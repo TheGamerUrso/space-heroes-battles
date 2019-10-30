@@ -183,9 +183,8 @@ public class GooglePlayServicesManager : MonoBehaviour
 #elif UNITY_IOS
     Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
+        }
     }
-
-
 
 
     public void AddScore(long score)
@@ -214,8 +213,10 @@ public class GooglePlayServicesManager : MonoBehaviour
 #elif UNITY_IOS
     Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
+            }
         }
     }
+
 
 
     public void SignIn()
@@ -235,6 +236,7 @@ public class GooglePlayServicesManager : MonoBehaviour
         Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
     }
-
-
 }
+
+
+
