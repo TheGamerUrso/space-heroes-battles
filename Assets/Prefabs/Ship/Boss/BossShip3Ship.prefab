@@ -76,6 +76,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particleSFX: []
   weaponData: {fileID: 11400000, guid: 97cf68f40f6561e4abff06da3a49a34c, type: 2}
+  source: {fileID: 0}
   FollowRotation: 0
   delayBetweenShots: 0
   TargetPrefab: {fileID: 5794136369597094762, guid: df5db9b7621261944a51da89f64c05dc,
@@ -152,7 +153,7 @@ GameObject:
   - component: {fileID: 4767090198587326564}
   - component: {fileID: 2780336969355454707}
   m_Layer: 15
-  m_Name: BossShip3
+  m_Name: BossShip3Ship
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -232,10 +233,10 @@ MonoBehaviour:
     Level: 1
     xp: 0
     xpToLevel: 100
-    LevelUpAnnouncementPrefab: {fileID: 0}
   ShieldEffect: {fileID: 6174798991898319939}
   ExplostionEffect: 0
   animator: {fileID: 1777818193275199295}
+  Alive: 0
   simpleAI: {fileID: 0}
   enemyElement:
     Name: 
@@ -245,7 +246,6 @@ MonoBehaviour:
     MaxNumberInScene: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
   DeathDelay: 0
-  Alive: 0
   m_ValueOfEnemy: 100
   DropItems: 
   numberOfHits: 5
@@ -278,7 +278,7 @@ MonoBehaviour:
     type: 3}
   m_IsMovingVertical: 0
   appear: 0
-  Entered: 0
+  entered: 0
   cooldown: 0
 --- !u!1001 &538807800429423466
 PrefabInstance:

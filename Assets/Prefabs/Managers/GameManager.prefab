@@ -1,5 +1,41 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &-6772886796938903610
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 9157915814294348282}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8938050810182263664}
+  m_Layer: 0
+  m_Name: Missing Prefab (Dummy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &8938050810182263664
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 224377555660833418, guid: cc72083ff62c6664bb133b598e40e99b,
+    type: 3}
+  m_PrefabInstance: {fileID: 9157915814294348282}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: -6772886796938903610}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6054925506316458978}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2406176206008801007
 GameObject:
   m_ObjectHideFlags: 0
@@ -28,7 +64,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8938050810182263664}
+  - {fileID: 6054925506316458978}
   - {fileID: 3052752431824862156}
   - {fileID: 5457895658814224155}
   - {fileID: 464093495667107476}
@@ -61,6 +97,69 @@ MonoBehaviour:
   - name: Player 3
     prefab: {fileID: 574412232638276670}
   levelupAnnouncement: {fileID: 9155948512115540062}
+--- !u!1 &7275563260326507635
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 9157915814294348282}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6054925506316458978}
+  m_Layer: 0
+  m_Name: LevelUPAnnouncementGameUI (Missing Prefab)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6054925506316458978
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 9157915814294348282}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7275563260326507635}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: -288089992081097075}
+  - {fileID: 8938050810182263664}
+  m_Father: {fileID: 2406176206008801005}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &9155948512115540062
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 1976100621885860, guid: cc72083ff62c6664bb133b598e40e99b,
+    type: 3}
+  m_PrefabInstance: {fileID: 9157915814294348282}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: -288089992081097075}
+  m_Layer: 0
+  m_Name: Missing Prefab (Dummy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &-288089992081097075
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 9157915814294348282}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9155948512115540062}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 6054925506316458978}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &5555893872372776002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -494,15 +593,3 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: cc72083ff62c6664bb133b598e40e99b, type: 3}
---- !u!1 &9155948512115540062 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1976100621885860, guid: cc72083ff62c6664bb133b598e40e99b,
-    type: 3}
-  m_PrefabInstance: {fileID: 9157915814294348282}
-  m_PrefabAsset: {fileID: 0}
---- !u!224 &8938050810182263664 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 224377555660833418, guid: cc72083ff62c6664bb133b598e40e99b,
-    type: 3}
-  m_PrefabInstance: {fileID: 9157915814294348282}
-  m_PrefabAsset: {fileID: 0}
