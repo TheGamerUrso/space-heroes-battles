@@ -41,28 +41,34 @@ public class LevelElement : MonoBehaviour
 
             button.onClick.AddListener(() =>
             {
+                Debug.Log("Pressed" + "Level " + level.mission.Level + " Button");
                 buttonAction.Invoke(level);
             });
 
-            Refresh();
         }
         else if (level.ID.Contains("Survival"))
-        {
-            level = new Level("SurvivalMode",null,null,true,false);
-            NameText.text = "Survival";
-            button.interactable = level.interactable;
+        {     
+            NameText.text = "SurvivalMode";
+
+            button.onClick.AddListener(() =>
+            {
+                buttonAction.Invoke(level);
+            });
+
             NameText.color = normalColor;
+            buttonImage.color = normalColor;
         }
         else if (string.IsNullOrEmpty(level.ID))
         {
             SetEmptyLevelElement();
         }
+
         Refresh();
     }
 
     public void SetEmptyLevelElement()
     {
-        NameText.text = " More Soon";
+        NameText.text = "More Soon";
         level.interactable = false;
         level.Locked = true;
         button.interactable = level.interactable;
@@ -84,27 +90,44 @@ public class LevelElement : MonoBehaviour
 
     public void Refresh()
     {
-        PlayerData playerData = DataController.GetPlayerData();
-        if (level.mission != null)
+        if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
         {
-            if (level.mission.ID <= playerData.LevelUnlocked)
+            PlayerData playerData = DataController.GetPlayerData();
+            if (level.mission != null)
             {
-                level.interactable = true;
-                level.Locked = false;
+                if (level.mission.ID <= playerData.LevelUnlocked)
+                {
+                    level.interactable = true;
+                    level.Locked = false;
+                }
+            }
+
+            button.interactable = level.interactable;
+
+            if (level.Locked)
+            {
+                NameText.color = LockedColor;
+                buttonImage.color = LockedColor;
+            }
+            else
+            {
+                NameText.color = normalColor;
+                buttonImage.color = normalColor;
             }
         }
-
-        button.interactable = level.interactable;
-
-        if (level.Locked)
+        else if (level.ID.Contains("Survival"))
         {
-            NameText.color = LockedColor;
-            buttonImage.color = LockedColor;
-        }
-        else
-        {
+            level.interactable = true;
+            level.Locked = false;
             NameText.color = normalColor;
             buttonImage.color = normalColor;
+        }
+        else if (string.IsNullOrEmpty(level.ID))
+        {
+            level.interactable = false;
+            level.Locked = true;
+            NameText.color = LockedColor;
+            buttonImage.color = LockedColor;
         }
     }
 

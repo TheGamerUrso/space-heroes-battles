@@ -174,31 +174,21 @@ public class ProjectControllerWindow : EditorWindow
         {
             PlayerData playerData = DataController.GetPlayerData();
             MissionCollection missionCollection = DataController.GetMissionCollection();
-            Mission mission = missionCollection.GetMission(CompleteLevelIndex);
+            Mission mission = missionCollection.GetMission(playerData.LevelUnlocked++);
 
-            LevelObjectiveData[] levelObjectiveDatas = playerData.GetLevelObjectives("Level" + CompleteLevelIndex);
+            LevelObjectiveData[] levelObjectiveDatas = playerData.GetLevelObjectives("Level" + mission.ID);
             if (EditorApplication.isPlaying)
             {
                 for (int i = 0; i < levelObjectiveDatas.Length; i++)
                 {
                     levelObjectiveDatas[i].completed = true;
                 }
-            }
-
-            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-            int missionsCompleted = 0;
-            foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-            {
-                if (item.Value[0].completed == true)
-                {
-                    missionsCompleted++;
-                }
-            }
+            }           
 
             BriefingScreen briefingScreen = GameObject.FindObjectOfType<BriefingScreen>();
    
 
-            playerData.LevelUnlocked = missionsCompleted+1;
+            playerData.LevelUnlocked = mission.ID+1;
 
             briefingScreen.RefreshLevelElements();
 
@@ -210,7 +200,8 @@ public class ProjectControllerWindow : EditorWindow
         EditorGUILayout.Space();
         EditorGUILayout.BeginHorizontal();
         GUILayout.Label("Game Data");
-
+        
+    
         if (GUILayout.Button("Delete"))
         {
             PlayerPrefs.DeleteAll();

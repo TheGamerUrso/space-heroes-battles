@@ -136,7 +136,7 @@ public class BriefingScreen : MonoBehaviour
 
     public void StartMissionBriefing(Level level)
     {
-        if (level.ID.Contains("Level") || level.ID.Contains("Prologue"))
+        if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
         {
             ScreenManager.Instance.Open("Briefing");
             GameManager.LevelSelected = level.mission.ID;
