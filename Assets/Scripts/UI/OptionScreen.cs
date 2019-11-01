@@ -10,6 +10,7 @@ public class OptionScreen : GooglePlayOptions
 
     public override void OnOptionEnter()
     {
+        base.OnOptionEnter();
         if (mainMenuManager == null)
             mainMenuManager = MainMenuManager.instance;
     }
