@@ -212,6 +212,7 @@ public class BaseOptions : MonoBehaviour
         PlayerData playerData = DataController.GetPlayerData();
 
         playerData.distance = Distances[distance - 1];
+        UpdateDistance();
     }
 
     public virtual void ExitAndSave()
