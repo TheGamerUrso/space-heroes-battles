@@ -26,7 +26,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == false)
+        if (Instance == null)
         {
             Instance = this;
 
