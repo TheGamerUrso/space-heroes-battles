@@ -37,11 +37,15 @@ public class SplashScreen : MonoBehaviour
         // {
         //     async.allowSceneActivation = true;
         //}
-
+#if UNITY_ANDROID
         if (GameServices.IsInitialized())
         {
             async.allowSceneActivation = true;
         }
+#elif UNITY_EDITOR
+        async.allowSceneActivation = true;
+#endif
+
     }
 
     public void SignIn()
