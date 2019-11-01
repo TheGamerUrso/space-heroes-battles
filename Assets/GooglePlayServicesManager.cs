@@ -58,7 +58,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 
     public User GetUserInfo()
     {
-#if Unity_Android
+#if UNITY_ANDROID
         return new User(GameServices.LocalUser.image, GameServices.LocalUser.userName);
 #else
         return new User(null,"Over9000");
