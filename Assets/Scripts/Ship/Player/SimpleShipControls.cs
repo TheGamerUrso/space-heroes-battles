@@ -25,7 +25,9 @@ public class SimpleShipControls : MonoBehaviour
 
 
     private bool blockMovement;
-    public float slowMo;
+
+
+
     public void Start()
     {
         targetPos = transform.position;
@@ -56,29 +58,23 @@ public class SimpleShipControls : MonoBehaviour
 
     public void GetPlayerInput()
     {
-        Debug.Log(EventSystem.current.IsPointerOverGameObject());
         if (mouseInput.GetClickDown())
         {
             SetTargetPosition();
             isMoving = true;
 
             Rotate();
-            slowMo = 1;
+   
         }
         else
         {
             Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
             ShipModel.transform.localEulerAngles = new Vector3(targetEulerAngels.x
               , targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, 0, .1f));
-
-            slowMo = .3f;
-
+            
         }
+        GuiManager.Instance.SlowMoEffect(this);
 
-        if (GameManager.Paused == false)
-        {
-            Time.timeScale = slowMo;
-        }
     }
 
     public bool IsEnterOrExitAnimationState()

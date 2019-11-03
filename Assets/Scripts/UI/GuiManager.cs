@@ -32,8 +32,8 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
-
-
+    private float slowMo;
+    private bool useSloMo;
     private bool ResultShowed = false;
     #endregion Variables
 
@@ -74,7 +74,33 @@ public class GuiManager : MonoBehaviour
     private void Start()
     {
         instance = this;
+        useSloMo = true;
     }
+    private void Update()
+    {
+
+    }
+
+    public void SlowMoEffect(SimpleShipControls simpleShipControls)
+    {
+        Time.timeScale = 1.0f;
+        if (simpleShipControls.IsEnterOrExitAnimationState() && useSloMo)
+        {
+            if (simpleShipControls.mouseInput.GetClickDown())
+            {
+                slowMo = 1;
+            }
+            else
+            {
+                slowMo = .3f;
+            }
+
+            Time.timeScale = slowMo;
+        }
+                   
+    
+    }
+
     public void SetCountdownVisibility(bool enable)
     {
         CountdownWidgetText.gameObject.SetActive(enable);
@@ -144,6 +170,7 @@ public class GuiManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
+        useSloMo = false;
         AudioManager.PlaySound("Click", 1);
         SceneLoader.instance.LoadMainenu();
         GameObject activeMenuGO = null;
@@ -264,7 +291,7 @@ public class GuiManager : MonoBehaviour
             // playerData.m_EnemyKilled += SpawnEnemies.EnemyKilled;
             //playerData.TotalSuperUsed += player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
 
-  
+
 
             if (!SpawnEnemies.Instance.survival)
             {
