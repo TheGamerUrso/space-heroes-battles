@@ -24,7 +24,7 @@ public class DrawLine : MonoBehaviour
             {
                 prevPoint = i - 1;
             }
-            Debug.DrawLine(Nodes[prevPoint].position, Nodes[i].position, Color.red);
+           // Debug.DrawLine(Nodes[prevPoint].position, Nodes[i].position, Color.red);
         }
     }
 
@@ -37,7 +37,7 @@ public class DrawLine : MonoBehaviour
             {
                 prevPoint = i - 1;
             }
-            Debug.DrawLine(Nodes[prevPoint].position, Nodes[i].position, Color.red);
+            //Debug.DrawLine(Nodes[prevPoint].position, Nodes[i].position, Color.red);
         }
     }
 }
