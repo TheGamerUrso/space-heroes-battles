@@ -39,6 +39,7 @@ public class SimpleShipControls : MonoBehaviour
     private Vector2 MaxScreenBound;
     private Vector2 MinScreenBound;
 
+    public float slowMo;
     public void Start()
     {
         FollowTarget = GameObject.Find("Pointer");
@@ -63,12 +64,20 @@ public class SimpleShipControls : MonoBehaviour
         {
             SetTarggetPosition();
             Rotate(); ;
+            slowMo = 1;
         }
         else
         {
             Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
             ShipModel.transform.localEulerAngles = new Vector3(targetEulerAngels.x
               , targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, 0, .1f));
+
+            slowMo = .3f;
+
+        }
+        if (GameManager.Paused == false)
+        {
+            Time.timeScale = slowMo;
         }
     }
 
