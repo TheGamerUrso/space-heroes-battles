@@ -83,7 +83,6 @@ public class GuiManager : MonoBehaviour
 
     public void SlowMoEffect(SimpleShipControls simpleShipControls)
     {
-        Time.timeScale = 1.0f;
         if (simpleShipControls.IsEnterOrExitAnimationState() && useSloMo)
         {
             if (simpleShipControls.mouseInput.GetClickDown())
@@ -94,11 +93,8 @@ public class GuiManager : MonoBehaviour
             {
                 slowMo = .3f;
             }
-
             Time.timeScale = slowMo;
-        }
-                   
-    
+        }                 
     }
 
     public void SetCountdownVisibility(bool enable)
@@ -171,6 +167,7 @@ public class GuiManager : MonoBehaviour
     public void LoadMainMenu()
     {
         useSloMo = false;
+        Time.timeScale = 1.0f;
         AudioManager.PlaySound("Click", 1);
         SceneLoader.instance.LoadMainenu();
         GameObject activeMenuGO = null;
@@ -225,6 +222,7 @@ public class GuiManager : MonoBehaviour
     //Game is Over
     public void GameOver()
     {
+        Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
             Player player = PlayerManager.GetPlayer();

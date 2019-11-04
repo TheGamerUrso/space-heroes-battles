@@ -123,6 +123,7 @@ public class GameOverWidget : MonoBehaviour
             // EM_GameServicesConstants.Sample_Achievement is the generated name constant
             // of an achievement named "Sample Achievement"
 #if UNITY_ANDROID
+            if (GooglePlayServicesManager.Instance)
             GooglePlayServicesManager.Instance.UnlockAchievement(GameManager.LevelSelected);
 #elif UNITY_EDITOR
      Debug.Log("UnlockAchievement"); 
