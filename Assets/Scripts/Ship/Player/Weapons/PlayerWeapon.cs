@@ -6,7 +6,7 @@ public class PlayerWeapon : WeaponScript
 {
     private PlayerAnimation playerAnimation;
     public Transform shipTransform;
-
+    private bool holdFire;
     public void SetShipTransform(Transform shipTransform)
     {
         this.shipTransform = shipTransform;
@@ -32,19 +32,60 @@ public class PlayerWeapon : WeaponScript
 
     public override void Shoot()
     {
-        if (Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
+        if (Input.touchCount > 0)
         {
-            if (Time.time > m_NewShot)
+            Touch touch = Input.GetTouch(0);
+ 
+            Touch touch2nd = Input.GetTouch(1);
+            switch (touch.phase)
             {
-                m_NewShot = Time.time + weaponData.m_FireRate;
-                InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
+                case TouchPhase.Began:
+                    Fire();
+                    break;
+            }
 
-                AudioManager.PlaySound(source,weaponData.ShootSoundEffect,0,true);
+            switch (touch2nd.phase)
+            {
+                case TouchPhase.Began:
+                    holdFire = true;
+                    break;
+                case TouchPhase.Ended:
+                    holdFire = false;
+                    break;
+                case TouchPhase.Canceled:
+                    holdFire = false;
+                    break;
+            }
+        }
 
-                foreach (var item in particleSFX)
-                {
-                    item.PlayEffect();
-                }
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
+
+            if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
+            {
+                Fire();
+            }
+        }
+    }
+
+    public override void Fire()
+    {
+        if (holdFire)
+        {
+            return;
+        }
+
+        if (Time.time > m_NewShot)
+        {
+            m_NewShot = Time.time + weaponData.m_FireRate;
+            InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
+
+            AudioManager.PlaySound(source, weaponData.ShootSoundEffect, 0, true);
+
+            foreach (var item in particleSFX)
+            {
+                item.PlayEffect();
             }
         }
     }

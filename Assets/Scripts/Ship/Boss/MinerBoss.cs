@@ -20,7 +20,7 @@ public class MinerBoss : BaseBossEnemy
 
     public override void Attack()
     {
-        if (bossEnemyAI.entered && bossEnemyAI.appear)
+        if (baseEnemyAI.isEntered && baseEnemyAI.isAppeared)
         {
             if (delayAttak > 0)
             {

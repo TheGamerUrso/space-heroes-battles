@@ -159,7 +159,7 @@ GameObject:
   - component: {fileID: 9045726662814918858}
   - component: {fileID: 9045726662814918859}
   m_Layer: 15
-  m_Name: BossShip4
+  m_Name: BossShip4Ship
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -239,11 +239,11 @@ MonoBehaviour:
     Level: 1
     xp: 0
     xpToLevel: 100
-    LevelUpAnnouncementPrefab: {fileID: 0}
   ShieldEffect: {fileID: 1512342256574877601}
   ExplostionEffect: 6
   animator: {fileID: 8997901948444743969}
-  simpleAI: {fileID: 9045726662814918859}
+  Alive: 0
+  baseEnemyAI: {fileID: 9045726662814918859}
   enemyElement:
     Name: 
     gameObjectType: 0
@@ -252,14 +252,11 @@ MonoBehaviour:
     MaxNumberInScene: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
   DeathDelay: 0
-  Alive: 0
   m_ValueOfEnemy: 500
   DropItems: 08000000
-  numberOfHits: 10
   Weapons:
   - {fileID: 9046161308298879779}
   delayAttak: 3
-  minerBossAI: {fileID: 9045726662814918859}
 --- !u!114 &9045726662814918859
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -285,8 +282,6 @@ MonoBehaviour:
   WaypointPrefab: {fileID: 6703628987737136979, guid: d1a54488334813a4bb52fd03795941de,
     type: 3}
   m_IsMovingVertical: 0
-  appear: 0
-  Entered: 0
   Positions:
   - {x: -0.8, y: 0, z: -25.8}
   - {x: -0.8, y: 0, z: 100}
@@ -548,6 +543,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9044323090198065027}
     m_Modifications:
+    - target: {fileID: 1464130571818748828, guid: dd950f0cf6e68a54d80d2e3c116d2149,
+        type: 3}
+      propertyPath: m_Name
+      value: EngineFX
+      objectReference: {fileID: 0}
     - target: {fileID: 1466836129599657942, guid: dd950f0cf6e68a54d80d2e3c116d2149,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -628,11 +628,6 @@ PrefabInstance:
       propertyPath: m_LocalPosition.y
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 1464130571818748828, guid: dd950f0cf6e68a54d80d2e3c116d2149,
-        type: 3}
-      propertyPath: m_Name
-      value: EngineFX
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd950f0cf6e68a54d80d2e3c116d2149, type: 3}
 --- !u!4 &1329790409321464101 stripped
@@ -648,6 +643,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9044323090198065027}
     m_Modifications:
+    - target: {fileID: 1464130571818748828, guid: dd950f0cf6e68a54d80d2e3c116d2149,
+        type: 3}
+      propertyPath: m_Name
+      value: EngineFX (1)
+      objectReference: {fileID: 0}
     - target: {fileID: 1466836129599657942, guid: dd950f0cf6e68a54d80d2e3c116d2149,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -727,11 +727,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalPosition.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1464130571818748828, guid: dd950f0cf6e68a54d80d2e3c116d2149,
-        type: 3}
-      propertyPath: m_Name
-      value: EngineFX (1)
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd950f0cf6e68a54d80d2e3c116d2149, type: 3}
@@ -833,11 +828,6 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6387889792355075745, guid: f879758ca74f5d14db1362a409f19936,
-        type: 3}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 2542704849084951094, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -872,6 +862,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6387889792355075745, guid: f879758ca74f5d14db1362a409f19936,
+        type: 3}
+      propertyPath: m_Mesh
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6432920354971105835, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}

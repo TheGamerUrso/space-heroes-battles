@@ -8,14 +8,13 @@ public class BaseBossEnemy : BaseEnemy
     [Header("Boss Config")]
 
     protected GameObject bossWidget;
-    protected int hitIndex;
-    [SerializeField] protected int numberOfHits;
-    protected bool CanAttack;
+    protected int           hitIndex;
+    protected int           numberOfHits;
+
     protected int currentWeaponActive;
     [SerializeField] protected IDestroyable[] DestroyableParts;
 
-    protected BaseBossEnemyAI bossEnemyAI;
-
+    protected bool CanAttack;
     [SerializeField]
     protected GameObject[] Weapons;
     [SerializeField]
@@ -58,7 +57,7 @@ public class BaseBossEnemy : BaseEnemy
 
         foreach (IDestroyable item in DestroyableParts)
         {
-            if (item.IsAlive == false)
+            if (item.IsDestroyed == false)
             {
                 return;
             }
@@ -71,8 +70,6 @@ public class BaseBossEnemy : BaseEnemy
 
     public virtual void BossTakeDamage()
     {
-
-
         PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
         playerWeaponSystem.IncreasePowerUp(.05f);
 
@@ -148,5 +145,7 @@ public class BaseBossEnemy : BaseEnemy
     public override void Death()
     {
         base.Death();
+        GuiManager.Instance.ToggleSlowMo(false);
+
     }
 }

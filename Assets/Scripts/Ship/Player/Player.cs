@@ -23,7 +23,7 @@ public class Player : Ship, IDestroyable
     private bool GotHit;
     private int SuperUsed;
     public ParticleSystem ItemCollectedEffect;
-    public bool IsAlive
+    public bool IsDestroyed
     {
         get { return Alive; }
         set { Alive = value; }
@@ -53,7 +53,7 @@ public class Player : Ship, IDestroyable
     {
         InitIfNeeded();
 
-        IsAlive = true;
+        IsDestroyed = true;
 
         PlayerData playerData = DataController.GetPlayerData();
 
@@ -189,7 +189,7 @@ public class Player : Ship, IDestroyable
             return;
         }
 
-        if (IsAlive == false)
+        if (IsDestroyed == false)
         {
             return;
         }

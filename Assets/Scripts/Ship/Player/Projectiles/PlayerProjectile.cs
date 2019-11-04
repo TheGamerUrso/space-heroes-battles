@@ -53,7 +53,7 @@ public class PlayerProjectile : Projectile
         Vector3 position = transform.position;
         foreach (GameObject go in gos)
         {
-            if (go.GetComponent<Enemy>())
+            if (go.GetComponent<BaseEnemy>())
             {
                 Vector3 diff = go.transform.position - position;
                 float curDistance = diff.sqrMagnitude;

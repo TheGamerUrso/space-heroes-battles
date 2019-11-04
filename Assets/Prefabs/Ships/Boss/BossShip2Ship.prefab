@@ -293,7 +293,7 @@ GameObject:
   - component: {fileID: 465662296617436389}
   - component: {fileID: 5743645370129726073}
   m_Layer: 15
-  m_Name: BossShip2
+  m_Name: BossShip2Ship
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -360,7 +360,7 @@ MonoBehaviour:
     CurrentHealth: 0
     Damage: 0
     FireRate: 0
-    Speed: 100
+    Speed: 75
     SuperDamage: 0
     SuperChargeTime: 0
     MagnetPower: 0
@@ -373,11 +373,11 @@ MonoBehaviour:
     Level: 1
     xp: 0
     xpToLevel: 100
-    LevelUpAnnouncementPrefab: {fileID: 0}
   ShieldEffect: {fileID: 2520402327702343036}
   ExplostionEffect: 7
   animator: {fileID: 6902708503129045204}
-  simpleAI: {fileID: 5743645370129726073}
+  Alive: 0
+  baseEnemyAI: {fileID: 5743645370129726073}
   enemyElement:
     Name: 
     gameObjectType: 0
@@ -386,10 +386,8 @@ MonoBehaviour:
     MaxNumberInScene: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
   DeathDelay: 0
-  Alive: 0
   m_ValueOfEnemy: 100
   DropItems: 
-  numberOfHits: 10
   Weapons:
   - {fileID: 7314066710493141038}
   delayAttak: 1
@@ -418,8 +416,6 @@ MonoBehaviour:
   WaypointPrefab: {fileID: 1811661054583536, guid: 3d43c90d23e6d9a44bae44707ef9c210,
     type: 3}
   m_IsMovingVertical: 0
-  appear: 0
-  Entered: 0
 --- !u!1 &6049227061383995164
 GameObject:
   m_ObjectHideFlags: 0
@@ -636,6 +632,7 @@ MonoBehaviour:
   - {fileID: 8658170788350185538}
   - {fileID: 4234640478162528028}
   weaponData: {fileID: 11400000, guid: dc2e9394ed6ca3046b6d28b7d76e384b, type: 2}
+  source: {fileID: 0}
   FollowRotation: 0
   delayBetweenShots: 0.3
   delay: 0
@@ -643,6 +640,7 @@ MonoBehaviour:
   delayTimer: 0
   m_NumberOfBullets: 8
   RandomRotationOnY: 1
+  usePitch: 0
 --- !u!1 &7826898983038948128
 GameObject:
   m_ObjectHideFlags: 0
@@ -2360,6 +2358,31 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 20
+      objectReference: {fileID: 0}
     - target: {fileID: 2542704849084951094, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2394,31 +2417,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
-        type: 3}
-      propertyPath: m_LocalScale.z
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -4
-      objectReference: {fileID: 0}
-    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
-        type: 3}
-      propertyPath: m_LocalScale.y
-      value: 20
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f879758ca74f5d14db1362a409f19936, type: 3}

@@ -106,9 +106,10 @@ public class PlayerWeaponSystem : MonoBehaviour
 
         if (Input.touchCount > 0)
         {
+            Touch touch = Input.GetTouch(0);
             if (playerPowerUp >= 1)
-            {
-                switch (Input.GetTouch(0).phase)
+            {           
+                switch (touch.phase)
                 {
                     case TouchPhase.Began:
                         clicked = true;
@@ -143,7 +144,7 @@ public class PlayerWeaponSystem : MonoBehaviour
                     }
                 }
 
-                if (clicktimes > 1)
+                if (clicktimes > 1 || touch.tapCount > 2)
                 {
                     clicktimes = 0;
                     ActivateSpecial();
@@ -161,7 +162,6 @@ public class PlayerWeaponSystem : MonoBehaviour
 
         if (CrossPlatformInputManager.GetButtonDown("Fire2") && playerPowerUp >= 1)
         {
-
             ActivateSpecial();
         }
 

@@ -33,7 +33,7 @@ public class EnemyManager
     public static int EnemySpawnedInTotal = 0;
 
     [SerializeField] private GameObject[] BossPrefab;
-    public List<Enemy> ListOfSpawnedEnemies = new List<Enemy>();
+    public List<BaseEnemy> ListOfSpawnedEnemies = new List<BaseEnemy>();
     private List<EnemyElement> ListOfEnemyToSpawn;
 
     private Player p;
@@ -68,7 +68,7 @@ public class EnemyManager
 
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 
-        Enemy enemy = enemGO.GetComponent<Enemy>();
+        BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
         FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
         if (followPathAI == null)
         {
@@ -97,7 +97,7 @@ public class EnemyManager
 
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 
-        Enemy enemy = enemGO.GetComponent<Enemy>();
+        BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
         FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
         if (followPathAI == null)
         {
@@ -129,7 +129,7 @@ public class EnemyManager
             Quaternion.identity);
 
         int playerLevel = PlayerManager.GetPlayer().Level;
-        Enemy enemy = BossGO.GetComponentInChildren<Enemy>();
+        BaseEnemy enemy = BossGO.GetComponentInChildren<BaseEnemy>();
         enemy.SetEnemyStats(SpawnEnemies.LevelDifficulty, EnemyDied, EnemyEscaped);
 
         EnemyManager.Instance.ListOfSpawnedEnemies.Add(enemy);
@@ -142,7 +142,7 @@ public class EnemyManager
         NumberOfEnemies--;
         EnemiesEscaped++;
         enemy.enemyElement.currentNumberInScene--;
-        instance.ListOfSpawnedEnemies.Remove((Enemy)enemy);
+        instance.ListOfSpawnedEnemies.Remove((BaseEnemy)enemy);
     }
 
     public static void EnemyDied(BaseEnemy enemy)
@@ -225,7 +225,7 @@ public class EnemyManager
         //Drop Item
         DropController.PickRandomDropItem(enemy.transform);
 
-        instance.ListOfSpawnedEnemies.Remove((Enemy)enemy);
+        instance.ListOfSpawnedEnemies.Remove((BaseEnemy)enemy);
 
         GameObject.Destroy(EnemyManager.instance.BossGO,2f);
 

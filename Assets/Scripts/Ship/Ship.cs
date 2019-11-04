@@ -60,7 +60,7 @@ public abstract class Ship : MonoBehaviour
     //Get Health Presentatge
     public float GetHealthPresentage()
     {
-        return CurrentHealth / MaxHealth;
+        return (CurrentHealth / MaxHealth)*100;
     }
 
     public void SetGameManager(GameManager gameManager)

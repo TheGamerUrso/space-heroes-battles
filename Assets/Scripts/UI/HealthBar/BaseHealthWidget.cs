@@ -63,7 +63,7 @@ public class BaseHealthWidget : MonoBehaviour
 
     public void SetHealthBarPosition(Transform transform)
     {
-        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.localPosition);
+        Vector3 screenPos = Camera.main.WorldToScreenPoint(transform.position);
         HealthBarImage.transform.position = screenPos + offset;
     }
 }

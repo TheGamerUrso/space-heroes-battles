@@ -36,6 +36,14 @@ public class GuiManager : MonoBehaviour
     private bool useSloMo;
     private bool ResultShowed = false;
     #endregion Variables
+    public void ToggleSlowMo(bool value)
+    {
+        useSloMo = value;
+        if(value == false)
+        {
+            Time.timeScale = 1.0f;
+        }
+    }
 
     private void OnApplicationFocus(bool focus)
     {

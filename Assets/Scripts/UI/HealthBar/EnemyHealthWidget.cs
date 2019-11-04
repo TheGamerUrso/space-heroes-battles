@@ -20,7 +20,7 @@ public class EnemyHealthWidget : BaseHealthWidget
     }
     public override void Initiallize(Ship ship)
     {
-        ship.GetComponent<Enemy>().OnEnemyHit = OnDamageTaken;
+        ship.GetComponent<BaseEnemy>().OnEnemyHit = OnDamageTaken;
     }
 
     public override void Refresh(IDestroyable user)
@@ -52,13 +52,16 @@ public class EnemyHealthWidget : BaseHealthWidget
         }
 
         bool m_HasShield = ship.HasShieldModule();
-        if (m_HasShield)
+        if (ShieldBarImage != null)
         {
-            ShieldBarImage.fillAmount = 1;
-        }
-        else
-        {
-            ShieldBarImage.fillAmount = 0;
+            if (m_HasShield)
+            {
+                ShieldBarImage.fillAmount = 1;
+            }
+            else
+            {
+                ShieldBarImage.fillAmount = 0;
+            }
         }
 
         timer = duration;

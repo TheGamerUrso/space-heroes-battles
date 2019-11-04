@@ -12,7 +12,7 @@ public class Asteroids : MonoBehaviour, IDestroyable
     public Transform AsteroidTransform;
     public float takeDamageDelay;
 
-    public bool IsAlive
+    public bool IsDestroyed
     {
         get
         {

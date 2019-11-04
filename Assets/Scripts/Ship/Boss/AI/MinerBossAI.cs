@@ -14,14 +14,14 @@ public class MinerBossAI : BaseBossEnemyAI
         transform.position = Positions[0];
         currentPath = 1;
 
-        m_XVel = GetComponent<Enemy>().GetShipStatsSystem().Speed;
+        m_XVel = GetComponent<BaseEnemy>().GetShipStatsSystem().Speed;
     }
 
 
 
     public override void Move()
     {
-        if (appear == false)
+        if (appeared == false)
         {
             transform.position = Vector3.MoveTowards(transform.position, Positions[currentPath], m_XVel * Time.deltaTime);
             transform.rotation = Quaternion.Euler(0, 180, 0);
@@ -29,12 +29,12 @@ public class MinerBossAI : BaseBossEnemyAI
             if (transform.position == Positions[1])
             {
                m_XVel = 50;
-                appear = true;
+                appeared = true;
             }
         }
         else
         {
-            if (appear)
+            if (appeared)
             {
              
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, 0), 1);
@@ -48,7 +48,7 @@ public class MinerBossAI : BaseBossEnemyAI
             }
         }
 
-        if (appear)
+        if (appeared)
         {
             base.Move();
         }

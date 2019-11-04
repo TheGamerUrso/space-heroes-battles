@@ -2,14 +2,13 @@
 using System.Collections;
 using UnityEngine;
 
-public class Punch : MonoBehaviour, IDestroyable
+public class Punch : Ship, IDestroyable
 {
     public event Action<object> OnEnemyHit = delegate { };
     public Transform[] Waypoints;
 
     public HealthBarSettings HealthBarSettings;
-
-    private GameObject healthBar;
+    private EnemyHealthWidget healthBar;
 
     public int currentWaypoint;
     public float cooldown;
@@ -17,13 +16,15 @@ public class Punch : MonoBehaviour, IDestroyable
 
     public bool isDestroyed = false;
 
-    public float currentHealth;
-    public float maxhealth;
+
 
     protected float takeDamageDelay;
     public GameObject FireEffect;
 
-    public bool IsAlive
+    public BaseBossEnemy baseBossEnemy;
+
+
+    public bool IsDestroyed
     {
         get
         {
@@ -32,49 +33,6 @@ public class Punch : MonoBehaviour, IDestroyable
         set
         {
             isDestroyed = value;
-        }
-    }
-
-    public float MaxHealth
-    {
-        get
-        {
-            return maxhealth;
-        }
-        set { maxhealth = value; }
-    }
-
-    public float CurrentHealth
-    {
-        get
-        {
-            return currentHealth;
-        }
-        set
-        {
-            currentHealth = value;
-        }
-    }
-
-    private void Start()
-    {
-
-        if (cooldown >= 0)
-        {
-            cooldown = UnityEngine.Random.Range(2, 4);
-        }
-        else
-        {
-            cooldown = 0;
-        }
-
-        if (FireEffect)
-            FireEffect.SetActive(false);
-
-        if (HealthBarSettings != null)
-        {
-            healthBar = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
-            OnEnemyHit += healthBar.GetComponent<BaseHealthWidget>().OnDamageTaken;
         }
     }
 
@@ -101,6 +59,7 @@ public class Punch : MonoBehaviour, IDestroyable
             {
                 takeDamageDelay -= Time.deltaTime;
             }
+
             transform.position = Vector3.MoveTowards(transform.position, Waypoints[currentWaypoint].position, 1);
         }
         else
@@ -112,7 +71,7 @@ public class Punch : MonoBehaviour, IDestroyable
     private IEnumerator PunchCoroutine()
     {
         currentWaypoint = 1;
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(UnityEngine.Random.Range(2,3));
         currentWaypoint = 0;
         cooldown = UnityEngine.Random.Range(2, 4);
     }
@@ -123,17 +82,20 @@ public class Punch : MonoBehaviour, IDestroyable
         {
             return;
         }
-        currentHealth -= dmg;
+        CurrentHealth -= dmg;
+        Debug.Log(GetHealthPresentage());
+        if (GetHealthPresentage() <= 50)
+        {
+            if (FireEffect && !FireEffect.activeSelf)
+                FireEffect.SetActive(true);
+        }
+
         if (CurrentHealth <= 0)
         {
-            currentHealth = 0;
+            CurrentHealth = 0;
             if (isDestroyed == false)
             {
-                GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
-                explostion.transform.position = transform.position;
-                isDestroyed = true;
-                if (FireEffect)
-                    FireEffect.SetActive(true);
+                Death();
             }
         }
 
@@ -174,13 +136,52 @@ public class Punch : MonoBehaviour, IDestroyable
 
     public void Heal(float ammount)
     {
-        currentHealth += ammount;
+        CurrentHealth += ammount;
 
-        if (currentHealth > maxhealth)
+        if (CurrentHealth > MaxHealth)
         {
-            currentHealth = maxhealth;
+            CurrentHealth = MaxHealth;
         }
 
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxhealth);
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+    }
+
+    public override void ShipStartSetUp()
+    {
+        if (cooldown >= 0)
+        {
+            cooldown = UnityEngine.Random.Range(2, 4);
+        }
+        else
+        {
+            cooldown = 0;
+        }
+
+        GetLevelSystem().SetLevel(baseBossEnemy.GetLevelSystem().GetLevel());
+        GetShipStatsSystem().SetStats(levelSystem);
+
+
+        if (FireEffect)
+            FireEffect.SetActive(false);
+
+        if (HealthBarSettings != null)
+        {   
+            GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
+            healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
+            OnEnemyHit += initializedHealthWidget.GetComponent<BaseHealthWidget>().OnDamageTaken;
+        }
+    }
+
+    public override void InitReferences()
+    {
+       
+    }
+
+    public override void Death()
+    {
+        GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
+        explostion.transform.position = transform.position;
+        isDestroyed = true;
+
     }
 }

@@ -16,7 +16,7 @@ public class Boxer : BaseBossEnemy
 
         foreach (IDestroyable item in DestroyableParts)
         {
-            if (item.IsAlive == false)
+            if (item.IsDestroyed == false)
             {
                 return;
             }
@@ -34,9 +34,8 @@ public class Boxer : BaseBossEnemy
             return;
         }
 
-      
-
         PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
+        if(playerWeaponSystem)
         playerWeaponSystem.IncreasePowerUp(.05f);
 
         if (Random.Range(0, 100) >= 50)
@@ -46,7 +45,6 @@ public class Boxer : BaseBossEnemy
                 GetComponent<BossAI>().ChangeWaypoint(hitIndex);
             }
         }
-
 
         base.BossTakeDamage();
     }

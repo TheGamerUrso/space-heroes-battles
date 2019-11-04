@@ -13,7 +13,7 @@ public class BaseEnemy : Ship, IDestroyable
     public bool Alive;
 
     [Header("Enemy Config")]
-    public SimpleAI simpleAI;
+    public BaseEnemyAI baseEnemyAI;
     public Action<BaseEnemy> onEnemyDeath;
     public Action<object> OnEnemyHit;
     public Action<BaseEnemy> onEnemyEscape;
@@ -23,7 +23,7 @@ public class BaseEnemy : Ship, IDestroyable
     public float DeathDelay;
 
     //IDestroyable Values
-    public bool IsAlive
+    public bool IsDestroyed
     {
         get { return Alive; }
         set { Alive = value; }
@@ -99,7 +99,7 @@ public class BaseEnemy : Ship, IDestroyable
             healthBar.GetComponent<BaseHealthWidget>();
         }
 
-        simpleAI = GetComponent<SimpleAI>();
+        baseEnemyAI = GetComponent<SimpleAI>();
         ShieldEffect.SetActive(ShieldModuleInstalled);
 
         weaponScript = GetComponentInChildren<WeaponScript>(true);
@@ -203,7 +203,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     }
 
-    public void OnTriggerEnter(Collider other)
+    public virtual void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {

@@ -24,7 +24,7 @@ public class FollowPathAI : BaseEnemyAI
     private Vector3 dir;
     private Transform[] PathList;
     private GameObject path;
-    private float pathMagnitude;
+    protected float pathMagnitude;
 
     public void GeneratePath()
     {

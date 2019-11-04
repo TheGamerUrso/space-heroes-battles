@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class BaseEnemyAI : MonoBehaviour
 {
-    [Header("Simple AI Config")]
+    [Header("Enemy AI Config")]
+
+    protected BaseEnemy enemy;
+    protected Rigidbody rigid;
 
     protected int Direction;
     protected bool Loop;
@@ -19,11 +22,29 @@ public class BaseEnemyAI : MonoBehaviour
     protected float delay = .5f;
     protected Vector3 movement;
 
-    protected Enemy enemy;
-    protected Rigidbody rigid;
+
 
     protected float m_XVel;
     protected float m_ZVel;
+
+    protected bool appeared;
+    protected bool entered;
+
+    public bool isAppeared
+    {
+        get
+        {
+            return appeared;
+        }
+    }
+
+    public bool isEntered
+    {
+        get
+        {
+            return entered;
+        }
+    }
 
     protected float XVel
     {
@@ -79,7 +100,7 @@ public class BaseEnemyAI : MonoBehaviour
 
         if (enemy == null)
         {
-            enemy = GetComponent<Enemy>();
+            enemy = GetComponent<BaseEnemy>();
         }
     }
 

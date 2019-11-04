@@ -30,33 +30,39 @@ public class MouseInput
 
     public Vector2 GetTouchPosition()
     {
-        if (Input.touchCount > 0)
-        {
-            currentTouch = Input.GetTouch(0);
-            currentTouchPhase = currentTouch.phase;
-            blockMovement = CheckIfTouchIsOverUI(currentTouch);
+        if (Application.platform == RuntimePlatform.Android) {
 
-            if (!blockMovement)
+            if (Input.touchCount > 0)
             {
-                switch (currentTouchPhase)
+                currentTouch = Input.GetTouch(0);
+                currentTouchPhase = currentTouch.phase;
+                blockMovement = CheckIfTouchIsOverUI(currentTouch);
+
+                if (!blockMovement)
                 {
-                    case TouchPhase.Began:
-                        previousTouchPos = currentTouch.position;
-                        return currentTouch.position;
-                    case TouchPhase.Moved:
-                        previousTouchPos = currentTouch.position;
-                        return currentTouch.position;
-                    case TouchPhase.Stationary:
-                        previousTouchPos = currentTouch.position;
-                        return currentTouch.position;
-                    case TouchPhase.Ended:
-                        return previousTouchPos;
-                    case TouchPhase.Canceled:
-                        return previousTouchPos;
-                    default:
-                        return previousTouchPos;
+                    switch (currentTouchPhase)
+                    {
+                        case TouchPhase.Began:
+                            previousTouchPos = currentTouch.position;
+                            return currentTouch.position;
+                        case TouchPhase.Moved:
+                            previousTouchPos = currentTouch.position;
+                            return currentTouch.position;
+                        case TouchPhase.Stationary:
+                            previousTouchPos = currentTouch.position;
+                            return currentTouch.position;
+                        case TouchPhase.Ended:
+                            return previousTouchPos;
+                        case TouchPhase.Canceled:
+                            return previousTouchPos;
+                        default:
+                            return previousTouchPos;
+                    }
                 }
             }
+        }
+        else {
+            previousTouchPos = Input.mousePosition;
         }
         return previousTouchPos;
     }

@@ -9,8 +9,7 @@ public class BaseBossEnemyAI : FollowPathAI
     [SerializeField] protected bool m_IsMovingVertical = false;
 
     protected Transform[] m_Waypoints = new Transform[3];
-    [HideInInspector] public bool appear;
-    [HideInInspector] public bool entered;
+
     protected GameObject waypointsGameObject;
 
     public override void Initialize()
@@ -45,6 +44,12 @@ public class BaseBossEnemyAI : FollowPathAI
 
     private IEnumerator MoveVerticalWithDelay(int hitIndex)
     {
+        int waitTime = Random.Range(2, 4);
+        while (pathMagnitude > 1)
+        {
+            yield return new WaitForSeconds(waitTime);
+        }
+
         if (currentPointToFollowIndex == 1)
         {
             currentPointToFollowIndex = 2;
@@ -62,4 +67,5 @@ public class BaseBossEnemyAI : FollowPathAI
         m_IsMovingVertical = false;
         hitIndex = 0;
     }
+
 }
