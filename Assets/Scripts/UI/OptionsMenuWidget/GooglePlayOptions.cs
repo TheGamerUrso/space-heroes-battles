@@ -21,7 +21,10 @@ public class GooglePlayOptions : BaseOptions
     public override void OnOptionEnter()
     {
         base.OnOptionEnter();
-        InitializeGooglePlayProfile();
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            InitializeGooglePlayProfile();
+        }
     }
 
     public void InitializeGooglePlayProfile()

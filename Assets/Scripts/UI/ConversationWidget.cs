@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class ConversationWidget : MonoBehaviour
 {
@@ -10,13 +11,17 @@ public class ConversationWidget : MonoBehaviour
     public float speed;
     private int curIndex;
     private bool skip;
+    public ContentSizeFitter contentSizeFitter;
 
     private void OnEnable()
     {
         StartCoroutine(AnimateText(Text));
         ActualTextShowned = string.Empty;
         StoryText.text = ActualTextShowned;
-        // StoryText.GetComponent<RectTransform>().transform.localPosition = new Vector3(0, -1578, 0);
+        StoryText.GetComponent<RectTransform>().transform.localPosition = new Vector3(0, -1578, 0);
+
+
+        contentSizeFitter.enabled = false;
     }
 
     public void SetStory(string text)
@@ -37,12 +42,15 @@ public class ConversationWidget : MonoBehaviour
     {
         char[] words = text.ToCharArray();
         curIndex = 0;
+
         while (skip == false && curIndex <= words.Length)
         {
             yield return new WaitForSeconds(speed);
             ActualTextShowned += words[curIndex];
             StoryText.text = ActualTextShowned;
             curIndex++;
+            if(!contentSizeFitter.enabled)
+            contentSizeFitter.enabled = true;
         }
 
         curIndex = words.Length;

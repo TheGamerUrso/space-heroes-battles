@@ -27,6 +27,8 @@ public class DialogueManager : MonoBehaviour
         Mission mission = DataController.GetMission(currentMission);
         ConversationWidget.SetStory(mission.Description);
         ConversationWidget.gameObject.SetActive(true);
+
+
     }
 
     public void Close()
