@@ -91,7 +91,7 @@ public class GuiManager : MonoBehaviour
 
     public void SlowMoEffect(SimpleShipControls simpleShipControls)
     {
-        if (simpleShipControls.IsEnterOrExitAnimationState() && useSloMo)
+        if (simpleShipControls.IsEnterOrExitAnimationState() && useSloMo && !GameManager.Paused)
         {
             if (simpleShipControls.mouseInput.GetClickDown())
             {

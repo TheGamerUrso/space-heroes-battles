@@ -30,7 +30,7 @@ public class MouseInput
 
     public Vector2 GetTouchPosition()
     {
-        if (Application.platform == RuntimePlatform.Android) {
+       // if (Application.platform == RuntimePlatform.Android) {
 
             if (Input.touchCount > 0)
             {
@@ -60,10 +60,10 @@ public class MouseInput
                     }
                 }
             }
-        }
-        else {
-            previousTouchPos = Input.mousePosition;
-        }
+       // }
+       // else {
+      //      previousTouchPos = Input.mousePosition;
+       // }
         return previousTouchPos;
     }
 

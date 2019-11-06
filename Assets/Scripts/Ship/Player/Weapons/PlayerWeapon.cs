@@ -34,39 +34,49 @@ public class PlayerWeapon : WeaponScript
     {
         if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0);
- 
-            Touch touch2nd = Input.GetTouch(1);
-            switch (touch.phase)
+            for (int i = 0; i < Input.touches.Length; i++)
             {
-                case TouchPhase.Began:
-                    Fire();
-                    break;
+                Touch touch = Input.GetTouch(i);
+                if(touch.fingerId == 0)
+                {
+                    switch (touch.phase)
+                    {
+                        case TouchPhase.Stationary:
+                            Fire();
+                            break;
+                    }
+                }
+                else if(touch.fingerId == 1)
+                {
+                    switch (touch.phase)
+                    {
+                        case TouchPhase.Began:
+                            holdFire = true;
+                            break;
+                        case TouchPhase.Ended:
+                            holdFire = false;
+                            break;
+                        case TouchPhase.Canceled:
+                            holdFire = false;
+                            break;
+                        case TouchPhase.Stationary:
+                            holdFire = true;
+                            break;
+                    }
+                }
             }
-
-            switch (touch2nd.phase)
-            {
-                case TouchPhase.Began:
-                    holdFire = true;
-                    break;
-                case TouchPhase.Ended:
-                    holdFire = false;
-                    break;
-                case TouchPhase.Canceled:
-                    holdFire = false;
-                    break;
-            }
+      
         }
 
-        if (Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
+        //if (Application.platform == RuntimePlatform.WindowsEditor)
+        //{
+        //    holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
 
-            if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
-            {
-                Fire();
-            }
-        }
+        //    if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
+        //    {
+        //        Fire();
+        //    }
+        //}
     }
 
     public override void Fire()
