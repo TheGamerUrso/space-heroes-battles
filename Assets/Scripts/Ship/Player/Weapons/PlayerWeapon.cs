@@ -37,35 +37,31 @@ public class PlayerWeapon : WeaponScript
             for (int i = 0; i < Input.touches.Length; i++)
             {
                 Touch touch = Input.GetTouch(i);
-                if(touch.fingerId == 0)
+
+                if (touch.fingerId == 0)
                 {
                     switch (touch.phase)
                     {
                         case TouchPhase.Stationary:
                             Fire();
-                            break;
+                            continue;
                     }
                 }
-                else if(touch.fingerId == 1)
+
+                if (touch.fingerId == 1)
                 {
                     switch (touch.phase)
                     {
                         case TouchPhase.Began:
                             holdFire = true;
-                            break;
+                            continue;
                         case TouchPhase.Ended:
                             holdFire = false;
-                            break;
-                        case TouchPhase.Canceled:
-                            holdFire = false;
-                            break;
-                        case TouchPhase.Stationary:
-                            holdFire = true;
-                            break;
+                            continue;
                     }
                 }
             }
-      
+
         }
 
         //if (Application.platform == RuntimePlatform.WindowsEditor)

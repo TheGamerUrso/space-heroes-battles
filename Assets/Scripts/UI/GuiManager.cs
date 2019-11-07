@@ -25,6 +25,7 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private GameObject GameOverScreen;
     [SerializeField] private GameObject WinScreen = null;
     [SerializeField] private GameObject PauseScreen;
+    [SerializeField] private GameObject pauseButton;
 
     [Header("PlayerHUD")]
     [SerializeField] private GameObject PlayerHUD;
@@ -36,6 +37,9 @@ public class GuiManager : MonoBehaviour
     private bool useSloMo;
     private bool ResultShowed = false;
     #endregion Variables
+    private float timer;
+
+
     public void ToggleSlowMo(bool value)
     {
         useSloMo = value;
@@ -83,10 +87,23 @@ public class GuiManager : MonoBehaviour
     {
         instance = this;
         useSloMo = true;
+        timer = 1;
     }
     private void Update()
     {
-
+        if (Time.timeScale == 1)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                pauseButton.SetActive(false);
+            }
+        }
+        else
+        {
+            timer = 1;
+            pauseButton.SetActive(true);
+        }
     }
 
     public void SlowMoEffect(SimpleShipControls simpleShipControls)
@@ -100,10 +117,12 @@ public class GuiManager : MonoBehaviour
             else
             {
                 slowMo = .3f;
+
             }
             Time.timeScale = slowMo;
         }                 
     }
+
 
     public void SetCountdownVisibility(bool enable)
     {
