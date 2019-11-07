@@ -69,7 +69,7 @@ public class MouseInput
 
     public bool GetClickDown()
     {
-        if (Input.GetMouseButton(MOUSE))
+        if (Input.touchCount > 0)
         {
             return true;
         }
