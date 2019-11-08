@@ -25,6 +25,7 @@ public class PauseMenuOptionScreen : BaseOptions
         for (int i = 0; i < LevelObjectivesElements.Length; i++)
         {
             LevelObjectivesElements[i].levelObjectiveData = levelObjectiveDatas[i];
+            LevelObjectivesElements[i].RefreshLevelObjectiveEement();
         }
     }
 
