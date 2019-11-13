@@ -5,12 +5,12 @@ using UnityEngine;
 public class SpecialAttack : PlayerWeapon
 {
     private bool SpecialActive = false;
-    private float SuperTimer;
     private CountDownTimer m_CountDownTimer;
     private float PowerUpLevel = 0;
     private float previousRapidFireValue = 0;
     private int weaponCurrentType;
     private float playerFireRate;
+    private float turretDuration;
 
     private PlayerWeaponSystem playerWeaponSystem;
     private PlayerWeapon[] playerWeapons;
@@ -30,32 +30,30 @@ public class SpecialAttack : PlayerWeapon
 
             playerWeaponSystem.IncreaseSuperUsed();
 
-            if (weaponData.RapidFireMode)
+            if (RapidFireMoade)
             {
-  
-
                 if (playerWeapons == null)
                 {
                     playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
                 }
 
-                playerFireRate = playerWeapons[0].weaponData.m_FireRate;
+                playerFireRate = playerWeapons[0].FireRate;
                 weaponCurrentType = playerWeaponSystem.getCurrentWeaponType();
 
                 PlayerWeaponSystem.SwitchWeapon(playerWeaponSystem, 4);
                 
                 foreach (PlayerWeapon item in playerWeapons)
                 {
-                    item.weaponData.m_FireRate = 0.2f;
+                    item.FireRate = 0.2f;
                 }
             }
 
-            SuperTimer = shipStatsSystem.baseSpecialCountdown;
+            turretDuration = SuperChargeTime;
 
             if (weaponData.SummonTurrets)
             {
                 GetComponentInChildren<PlaceTurrets>().CreateTurret();
-                SuperTimer = GetComponentInChildren<PlaceTurrets>().TurretPrefab.GetComponent<Turret>().TTL;
+                turretDuration = GetComponentInChildren<PlaceTurrets>().TurretPrefab.GetComponent<Turret>().TTL;
             }
 
             SpecialActive = true;
@@ -74,7 +72,7 @@ public class SpecialAttack : PlayerWeapon
                 }
                 foreach (PlayerWeapon item in playerWeapons)
                 {
-                    item.weaponData.m_FireRate = playerFireRate;
+                    item.SetFireRate(playerFireRate);
                 }
 
                 if (playerWeaponSystem == null)
@@ -84,6 +82,7 @@ public class SpecialAttack : PlayerWeapon
 
                 PlayerWeaponSystem.SwitchWeapon(playerWeaponSystem,weaponCurrentType);
             }
+
             SpecialActive = false;
         }
     }
@@ -97,7 +96,15 @@ public class SpecialAttack : PlayerWeapon
             ActivateSpecial();
             if (m_CountDownTimer == null)
             {
-                m_CountDownTimer = new CountDownTimer(SuperTimer);
+                if (weaponData.SummonTurrets)
+                {
+                    m_CountDownTimer = new CountDownTimer(turretDuration);
+                }
+                else
+                {
+                    m_CountDownTimer = new CountDownTimer(SuperChargeTime);
+                }
+             
             }
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
@@ -105,7 +112,14 @@ public class SpecialAttack : PlayerWeapon
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperTimer;
+                    if (weaponData.SummonTurrets)
+                    {
+                        PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
+                    }
+                    else
+                    {
+                        PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                    }
                 }
 
                 if (PlayerManager.GetPlayer().GetHealthPresentage() <= .5f)
@@ -136,19 +150,19 @@ public class SpecialAttack : PlayerWeapon
         {
             if (SpecialActive)
             {
-                if (Time.time > m_NewShot)
+                if (Time.time > newShot)
                 {
-                    m_NewShot = Time.time + weaponData.m_FireRate;
+                    newShot = Time.time + GetFireRate();
                     GameObject rocket = 
                         PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
 
                     rocket.transform.position = transform.position;
 
-                    rocket.GetComponent<Rocket>().setDamage(weaponData.m_WeaponDamage);
+                    rocket.GetComponent<Rocket>().setDamage(Damage);
 
                     rocket.GetComponent<Rocket>().HomeMissleType = weaponData.m_HomeMissleUpgrade;
 
-                    AudioManager.PlaySound(source, weaponData.ShootSoundEffect);
+                    PlayWeaponFireSound();
 
                 }
             }
@@ -180,9 +194,9 @@ public class SpecialAttack : PlayerWeapon
 
     public override void InitWeapon()
     {
-        SuperTimer = shipStatsSystem.SuperChargeTime;
-        weaponData.m_WeaponDamage = shipStatsSystem.SuperDamage;
-        weaponData.m_FireRate = shipStatsSystem.FireRate;
+        SuperChargeTime = shipStatsSystem.SuperChargeTime;
+        SuperDamage = weaponData.m_WeaponDamage;
+        FireRate = weaponData.m_FireRate;
 
     }
 

@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class FollowPathAI : BaseEnemyAI
 {
+    #region FollowPath AI Config
     [Header("FollowPath AI Config")]
     public int[] PathIndex;
     public Transform[] Path;
-    [HideInInspector] public int currentPointToFollowIndex;
+    public int currentPointToFollowIndex;
 
     [SerializeField] protected bool PingPong = false;
     [SerializeField] protected bool RotateTowardDir = false;
@@ -25,10 +26,11 @@ public class FollowPathAI : BaseEnemyAI
     private Transform[] PathList;
     private GameObject path;
     protected float pathMagnitude;
+    #endregion
 
     public void GeneratePath()
     {
-        Debug.Log("Generate new Path");
+       // Debug.Log("Generate new Path");
         curPath = Random.Range(0, PathIndex.Length);
         path = Waypoints.Instance.GetPath(PathIndex[curPath]);
         Transform[] PathList = TransformExtention.GetChildrenAsList(path.transform);
@@ -44,29 +46,38 @@ public class FollowPathAI : BaseEnemyAI
         }
     }
 
-
     public void GeneratePath(Transform[] newPath)
     {
         Path = newPath;
     }
 
     public override void Initialize()
-    {
+    {  
+        startingPosition = transform.position;
+
         if (Path.Length == 0)
         {
             GeneratePath();
         }
-        startingPosition = transform.localPosition;
-
     }
+
     public override void Enter()
     {
-        transform.localPosition = startingPosition;
+        base.Enter();
         currentPointToFollowIndex = 0;
     }
 
     public override void Move()
     {
+        Animator animator = enemy.GetAnimator();
+        var info = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (info.shortNameHash == enterNameHash)
+        {
+            Debug.Log("Entering");
+            return;
+        }
+
         if (Path.Length > 0)
         {
             pathMagnitude = (Path[currentPointToFollowIndex].position - transform.position).magnitude;
@@ -118,7 +129,7 @@ public class FollowPathAI : BaseEnemyAI
 
             Path[currentPointToFollowIndex].position = newPos;
 
-            rigid.MovePosition(Vector3.MoveTowards(transform.position, newPos, XVel * Time.deltaTime));
+            rigid.MovePosition(Vector3.MoveTowards(transform.position, newPos, xVel * Time.deltaTime));
 
             if (RotateTowardDir)
             {

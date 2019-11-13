@@ -10,8 +10,9 @@ public abstract class Ship : MonoBehaviour
     [SerializeField] protected PoolGameObjectType ExplostionEffect;
 
     [SerializeField] protected Animator animator;
-    protected bool ShieldModuleInstalled;
+    protected bool bShieldModuleInstalled;
 
+    #region Getters and Setters
     public int Level
     {
         get
@@ -29,9 +30,7 @@ public abstract class Ship : MonoBehaviour
         set { shipStatsSystem.SetMaxHealth(value); }
     }
 
-    public float CurrentHealth
-    {
-        get
+    public float CurrentHealth{get
         {
             return shipStatsSystem.CurrentHealth;
         }
@@ -40,12 +39,16 @@ public abstract class Ship : MonoBehaviour
             shipStatsSystem.CurrentHealth = value;
         }
     }
+    #endregion
+
+    public Animator GetAnimator()
+    {
+        return animator;
+    }
 
     private void Awake()
     {
         InitReferences();
-
-
     }
 
     private void Start()
@@ -70,17 +73,17 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void InstallShieldModule()
     {
-        if (ShieldModuleInstalled)
+        if (bShieldModuleInstalled)
         {
             return;
         }
 
-        ShieldModuleInstalled = true;
+        bShieldModuleInstalled = true;
     }
 
     public bool HasShieldModule()
     {
-        return ShieldModuleInstalled;
+        return bShieldModuleInstalled;
     }
 
     //Setter   and Getter for LevelSystem

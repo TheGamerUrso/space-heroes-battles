@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [Serializable]
 public abstract class WeaponScript : MonoBehaviour
 {
+
+    #region Weapon Variables
     [Header("Weapon")]
-    public  Action<WeaponScript>onUpdate;
+    public Action<WeaponScript> onUpdate;
     [SerializeField]
     protected List<WeaponFireEffect> particleSFX = new List<WeaponFireEffect>();
     protected Transform[] Cannons;
@@ -21,10 +24,30 @@ public abstract class WeaponScript : MonoBehaviour
     [SerializeField] protected float delayBetweenShots;
     protected GameObject InstansiatedProjectile;
 
-    protected float m_NewShot;
+    protected float newShot;
     protected ShipStatsSystem shipStatsSystem;
     protected Ship ship;
 
+    protected bool usePitch;
+    protected bool autoAttack;
+    #endregion
+
+    #region WeaponData Getters
+    public int DamageMulitplier { get { return weaponData.multiplier; } }
+
+    public bool HomeMissleUpgrade { get { return weaponData.m_HomeMissleUpgrade; } }
+    public bool RapidFireMoade { get { return weaponData.RapidFireMode; } private set { } }
+
+    public bool AutoAttack { get { return autoAttack; } set { autoAttack = value; } }
+
+    public float SuperChargeTime { get { return shipStatsSystem.SuperChargeTime; } set { shipStatsSystem.SuperChargeTime = value; } }
+    public float SuperDamage { get { return shipStatsSystem.SuperDamage; } set { shipStatsSystem.SuperDamage = value; } }
+
+    public float FireRate { get { return shipStatsSystem.FireRate; } set { shipStatsSystem.FireRate = value; } }
+    public float Damage { get { return shipStatsSystem.Damage; } set { shipStatsSystem.Damage = value; } }
+    public AudioClip SoundSFX { get { return weaponData.ShootSoundEffect; } private set { } }
+    public PoolGameObjectType ProjectilePrefab { get { return weaponData.m_Projectile; } private set { } }
+    #endregion
 
     public void SetShip(Ship ship)
     {
@@ -49,7 +72,7 @@ public abstract class WeaponScript : MonoBehaviour
     private void Start()
     {
         source = GetComponent<AudioSource>();
-        
+
         Cannons = transform.Cast<Transform>().ToArray();
         Initialize();
     }
@@ -67,11 +90,11 @@ public abstract class WeaponScript : MonoBehaviour
 
     public virtual void InitWeapon()
     {
-        weaponData.m_FireRate = shipStatsSystem.FireRate;
-        weaponData.m_WeaponDamage = shipStatsSystem.Damage;
+        FireRate = weaponData.m_FireRate;
+        Damage = weaponData.m_WeaponDamage;
     }
 
-    public virtual void Initialize(){}
+    public virtual void Initialize() { }
 
     public virtual void Fire() { }
 
@@ -79,16 +102,21 @@ public abstract class WeaponScript : MonoBehaviour
 
     public virtual void SetDamage(float damage)
     {
-        weaponData.m_WeaponDamage = damage;
+        shipStatsSystem.Damage = damage;
     }
 
     public float GetFireRate()
     {
-        return weaponData.m_FireRate;
+        return shipStatsSystem.FireRate;
     }
 
     public virtual void SetFireRate(float fireRate)
     {
-        weaponData.m_FireRate = fireRate;
+        shipStatsSystem.FireRate = fireRate;
+    }
+
+    public void PlayWeaponFireSound(int audioMixGroup = 0,bool usePitch = false)
+    {
+        AudioManager.PlaySound(source, SoundSFX, audioMixGroup, usePitch);
     }
 }

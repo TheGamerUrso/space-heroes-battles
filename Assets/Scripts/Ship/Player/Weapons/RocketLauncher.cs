@@ -4,7 +4,7 @@ public class RocketLauncher : WeaponScript
 {
     public override void Shoot()
     {
-        if (weaponData.m_HomeMissleUpgrade)
+        if (HomeMissleUpgrade)
         {
             HomeMissle();
         }
@@ -19,9 +19,9 @@ public class RocketLauncher : WeaponScript
         {
             if (Input.GetKeyDown(KeyCode.F))
             {
-                if (Time.time > m_NewShot)
+                if (Time.time > newShot)
                 {
-                    m_NewShot = Time.time + weaponData.m_FireRate;
+                    newShot = Time.time + FireRate;
                     GameObject rocket = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
                     rocket.transform.position = transform.position;
                     /*
@@ -29,11 +29,11 @@ public class RocketLauncher : WeaponScript
                         Quaternion.Euler(new Vector3(0, 0, 0)));
                         */
 
-                    rocket.GetComponent<Rocket>().setDamage(weaponData.m_WeaponDamage);
+                    rocket.GetComponent<Rocket>().setDamage(Damage);
                     rocket.GetComponent<Rocket>().HomeMissleType = false;
                     weaponData.m_NumberOfMissiles--;
 
-                    AudioManager.PlaySound(source, weaponData.ShootSoundEffect);
+                    PlayWeaponFireSound();
                 }
             }
         }
@@ -42,8 +42,8 @@ public class RocketLauncher : WeaponScript
 
     public override void InitWeapon()
     {
-        weaponData.m_WeaponDamage = shipStatsSystem.SuperDamage;
-        weaponData.m_FireRate = shipStatsSystem.FireRate;
-        weaponData.AutoAttack = true;
+        Damage = weaponData.m_WeaponDamage;
+        FireRate = weaponData.m_FireRate;
+        AutoAttack = true;
     }
 }

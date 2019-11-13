@@ -123,10 +123,7 @@ public class EnemyManager
     {
         EnemyManager.NumberOfEnemies++;
         GameObject bossprefab = BossPrefab[UnityEngine.Random.Range(0, BossPrefab.Length)];
-        BossGO = GameObject.Instantiate(bossprefab,
-            new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax),
-            -50, Constants.m_ZMax),
-            Quaternion.identity);
+        BossGO = GameObject.Instantiate(bossprefab, bossprefab.transform.position, bossprefab.transform.rotation);
 
         int playerLevel = PlayerManager.GetPlayer().Level;
         BaseEnemy enemy = BossGO.GetComponentInChildren<BaseEnemy>();

@@ -1,19 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class Boxer : BaseBossEnemy
 {
-    public override void Phases()
-    {
-        if (Weapons[0].activeSelf == false)
-        {
-            Weapons[0].SetActive(true);
-        }
-    }
     public override void TakeDamage(float damage)
     {
-
         foreach (IDestroyable item in DestroyableParts)
         {
             if (item.IsDestroyed == false)
@@ -27,7 +20,7 @@ public class Boxer : BaseBossEnemy
     }
 
 
-    public override void BossTakeDamage()
+    public override void BossHit()
     {
         if (GuiManager.IsTrasnmiting() || delayAttak > 0)
         {
@@ -46,6 +39,6 @@ public class Boxer : BaseBossEnemy
             }
         }
 
-        base.BossTakeDamage();
+        base.BossHit();
     }
 }

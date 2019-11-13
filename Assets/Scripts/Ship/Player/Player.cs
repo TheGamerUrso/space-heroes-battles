@@ -59,14 +59,14 @@ public class Player : Ship, IDestroyable
 
         if (playerData.Upgrades[((int)UpgradeType.Shield - 1)] == 0)
         {
-            ShieldModuleInstalled = false;
+            bShieldModuleInstalled = false;
         }
         else
         {
-            ShieldModuleInstalled = true;
+            bShieldModuleInstalled = true;
         }
 
-        ShieldEffect.SetActive(ShieldModuleInstalled);
+        ShieldEffect.SetActive(bShieldModuleInstalled);
 
         shipStatsSystem.SetStats(levelSystem);
 
@@ -147,7 +147,7 @@ public class Player : Ship, IDestroyable
     public override void InstallShieldModule()
     {
         base.InstallShieldModule();
-        ShieldEffect.SetActive(ShieldModuleInstalled);
+        ShieldEffect.SetActive(bShieldModuleInstalled);
     }
 
     public override void Death()
@@ -199,12 +199,12 @@ public class Player : Ship, IDestroyable
             dmg = MaxHealth - 1;
         }
 
-        if (ShieldModuleInstalled == true)
+        if (bShieldModuleInstalled == true)
         {
-            ShieldModuleInstalled = false;
-            ShieldEffect.SetActive(ShieldModuleInstalled);
+            bShieldModuleInstalled = false;
+            ShieldEffect.SetActive(bShieldModuleInstalled);
         }
-        else if (ShieldModuleInstalled == false)
+        else if (bShieldModuleInstalled == false)
         {
             if (invisibilityTimer <= 0)
             {

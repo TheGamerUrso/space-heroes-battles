@@ -215,7 +215,7 @@ public class PlayerWeaponSystem : MonoBehaviour
         Player player = GetComponentInParent<Player>();
         if (WeaponUpgradeCollected < 5 && CurrentWeapnType < 4)
         {
-            WeaponUpgradeCollected++;
+            WeaponUpgradeCollected+=2;
 
             if (Player.TempFireRateUpgrade == false)
             {

@@ -47,18 +47,21 @@ public class PlayerWeapon : WeaponScript
             }
         }
 
+
+
+
+        if (Application.platform == RuntimePlatform.WindowsEditor)
+        {
+            holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
+
+            if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
+            {
+                Fire();
+            }
+        }
     }
 
 
-    //if (Application.platform == RuntimePlatform.WindowsEditor)
-    //{
-    //    holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
-
-    //    if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
-    //    {
-    //        Fire();
-    //    }
-    //}
 
 
     public override void Fire()
@@ -68,12 +71,12 @@ public class PlayerWeapon : WeaponScript
             return;
         }
 
-        if (Time.time > m_NewShot)
+        if (Time.time > newShot)
         {
-            m_NewShot = Time.time + weaponData.m_FireRate;
+            newShot = Time.time + GetFireRate();
             InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
 
-            AudioManager.PlaySound(source, weaponData.ShootSoundEffect, 0, true);
+            PlayWeaponFireSound(0,true);
 
             foreach (var item in particleSFX)
             {
@@ -92,7 +95,7 @@ public class PlayerWeapon : WeaponScript
             projectile = PoolManager.Instance.GetObjectFromPool(m_Projectile).GetComponent<PlayerProjectile>();
             projectile.transform.position = Cannons[i].transform.position;
             projectile.transform.rotation = Quaternion.Euler(new Vector3(0, ship.transform.eulerAngles.y, 0) + Cannons[i].eulerAngles);
-            projectile.setDamage(weaponData.m_WeaponDamage + weaponData.multiplier);
+            projectile.setDamage(Damage + DamageMulitplier);
         }
     }
 

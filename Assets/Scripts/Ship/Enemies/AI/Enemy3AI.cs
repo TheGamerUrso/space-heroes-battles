@@ -12,7 +12,7 @@ public class Enemy3AI : SimpleAI
     {
         if (transform.position.z > 50)
         {
-            transform.position -= transform.forward * ZVel * Time.deltaTime;
+            transform.position -= transform.forward * zVel * Time.deltaTime;
         }
         else
         {

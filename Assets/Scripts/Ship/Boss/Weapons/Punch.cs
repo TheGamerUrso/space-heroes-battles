@@ -7,6 +7,7 @@ public class Punch : Ship, IDestroyable
     public event Action<object> OnEnemyHit = delegate { };
     public Transform[] Waypoints;
 
+
     public HealthBarSettings HealthBarSettings;
     private EnemyHealthWidget healthBar;
 
@@ -23,7 +24,7 @@ public class Punch : Ship, IDestroyable
 
     public BaseBossEnemy baseBossEnemy;
 
-
+    #region Getters and Setters
     public bool IsDestroyed
     {
         get
@@ -35,9 +36,18 @@ public class Punch : Ship, IDestroyable
             isDestroyed = value;
         }
     }
+    #endregion
 
+    
     private void Update()
     {
+      
+        var info = animator.GetCurrentAnimatorStateInfo(0);
+
+        if (info.shortNameHash == Animator.StringToHash("Enter")){
+            return;
+        }
+
         if (isDestroyed == false)
         {
             float dist = (transform.position - Waypoints[0].position).magnitude;
@@ -156,8 +166,10 @@ public class Punch : Ship, IDestroyable
         {
             cooldown = 0;
         }
+        GetShipStatsSystem().ReplaceBaseStats(baseBossEnemy.GetShipStatsSystem());
 
         GetLevelSystem().SetLevel(baseBossEnemy.GetLevelSystem().GetLevel());
+
         GetShipStatsSystem().SetStats(levelSystem);
 
 
@@ -174,7 +186,7 @@ public class Punch : Ship, IDestroyable
 
     public override void InitReferences()
     {
-       
+        animator = baseBossEnemy.GetAnimator();
     }
 
     public override void Death()
