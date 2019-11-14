@@ -207,9 +207,9 @@ public class SpawnEnemies : MonoBehaviour
                             if (Wave % 2 == 0)
                             {
                                 bossWave = true;
-                                AudioManager.PlaySound("Danger", 3);
+                               // AudioManager.PlaySound("Danger", 3);
                                 string[] transmitions = { "There is something Big Coming on your way", "Be Careful" };
-                                GuiManager.PlayTrasmition(transmitions);
+                                GuiManager.PlayTrasmition(transmitions, true);
 
                                 while (GuiManager.IsTrasnmiting())
                                 {
@@ -232,9 +232,9 @@ public class SpawnEnemies : MonoBehaviour
                                 if (BossStage)
                                 {
                                     bossWave = true;
-                                    AudioManager.PlaySound("Danger", 3);
+                                    //AudioManager.PlaySound("Danger", 3);
                                     string[] transmitions = { "There is something Big Coming on your way", "Be Careful" };
-                                    GuiManager.PlayTrasmition(transmitions);
+                                    GuiManager.PlayTrasmition(transmitions,true);
 
                                     while (GuiManager.IsTrasnmiting())
                                     {

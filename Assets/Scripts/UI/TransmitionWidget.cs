@@ -7,17 +7,39 @@ public class TransmitionWidget : MonoBehaviour
 
     public GameObject TransmitionWidgetPrefab;
     public TMPro.TextMeshProUGUI TransmitionText;
-
+    public Animator BossStageWarning;
     public string[] transmitions;
 
-    public void RecieveTransmition(string[] transmitions)
+    public void RecieveTransmition(string[] transmitions,bool boss = false)
     {
         TransmitionText.text = "Transmition Incoming";
         this.transmitions = transmitions;
         if (IncomingTransmition == false)
         {
-            StartCoroutine(TranmisionEvent());
+            if (boss)
+            {
+                StartCoroutine(WarningBossIncomingEvent());
+            }
+            else {
+                StartCoroutine(TranmisionEvent());
+            }
         }
+    }
+
+
+    private IEnumerator WarningBossIncomingEvent()
+    {
+        AnimationClip[] animatorClipInfo = BossStageWarning.runtimeAnimatorController.animationClips;
+        float length = animatorClipInfo[0].length;
+
+        IncomingTransmition = true;
+
+        BossStageWarning.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(length);
+
+        BossStageWarning.gameObject.SetActive(false);
+        IncomingTransmition = false;
     }
 
     private IEnumerator TranmisionEvent()

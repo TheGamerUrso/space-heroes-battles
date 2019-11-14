@@ -33,6 +33,7 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
+
     private float slowMo;
     private bool useSloMo;
     private bool ResultShowed = false;
@@ -222,16 +223,16 @@ public class GuiManager : MonoBehaviour
         Menu.SetActive(false);
     }
 
-    public static void PlayTrasmition(string[] transmitions)
+    public static void PlayTrasmition(string[] transmitions,bool boss = false)
     {
         AudioManager.PlaySound("transmition", 3);
-        GuiManager.instance.ShowTrasmition(transmitions);
+        GuiManager.instance.ShowTrasmition(transmitions,boss);
     }
 
-    public void ShowTrasmition(string[] transmitions)
+    public void ShowTrasmition(string[] transmitions,bool boss = false)
     {
         if (GameObject.FindObjectOfType<TransmitionWidget>())
-            GameObject.FindObjectOfType<TransmitionWidget>().RecieveTransmition(transmitions);
+            GameObject.FindObjectOfType<TransmitionWidget>().RecieveTransmition(transmitions,boss);
     }
 
     public static bool IsTrasnmiting()
