@@ -20,11 +20,6 @@ public class SpreadWeapon : WeaponScript
         }
     }
 
-    public override void Initialize()
-    {
-        FireRate = weaponData.m_FireRate;
-    }
-
     private IEnumerator SpreadWeaponCoroutine()
     {
         int posToShoot = Radius;

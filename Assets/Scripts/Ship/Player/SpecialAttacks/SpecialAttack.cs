@@ -103,8 +103,7 @@ public class SpecialAttack : PlayerWeapon
                 else
                 {
                     m_CountDownTimer = new CountDownTimer(SuperChargeTime);
-                }
-             
+                }         
             }
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
@@ -191,13 +190,4 @@ public class SpecialAttack : PlayerWeapon
         else
             return 0;
     }
-
-    public override void InitWeapon()
-    {
-        SuperChargeTime = shipStatsSystem.SuperChargeTime;
-        SuperDamage = weaponData.m_WeaponDamage;
-        FireRate = weaponData.m_FireRate;
-
-    }
-
 }

@@ -7,8 +7,6 @@ public class WeaponData : ScriptableObject
     public PoolGameObjectType m_Projectile;
     public bool Split;
 
-    [Range(.1f,4)]
-    public float m_FireRate;
     public bool AutoAttack;
 
     public float m_WeaponDamage;

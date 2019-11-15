@@ -72,6 +72,7 @@ public class Player : Ship, IDestroyable
 
         shipController.speed = shipStatsSystem.Speed;
 
+
         upgradeSystem.ApplyUpdatesToShip(shipStatsSystem);
 
 
@@ -101,6 +102,19 @@ public class Player : Ship, IDestroyable
             }
         }
     }
+    public void TempFireRateBuff(float fireRate = 0.0f, bool temporary = false)
+    {
+
+        if (!TempFireRateUpgrade)
+        {
+            TempFireRateUpgrade = true;
+            GiveTemporaryFireRateBuff();
+        }
+
+
+        UpdateWeaponStats(shipStatsSystem.FireRate - fireRate);
+
+    }
 
     public void GiveTemporaryFireRateBuff()
     {
@@ -121,40 +135,16 @@ public class Player : Ship, IDestroyable
         UpdateWeaponStats(shipStatsSystem.FireRate, DamageTemp);
     }
 
-    public void TempFireRateBuff(float fireRate = 0.0f)
-    {
-        
-        if (!TempFireRateUpgrade)
-        {
-            TempFireRateUpgrade = true;
-            GiveTemporaryFireRateBuff();
-        }
-        
-        WeaponScript[] weapons = GetComponentsInChildren<WeaponScript>(true);
-        for (int i = 0; i < weapons.Length; i++)
-        {
-            if (weapons[i].gameObject.activeSelf)
-            {
-                //if (shipStatsSystem == null)
-                //{
-                //    Debug.Log(weapons[i].gameObject.name + " shipStatsSystem is null");
-                //}
-                Debug.Log(weapons[i].gameObject.name + "Increasing FireRate");
-                weapons[i].SetFireRate(shipStatsSystem.FireRate - fireRate);
-                weapons[i].SetDamage(shipStatsSystem.Damage);
-            }
-        }
-    }
 
-    public void UpdateWeaponStats(float fireRate, float damage)
-    {
-        WeaponScript[] weapons = GetComponentsInChildren<WeaponScript>(true);
 
-        for (int i = 0; i < weapons.Length; i++)
-        {
-            weapons[i].SetFireRate(shipStatsSystem.FireRate);
-            weapons[i].SetDamage(shipStatsSystem.Damage);
-        }
+    public void UpdateWeaponStats(float fireRate, float damage = 0)
+    {
+        WeaponScript weapon = PlayerWeaponSystem.GetCurrentActiveWeapon(weaponSystem).GetComponent<WeaponScript>();
+
+        weapon.SetFireRate(fireRate);
+        if (damage > 0)
+            weapon.SetDamage(damage);
+
     }
 
     public override void InstallShieldModule()

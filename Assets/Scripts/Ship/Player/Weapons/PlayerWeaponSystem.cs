@@ -54,7 +54,6 @@ public class PlayerWeaponSystem : MonoBehaviour
         {
             if (Weapons[i].gameObject.activeSelf)
             {
-
                 Weapons[i].SetShipStatsSystem(ShipStatsSystem);
                 Weapons[i].SetPlayerAnimation(playerAnimation);
                 Weapons[i].SetShipTransform(player.transform);
@@ -212,9 +211,13 @@ public class PlayerWeaponSystem : MonoBehaviour
     public void WeaponPowerUPCollected()
     {
         Player player = GetComponentInParent<Player>();
-        if (WeaponUpgradeCollected < 5 && CurrentWeapnType < 4)
+        if (WeaponUpgradeCollected <= 5 && CurrentWeapnType < 4)
         {
             WeaponUpgradeCollected+=2;
+            if (WeaponUpgradeCollected > 5)
+            {
+                WeaponUpgradeCollected = 5;
+            }
             Debug.Log("increase FireRate by " + 0.01f * WeaponUpgradeCollected);
             player.TempFireRateBuff(0.01f * WeaponUpgradeCollected);
         }
@@ -239,6 +242,11 @@ public class PlayerWeaponSystem : MonoBehaviour
     public int getCurrentWeaponType()
     {
         return currentWeapon;
+    }
+
+    public static GameObject GetCurrentActiveWeapon(PlayerWeaponSystem weaponSystem)
+    {
+        return weaponSystem.Weapons[weaponSystem.currentWeapon].gameObject;
     }
 
     public static void SwitchWeapon(PlayerWeaponSystem weaponSystem, int WeaponTypeIndex)

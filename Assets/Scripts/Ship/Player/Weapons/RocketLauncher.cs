@@ -39,11 +39,9 @@ public class RocketLauncher : WeaponScript
         }
     }
 
-
-    public override void InitWeapon()
+    public override void Initialize()
     {
-        Damage = weaponData.m_WeaponDamage;
-        FireRate = weaponData.m_FireRate;
         AutoAttack = true;
     }
+
 }

@@ -9,7 +9,7 @@ public class ShipStatsSystem
     public float CurrentHealth;
 
     public float Damage;
-    [Range(.1f, 10)]
+    [Range(.2f, 10)]
     public float FireRate;
     public float Speed;
     public float SuperDamage;

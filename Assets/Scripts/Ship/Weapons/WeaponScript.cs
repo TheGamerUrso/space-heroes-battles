@@ -52,9 +52,7 @@ public abstract class WeaponScript : MonoBehaviour
 
     public void SetShipStatsSystem(ShipStatsSystem shipStatsSystem)
     {
-
         this.shipStatsSystem = shipStatsSystem;
-        InitWeapon();
     }
 
     private void OnValidate()
@@ -83,12 +81,6 @@ public abstract class WeaponScript : MonoBehaviour
         {
             Shoot();
         }
-    }
-
-    public virtual void InitWeapon()
-    {
-        FireRate = weaponData.m_FireRate;
-        Damage = weaponData.m_WeaponDamage;
     }
 
     public virtual void Initialize() { }

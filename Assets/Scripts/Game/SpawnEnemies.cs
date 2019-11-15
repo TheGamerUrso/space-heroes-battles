@@ -28,8 +28,8 @@ public class SpawnEnemies : MonoBehaviour
     public bool bossWave;
     private int Wave = 0;
     private float countdown;
-    private float minDelay = .5f;
-    private float maxDelay = 1;
+    private float minDelay = .3f;
+    private float maxDelay = .5f;
     private int AvailableEnemies;
     public bool spawnReady;
 
