@@ -30,7 +30,7 @@ public class ShipStatsSystem
     {
         baseDamage = 12.5f;
         baseHealth = 25f;
-        baseFireRate = .4f;
+        baseFireRate = .5f;
         baseSpecialCountdown = 1f;
     }
 

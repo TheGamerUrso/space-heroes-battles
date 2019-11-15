@@ -49,13 +49,10 @@ public abstract class WeaponScript : MonoBehaviour
     public PoolGameObjectType ProjectilePrefab { get { return weaponData.m_Projectile; } private set { } }
     #endregion
 
-    public void SetShip(Ship ship)
-    {
-        this.ship = ship;
-    }
 
     public void SetShipStatsSystem(ShipStatsSystem shipStatsSystem)
     {
+
         this.shipStatsSystem = shipStatsSystem;
         InitWeapon();
     }
@@ -72,8 +69,8 @@ public abstract class WeaponScript : MonoBehaviour
     private void Start()
     {
         source = GetComponent<AudioSource>();
-
         Cannons = transform.Cast<Transform>().ToArray();
+
         Initialize();
     }
 
@@ -112,11 +109,20 @@ public abstract class WeaponScript : MonoBehaviour
 
     public virtual void SetFireRate(float fireRate)
     {
+        if (shipStatsSystem == null)
+        {
+            Debug.LogError (gameObject.name + " shipStatsSystem is null");
+        }
         shipStatsSystem.FireRate = fireRate;
     }
 
     public void PlayWeaponFireSound(int audioMixGroup = 0,bool usePitch = false)
     {
         AudioManager.PlaySound(source, SoundSFX, audioMixGroup, usePitch);
+    }
+
+    public void SetShip(Ship ship)
+    {
+        this.ship = ship;
     }
 }

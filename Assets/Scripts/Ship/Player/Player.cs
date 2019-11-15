@@ -74,15 +74,13 @@ public class Player : Ship, IDestroyable
 
         upgradeSystem.ApplyUpdatesToShip(shipStatsSystem);
 
-        weaponSystem.SetShipStatSystem(shipStatsSystem);
+
+        //TO DO Removed
+        //weaponSystem.SetShipStatSystem(shipStatsSystem);
 
         weaponSystem.SetPlayerAnimation(playerAnimation);
-
         weaponSystem.SetPlayer(this);
-
         levelSystem.OnLevelUp = LevelSystem_OnLevelUpHandled;
-
-
     }
 
     public void LevelSystem_OnLevelUpHandled()
@@ -125,11 +123,26 @@ public class Player : Ship, IDestroyable
 
     public void TempFireRateBuff(float fireRate = 0.0f)
     {
+        
+        if (!TempFireRateUpgrade)
+        {
+            TempFireRateUpgrade = true;
+            GiveTemporaryFireRateBuff();
+        }
+        
         WeaponScript[] weapons = GetComponentsInChildren<WeaponScript>(true);
         for (int i = 0; i < weapons.Length; i++)
         {
-            weapons[i].SetFireRate(shipStatsSystem.FireRate - fireRate);
-            weapons[i].SetDamage(shipStatsSystem.Damage);
+            if (weapons[i].gameObject.activeSelf)
+            {
+                //if (shipStatsSystem == null)
+                //{
+                //    Debug.Log(weapons[i].gameObject.name + " shipStatsSystem is null");
+                //}
+                Debug.Log(weapons[i].gameObject.name + "Increasing FireRate");
+                weapons[i].SetFireRate(shipStatsSystem.FireRate - fireRate);
+                weapons[i].SetDamage(shipStatsSystem.Damage);
+            }
         }
     }
 
