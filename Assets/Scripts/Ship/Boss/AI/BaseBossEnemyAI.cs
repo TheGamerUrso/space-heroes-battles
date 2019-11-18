@@ -128,7 +128,7 @@ public class BaseBossEnemyAI : FollowPathAI
         Vector3 newPos = transform.position;
         newPos.x = xVel;
         newPos.z = zVel;
-        transform.position = newPos;
+        transform.Translate(newPos);
     }
 
     public void ChangeWaypointByIndex(int currentPointToFollowIndex)

@@ -129,7 +129,14 @@ public class FollowPathAI : BaseEnemyAI
 
             Path[currentPointToFollowIndex].position = newPos;
 
-            rigid.MovePosition(Vector3.MoveTowards(transform.position, newPos, xVel * Time.deltaTime));
+
+            Vector3 direction = (newPos - transform.position);
+            Vector3 normalizedDirection = direction.normalized;
+            float distance = direction.magnitude;
+
+            if (distance > 1) {
+                rigid.MovePosition(transform.position + normalizedDirection * xVel * Time.deltaTime);
+            }
 
             if (RotateTowardDir)
             {

@@ -277,7 +277,7 @@ public class SpawnEnemies : MonoBehaviour
                             if (Wave == 1 && !bossWave)
                             {
                                 yield return new WaitForSeconds(1.5f);
-                                string[] transmitions = { "Survive", "Good Luck!" };
+                                string[] transmitions = { "Wave" + Wave ,"Level Difficulty " + LevelDifficuilty ," Ready!" , "GO" };
 
                                 GuiManager.PlayTrasmition(transmitions);
                             }

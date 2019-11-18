@@ -90,7 +90,7 @@ public class BaseEnemyAI : MonoBehaviour
         }
     }
 
-    public void Update()
+    private void FixedUpdate()
     {
         Move();
     }
@@ -106,9 +106,7 @@ public class BaseEnemyAI : MonoBehaviour
 
         StartCoroutine(EnterAnimationCoroutine());
     }
-    public virtual void Enter()
-    {
-      
+    public virtual void Enter(){     
     }
 
     public void Leave()

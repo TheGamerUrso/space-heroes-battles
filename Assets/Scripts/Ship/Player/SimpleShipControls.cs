@@ -73,7 +73,8 @@ public class SimpleShipControls : MonoBehaviour
               , targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, 0, .1f));
             
         }
-        GuiManager.Instance.SlowMoEffect(this);
+
+
 
     }
 

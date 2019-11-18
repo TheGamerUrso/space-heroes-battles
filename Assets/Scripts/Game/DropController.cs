@@ -83,7 +83,7 @@ public class DropController : MonoBehaviour
 
 
             bool hasShield = p.HasShieldModule();
-            bool fullHealth = p.GetHealthPresentage() == 1;
+            bool fullHealth = p.GetHealthPresentage() == 100;
             bool dropExtra = false;
 
             PoolGameObjectType itemTypeToSpawn = ListOfDropItems[0].DropItemsType;
@@ -97,7 +97,7 @@ public class DropController : MonoBehaviour
                     if (!hasShield && shieldDropCooldown < 0)
                     {
                         itemTypeToSpawn = ListOfDropItems[2].DropItemsType;
-                        shieldDropCooldown = 2;
+                        shieldDropCooldown = UnityEngine.Random.Range(2, 8);
                         break;
                     }
                     else
@@ -111,7 +111,7 @@ public class DropController : MonoBehaviour
                     if (!fullHealth && healthDropCooldown < 0)
                     {
                         itemTypeToSpawn = ListOfDropItems[3].DropItemsType;
-                        healthDropCooldown = 2;
+                        healthDropCooldown = UnityEngine.Random.Range(2, 8); 
                         break;
                     }
                     else
@@ -125,7 +125,7 @@ public class DropController : MonoBehaviour
                     if (powerDropCooldown < 0)
                     {
                         itemTypeToSpawn = ListOfDropItems[1].DropItemsType;
-                        powerDropCooldown = 2;
+                        powerDropCooldown = UnityEngine.Random.Range(2, 4); 
                         break;
                     }
                     else

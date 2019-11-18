@@ -30,8 +30,8 @@ public class GrenadeProjectile : EnemyProjectile
         if (duration > 0)
         {
             duration -= Time.deltaTime;
-            transform.position
-                += transform.forward * speed * Time.deltaTime;
+            rigid.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+
         }
 
         if (!exploded && duration <= 0)
@@ -62,10 +62,9 @@ public class GrenadeProjectile : EnemyProjectile
     {
         InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
 
-        InstansiatedProjectile.transform.position = transform.position;
-        InstansiatedProjectile.transform.rotation = Cannons[i].rotation;
+        InstansiatedProjectile.transform.SetPositionAndRotation(transform.position, Cannons[i].rotation);
 
         InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(weaponData.m_WeaponDamage);
-       
+
     }
 }

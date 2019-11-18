@@ -48,7 +48,7 @@ public class ArtilleryProjectile : EnemyProjectile
 
         GameObject tempStorage = GameObject.Find("DynamicObjects");
         WarningSignal = Instantiate(WarningSignalPrefab, tempStorage.transform, false);
-        WarningSignal.transform.position = new Vector3(0, -50, 0);
+        WarningSignal.transform.SetPositionAndRotation(new Vector3(0, -50, 0),Quaternion.identity);
 
     }
 
@@ -75,12 +75,12 @@ public class ArtilleryProjectile : EnemyProjectile
             }
   
 
-            WarningSignal.transform.position = Vector3.Lerp(WarningSignal.transform.position, Target.transform.position,3 * Time.deltaTime);
+            WarningSignal.transform.Translate(Vector3.Lerp(WarningSignal.transform.position, Target.transform.position,3 * Time.deltaTime));
 
             TargetToGo = WarningSignal.transform;
 
             Vector3 newPos = (transform.forward * speed) + (transform.up * yVel);
-            transform.Translate(newPos * Time.deltaTime);
+            rigid.MovePosition(transform.position + newPos * Time.deltaTime);
         }
         else if (fall && TargetToGo != null)
         {
@@ -96,15 +96,16 @@ public class ArtilleryProjectile : EnemyProjectile
                Mathf.Clamp(WarningSignal.transform.localScale.z, 0, 1)
                 );
 
-            transform.position = Vector3.MoveTowards(transform.position, TargetToGo.transform.position, 1);
+            Vector3 direction = (TargetToGo.transform.position - transform.position).normalized;
+            rigid.MovePosition(transform.position + direction * speed * Time.deltaTime);
+            //transform.position = Vector3.MoveTowards(transform.position, TargetToGo.transform.position, 1);
         }
         if (TargetToGo != null)
         {
             if ((transform.position - TargetToGo.transform.position).magnitude < .1f)
             {
                 GameObject explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-                explosion.transform.position = transform.position + Vector3.up * 2;
-                explosion.transform.rotation = Quaternion.identity;
+                explosion.transform.SetPositionAndRotation(transform.position + Vector3.up * 2, Quaternion.identity);
 
                 Destroy(WarningSignal);
                 gameObject.SetActive(false);

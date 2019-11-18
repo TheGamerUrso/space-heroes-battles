@@ -92,6 +92,8 @@ public class GuiManager : MonoBehaviour
     }
     private void Update()
     {
+        SlowMoEffect();
+        
         if (Time.timeScale == 1)
         {
             timer -= Time.deltaTime;
@@ -107,11 +109,11 @@ public class GuiManager : MonoBehaviour
         }
     }
 
-    public void SlowMoEffect(SimpleShipControls simpleShipControls)
+    public void SlowMoEffect()
     {
-        if (simpleShipControls.IsEnterOrExitAnimationState() && useSloMo && !GameManager.Paused)
+        if ( useSloMo && !GameManager.Paused)
         {
-            if (simpleShipControls.mouseInput.GetClickDown())
+            if (IsTrasnmiting() ||Input.touchCount > 0 || Input.GetMouseButton(0))
             {
                 slowMo = 1;
             }

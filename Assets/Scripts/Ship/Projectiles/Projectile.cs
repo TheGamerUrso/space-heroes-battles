@@ -6,7 +6,7 @@ public abstract class Projectile : MonoBehaviour
 
     [SerializeField]
     protected float Damage;
-
+    protected Rigidbody rigid;
     [SerializeField]
     protected PoolGameObjectType ExplosionPrefab;
 
@@ -22,7 +22,9 @@ public abstract class Projectile : MonoBehaviour
         SetInitialReference();
     }
 
-    public virtual void SetInitialReference() { }
+    public virtual void SetInitialReference() {
+        rigid = GetComponent<Rigidbody>();
+    }
 
     public void setDamage(float newDamage)
     {

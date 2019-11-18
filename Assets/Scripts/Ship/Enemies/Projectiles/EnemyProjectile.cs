@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class EnemyProjectile : Projectile
 {
-    public Player           Target;
-    public Vector3          TargetLastPosition;
-    private IDestroyable    target;
-    private GameObject      explosion;
+    public Player Target;
+    public Vector3 TargetLastPosition;
+    private IDestroyable target;
+    private GameObject explosion;
 
     private void FixedUpdate()
     {
@@ -18,25 +18,28 @@ public class EnemyProjectile : Projectile
         if (FollowTarget)
         {
             // Aim bullet in player's direction.
-
-            transform.position -= TargetLastPosition * speed * Time.deltaTime;
+            rigid.MovePosition(transform.position - TargetLastPosition * speed * Time.deltaTime);
+            //  transform.position -= TargetLastPosition * speed * Time.deltaTime;
         }
         else
         {
-            transform.position -= transform.forward * speed * Time.deltaTime;
+            rigid.MovePosition(transform.position - transform.forward * speed * Time.deltaTime);
+            // transform.position -= transform.forward * speed * Time.deltaTime;
         }
 
-        if (transform.position.z < Constants.m_ZMin)
+        Vector3 worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
+        Vector3 ScreenToViewpoint = Camera.main.ScreenToViewportPoint(worldToScreen);
+
+        if(transform.position.z < Constants.m_ZMin )
         {
             gameObject.SetActive(false);
         }
+
     }
     public override void DestoryNow()
     {
-        explosion =PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-        explosion.transform.position = transform.position + Vector3.up * 2;
-        explosion.transform.rotation = Quaternion.identity;
-
+        explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        explosion.transform.SetPositionAndRotation(transform.position + Vector3.up * 2, Quaternion.identity);
         gameObject.SetActive(false);
     }
 
