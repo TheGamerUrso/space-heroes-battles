@@ -29,21 +29,21 @@ public class ShootTargetLocation : WeaponScript
 
         for (i = 0; i < m_NumberOfBullets; i++)
         {
-            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
+            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             InstansiatedProjectile.transform.localPosition = Cannons[0].transform.position;
             InstansiatedProjectile.transform.rotation = Cannons[0].transform.rotation;
             InstansiatedProjectile.GetComponent<EnemyProjectile>().GetTargetLastPosition();
             InstansiatedProjectile.GetComponent<EnemyProjectile>().SetFollowTarget(true);
-            InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(weaponData.m_WeaponDamage);
+            InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(Damage);
 
             yield return new WaitForSeconds(1.0f);
 
-            AudioManager.PlaySound(source, weaponData.ShootSoundEffect);
+            PlayWeaponFireSound();
 
             i++;
         }
 
-        yield return new WaitForSeconds(weaponData.m_FireRate);
+        yield return new WaitForSeconds(FireRate);
 
         m_Shooting = false;
     }

@@ -956,6 +956,7 @@ MonoBehaviour:
   - {fileID: 6751643282018932896}
   - {fileID: 758445965696700512}
   SpecialAttacks: {fileID: 6751479238491873474}
+  RocketLauncher: {fileID: 6751520592689820144}
   superUsed: 0
 --- !u!1 &6639128996365401872
 GameObject:
@@ -1283,12 +1284,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rigid: {fileID: 0}
-  FollowTarget: {fileID: 0}
   rotInput:
     worldToViewport: {x: 0, y: 0}
   rotSpeed: 15
   speed: 100
-  Ship: {fileID: 6640537673763791464}
+  touchPosOffset: {x: 0, y: 0}
   ShipModel: {fileID: 2640992793129728498}
 --- !u!114 &6754395505337494356
 MonoBehaviour:
@@ -1319,7 +1319,6 @@ MonoBehaviour:
     Level: 1
     xp: 0
     xpToLevel: 100
-    LevelUpAnnouncementPrefab: {fileID: 0}
   ShieldEffect: {fileID: 3639260257090773083}
   ExplostionEffect: 6
   animator: {fileID: 6734788952207632584}
@@ -2167,16 +2166,6 @@ PrefabInstance:
       propertyPath: ColorBySpeedModule.gradient.maxGradient.m_NumAlphaKeys
       value: 4
       objectReference: {fileID: 0}
-    - target: {fileID: 2136116237267725866, guid: aba38ed180b781a40a5dee8fc9195081,
-        type: 3}
-      propertyPath: m_LengthScale
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2136116237267725866, guid: aba38ed180b781a40a5dee8fc9195081,
-        type: 3}
-      propertyPath: m_VelocityScale
-      value: 0.5
-      objectReference: {fileID: 0}
     - target: {fileID: 2136116237267725865, guid: aba38ed180b781a40a5dee8fc9195081,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -2246,6 +2235,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalScale.z
       value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2136116237267725866, guid: aba38ed180b781a40a5dee8fc9195081,
+        type: 3}
+      propertyPath: m_LengthScale
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2136116237267725866, guid: aba38ed180b781a40a5dee8fc9195081,
+        type: 3}
+      propertyPath: m_VelocityScale
+      value: 0.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aba38ed180b781a40a5dee8fc9195081, type: 3}

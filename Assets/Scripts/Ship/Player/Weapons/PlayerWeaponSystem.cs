@@ -11,16 +11,17 @@ public class PlayerWeaponSystem : MonoBehaviour
     private bool clicked;
     [SerializeField] private PlayerWeapon[] Weapons;
     [SerializeField] private SpecialAttack SpecialAttacks = null;
-
+    [SerializeField] private WeaponScript RocketLauncher = null;
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
     public static int WeaponUpgradeCollected = 0;
     private Player player;
-    private ShipStatsSystem shipStatsSystem;
+    public ShipStatsSystem ShipStatsSystem { get { return player.GetShipStatsSystem(); } }
     private PlayerAnimation playerAnimation;
 
     [SerializeField] private int superUsed;
 
+    
     public void ResetSuperUsedToZero()
     {
         superUsed = 0;
@@ -46,11 +47,6 @@ public class PlayerWeaponSystem : MonoBehaviour
         this.playerAnimation = playerAnimation;
     }
 
-    public void SetShipStatSystem(ShipStatsSystem shipStatsSystem)
-    {
-        this.shipStatsSystem = shipStatsSystem;
-    }
-
     public void SetPlayer(Player player)
     {
         this.player = player;
@@ -58,13 +54,15 @@ public class PlayerWeaponSystem : MonoBehaviour
         {
             if (Weapons[i].gameObject.activeSelf)
             {
-                Weapons[i].SetShipStatsSystem(shipStatsSystem);
+                Weapons[i].SetShipStatsSystem(ShipStatsSystem);
                 Weapons[i].SetPlayerAnimation(playerAnimation);
                 Weapons[i].SetShipTransform(player.transform);
             }
         }
 
-        SpecialAttacks.SetShipStatsSystem(shipStatsSystem);
+        RocketLauncher.SetShipStatsSystem(ShipStatsSystem);
+
+        SpecialAttacks.SetShipStatsSystem(ShipStatsSystem);
         SpecialAttacks.SetPlayerAnimation(playerAnimation);
         SpecialAttacks.SetShipTransform(player.transform);
     }
@@ -213,15 +211,14 @@ public class PlayerWeaponSystem : MonoBehaviour
     public void WeaponPowerUPCollected()
     {
         Player player = GetComponentInParent<Player>();
-        if (WeaponUpgradeCollected < 5 && CurrentWeapnType < 4)
+        if (WeaponUpgradeCollected <= 5 && CurrentWeapnType < 4)
         {
-            WeaponUpgradeCollected++;
-
-            if (Player.TempFireRateUpgrade == false)
+            WeaponUpgradeCollected+=2;
+            if (WeaponUpgradeCollected > 5)
             {
-                Player.TempFireRateUpgrade = true;
-                player.GiveTemporaryFireRateBuff();
+                WeaponUpgradeCollected = 5;
             }
+            Debug.Log("increase FireRate by " + 0.01f * WeaponUpgradeCollected);
             player.TempFireRateBuff(0.01f * WeaponUpgradeCollected);
         }
     }
@@ -245,6 +242,11 @@ public class PlayerWeaponSystem : MonoBehaviour
     public int getCurrentWeaponType()
     {
         return currentWeapon;
+    }
+
+    public static GameObject GetCurrentActiveWeapon(PlayerWeaponSystem weaponSystem)
+    {
+        return weaponSystem.Weapons[weaponSystem.currentWeapon].gameObject;
     }
 
     public static void SwitchWeapon(PlayerWeaponSystem weaponSystem, int WeaponTypeIndex)

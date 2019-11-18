@@ -170,12 +170,22 @@ public class PlayerWidget : MonoBehaviour
 
     public void RefreshWeaponIndicatorSprite()
     {
-        var sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
-
-        if (m_PowerUps.fillAmount == 1)
+        var sprite = WeaponIndicatorSpritesNotActivated[0];
+        
+        var collecterUpgrade = PlayerWeaponSystem.WeaponUpgradeCollected;
+        if (m_PowerUps.fillAmount == 1 && collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
             sprite = WeaponIndicatorSpritesActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
         }
+        else if(collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
+        {
+            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+        }
+        else
+        {
+            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+        }
+
         WeaponIndicatorImage.sprite = sprite;
     }
 

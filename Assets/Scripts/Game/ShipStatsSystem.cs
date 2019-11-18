@@ -9,6 +9,7 @@ public class ShipStatsSystem
     public float CurrentHealth;
 
     public float Damage;
+    [Range(.2f, 10)]
     public float FireRate;
     public float Speed;
     public float SuperDamage;
@@ -21,6 +22,7 @@ public class ShipStatsSystem
     [Header("Base Attributes")]
     public float baseDamage;
     public float baseHealth;
+    [Range(.1f,10)]
     public float baseFireRate;
     public float baseSpecialCountdown;
 
@@ -28,8 +30,16 @@ public class ShipStatsSystem
     {
         baseDamage = 12.5f;
         baseHealth = 25f;
-        baseFireRate = .4f;
+        baseFireRate = .5f;
         baseSpecialCountdown = 1f;
+    }
+
+    public void ReplaceBaseStats(ShipStatsSystem shipStatsSystem)
+    {
+        this.baseDamage = shipStatsSystem.baseDamage;
+        this.baseHealth = shipStatsSystem.baseHealth;
+        this.baseFireRate = shipStatsSystem.baseHealth;
+        this.baseSpecialCountdown = shipStatsSystem.baseSpecialCountdown;
     }
 
     public void SetStats(LevelSystem levelSystem)

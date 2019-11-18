@@ -3,29 +3,52 @@ using TheGamerUrso;
 using UnityEngine;
 using System.Linq;
 
+using Random = UnityEngine.Random;
+using System.Collections;
+
 public class BaseBossEnemy : BaseEnemy
 {
+    #region Animation Config
+    [Header("Animation Config")]
+    int enterNameHash = Animator.StringToHash("Enter");
+    int flyingNameHash = Animator.StringToHash("Flying");
+    int deathNameHash = Animator.StringToHash("Death");
+    #endregion
+
+    #region Boss Config
     [Header("Boss Config")]
-
+    public BaseBossEnemyAI BossAI;
     protected GameObject bossWidget;
-    protected int           hitIndex;
-    protected int           numberOfHits;
+    protected int hitIndex;
+    protected int numberOfHits;
 
-    protected int currentWeaponActive;
+    protected int phase;
+
+
+    public GameObject ExplosionsDeathEffect;
+
+    #endregion
+
+    #region Destroyable Parts Cofig
+    [Header("Destroyable Parts Cofig")]
     [SerializeField] protected IDestroyable[] DestroyableParts;
+    #endregion
 
-    protected bool CanAttack;
-    [SerializeField]
-    protected GameObject[] Weapons;
-    [SerializeField]
-    protected float delayAttak = 3;
+    public override void Enter()
+    {
+        EnableColliders(false);
+        currentWeaponActive = 1;
+        for (int weaponIndex = 0; weaponIndex < Weapons.Length; weaponIndex++)
+        {
+            Weapons[weaponIndex].GetComponent<WeaponScript>().SetShipStatsSystem(shipStatsSystem);
+        }
+
+    }
 
     public override void InitReferences()
     {
-        
-        shipStatsSystem.SetStats(levelSystem);
-        ShieldModuleInstalled = false;
-
+        base.InitReferences();
+        BossAI = GetComponent<BaseBossEnemyAI>();
         DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
         DestroyableParts = transform.GetComponentsInChildren<IDestroyable>().Where((item) => !item.Equals(this)).ToArray();
 
@@ -63,74 +86,100 @@ public class BaseBossEnemy : BaseEnemy
             }
         }
 
-        BossTakeDamage();
+        BossHit();
 
         base.TakeDamage(damage);
+
+        if (shipStatsSystem.CurrentHealth < 0)
+        {
+            EnableColliders(false);
+            Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
+        }
     }
 
-    public virtual void BossTakeDamage()
+    public virtual void BossHit()
     {
         PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
         playerWeaponSystem.IncreasePowerUp(.05f);
+
 
         hitIndex++;
 
         if (hitIndex > numberOfHits)
         {
             hitIndex = 0;
-            GetComponent<BossAI>().ChangeWaypoint(hitIndex);
+            BossAI.ChangeWaypoint(hitIndex);
+        }
+
+
+
+        if (Weapons[0].activeSelf == false)
+        {
+            Weapons[0].SetActive(true);
         }
     }
 
-
-    public override void Update()
+    public override void Tick()
     {
-        base.Update();
-        Tick();
-    }
+        var info = animator.GetCurrentAnimatorStateInfo(0);
 
-    public virtual void Tick()
-    {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Enter") || GuiManager.IsTrasnmiting())
+        if (info.shortNameHash == enterNameHash || GuiManager.IsTrasnmiting())
         {
             return;
         }
 
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
+        if (info.shortNameHash == deathNameHash)
         {
             for (int i = 0; i < Weapons.Length; i++)
             {
                 Weapons[i].SetActive(false);
             }
         }
-        Attack();
+
+        if (shipStatsSystem.CurrentHealth > 0)
+        {
+            Attack();
+        }
+
+
     }
 
     public virtual void Phases()
     {
-        for (int i = 0; i < Weapons.Length; i++)
+        if (phase == 0 && shipStatsSystem.GetHealthPressentage() <= 70f)
         {
-            if (Weapons[i].GetComponent<WeaponScript>().gameObject.activeSelf == false)
-            {
-                Weapons[i].GetComponent<WeaponScript>().gameObject.SetActive(true);
-            }
-        }
-
-        if (shipStatsSystem.GetHealthPressentage() <= 50f)
-        {
-            //Debug.Log(shipStatsSystem.GetHealthPressentage());
-            // Debug.Log("Increase Attack Speed");
-
+            phase = 1;
             for (int i = 0; i < Weapons.Length; i++)
             {
-                float newFireRate = Weapons[i].GetComponent<WeaponScript>().GetFireRate() - .2f;
+                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
 
-                Weapons[i].GetComponent<WeaponScript>().SetFireRate(newFireRate);
+                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
+            }
+        }
+        else if (phase == 1 && shipStatsSystem.GetHealthPressentage() <= 30f)
+        {
+            phase = 2;
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
+
+                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
+            }
+
+        }
+        else if (phase == 2 && shipStatsSystem.GetHealthPressentage() <= 10f)
+        {
+            phase = 3;
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
+
+                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
             }
         }
     }
 
-    public virtual void Attack()
+    public override void Attack()
     {
         if (delayAttak > 0)
         {
@@ -138,14 +187,51 @@ public class BaseBossEnemy : BaseEnemy
         }
         else
         {
+
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                if (!Weapons[i].activeSelf)
+                {
+                    Weapons[i].SetActive(true);
+
+                }
+            }
+
             Phases();
+
         }
     }
 
     public override void Death()
     {
-        base.Death();
-        GuiManager.Instance.ToggleSlowMo(false);
+        var info = animator.GetCurrentAnimatorStateInfo(0);
+        animator.SetBool("Death", true);
 
+        StartCoroutine(DeathSequence());
+
+        EnableColliders(false);
+
+        for (int i = 0; i < currentWeaponActive; i++)
+        {
+            Weapons[i].SetActive(false);
+        }
+
+        EnemyProjectile[] enemyProjectiles = GameObject.FindObjectsOfType<EnemyProjectile>();
+        if (enemyProjectiles.Length > 0)
+        {
+            foreach (EnemyProjectile item in enemyProjectiles)
+            {
+                item.gameObject.SetActive(false);
+            }
+        }
+
+        GuiManager.Instance.ToggleSlowMo(false); 
     }
+
+    IEnumerator DeathSequence()
+    {
+        yield return new WaitForSeconds(4.0f);
+        base.Death();
+    }
+
 }

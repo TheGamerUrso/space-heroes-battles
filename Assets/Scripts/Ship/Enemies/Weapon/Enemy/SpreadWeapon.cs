@@ -20,25 +20,20 @@ public class SpreadWeapon : WeaponScript
         }
     }
 
-    public override void Initialize()
-    {
-        weaponData.m_FireRate = shipStatsSystem.FireRate;
-    }
-
     private IEnumerator SpreadWeaponCoroutine()
     {
         int posToShoot = Radius;
         for (int i = 0; i < m_NumberOfBullets; i++)
         {
-            GameObject newBullet = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
+            GameObject newBullet = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             newBullet.transform.position = transform.position;
             newBullet.transform.rotation = Quaternion.Euler(new Vector3(0, posToShoot, 0));
-            newBullet.GetComponent<Projectile>().setDamage(weaponData.m_WeaponDamage);
+            newBullet.GetComponent<Projectile>().setDamage(Damage);
             posToShoot += Angle;
             yield return new WaitForSeconds(delayBetweenShots);
-            AudioManager.PlaySound(source, weaponData.ShootSoundEffect);
+            PlayWeaponFireSound();
         }
-        yield return new WaitForSeconds(weaponData.m_FireRate);
+        yield return new WaitForSeconds(GetFireRate());
         m_Shooting = false;
     }
 

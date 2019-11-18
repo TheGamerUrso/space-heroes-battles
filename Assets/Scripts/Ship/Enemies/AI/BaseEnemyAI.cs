@@ -13,7 +13,6 @@ public class BaseEnemyAI : MonoBehaviour
     protected bool Loop;
     protected bool directionChanged;
     protected Vector3 startingPosition;
-    protected Animator animator;
     protected Coroutine EnterCoroutine;
     protected Vector3 dist;
     protected Vector2 MaxScreenBound;
@@ -22,72 +21,42 @@ public class BaseEnemyAI : MonoBehaviour
     protected float delay = .5f;
     protected Vector3 movement;
 
-
-
     protected float m_XVel;
     protected float m_ZVel;
 
-    protected bool appeared;
-    protected bool entered;
+    public float xVel { get { return m_XVel; } set { m_XVel = value; } }
+    public float zVel { get { return m_ZVel; } set { m_ZVel = value; } }
 
-    public bool isAppeared
-    {
-        get
-        {
-            return appeared;
-        }
-    }
+    public bool bAppeared, bEntered;
 
-    public bool isEntered
-    {
-        get
-        {
-            return entered;
-        }
-    }
-
-    protected float XVel
-    {
-        get
-        {
-            return m_XVel;
-        }
-        set
-        {
-            m_XVel = value;
-        }
-    }
-
-    protected float ZVel
-    {
-        get
-        {
-            return m_ZVel;
-        }
-        set
-        {
-            m_ZVel = value;
-        }
-    }
+    [Header("MinerBossAI Config")]
+    protected int enterNameHash = Animator.StringToHash("Enter");
+    protected int deathNameHash = Animator.StringToHash("Death");
 
     private void OnEnable()
     {
-        Enter();
+        Appear();
+    }
+
+    private void Awake()
+    {
+        InitIfNeeded();
+        Initialize();
     }
 
     public void Start()
     {
-        InitIfNeeded();
-        Initialize();
-
-        XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
-        ZVel = enemy.GetShipStatsSystem().GetSpeed();
+        m_XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
+        m_ZVel = enemy.GetShipStatsSystem().GetSpeed();
+        
+        Enter(); 
 
         Direction = 0;
     }
 
     public virtual void Initialize()
     {
+        Debug.Log(gameObject.name);
         startingPosition = transform.position;
     }
 
@@ -121,14 +90,14 @@ public class BaseEnemyAI : MonoBehaviour
         }
     }
 
-    public void Update()
+    private void FixedUpdate()
     {
         Move();
     }
 
     public virtual void Move() { }
 
-    public virtual void Enter()
+    public virtual void Appear()
     {
         if (EnterCoroutine != null)
         {
@@ -137,6 +106,9 @@ public class BaseEnemyAI : MonoBehaviour
 
         StartCoroutine(EnterAnimationCoroutine());
     }
+    public virtual void Enter(){     
+    }
+
     public void Leave()
     {
         enemy.Leave();

@@ -122,7 +122,7 @@ Animator:
   m_GameObject: {fileID: 1346500823932158}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: e6341e62983a4ed48b3eaef9f7297b20, type: 2}
+  m_Controller: {fileID: 9100000, guid: 35c33a99cf372d44ea9a748a4c0400a7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -357,8 +357,13 @@ MonoBehaviour:
   ShieldEffect: {fileID: 8147525768907002281}
   ExplostionEffect: 6
   animator: {fileID: 95387336827741072}
-  Alive: 0
   baseEnemyAI: {fileID: 114099360190212058}
+  Alive: 0
+  Weapons:
+  - {fileID: 1813821419264402}
+  - {fileID: 1357740497020668}
+  delayAttak: 3
+  DeathDelay: 0
   enemyElement:
     Name: 
     gameObjectType: 0
@@ -366,13 +371,11 @@ MonoBehaviour:
     currentNumberInScene: 0
     MaxNumberInScene: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
-  DeathDelay: 0
   m_ValueOfEnemy: 100
   DropItems: 
-  Weapons:
-  - {fileID: 1813821419264402}
-  - {fileID: 1357740497020668}
-  delayAttak: 3
+  BossAI: {fileID: 0}
+  ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
+    type: 3}
 --- !u!114 &114099360190212058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -385,6 +388,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2584a7a9424a942ad6c1b58b724dcd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bAppeared: 0
+  bEntered: 0
   PathIndex: 
   Path: []
   currentPointToFollowIndex: 0
@@ -398,6 +403,11 @@ MonoBehaviour:
   WaypointPrefab: {fileID: 1811661054583536, guid: 3d43c90d23e6d9a44bae44707ef9c210,
     type: 3}
   m_IsMovingVertical: 0
+  cooldown: 0
+  Positions: []
+  CurclularMove: 0
+  angle: 0
+  radius: 5
 --- !u!1 &1688834327602886
 GameObject:
   m_ObjectHideFlags: 0
@@ -988,11 +998,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936,
-        type: 3}
-      propertyPath: m_LocalScale.x
-      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}

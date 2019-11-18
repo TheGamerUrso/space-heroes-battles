@@ -6,7 +6,7 @@ public class WeaponData : ScriptableObject
     public AudioClip ShootSoundEffect;
     public PoolGameObjectType m_Projectile;
     public bool Split;
-    public float m_FireRate;
+
     public bool AutoAttack;
 
     public float m_WeaponDamage;

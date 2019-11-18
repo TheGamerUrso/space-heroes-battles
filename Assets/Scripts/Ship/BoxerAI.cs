@@ -2,45 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoxerAI : BossAI
+public class BoxerAI : BaseBossEnemyAI
 {
-    public float cooldown;
 
-    public override void Initialize()
+    public override IEnumerator MoveVerticalWithDelay(int hitIndex)
     {
-        base.Initialize();
-    }
+        int waitTime = Random.Range(2, 4);
+        int waitTillComeBack = Random.Range(2, 4);
 
-    public override void Move()
-    {
-        base.Move();
-
-        if (cooldown > 0)
+        while (pathMagnitude > 1)
         {
-            cooldown -= Time.deltaTime;
+            yield return new WaitForSeconds(waitTime);
         }
 
-    }
-    public override void ChangeWaypoint(int hitIndex)
-    {
-        if (cooldown <= 0)
+        if (currentPointToFollowIndex == 0)
         {
-            if (!m_IsMovingVertical)
-            {
-                m_IsMovingVertical = true;
-                StartCoroutine(PushForward(hitIndex));
-            }
+            currentPointToFollowIndex = 1;
         }
-    }
+        else if (currentPointToFollowIndex == 1)
+        {
+            currentPointToFollowIndex = 0;
+        }
 
-
-    private IEnumerator PushForward(int hitIndex)
-    {    
-        currentPointToFollowIndex = 1;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(waitTillComeBack);
         currentPointToFollowIndex = 0;
+
+        yield return new WaitForSeconds(1);
         m_IsMovingVertical = false;
+        cooldown = Random.Range(4, 6);
         hitIndex = 0;
-        cooldown = UnityEngine.Random.Range(4, 6); 
     }
 }

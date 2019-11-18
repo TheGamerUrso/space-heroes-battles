@@ -30,8 +30,8 @@ public class MouseInput
 
     public Vector2 GetTouchPosition()
     {
-       // if (Application.platform == RuntimePlatform.Android) {
-
+        if (Application.platform == RuntimePlatform.Android)
+        {
             if (Input.touchCount > 0)
             {
                 currentTouch = Input.GetTouch(0);
@@ -60,16 +60,17 @@ public class MouseInput
                     }
                 }
             }
-       // }
-       // else {
-      //      previousTouchPos = Input.mousePosition;
-       // }
+        }
+        else
+        {
+            previousTouchPos = Input.mousePosition;
+        }
         return previousTouchPos;
     }
 
     public bool GetClickDown()
     {
-        if (Input.GetMouseButton(MOUSE))
+        if (Input.touchCount > 0 || Input.GetMouseButton(0))
         {
             return true;
         }

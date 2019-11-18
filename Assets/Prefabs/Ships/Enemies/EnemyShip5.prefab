@@ -211,11 +211,14 @@ MonoBehaviour:
     Level: 1
     xp: 0
     xpToLevel: 100
-    LevelUpAnnouncementPrefab: {fileID: 0}
   ShieldEffect: {fileID: 4283895241739180047}
   ExplostionEffect: 6
   animator: {fileID: 8912635664142275641}
-  simpleAI: {fileID: 3956459546385333304}
+  baseEnemyAI: {fileID: 0}
+  Alive: 0
+  Weapons: []
+  delayAttak: 3
+  DeathDelay: 0
   enemyElement:
     Name: 
     gameObjectType: 0
@@ -223,8 +226,6 @@ MonoBehaviour:
     currentNumberInScene: 0
     MaxNumberInScene: 0
   HealthBarSettings: {fileID: 11400000, guid: b8654c602fea6e14e95f7801eafff54e, type: 2}
-  DeathDelay: 0
-  Alive: 0
   m_ValueOfEnemy: 100
   DropItems: 07000000080000000a00000009000000
 --- !u!65 &7324131938950037138
@@ -268,6 +269,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b421540695a251140a34f21e36d3c698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bAppeared: 0
+  bEntered: 0
   PathIndex: 03000000050000000600000007000000
   Path: []
   currentPointToFollowIndex: 0
@@ -424,6 +427,7 @@ MonoBehaviour:
   - {fileID: 1684985085546303762}
   - {fileID: 1576112374745010777}
   weaponData: {fileID: 11400000, guid: ec35bfd892a602e4abbdc82d0c561d25, type: 2}
+  source: {fileID: 1544188833340423206}
   FollowRotation: 0
   delayBetweenShots: 0
   delay: 0
@@ -431,7 +435,6 @@ MonoBehaviour:
   delayTimer: 0
   m_NumberOfBullets: 0
   RandomRotationOnY: 0
-  usePitch: 0
 --- !u!1 &8992550464686980048
 GameObject:
   m_ObjectHideFlags: 0

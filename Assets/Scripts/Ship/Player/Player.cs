@@ -59,30 +59,29 @@ public class Player : Ship, IDestroyable
 
         if (playerData.Upgrades[((int)UpgradeType.Shield - 1)] == 0)
         {
-            ShieldModuleInstalled = false;
+            bShieldModuleInstalled = false;
         }
         else
         {
-            ShieldModuleInstalled = true;
+            bShieldModuleInstalled = true;
         }
 
-        ShieldEffect.SetActive(ShieldModuleInstalled);
+        ShieldEffect.SetActive(bShieldModuleInstalled);
 
         shipStatsSystem.SetStats(levelSystem);
 
         shipController.speed = shipStatsSystem.Speed;
 
+
         upgradeSystem.ApplyUpdatesToShip(shipStatsSystem);
 
-        weaponSystem.SetShipStatSystem(shipStatsSystem);
+
+        //TO DO Removed
+        //weaponSystem.SetShipStatSystem(shipStatsSystem);
 
         weaponSystem.SetPlayerAnimation(playerAnimation);
-
         weaponSystem.SetPlayer(this);
-
         levelSystem.OnLevelUp = LevelSystem_OnLevelUpHandled;
-
-
     }
 
     public void LevelSystem_OnLevelUpHandled()
@@ -102,6 +101,19 @@ public class Player : Ship, IDestroyable
                 invisibilityTimer -= Time.deltaTime;
             }
         }
+    }
+    public void TempFireRateBuff(float fireRate = 0.0f, bool temporary = false)
+    {
+
+        if (!TempFireRateUpgrade)
+        {
+            TempFireRateUpgrade = true;
+            GiveTemporaryFireRateBuff();
+        }
+
+
+        UpdateWeaponStats(shipStatsSystem.FireRate - fireRate);
+
     }
 
     public void GiveTemporaryFireRateBuff()
@@ -123,31 +135,22 @@ public class Player : Ship, IDestroyable
         UpdateWeaponStats(shipStatsSystem.FireRate, DamageTemp);
     }
 
-    public void TempFireRateBuff(float fireRate = 0.0f)
-    {
-        WeaponScript[] weapons = GetComponentsInChildren<WeaponScript>(true);
-        for (int i = 0; i < weapons.Length; i++)
-        {
-            weapons[i].SetFireRate(shipStatsSystem.FireRate - fireRate);
-            weapons[i].SetDamage(shipStatsSystem.Damage);
-        }
-    }
 
-    public void UpdateWeaponStats(float fireRate, float damage)
-    {
-        WeaponScript[] weapons = GetComponentsInChildren<WeaponScript>(true);
 
-        for (int i = 0; i < weapons.Length; i++)
-        {
-            weapons[i].SetFireRate(shipStatsSystem.FireRate);
-            weapons[i].SetDamage(shipStatsSystem.Damage);
-        }
+    public void UpdateWeaponStats(float fireRate, float damage = 0)
+    {
+        WeaponScript weapon = PlayerWeaponSystem.GetCurrentActiveWeapon(weaponSystem).GetComponent<WeaponScript>();
+
+        weapon.SetFireRate(fireRate);
+        if (damage > 0)
+            weapon.SetDamage(damage);
+
     }
 
     public override void InstallShieldModule()
     {
         base.InstallShieldModule();
-        ShieldEffect.SetActive(ShieldModuleInstalled);
+        ShieldEffect.SetActive(bShieldModuleInstalled);
     }
 
     public override void Death()
@@ -199,12 +202,12 @@ public class Player : Ship, IDestroyable
             dmg = MaxHealth - 1;
         }
 
-        if (ShieldModuleInstalled == true)
+        if (bShieldModuleInstalled == true)
         {
-            ShieldModuleInstalled = false;
-            ShieldEffect.SetActive(ShieldModuleInstalled);
+            bShieldModuleInstalled = false;
+            ShieldEffect.SetActive(bShieldModuleInstalled);
         }
-        else if (ShieldModuleInstalled == false)
+        else if (bShieldModuleInstalled == false)
         {
             if (invisibilityTimer <= 0)
             {

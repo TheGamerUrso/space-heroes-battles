@@ -10,25 +10,32 @@ public class EnemyInformationAfterDeath : EventArgs
 
 public class BaseEnemy : Ship, IDestroyable
 {
-    public bool Alive;
-
     [Header("Enemy Config")]
     public BaseEnemyAI baseEnemyAI;
+    protected BoxCollider boxCollider;
+
     public Action<BaseEnemy> onEnemyDeath;
     public Action<object> OnEnemyHit;
     public Action<BaseEnemy> onEnemyEscape;
-    [HideInInspector] public EnemyElement enemyElement;
+
+    public      bool Alive;
+    protected   bool CanAttack;
+    [SerializeField] 
+    protected   GameObject[] Weapons;
+    [SerializeField]
+    protected   float delayAttak = 3;
+    public      float DeathDelay;
+    protected   int currentWeaponActive;
+
     private EnemyHealthWidget healthBar;
+
+    [HideInInspector] public EnemyElement enemyElement;
+   
     [SerializeField] private HealthBarSettings HealthBarSettings;
-    public float DeathDelay;
+
 
     //IDestroyable Values
-    public bool IsDestroyed
-    {
-        get { return Alive; }
-        set { Alive = value; }
-    }
-
+    public bool IsDestroyed{ get; set; } = false;
     public int m_ValueOfEnemy;
 
     public PoolGameObjectType[] DropItems;
@@ -36,11 +43,13 @@ public class BaseEnemy : Ship, IDestroyable
     protected WeaponScript weaponScript;
     protected float takeDamageDelay;
     protected bool EnableShield;
+
     private void OnDisable()
     {
         onEnemyDeath = null;
         onEnemyEscape = null;
     }
+
     private void OnEnable()
     {
         Alive = true;
@@ -49,8 +58,8 @@ public class BaseEnemy : Ship, IDestroyable
     public virtual void SetEnemyStats(int level, Action<BaseEnemy> OnEnemyDeath, Action<BaseEnemy> OnEnemyEscape)
     {
         GetLevelSystem().SetLevel(level);
-
         GetShipStatsSystem().SetStats(levelSystem);
+        bShieldModuleInstalled = false;
 
         // int randomNum = UnityEngine.Random.Range(0, 100);
 
@@ -58,7 +67,7 @@ public class BaseEnemy : Ship, IDestroyable
         // {
         //     EnableShield = true;
         //}
-        ShieldModuleInstalled = false;
+
         //if (EnableShield)
         // {
         //     int hasShield = UnityEngine.Random.Range(0, 100);
@@ -73,7 +82,6 @@ public class BaseEnemy : Ship, IDestroyable
         //  }
 
 
-
         if (weaponScript)
         {
             weaponScript.SetShip(this);
@@ -86,10 +94,9 @@ public class BaseEnemy : Ship, IDestroyable
 
     public override void InitReferences()
     {
-        //shipStatsSystem = new ShipStatsSystem();
-        //levelSystem = new LevelSystem();
         shipStatsSystem.SetStats(levelSystem);
-        ShieldModuleInstalled = false;
+        bShieldModuleInstalled = false;
+        boxCollider = GetComponent<BoxCollider>();
     }
 
     public override void ShipStartSetUp()
@@ -100,7 +107,7 @@ public class BaseEnemy : Ship, IDestroyable
         }
 
         baseEnemyAI = GetComponent<SimpleAI>();
-        ShieldEffect.SetActive(ShieldModuleInstalled);
+        ShieldEffect.SetActive(bShieldModuleInstalled);
 
         weaponScript = GetComponentInChildren<WeaponScript>(true);
         if (weaponScript != null)
@@ -115,8 +122,10 @@ public class BaseEnemy : Ship, IDestroyable
             healthBar.Initiallize(this);
         }
     }
+    public virtual void Attack(){}
 
-    public virtual void Enter() { }
+    public virtual void Enter() {}
+
     public void Leave()
     {
         if (onEnemyEscape != null) onEnemyEscape(this);
@@ -145,18 +154,17 @@ public class BaseEnemy : Ship, IDestroyable
         {
             takeDamageDelay = .1f;
 
-            if (ShieldModuleInstalled == true)
+            if (bShieldModuleInstalled == true)
             {
-                ShieldModuleInstalled = false;
-                ShieldEffect.SetActive(ShieldModuleInstalled);
+                bShieldModuleInstalled = false;
+                ShieldEffect.SetActive(bShieldModuleInstalled);
             }
-            else if (ShieldModuleInstalled == false)
+            else if (bShieldModuleInstalled == false)
             {
                 shipStatsSystem.CurrentHealth -= dmg;
 
                 if (shipStatsSystem.CurrentHealth < 1)
                 {
-                    animator.SetBool("Death", true);
                     Death();
                 }
             }
@@ -181,7 +189,12 @@ public class BaseEnemy : Ship, IDestroyable
         {
             takeDamageDelay -= Time.deltaTime;
         }
+        Tick();
     }
+
+    public virtual void Tick(){}
+
+ 
 
     public override void Death()
     {
@@ -198,10 +211,16 @@ public class BaseEnemy : Ship, IDestroyable
 
             healthBar.Hide();
             gameObject.SetActive(false);
-
         }
-
     }
+
+    public void EnableColliders(bool enabled)
+    {
+        if (boxCollider == null)
+            boxCollider = GetComponent<BoxCollider>();
+        boxCollider.enabled = enabled;
+    }
+
 
     public virtual void OnTriggerEnter(Collider other)
     {

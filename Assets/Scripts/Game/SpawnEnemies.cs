@@ -28,8 +28,8 @@ public class SpawnEnemies : MonoBehaviour
     public bool bossWave;
     private int Wave = 0;
     private float countdown;
-    private float minDelay = 1;
-    private float maxDelay = 2;
+    private float minDelay = .3f;
+    private float maxDelay = .5f;
     private int AvailableEnemies;
     public bool spawnReady;
 
@@ -207,9 +207,9 @@ public class SpawnEnemies : MonoBehaviour
                             if (Wave % 2 == 0)
                             {
                                 bossWave = true;
-                                AudioManager.PlaySound("Danger", 3);
+                               // AudioManager.PlaySound("Danger", 3);
                                 string[] transmitions = { "There is something Big Coming on your way", "Be Careful" };
-                                GuiManager.PlayTrasmition(transmitions);
+                                GuiManager.PlayTrasmition(transmitions, true);
 
                                 while (GuiManager.IsTrasnmiting())
                                 {
@@ -232,9 +232,9 @@ public class SpawnEnemies : MonoBehaviour
                                 if (BossStage)
                                 {
                                     bossWave = true;
-                                    AudioManager.PlaySound("Danger", 3);
+                                    //AudioManager.PlaySound("Danger", 3);
                                     string[] transmitions = { "There is something Big Coming on your way", "Be Careful" };
-                                    GuiManager.PlayTrasmition(transmitions);
+                                    GuiManager.PlayTrasmition(transmitions,true);
 
                                     while (GuiManager.IsTrasnmiting())
                                     {
@@ -277,7 +277,7 @@ public class SpawnEnemies : MonoBehaviour
                             if (Wave == 1 && !bossWave)
                             {
                                 yield return new WaitForSeconds(1.5f);
-                                string[] transmitions = { "Survive", "Good Luck!" };
+                                string[] transmitions = { "Wave" + Wave ,"Level Difficulty " + LevelDifficuilty ," Ready!" , "GO" };
 
                                 GuiManager.PlayTrasmition(transmitions);
                             }

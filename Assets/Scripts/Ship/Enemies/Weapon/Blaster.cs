@@ -11,7 +11,7 @@ public class Blaster : WeaponScript
     public float delayTimer;
     public int m_NumberOfBullets;
     public bool RandomRotationOnY;
-    public bool usePitch;
+
 
     public override void Initialize()
     {
@@ -30,13 +30,6 @@ public class Blaster : WeaponScript
             return;
         }
 
-        if (weaponData.m_FireRate != shipStatsSystem.FireRate
-            || weaponData.m_WeaponDamage != shipStatsSystem.Damage)
-        {
-            weaponData.m_FireRate = shipStatsSystem.FireRate;
-            weaponData.m_WeaponDamage = shipStatsSystem.Damage;
-        }
-
         if (delay && !shooting)
         {
             StartCoroutine(ShowWitHDelay());
@@ -53,11 +46,11 @@ public class Blaster : WeaponScript
 
     public override void Fire()
     {
-        if (Time.time > m_NewShot)
+        if (Time.time > newShot)
         {
-            m_NewShot = Time.time + weaponData.m_FireRate;
+            newShot = Time.time + FireRate;
 
-            AudioManager.PlaySound(source, weaponData.ShootSoundEffect,0, usePitch);
+            PlayWeaponFireSound();
 
             for (int i = 0; i < Cannons.Length; i++)
             {
@@ -69,15 +62,13 @@ public class Blaster : WeaponScript
     {
         shooting = true;
 
-
-
         for (int i = 0; i < Cannons.Length; i++)
         {
             InstansiateProjectiles(i);
             yield return new WaitForSeconds(delayBetweenShots);
         }
 
-        yield return new WaitForSeconds(weaponData.m_FireRate);
+        yield return new WaitForSeconds(FireRate);
         shooting = false;
     }
 
@@ -95,7 +86,7 @@ public class Blaster : WeaponScript
 
         for (int i = 0; i < m_NumberOfBullets; i++)
         {
-            GameObject newBullet = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
+            GameObject newBullet = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
 
             cannon = templist[UnityEngine.Random.Range(0, templist.Count)].transform;
             //templist.Remove(cannon);
@@ -104,22 +95,22 @@ public class Blaster : WeaponScript
 
             newBullet.transform.rotation = Quaternion.Euler(new Vector3(0, UnityEngine.Random.Range(-25, 25), 0));
             //bomb.GetComponent<EnemyProjectile>().m_FollowPlayer =    weaponData.m_ShootDirectlyToPlayerPosition;
-            newBullet.GetComponent<EnemyProjectile>().setDamage(weaponData.m_WeaponDamage);
+            newBullet.GetComponent<EnemyProjectile>().setDamage(Damage);
             //newBullet.transform.TransformDirection(direction);
-            AudioManager.PlaySound(source, weaponData.ShootSoundEffect, 0, usePitch);
+            PlayWeaponFireSound();
             yield return new WaitForSeconds(delayBetweenShots);
 
         }
 
-        yield return new WaitForSeconds(weaponData.m_FireRate);
+        yield return new WaitForSeconds(FireRate);
         m_NumberOfBullets = 0;
         shooting = false;
     }
 
     private void InstansiateProjectiles(int i)
     {
-        AudioManager.PlaySound(source, weaponData.ShootSoundEffect, 0, usePitch);
-        InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
+
+        InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
         if (Multiple)
         {
             InstansiatedProjectile.transform.position = transform.position;
@@ -140,7 +131,7 @@ public class Blaster : WeaponScript
             InstansiatedProjectile.transform.rotation = Quaternion.Euler(new Vector3(0, Random.Range(-40, 40), 0));
         }
 
-        InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(weaponData.m_WeaponDamage);
+        InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(Damage);
 
     }
 }

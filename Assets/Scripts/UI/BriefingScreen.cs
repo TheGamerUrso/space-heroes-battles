@@ -26,6 +26,7 @@ public class BriefingScreen : MonoBehaviour
     private Mission currentMissionSelected;
     private LevelObjectiveData[] levelObjectiveDatas;
 
+    public GameObject ShowStoryButton;
     public GameObject survivalScreen;
     public GameObject announcementMessage;
 
@@ -143,6 +144,7 @@ public class BriefingScreen : MonoBehaviour
 
             RefreshLevelObjectiveData();
             survivalScreen.SetActive(false);
+            ShowStoryButton.SetActive(true);
             currentMission = DataController.GetMission(level.mission.ID);
             LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
             LevelDetailLevelTItle.text = currentMission.Title;
@@ -155,6 +157,7 @@ public class BriefingScreen : MonoBehaviour
             ScreenManager.Instance.Open("Briefing");
             GameManager.LevelSelected = -1;
             survivalScreen.SetActive(true);
+            ShowStoryButton.SetActive(false);
             HideLevelObjectives();
             LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
             LevelDetailLevelTItle.text = "Survival";

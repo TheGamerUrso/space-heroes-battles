@@ -22,9 +22,9 @@ public class Rocket : PlayerProjectile
             Vector3 rockPos = transform.position;
             Vector3 def = dest - rockPos;
 
-            transform.position = Vector3.MoveTowards(transform.position
-                , m_Target.transform.position,
-                speed * Time.deltaTime);
+            Vector3 direction = (m_Target.transform.position - transform.position).normalized;
+
+            rigid.MovePosition(transform.position + direction * speed * Time.deltaTime);
 
             lookAt(transform, def);
         }
@@ -32,17 +32,17 @@ public class Rocket : PlayerProjectile
         {
             base.Movement();
             transform.eulerAngles = new Vector3(0, 0, 0);
-           // if (m_Target == null)
-             //   m_Target = FindClosestEnemy();
+            // if (m_Target == null)
+            //   m_Target = FindClosestEnemy();
         }
 
         if (m_Target != null && m_Target.activeInHierarchy == false)
         {
             m_Target = null;
-         
+
         }
 
-        if(transform.position.z > Constants.m_ZMax)
+        if (transform.position.z > Constants.m_ZMax)
         {
             gameObject.SetActive(false);
         }

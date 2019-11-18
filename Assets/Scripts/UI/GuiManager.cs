@@ -25,6 +25,7 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private GameObject GameOverScreen;
     [SerializeField] private GameObject WinScreen = null;
     [SerializeField] private GameObject PauseScreen;
+    [SerializeField] private GameObject pauseButton;
 
     [Header("PlayerHUD")]
     [SerializeField] private GameObject PlayerHUD;
@@ -32,10 +33,14 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
+
     private float slowMo;
     private bool useSloMo;
     private bool ResultShowed = false;
     #endregion Variables
+    private float timer;
+
+
     public void ToggleSlowMo(bool value)
     {
         useSloMo = value;
@@ -83,27 +88,44 @@ public class GuiManager : MonoBehaviour
     {
         instance = this;
         useSloMo = true;
+        timer = 1;
     }
     private void Update()
     {
-
+        SlowMoEffect();
+        
+        if (Time.timeScale == 1)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                pauseButton.SetActive(false);
+            }
+        }
+        else
+        {
+            timer = 1;
+            pauseButton.SetActive(true);
+        }
     }
 
-    public void SlowMoEffect(SimpleShipControls simpleShipControls)
+    public void SlowMoEffect()
     {
-        if (simpleShipControls.IsEnterOrExitAnimationState() && useSloMo && !GameManager.Paused)
+        if ( useSloMo && !GameManager.Paused)
         {
-            if (simpleShipControls.mouseInput.GetClickDown())
+            if (IsTrasnmiting() ||Input.touchCount > 0 || Input.GetMouseButton(0))
             {
                 slowMo = 1;
             }
             else
             {
                 slowMo = .3f;
+
             }
             Time.timeScale = slowMo;
         }                 
     }
+
 
     public void SetCountdownVisibility(bool enable)
     {
@@ -203,16 +225,16 @@ public class GuiManager : MonoBehaviour
         Menu.SetActive(false);
     }
 
-    public static void PlayTrasmition(string[] transmitions)
+    public static void PlayTrasmition(string[] transmitions,bool boss = false)
     {
         AudioManager.PlaySound("transmition", 3);
-        GuiManager.instance.ShowTrasmition(transmitions);
+        GuiManager.instance.ShowTrasmition(transmitions,boss);
     }
 
-    public void ShowTrasmition(string[] transmitions)
+    public void ShowTrasmition(string[] transmitions,bool boss = false)
     {
         if (GameObject.FindObjectOfType<TransmitionWidget>())
-            GameObject.FindObjectOfType<TransmitionWidget>().RecieveTransmition(transmitions);
+            GameObject.FindObjectOfType<TransmitionWidget>().RecieveTransmition(transmitions,boss);
     }
 
     public static bool IsTrasnmiting()
