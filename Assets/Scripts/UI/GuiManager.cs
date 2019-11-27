@@ -40,11 +40,12 @@ public class GuiManager : MonoBehaviour
     #endregion Variables
     private float timer;
 
+    private float delayTheSlowMoEffectTimer;
 
     public void ToggleSlowMo(bool value)
     {
         useSloMo = value;
-        if(value == false)
+        if (value == false)
         {
             Time.timeScale = 1.0f;
         }
@@ -87,13 +88,13 @@ public class GuiManager : MonoBehaviour
     private void Start()
     {
         instance = this;
-        useSloMo = true;
+        delayTheSlowMoEffectTimer = 4;
         timer = 1;
     }
     private void Update()
     {
         SlowMoEffect();
-        
+
         if (Time.timeScale == 1)
         {
             timer -= Time.deltaTime;
@@ -107,13 +108,19 @@ public class GuiManager : MonoBehaviour
             timer = 1;
             pauseButton.SetActive(true);
         }
+
+        if (SpawnEnemies.Instance.spawnReady)
+        {
+            useSloMo = true;
+        }
+
     }
 
     public void SlowMoEffect()
     {
-        if ( useSloMo && !GameManager.Paused)
+        if (useSloMo && !GameManager.Paused)
         {
-            if (IsTrasnmiting() ||Input.touchCount > 0 || Input.GetMouseButton(0))
+            if (IsTrasnmiting() || Input.touchCount > 0 || Input.GetMouseButton(0))
             {
                 slowMo = 1;
             }
@@ -123,7 +130,7 @@ public class GuiManager : MonoBehaviour
 
             }
             Time.timeScale = slowMo;
-        }                 
+        }
     }
 
 
@@ -155,6 +162,7 @@ public class GuiManager : MonoBehaviour
 
     public void ResumeButton()
     {
+        useSloMo = true;
         AudioManager.PlaySound("Back", 1);
         ShowPauseMenu(false);
         GameManager.instance.PauseTheGame(false);
@@ -162,6 +170,7 @@ public class GuiManager : MonoBehaviour
 
     public void PauseButton()
     {
+        useSloMo = false;
         AudioManager.PlaySound("Click", 1);
         ShowPauseMenu(true);
         GameManager.instance.PauseTheGame();
@@ -225,16 +234,16 @@ public class GuiManager : MonoBehaviour
         Menu.SetActive(false);
     }
 
-    public static void PlayTrasmition(string[] transmitions,bool boss = false)
+    public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
         AudioManager.PlaySound("transmition", 3);
-        GuiManager.instance.ShowTrasmition(transmitions,boss);
+        GuiManager.instance.ShowTrasmition(transmitions, boss);
     }
 
-    public void ShowTrasmition(string[] transmitions,bool boss = false)
+    public void ShowTrasmition(string[] transmitions, bool boss = false)
     {
         if (GameObject.FindObjectOfType<TransmitionWidget>())
-            GameObject.FindObjectOfType<TransmitionWidget>().RecieveTransmition(transmitions,boss);
+            GameObject.FindObjectOfType<TransmitionWidget>().RecieveTransmition(transmitions, boss);
     }
 
     public static bool IsTrasnmiting()
@@ -371,6 +380,8 @@ public class GuiManager : MonoBehaviour
 
     private IEnumerator GameOverCoroutine()
     {
+        useSloMo = false;
+        PlayerHUD.gameObject.SetActive(false);
         AudioManager.SetMusic("GameOver", false);
 
 
@@ -387,7 +398,8 @@ public class GuiManager : MonoBehaviour
 
     public IEnumerator WinCoroutine()
     {
-
+        useSloMo = false;
+        PlayerHUD.gameObject.SetActive(false); 
         yield return new WaitForSeconds(2.0f);
         AudioManager.SetMusic("Victory", false);
         GameManager.instance.SetState(GameStates.GameOver);
