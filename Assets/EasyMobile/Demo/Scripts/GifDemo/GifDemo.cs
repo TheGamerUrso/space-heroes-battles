@@ -297,7 +297,11 @@ namespace EasyMobile.Demo
             if (!string.IsNullOrEmpty(giphyUsername) && !string.IsNullOrEmpty(giphyApiKey))
                 Giphy.Upload(giphyUsername, giphyApiKey, content, OnGiphyUploadProgress, OnGiphyUploadCompleted, OnGiphyUploadFailed);
             else
-                Giphy.Upload(content, OnGiphyUploadProgress, OnGiphyUploadCompleted, OnGiphyUploadFailed);
+#if UNITY_EDITOR
+                Debug.LogError("Upload failed: please provide valid Giphy username and API key in the GifDemo game object.");
+#else
+                NativeUI.Alert("Upload Failed", "Please provide valid Giphy username and API key in the GifDemo game object.");
+#endif
         }
 
         public void ShareGiphyURL()

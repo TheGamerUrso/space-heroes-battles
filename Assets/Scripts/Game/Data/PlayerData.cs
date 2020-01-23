@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using EasyMobile;
 
 [Serializable]
 public class PlayerData
@@ -67,7 +68,7 @@ public class PlayerData
             {
                 HighScore[level] = score;
                 if (GooglePlayServicesManager.Instance)
-                    GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EasyMobile.EM_GameServicesConstants.Leaderboard_Survival_Mode);
+                  GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
 
             }
             Score[level] = score;

@@ -58,7 +58,7 @@ public class ShipSelect : MonoBehaviour
         }
 
         if (GooglePlayServicesManager.Instance)
-            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Heroes_Assemble, num);
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
 
         SelectShip(currentShip);
     }

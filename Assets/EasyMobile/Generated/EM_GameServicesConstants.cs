@@ -9,19 +9,19 @@ namespace EasyMobile
 	public static class EM_GameServicesConstants
 	{
 		public const string Achievement_Destroyer = "Destroyer";
-		public const string Achievement_Level2_Completed = "Level2 Completed";
-		public const string Achievement_Level7_Completed = "Level7 Completed";
-		public const string Achievement_Level5_Completed = "Level5 Completed";
+		public const string Achievement_Level_6_Completed = "Level 6 Completed";
+		public const string Achievement_Unlock_All_Heroes = "Unlock All Heroes";
+		public const string Achievement_Level_3_Completed = "Level 3 Completed";
 		public const string Achievement_Piece_of_Cake = "Piece of Cake";
-		public const string Achievement_Heroes_Assemble = "Heroes_Assemble";
+		public const string Achievement_Level_7_Completed = "Level 7 Completed";
 		public const string Leaderboard_Survival_Mode = "Survival Mode";
-		public const string Achievement_Level1_Completed = "Level1 Completed";
+		public const string Achievement_Level_5_Completed = "Level 5 Completed";
 		public const string Achievement_Max_Power = "Max Power";
 		public const string Achievement_Prologue_Completed = "Prologue Completed";
-		public const string Achievement_Level6_Completed = "Level6 Completed";
-		public const string Achievement_Level8_Completed = "Level8 Completed";
-		public const string Achievement_Level3_Completed = "Level3 Completed";
-		public const string Achievement_Level4_Completed = "Level4 Completed";
+		public const string Achievement_Level_1_Completed = "Level 1 Completed";
+		public const string Achievement_Level_2_Completed = "Level 2 Completed";
+		public const string Achievement_Level_8_Completed = "Level 8 Completed";
+		public const string Achievement_Level_4_Completed = "Level 4 Completed";
 
 	}
 }

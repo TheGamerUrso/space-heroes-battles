@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 8
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -25,6 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
+  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -41,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 11
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -53,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 4
+    serializedVersion: 9
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -66,13 +67,30 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_DirectLightInLightProbes: 1
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
+    m_MixedBakeMode: 1
+    m_BakeBackend: 0
+    m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
+    m_PVRSampleCount: 500
+    m_PVRBounces: 2
+    m_PVRFilterTypeDirect: 0
+    m_PVRFilterTypeIndirect: 0
+    m_PVRFilterTypeAO: 0
+    m_PVRFilteringMode: 0
+    m_PVRCulling: 1
+    m_PVRFilteringGaussRadiusDirect: 1
+    m_PVRFilteringGaussRadiusIndirect: 5
+    m_PVRFilteringGaussRadiusAO: 2
+    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+    m_PVRFilteringAtrousPositionSigmaIndirect: 2
+    m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_RuntimeCPUUsage: 25
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -89,7 +107,11 @@ NavMeshSettings:
     minRegionArea: 2
     manualCellSize: 0
     cellSize: 0.16666667
+    manualTileSize: 0
+    tileSize: 256
     accuratePlacement: 0
+    debug:
+      m_Flags: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &2156533
 GameObject:
@@ -181,6 +203,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &7480819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1075,6 +1098,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &100108840
 GameObject:
   m_ObjectHideFlags: 0
@@ -1355,6 +1379,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &118084543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1494,6 +1519,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &118559299
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1723,6 +1749,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!1 &140518494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1861,6 +1888,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &172758984
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2310,6 +2338,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &206390054
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2520,6 +2549,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &219017300
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2919,6 +2949,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &241239224
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3305,6 +3336,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &300977537
 GameObject:
   m_ObjectHideFlags: 0
@@ -3469,6 +3501,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &313199396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3855,6 +3888,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &337584206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4019,6 +4053,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &342133397
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4249,6 +4284,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &376713655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4767,6 +4803,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &475945755
 GameObject:
   m_ObjectHideFlags: 0
@@ -4897,6 +4934,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &482189774
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5034,22 +5072,13 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 21071f90a50be4657a996d42f1eb96eb, type: 2}
-  m_RootGameObject: {fileID: 868980538}
   m_IsPrefabParent: 0
---- !u!114 &486127195
+--- !u!114 &486127195 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11482890, guid: 21071f90a50be4657a996d42f1eb96eb,
     type: 2}
   m_PrefabInternal: {fileID: 486127194}
-  m_GameObject: {fileID: 868980538}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13a4df66f09444441916a8981a303377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  checkedSprite: {fileID: 21300000, guid: 264c906642fb1407aa182e15c399a64a, type: 3}
-  uncheckedSprite: {fileID: 21300000, guid: 6352641b378eb4da9ad43b0152fee969, type: 3}
 --- !u!1 &490097322
 GameObject:
   m_ObjectHideFlags: 0
@@ -5106,6 +5135,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &490097325
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5298,7 +5328,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &506004123
@@ -5390,6 +5420,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &519230422
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5552,6 +5583,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &550167882
 GameObject:
   m_ObjectHideFlags: 0
@@ -5726,6 +5758,7 @@ MonoBehaviour:
   m_PreferredHeight: 3.5778823
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &587063265
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6145,6 +6178,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &642868926
 GameObject:
   m_ObjectHideFlags: 0
@@ -6301,6 +6335,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &667895585
 GameObject:
   m_ObjectHideFlags: 0
@@ -6458,130 +6493,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 0
   m_VerticalFit: 2
---- !u!1 &678383126
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 177754, guid: 297e1561490784b9994f29cb42adcb47, type: 2}
-  m_PrefabInternal: {fileID: 1407701620}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 678383129}
-  - component: {fileID: 678383128}
-  - component: {fileID: 678383127}
-  m_Layer: 0
-  m_Name: SoundManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!82 &678383127
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8293380, guid: 297e1561490784b9994f29cb42adcb47,
-    type: 2}
-  m_PrefabInternal: {fileID: 1407701620}
-  m_GameObject: {fileID: 678383126}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
---- !u!114 &678383128
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11414404, guid: 297e1561490784b9994f29cb42adcb47,
-    type: 2}
-  m_PrefabInternal: {fileID: 1407701620}
-  m_GameObject: {fileID: 678383126}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aaf8d9225aed436fac411517bdcdfce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 8300000, guid: 3915655759dd44b19b510f0b088deac7, type: 3}
---- !u!4 &678383129
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 498006, guid: 297e1561490784b9994f29cb42adcb47, type: 2}
-  m_PrefabInternal: {fileID: 1407701620}
-  m_GameObject: {fileID: 678383126}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &681617166
 GameObject:
   m_ObjectHideFlags: 0
@@ -6638,6 +6549,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &681617169
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6732,7 +6644,6 @@ GameObject:
   m_Component:
   - component: {fileID: 704843946}
   - component: {fileID: 704843945}
-  - component: {fileID: 704843944}
   - component: {fileID: 704843943}
   - component: {fileID: 704843942}
   m_Layer: 0
@@ -6750,13 +6661,6 @@ AudioListener:
   m_GameObject: {fileID: 704843941}
   m_Enabled: 1
 --- !u!124 &704843943
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 704843941}
-  m_Enabled: 1
---- !u!92 &704843944
 Behaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -6793,10 +6697,12 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!4 &704843946
 Transform:
   m_ObjectHideFlags: 0
@@ -6868,6 +6774,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 13
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &712906878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7013,6 +6920,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &728556390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7233,6 +7141,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &737598963
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7498,7 +7407,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -7956,6 +7865,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &865712995
 GameObject:
   m_ObjectHideFlags: 0
@@ -8146,35 +8056,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 866123084}
---- !u!1 &868980538
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 181082, guid: 21071f90a50be4657a996d42f1eb96eb, type: 2}
-  m_PrefabInternal: {fileID: 486127194}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 868980539}
-  - component: {fileID: 486127195}
-  m_Layer: 0
-  m_Name: DemoUtils
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &868980539
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 430562, guid: 21071f90a50be4657a996d42f1eb96eb, type: 2}
-  m_PrefabInternal: {fileID: 486127194}
-  m_GameObject: {fileID: 868980538}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 71.96389, y: 323.56952, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &932940593
 GameObject:
   m_ObjectHideFlags: 0
@@ -8315,6 +8196,7 @@ MonoBehaviour:
   m_PreferredHeight: 3.5778823
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &936216751
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8704,6 +8586,7 @@ MonoBehaviour:
   m_PreferredHeight: 100
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &989538168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8860,6 +8743,7 @@ MonoBehaviour:
   m_PreferredHeight: 50.000004
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1005042317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8972,6 +8856,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1010821401
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9137,6 +9022,7 @@ MonoBehaviour:
   m_PreferredHeight: 3.5778823
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1015997059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9304,6 +9190,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1025098305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9463,6 +9350,7 @@ MonoBehaviour:
   m_PreferredHeight: 3.5778823
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1065529845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9744,6 +9632,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &1080827324
 GameObject:
   m_ObjectHideFlags: 0
@@ -9867,6 +9756,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1106574672
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10125,6 +10015,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &1132796128
 GameObject:
   m_ObjectHideFlags: 0
@@ -10763,6 +10654,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1233027009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11082,6 +10974,7 @@ MonoBehaviour:
   m_PreferredHeight: 100
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1273672204
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11261,6 +11154,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &1286331753
 GameObject:
   m_ObjectHideFlags: 0
@@ -11451,6 +11345,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1289160037
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11641,6 +11536,7 @@ MonoBehaviour:
   m_PreferredHeight: 3.5778823
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1308915630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11953,6 +11849,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1341306347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12184,6 +12081,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1359066139
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12326,6 +12224,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1364785546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -12531,7 +12430,6 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 297e1561490784b9994f29cb42adcb47, type: 2}
-  m_RootGameObject: {fileID: 678383126}
   m_IsPrefabParent: 0
 --- !u!1 &1411631479
 GameObject:
@@ -12767,6 +12665,7 @@ MonoBehaviour:
   m_PreferredHeight: 3.5778823
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1428537249
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13002,6 +12901,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1440146561
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13199,6 +13099,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1471809877
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13363,6 +13264,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1484143950
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14259,6 +14161,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1559054506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14548,6 +14451,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1565354420
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14774,6 +14678,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &1568981691
 GameObject:
   m_ObjectHideFlags: 0
@@ -15431,6 +15336,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &1637242463
 GameObject:
   m_ObjectHideFlags: 0
@@ -15635,7 +15541,7 @@ Canvas:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1642262535}
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
@@ -15644,6 +15550,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -15790,6 +15697,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1644688209
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -15885,6 +15793,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1651299518
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16413,6 +16322,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &1718243948
 GameObject:
   m_ObjectHideFlags: 0
@@ -16649,6 +16559,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1729981740
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16752,7 +16663,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -16816,6 +16727,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1750925104
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17112,6 +17024,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1810304708
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17253,6 +17166,7 @@ MonoBehaviour:
   m_PreferredHeight: 100
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1815287321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17341,6 +17255,7 @@ MonoBehaviour:
   m_PreferredHeight: 70
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1821116407
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17578,6 +17493,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1828066058
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17719,6 +17635,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1832079206
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18031,6 +17948,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1881753600
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18392,6 +18310,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &1894390025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18561,6 +18480,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1911170226
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19295,6 +19215,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &2010198032
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19664,6 +19585,7 @@ MonoBehaviour:
   m_PreferredHeight: 3.5778823
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &2042443144
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -19934,6 +19856,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &2060739702
 GameObject:
   m_ObjectHideFlags: 0
@@ -20033,7 +19956,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -20132,6 +20055,7 @@ MonoBehaviour:
   m_PreferredHeight: 70
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &2099446506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20318,6 +20242,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &2115950149
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20405,6 +20330,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &2117994659
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20567,6 +20493,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &2126361766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20667,6 +20594,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: 1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &2137415807
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20782,6 +20710,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &2145205418
 GameObject:
   m_ObjectHideFlags: 0
@@ -20861,6 +20790,7 @@ MonoBehaviour:
   m_PreferredHeight: 100
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &2145205422
 MonoBehaviour:
   m_ObjectHideFlags: 0

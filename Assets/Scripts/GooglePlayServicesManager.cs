@@ -44,7 +44,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 
     private void Start()
     {
-        // Managed init respects the Max Login Requests value
+        //Managed init respects the Max Login Requests value
         if (!GameServices.IsInitialized())
         {
             GameServices.Init();
@@ -54,6 +54,7 @@ public class GooglePlayServicesManager : MonoBehaviour
     public bool GetInitialized()
     {
         return GameServices.IsInitialized();
+        return false;
     }
 
     public User GetUserInfo()
@@ -61,8 +62,9 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         return new User(GameServices.LocalUser.image, GameServices.LocalUser.userName);
 #else
-        return new User(null,"Over9000");
+                return new User(null,"Over9000");
 #endif
+        return null;
     }
 
 
@@ -75,7 +77,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
             GameServices.ReportScore(score, leaderboard);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
@@ -92,13 +94,13 @@ public class GooglePlayServicesManager : MonoBehaviour
 
             GameServices.ReportAchievementProgress(achievement, ammount);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
 
     public void UnlockAchivement(string achievement)
-    {
+        {
         if (GameServices.IsInitialized())
         {
 #if UNITY_ANDROID
@@ -109,13 +111,13 @@ public class GooglePlayServicesManager : MonoBehaviour
 
             GameServices.UnlockAchievement(achievement);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+                Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
 
-    public void UnlockAchievement(int achievement)
-    {
+        public void UnlockAchievement(int achievement)
+        {
         if (GameServices.IsInitialized())
         {
 #if UNITY_ANDROID
@@ -126,33 +128,33 @@ public class GooglePlayServicesManager : MonoBehaviour
             switch (achievement)
             {
                 case 1:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 2:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 3:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 4:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 5:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 6:
                     achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 7:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 8:
 
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 9:
                     achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
@@ -168,7 +170,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 
             GameServices.UnlockAchievement(achievementToUnlock);
 #elif UNITY_IOS
-        Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+                    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
@@ -185,7 +187,7 @@ public class GooglePlayServicesManager : MonoBehaviour
         {
             GameServices.Init();    // start a new initialization process
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
@@ -195,7 +197,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         GameServices.ReportScore(score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
     }
 
@@ -214,7 +216,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 
                 GameServices.Init();    // start a new initialization process
 #elif UNITY_IOS
-    Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
             }
         }
@@ -225,7 +227,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         GameServices.ManagedInit();
 #elif UNITY_IOS
-    Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
     }
 
@@ -234,7 +236,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         GameServices.SignOut();
 #elif UNITY_IOS
-        Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
+                Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
     }
 }

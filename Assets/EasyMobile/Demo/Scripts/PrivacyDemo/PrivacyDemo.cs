@@ -229,7 +229,7 @@ namespace EasyMobile.Demo
             // In short we'll just go ahead with initializing the EM runtime.
             if (consent != null)
             {
-                if (RuntimeManager.IsInitialized())
+                if (!RuntimeManager.IsInitialized())
                     RuntimeManager.Init();
 
                 return;
@@ -479,7 +479,7 @@ namespace EasyMobile.Demo
             initMethod.Invoke(null, null);
 
             // Now fetch the opt-out URL.
-            fetchURLMethod.Invoke(null, 
+            fetchURLMethod.Invoke(null,
                 new object[]
                 {
                     (Action<string>)((url) =>
