@@ -75,7 +75,7 @@ public class PlayerManager{
     {
         if (instance.currentPlayer == null)
         {
-            int shipSelected = GameManager.instance.CurrentHeroChoosen;
+            int shipSelected = GameManager.CurrentHeroChoosen;
             instance.CreatePlayerById(shipSelected);
         }
         return Instance.currentPlayer.GetComponent<Player>();

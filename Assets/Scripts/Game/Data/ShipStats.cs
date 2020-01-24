@@ -111,7 +111,7 @@ public struct ShipStats
         var GameControllerSuperTime = 0;
         var GameControllerSuperDamage = 0;
         PlayerData playerData = DataController.GetPlayerData();
-        if (GameManager.instance)
+        if (GameManager.Instance)
         {
             GameControllerSpeedValue = playerData.Upgrades[(int)UpgradeType.Speed];
             GameControllerDamageValue = playerData.Upgrades[(int)UpgradeType.Damage];

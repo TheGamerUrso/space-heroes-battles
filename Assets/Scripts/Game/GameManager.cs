@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 [Serializable]
 public class PlayerShip
@@ -14,19 +15,22 @@ public enum GameStates
     Menu, Game, GameOver, Debug
 }
 
-public class GameManager : MonoSingleton<GameManager>
+public class GameManager : Singleton<GameManager>
 {
-    private GameStates currentGameState;
-    public static bool Paused;
-    private State[] ListOfStates;
-    private static State currentState;
-    private float DefaultTimeDeltaScale;
+    public delegate void OnLoadData();
+    public event OnLoadData OnLoadDataCompleted;
 
-    public int counsEarnInGame;
-    public int coinDropInTotal;
-    public int score;
-    public int MaxLevelUnlocked = 5;
-    public int CurrentHeroChoosen;
+    public static bool IsGameOver;
+    public  static bool Paused;
+
+
+    private static float DefaultTimeDeltaScale;
+
+    public static int counsEarnInGame;
+    public static int coinDropInTotal;
+    public static int score;
+    public static int MaxLevelUnlocked = 5;
+    public static int CurrentHeroChoosen;
 
     [Range(0, 20)]
     public int LevelDifficuilty;
@@ -36,7 +40,6 @@ public class GameManager : MonoSingleton<GameManager>
     public static int LevelSelected = 0;
 
     public GameObject levelupAnnouncement;
-
 
     public override void Init()
     {
@@ -52,9 +55,9 @@ public class GameManager : MonoSingleton<GameManager>
         //DataController.SavePlayerData();
     }
 
-    public static void ShowLevelup()
+    public void ShowLevelup()
     {
-        GameManager.instance.levelupAnnouncement.SetActive(true);
+        Instance.levelupAnnouncement.SetActive(true);
     }
 
     private void Start()
@@ -63,31 +66,17 @@ public class GameManager : MonoSingleton<GameManager>
         {
             SpawnEnemies.SetLevelDifficuilty(LevelDifficuilty);
         }
-
-        new PlayerManager(players);
-        MenuState menuState = new MenuState(this);
-        MainGameState mainGameState = new MainGameState(this);
-        GameOverState gameOverState = new GameOverState(this);
-
-        ListOfStates = new State[]{
-            menuState,mainGameState,gameOverState
-            };
-
-        SetState(currentGameState);
-
         PlayerData playerData = DataController.GetPlayerData();
- 
-        AudioManager.instance.SetMusicVolume(playerData.MusicVolume);
+        AudioManager.Instance.SetMusicVolume(playerData.MusicVolume);
 
-        AudioManager.instance.SetSoundVolume(playerData.SFXVolume);
+        AudioManager.Instance.SetSoundVolume(playerData.SFXVolume);
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
-
-  
+        GameEventSystem.OnPlayerLevelUpHandled += ShowLevelup;
     }
 
-    public void PauseTheGame(bool value = true)
+    public static void PauseTheGame(bool value = true)
     {
         if (value)
         {
@@ -103,25 +92,10 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    public void SetState(GameStates gameState)
+    public static bool IsMouseOverUI()
     {
-        if (currentState != null)
-        {
-           currentState.OnStateExit();
-        }
-
-       currentGameState = gameState;
-
-        currentState = ListOfStates[(int)gameState];
-
-        if (currentState != null)
-        {
-           currentState.OnStateEnter();
-        }
+        return EventSystem.current.IsPointerOverGameObject();
     }
 
-    public GameStates GetCurrentState()
-    {
-        return currentGameState;
-    }
+ 
 }

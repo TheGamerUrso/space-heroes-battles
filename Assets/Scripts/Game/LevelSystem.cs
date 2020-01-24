@@ -3,7 +3,7 @@ using UnityEngine;
 [Serializable]
 public class LevelSystem
 {
-    public Action OnLevelUp;
+//public Action OnLevelUp;
 
     [Header("Level System")]
     [SerializeField]private int Level;
@@ -36,10 +36,7 @@ public class LevelSystem
                 Level++;
                 xp -= xpToLevel;
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
-                if (OnLevelUp != null)
-                {
-                    OnLevelUp();
-                }
+                GameEventSystem.Call(EventType.Player_LevelUp);
             }
         }
         else

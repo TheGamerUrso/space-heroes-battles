@@ -81,7 +81,7 @@ public class Player : Ship, IDestroyable
 
         weaponSystem.SetPlayerAnimation(playerAnimation);
         weaponSystem.SetPlayer(this);
-        levelSystem.OnLevelUp = LevelSystem_OnLevelUpHandled;
+        GameEventSystem.OnPlayerLevelUpHandled += LevelSystem_OnLevelUpHandled;       
     }
 
     public void LevelSystem_OnLevelUpHandled()
@@ -89,7 +89,6 @@ public class Player : Ship, IDestroyable
         Heal(MaxHealth);
         shipStatsSystem.SetStats(levelSystem);
         weaponSystem.SetPlayer(this);
-        GameManager.ShowLevelup();
     }
 
     private void Update()
@@ -180,7 +179,7 @@ public class Player : Ship, IDestroyable
 
         if (GetHealthPresentage() > .2f)
         {
-            AudioManager.instance.StopSoundEffect();
+            AudioManager.Instance.StopSoundEffect();
         }
     }
 
@@ -248,7 +247,7 @@ public class Player : Ship, IDestroyable
                 if (CurrentHealth < 1)
                 {
                     Death();
-                    AudioManager.instance.StopSoundEffect();
+                    AudioManager.Instance.StopSoundEffect();
                 }
 
 

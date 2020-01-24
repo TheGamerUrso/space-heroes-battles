@@ -14,7 +14,7 @@ public class PlanetGenerator : MonoBehaviour
 
     IEnumerator GeneratePlanet()
     {
-        while (SpawnEnemies.GameOver == false)
+        while (GameManager.IsGameOver == false)
         {
             yield return new WaitForSeconds(Random.Range(10, 20));
             GameObject planet = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.Planet) as GameObject;

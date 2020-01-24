@@ -7,14 +7,9 @@ using UnityEngine.UI;
 public class SplashScreen : MonoBehaviour
 {
     public GooglePlayServicesManager googlePlayServicesManager;
-    private AsyncOperation async;
     public float targetTime = 60.0f;
-
-    [SerializeField] private Image Loading;
-    private bool AllowGameStart = false;
-
-
     public GameObject GoogleServicesNotify;
+
     private void Awake()
     {
         if (!RuntimeManager.IsInitialized())
@@ -23,10 +18,7 @@ public class SplashScreen : MonoBehaviour
 
     public void Start()
     {
-        Application.runInBackground = true;
-
-         LoadGame();
-
+        LoadGame();
     }
 
     private void Update()
@@ -40,10 +32,12 @@ public class SplashScreen : MonoBehaviour
 #if UNITY_ANDROID
         if (GameServices.IsInitialized())
         {
-            async.allowSceneActivation = true;
+            SceneLoader.Instance.AllowSceneActivation();
         }
-#elif UNITY_EDITOR
-        async.allowSceneActivation = true;
+#endif
+
+#if UNITY_EDITOR
+        SceneLoader.Instance.AllowSceneActivation();
 #endif
 
     }
@@ -51,26 +45,24 @@ public class SplashScreen : MonoBehaviour
     public void SignIn()
     {
         GooglePlayServicesManager.Instance.SignIn();
-
     }
 
     public void ContinueWithoutLogIn()
     {
         GoogleServicesNotify.SetActive(false);
-        async.allowSceneActivation = true;
+        SceneLoader.Instance.AllowSceneActivation();
     }
 
     public void LoadGame()
     {
-        async = SceneManager.LoadSceneAsync("Main");
-        async.allowSceneActivation = false;
+        SceneLoader.Instance.LoadScene("Intro");
     }
 
     void OnUserLoginSucceeded()
     {
         Debug.Log("User logged in successfully.");
         GoogleServicesNotify.SetActive(false);
-        async.allowSceneActivation = true;
+        SceneLoader.Instance.AllowSceneActivation();
     }
 
     void OnUserLoginFailed()

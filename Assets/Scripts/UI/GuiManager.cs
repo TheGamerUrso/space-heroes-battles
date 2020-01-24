@@ -55,14 +55,9 @@ public class GuiManager : MonoBehaviour
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (GameManager.instance.GetCurrentState() != GameStates.Game)
+            if (!focus && GameManager.IsGameOver == false)
             {
-                return;
-            }
-
-            if (!focus && SpawnEnemies.GameOver == false)
-            {
-                GameManager.instance.PauseTheGame();
+                GameManager.PauseTheGame();
                 ShowPauseMenu(true);
             }
         }
@@ -70,16 +65,11 @@ public class GuiManager : MonoBehaviour
 
     private void OnApplicationPause(bool Paused)
     {
-        if (GameManager.instance.GetCurrentState() != GameStates.Game)
-        {
-            return;
-        }
-
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (SpawnEnemies.GameOver == false)
+            if (GameManager.IsGameOver == false)
             {
-                GameManager.instance.PauseTheGame();
+                GameManager.PauseTheGame();
                 ShowPauseMenu(true);
             }
         }
@@ -93,14 +83,12 @@ public class GuiManager : MonoBehaviour
     }
     private void Update()
     {
-        SlowMoEffect();
-
         if (Time.timeScale == 1)
         {
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                pauseButton.SetActive(false);
+                //pauseButton.SetActive(false);
             }
         }
         else
@@ -108,6 +96,7 @@ public class GuiManager : MonoBehaviour
             timer = 1;
             pauseButton.SetActive(true);
         }
+        SlowMoEffect();
 
         if (SpawnEnemies.Instance.spawnReady)
         {
@@ -119,7 +108,7 @@ public class GuiManager : MonoBehaviour
     public void SlowMoEffect()
     {
         if (useSloMo && !GameManager.Paused)
-        {
+         {
             if (IsTrasnmiting() || Input.touchCount > 0 || Input.GetMouseButton(0))
             {
                 slowMo = 1;
@@ -156,7 +145,7 @@ public class GuiManager : MonoBehaviour
     public void ReplayButton()
     {
         AudioManager.PlaySound("Click", 1);
-        GameManager.instance.SetState(GameStates.Game);
+        
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
@@ -165,7 +154,7 @@ public class GuiManager : MonoBehaviour
         useSloMo = true;
         AudioManager.PlaySound("Back", 1);
         ShowPauseMenu(false);
-        GameManager.instance.PauseTheGame(false);
+        GameManager.PauseTheGame(false);
     }
 
     public void PauseButton()
@@ -173,7 +162,7 @@ public class GuiManager : MonoBehaviour
         useSloMo = false;
         AudioManager.PlaySound("Click", 1);
         ShowPauseMenu(true);
-        GameManager.instance.PauseTheGame();
+        GameManager.PauseTheGame();
     }
 
     public void ShowPauseMenu(bool value)
@@ -206,9 +195,9 @@ public class GuiManager : MonoBehaviour
     public void LoadMainMenu()
     {
         useSloMo = false;
-        Time.timeScale = 1.0f;
+        GameManager.PauseTheGame(false);
         AudioManager.PlaySound("Click", 1);
-        SceneLoader.instance.LoadMainenu();
+        SceneLoader.Instance.LoadMainenu();
         GameObject activeMenuGO = null;
 
         if (WinScreen.activeSelf)
@@ -270,7 +259,6 @@ public class GuiManager : MonoBehaviour
             {
                 player = GameObject.FindObjectOfType<Player>();
             }
-
             PlayerData playerData = DataController.GetPlayerData();
 
             playerData.Level = player.GetLevelSystem().GetLevel();
@@ -387,12 +375,6 @@ public class GuiManager : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
-
-
-        GameManager.instance.SetState(GameStates.GameOver);
-
-
-
         GameOverScreen.gameObject.SetActive(true);
     }
 
@@ -402,7 +384,6 @@ public class GuiManager : MonoBehaviour
         PlayerHUD.gameObject.SetActive(false); 
         yield return new WaitForSeconds(2.0f);
         AudioManager.SetMusic("Victory", false);
-        GameManager.instance.SetState(GameStates.GameOver);
 
         yield return new WaitForSeconds(2.0f);
 

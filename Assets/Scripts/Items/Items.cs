@@ -97,7 +97,7 @@ public class Items : MonoBehaviour
         {
             player.Heal(player.Level * itemData.m_HealValue);
             GuiManager.Instance.CreateFloatingText("Heal up", transform.localPosition);
-            if (AudioManager.instance)
+            if (AudioManager.Instance)
             {
                 AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
             }
@@ -112,7 +112,7 @@ public class Items : MonoBehaviour
         {
             SpawnEnemies.counsEarnInGame++;
             GuiManager.Instance.CreateFloatingText("$", transform.localPosition);
-            if (AudioManager.instance)
+            if (AudioManager.Instance)
             {
                 AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 3);
             }
@@ -132,7 +132,7 @@ public class Items : MonoBehaviour
         {
             player.InstallShieldModule();
             GuiManager.Instance.CreateFloatingText("Shield Up", transform.localPosition);
-            if (AudioManager.instance)
+            if (AudioManager.Instance)
             {
                 AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
             }
@@ -150,7 +150,7 @@ public class Items : MonoBehaviour
             playerWeaponSystem.WeaponPowerUPCollected();
             GuiManager.Instance.CreateFloatingText("Power Up", transform.localPosition);
 
-            if (AudioManager.instance)
+            if (AudioManager.Instance)
             {
                 AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
             }

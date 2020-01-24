@@ -50,7 +50,6 @@ public class SpawnEnemies : MonoBehaviour
 
     public int AvailableEnemiesIndex = 1;
     public static int LevelDifficulty { get; private set; }
-    public static bool GameOver { get; set; }
     public static float Score { get; set; }
     public static int WaveSurvived { get; set; }
     public static int EnemyKilled { get; set; }
@@ -95,9 +94,8 @@ public class SpawnEnemies : MonoBehaviour
 
     public void GameStart()
     {
-        GameOver = false;
+        GameManager.IsGameOver = false;
         countdown = countdownDelay;
-        GameManager.instance.SetState(GameStates.Game);
 
         if (survival)
         {
@@ -114,9 +112,8 @@ public class SpawnEnemies : MonoBehaviour
     private void Update()
     {
         //If Music is Done Choose something new to play.
-        if (GameManager.instance.GetCurrentState() != GameStates.GameOver)
+        if (GameManager.IsGameOver)
         {
-
             AudioManager.PlayRandomMusic();
         }
 
@@ -131,7 +128,7 @@ public class SpawnEnemies : MonoBehaviour
 
     public void Spawning()
     {
-        if (GameOver == false)
+        if (GameManager.IsGameOver == false)
         {
             //if Number of Enemies that are spawn is more that Max don't spawn anymore
             if (EnemyManager.CheckIfCurrentEnemiesAreMoreThanMax())
@@ -139,7 +136,7 @@ public class SpawnEnemies : MonoBehaviour
                 spawnerState = SpawnerState.wait;
             }
         }
-        else if (GameOver == true)
+        else if (GameManager.IsGameOver == true)
         {
             StopCoroutine(Spawn());
             spawnerState = SpawnerState.stopped;
@@ -148,7 +145,7 @@ public class SpawnEnemies : MonoBehaviour
 
     private IEnumerator Spawn()
     {
-        while (GameOver == false)
+        while (GameManager.IsGameOver == false)
         {
             switch (spawnerState)
             {
@@ -170,9 +167,9 @@ public class SpawnEnemies : MonoBehaviour
                     if (Wave == 0 || EnemyManager.CheckIfWeKilledEnoughEnemiesToProgress())
                     {
                         WaveSurvived = Wave;
-
                         PlayerData playerData = DataController.GetPlayerData();
                         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.survive);
+
                         if (objectiveData != null)
                         {
                             objectiveData.UpdateProgress(WaveSurvived);
@@ -256,7 +253,7 @@ public class SpawnEnemies : MonoBehaviour
                                         yield return null;
                                     }
 
-                                    GameOver = true;
+                                    GameManager.IsGameOver = true;
                                 }
                             }
                         }
@@ -307,7 +304,7 @@ public class SpawnEnemies : MonoBehaviour
 
 
 
-                    if (GameOver)
+                    if (GameManager.IsGameOver)
                     {
                         yield return new WaitForSeconds(.5f);
 

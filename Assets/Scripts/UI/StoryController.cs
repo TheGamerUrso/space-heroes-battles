@@ -43,7 +43,7 @@ public class StoryController : MonoBehaviour
 
                 if (charArray[i].Equals('%'))
                 {
-                    SceneLoader.instance.LoadScene("Level" + "" + charArray[i]);
+                    SceneLoader.Instance.LoadScene("Level" + "" + charArray[i]);
                 }
 
                 textToShow += "" + charArray[i];

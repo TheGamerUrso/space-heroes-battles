@@ -23,7 +23,7 @@ public class ScreenManager : MonoBehaviour
 
     private void Start()
     {
-        AudioAPI =  AudioManager.instance;
+        AudioAPI =  AudioManager.Instance;
         foreach (UIScreens item in MainMenuScreens)
         {
             if (item.Name.Equals("Upgrades") || item.Name.Equals("Levels"))

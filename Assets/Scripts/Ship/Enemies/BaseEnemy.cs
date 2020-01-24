@@ -2,21 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-public class EnemyInformationAfterDeath : EventArgs
-{
-    public EnemyElement enemyElement;
-    public int EnemyAward;
-}
 
 public class BaseEnemy : Ship, IDestroyable
 {
+    private GameEventSystem gameEventSystem;
+
     [Header("Enemy Config")]
     public BaseEnemyAI baseEnemyAI;
     protected BoxCollider boxCollider;
 
-    public Action<BaseEnemy> onEnemyDeath;
-    public Action<object> OnEnemyHit;
-    public Action<BaseEnemy> onEnemyEscape;
+    //public Action<BaseEnemy> onEnemyDeath;
+    //public Action<object> OnEnemyHit;
+    //public Action<BaseEnemy> onEnemyEscape;
 
     public      bool Alive;
     protected   bool CanAttack;
@@ -46,8 +43,8 @@ public class BaseEnemy : Ship, IDestroyable
 
     private void OnDisable()
     {
-        onEnemyDeath = null;
-        onEnemyEscape = null;
+        //onEnemyDeath = null;
+        //onEnemyEscape = null;
     }
 
     private void OnEnable()
@@ -88,8 +85,8 @@ public class BaseEnemy : Ship, IDestroyable
             weaponScript.SetShipStatsSystem(GetShipStatsSystem());
         }
 
-        this.onEnemyDeath = OnEnemyDeath;
-        this.onEnemyEscape = OnEnemyEscape;
+        //this.onEnemyDeath = OnEnemyDeath;
+        //this.onEnemyEscape = OnEnemyEscape;
     }
 
     public override void InitReferences()
@@ -128,7 +125,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public void Leave()
     {
-        if (onEnemyEscape != null) onEnemyEscape(this);
+       GameEventSystem.Call(EventType.Enemy_Escape,this);
     }
 
     public virtual void Heal(float ammount)
@@ -176,11 +173,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public virtual void Hit()
     {
-
-        if (OnEnemyHit != null)
-        {
-            OnEnemyHit(this);
-        }
+        GameEventSystem.Call(EventType.Enemy_Hit, this);
     }
 
     public virtual void Update()
@@ -205,8 +198,7 @@ public class BaseEnemy : Ship, IDestroyable
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
 
-            if (onEnemyDeath != null)
-                onEnemyDeath(this);
+            GameEventSystem.Call(EventType.Enemy_Death, this);
 
 
             healthBar.Hide();

@@ -4,23 +4,21 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class SceneLoader : MonoSingleton<SceneLoader>
+public class SceneLoader : Singleton<SceneLoader>
 {
-    private class LoadingMonoBehaviour : MonoBehaviour { }
-
-    public static Action OnLoadCallbak;
     private static AsyncOperation LoadingAsyncOperation;
-    public Image BlockRaycast;
-    public GameObject ProgressBarPanel;
+    private Animator animator;
     public Image progressBar;
 
+    public Image BlockRaycast;
+    public GameObject ProgressBarPanel;
     public GameObject Content;
-    public Animator animator;
+
+    public string currentLevelLoaded;
 
     public override void Init()
     {
         base.Init();
-
         animator = GetComponentInChildren<Animator>();
     }
 
@@ -28,10 +26,15 @@ public class SceneLoader : MonoSingleton<SceneLoader>
     {
         Hide();
     }
-
-    public static float GetLoadingProgress()
+    
+    public void AllowSceneActivation()
     {
-        if(LoadingAsyncOperation != null)
+        LoadingAsyncOperation.allowSceneActivation = true;
+    }
+
+    private float GetLoadingProgress()
+    {
+        if (LoadingAsyncOperation != null)
         {
             return LoadingAsyncOperation.progress;
         }
@@ -49,37 +52,45 @@ public class SceneLoader : MonoSingleton<SceneLoader>
 
     public void LoadMainenu()
     {
-        GameManager.instance.PauseTheGame(false);
         StartCoroutine(ShowLoadingScreen("Main"));
     }
 
-    public IEnumerator ShowLoadingScreen(string level)
+    private IEnumerator ShowLoadingScreen(string level)
     {
         ShowProgressBar();
 
         yield return new WaitForSeconds(2.0f);
 
-        StartCoroutine(LoadSceneAsync(level));
+        StartCoroutine(LoadSceneWithDelay(level));
+    }
+    private IEnumerator LoadSceneWithDelay(string level)
+    { 
+        LoadingAsyncOperation = SceneManager.LoadSceneAsync(level);
+
+        while (LoadingAsyncOperation.isDone == false)
+        {
+            progressBar.fillAmount = GetProgress();
+            System.GC.Collect();
+            yield return null;
+        }
+
+ 
+        Hide();
     }
 
     private IEnumerator LoadSceneAsync(string level)
     {
         LoadingAsyncOperation = SceneManager.LoadSceneAsync(level);
-
+        LoadingAsyncOperation.completed += OnSceneLoadCompleted;
         while (LoadingAsyncOperation.isDone == false)
         {
             progressBar.fillAmount = GetProgress();
             yield return null;
         }
 
-        if (level.Equals("Main"))
-        {
-            GameManager.instance.SetState(GameStates.Menu);
-        }
-
-        Hide();
     }
-    public static float GetProgress()
+
+    private static float GetProgress()
     {
         if (LoadingAsyncOperation != null)
         {
@@ -87,10 +98,11 @@ public class SceneLoader : MonoSingleton<SceneLoader>
         }
         else
         {
-           return 1f;
+            return 1f;
         }
     }
-    public void ShowProgressBar()
+
+    private void ShowProgressBar()
     {
         if (animator)
         {
@@ -101,7 +113,7 @@ public class SceneLoader : MonoSingleton<SceneLoader>
         ProgressBarPanel.SetActive(true);
     }
 
-    public void Hide()
+    private void Hide()
     {
         if (animator)
         {
@@ -110,5 +122,14 @@ public class SceneLoader : MonoSingleton<SceneLoader>
         }
         Content.gameObject.SetActive(false);
         BlockRaycast.enabled = false;
+    }
+
+    void OnSceneLoadCompleted(AsyncOperation ao)
+    {
+        if (currentLevelLoaded.Contains("Level"))
+        {
+            AudioManager.PlayRandomMusic(true);
+            Application.targetFrameRate = 60;
+        }
     }
 }

@@ -29,7 +29,6 @@ public class MainMenuManager : MonoBehaviour
     {
 
 
-
     }
     public void ShowLeaderboards()
     {
@@ -44,8 +43,14 @@ public class MainMenuManager : MonoBehaviour
     private void Start()
     {
         version.text = "ver " + Application.version;
-
+        GameManager.PauseTheGame(false);
         AudioManager.SetMusic("Menu");
+        PlayerData playerData = DataController.GetPlayerData();
+        playerData.GotHitInGame = false;
+        playerData.PlayedGame = false;
+
+
+        Application.targetFrameRate = 30;
 
     }
 
@@ -60,7 +65,8 @@ public class MainMenuManager : MonoBehaviour
     {
         levelIndex = GameManager.LevelSelected;
         levelName = string.Format("Level" + (levelIndex + 1));
-        SceneLoader.instance.LoadScene(levelName);
+        SceneLoader.Instance.LoadScene(levelName);
+
     }
 
     public void ShowMessage(string text)

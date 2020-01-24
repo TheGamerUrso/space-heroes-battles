@@ -10,7 +10,7 @@ public class SurvivalHighscore : MonoBehaviour
     private void OnEnable()
     {
         PlayerData playerData = DataController.GetPlayerData();
-        float score =  playerData.GetScore(0);
+        float score = playerData.GetScore(0);
         float highscore = playerData.GetHighScore(0);
         highscoreText.text = string.Format("{00:00000000}", highscore);
         scoreText.text = string.Format("{00:00000000}", score);

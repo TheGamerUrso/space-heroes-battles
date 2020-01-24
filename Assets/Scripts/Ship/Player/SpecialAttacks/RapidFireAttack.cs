@@ -9,7 +9,7 @@ public class RapidFireAttack : SpecialAttack
 
     void Start()
     {
-        GameManager gm = GameManager.instance;
+        gm = GameObject.FindObjectOfType<GameManager>();
       //  if (gm)
        // previousRapidFireValue = gm.playerProgression.Fire;
     }

@@ -41,6 +41,8 @@ public class EnemyManager
     private DropController dropController;
     private GameObject BossGO;
 
+
+
     public EnemyManager(GameObject[] newBossPrefab)
     {
         instance = this;
@@ -58,6 +60,9 @@ public class EnemyManager
         EnemyManager.EnemiesEscaped = 0;
         SpawnEnemies.EnemyKilled = 0;
         EnemySpawnedInTotal = 0;
+
+        GameEventSystem.OnEnemyDeathHandled += EnemyDied;
+        GameEventSystem.OnEnemyDeathHandled += EnemyEscaped;
     }
 
     public void CreateEnemy(EnemyElement enemyElement,int LevelDifficulty)
@@ -87,6 +92,8 @@ public class EnemyManager
         enemyElement.currentNumberInScene++;
 
         EnemySpawnedInTotal++;
+    
+    
     }
 
     public void CreateEnemy(EnemyElement enemyElement)
@@ -160,12 +167,10 @@ public class EnemyManager
                 }
             }
         }
-        PlayerData playerData = DataController.GetPlayerData();
-
-
+     
         SpawnEnemies.EnemyKilled++;
         SpawnEnemies.CurrentEnemyKilled++;
-
+        PlayerData playerData = DataController.GetPlayerData();
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
         if (objectiveData != null)
             objectiveData.UpdateProgress(SpawnEnemies.CurrentEnemyKilled);

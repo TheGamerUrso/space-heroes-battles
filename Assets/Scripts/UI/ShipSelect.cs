@@ -98,7 +98,7 @@ public class ShipSelect : MonoBehaviour
 
         Ships[currentShip].SetActive(true);
 
-        GameManager.instance.CurrentHeroChoosen = currentShip;
+        GameManager.CurrentHeroChoosen = currentShip;
 
         UISelectButton.SetActive(true);
         UIUnlockButton.SetActive(false);

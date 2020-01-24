@@ -25,19 +25,33 @@ public class GameOverWidget : MonoBehaviour
     [Header("GameOver Widget Config")]
     public LevelObjectivesElement[] levelObjectives;
     public LevelObjectiveData[] levelObjectiveDatas;
-
+    public void PlaySound()
+    {
+        AudioManager.PlaySound("UISlide", 0);
+    }
     private void OnEnable()
     {
-        GameManager.instance.SetState(GameStates.GameOver);
+        GameManager.IsGameOver = true;
+
+        Player player = PlayerManager.GetPlayer();
+        PlayerData playerData = DataController.GetPlayerData();
+        PlayerAnimation playerAnimation = player.PlayerAnimation();
+
+        if (player != null)
+        {
+            AudioManager.PlaySound("Victory", 3);
+            playerAnimation.Exit();
+        }
+        else if (player == null)
+        {
+            AudioManager.PlaySound("GameOver", 3);
+        }
+
         UpdateScore();
         AudioManager.SetMusic("GameOver");
         levelName = "Level" + GameManager.LevelSelected;
         killed = EnemyManager.EnemySpawnedInTotal * .9f;
         collected = SpawnEnemies.CoinDropInTotal * .9f;
-
-        player = PlayerManager.GetPlayer();
-        playerData = DataController.GetPlayerData();
-
 
         playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
 
@@ -45,7 +59,7 @@ public class GameOverWidget : MonoBehaviour
         {
             missionCollection = DataController.GetMissionCollection();
             mission = missionCollection.GetMission(GameManager.LevelSelected);
-
+    
             levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
         }
         if (!SpawnEnemies.Instance.survival)
@@ -143,12 +157,12 @@ public class GameOverWidget : MonoBehaviour
         m_PlayAgainButton.onClick.AddListener(() =>
         {
             Scene loadedLevel = SceneManager.GetActiveScene();
-            SceneLoader.instance.LoadScene(loadedLevel.name);
+            SceneLoader.Instance.LoadScene(loadedLevel.name);
         });
 
         m_QuitButton.onClick.AddListener(() =>
         {
-            SceneLoader.instance.LoadScene("Main");
+            SceneLoader.Instance.LoadScene("Main");
         });
     }
 

@@ -20,7 +20,7 @@ public class EnemyHealthWidget : BaseHealthWidget
     }
     public override void Initiallize(Ship ship)
     {
-        ship.GetComponent<BaseEnemy>().OnEnemyHit = OnDamageTaken;
+        GameEventSystem.OnEnemyHithHandled += OnDamageTaken;
     }
 
     public override void Refresh(IDestroyable user)

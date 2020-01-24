@@ -10,7 +10,7 @@ public class AudioTrack
     public AudioClip audioClip;
 }
 
-public class AudioManager : MonoSingleton<AudioManager>
+public class AudioManager : Singleton<AudioManager>
 {
     // public static AudioManager instance;
     public AudioTrack[] SoundCLips;
@@ -80,18 +80,18 @@ public class AudioManager : MonoSingleton<AudioManager>
 
     public static void PlaySound(string IdTrack, int mixGroupIndex, bool repeat = false)
     {
-        AudioManager.instance.PlaySoundById(IdTrack, mixGroupIndex);
+        AudioManager.Instance.PlaySoundById(IdTrack, mixGroupIndex);
     }
 
     public static void PlayRandomMusic(bool force = false)
     {
-        AudioManager.instance.PlayRandomSong(force);
+        AudioManager.Instance.PlayRandomSong(force);
     }
 
     public static void SetMusic(string IdTrack, bool loop = true)
     {
 
-        AudioManager.instance.SetMusicByName(IdTrack, loop);
+        AudioManager.Instance.SetMusicByName(IdTrack, loop);
     }
 
     public void SetMusicByName(string IdTrack, bool loop = true)
@@ -166,7 +166,7 @@ public class AudioManager : MonoSingleton<AudioManager>
 
     public static void PlaySound(AudioSource source, AudioClip audioClip, int mixGroupIndex = 0, bool usePitch = false)
     {
-        AudioManager.instance.PlaySoundByClip(source, audioClip, mixGroupIndex, usePitch);
+        AudioManager.Instance.PlaySoundByClip(source, audioClip, mixGroupIndex, usePitch);
     }
 
     public void PlaySoundByClip(AudioSource source, AudioClip audioClip, int mixGroupIndex = 0, bool usePitch = false)
