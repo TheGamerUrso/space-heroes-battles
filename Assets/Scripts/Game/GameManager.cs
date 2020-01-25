@@ -1,6 +1,7 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class PlayerShip
@@ -21,7 +22,7 @@ public class GameManager : Singleton<GameManager>
     public event OnLoadData OnLoadDataCompleted;
 
     public static bool IsGameOver;
-    public  static bool Paused;
+    public static bool Paused;
 
 
     private static float DefaultTimeDeltaScale;
@@ -44,7 +45,19 @@ public class GameManager : Singleton<GameManager>
     public override void Init()
     {
         base.Init();
+
         new DataController();
+        PlayerManager.Initialize(players);
+
+        PlayerData playerData = DataController.GetPlayerData();
+
+        AudioManager.Instance.SetMusicVolume(playerData.MusicVolume);
+
+        AudioManager.Instance.SetSoundVolume(playerData.SFXVolume);
+
+        DefaultTimeDeltaScale = Time.fixedDeltaTime;
+
+        GameEventSystem.OnPlayerLevelUpHandled += ShowLevelup;
 
     }
 
@@ -62,18 +75,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-        if (LevelDifficuilty > 0)
-        {
-            SpawnEnemies.SetLevelDifficuilty(LevelDifficuilty);
-        }
-        PlayerData playerData = DataController.GetPlayerData();
-        AudioManager.Instance.SetMusicVolume(playerData.MusicVolume);
-
-        AudioManager.Instance.SetSoundVolume(playerData.SFXVolume);
-
-        DefaultTimeDeltaScale = Time.fixedDeltaTime;
-
-        GameEventSystem.OnPlayerLevelUpHandled += ShowLevelup;
+        SceneLoader.Instance.LoadScene("Intro");
     }
 
     public static void PauseTheGame(bool value = true)
@@ -97,5 +99,5 @@ public class GameManager : Singleton<GameManager>
         return EventSystem.current.IsPointerOverGameObject();
     }
 
- 
+
 }

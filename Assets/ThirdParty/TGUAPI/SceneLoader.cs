@@ -6,6 +6,7 @@ using UnityEngine.UI;
 
 public class SceneLoader : Singleton<SceneLoader>
 {
+    private static AsyncOperation UnloadAsyncOperation;
     private static AsyncOperation LoadingAsyncOperation;
     private Animator animator;
     public Image progressBar;
@@ -52,7 +53,7 @@ public class SceneLoader : Singleton<SceneLoader>
 
     public void LoadMainenu()
     {
-        StartCoroutine(ShowLoadingScreen("Main"));
+        LoadScene("Main");
     }
 
     private IEnumerator ShowLoadingScreen(string level)
@@ -63,31 +64,38 @@ public class SceneLoader : Singleton<SceneLoader>
 
         StartCoroutine(LoadSceneWithDelay(level));
     }
+
+
     private IEnumerator LoadSceneWithDelay(string level)
-    { 
-        LoadingAsyncOperation = SceneManager.LoadSceneAsync(level);
-
-        while (LoadingAsyncOperation.isDone == false)
-        {
-            progressBar.fillAmount = GetProgress();
-            System.GC.Collect();
-            yield return null;
-        }
-
- 
-        Hide();
-    }
-
-    private IEnumerator LoadSceneAsync(string level)
     {
-        LoadingAsyncOperation = SceneManager.LoadSceneAsync(level);
+        if (!string.IsNullOrEmpty(currentLevelLoaded))
+        {
+            UnloadAsyncOperation = SceneManager.UnloadSceneAsync(currentLevelLoaded);
+
+            UnloadAsyncOperation.completed += OnScenUnloadCompleted;
+
+
+            while (UnloadAsyncOperation.isDone == false)
+            {
+                progressBar.fillAmount = GetProgress();
+
+                yield return null;
+            }
+        }
+
+        LoadingAsyncOperation = SceneManager.LoadSceneAsync(level, LoadSceneMode.Additive);
         LoadingAsyncOperation.completed += OnSceneLoadCompleted;
+
         while (LoadingAsyncOperation.isDone == false)
         {
             progressBar.fillAmount = GetProgress();
+
             yield return null;
         }
 
+        currentLevelLoaded = level;
+
+        Hide();
     }
 
     private static float GetProgress()
@@ -122,6 +130,10 @@ public class SceneLoader : Singleton<SceneLoader>
         }
         Content.gameObject.SetActive(false);
         BlockRaycast.enabled = false;
+    }
+    void OnScenUnloadCompleted(AsyncOperation ao)
+    {
+    
     }
 
     void OnSceneLoadCompleted(AsyncOperation ao)

@@ -33,7 +33,7 @@ public class XPBarWidget : MonoBehaviour
     public void UpdateXPBarWidget()
     {
         PlayerData playerData = DataController.GetPlayerData();
-        LevelSystem levelSystem = PlayerManager.Instance.GetPlayerByID(playerData.currentSelectedShip).prefab.GetLevelSystem();
+        LevelSystem levelSystem = PlayerManager.GetPlayerByID(playerData.currentSelectedShip).prefab.GetLevelSystem();
 
         if (levelSystem.GetLevel() >= levelSystem.GetMaxLevel())
         {

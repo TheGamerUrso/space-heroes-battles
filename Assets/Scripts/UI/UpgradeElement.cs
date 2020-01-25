@@ -25,13 +25,10 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
     public Image NotAvailableImage;
     public TextMeshProUGUI NotAvailbleText;
 
-    private PlayerManager playerManager;
-
     private void OnEnable()
     {
         RefreshUpgradeElement();
     }
-
 
     public bool CheckAvailable()
     {

@@ -29,7 +29,6 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
         if (!bIsInitialized)
         {
             bIsInitialized = true;
-            DontDestroyOnLoad(this);
             Instance.Init();
         }
     }
