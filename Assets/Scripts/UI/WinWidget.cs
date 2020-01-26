@@ -18,6 +18,14 @@ public class WinWidget : MonoBehaviour
     public LevelObjectivesElement[] levelObjectives;
     public LevelObjectiveData[] levelObjectiveDatas;
 
+    public AudioClip audioClip;
+    public AudioSource audioSource;
+
+    public void PlaySound()
+    {
+        audioSource.PlayOneShot(audioClip);
+    }
+
     private void OnEnable()
     {
         levelName = "Level" + GameManager.LevelSelected;

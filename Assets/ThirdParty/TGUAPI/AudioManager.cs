@@ -120,7 +120,7 @@ public class AudioManager : Singleton<AudioManager>
             {
                 if (MusicSource.clip != randomClip || !MusicSource.isPlaying)
                 {
-                    MusicSource.loop = true;
+                    MusicSource.loop = false;
                     MusicSource.clip = randomClip;
                     MusicSource.Play();
                 }
@@ -128,6 +128,10 @@ public class AudioManager : Singleton<AudioManager>
         }
     }
 
+    public bool MusicIsDone()
+    {
+        return !MusicSource.isPlaying;
+    }
     public void StopSoundEffect()
     {
         SFXSource.Stop();

@@ -105,14 +105,15 @@ public class SpawnEnemies : MonoBehaviour
         if (SpawnerCoroutine == null)
             SpawnerCoroutine = StartCoroutine(Spawn());
 
-
+        AudioManager.PlayRandomMusic(true);
+        Application.targetFrameRate = 60;
 
     }
 
     private void Update()
     {
         //If Music is Done Choose something new to play.
-        if (GameManager.IsGameOver)
+        if (AudioManager.Instance.MusicIsDone())
         {
             AudioManager.PlayRandomMusic();
         }

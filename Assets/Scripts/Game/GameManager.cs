@@ -10,12 +10,6 @@ public class PlayerShip
     public Player prefab;
 }
 
-
-public enum GameStates
-{
-    Menu, Game, GameOver, Debug
-}
-
 public class GameManager : Singleton<GameManager>
 {
     public delegate void OnLoadData();
@@ -42,6 +36,8 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject levelupAnnouncement;
 
+    public bool debug;
+
     public override void Init()
     {
         base.Init();
@@ -59,6 +55,13 @@ public class GameManager : Singleton<GameManager>
 
         GameEventSystem.OnPlayerLevelUpHandled += ShowLevelup;
 
+        GameEventSystem.OnShipSelectHandled += ShipSelected;
+
+    }
+
+    public void ShipSelected(int shipSelected)
+    {
+        GameManager.CurrentHeroChoosen = shipSelected;
     }
 
     public override void OnQuitGame()
@@ -75,6 +78,7 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+        if(debug==false)
         SceneLoader.Instance.LoadScene("Intro");
     }
 

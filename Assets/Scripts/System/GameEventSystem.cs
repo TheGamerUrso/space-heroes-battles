@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 public enum EventType {
-    Enemy_Death,Enemy_Hit,Enemy_Escape,Player_LevelUp
+    Enemy_Death,Enemy_Hit,Enemy_Escape,Player_LevelUp,UpgradeBought,ShipSelect
 }
 
 public class GameEventSystem
@@ -22,6 +22,11 @@ public class GameEventSystem
     public delegate void OnPlayerLevelUp();
     public static OnPlayerLevelUp OnPlayerLevelUpHandled;
 
+    public delegate void OnUpgradeBought(UpgradeElement upgradeElement);
+    public static OnUpgradeBought OnUpgradeBoughtHandled;
+
+    public delegate void OnShipSelect(int shipSelected);
+    public static OnShipSelect OnShipSelectHandled;
 
     public static void Call(EventType eventType , params object[] args)
     {
@@ -38,6 +43,12 @@ public class GameEventSystem
                 break;
             case EventType.Player_LevelUp:
                 OnPlayerLevelUpHandled?.Invoke();
+                break;
+            case EventType.UpgradeBought:
+                OnUpgradeBoughtHandled?.Invoke((UpgradeElement)args[0]);
+                break;
+            case EventType.ShipSelect:
+                OnShipSelectHandled?.Invoke((int)args[0]);
                 break;
             default:
                 break;

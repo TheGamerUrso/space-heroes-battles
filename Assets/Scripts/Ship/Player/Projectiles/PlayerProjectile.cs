@@ -6,6 +6,13 @@ public class PlayerProjectile : Projectile
     private GameObject explosion;
     private IDestroyable Target;
 
+
+    private void OnDisable()
+    {
+        if (trailRenderer)
+            trailRenderer.Clear();
+    }
+
     private void FixedUpdate()
     {
         Movement();
@@ -24,10 +31,10 @@ public class PlayerProjectile : Projectile
 
     public override void DestoryNow()
     {
-       GameObject explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-        explode.transform.position = transform.position; 
-       //explosion.transform.position = transform.position + Vector3.up * 2;
-       //explosion.transform.rotation = Quaternion.identity;
+        GameObject explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        explode.transform.position = transform.position;
+        //explosion.transform.position = transform.position + Vector3.up * 2;
+        //explosion.transform.rotation = Quaternion.identity;
 
         gameObject.SetActive(false);
     }

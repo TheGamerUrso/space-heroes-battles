@@ -190,17 +190,7 @@ public class ScreenManager : MonoBehaviour
         }
     }
 
-    public void ShowMessage(string text)
-    {
-        Open("Error");
-        foreach (UIScreens item in MainMenuScreens)
-        {
-            if (item.Name.Equals("Error"))
-            {
-                item.m_UIElement.gameObject.GetComponent<SystemMessageWidget>().SetWidgetText(text);
-            }
-        }
-    }
+
     IEnumerator SwitchScreen(string Id)
     {
         AudioManager.PlaySound("Click", 1);

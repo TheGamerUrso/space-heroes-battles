@@ -5,52 +5,34 @@ using UnityEngine.UI;
 
 public class ShipSelectElement : MonoBehaviour
 {
-    public event EventHandler<ShipEventArgs> ShipSelected;
-
-    private int ID;
+    public int ID;
     public ShipSelectData shipSelectData;
     public bool Locked;
     public Button PurchaseButton;
     public Image Icon;
     public Image LockImage;
     public TextMeshProUGUI CostText;
-    public int Cost;
 
     private void Start()
     {
-        Cost = shipSelectData.Cost;
         Icon.sprite = shipSelectData.Icon;
-        CostText.text = Cost.ToString();
-        if(Cost == 0)
+        CostText.text = shipSelectData.Cost.ToString();
+        if(shipSelectData.Cost == 0)
         {
             Unlock();
         }
-        //if (shipSelectData.ID.Equals("Ship1"))
-        //{
-        //    DataController.instance.playerData.UnlockedHeroes[0] = 1;
-        //    Unlock();
-        //}
-        //else
-        //{
-        //    Locked = true;
-        //}
-
-        //if (Locked)
-        //{
-        //    Lock.gameObject.SetActive(true);
-        //}
-
-        // PurchaseButton.onClick.AddListener(() =>
-        // {
-        // Purchase();
-        //});
     }
 
     private void Update()
     {
+        RefreshElement();
+    }
+
+    public void RefreshElement()
+    {
         PlayerData playerData = DataController.GetPlayerData();
         int coins = playerData.Coins;
-        if (coins >= Cost)
+        if (coins >= shipSelectData.Cost)
         {
             CostText.color = Color.green;
         }
@@ -60,17 +42,6 @@ public class ShipSelectElement : MonoBehaviour
         }
     }
 
-    public void RefreshElement()
-    {
-    }
-
-    public ShipEventArgs Select()
-    {
-        ShipEventArgs e = new ShipEventArgs();
-        e.selectElement = this;
-        e.shipSelectData = shipSelectData;
-        return e;
-    }
 
     public void Lock()
     {
@@ -79,10 +50,12 @@ public class ShipSelectElement : MonoBehaviour
         CostText.gameObject.SetActive(true);
     }
 
-    public void Unlock()
+    public void SelectShip(int shipId)
     {
-
-      
+        GameEventSystem.Call(EventType.ShipSelect, shipId);
+    }
+    public void Unlock()
+    {      
         Locked = false;
         LockImage.gameObject.SetActive(Locked);
         CostText.gameObject.SetActive(false);
@@ -91,20 +64,17 @@ public class ShipSelectElement : MonoBehaviour
     public void Purchase()
     {
         PlayerData playerData = DataController.GetPlayerData();
-
         if (Locked)
         {
-            int coins = playerData.Coins;
-
-            if (coins >= Cost)
+            if (playerData.Coins >= shipSelectData.Cost)
             {
-                // Debug.Log("I have Enough For this Ship");
-                playerData.Coins -= Cost;
+                Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
+                playerData.Coins -= shipSelectData.Cost;
                 Unlock();
             }
             else
             {
-                //Debug.Log("I do not have enough For this Ship");
+                Popup.Show(Popup.popupType.message, "Not Enough Coins", true);
             }
         }
         else

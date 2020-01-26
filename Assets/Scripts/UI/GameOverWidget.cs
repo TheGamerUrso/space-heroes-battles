@@ -25,10 +25,16 @@ public class GameOverWidget : MonoBehaviour
     [Header("GameOver Widget Config")]
     public LevelObjectivesElement[] levelObjectives;
     public LevelObjectiveData[] levelObjectiveDatas;
+
+
+    public AudioClip audioClip;
+    public AudioSource audioSource;
+
     public void PlaySound()
     {
-        AudioManager.PlaySound("UISlide", 0);
+        audioSource.PlayOneShot(audioClip);
     }
+
     private void OnEnable()
     {
         GameManager.IsGameOver = true;

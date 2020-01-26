@@ -16,6 +16,9 @@ public class SceneLoader : Singleton<SceneLoader>
     public GameObject Content;
 
     public string currentLevelLoaded;
+    public AudioClip appearSFX;
+    public AudioClip disapearSFX;
+    public AudioSource audioSouce;
 
     public override void Init()
     {
@@ -114,6 +117,7 @@ public class SceneLoader : Singleton<SceneLoader>
     {
         if (animator)
         {
+            audioSouce.PlayOneShot(disapearSFX);
             animator.ResetTrigger("Open");
             animator.SetTrigger("Close");
         }
@@ -125,6 +129,7 @@ public class SceneLoader : Singleton<SceneLoader>
     {
         if (animator)
         {
+            audioSouce.PlayOneShot(appearSFX);
             animator.ResetTrigger("Close");
             animator.SetTrigger("Open");
         }
@@ -138,10 +143,6 @@ public class SceneLoader : Singleton<SceneLoader>
 
     void OnSceneLoadCompleted(AsyncOperation ao)
     {
-        if (currentLevelLoaded.Contains("Level"))
-        {
-            AudioManager.PlayRandomMusic(true);
-            Application.targetFrameRate = 60;
-        }
+
     }
 }
