@@ -151,15 +151,29 @@ public class AudioManager : Singleton<AudioManager>
             {
                 if (BackgroundMusic.clip != randomClip || !BackgroundMusic.isPlaying)
                 {
+<<<<<<< HEAD
                     BackgroundMusic.loop = true;
                     BackgroundMusic.clip = randomClip;
                     PlayMusic(randomClip);
+=======
+                    MusicSource.loop = false;
+                    MusicSource.clip = randomClip;
+                    MusicSource.Play();
+>>>>>>> ad71f549b2acab4b3208fa994998bd9e5e034b48
                 }
             }
         }
     }
 
+<<<<<<< HEAD
     public void PlaySoundByClip(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+=======
+    public bool MusicIsDone()
+    {
+        return !MusicSource.isPlaying;
+    }
+    public void StopSoundEffect()
+>>>>>>> ad71f549b2acab4b3208fa994998bd9e5e034b48
     {
         if (usePitch)
         {
