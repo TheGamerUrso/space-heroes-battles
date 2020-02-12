@@ -29,17 +29,6 @@ public class SplashScreen : MonoBehaviour
         // {
         //     async.allowSceneActivation = true;
         //}
-#if UNITY_ANDROID
-        if (GameServices.IsInitialized())
-        {
-            SceneLoader.Instance.AllowSceneActivation();
-        }
-#endif
-
-#if UNITY_EDITOR
-        SceneLoader.Instance.AllowSceneActivation();
-#endif
-
     }
 
     public void SignIn()
@@ -50,7 +39,6 @@ public class SplashScreen : MonoBehaviour
     public void ContinueWithoutLogIn()
     {
         GoogleServicesNotify.SetActive(false);
-        SceneLoader.Instance.AllowSceneActivation();
     }
 
     public void LoadGame()
@@ -62,7 +50,6 @@ public class SplashScreen : MonoBehaviour
     {
         Debug.Log("User logged in successfully.");
         GoogleServicesNotify.SetActive(false);
-        SceneLoader.Instance.AllowSceneActivation();
     }
 
     void OnUserLoginFailed()

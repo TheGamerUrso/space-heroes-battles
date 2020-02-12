@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 [Serializable]
@@ -105,14 +106,15 @@ public class SpawnEnemies : MonoBehaviour
         if (SpawnerCoroutine == null)
             SpawnerCoroutine = StartCoroutine(Spawn());
 
-
+        AudioManager.PlayRandomMusic(true);
+        Application.targetFrameRate = 60;
 
     }
 
     private void Update()
     {
         //If Music is Done Choose something new to play.
-        if (GameManager.IsGameOver)
+        if (AudioManager.Instance.MusicIsDone())
         {
             AudioManager.PlayRandomMusic();
         }
@@ -327,7 +329,7 @@ public class SpawnEnemies : MonoBehaviour
                     {
                         if (bossWave == true)
                         {
-                            AudioManager.SetMusic("Boss");
+                            AudioManager.PlayMusic("Boss");
                             EnemyManager.Instance.SpawnBoss(LevelDifficulty);
                         }
                         else if (bossWave == false)

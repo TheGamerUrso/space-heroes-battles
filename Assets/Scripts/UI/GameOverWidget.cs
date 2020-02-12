@@ -25,10 +25,16 @@ public class GameOverWidget : MonoBehaviour
     [Header("GameOver Widget Config")]
     public LevelObjectivesElement[] levelObjectives;
     public LevelObjectiveData[] levelObjectiveDatas;
+
+
+    public AudioClip audioClip;
+    public AudioSource audioSource;
+
     public void PlaySound()
     {
-        AudioManager.PlaySound("UISlide", 0);
+        audioSource.PlayOneShot(audioClip);
     }
+
     private void OnEnable()
     {
         GameManager.IsGameOver = true;
@@ -39,16 +45,16 @@ public class GameOverWidget : MonoBehaviour
 
         if (player != null)
         {
-            AudioManager.PlaySound("Victory", 3);
+            AudioManager.PlaySound(null,"Victory", 3);
             playerAnimation.Exit();
         }
         else if (player == null)
         {
-            AudioManager.PlaySound("GameOver", 3);
+            AudioManager.PlaySound(null,"GameOver", 3);
         }
 
         UpdateScore();
-        AudioManager.SetMusic("GameOver");
+        AudioManager.PlayMusic("GameOver");
         levelName = "Level" + GameManager.LevelSelected;
         killed = EnemyManager.EnemySpawnedInTotal * .9f;
         collected = SpawnEnemies.CoinDropInTotal * .9f;

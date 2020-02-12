@@ -5,7 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 {
-    public Action<UpgradeElement> OnUpgradeBought;
     public UpgradeData upgradeData;
     public TextMeshProUGUI CostText;
     public TextMeshProUGUI NammeText;
@@ -30,13 +29,15 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
         RefreshUpgradeElement();
     }
 
-    public bool CheckAvailable()
+    public bool CheckAvailable(bool showError = false)
     {
         PlayerData playerData = DataController.GetPlayerData();
         if (upgradeData.MaxLevel > 0)
         {
             if (playerData.Level >= upgradeData.LevelRequirementPerLevel[currentUpgradeIndex])
             {
+                if(showError)
+                Popup.Show(Popup.popupType.message, "Need Lv " + upgradeData.LevelRequirementPerLevel[currentUpgradeIndex].ToString());
                 return true;
             }
         }
@@ -44,6 +45,8 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
         {
             if (playerData.Upgrades[(int)(upgradeData.upgradeType)-1] == 0)
             {
+                if (showError)
+                    Popup.Show(Popup.popupType.message, "Cannot Upgrade Anymore");
                 return true;
             }
         }
@@ -54,6 +57,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
     {
         Initialize();
     }
+
     public void Initialize()
     {
         PlayerData playerData = DataController.GetPlayerData();
@@ -91,14 +95,15 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
     }
     public void Purshase()
     {
-        if (CheckAvailable())
+        if (CheckAvailable(true))
         {
             PlayerData playerData = DataController.GetPlayerData();
-            AudioManager.PlaySound("Click", 1);
+            AudioManager.PlaySound(null, "Click", 1);
 
 
             if (playerData.Coins < Cost)
             {
+                Popup.Show(Popup.popupType.message, "Cannot Afford it yet");
                 return;
             }
 
@@ -127,7 +132,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
             playerData.Coins -= Cost;
 
-            OnUpgradeBought(this);
+            GameEventSystem.Call(EventType.UpgradeBought, this);
 
             RefreshUpgradeElement();
         }

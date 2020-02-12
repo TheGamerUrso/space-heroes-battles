@@ -21,12 +21,11 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: Projectile_Player_mat
-  m_Shader: {fileID: 4800000, guid: 933532a4fcc9baf4fa0491de14d08ed7, type: 3}
-  m_ShaderKeywords: _EMISSION _ENVIRONMENTREFLECTIONS_OFF _RECEIVE_SHADOWS_OFF _SMOOTHNESS_TEXTURE_ALBEDO_CHANNEL_A
-    _SPECULARHIGHLIGHTS_OFF
+  m_Shader: {fileID: 4800000, guid: b7839dad95683814aa64166edc107ae2, type: 3}
+  m_ShaderKeywords: _COLORADDSUBDIFF_ON _EMISSION _RECEIVE_SHADOWS_OFF
   m_LightmapFlags: 2
   m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: 2050
   stringTagMap:
     RenderType: Opaque
@@ -95,12 +94,18 @@ Material:
     - _CameraFadingEnabled: 0
     - _CameraFarFadeDistance: 2
     - _CameraNearFadeDistance: 1
-    - _Cull: 2
-    - _Cutoff: 0.529
+    - _ColorMode: 1
+    - _Cull: 1
+    - _Cutoff: 0.222
     - _DetailNormalMapScale: 1
+    - _DistortionBlend: 0.5
+    - _DistortionEnabled: 0
+    - _DistortionStrength: 1
+    - _DistortionStrengthScaled: 0.1
     - _DstBlend: 0
     - _EmissionEnabled: 0
     - _EnvironmentReflections: 0
+    - _FlipbookBlending: 0
     - _FlipbookMode: 0
     - _GlossMapScale: 0
     - _Glossiness: 0
@@ -145,13 +150,14 @@ Material:
     - _SrcBlend: 1
     - _Surface: 0
     - _UVSec: 0
-    - _WorkflowMode: 1
+    - _WorkflowMode: 0
     - _ZWrite: 1
     m_Colors:
     - _BaseColor: {r: 1, g: 0.5098562, b: 0, a: 1}
+    - _BaseColorAddSubDiff: {r: 1, g: 0, b: 0, a: 0}
     - _CameraFadeParams: {r: 0, g: Infinity, b: 0, a: 0}
     - _Color: {r: 1, g: 0.5098562, b: 0, a: 1}
-    - _EmissionColor: {r: 1.6627451, g: 0.3764706, b: 0, a: 1}
+    - _EmissionColor: {r: 3.3254905, g: 0.7660816, b: 0, a: 1}
     - _HighlightColor: {r: 1, g: 1, b: 1, a: 1}
     - _OutlineColor: {r: 0, g: 0, b: 0, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}

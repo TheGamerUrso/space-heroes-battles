@@ -101,7 +101,7 @@ public class ObjectivesElement : MonoBehaviour
             RefreshQuests();
         }
 
-        AudioManager.PlaySound(null, ClickSoundEffect,1);
+        AudioManager.PlaySound(null, "Click",1);
   
     }
 

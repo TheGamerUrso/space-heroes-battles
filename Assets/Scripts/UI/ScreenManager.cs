@@ -88,7 +88,7 @@ public class ScreenManager : MonoBehaviour
 
     IEnumerator MenuSwitcher(bool open)
     {
-        AudioManager.PlaySound("Click", 1);
+        AudioManager.PlaySound(null,"Click", 1);
 
         foreach (UIScreens item in MainMenuScreens)
         {
@@ -160,7 +160,7 @@ public class ScreenManager : MonoBehaviour
 
     public void Close()
     {
-        AudioManager.PlaySound("Back", 1);
+        AudioManager.PlaySound(null,"Back", 1);
         if (string.IsNullOrEmpty(previousScreen) || previousScreen.Equals("Menu") || !OptionsOrHighscoreOpen())
         {
             CloseMenu();
@@ -190,20 +190,10 @@ public class ScreenManager : MonoBehaviour
         }
     }
 
-    public void ShowMessage(string text)
-    {
-        Open("Error");
-        foreach (UIScreens item in MainMenuScreens)
-        {
-            if (item.Name.Equals("Error"))
-            {
-                item.m_UIElement.gameObject.GetComponent<SystemMessageWidget>().SetWidgetText(text);
-            }
-        }
-    }
+
     IEnumerator SwitchScreen(string Id)
     {
-        AudioManager.PlaySound("Click", 1);
+        AudioManager.PlaySound(null,"Click", 1);
         if (Id.Equals("Menu"))
         {
             OpenMenu();

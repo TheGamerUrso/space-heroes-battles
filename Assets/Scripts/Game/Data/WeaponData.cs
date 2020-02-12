@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TheGamerUrso.PoolSystem;
+using UnityEngine;
 
 [CreateAssetMenu(menuName = "Create New Weapon")]
 public class WeaponData : ScriptableObject

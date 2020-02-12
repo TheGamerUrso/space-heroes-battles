@@ -1,4 +1,5 @@
 using System.Collections;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class Player : Ship, IDestroyable
@@ -179,7 +180,7 @@ public class Player : Ship, IDestroyable
 
         if (GetHealthPresentage() > .2f)
         {
-            AudioManager.Instance.StopSoundEffect();
+            //AudioManager.Instance.StopSoundEffect();
         }
     }
 
@@ -241,16 +242,13 @@ public class Player : Ship, IDestroyable
 
                 if (GetHealthPresentage() < .2f)
                 {
-                    AudioManager.PlaySound("Alarm", 2);
+                    AudioManager.PlaySound(null,"Alarm", 2);
                 }
 
                 if (CurrentHealth < 1)
                 {
                     Death();
-                    AudioManager.Instance.StopSoundEffect();
                 }
-
-
             }
         }
     }

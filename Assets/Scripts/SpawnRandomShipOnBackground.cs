@@ -12,13 +12,13 @@ public class SpawnRandomShipOnBackground : MonoBehaviour
     
     private void OnDisable()
     {
-        Intro_UI.OnIntroClickContinueHandled -= Hide;
+        Intro.OnIntroClickContinueHandled -= Hide;
     }
 
     void Start()
     {
         ChooseNext();
-        Intro_UI.OnIntroClickContinueHandled += Hide;
+        Intro.OnIntroClickContinueHandled += Hide;
     }
 
     void Hide()

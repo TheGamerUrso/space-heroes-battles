@@ -18,28 +18,19 @@ public class User
 
 
 }
-public class GooglePlayServicesManager : MonoBehaviour
+public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 {
     public static GooglePlayServicesManager Instance;
 
     public static bool isInitialized;
 
-    private void Awake()
+    protected override void Awake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
+        base.Awake();
+        if (!RuntimeManager.IsInitialized())
+            RuntimeManager.Init();
 
-            if (!RuntimeManager.IsInitialized())
-                RuntimeManager.Init();
-
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
+        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
@@ -62,7 +53,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         return new User(GameServices.LocalUser.image, GameServices.LocalUser.userName);
 #else
-                return new User(null,"Over9000");
+        return new User(null, "Over9000");
 #endif
         return null;
     }
@@ -82,6 +73,7 @@ public class GooglePlayServicesManager : MonoBehaviour
         }
     }
 
+
     public void ReportAchivementProgress(string achievement, float ammount)
     {
         if (GameServices.IsInitialized())
@@ -99,8 +91,9 @@ public class GooglePlayServicesManager : MonoBehaviour
         }
     }
 
+
     public void UnlockAchivement(string achievement)
-        {
+    {
         if (GameServices.IsInitialized())
         {
 #if UNITY_ANDROID
@@ -116,8 +109,8 @@ public class GooglePlayServicesManager : MonoBehaviour
         }
     }
 
-        public void UnlockAchievement(int achievement)
-        {
+    public void UnlockAchievement(int achievement)
+    {
         if (GameServices.IsInitialized())
         {
 #if UNITY_ANDROID
@@ -128,33 +121,33 @@ public class GooglePlayServicesManager : MonoBehaviour
             switch (achievement)
             {
                 case 1:
-                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 2:
-                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 3:
-                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 4:
-                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 5:
-                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
 
                 case 6:
                     achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 7:
-                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 8:
 
-                   achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 9:
                     achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
@@ -186,10 +179,10 @@ public class GooglePlayServicesManager : MonoBehaviour
         else
         {
             GameServices.Init();    // start a new initialization process
+        }
 #elif UNITY_IOS
             Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
-        }
     }
 
     public void AddScore(long score)
@@ -203,9 +196,10 @@ public class GooglePlayServicesManager : MonoBehaviour
 
     public void ShowLeaderboards()
     {
+#if UNITY_ANDROID
         if (GameServices.IsInitialized())
         {
-#if UNITY_ANDROID
+
             // Check for initialization before showing leaderboard UI
             if (GameServices.IsInitialized())
             {
@@ -215,12 +209,15 @@ public class GooglePlayServicesManager : MonoBehaviour
             {
 
                 GameServices.Init();    // start a new initialization process
+            }
 #elif UNITY_IOS
             Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
-            }
+
         }
     }
+
+
 
     public void SignIn()
     {
@@ -240,6 +237,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 #endif
     }
 }
+
 
 
 

@@ -178,7 +178,7 @@ public class PlayerWeaponSystem : MonoBehaviour
         {
             if (player.CanUsePowerUpItem)
             {
-                AudioManager.PlaySound("Power",3);
+                AudioManager.PlaySound(null,"Power",3);
                 CurrentWeapnType++;
 
                 if (CurrentWeapnType > 4)

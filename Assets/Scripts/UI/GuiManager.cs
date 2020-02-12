@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using EasyMobile;
+using TheGamerUrso.PoolSystem;
+
 public class GuiManager : MonoBehaviour
 {
 
@@ -144,7 +146,7 @@ public class GuiManager : MonoBehaviour
 
     public void ReplayButton()
     {
-        AudioManager.PlaySound("Click", 1);
+        AudioManager.PlaySound(null,"Click", 1);
         
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
@@ -152,7 +154,7 @@ public class GuiManager : MonoBehaviour
     public void ResumeButton()
     {
         useSloMo = true;
-        AudioManager.PlaySound("Back", 1);
+        AudioManager.PlaySound(null,"Back", 1);
         ShowPauseMenu(false);
         GameManager.PauseTheGame(false);
     }
@@ -160,7 +162,7 @@ public class GuiManager : MonoBehaviour
     public void PauseButton()
     {
         useSloMo = false;
-        AudioManager.PlaySound("Click", 1);
+        AudioManager.PlaySound(null,"Click", 1);
         ShowPauseMenu(true);
         GameManager.PauseTheGame();
     }
@@ -196,7 +198,7 @@ public class GuiManager : MonoBehaviour
     {
         useSloMo = false;
         GameManager.PauseTheGame(false);
-        AudioManager.PlaySound("Click", 1);
+        AudioManager.PlaySound(null,"Click", 1);
         SceneLoader.Instance.LoadMainenu();
         GameObject activeMenuGO = null;
 
@@ -225,7 +227,7 @@ public class GuiManager : MonoBehaviour
 
     public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
-        AudioManager.PlaySound("transmition", 3);
+        AudioManager.PlaySound(null,"transmition", 3);
         GuiManager.instance.ShowTrasmition(transmitions, boss);
     }
 
@@ -370,7 +372,7 @@ public class GuiManager : MonoBehaviour
     {
         useSloMo = false;
         PlayerHUD.gameObject.SetActive(false);
-        AudioManager.SetMusic("GameOver", false);
+        AudioManager.PlayMusic("GameOver", false);
 
 
         yield return new WaitForSeconds(2.0f);
@@ -383,7 +385,7 @@ public class GuiManager : MonoBehaviour
         useSloMo = false;
         PlayerHUD.gameObject.SetActive(false); 
         yield return new WaitForSeconds(2.0f);
-        AudioManager.SetMusic("Victory", false);
+        AudioManager.PlayMusic("Victory", false);
 
         yield return new WaitForSeconds(2.0f);
 

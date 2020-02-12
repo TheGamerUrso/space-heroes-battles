@@ -1,3 +1,4 @@
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour
@@ -14,12 +15,14 @@ public abstract class Projectile : MonoBehaviour
     protected float speed;
 
     protected Transform EffectsHolder;
-
+    protected TrailRenderer trailRenderer;
     [SerializeField] protected bool FollowTarget = false;
 
     private void Awake()
     {
         SetInitialReference();
+
+        trailRenderer = GetComponent<TrailRenderer>();
     }
 
     public virtual void SetInitialReference() {

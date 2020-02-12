@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 [Serializable]
@@ -19,7 +20,7 @@ public class SpecialAttack : PlayerWeapon
     {
         if (SpecialActive == false)
         {
-            AudioManager.PlaySound("Super", 3);
+            AudioManager.PlaySound(null,"Super", 3);
 
             if (playerWeaponSystem == null)
             {

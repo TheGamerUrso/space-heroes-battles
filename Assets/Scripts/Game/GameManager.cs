@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -8,12 +9,6 @@ public class PlayerShip
 {
     public string name;
     public Player prefab;
-}
-
-
-public enum GameStates
-{
-    Menu, Game, GameOver, Debug
 }
 
 public class GameManager : Singleton<GameManager>
@@ -42,6 +37,15 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject levelupAnnouncement;
 
+    public bool debug;
+
+    public GameObject[] SystemPrefabs;
+    private List<GameObject> _instancedSystemPrefabs;
+    public static bool IsMouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }
+
     public override void Init()
     {
         base.Init();
@@ -59,6 +63,13 @@ public class GameManager : Singleton<GameManager>
 
         GameEventSystem.OnPlayerLevelUpHandled += ShowLevelup;
 
+        GameEventSystem.OnShipSelectHandled += ShipSelected;
+
+    }
+
+    public void ShipSelected(int shipSelected)
+    {
+        GameManager.CurrentHeroChoosen = shipSelected;
     }
 
     public override void OnQuitGame()
@@ -75,7 +86,21 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+        DontDestroyOnLoad(gameObject);
+        _instancedSystemPrefabs = new List<GameObject>();
+        InstantiateSystemPrefabs();
+
+
+        if (debug==false)
         SceneLoader.Instance.LoadScene("Intro");
+    }
+    private void InstantiateSystemPrefabs()
+    {
+        foreach (var systemPrefab in SystemPrefabs)
+        {
+            var prefabInstance = Instantiate(systemPrefab);
+            _instancedSystemPrefabs.Add(prefabInstance);
+        }
     }
 
     public static void PauseTheGame(bool value = true)
@@ -93,11 +118,4 @@ public class GameManager : Singleton<GameManager>
             Paused = false;
         }
     }
-
-    public static bool IsMouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
-    }
-
-
 }
