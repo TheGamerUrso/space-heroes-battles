@@ -183,12 +183,4 @@ public class SceneLoader : Singleton<SceneLoader>
         Content.gameObject.SetActive(false);
         BlockRaycast.enabled = false;
     }
-
-<<<<<<< HEAD
-=======
-    void OnSceneLoadCompleted(AsyncOperation ao)
-    {
-
-    }
->>>>>>> ad71f549b2acab4b3208fa994998bd9e5e034b48
 }

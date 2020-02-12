@@ -39,7 +39,6 @@ public class GameManager : Singleton<GameManager>
 
     public bool debug;
 
-<<<<<<< HEAD
     public GameObject[] SystemPrefabs;
     private List<GameObject> _instancedSystemPrefabs;
     public static bool IsMouseOverUI()
@@ -47,8 +46,6 @@ public class GameManager : Singleton<GameManager>
         return EventSystem.current.IsPointerOverGameObject();
     }
 
-=======
->>>>>>> ad71f549b2acab4b3208fa994998bd9e5e034b48
     public override void Init()
     {
         base.Init();
@@ -89,16 +86,12 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
-<<<<<<< HEAD
         DontDestroyOnLoad(gameObject);
         _instancedSystemPrefabs = new List<GameObject>();
         InstantiateSystemPrefabs();
 
 
         if (debug==false)
-=======
-        if(debug==false)
->>>>>>> ad71f549b2acab4b3208fa994998bd9e5e034b48
         SceneLoader.Instance.LoadScene("Intro");
     }
     private void InstantiateSystemPrefabs()

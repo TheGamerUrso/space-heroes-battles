@@ -37,6 +37,11 @@ public class AudioManager : Singleton<AudioManager>
     [HideInInspector] public bool crossfade = false;
     [HideInInspector] public float targetVolume;
 
+    public bool MusicIsDone()
+    {
+        return !BackgroundMusic.isPlaying;
+    }
+
     public float GetSoundVolume()
     {
         return soundVolume;
@@ -88,11 +93,6 @@ public class AudioManager : Singleton<AudioManager>
         SetSoundVolume(soundVolume);
     }
 
-    public bool MusicIsDone()
-    {
-        return !BackgroundMusic.isPlaying;
-    }
-
     public bool PlayingMusic()
     {
         if (BackgroundMusic.isPlaying)
@@ -112,17 +112,13 @@ public class AudioManager : Singleton<AudioManager>
 
         AudioManager.Instance.PlayMusicById(IdTrack, loop);
     }
-
-    public static void PlaySound(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
-    {
-        AudioManager.Instance.PlaySoundByClip(source, clip, mixGroupIndex, usePitch, minRange, maxRange);
-    }
-
-
-
     public static void PlaySound(AudioSource source, string IdTrack, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
         AudioManager.Instance.PlaySoundByClip(source, IdTrack, mixGroupIndex, usePitch, minRange, maxRange);
+    }
+    public static void PlaySound(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+    {
+        AudioManager.Instance.PlaySoundByClip(source, clip, mixGroupIndex, usePitch, minRange, maxRange);
     }
 
     public void PlayMusicById(string IdTrack, bool loop = true)
@@ -151,64 +147,47 @@ public class AudioManager : Singleton<AudioManager>
             {
                 if (BackgroundMusic.clip != randomClip || !BackgroundMusic.isPlaying)
                 {
-<<<<<<< HEAD
                     BackgroundMusic.loop = true;
                     BackgroundMusic.clip = randomClip;
                     PlayMusic(randomClip);
-=======
-                    MusicSource.loop = false;
-                    MusicSource.clip = randomClip;
-                    MusicSource.Play();
->>>>>>> ad71f549b2acab4b3208fa994998bd9e5e034b48
                 }
             }
         }
     }
-
-<<<<<<< HEAD
     public void PlaySoundByClip(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
-=======
-    public bool MusicIsDone()
     {
-        return !MusicSource.isPlaying;
-    }
-    public void StopSoundEffect()
->>>>>>> ad71f549b2acab4b3208fa994998bd9e5e034b48
-    {
+        if (source == null)
+        {
+            source = BackgroundMusic;
+        }
+
         if (usePitch)
         {
             float prevPitch = source.pitch;
             source.pitch = UnityEngine.Random.Range(minRange, maxRange);
         }
-        BackgroundMusic.PlayOneShot(clip);
-    }
 
+        source.PlayOneShot(clip);
+
+    }
 
     public void PlaySoundByClip(AudioSource source, string IdTrack, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
         AudioClip audioClip;
         if (ListOfSoundClips.TryGetValue(IdTrack, out audioClip))
         {
-            if (source != null)
+            if (source == null)
             {
-                if (usePitch)
-                {
-                    float prevPitch = source.pitch;
-                    source.pitch = UnityEngine.Random.Range(minRange, maxRange);
-                }
-
-                source.PlayOneShot(audioClip);
+                source = BackgroundMusic;
             }
-            else
+
+            if (usePitch)
             {
-
-                if (usePitch)
-                {
-                    float prevPitch = source.pitch;
-                    source.pitch = UnityEngine.Random.Range(minRange, maxRange);
-                }
-                BackgroundMusic.PlayOneShot(audioClip);
+                float prevPitch = source.pitch;
+                source.pitch = UnityEngine.Random.Range(minRange, maxRange);
             }
+
+            source.PlayOneShot(audioClip);
         }
     }
 
