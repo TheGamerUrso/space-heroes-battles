@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using System;
 
 [RequireComponent(typeof(CanvasGroup))]
 public class UIView : MonoBehaviour
 {
+ 
+   
     private CanvasGroup canvasGroup;
     public bool ViewIsActive
     {
@@ -42,6 +45,5 @@ public class UIView : MonoBehaviour
         {
             Debug.Log("Error" + gameObject.name);
         }
-
     }
 }
