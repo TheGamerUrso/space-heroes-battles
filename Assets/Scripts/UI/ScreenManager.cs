@@ -21,6 +21,17 @@ public class ScreenManager : MonoBehaviour
         Instance = this;
     }
 
+    public GameObject GetUIScreen(string name)
+    {
+        for (int i = 0; i < MainMenuScreens.Length; i++)
+        {
+            if (MainMenuScreens[i].Name.Equals("name"))
+            {
+                return MainMenuScreens[i].m_UIElement;
+            }
+        }
+        return null;
+    }
     private void Start()
     {
         AudioAPI =  AudioManager.Instance;
@@ -28,7 +39,7 @@ public class ScreenManager : MonoBehaviour
         {
             if (item.Name.Equals("Upgrades") || item.Name.Equals("Levels"))
             {
-                item.m_UIElement.SetActive(false);
+                item.m_UIElement.GetComponent<UIView>().Close();
             }
         }
     }
@@ -106,11 +117,11 @@ public class ScreenManager : MonoBehaviour
             {
                 if (open)
                 {
-                    item.m_UIElement.SetActive(true);
+                    item.m_UIElement.GetComponent<UIView>().Open();
                 }
                 else
                 {
-                    item.m_UIElement.SetActive(false);
+                    item.m_UIElement.GetComponent<UIView>().Close();
                 }
             }
         }
@@ -171,7 +182,7 @@ public class ScreenManager : MonoBehaviour
             {
                 if (item.Name.Equals(previousScreen))
                 {
-                    item.m_UIElement.SetActive(true);
+                    item.m_UIElement.GetComponent<UIView>().Open();
 
                     if (IsScrene(previousScreen, "Levels") || IsScrene(previousScreen, "Upgrades"))
                     {
@@ -184,7 +195,7 @@ public class ScreenManager : MonoBehaviour
                 }
                 else
                 {
-                    item.m_UIElement.SetActive(false);
+                    item.m_UIElement.GetComponent<UIView>().Close();
                 }
             }
         }
@@ -204,16 +215,16 @@ public class ScreenManager : MonoBehaviour
             {
                 if (item.Name.Equals(Id))
                 {
-                    item.m_UIElement.SetActive(true);
+                    item.m_UIElement.GetComponent<UIView>().Open();
                 }
                 else
                 {
-                    if (item.m_UIElement.activeSelf)
+                    if (item.m_UIElement.GetComponent<UIView>().ViewIsActive)
                     {
                         if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
                             previousScreen = item.Name;
                     }
-                    item.m_UIElement.SetActive(false);
+                    item.m_UIElement.GetComponent<UIView>().Close();
                 }
             }
         }

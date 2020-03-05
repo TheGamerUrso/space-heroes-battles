@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,7 +41,7 @@ public class BriefingScreen : MonoBehaviour
         for (int i = 0; i < ListOfLevelElements.Count; i++)
         {
             GameObject levelElement = ListOfLevelElements[i];
-            
+
             levelElement.GetComponent<LevelElement>().Refresh();
         }
     }
@@ -103,7 +104,7 @@ public class BriefingScreen : MonoBehaviour
                 PlayerPrefs.SetInt("SurvivalUnlocked", 1);
             }
 
-            level = new Level("Survival Mode", null,null, true, true);
+            level = new Level("Survival Mode", null, null, true, true);
 
             GameObject LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
             levelElement = LevelElementGO.GetComponent<LevelElement>();
@@ -116,8 +117,8 @@ public class BriefingScreen : MonoBehaviour
             Mission missionItem = missionCollection.Missions[i];
             LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
 
-            level = new Level(missionItem.Title,missionItem, sprites[missionItem.SpriteID], false, true);
-           
+            level = new Level(missionItem.Title, missionItem, sprites[missionItem.SpriteID], false, true);
+
             if (missionItem.ID <= playerData.LevelUnlocked)
             {
                 level.interactable = true;
@@ -132,7 +133,7 @@ public class BriefingScreen : MonoBehaviour
         }
 
         GameObject emptyLevelElement = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
-        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("",null,null,false,false), null);
+        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("", null, null, false, false), null);
     }
 
     public void StartMissionBriefing(Level level)

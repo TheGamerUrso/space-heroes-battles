@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -41,6 +42,11 @@ public class GameManager : Singleton<GameManager>
 
     public GameObject[] SystemPrefabs;
     private List<GameObject> _instancedSystemPrefabs;
+
+    public bool autoKillMode;
+    public bool useSafeMode;
+    public LogBehaviour logBehaviour;
+
     public static bool IsMouseOverUI()
     {
         return EventSystem.current.IsPointerOverGameObject();
@@ -86,6 +92,8 @@ public class GameManager : Singleton<GameManager>
 
     private void Start()
     {
+        DOTween.Init(autoKillMode, useSafeMode, logBehaviour);
+
         DontDestroyOnLoad(gameObject);
         _instancedSystemPrefabs = new List<GameObject>();
         InstantiateSystemPrefabs();
