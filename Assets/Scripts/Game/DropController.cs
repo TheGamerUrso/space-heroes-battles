@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
@@ -7,6 +8,8 @@ using UnityEngine;
 public class DropProbabilities
 {
     public string Name;
+    public float weight;
+    public Vector2 range;
     public PoolGameObjectType DropItemsType;
 }
 
@@ -49,7 +52,7 @@ public class DropController : MonoBehaviour
 
     private void Update()
     {
-        if(powerDropCooldown > 0)
+        if (powerDropCooldown > 0)
         {
             powerDropCooldown -= Time.deltaTime;
         }
@@ -112,7 +115,7 @@ public class DropController : MonoBehaviour
                     if (!fullHealth && healthDropCooldown < 0)
                     {
                         itemTypeToSpawn = ListOfDropItems[3].DropItemsType;
-                        healthDropCooldown = UnityEngine.Random.Range(2, 8); 
+                        healthDropCooldown = UnityEngine.Random.Range(2, 8);
                         break;
                     }
                     else
@@ -126,7 +129,7 @@ public class DropController : MonoBehaviour
                     if (powerDropCooldown < 0)
                     {
                         itemTypeToSpawn = ListOfDropItems[1].DropItemsType;
-                        powerDropCooldown = UnityEngine.Random.Range(2, 4); 
+                        powerDropCooldown = UnityEngine.Random.Range(2, 4);
                         break;
                     }
                     else
