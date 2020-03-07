@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveMaterialOffset : MonoBehaviour {
-    private string offsetKey = "_BaseMap";
+    private string offsetKey = "_MainTex";
     public float scrollSpeed = 0.5F;
+    public float xScrollSpeed = 0;
     public Renderer rend;
+
     private float offset;
+    private float offXset;
 
     public float frequently;
     public float magnitute;
@@ -20,12 +23,14 @@ public class MoveMaterialOffset : MonoBehaviour {
         if (sinMove == false)
         {
             offset += scrollSpeed * Time.deltaTime;
+            offXset += xScrollSpeed * Time.deltaTime;
         }
         else
         {
             offset = Mathf.Sin(Time.time * frequently) * magnitute;
+            offXset = Mathf.Sin(Time.time * frequently) * magnitute;
         }
-        rend.material.SetTextureOffset(offsetKey, new Vector2(0, offset));
+        rend.material.SetTextureOffset(offsetKey, new Vector2(offXset, offset));
     }
 }
 

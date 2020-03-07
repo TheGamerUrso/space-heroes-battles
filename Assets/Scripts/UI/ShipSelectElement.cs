@@ -52,7 +52,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void SelectShip(int shipId)
     {
-        GameEventSystem.Call(EventType.ShipSelect, shipId);
+        GameEventSystem.Call(GameEventType.ShipSelect, shipId);
     }
     public void Unlock()
     {      

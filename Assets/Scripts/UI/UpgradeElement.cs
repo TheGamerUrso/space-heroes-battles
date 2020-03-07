@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+
 public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 {
     public UpgradeData upgradeData;
@@ -23,6 +24,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
     public Image NotAvailableImage;
     public TextMeshProUGUI NotAvailbleText;
+
 
     private void OnEnable()
     {
@@ -132,7 +134,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
             playerData.Coins -= Cost;
 
-            GameEventSystem.Call(EventType.UpgradeBought, this);
+            GameEventSystem.Call(GameEventType.UpgradeBought, this);
 
             RefreshUpgradeElement();
         }

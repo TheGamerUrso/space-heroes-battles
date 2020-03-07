@@ -96,8 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
-  m_LightingDataAsset: {fileID: 112000002, guid: 073dd116b781fa64397cf72960799d03,
-    type: 2}
+  m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
 NavMeshSettings:
@@ -193,6 +192,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: SceneLoader
       objectReference: {fileID: 0}
+    - target: {fileID: 8036192080170494493, guid: 79b2d922f7452e54b93f8bef4382d463,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8036192080170494495, guid: 79b2d922f7452e54b93f8bef4382d463,
         type: 3}
       propertyPath: appearSFX
@@ -240,7 +244,6 @@ GameObject:
   m_Component:
   - component: {fileID: 192360186}
   - component: {fileID: 192360185}
-  - component: {fileID: 192360184}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -248,26 +251,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &192360184
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 192360183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a79441f348de89743a2939f4d699eac1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_RenderShadows: 0
-  m_RequiresDepthTextureOption: 0
-  m_RequiresOpaqueTextureOption: 0
-  m_RendererOverrideOption: 0
-  m_RendererData: {fileID: 0}
-  m_RequiresDepthTexture: 0
-  m_RequiresColorTexture: 0
-  m_Version: 2
 --- !u!20 &192360185
 Camera:
   m_ObjectHideFlags: 0
@@ -1961,10 +1944,25 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 574412232638276670, guid: c142f04100b4f9b4aa278b145f49503f,
+    - target: {fileID: 34436936848726836, guid: c142f04100b4f9b4aa278b145f49503f,
         type: 3}
-      propertyPath: shipStatsSystem.baseFireRate
-      value: 0.45
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 460281400707690252, guid: c142f04100b4f9b4aa278b145f49503f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 464093495667107476, guid: c142f04100b4f9b4aa278b145f49503f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -12.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 866281388042034836, guid: c142f04100b4f9b4aa278b145f49503f,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2406176206008801005, guid: c142f04100b4f9b4aa278b145f49503f,
         type: 3}
@@ -2021,45 +2019,30 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2406176206008801006, guid: c142f04100b4f9b4aa278b145f49503f,
-        type: 3}
-      propertyPath: debug
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2406176206008801006, guid: c142f04100b4f9b4aa278b145f49503f,
-        type: 3}
-      propertyPath: useSafeMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2406176206008801006, guid: c142f04100b4f9b4aa278b145f49503f,
-        type: 3}
-      propertyPath: autoKillMode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2406176206008801006, guid: c142f04100b4f9b4aa278b145f49503f,
-        type: 3}
-      propertyPath: logBehaviour
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 2406176206008801007, guid: c142f04100b4f9b4aa278b145f49503f,
         type: 3}
       propertyPath: m_Name
       value: GameManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 2406176206008801007, guid: c142f04100b4f9b4aa278b145f49503f,
-        type: 3}
-      propertyPath: m_IsActive
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3048510079923483220, guid: c142f04100b4f9b4aa278b145f49503f,
         type: 3}
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5347502691763434929, guid: c142f04100b4f9b4aa278b145f49503f,
+    - target: {fileID: 5453193681058971267, guid: c142f04100b4f9b4aa278b145f49503f,
         type: 3}
-      propertyPath: shipStatsSystem.baseFireRate
-      value: 0.4
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5457895658814224155, guid: c142f04100b4f9b4aa278b145f49503f,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 12.08
+      objectReference: {fileID: 0}
+    - target: {fileID: 8060057268696759121, guid: c142f04100b4f9b4aa278b145f49503f,
+        type: 3}
+      propertyPath: scrollSpeed
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c142f04100b4f9b4aa278b145f49503f, type: 3}

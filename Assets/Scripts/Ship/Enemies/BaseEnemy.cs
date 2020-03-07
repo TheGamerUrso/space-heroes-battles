@@ -126,7 +126,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public void Leave()
     {
-       GameEventSystem.Call(EventType.Enemy_Escape,this);
+       GameEventSystem.Call(GameEventType.Enemy_Escape,this);
     }
 
     public virtual void Heal(float ammount)
@@ -174,7 +174,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public virtual void Hit()
     {
-        GameEventSystem.Call(EventType.Enemy_Hit, this);
+        GameEventSystem.Call(GameEventType.Enemy_Hit, this);
     }
 
     public virtual void Update()
@@ -199,7 +199,7 @@ public class BaseEnemy : Ship, IDestroyable
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
 
-            GameEventSystem.Call(EventType.Enemy_Death, this);
+            GameEventSystem.Call(GameEventType.Enemy_Death, this);
 
 
             healthBar.Hide();
