@@ -5,7 +5,7 @@ public class UpgradeManager : MonoBehaviour
     public UpgradeElement[] upgradeElements;
     private void Start()
     {
-        GameEventSystem.OnUpgradeBoughtHandled = Refresh;
+        GameEventSystem.OnUpgradeBought = Refresh;
 
         for (int i = 0; i < upgradeElements.Length; i++)
         {

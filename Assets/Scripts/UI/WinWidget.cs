@@ -7,6 +7,7 @@ public class WinWidget : MonoBehaviour
 {
     private Player player;
     private PlayerData playerData;
+    private GameController gameController;
     [SerializeField] private MissionCollection missionCollection;
     [SerializeField] private Mission mission;
     [SerializeField] private TextMeshProUGUI Score = null;
@@ -28,9 +29,13 @@ public class WinWidget : MonoBehaviour
 
     private void OnEnable()
     {
+        if (gameController==null)
+        {
+            gameController = GameController.Instance;
+        }
         levelName = "Level" + GameManager.LevelSelected;
-        killed = EnemyManager.EnemySpawnedInTotal * .9f;
-        collected = SpawnEnemies.CoinDropInTotal * .9f;
+        killed = gameController.EnemySpawnedInTotal * .9f;
+        collected = gameController.CoinDropInTotal * .9f;
 
         player = PlayerManager.GetPlayer();
         playerData = DataController.GetPlayerData();
@@ -50,7 +55,7 @@ public class WinWidget : MonoBehaviour
            // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
         }
 
-        if (!levelObjectiveDatas[1].completed && SpawnEnemies.EnemyKilled >= killed)
+        if (!levelObjectiveDatas[1].completed && gameController.EnemyKilled >= killed)
         {
             levelObjectiveDatas[1].completed = true;
             PlayerManager.GetPlayer().GetLevelSystem().AddXP(75);
@@ -64,7 +69,7 @@ public class WinWidget : MonoBehaviour
            // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
         }
 
-        if (!levelObjectiveDatas[3].completed && SpawnEnemies.counsEarnInGame >= 0 && SpawnEnemies.counsEarnInGame >= collected)
+        if (!levelObjectiveDatas[3].completed && gameController.counsEarnInGame >= 0 && gameController.counsEarnInGame >= collected)
         {
             levelObjectiveDatas[3].completed = true;
             PlayerManager.GetPlayer().GetLevelSystem().AddXP(25);
@@ -76,10 +81,9 @@ public class WinWidget : MonoBehaviour
         StartCoroutine(ShowGameResults());
     }
 
-
     private IEnumerator ShowGameResults()
     {
-        string scoreText = string.Format("{00:0000000000}", SpawnEnemies.Score);
+        string scoreText = string.Format("{00:0000000000}", gameController.Score);
         Score.text = scoreText;
         int ChallengeIndex = 0;
 

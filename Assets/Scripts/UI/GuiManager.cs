@@ -7,19 +7,9 @@ using UnityEngine.UI;
 using EasyMobile;
 using TheGamerUrso.PoolSystem;
 
-public class GuiManager : MonoBehaviour
+public class GuiManager : Singleton<GuiManager>
 {
-
-    private static GuiManager instance;
-
-    public static GuiManager Instance
-    {
-        get
-        {
-            return instance;
-        }
-        private set { instance = value; }
-    }
+    public GameController gameController;
 
     #region Variables
 
@@ -57,7 +47,7 @@ public class GuiManager : MonoBehaviour
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (!focus && GameManager.IsGameOver == false)
+            if (!focus && gameController.IsGameOver == false)
             {
                 GameManager.PauseTheGame();
                 ShowPauseMenu(true);
@@ -69,7 +59,7 @@ public class GuiManager : MonoBehaviour
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (GameManager.IsGameOver == false)
+            if (gameController.IsGameOver == false)
             {
                 GameManager.PauseTheGame();
                 ShowPauseMenu(true);
@@ -79,10 +69,12 @@ public class GuiManager : MonoBehaviour
 
     private void Start()
     {
-        instance = this;
-        delayTheSlowMoEffectTimer = 4;
+        gameController = GameController.Instance;
+
+         delayTheSlowMoEffectTimer = 4;
         timer = 1;
     }
+
     private void Update()
     {
         if (Time.timeScale == 1)
@@ -136,7 +128,7 @@ public class GuiManager : MonoBehaviour
     }
     public static void Countdown(float countdown)
     {
-        GuiManager.instance.CountdownText(countdown);
+        GuiManager.Instance.CountdownText(countdown);
     }
 
     public void CountdownText(float countdown)
@@ -174,12 +166,12 @@ public class GuiManager : MonoBehaviour
 
     public void UpdateCoinWidgetText()
     {
-        CoinWidgetText.text = string.Format("{0}", SpawnEnemies.counsEarnInGame);
+        CoinWidgetText.text = string.Format("{0}", gameController.counsEarnInGame);
     }
 
     public void UpdateScore(int score)
     {
-        string scoreText = string.Format("{00:00000000}", SpawnEnemies.Score);
+        string scoreText = string.Format("{00:00000000}", gameController.Score);
         ScoreText.text = scoreText;
     }
 
@@ -228,7 +220,7 @@ public class GuiManager : MonoBehaviour
     public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
         AudioManager.PlaySound(null,"transmition", 3);
-        GuiManager.instance.ShowTrasmition(transmitions, boss);
+        GuiManager.Instance.ShowTrasmition(transmitions, boss);
     }
 
     public void ShowTrasmition(string[] transmitions, bool boss = false)
@@ -280,7 +272,7 @@ public class GuiManager : MonoBehaviour
                         case ObjectiveType.Kill:
                             if (objective.completed == false)
                             {
-                                var progressSoFar = objective.progress + SpawnEnemies.CurrentEnemyKilled;
+                                var progressSoFar = objective.progress + gameController.CurrentEnemyKilled;
                                 objective.UpdateProgress(progressSoFar);
                             }
                             break;
@@ -302,7 +294,7 @@ public class GuiManager : MonoBehaviour
                             }
                             break;
                         case ObjectiveType.survive:
-                            objective.UpdateProgress(SpawnEnemies.WaveSurvived);
+                            objective.UpdateProgress(gameController.WaveSurvived);
                             break;
                         case ObjectiveType.spend:
                             break;
@@ -320,7 +312,7 @@ public class GuiManager : MonoBehaviour
 
 
 
-            if (!SpawnEnemies.Instance.survival)
+            if (!gameController.survivalMode)
             {
                 Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
                 int missionsCompleted = 0;
@@ -334,17 +326,17 @@ public class GuiManager : MonoBehaviour
 
                 int levelPlayed = GameManager.LevelSelected;
 
-                playerData.SetScore(levelPlayed + 1, SpawnEnemies.Score);
+                playerData.SetScore(levelPlayed + 1, gameController.Score);
 
                 playerData.LevelUnlocked = missionsCompleted;
             }
             else
             {
-                playerData.SetScore(0, SpawnEnemies.Score);
+                playerData.SetScore(0, gameController.Score);
             }
 
-            playerData.Coins += SpawnEnemies.counsEarnInGame;
-            playerData.TotalKills += SpawnEnemies.EnemyKilled;
+            playerData.Coins += gameController.counsEarnInGame;
+            playerData.TotalKills += gameController.EnemyKilled;
 
             SaveSystem.SavePlayerData();
 

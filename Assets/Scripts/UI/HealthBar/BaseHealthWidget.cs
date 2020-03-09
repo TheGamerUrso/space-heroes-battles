@@ -19,7 +19,7 @@ public class BaseHealthWidget : MonoBehaviour
 
 
     public Vector3 offset;
-    public virtual void OnDamageTaken(object user) { }
+    public virtual void OnDamageTaken(string id,object user) { }
     public virtual void Initiallize(Ship ship)
     {
 

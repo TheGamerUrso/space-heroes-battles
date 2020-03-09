@@ -82,7 +82,7 @@ public class Player : Ship, IDestroyable
 
         weaponSystem.SetPlayerAnimation(playerAnimation);
         weaponSystem.SetPlayer(this);
-        GameEventSystem.OnPlayerLevelUpHandled += LevelSystem_OnLevelUpHandled;       
+        GameEventSystem.OnPlayerLevelUp += LevelSystem_OnLevelUpHandled;
     }
 
     public void LevelSystem_OnLevelUpHandled()
@@ -242,7 +242,7 @@ public class Player : Ship, IDestroyable
 
                 if (GetHealthPresentage() < .2f)
                 {
-                    AudioManager.PlaySound(null,"Alarm", 2);
+                    AudioManager.PlaySound(null, "Alarm", 2);
                 }
 
                 if (CurrentHealth < 1)

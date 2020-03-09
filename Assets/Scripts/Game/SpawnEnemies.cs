@@ -21,54 +21,24 @@ public enum SpawnerState
 public class SpawnEnemies : MonoBehaviour
 {
     public static SpawnEnemies Instance;
+    public GameController gameController;
+    public BossBattleSystem bossBattleSystem;
 
-    private EnemyManager enemyManager;
     private Coroutine SpawnerCoroutine;
     private SpawnerState spawnerState;
     private float delay;
-    public bool bossWave;
-    private int Wave = 0;
+
     private float countdown;
     private float minDelay = .3f;
     private float maxDelay = .5f;
-    private int AvailableEnemies;
+
     public bool spawnReady;
 
-    [SerializeField] public bool survival = false;
-
-    [Range(1, 21)]
-    private int LevelDifficuilty = 1;
-
-    private int LevelIncreaseThreshold = 2;
-
-
     [SerializeField] private float countdownDelay;
-    [SerializeField] private bool BossStage;
-    [SerializeField] private GameObject[] BossPrefab = null;
-    [SerializeField] private int maxWave;
-    [SerializeField] private AudioClip GameOverClip;
+ 
     [SerializeField] private List<EnemyElement> ListOfEnemyToSpawn = new List<EnemyElement>();
 
-    public int AvailableEnemiesIndex = 1;
-    public static int LevelDifficulty { get; private set; }
-    public static float Score { get; set; }
-    public static int WaveSurvived { get; set; }
-    public static int EnemyKilled { get; set; }
-    public static int CurrentEnemyKilled { get; set; }
-    public static int CoinDropInTotal { get; set; }
-    public static int counsEarnInGame { get; set; }
-
-    public int MaxWave
-    {
-        get
-        {
-            return maxWave;
-        }
-        set
-        {
-            maxWave = value;
-        }
-    }
+    private int AvailableEnemiesIndex;
 
     private void Awake()
     {
@@ -77,39 +47,18 @@ public class SpawnEnemies : MonoBehaviour
 
     private void Start()
     {
-        if (!survival)
-        {
-            MissionCollection missionCollection = DataController.GetMissionCollection();
-            Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
-            LevelDifficulty = mission.Level;
-        }
-        else
-        {
-            LevelDifficulty = 1;
-        }
+        gameController = GameController.Instance;
+        bool SurvivalMode = gameController.survivalMode;
+        int LevelDifficulty = gameController.LevelDifficulty;
 
-        EnemyManager enemyManager = new EnemyManager(BossPrefab);
-        PlayerManager.GetPlayer().GetWeaponSystem().ResetWeaponPowerUPCollected();
-        GameStart();
-    }
-
-    public void GameStart()
-    {
-        GameManager.IsGameOver = false;
         countdown = countdownDelay;
 
-        if (survival)
-        {
-            AvailableEnemiesIndex = 1;
-        }
+        new EnemyManager(gameController,this);
 
         if (SpawnerCoroutine == null)
             SpawnerCoroutine = StartCoroutine(Spawn());
-
-        AudioManager.PlayRandomMusic(true);
-        Application.targetFrameRate = 60;
-
     }
+
 
     private void Update()
     {
@@ -130,15 +79,15 @@ public class SpawnEnemies : MonoBehaviour
 
     public void Spawning()
     {
-        if (GameManager.IsGameOver == false)
+        if (gameController.IsGameOver == false)
         {
             //if Number of Enemies that are spawn is more that Max don't spawn anymore
-            if (EnemyManager.CheckIfCurrentEnemiesAreMoreThanMax())
+            if (gameController.CheckIfCurrentEnemiesAreMoreThanMax())
             {
                 spawnerState = SpawnerState.wait;
             }
         }
-        else if (GameManager.IsGameOver == true)
+        else if (gameController.IsGameOver == true)
         {
             StopCoroutine(Spawn());
             spawnerState = SpawnerState.stopped;
@@ -147,13 +96,13 @@ public class SpawnEnemies : MonoBehaviour
 
     private IEnumerator Spawn()
     {
-        while (GameManager.IsGameOver == false)
+        while (gameController.IsGameOver == false)
         {
             switch (spawnerState)
             {
                 case SpawnerState.stopped:
 
-                    if (EnemyManager.CheckIfCurrentAreLessThanMax())
+                    if (gameController.CheckIfCurrentAreLessThanMax())
                     {
                         spawnerState = SpawnerState.wait;
                     }
@@ -161,32 +110,33 @@ public class SpawnEnemies : MonoBehaviour
 
                 case SpawnerState.wait:
 
-                    if (bossWave)
+                    if (gameController.BossStage)
                     {
                         break;
                     }
+
                     yield return new WaitForSeconds(2.0f);
-                    if (Wave == 0 || EnemyManager.CheckIfWeKilledEnoughEnemiesToProgress())
+                    if (gameController.Wave == 0 || gameController.CheckIfWeKilledEnoughEnemiesToProgress())
                     {
-                        WaveSurvived = Wave;
+                        gameController.WaveSurvived = gameController.Wave;
                         PlayerData playerData = DataController.GetPlayerData();
                         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.survive);
 
                         if (objectiveData != null)
                         {
-                            objectiveData.UpdateProgress(WaveSurvived);
+                            objectiveData.UpdateProgress(gameController.WaveSurvived);
                         }
 
-                        Wave++;
+                        gameController.Wave++;
 
-                        if (survival)
+                        if (gameController.survivalMode)
                         {
-                            if (Wave % LevelIncreaseThreshold == 0)
+                            if (gameController.Wave % gameController.LevelIncreaseThreshold == 0)
                             {
-                                LevelDifficuilty++;
+                                gameController.LevelDifficuilty++;
                             }
 
-                            if (Wave % 8 == 0)
+                            if (gameController.Wave % 8 == 0)
                             {
                                 AvailableEnemiesIndex++;
 
@@ -199,16 +149,14 @@ public class SpawnEnemies : MonoBehaviour
 
                         GuiManager.CountdownVisibility(true);
 
-                        SpawnEnemies.CurrentEnemyKilled = 0;
-                        EnemyManager.EnemiesEscaped = 0;
-                        if (survival)
+                        gameController.CurrentEnemyKilled = 0;
+                        gameController.EnemiesEscaped = 0;
+                        if (gameController.survivalMode)
                         {
-                            if (Wave % 2 == 0)
+                            if (gameController.Wave % 2 == 0 && !gameController.bossWave)
                             {
-                                bossWave = true;
-                               // AudioManager.PlaySound("Danger", 3);
-                                string[] transmitions = { "There is something Big Coming on your way", "Be Careful" };
-                                GuiManager.PlayTrasmition(transmitions, true);
+                                gameController.bossWave = true;
+                                bossBattleSystem.ShowBossFightWarning();
 
                                 while (GuiManager.IsTrasnmiting())
                                 {
@@ -216,7 +164,7 @@ public class SpawnEnemies : MonoBehaviour
                                     yield return new WaitForSeconds(.1f);
                                 }
 
-                                while (EnemyManager.NumberOfEnemies > 0)
+                                while (gameController.NumberOfEnemies > 0)
                                 {
                                     yield return null;
                                 }
@@ -226,22 +174,20 @@ public class SpawnEnemies : MonoBehaviour
                         }
                         else
                         {
-                            if (Wave >= MaxWave)
+                            if (gameController.Wave >= gameController.MaxWave)
                             {
-                                if (BossStage)
+                                if (!gameController.bossWave)
                                 {
-                                    bossWave = true;
-                                    //AudioManager.PlaySound("Danger", 3);
-                                    string[] transmitions = { "There is something Big Coming on your way", "Be Careful" };
-                                    GuiManager.PlayTrasmition(transmitions,true);
+                                    gameController.bossWave = true;
 
+                                    bossBattleSystem.ShowBossFightWarning();
+                                   
                                     while (GuiManager.IsTrasnmiting())
                                     {
-                                        GuiManager.CountdownVisibility(false);
                                         yield return new WaitForSeconds(.1f);
                                     }
 
-                                    while (EnemyManager.NumberOfEnemies > 0)
+                                    while (gameController.NumberOfEnemies > 0)
                                     {
                                         yield return null;
                                     }
@@ -250,33 +196,30 @@ public class SpawnEnemies : MonoBehaviour
                                 }
                                 else
                                 {
-                                    while (EnemyManager.NumberOfEnemies > 0)
+                                    while (gameController.BossStage)
                                     {
                                         yield return null;
                                     }
-
-                                    GameManager.IsGameOver = true;
                                 }
                             }
                         }
 
-                        if (!survival)
+                        if (!gameController.survivalMode)
                         {
-                            if (Wave == 1 && !bossWave)
+                            if (gameController.Wave == 1 && !gameController.bossWave)
                             {
                                 yield return new WaitForSeconds(1.5f);
 
                                 string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
                                 GuiManager.PlayTrasmition(transmitions);
-
                             }
                         }
                         else
                         {
-                            if (Wave == 1 && !bossWave)
+                            if (gameController.Wave == 1 && !gameController.bossWave)
                             {
                                 yield return new WaitForSeconds(1.5f);
-                                string[] transmitions = { "Wave" + Wave ,"Level Difficulty " + LevelDifficuilty ," Ready!" , "GO" };
+                                string[] transmitions = { "Wave" + gameController.Wave, "Level Difficulty " + gameController.LevelDifficuilty, " Ready!" , "GO" };
 
                                 GuiManager.PlayTrasmition(transmitions);
                             }
@@ -292,7 +235,6 @@ public class SpawnEnemies : MonoBehaviour
                         {
                             countdown -= Time.deltaTime;
 
-
                             GuiManager.CountdownVisibility(false);
                             GuiManager.Countdown(countdown);
 
@@ -301,17 +243,11 @@ public class SpawnEnemies : MonoBehaviour
 
                         // countdown = countdownDelay;
                         GuiManager.CountdownVisibility(false);
-
                     }
 
-
-
-                    if (GameManager.IsGameOver)
+                    if (gameController.IsGameOver)
                     {
                         yield return new WaitForSeconds(.5f);
-
-                        GuiManager.Instance.GameOver();
-
                         spawnerState = SpawnerState.Idle;
                     }
                     else
@@ -325,14 +261,13 @@ public class SpawnEnemies : MonoBehaviour
                     delay = UnityEngine.Random.Range(minDelay, maxDelay);
 
                     yield return new WaitForSeconds(delay);
-                    if (EnemyManager.CheckIfWeReachedSpawnLimit())
+                    if (gameController.CheckIfWeReachedSpawnLimit())
                     {
-                        if (bossWave == true)
+                        if (gameController.bossWave && !gameController.BossStage)
                         {
-                            AudioManager.PlayMusic("Boss");
-                            EnemyManager.Instance.SpawnBoss(LevelDifficulty);
+                            bossBattleSystem.StartBossFight();
                         }
-                        else if (bossWave == false)
+                        else if (gameController.bossWave == false)
                         {
                             spawnReady = true;
                             while (spawnReady)
@@ -352,6 +287,7 @@ public class SpawnEnemies : MonoBehaviour
                                     SpawnEnemy(randomEnemy);
                                     yield return new WaitForSeconds(.5f);
                                 }
+
                                 spawnReady = false;
 
                                 yield return null;
@@ -373,9 +309,10 @@ public class SpawnEnemies : MonoBehaviour
         EnemyElement enemyElement = ListOfEnemyToSpawn[randomEnemy];
         if (enemyElement.currentNumberInScene < enemyElement.MaxNumberInScene)
         {
-            if (survival)
+            if (gameController.survivalMode)
             {
-                EnemyManager.Instance.CreateEnemy(enemyElement, LevelDifficuilty);
+                EnemyManager.Instance.CreateEnemy(
+                    enemyElement, gameController.LevelDifficuilty);
             }
             else
             {
@@ -383,10 +320,5 @@ public class SpawnEnemies : MonoBehaviour
             }
         }
 
-    }
-
-    public static void SetLevelDifficuilty(int Level)
-    {
-        LevelDifficulty = Level;
     }
 }

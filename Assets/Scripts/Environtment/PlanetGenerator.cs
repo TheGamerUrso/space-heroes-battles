@@ -5,17 +5,19 @@ using UnityEngine;
 
 public class PlanetGenerator : MonoBehaviour
 {
+    public GameController gameController;
     public GameObject Planet;
     public GameObject[] Planets;
 
     void Start()
     {
         StartCoroutine(GeneratePlanet());
+        gameController = GameController.Instance;
     }
 
     IEnumerator GeneratePlanet()
     {
-        while (GameManager.IsGameOver == false)
+        while (gameController.IsGameOver == false)
         {
             yield return new WaitForSeconds(Random.Range(10, 20));
             GameObject planet = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.Planet) as GameObject;

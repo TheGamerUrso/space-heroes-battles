@@ -13,25 +13,9 @@ public class DropProbabilities
     public PoolGameObjectType DropItemsType;
 }
 
-public class DropController : MonoBehaviour
+public class DropController : Singleton<DropController>
 {
-    private static DropController instance;
-
-    public static DropController Instance
-    {
-        get
-        {
-            try
-            {
-                return instance;
-            }
-            catch (NullReferenceException e)
-            {
-                Debug.LogWarning(e.Message);
-            }
-            return null;
-        }
-    }
+    public GameController gameController;
 
     private float timerSincePowerUpDroped;
 
@@ -45,9 +29,10 @@ public class DropController : MonoBehaviour
     public float shieldDropCooldown = 4;
     public float healthDropCooldown = 3;
     public float powerDropCooldown = 1;
-    private void Awake()
+
+    private void Start()
     {
-        instance = this;
+        gameController = GameController.Instance;
     }
 
     private void Update()
@@ -70,7 +55,7 @@ public class DropController : MonoBehaviour
 
     public static void PickRandomDropItem(Transform transform)
     {
-        DropController.instance.PickRandomEnemyToSpawn(transform);
+        Instance.PickRandomEnemyToSpawn(transform);
     }
 
     public void PickRandomEnemyToSpawn(Transform transform)
@@ -162,7 +147,7 @@ public class DropController : MonoBehaviour
                 extraDrop.transform.rotation = Quaternion.identity;
             }
 
-            SpawnEnemies.CoinDropInTotal++;
+            gameController.CoinDropInTotal++;
 
             return;
         }

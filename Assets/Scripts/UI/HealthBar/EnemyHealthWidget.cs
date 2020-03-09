@@ -20,7 +20,7 @@ public class EnemyHealthWidget : BaseHealthWidget
     }
     public override void Initiallize(Ship ship)
     {
-        GameEventSystem.OnEnemyHithHandled += OnDamageTaken;
+        GameEventSystem.OnEnemyHit += OnDamageTaken;
     }
 
     public override void Refresh(IDestroyable user)
@@ -35,7 +35,7 @@ public class EnemyHealthWidget : BaseHealthWidget
         HealthBarImage.color = Color.Lerp(RedColor, GreenColor, HealthBarImage.fillAmount);
 
     }
-    public override void OnDamageTaken(object sender)
+    public override void OnDamageTaken(string id,object sender)
     {
         IDestroyable user = (IDestroyable)sender;
         MonoBehaviour userGO = user as MonoBehaviour;

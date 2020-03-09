@@ -10,65 +10,49 @@ public class EnemyManager
     {
         get
         {
-            if (instance != null)
+            if (instance == null)
             {
-                return instance;
+                instance = new EnemyManager(GameController.Instance, SpawnEnemies.Instance);
             }
-            return null;
+            return instance;
         }
     }
-
-    private GameManager Gm;
-    private GuiManager Gui;
-    private ComboKillIndicator comboKillIndicator;
+    public GameController gameController;
+    public SpawnEnemies spawnEnemies;
 
     private float searchCountdown = 1f;
     private int availableEnemies;
 
+    private static List<BaseEnemy> ListOfSpawnedEnemies = new List<BaseEnemy>();
 
-    //Variables for Spawning Enemies
-    public static int EnemiesKilled;
-    public static int EnemiesEscaped;
-    public static int NumberOfEnemies;
-    public static int MaxEnemiesToSpawn = 8;
-    public static int EnemySpawnedInTotal = 0;
-
-    [SerializeField] private GameObject[] BossPrefab;
-    public List<BaseEnemy> ListOfSpawnedEnemies = new List<BaseEnemy>();
-    private List<EnemyElement> ListOfEnemyToSpawn;
-
-    private Player p;
-    private PlayerWeaponSystem playerWeaponSystem;
-    private DropController dropController;
-    private GameObject BossGO;
-
-
-
-    public EnemyManager(GameObject[] newBossPrefab)
+    public EnemyManager(GameController gameController, SpawnEnemies spawnEnemies)
     {
-        instance = this;
-
-        Init();
-        BossPrefab = newBossPrefab;
-        ListOfEnemyToSpawn = new List<EnemyElement>();
+        this.gameController = gameController;
+        this.spawnEnemies = spawnEnemies;
     }
 
-    public static void Init()
+    public int NumberOfEnemies
     {
-        PlayerManager.GetPlayer().GetWeaponSystem().IncreasePowerUp(0);
-        EnemyManager.NumberOfEnemies = 0;
-        SpawnEnemies.CurrentEnemyKilled = 0;
-        EnemyManager.EnemiesEscaped = 0;
-        SpawnEnemies.EnemyKilled = 0;
-        EnemySpawnedInTotal = 0;
-
-        GameEventSystem.OnEnemyDeathHandled += EnemyDied;
-        GameEventSystem.OnEnemyDeathHandled += EnemyEscaped;
+        get { return ListOfSpawnedEnemies.Count; }
     }
 
-    public void CreateEnemy(EnemyElement enemyElement,int LevelDifficulty)
+    public void SpawnBoss(GameObject bossPrefab, int difficulty)
     {
-        EnemyManager.NumberOfEnemies++;
+        gameController.NumberOfEnemies++;
+        GameObject BossGO = GameObject.Instantiate(bossPrefab, bossPrefab.transform.localPosition, bossPrefab.transform.localRotation);
+
+        int playerLevel = PlayerManager.GetPlayer().Level;
+        BaseEnemy enemy = BossGO.GetComponentInChildren<BaseEnemy>();
+        enemy.SetEnemyStats(difficulty);
+
+        Add(enemy);
+        gameController.EnemySpawnedInTotal++;
+        BossGO.SetActive(true);
+    }
+
+    public void CreateEnemy(EnemyElement enemyElement, int LevelDifficulty)
+    {
+        gameController.NumberOfEnemies++;
 
         Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
 
@@ -88,18 +72,16 @@ public class EnemyManager
 
         enemy.enemyElement = enemyElement;
 
-        enemy.SetEnemyStats(LevelDifficulty, EnemyDied, EnemyEscaped);
+        enemy.SetEnemyStats(LevelDifficulty);
 
         enemyElement.currentNumberInScene++;
 
-        EnemySpawnedInTotal++;
-    
-    
+        gameController.EnemySpawnedInTotal++;
     }
 
     public void CreateEnemy(EnemyElement enemyElement)
     {
-        EnemyManager.NumberOfEnemies++;
+        gameController.NumberOfEnemies++;
 
         Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
 
@@ -119,138 +101,21 @@ public class EnemyManager
 
         enemy.enemyElement = enemyElement;
 
-        enemy.SetEnemyStats(SpawnEnemies.LevelDifficulty, EnemyDied, EnemyEscaped);
+        enemy.SetEnemyStats(gameController.LevelDifficulty);
 
         enemyElement.currentNumberInScene++;
 
-        EnemySpawnedInTotal++;
+        gameController.EnemySpawnedInTotal++;
     }
 
 
-    public void SpawnBoss(int difficulty)
+    public static void Remove(BaseEnemy baseEnemy)
     {
-        EnemyManager.NumberOfEnemies++;
-        GameObject bossprefab = BossPrefab[UnityEngine.Random.Range(0, BossPrefab.Length)];
-        BossGO = GameObject.Instantiate(bossprefab, bossprefab.transform.localPosition, bossprefab.transform.localRotation);
-
-        int playerLevel = PlayerManager.GetPlayer().Level;
-        BaseEnemy enemy = BossGO.GetComponentInChildren<BaseEnemy>();
-        enemy.SetEnemyStats(SpawnEnemies.LevelDifficulty, EnemyDied, EnemyEscaped);
-
-        EnemyManager.Instance.ListOfSpawnedEnemies.Add(enemy);
-
-        EnemyManager.EnemySpawnedInTotal++;
-        BossGO.SetActive(true);
-    }
-    public static void EnemyEscaped(BaseEnemy enemy)
-    {
-        NumberOfEnemies--;
-        EnemiesEscaped++;
-        enemy.enemyElement.currentNumberInScene--;
-        instance.ListOfSpawnedEnemies.Remove((BaseEnemy)enemy);
+        ListOfSpawnedEnemies.Remove(baseEnemy);
     }
 
-    public static void EnemyDied(BaseEnemy enemy)
+    public static void Add(BaseEnemy baseEnemy)
     {
-        Vector3 enemyPos = enemy.transform.position;
-
-        if (EnemyManager.instance.BossGO != null)
-        {
-            if (GuiManager.Instance)
-            {
-                if (!SpawnEnemies.Instance.survival)
-                {
-                    GuiManager.Instance.GameOver();
-                }
-                else
-                {
-                    SpawnEnemies.Instance.bossWave = false;
-                }
-            }
-        }
-     
-        SpawnEnemies.EnemyKilled++;
-        SpawnEnemies.CurrentEnemyKilled++;
-        PlayerData playerData = DataController.GetPlayerData();
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
-        if (objectiveData != null)
-            objectiveData.UpdateProgress(SpawnEnemies.CurrentEnemyKilled);
-
-        NumberOfEnemies--;
-        enemy.enemyElement.currentNumberInScene--;
-
-
-        //Update ComboKillIndicator
-        if (ComboKillIndicator.instance)
-            ComboKillIndicator.instance.ConfirmKill();
-
-        int multiplayer = 0;
-        if (ComboKillIndicator.instance)
-        {
-            multiplayer = ComboKillIndicator.instance.GetMultiplier();
-        }
-
-        //Update Score
-        int score = multiplayer * enemy.m_ValueOfEnemy;
-        SpawnEnemies.Score += score;
-        GuiManager.Instance.UpdateScore(score);
-
-        GuiManager.Instance.CreateFloatingText(string.Format("{0}", score), enemyPos);
-
-        //Update Player Attributes
-
-        if (PlayerManager.GetPlayer() == null)
-        {
-            return;
-        }
-
-        Player p = PlayerManager.GetPlayer();
-        PlayerWeaponSystem playerWeaponSystem = p.GetWeaponSystem();
-
-
-        int PlayerLevel = p.Level;
-        int EnemyLevel = enemy.Level;
-        int levelDiffrence = PlayerLevel / EnemyLevel;
-
-        if (levelDiffrence == 0)
-        {
-            levelDiffrence = 1;
-        }
-
-        // float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-        float XPEarned = 5 / levelDiffrence;
-        p.GetLevelSystem().AddXP((int)XPEarned);
-        Debug.Log(string.Format("exp = {0}\n", XPEarned));
-
-
-        playerWeaponSystem.IncreasePowerUp(.1f);
-
-        //Drop Item
-        DropController.PickRandomDropItem(enemy.transform);
-
-        instance.ListOfSpawnedEnemies.Remove((BaseEnemy)enemy);
-
-        GameObject.Destroy(EnemyManager.instance.BossGO,2f);
-
-    }
-
-    public static bool CheckIfWeReachedSpawnLimit()
-    {
-        return EnemyManager.NumberOfEnemies < EnemyManager.MaxEnemiesToSpawn;
-    }
-
-    public static bool CheckIfWeKilledEnoughEnemiesToProgress()
-    {
-        return (SpawnEnemies.CurrentEnemyKilled + EnemyManager.EnemiesEscaped) >= EnemyManager.MaxEnemiesToSpawn;
-    }
-
-    public static bool CheckIfCurrentEnemiesAreMoreThanMax()
-    {
-        return EnemyManager.NumberOfEnemies >= EnemyManager.MaxEnemiesToSpawn;
-    }
-
-    public static bool CheckIfCurrentAreLessThanMax()
-    {
-        return EnemyManager.NumberOfEnemies <= EnemyManager.MaxEnemiesToSpawn;
+        ListOfSpawnedEnemies.Add(baseEnemy);
     }
 }

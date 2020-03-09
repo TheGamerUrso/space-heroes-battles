@@ -7,6 +7,7 @@ using UnityEngine;
 public class BaseEnemy : Ship, IDestroyable
 {
     private GameEventSystem gameEventSystem;
+    protected string id;
 
     [Header("Enemy Config")]
     public BaseEnemyAI baseEnemyAI;
@@ -44,8 +45,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     private void OnDisable()
     {
-        //onEnemyDeath = null;
-        //onEnemyEscape = null;
+
     }
 
     private void OnEnable()
@@ -53,41 +53,17 @@ public class BaseEnemy : Ship, IDestroyable
         Alive = true;
     }
 
-    public virtual void SetEnemyStats(int level, Action<BaseEnemy> OnEnemyDeath, Action<BaseEnemy> OnEnemyEscape)
+    public virtual void SetEnemyStats(int level)
     {
         GetLevelSystem().SetLevel(level);
         GetShipStatsSystem().SetStats(levelSystem);
         bShieldModuleInstalled = false;
-
-        // int randomNum = UnityEngine.Random.Range(0, 100);
-
-        //if (Level % 2 == 0 && randomNum >= 75)
-        // {
-        //     EnableShield = true;
-        //}
-
-        //if (EnableShield)
-        // {
-        //     int hasShield = UnityEngine.Random.Range(0, 100);
-        //     if (hasShield <= 100)
-        //      {
-        //          ShieldModuleInstalled = true;
-        //      }
-        //      else if (hasShield > 100)
-        //      {
-        //          ShieldModuleInstalled = false;
-        //      }
-        //  }
-
 
         if (weaponScript)
         {
             weaponScript.SetShip(this);
             weaponScript.SetShipStatsSystem(GetShipStatsSystem());
         }
-
-        //this.onEnemyDeath = OnEnemyDeath;
-        //this.onEnemyEscape = OnEnemyEscape;
     }
 
     public override void InitReferences()
@@ -126,7 +102,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public void Leave()
     {
-       GameEventSystem.Call(GameEventType.Enemy_Escape,this);
+       GameEventSystem.Call(GameEventType.Enemy_Escape,id,this);
     }
 
     public virtual void Heal(float ammount)
@@ -174,7 +150,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public virtual void Hit()
     {
-        GameEventSystem.Call(GameEventType.Enemy_Hit, this);
+        GameEventSystem.Call(GameEventType.Enemy_Hit, id,this);
     }
 
     public virtual void Update()
@@ -199,7 +175,7 @@ public class BaseEnemy : Ship, IDestroyable
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
 
-            GameEventSystem.Call(GameEventType.Enemy_Death, this);
+            GameEventSystem.Call(GameEventType.Enemy_Death, id,this);
 
 
             healthBar.Hide();

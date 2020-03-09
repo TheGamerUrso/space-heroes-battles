@@ -9,6 +9,7 @@ public class GameOverWidget : MonoBehaviour
 {
     private Player player;
     private PlayerData playerData;
+    private GameController gameController;
 
     [SerializeField] private MissionCollection missionCollection;
     [SerializeField] private Mission mission;
@@ -37,7 +38,7 @@ public class GameOverWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        GameManager.IsGameOver = true;
+        gameController.IsGameOver = true;
 
         Player player = PlayerManager.GetPlayer();
         PlayerData playerData = DataController.GetPlayerData();
@@ -56,19 +57,19 @@ public class GameOverWidget : MonoBehaviour
         UpdateScore();
         AudioManager.PlayMusic("GameOver");
         levelName = "Level" + GameManager.LevelSelected;
-        killed = EnemyManager.EnemySpawnedInTotal * .9f;
-        collected = SpawnEnemies.CoinDropInTotal * .9f;
+        killed = gameController.EnemySpawnedInTotal * .9f;
+        collected = gameController.CoinDropInTotal * .9f;
 
         playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
 
-        if (SpawnEnemies.Instance.survival == false)
+        if (gameController.survivalMode == false)
         {
             missionCollection = DataController.GetMissionCollection();
             mission = missionCollection.GetMission(GameManager.LevelSelected);
     
             levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
         }
-        if (!SpawnEnemies.Instance.survival)
+        if (!gameController.survivalMode)
         {
             StartCoroutine(ShowGameResults());
         }
@@ -152,14 +153,14 @@ public class GameOverWidget : MonoBehaviour
     }
     public void UpdateScore()
     {
-        string scoreText = string.Format("{00:0000000000}", SpawnEnemies.Score);
+        string scoreText = string.Format("{00:0000000000}", gameController.Score);
         UpdateText(scoreText);
     }
 
     private void Start()
     {
         animator = GetComponent<Animator>();
-
+        gameController = GameController.Instance;
         m_PlayAgainButton.onClick.AddListener(() =>
         {
             Scene loadedLevel = SceneManager.GetActiveScene();

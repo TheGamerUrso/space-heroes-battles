@@ -17,7 +17,7 @@ public class GameManager : Singleton<GameManager>
     public delegate void OnLoadData();
     public event OnLoadData OnLoadDataCompleted;
 
-    public static bool IsGameOver;
+
     public static bool Paused;
 
 
@@ -67,9 +67,9 @@ public class GameManager : Singleton<GameManager>
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
-        GameEventSystem.OnPlayerLevelUpHandled += ShowLevelup;
+        GameEventSystem.OnPlayerLevelUp += ShowLevelup;
 
-        GameEventSystem.OnShipSelectHandled += ShipSelected;
+        GameEventSystem.OnShipSelect += ShipSelected;
 
     }
 

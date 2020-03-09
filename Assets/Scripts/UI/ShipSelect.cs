@@ -56,7 +56,7 @@ public class ShipSelect : MonoBehaviour
         if (GooglePlayServicesManager.Instance)
             GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
 
-        GameEventSystem.OnShipSelectHandled += SelectShip;
+        GameEventSystem.OnShipSelect += SelectShip;
 
         SelectShip(0);
     }

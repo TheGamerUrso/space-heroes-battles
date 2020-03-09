@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Items : MonoBehaviour
 {
+    public GameController gameController;
     private int frameInterval = 1;
     [SerializeField] private ItemData itemData;
 
@@ -40,6 +41,7 @@ public class Items : MonoBehaviour
 
     private void Start()
     {
+        gameController = GameController.Instance;
         Initialize();
     }
     public void SetPlayer(Player player)
@@ -110,7 +112,7 @@ public class Items : MonoBehaviour
 
         if (itemData.m_RewardAmount > 0)
         {
-            SpawnEnemies.counsEarnInGame++;
+            gameController.counsEarnInGame++;
             GuiManager.Instance.CreateFloatingText("$", transform.localPosition);
             if (AudioManager.Instance)
             {

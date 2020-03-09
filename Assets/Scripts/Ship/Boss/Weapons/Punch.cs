@@ -5,7 +5,8 @@ using UnityEngine;
 
 public class Punch : Ship, IDestroyable
 {
-    public event Action<object> OnEnemyHit = delegate { };
+    public string id;
+    public event Action<string,object> OnEnemyHit = delegate { };
     public Transform[] Waypoints;
 
 
@@ -39,7 +40,11 @@ public class Punch : Ship, IDestroyable
     }
     #endregion
 
-    
+    private void Start()
+    {
+        id = gameObject.name + UnityEngine.Random.Range(1,1000);
+    }
+
     private void Update()
     {
       
@@ -110,7 +115,7 @@ public class Punch : Ship, IDestroyable
             }
         }
 
-        OnEnemyHit?.Invoke(this);
+        OnEnemyHit?.Invoke(id,this);
 
     }
 
