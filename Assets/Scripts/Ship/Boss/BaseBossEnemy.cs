@@ -36,11 +36,6 @@ public class BaseBossEnemy : BaseEnemy
     {
         EnableColliders(false);
         currentWeaponActive = 1;
-        for (int weaponIndex = 0; weaponIndex < Weapons.Length; weaponIndex++)
-        {
-            Weapons[weaponIndex].GetComponent<WeaponScript>().SetShipStatsSystem(shipStatsSystem);
-        }
-
     }
 
     public override void InitReferences()
@@ -64,7 +59,6 @@ public class BaseBossEnemy : BaseEnemy
 
         for (int i = 0; i < Weapons.Length; i++)
         {
-            Weapons[i].GetComponent<WeaponScript>().SetShipStatsSystem(shipStatsSystem);
             Weapons[i].SetActive(false);
         }
     }

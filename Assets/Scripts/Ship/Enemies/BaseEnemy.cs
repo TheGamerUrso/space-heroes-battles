@@ -62,7 +62,6 @@ public class BaseEnemy : Ship, IDestroyable
         if (weaponScript)
         {
             weaponScript.SetShip(this);
-            weaponScript.SetShipStatsSystem(GetShipStatsSystem());
         }
     }
 
@@ -82,12 +81,6 @@ public class BaseEnemy : Ship, IDestroyable
 
         baseEnemyAI = GetComponent<SimpleAI>();
         ShieldEffect.SetActive(bShieldModuleInstalled);
-
-        weaponScript = GetComponentInChildren<WeaponScript>(true);
-        if (weaponScript != null)
-        {
-            weaponScript.SetShipStatsSystem(shipStatsSystem);
-        }
 
         if (HealthBarSettings != null)
         {

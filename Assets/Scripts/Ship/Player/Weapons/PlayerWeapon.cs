@@ -8,6 +8,19 @@ public class PlayerWeapon : WeaponScript
     private PlayerAnimation playerAnimation;
     public Transform shipTransform;
     private bool holdFire;
+    public float SuperChargeTime { get { return shipStatsSystem.SuperChargeTime; } set { shipStatsSystem.SuperChargeTime = value; } }
+    public float SuperDamage { get { return shipStatsSystem.SuperDamage; } set { shipStatsSystem.SuperDamage = value; } }
+
+    public int DamageMulitplier { get { return weaponData.multiplier; } }
+
+    public bool HomeMissleUpgrade { get { return weaponData.m_HomeMissleUpgrade; } }
+
+    public bool RapidFireMoade { get { return weaponData.RapidFireMode; } private set { } }
+
+    protected bool autoAttack;
+    public bool AutoAttack { get { return autoAttack; } set { autoAttack = value; } }
+
+    protected bool usePitch;
     public void SetShipTransform(Transform shipTransform)
     {
         this.shipTransform = shipTransform;
@@ -17,9 +30,19 @@ public class PlayerWeapon : WeaponScript
     {
         this.playerAnimation = playerAnimation;
     }
+    public override void OnStart()
+    {
+        base.OnStart();
+    }
 
     public override void Update()
     {
+        
+    }
+
+    public override void OnUpdate()
+    {
+        base.OnUpdate(); 
         if (Time.frameCount % 1 == 0)
         {
             if (playerAnimation.GetAnimationState("Enter") || playerAnimation.GetAnimationState("Exit"))
@@ -27,7 +50,7 @@ public class PlayerWeapon : WeaponScript
                 return;
             }
 
-            base.Update();
+            Shoot();
         }
     }
 
@@ -47,9 +70,6 @@ public class PlayerWeapon : WeaponScript
                 holdFire = false;
             }
         }
-
-
-
 
         if (Application.platform == RuntimePlatform.WindowsEditor)
         {

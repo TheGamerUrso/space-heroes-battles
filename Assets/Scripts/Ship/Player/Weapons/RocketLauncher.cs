@@ -1,7 +1,7 @@
 ﻿using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public class RocketLauncher : WeaponScript
+public class RocketLauncher : PlayerWeapon
 {
     public override void Shoot()
     {

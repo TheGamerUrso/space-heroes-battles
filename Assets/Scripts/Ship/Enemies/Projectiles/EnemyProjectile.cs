@@ -4,22 +4,41 @@ using UnityEngine;
 
 public class EnemyProjectile : Projectile
 {
-    public Player Target;
+    public GameObject Target;
     public Vector3 TargetLastPosition;
-    private IDestroyable target;
-    private GameObject explosion;
-    protected bool FollowTarget;
 
-    public override void Movement()
+    public bool FollowTarget;
+
+    protected override void OnAwake()
     {
-        rigid.MovePosition(transform.position  + (transform.forward * speed * Time.deltaTime));   
+        base.OnAwake(); 
+    }
 
-        if(transform.position.z < Constants.m_ZMin )
-        {
-            gameObject.SetActive(false);
-        }
+    private void OnEnable()
+    {
+        
+    }
+
+    private void OnDisable()
+    {
+        rigid.velocity = Vector3.zero;
+    }
+
+    protected override void OnStart()
+    {
+        base.OnStart();
 
     }
+    public override void Movement()
+    {
+        //rigid.MovePosition(transform.position  + (transform.forward * speed * Time.deltaTime));   
+
+        //if (transform.position.z < Constants.m_ZMin)
+        //{
+        //    gameObject.SetActive(false);
+        //}
+    }
+
     public override void DestoryNow()
     {
         explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
@@ -35,19 +54,5 @@ public class EnemyProjectile : Projectile
             destroyable.TakeDamage(damage);
             DestoryNow();
         }
-    }
-
-    public void GetTargetLastPosition()
-    {
-        Target = GameObject.FindObjectOfType<Player>();
-        if (Target)
-        {
-            TargetLastPosition = (transform.position - Target.transform.position).normalized;
-        }
-    }
-
-    public void SetFollowTarget(bool value)
-    {
-        FollowTarget = value;
     }
 }

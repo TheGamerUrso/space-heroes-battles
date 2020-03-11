@@ -17,8 +17,7 @@ public class PlaceTurrets : MonoBehaviour
             if (TurrentPlaces[i].childCount == 0)
             {
                 GameObject Turret = CreateNew(TurrentPlaces[i]);
-                Turret.GetComponentInChildren<PlayerWeapon>().SetPlayerAnimation(player.PlayerAnimation());
-                Turret.GetComponentInChildren<PlayerWeapon>().SetShipStatsSystem(player.GetShipStatsSystem());
+                Turret.GetComponentInChildren<PlayerWeapon>().SetPlayerAnimation(player.PlayerAnimation());    
                 Turret.GetComponentInChildren<PlayerWeapon>().SetShipTransform(Turret.transform);
                 Turret.transform.SetParent(TurrentPlaces[i]);
                 Turret.transform.position = TurrentPlaces[i].position;

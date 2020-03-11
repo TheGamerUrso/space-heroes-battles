@@ -54,15 +54,12 @@ public class PlayerWeaponSystem : MonoBehaviour
         {
             if (Weapons[i].gameObject.activeSelf)
             {
-                Weapons[i].SetShipStatsSystem(ShipStatsSystem);
                 Weapons[i].SetPlayerAnimation(playerAnimation);
                 Weapons[i].SetShipTransform(player.transform);
             }
         }
 
-        RocketLauncher.SetShipStatsSystem(ShipStatsSystem);
-
-        SpecialAttacks.SetShipStatsSystem(ShipStatsSystem);
+       
         SpecialAttacks.SetPlayerAnimation(playerAnimation);
         SpecialAttacks.SetShipTransform(player.transform);
     }

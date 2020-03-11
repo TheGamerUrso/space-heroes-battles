@@ -73,23 +73,6 @@ public class BaseEnemyAI : MonoBehaviour
         }
     }
 
-    public IEnumerator EnterAnimationCoroutine()
-    {
-        while (transform.GetChild(1).transform.localScale.x < 1)
-        {
-            Vector3 NewSize = transform.GetChild(1).transform.localScale;
-            NewSize.x += Time.deltaTime;
-            NewSize.y += Time.deltaTime;
-            NewSize.z += Time.deltaTime;
-            if (NewSize.x > 1)
-            {
-                NewSize = Vector3.one;
-            }
-            transform.GetChild(1).transform.localScale = NewSize;
-            yield return null;
-        }
-    }
-
     private void FixedUpdate()
     {
         Move();
@@ -99,13 +82,8 @@ public class BaseEnemyAI : MonoBehaviour
 
     public virtual void Appear()
     {
-        if (EnterCoroutine != null)
-        {
-            StopCoroutine(EnterAnimationCoroutine());
-        }
-
-        StartCoroutine(EnterAnimationCoroutine());
     }
+
     public virtual void Enter(){     
     }
 
