@@ -8,6 +8,8 @@ using System.Collections;
 
 public class BaseBossEnemy : BaseEnemy
 {
+    public Action OnBossAttack;
+
     #region Animation Config
     [Header("Animation Config")]
     int enterNameHash = Animator.StringToHash("Enter");
@@ -21,10 +23,6 @@ public class BaseBossEnemy : BaseEnemy
     protected GameObject bossWidget;
     protected int hitIndex;
     protected int numberOfHits;
-
-    protected int phase;
-
-
     public GameObject ExplosionsDeathEffect;
 
     #endregion
@@ -144,41 +142,6 @@ public class BaseBossEnemy : BaseEnemy
 
     }
 
-    public virtual void Phases()
-    {
-        if (phase == 0 && shipStatsSystem.GetHealthPressentage() <= 70f)
-        {
-            phase = 1;
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
-
-                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
-            }
-        }
-        else if (phase == 1 && shipStatsSystem.GetHealthPressentage() <= 30f)
-        {
-            phase = 2;
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
-
-                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
-            }
-
-        }
-        else if (phase == 2 && shipStatsSystem.GetHealthPressentage() <= 10f)
-        {
-            phase = 3;
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
-
-                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
-            }
-        }
-    }
-
     public override void Attack()
     {
         if (delayAttak > 0)
@@ -197,7 +160,7 @@ public class BaseBossEnemy : BaseEnemy
                 }
             }
 
-            Phases();
+            OnBossAttack?.Invoke();
 
         }
     }
@@ -225,13 +188,37 @@ public class BaseBossEnemy : BaseEnemy
             }
         }
 
-        GuiManager.Instance.ToggleSlowMo(false); 
+        GuiManager.Instance.ToggleSlowMo(false);
     }
 
     IEnumerator DeathSequence()
     {
         yield return new WaitForSeconds(4.0f);
         base.Death();
+    }
+
+    public float GetHealtHPresentage()
+    {
+        return shipStatsSystem.GetHealthPressentage();
+    }
+
+    public void SetFireRate(int weaponIndex = 0,bool all = true)
+    {
+        if (all)
+        {
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
+
+                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
+            }
+        }
+        else
+        {
+            float newFireRate = Weapons[weaponIndex].GetComponent<WeaponScript>().FireRate - .2f;
+
+            Weapons[weaponIndex].GetComponent<WeaponScript>().FireRate = newFireRate;
+        }
     }
 
 }

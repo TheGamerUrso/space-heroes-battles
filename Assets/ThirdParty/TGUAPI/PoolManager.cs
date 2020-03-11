@@ -19,6 +19,7 @@ namespace TheGamerUrso
             public int GetPoolElementIndex { get { return poolIndex; } }
             public List<GameObject> GetThePoolElementGameObjects { get { return PoolElementGameObjects; } }
         }
+
         [Serializable]
         public enum PoolGameObjectType
         {

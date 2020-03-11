@@ -8,28 +8,11 @@ public class EnemyProjectile : Projectile
     public Vector3 TargetLastPosition;
     private IDestroyable target;
     private GameObject explosion;
-
-    private void FixedUpdate()
-    {
-        Movement();
-    }
+    protected bool FollowTarget;
 
     public override void Movement()
     {
-        if (FollowTarget)
-        {
-            // Aim bullet in player's direction.
-            rigid.MovePosition(transform.position - TargetLastPosition * speed * Time.deltaTime);
-            //  transform.position -= TargetLastPosition * speed * Time.deltaTime;
-        }
-        else
-        {
-            rigid.MovePosition(transform.position - transform.forward * speed * Time.deltaTime);
-            // transform.position -= transform.forward * speed * Time.deltaTime;
-        }
-
-        Vector3 worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
-        Vector3 ScreenToViewpoint = Camera.main.ScreenToViewportPoint(worldToScreen);
+        rigid.MovePosition(transform.position  + (transform.forward * speed * Time.deltaTime));   
 
         if(transform.position.z < Constants.m_ZMin )
         {
@@ -49,7 +32,7 @@ public class EnemyProjectile : Projectile
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            destroyable.TakeDamage(Damage);
+            destroyable.TakeDamage(damage);
             DestoryNow();
         }
     }

@@ -5,6 +5,7 @@ public class ArtilleryWeapon : WeaponScript
 {
     [Header("Artillery")]
     public GameObject TargetPrefab;
+    public Vector3[] Positions;
     public Transform[] artilleryTargets;
     private GameObject tarGO;
     public GameObject BulletPrefab;
@@ -12,21 +13,6 @@ public class ArtilleryWeapon : WeaponScript
     public override void Initialize()
     {
         base.Initialize();
-
-        tarGO = GameObject.Find(TargetPrefab.name);
-
-        if (tarGO == null)
-        {
-            tarGO = Instantiate(TargetPrefab, new Vector3(0, -50, 0), Quaternion.identity);
-            tarGO.name = TargetPrefab.name;
-        }
-
-        artilleryTargets = new Transform[tarGO.transform.childCount];
-
-        for (int i = 0; i < tarGO.transform.childCount; i++)
-        {
-            artilleryTargets[i] = tarGO.transform.GetChild(i);
-        }
 
         StartCoroutine(ShootDelay());
     }
@@ -36,8 +22,6 @@ public class ArtilleryWeapon : WeaponScript
         for (int i = 0; i < 4; i++)
         {
             GameObject bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
-
-            bullet.GetComponent<ArtilleryProjectile>().Targets(artilleryTargets);
         }
     }
 
@@ -49,9 +33,8 @@ public class ArtilleryWeapon : WeaponScript
             float randomDelay = UnityEngine.Random.Range(.4f, 1);
             for (int i = 0; i < Random.Range(2, 4); i++)
             {
-                GameObject bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
+                GameObject bullet = Instantiate(BulletPrefab, transform.position, Quaternion.Euler(0,0,0));
                 ArtilleryProjectile artilleryProjectile = bullet.GetComponent<ArtilleryProjectile>();
-                artilleryProjectile.Targets(artilleryTargets);
                 artilleryProjectile.setDamage(Damage);
                 yield return new WaitForSeconds(randomDelay);
             }

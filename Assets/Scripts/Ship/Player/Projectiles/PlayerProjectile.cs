@@ -22,7 +22,6 @@ public class PlayerProjectile : Projectile
     public override void Movement()
     {
         rigid.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
-        transform.position += transform.forward * speed * Time.deltaTime;
 
         if (transform.position.z > Constants.m_ZMax)
         {
@@ -47,7 +46,7 @@ public class PlayerProjectile : Projectile
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
             if (destroyable != null)
             {
-                destroyable.TakeDamage(Damage);
+                destroyable.TakeDamage(damage);
             }
             DestoryNow();
         }

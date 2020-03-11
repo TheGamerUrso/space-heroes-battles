@@ -30,11 +30,19 @@ public class FollowPathAI : BaseEnemyAI
 
     public void GeneratePath()
     {
-       // Debug.Log("Generate new Path");
+        // Debug.Log("Generate new Path");
         curPath = Random.Range(0, PathIndex.Length);
+        if (Waypoints.Instance == null)
+        {
+            return;
+        }
+
         path = Waypoints.Instance.GetPath(PathIndex[curPath]);
+
         Transform[] PathList = TransformExtention.GetChildrenAsList(path.transform);
+
         GeneratePath(PathList);
+
 
         currentPointToFollowIndex = 0;
         Reset = false;
@@ -52,7 +60,7 @@ public class FollowPathAI : BaseEnemyAI
     }
 
     public override void Initialize()
-    {  
+    {
         startingPosition = transform.position;
 
         if (Path.Length == 0)
@@ -134,7 +142,8 @@ public class FollowPathAI : BaseEnemyAI
             Vector3 normalizedDirection = direction.normalized;
             float distance = direction.magnitude;
 
-            if (distance > 1) {
+            if (distance > 1)
+            {
                 rigid.MovePosition(transform.position + normalizedDirection * xVel * Time.deltaTime);
             }
 

@@ -40,24 +40,24 @@ namespace TheGamerUrso
 
 
                 EditorGUI.PropertyField(
-                    new Rect(rect.x, rect.y, 60, EditorGUIUtility.singleLineHeight),
+                    new Rect(rect.x, rect.y, 128, EditorGUIUtility.singleLineHeight),
                     element.FindPropertyRelative("name"), GUIContent.none);
 
 
 
                 EditorGUI.PropertyField(
-                    new Rect(rect.x + 65, rect.y, 100, EditorGUIUtility.singleLineHeight),
+                    new Rect(rect.x + 128, rect.y, 128, EditorGUIUtility.singleLineHeight),
                     element.FindPropertyRelative("poolGameObjectType"), GUIContent.none);
 
 
 
                 EditorGUI.PropertyField(
-                  new Rect(rect.x + 60 + 110, rect.y, rect.width - 60 - 120 - 30, EditorGUIUtility.singleLineHeight),
-                  element.FindPropertyRelative("PoolElementGameObjects"), GUIContent.none);
+                  new Rect(rect.x + 128 + 128, rect.y, 200, EditorGUIUtility.singleLineHeight),
+                  element.FindPropertyRelative("PoolElementPrefab"), GUIContent.none);
 
 
                 EditorGUI.PropertyField(
-                  new Rect(rect.x + rect.width - 30, rect.y, 30, EditorGUIUtility.singleLineHeight),
+                  new Rect(rect.x + 128+ 128+ 200, rect.y, 128, EditorGUIUtility.singleLineHeight),
                   element.FindPropertyRelative("poolIndex"), GUIContent.none);
 
             };

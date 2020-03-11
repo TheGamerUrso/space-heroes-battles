@@ -1,117 +1,77 @@
-﻿using TheGamerUrso.PoolSystem;
+﻿using System.Collections;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class ArtilleryProjectile : EnemyProjectile
 {
+    public Vector3 target;
     public GameObject TargetPrefab;
-    public Transform[] artilleryTargets;
     public GameObject WarningSignalPrefab;
     private GameObject WarningSignal;
-    private Transform TargetToGo;
-    private int curTarget;
+
+    public float timer = 5;
+
     public float yVel;
 
     public bool fall;
 
     public float distFromTarget;
 
-    public void Targets(Transform[] targets)
+    public GameObject Player;
+
+    private void OnEnable()
     {
-        artilleryTargets = targets;
+        Player = GameObject.FindGameObjectWithTag("Player");
+        timer = 4;
+        fall = false;
+        StartCoroutine(GetTarget());
+    }
+    public override void SetInitialReference()
+    {
+        base.SetInitialReference();
     }
 
-    private void Start()
+    private void Update()
     {
-        //curTarget = UnityEngine.Random.Range(0, artilleryTargets.Length);
-        //foreach (Transform item in artilleryTargets)
-        //{
-        //    if (PlayerManager.GetPlayer() == null)
-        //    {
-        //        return;
-        //    }
-        //    Player Target = PlayerManager.GetPlayer();
+        timer -= Time.deltaTime;
+        if (timer < 0)
+        {
+            fall = true;
+        }
+    }
 
-        //    if (Target == null)
-        //    {
-        //        Target = GameObject.FindObjectOfType<Player>();
-        //    }
+    IEnumerator GetTarget()
+    {
 
-        //    if (Target != null)
-        //    {
-        //        float dist = (item.transform.position - Target.transform.position).magnitude;
-        //        if (dist < 5)
-        //        {
-        //            TargetToGo = item;
-        //            WarningSignal = Instantiate(WarningSignalPrefab, item.transform, false);
-        //        }
-        //    }
-        //}
-
-        GameObject tempStorage = GameObject.Find("DynamicObjects");
-        WarningSignal = Instantiate(WarningSignalPrefab, tempStorage.transform, false);
-        WarningSignal.transform.SetPositionAndRotation(new Vector3(0, -50, 0),Quaternion.identity);
+        while (!fall)
+        {
+            target = new Vector3(Player.transform.position.x, -50, Player.transform.position.z) + new Vector3(Random.insideUnitCircle.x * 5, 0, Random.insideUnitCircle.y * 5);
+            yield return null;
+        }
 
     }
 
     public override void Movement()
     {
-        if (transform.localPosition.y > 10)
+
+        if (!fall)
         {
-            fall = true;
+            Vector3 direction = (speed *
+                transform.up) + (speed / 2) * transform.forward;
+            rigid.MovePosition(transform.position + direction * Time.deltaTime);
         }
-
-        if (fall == false)
+        else if (fall)
         {
-            //New Code
-            if (PlayerManager.GetPlayer() == null)
-            {
-                return;
-            }
-
-            Player Target = PlayerManager.GetPlayer();
-
-            if (Target == null)
-            {
-                Target = GameObject.FindObjectOfType<Player>();
-            }
-  
-
-            WarningSignal.transform.Translate(Vector3.Lerp(WarningSignal.transform.position, Target.transform.position,3 * Time.deltaTime));
-
-            TargetToGo = WarningSignal.transform;
-
-            Vector3 newPos = (transform.forward * speed) + (transform.up * yVel);
-            rigid.MovePosition(transform.position + newPos * Time.deltaTime);
-        }
-        else if (fall && TargetToGo != null)
-        {
-
-
-            distFromTarget = (transform.position - TargetToGo.transform.position).magnitude - 30;
-
-            WarningSignal.transform.localScale = Vector3.Lerp(WarningSignal.transform.localScale, new Vector3(distFromTarget, distFromTarget, distFromTarget), .1f * Time.deltaTime);
-
-            WarningSignal.transform.localScale = new Vector3(
-               Mathf.Clamp(WarningSignal.transform.localScale.x, 0, 1),
-               Mathf.Clamp(WarningSignal.transform.localScale.y, 0, 1),
-               Mathf.Clamp(WarningSignal.transform.localScale.z, 0, 1)
-                );
-
-            Vector3 direction = (TargetToGo.transform.position - transform.position).normalized;
+            Vector3 direction = target - transform.position;
+            direction.Normalize();
+            Debug.DrawRay(transform.position, direction, Color.green);
             rigid.MovePosition(transform.position + direction * speed * Time.deltaTime);
-            //transform.position = Vector3.MoveTowards(transform.position, TargetToGo.transform.position, 1);
-        }
-        if (TargetToGo != null)
-        {
-            if ((transform.position - TargetToGo.transform.position).magnitude < .1f)
-            {
-                GameObject explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-                explosion.transform.SetPositionAndRotation(transform.position + Vector3.up * 2, Quaternion.identity);
 
-                Destroy(WarningSignal);
-                gameObject.SetActive(false);
-                Destroy(gameObject, 1);
+            if (Vector3.Distance(target, transform.position) < 2)
+            {
+                DestoryNow();
             }
         }
     }
+
 }
