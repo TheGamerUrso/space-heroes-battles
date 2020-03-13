@@ -35,7 +35,7 @@ public class ArtilleryWeapon : WeaponScript
             {
                 GameObject bullet = Instantiate(BulletPrefab, transform.position, Quaternion.Euler(0,0,0));
                 ArtilleryProjectile artilleryProjectile = bullet.GetComponent<ArtilleryProjectile>();
-                artilleryProjectile.setDamage(Damage);
+                artilleryProjectile.Damage = Damage;
                 yield return new WaitForSeconds(randomDelay);
             }
             delayBetweenShots = UnityEngine.Random.Range(4, 6);

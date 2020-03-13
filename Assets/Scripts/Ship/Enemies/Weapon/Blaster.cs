@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using TheGamerUrso.PoolSystem;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
@@ -27,10 +25,9 @@ public class Blaster : WeaponScript
             for (int i = 0; i < Cannons.Length; i++)
             {
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+                Vector3 shootDir = (Cannons[i].position - Cannons[i].forward).normalized;
                 InstansiatedProjectile.transform.position = Cannons[i].position;
-                InstansiatedProjectile.transform.rotation = Cannons[i].rotation;
-                InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(Damage);
-                InstansiatedProjectile.GetComponent<Rigidbody>().AddForce(InstansiatedProjectile.transform.forward * 100, ForceMode.Impulse);
+                InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, Damage);
             }
         }
     }

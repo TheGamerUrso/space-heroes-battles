@@ -49,10 +49,11 @@ public class SpecialAttack : PlayerWeapon
                 }
             }
 
-            turretDuration = SuperChargeTime;
+
 
             if (weaponData.SummonTurrets)
             {
+                turretDuration = SuperChargeTime;
                 GetComponentInChildren<PlaceTurrets>().CreateTurret();
                 turretDuration = GetComponentInChildren<PlaceTurrets>().TurretPrefab.GetComponent<Turret>().TTL;
             }
@@ -87,11 +88,8 @@ public class SpecialAttack : PlayerWeapon
             SpecialActive = false;
         }
     }
-
-    public override void Update()
+    public override void OnUpdate()
     {
-        base.Update();
-
         if (SpecialActive)
         {
             ActivateSpecial();
@@ -104,7 +102,7 @@ public class SpecialAttack : PlayerWeapon
                 else
                 {
                     m_CountDownTimer = new CountDownTimer(SuperChargeTime);
-                }         
+                }
             }
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
@@ -127,6 +125,7 @@ public class SpecialAttack : PlayerWeapon
                     PlayerManager.GetPlayer().Heal(.1f);
                 }
 
+                Shoot();
             }
             else
             {
@@ -143,7 +142,7 @@ public class SpecialAttack : PlayerWeapon
             ActivateSpecial();
         }
     }
-
+    
     public override void Shoot()
     {
         if (weaponData.SuperRockFireMode)
@@ -158,7 +157,7 @@ public class SpecialAttack : PlayerWeapon
 
                     rocket.transform.position = transform.position;
 
-                    rocket.GetComponent<Rocket>().setDamage(Damage);
+                    rocket.GetComponent<Rocket>().Damage = Damage;
 
                     rocket.GetComponent<Rocket>().HomeMissleType = weaponData.m_HomeMissleUpgrade;
 

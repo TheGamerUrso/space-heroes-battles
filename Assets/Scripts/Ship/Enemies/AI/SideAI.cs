@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso;
+using TheGamerUrso.Utils;
 using UnityEngine;
 public enum DirectionType
 {

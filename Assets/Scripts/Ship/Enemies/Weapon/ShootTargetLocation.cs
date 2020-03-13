@@ -41,7 +41,7 @@ public class ShootTargetLocation : Blaster
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(playerLastLocation);
-                InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(Damage);
+                InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = Damage;
 
                 //InstansiatedProjectile.GetComponent<Rigidbody>().AddForce(InstansiatedProjectile.transform.forward * 100, ForceMode.Impulse);
 

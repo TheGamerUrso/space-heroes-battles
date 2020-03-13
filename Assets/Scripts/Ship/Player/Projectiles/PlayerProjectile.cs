@@ -1,12 +1,18 @@
 using TheGamerUrso;
 using TheGamerUrso.PoolSystem;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class PlayerProjectile : Projectile
 {
-    private GameObject explosion;
-    private IDestroyable Target;
+    public override void Setup(Vector3 shootDir, float dmg)
+    {
+        this.shootDir = shootDir;
+        //transform.eulerAngles = new Vector3(0, Utilities.Get(shootDir), 0);
+        if (dmg > 0)
+            Damage = dmg;
 
+    }
 
     private void OnDisable()
     {
@@ -14,14 +20,9 @@ public class PlayerProjectile : Projectile
             trailRenderer.Clear();
     }
 
-    private void FixedUpdate()
-    {
-        Movement();
-    }
-
     public override void Movement()
     {
-        rigid.MovePosition(transform.position + transform.forward * speed * Time.deltaTime);
+        transform.position += shootDir * speed * Time.deltaTime;
 
         if (transform.position.z > Constants.m_ZMax)
         {

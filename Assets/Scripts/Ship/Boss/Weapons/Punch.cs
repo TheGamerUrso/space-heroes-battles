@@ -144,7 +144,7 @@ public class Punch : Ship, IDestroyable
 
                 if (playerProjectile)
                 {
-                    TakeDamage(playerProjectile.getDamage());
+                    TakeDamage(playerProjectile.Damage);
                 }
             }
         }

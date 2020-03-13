@@ -1,4 +1,5 @@
 ﻿using TheGamerUrso;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class FollowPathAI : BaseEnemyAI

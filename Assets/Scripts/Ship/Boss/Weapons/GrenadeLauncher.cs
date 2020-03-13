@@ -14,7 +14,7 @@ public class GrenadeLauncher : Blaster
             GameObject bomb = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             bomb.transform.position = Cannons[pos].transform.position;
             bomb.transform.rotation = Cannons[pos].rotation;
-            bomb.GetComponent<EnemyProjectile>().setDamage(Damage);
+            bomb.GetComponent<EnemyProjectile>().Damage = Damage;
             PlayWeaponFireSound();
         }
     }

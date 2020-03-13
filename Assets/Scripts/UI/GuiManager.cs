@@ -92,7 +92,7 @@ public class GuiManager : Singleton<GuiManager>
         }
         SlowMoEffect();
 
-        if (SpawnEnemies.Instance.spawnReady)
+        if (SpawnEnemies.Instance && SpawnEnemies.Instance.spawnReady)
         {
             useSloMo = true;
         }

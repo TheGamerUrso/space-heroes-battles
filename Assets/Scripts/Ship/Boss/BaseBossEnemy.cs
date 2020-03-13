@@ -5,6 +5,7 @@ using System.Linq;
 
 using Random = UnityEngine.Random;
 using System.Collections;
+using TheGamerUrso.Utils;
 
 public class BaseBossEnemy : BaseEnemy
 {

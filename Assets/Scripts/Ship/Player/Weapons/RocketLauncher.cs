@@ -1,5 +1,6 @@
 ﻿using TheGamerUrso.PoolSystem;
 using UnityEngine;
+using TheGamerUrso;
 
 public class RocketLauncher : PlayerWeapon
 {
@@ -7,34 +8,24 @@ public class RocketLauncher : PlayerWeapon
     {
         if (HomeMissleUpgrade)
         {
-            HomeMissle();
-        }
-    }
-
-    public void HomeMissle()
-    {
-        var middle = transform.position + new Vector3(0, 0, 1);
-        if (weaponData.m_HomeMissleUpgrade &&
-            weaponData.m_NumberOfMissiles > 0 &&
-            !weaponData.m_RocketUpgrade)
-        {
-            if (Input.GetKeyDown(KeyCode.F))
+            var middle = transform.position + new Vector3(0, 0, 1);
+            if (weaponData.m_HomeMissleUpgrade &&
+                weaponData.m_NumberOfMissiles > 0 &&
+                !weaponData.m_RocketUpgrade)
             {
-                if (Time.time > newShot)
+                if (Input.GetKeyDown(KeyCode.F))
                 {
-                    newShot = Time.time + FireRate;
-                    GameObject rocket = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
-                    rocket.transform.position = transform.position;
-                    /*
-                    GameObject newBullet = Instantiate(weaponData.m_Projectile, middle,
-                        Quaternion.Euler(new Vector3(0, 0, 0)));
-                        */
+                    if (Time.time > newShot)
+                    {
+                        newShot = Time.time + FireRate;
+                        GameObject rocket = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
+                        rocket.transform.position = transform.position;
 
-                    rocket.GetComponent<Rocket>().setDamage(Damage);
-                    rocket.GetComponent<Rocket>().HomeMissleType = false;
-                    weaponData.m_NumberOfMissiles--;
-
-                    PlayWeaponFireSound();
+                        rocket.GetComponent<Rocket>().Setup(transform.forward, SuperDamage);
+                        rocket.GetComponent<Rocket>().HomeMissleType = false;
+                        weaponData.m_NumberOfMissiles--;
+                        PlayWeaponFireSound();
+                    }
                 }
             }
         }

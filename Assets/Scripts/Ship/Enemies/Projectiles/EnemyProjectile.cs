@@ -1,5 +1,6 @@
 using TheGamerUrso;
 using TheGamerUrso.PoolSystem;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class EnemyProjectile : Projectile
@@ -9,34 +10,27 @@ public class EnemyProjectile : Projectile
 
     public bool FollowTarget;
 
-    protected override void OnAwake()
-    {
-        base.OnAwake(); 
-    }
-
-    private void OnEnable()
-    {
-        
-    }
-
     private void OnDisable()
     {
         rigid.velocity = Vector3.zero;
     }
 
-    protected override void OnStart()
+    public override void Setup(Vector3 shootDir, float dmg)
     {
-        base.OnStart();
+        this.shootDir = shootDir;
+        transform.eulerAngles = new Vector3(0, Utilities.GetAngleFromVectorFloat3D(shootDir), 0);
+        if (dmg > 0)
+            Damage = dmg;
 
     }
     public override void Movement()
     {
         //rigid.MovePosition(transform.position  + (transform.forward * speed * Time.deltaTime));   
-
-        //if (transform.position.z < Constants.m_ZMin)
-        //{
-        //    gameObject.SetActive(false);
-        //}
+        transform.position = shootDir * speed * Time.deltaTime;
+        if (transform.position.z < Constants.m_ZMin)
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public override void DestoryNow()

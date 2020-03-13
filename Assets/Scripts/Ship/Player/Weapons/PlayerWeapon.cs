@@ -37,12 +37,15 @@ public class PlayerWeapon : WeaponScript
 
     public override void OnUpdate()
     {
-        base.OnUpdate(); 
+        base.OnUpdate();
         if (Time.frameCount % 1 == 0)
         {
-            if (playerAnimation.GetAnimationState("Enter") || playerAnimation.GetAnimationState("Exit"))
+            if (playerAnimation != null)
             {
-                return;
+                if (playerAnimation.GetAnimationState("Enter") || playerAnimation.GetAnimationState("Exit"))
+                {
+                    return;
+                }
             }
 
             if (Input.touchCount > 0)
@@ -73,46 +76,45 @@ public class PlayerWeapon : WeaponScript
     }
 
     public override void Shoot()
-    { 
-            if (holdFire)
-            {
-                return;
-            }
+    {
+        if (holdFire)
+        {
+            return;
+        }
 
-            if (Time.time > newShot)
-            {
-                newShot = Time.time + GetFireRate();
-                InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
+        if (Time.time > newShot)
+        {
+            newShot = Time.time + GetFireRate();
+            InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
 
-                PlayWeaponFireSound(0, true);
+            PlayWeaponFireSound(0, true);
 
-                foreach (var item in particleSFX)
-                {
-                    item.PlayEffect();
-                }
+            foreach (var item in particleSFX)
+            {
+                item.PlayEffect();
             }
+        }
 
-            if (Input.touchCount > 1)
-            {
-                holdFire = true;
-            }
-            else
-            {
-                holdFire = false;
-            }
+        if (Input.touchCount > 1)
+        {
+            holdFire = true;
+        }
+        else
+        {
+            holdFire = false;
+        }
     }
 
     public void InstansiateBulletsByWeaponType(Transform ship, ref PoolGameObjectType m_Projectile, ref float m_WeaponDamage)
     {
-        PlayerProjectile projectile = null;
         List<GameObject> Projectiles = PoolManager.Instance.GetPoolByType(PoolGameObjectType.PlayerProjectile);
 
         for (int i = 0; i < Cannons.Length; i++)
         {
-            projectile = PoolManager.Instance.GetObjectFromPool(m_Projectile).GetComponent<PlayerProjectile>();
-            projectile.transform.position = Cannons[i].transform.position;
-            projectile.transform.rotation = Quaternion.Euler(new Vector3(0, ship.transform.eulerAngles.y, 0) + Cannons[i].eulerAngles);
-            projectile.setDamage(Damage + DamageMulitplier);
+            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+            Vector3 shootDir = Cannons[i].forward;
+            InstansiatedProjectile.transform.position = Cannons[i].position;
+            InstansiatedProjectile.GetComponent<PlayerProjectile>().Setup(shootDir, Damage + DamageMulitplier);
         }
     }
 

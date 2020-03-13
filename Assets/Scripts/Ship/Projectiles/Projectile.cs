@@ -4,60 +4,43 @@ using UnityEngine;
 public abstract class Projectile : MonoBehaviour
 {
     protected Rigidbody rigid;
- 
-    [SerializeField]protected float damage;
-    [SerializeField]protected float speed;
-    [SerializeField]protected PoolGameObjectType ExplosionPrefab;
+    protected Vector3 shootDir;
+    [SerializeField] protected float damage;
+    public float Damage
+    {
+        get { return damage; }
+        set { damage = value; }
+    }
+
+    [SerializeField] protected float speed;
+    [SerializeField] protected PoolGameObjectType ExplosionPrefab;
 
     protected GameObject explosion;
     protected Transform EffectsHolder;
     protected TrailRenderer trailRenderer;
 
-    private void OnEnable()
-    {
-        
-    }
+    protected virtual void OnEnable() { } 
 
-    protected virtual void OnAwake()
-    {
+    protected virtual void OnAwake() => SetInitialReference();
 
-    }
 
     private void Awake()
     {
         OnAwake();
-        SetInitialReference();     
-    }
-    private void Start()
-    {
-        OnStart();
     }
 
-    public virtual void SetInitialReference() {
+    private void Start() => OnStart();
+
+    public virtual void SetInitialReference()
+    {
         rigid = GetComponent<Rigidbody>();
         trailRenderer = GetComponent<TrailRenderer>();
     }
-
-    protected virtual void OnStart()
-    {
-
-    }
-    private void FixedUpdate()
-    {
-        Movement();
-    }
+    public virtual void Setup(Vector3 shootDir,float dmg = 1) { }
+    public virtual void OnStart() { }
+    private void Update() => Movement();
 
     public abstract void Movement();
 
-    public virtual void DestoryNow(){}
-
-    public void setDamage(float newDamage)
-    {
-        damage = newDamage;
-    }
-
-    public float getDamage()
-    {
-        return damage;
-    }
+    public virtual void DestoryNow() { }
 }
