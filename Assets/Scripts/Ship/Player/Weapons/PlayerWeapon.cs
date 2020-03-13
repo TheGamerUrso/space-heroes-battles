@@ -35,11 +35,6 @@ public class PlayerWeapon : WeaponScript
         base.OnStart();
     }
 
-    public override void Update()
-    {
-        
-    }
-
     public override void OnUpdate()
     {
         base.OnUpdate(); 
@@ -50,16 +45,52 @@ public class PlayerWeapon : WeaponScript
                 return;
             }
 
-            Shoot();
+            if (Input.touchCount > 0)
+            {
+                if (Input.touchCount > 1)
+                {
+                    holdFire = true;
+                }
+                else
+                {
+                    holdFire = false;
+                }
+
+                Shoot();
+
+            }
+
+            if (Application.platform == RuntimePlatform.WindowsEditor)
+            {
+                holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
+
+                if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
+                {
+                    Shoot();
+                }
+            }
         }
     }
 
     public override void Shoot()
-    {
-        if (Input.touchCount > 0)
-        {
+    { 
+            if (holdFire)
+            {
+                return;
+            }
 
-            Fire();
+            if (Time.time > newShot)
+            {
+                newShot = Time.time + GetFireRate();
+                InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
+
+                PlayWeaponFireSound(0, true);
+
+                foreach (var item in particleSFX)
+                {
+                    item.PlayEffect();
+                }
+            }
 
             if (Input.touchCount > 1)
             {
@@ -69,41 +100,6 @@ public class PlayerWeapon : WeaponScript
             {
                 holdFire = false;
             }
-        }
-
-        if (Application.platform == RuntimePlatform.WindowsEditor)
-        {
-            holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
-
-            if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
-            {
-                Fire();
-            }
-        }
-    }
-
-
-
-
-    public override void Fire()
-    {
-        if (holdFire)
-        {
-            return;
-        }
-
-        if (Time.time > newShot)
-        {
-            newShot = Time.time + GetFireRate();
-            InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
-
-            PlayWeaponFireSound(0,true);
-
-            foreach (var item in particleSFX)
-            {
-                item.PlayEffect();
-            }
-        }
     }
 
     public void InstansiateBulletsByWeaponType(Transform ship, ref PoolGameObjectType m_Projectile, ref float m_WeaponDamage)

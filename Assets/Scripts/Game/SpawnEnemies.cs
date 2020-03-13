@@ -38,7 +38,7 @@ public class SpawnEnemies : MonoBehaviour
  
     [SerializeField] private List<EnemyElement> ListOfEnemyToSpawn = new List<EnemyElement>();
 
-    private int AvailableEnemiesIndex;
+    [SerializeField] private int AvailableEnemiesIndex;
 
     private void Awake()
     {
