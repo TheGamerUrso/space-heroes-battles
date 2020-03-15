@@ -104,21 +104,25 @@ public class AudioManager : Singleton<AudioManager>
 
     public static void PlayRandomMusic(bool force = false)
     {
-        AudioManager.Instance.PlayRandomSong(force);
+        if (Instance)
+            AudioManager.Instance.PlayRandomSong(force);
     }
 
     public static void PlayMusic(string IdTrack, bool loop = true)
     {
-
-        AudioManager.Instance.PlayMusicById(IdTrack, loop);
+        if (Instance)
+            AudioManager.Instance.PlayMusicById(IdTrack, loop);
     }
+
     public static void PlaySound(AudioSource source, string IdTrack, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
-        AudioManager.Instance.PlaySoundByClip(source, IdTrack, mixGroupIndex, usePitch, minRange, maxRange);
+        if (Instance)
+            AudioManager.Instance.PlaySoundByClip(source, IdTrack, mixGroupIndex, usePitch, minRange, maxRange);
     }
     public static void PlaySound(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
-        AudioManager.Instance.PlaySoundByClip(source, clip, mixGroupIndex, usePitch, minRange, maxRange);
+        if (Instance)
+            AudioManager.Instance.PlaySoundByClip(source, clip, mixGroupIndex, usePitch, minRange, maxRange);
     }
 
     public void PlayMusicById(string IdTrack, bool loop = true)

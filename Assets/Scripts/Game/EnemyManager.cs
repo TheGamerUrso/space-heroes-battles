@@ -92,7 +92,6 @@ public class EnemyManager
         if (followPathAI == null)
         {
             enemGO.transform.position = spawnPos;
-            enemGO.transform.rotation = Quaternion.identity;
         }
         else
         {

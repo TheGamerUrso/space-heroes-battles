@@ -92,11 +92,14 @@ public class GameController : Singleton<GameController>
     }
 
     void Update()
-    {  
-        //If Music is Done Choose something new to play.     
-        if (!IsGameOver && AudioManager.Instance.MusicIsDone())
+    {
+        //If Music is Done Choose something new to play.    
+        if (AudioManager.Instance)
         {
-            AudioManager.PlayRandomMusic();
+            if (!IsGameOver && AudioManager.Instance.MusicIsDone())
+            {
+                AudioManager.PlayRandomMusic();
+            }
         }
     }
 

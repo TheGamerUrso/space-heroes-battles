@@ -12,10 +12,9 @@ public class ManeuverEnemy : SimpleAI
 
     public override void Move()
     {
-        movement = (-transform.forward * m_ZVel) + (-transform.right * m_XVel);
+        movement = (transform.forward * m_ZVel) + (transform.right * m_XVel);
         movement.x *= Direction;
-        //transform.localPosition += movement * Time.deltaTime;
-        rigid.MovePosition(transform.position + movement * Time.deltaTime);
+        transform.position += movement * Time.deltaTime;
         CheckOutOfSight();
     }
 

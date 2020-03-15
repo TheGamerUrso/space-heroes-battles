@@ -99,10 +99,12 @@ public class Items : MonoBehaviour
         {
             player.Heal(player.Level * itemData.m_HealValue);
             GuiManager.Instance.CreateFloatingText("Heal up", transform.localPosition);
+
             if (AudioManager.Instance)
             {
                 AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
             }
+
             if (!PlayerPrefs.HasKey("HealTut"))
             {
                 Tutorial.Instance.ShowTutorial(1);

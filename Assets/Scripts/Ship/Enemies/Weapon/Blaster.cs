@@ -1,5 +1,4 @@
 ﻿using TheGamerUrso.PoolSystem;
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class Blaster : WeaponScript
@@ -16,7 +15,7 @@ public class Blaster : WeaponScript
 
     public override void Shoot()
     {
-       if (Time.time > newShot)
+        if (Time.time > newShot)
         {
             newShot = Time.time + FireRate;
 
@@ -25,11 +24,24 @@ public class Blaster : WeaponScript
             for (int i = 0; i < Cannons.Length; i++)
             {
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-                Vector3 shootDir = (Cannons[i].position - Cannons[i].forward).normalized;
+                Vector3 dir = Cannons[i].position + Cannons[i].forward;
+                Vector3 shootDir = (dir - Cannons[i].position).normalized;
                 InstansiatedProjectile.transform.position = Cannons[i].position;
+                InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
                 InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, Damage);
             }
         }
     }
- 
+
+    public void OnDrawGizmos()
+    {
+        if (Cannons !=null && Cannons.Length > 0)
+        {
+            for (int i = 0; i < Cannons.Length; i++)
+            {
+                Gizmos.DrawLine(Cannons[i].position, Cannons[i].position + Cannons[i].forward);
+                Vector3 shootDir = (Cannons[i].position - (Cannons[i].position + Cannons[i].forward)).normalized;
+            }
+        }
+    }
 }

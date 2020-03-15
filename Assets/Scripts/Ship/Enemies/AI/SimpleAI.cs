@@ -6,7 +6,7 @@ public class SimpleAI : BaseEnemyAI
     public override void Move()
     {
         //With transform
-        movement = (-transform.forward * m_ZVel) + (-transform.right * m_XVel);
+        movement = (transform.forward * m_ZVel) + (transform.right * m_XVel);
         movement.x *= Direction;
         //transform.localPosition += movement * Time.deltaTime;
 

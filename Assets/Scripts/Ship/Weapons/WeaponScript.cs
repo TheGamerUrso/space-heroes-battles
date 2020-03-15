@@ -12,7 +12,7 @@ public abstract class WeaponScript : MonoBehaviour
     [Header("Weapon")]
     [SerializeField]
     protected List<WeaponFireEffect> particleSFX = new List<WeaponFireEffect>();
-    protected Transform[] Cannons;
+    [SerializeField] protected Transform[] Cannons;
     public WeaponData weaponData;
     protected int Radius;
     protected int Angle;
@@ -43,7 +43,7 @@ public abstract class WeaponScript : MonoBehaviour
     {
         OnStart();
         Initialize();
- 
+
     }
 
     public virtual void Update()
@@ -58,7 +58,7 @@ public abstract class WeaponScript : MonoBehaviour
         shipStatsSystem = ship.GetShipStatsSystem();
     }
 
-    public virtual void OnUpdate(){}
+    public virtual void OnUpdate() { }
 
     public virtual void Initialize() { }
 
@@ -91,16 +91,17 @@ public abstract class WeaponScript : MonoBehaviour
     {
         if (shipStatsSystem == null)
         {
-            Debug.LogError (gameObject.name + " shipStatsSystem is null");
+            Debug.LogError(gameObject.name + " shipStatsSystem is null");
         }
         shipStatsSystem.FireRate = fireRate;
     }
     #endregion
 
-    public void PlayWeaponFireSound(int audioMixGroup = 0,bool usePitch = false)
+    public void PlayWeaponFireSound(int audioMixGroup = 0, bool usePitch = false)
     {
-        AudioManager.PlaySound(source, SoundSFX, audioMixGroup, usePitch);
+        if (AudioManager.Instance)
+            AudioManager.PlaySound(source, SoundSFX, audioMixGroup, usePitch);
     }
 
-    
+
 }

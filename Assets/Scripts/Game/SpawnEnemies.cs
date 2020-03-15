@@ -48,49 +48,46 @@ public class SpawnEnemies : MonoBehaviour
     private void Start()
     {
         gameController = GameController.Instance;
-        bool SurvivalMode = gameController.survivalMode;
-        int LevelDifficulty = gameController.LevelDifficulty;
+        if (gameController)
+        {
+            bool SurvivalMode = gameController.survivalMode;
+            int LevelDifficulty = gameController.LevelDifficulty;
 
-        countdown = countdownDelay;
+            countdown = countdownDelay;
 
-        new EnemyManager(gameController,this);
+            new EnemyManager(gameController, this);
 
-        if (SpawnerCoroutine == null)
-            SpawnerCoroutine = StartCoroutine(Spawn());
+            if (SpawnerCoroutine == null)
+                SpawnerCoroutine = StartCoroutine(Spawn());
+        }
     }
 
 
     private void Update()
     {
-        //If Music is Done Choose something new to play.
-        if (AudioManager.Instance.MusicIsDone())
-        {
-            AudioManager.PlayRandomMusic();
-        }
-
-
         if (spawnerState != SpawnerState.Idle)
         {
             Spawning();
         }
-
-
     }
 
     public void Spawning()
     {
-        if (gameController.IsGameOver == false)
+        if (gameController)
         {
-            //if Number of Enemies that are spawn is more that Max don't spawn anymore
-            if (gameController.CheckIfCurrentEnemiesAreMoreThanMax())
+            if (gameController.IsGameOver == false)
             {
-                spawnerState = SpawnerState.wait;
+                //if Number of Enemies that are spawn is more that Max don't spawn anymore
+                if (gameController.CheckIfCurrentEnemiesAreMoreThanMax())
+                {
+                    spawnerState = SpawnerState.wait;
+                }
             }
-        }
-        else if (gameController.IsGameOver == true)
-        {
-            StopCoroutine(Spawn());
-            spawnerState = SpawnerState.stopped;
+            else if (gameController.IsGameOver == true)
+            {
+                StopCoroutine(Spawn());
+                spawnerState = SpawnerState.stopped;
+            }
         }
     }
 

@@ -11,7 +11,7 @@ public class Rocket : PlayerProjectile
     {
         if (HomeMissleType)
         {
-            m_Target = Utilities.GetClosest(transform.position, Mathf.Infinity);
+            m_Target = Utilities.GetClosest(Constants.ENEMYTAG,transform.position, Mathf.Infinity);
             if (m_Target != null)
             {
                 Debug.Log("Attacking " + m_Target, gameObject);
