@@ -11,11 +11,13 @@ public class Rocket : PlayerProjectile
     {
         if (HomeMissleType)
         {
-            m_Target = Utilities.GetClosest(transform.position, 10);
-            shootDir = transform.forward;
+            m_Target = Utilities.GetClosest(transform.position, Mathf.Infinity);
             if (m_Target != null)
             {
-                shootDir = (m_Target.transform.position - transform.position).normalized;
+                Debug.Log("Attacking " + m_Target, gameObject);
+            }else if(m_Target == null)
+            {
+                shootDir = transform.forward;
             }
         }
     }
@@ -27,27 +29,36 @@ public class Rocket : PlayerProjectile
 
     public override void Movement()
     {
-        if (HomeMissleType && m_Target)
+        if (HomeMissleType)
         {
-            Vector3 dest = m_Target.transform.position;
-            Vector3 rockPos = transform.position;
-            Vector3 def = dest - rockPos;
+            if (m_Target != null)
+            {
+                Debug.DrawLine(transform.position, m_Target.transform.position, Color.red);
 
+                shootDir = (m_Target.transform.position - transform.position).normalized;
+
+                if (!m_Target.activeInHierarchy)
+                {
+                    m_Target = null;
+                }
+
+            }
+            else if (m_Target == null)
+            {
+                shootDir = transform.forward;
+            }
+
+        
             transform.position += shootDir * speed * Time.deltaTime;
 
-            transform.eulerAngles = new Vector3(0, Utilities.GetAngleFromVectorIn3D(def), 0);
+            transform.rotation = Quaternion.LookRotation(shootDir);
         }
-        else
-        {
-            base.Movement();
-            transform.eulerAngles = new Vector3(0, 0, 0);
-        }
+
 
         if (transform.position.z > Constants.m_ZMax)
         {
             gameObject.SetActive(false);
         }
     }
-
 
 }

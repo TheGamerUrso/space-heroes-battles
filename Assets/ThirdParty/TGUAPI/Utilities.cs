@@ -9,21 +9,24 @@ namespace TheGamerUrso
         public static class Utilities
         {
 
-            public static GameObject GetClosest(Vector3 position,float maxRange)
+            public static GameObject GetClosest(Vector3 position, float maxRange)
             {
                 GameObject[] Enemies;
                 Enemies = GameObject.FindGameObjectsWithTag(Constants.ENEMYTAG);
                 GameObject enemyTarget = null;
                 foreach (GameObject enemy in Enemies)
                 {
-                    if(Vector3.Distance(position, enemy.transform.position)<= maxRange){
-                        if(enemyTarget == null)
+                    float dist = Vector3.Distance(position, enemy.transform.position);
+                    if (dist <= maxRange)
+                    {
+                        if (enemyTarget == null)
                         {
                             enemyTarget = enemy;
                         }
                         else
                         {
-                            if(Vector3.Distance(position, enemy.transform.position)<Vector3.Distance(position, enemyTarget.transform.position)){
+                            if (Vector3.Distance(position, enemy.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
+                            {
                                 enemyTarget = enemy;
                             }
                         }
