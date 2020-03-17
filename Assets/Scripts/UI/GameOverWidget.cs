@@ -38,29 +38,18 @@ public class GameOverWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        gameController.IsGameOver = true;
-
+        if (gameController == null)
+        {
+            gameController = GameController.Instance;
+        }
         Player player = PlayerManager.GetPlayer();
         PlayerData playerData = DataController.GetPlayerData();
-        PlayerAnimation playerAnimation = player.PlayerAnimation();
-
-        if (player != null)
-        {
-            AudioManager.PlaySound(null,"Victory", 3);
-            playerAnimation.Exit();
-        }
-        else if (player == null)
-        {
-            AudioManager.PlaySound(null,"GameOver", 3);
-        }
 
         UpdateScore();
-        AudioManager.PlayMusic("GameOver");
+
         levelName = "Level" + GameManager.LevelSelected;
         killed = gameController.EnemySpawnedInTotal * .9f;
         collected = gameController.CoinDropInTotal * .9f;
-
-        playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
 
         if (gameController.survivalMode == false)
         {
@@ -151,6 +140,7 @@ public class GameOverWidget : MonoBehaviour
 #endif
         }
     }
+
     public void UpdateScore()
     {
         string scoreText = string.Format("{00:0000000000}", gameController.Score);
@@ -160,17 +150,7 @@ public class GameOverWidget : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        gameController = GameController.Instance;
-        m_PlayAgainButton.onClick.AddListener(() =>
-        {
-            Scene loadedLevel = SceneManager.GetActiveScene();
-            SceneLoader.Instance.LoadScene(loadedLevel.name);
-        });
-
-        m_QuitButton.onClick.AddListener(() =>
-        {
-            SceneLoader.Instance.LoadScene("Main");
-        });
+   
     }
 
     public void UpdateText(string text)

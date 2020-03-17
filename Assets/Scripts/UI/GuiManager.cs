@@ -71,7 +71,7 @@ public class GuiManager : Singleton<GuiManager>
     {
         gameController = GameController.Instance;
 
-         delayTheSlowMoEffectTimer = 4;
+        delayTheSlowMoEffectTimer = 4;
         timer = 1;
     }
 
@@ -91,10 +91,16 @@ public class GuiManager : Singleton<GuiManager>
             pauseButton.SetActive(true);
         }
         SlowMoEffect();
-
-        if (SpawnEnemies.Instance && SpawnEnemies.Instance.spawnReady)
+        if (!gameController.IsGameOver)
         {
-            useSloMo = true;
+            if (SpawnEnemies.Instance && SpawnEnemies.Instance.spawnReady)
+            {
+                useSloMo = true;
+            }
+        }
+        else
+        {
+            useSloMo = false;
         }
 
     }
@@ -102,7 +108,7 @@ public class GuiManager : Singleton<GuiManager>
     public void SlowMoEffect()
     {
         if (useSloMo && !GameManager.Paused)
-         {
+        {
             if (IsTrasnmiting() || Input.touchCount > 0 || Input.GetMouseButton(0))
             {
                 slowMo = 1;
@@ -138,15 +144,15 @@ public class GuiManager : Singleton<GuiManager>
 
     public void ReplayButton()
     {
-        AudioManager.PlaySound(null,"Click", 1);
-        
+        AudioManager.PlaySound(null, "Click", 1);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
     public void ResumeButton()
     {
         useSloMo = true;
-        AudioManager.PlaySound(null,"Back", 1);
+        AudioManager.PlaySound(null, "Back", 1);
         ShowPauseMenu(false);
         GameManager.PauseTheGame(false);
     }
@@ -154,7 +160,7 @@ public class GuiManager : Singleton<GuiManager>
     public void PauseButton()
     {
         useSloMo = false;
-        AudioManager.PlaySound(null,"Click", 1);
+        AudioManager.PlaySound(null, "Click", 1);
         ShowPauseMenu(true);
         GameManager.PauseTheGame();
     }
@@ -190,7 +196,7 @@ public class GuiManager : Singleton<GuiManager>
     {
         useSloMo = false;
         GameManager.PauseTheGame(false);
-        AudioManager.PlaySound(null,"Click", 1);
+        AudioManager.PlaySound(null, "Click", 1);
         SceneLoader.Instance.LoadMainenu();
         GameObject activeMenuGO = null;
 
@@ -219,7 +225,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
-        AudioManager.PlaySound(null,"transmition", 3);
+        AudioManager.PlaySound(null, "transmition", 3);
         GuiManager.Instance.ShowTrasmition(transmitions, boss);
     }
 
@@ -241,66 +247,64 @@ public class GuiManager : Singleton<GuiManager>
         }
     }
 
-    //Game is Over
-    public void GameOver()
+    public void Win()
     {
+        useSloMo = false;
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
             Player player = PlayerManager.GetPlayer();
-
+            PlayerData playerData = DataController.GetPlayerData();
+            PlayerAnimation playerAnimation = player.PlayerAnimation();
+            playerAnimation.Exit();
+            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
             if (player == null)
             {
                 player = GameObject.FindObjectOfType<Player>();
             }
-            PlayerData playerData = DataController.GetPlayerData();
 
             playerData.Level = player.GetLevelSystem().GetLevel();
             playerData.xp = player.GetLevelSystem().GetXP();
             playerData.xpToLevel = player.GetLevelSystem().GetXpToLevel();
 
-
-            if (player.GetHealthPresentage() > 0)
+            //Save Game Data
+            playerData.PlayedGame = true;
+            for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
             {
-                //Save Game Data
-                playerData.PlayedGame = true;
-                for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
+                ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
+                switch ((ObjectiveType)objective.objectiveType)
                 {
-                    ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
-                    switch ((ObjectiveType)objective.objectiveType)
-                    {
-                        case ObjectiveType.Kill:
-                            if (objective.completed == false)
+                    case ObjectiveType.Kill:
+                        if (objective.completed == false)
+                        {
+                            var progressSoFar = objective.progress + gameController.CurrentEnemyKilled;
+                            objective.UpdateProgress(progressSoFar);
+                        }
+                        break;
+                    case ObjectiveType.Use:
+                        if (objective.completed == false)
+                        {
+                            var progressSoFar = objective.progress + player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
+                            objective.UpdateProgress(progressSoFar);
+                        }
+                        break;
+                    case ObjectiveType.Unharmed:
+                        if (objective.completed == false)
+                        {
+                            if (player.IsPlayerDamaged() == false)
                             {
-                                var progressSoFar = objective.progress + gameController.CurrentEnemyKilled;
-                                objective.UpdateProgress(progressSoFar);
+                                ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+                                objectiveData.UpdateProgress(1);
                             }
-                            break;
-                        case ObjectiveType.Use:
-                            if (objective.completed == false)
-                            {
-                                var progressSoFar = objective.progress + player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
-                                objective.UpdateProgress(progressSoFar);
-                            }
-                            break;
-                        case ObjectiveType.Unharmed:
-                            if (objective.completed == false)
-                            {
-                                if (player.IsPlayerDamaged() == false)
-                                {
-                                    ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                                    objectiveData.UpdateProgress(1);
-                                }
-                            }
-                            break;
-                        case ObjectiveType.survive:
-                            objective.UpdateProgress(gameController.WaveSurvived);
-                            break;
-                        case ObjectiveType.spend:
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    case ObjectiveType.survive:
+                        objective.UpdateProgress(gameController.WaveSurvived);
+                        break;
+                    case ObjectiveType.spend:
+                        break;
+                    default:
+                        break;
                 }
             }
 
@@ -309,7 +313,6 @@ public class GuiManager : Singleton<GuiManager>
             // playerData.WaveSurvived += SpawnEnemies.WaveSurvived;
             // playerData.m_EnemyKilled += SpawnEnemies.EnemyKilled;
             //playerData.TotalSuperUsed += player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
-
 
 
             if (!gameController.survivalMode)
@@ -335,34 +338,62 @@ public class GuiManager : Singleton<GuiManager>
                 playerData.SetScore(0, gameController.Score);
             }
 
+
+            if (GooglePlayServicesManager.Instance)
+            {
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+            }
+
+            StartCoroutine(WinCoroutine());
+        }
+    }
+    //Game is Over
+    public void GameOver()
+    {
+        gameController.IsGameOver = true;
+
+        useSloMo = false;
+        Time.timeScale = 1.0f;
+        if (!ResultShowed)
+        {
+            Player player = PlayerManager.GetPlayer();
+
+            if (player == null)
+            {
+                player = GameObject.FindObjectOfType<Player>();
+            }
+
+            
+
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+            playerData.Level = player.GetLevelSystem().GetLevel();
+            playerData.xp = player.GetLevelSystem().GetXP();
+            playerData.xpToLevel = player.GetLevelSystem().GetXpToLevel();
+
             playerData.Coins += gameController.counsEarnInGame;
             playerData.TotalKills += gameController.EnemyKilled;
 
             SaveSystem.SavePlayerData();
 
+
             if (GooglePlayServicesManager.Instance)
             {
-               GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
-               GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
             }
-
 
             ResultShowed = true;
 
-            if (player.GetHealthPresentage() > 0)
-            {
-                StartCoroutine(WinCoroutine());
-            }
-            else
-            {
-                StartCoroutine(GameOverCoroutine());
-            }
+            StartCoroutine(GameOverCoroutine());
+
         }
     }
 
     private IEnumerator GameOverCoroutine()
     {
-        useSloMo = false;
+
         PlayerHUD.gameObject.SetActive(false);
         AudioManager.PlayMusic("GameOver", false);
 
@@ -375,7 +406,7 @@ public class GuiManager : Singleton<GuiManager>
     public IEnumerator WinCoroutine()
     {
         useSloMo = false;
-        PlayerHUD.gameObject.SetActive(false); 
+        PlayerHUD.gameObject.SetActive(false);
         yield return new WaitForSeconds(2.0f);
         AudioManager.PlayMusic("Victory", false);
 
