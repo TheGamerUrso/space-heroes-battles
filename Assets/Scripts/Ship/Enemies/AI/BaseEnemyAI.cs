@@ -33,9 +33,9 @@ public class BaseEnemyAI : MonoBehaviour
     protected int enterNameHash = Animator.StringToHash("Enter");
     protected int deathNameHash = Animator.StringToHash("Death");
 
-    private void OnEnable()
+    public void OnEnable()
     {
-        Appear();
+        Enter();
     }
 
     private void Awake()
@@ -79,10 +79,6 @@ public class BaseEnemyAI : MonoBehaviour
     }
 
     public virtual void Move() { }
-
-    public virtual void Appear()
-    {
-    }
 
     public virtual void Enter(){     
     }

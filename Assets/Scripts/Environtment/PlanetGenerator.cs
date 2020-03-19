@@ -8,16 +8,17 @@ public class PlanetGenerator : MonoBehaviour
     public GameController gameController;
     public GameObject Planet;
     public GameObject[] Planets;
-
+    private bool SpawnPlanets;
     void Start()
     {
         StartCoroutine(GeneratePlanet());
         gameController = GameController.Instance;
+        SpawnPlanets = true;
     }
 
     IEnumerator GeneratePlanet()
     {
-        while (gameController.IsGameOver == false)
+        while (SpawnPlanets)
         {
             yield return new WaitForSeconds(Random.Range(10, 20));
             GameObject planet = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.Planet) as GameObject;

@@ -12,310 +12,149 @@ public class EnemyElement
     public GameObject Prefab;
     public int currentNumberInScene;
     public int MaxNumberInScene;
-}
-public enum SpawnerState
-{
-    stopped, wait, spawning, Idle
+    public int presentage;
 }
 
-public class SpawnEnemies : MonoBehaviour
+
+public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 {
-    public static SpawnEnemies Instance;
-    public GameController gameController;
-    public BossBattleSystem bossBattleSystem;
+    public EnemyElement[] enemyElements;
+    [Range(0, 6)]
+    public int availableEnemies;
 
-    private Coroutine SpawnerCoroutine;
-    private SpawnerState spawnerState;
-    private float delay;
+    public int NumberOfEnemies = 0;
+    public int LevelDifficulty = 1;
 
-    private float countdown;
-    private float minDelay = .3f;
-    private float maxDelay = .5f;
+    private float spawnTimer;
+    public float delay;
+    private bool spawnReady;
 
-    public bool spawnReady;
+    public bool gameover;
+    private int totalEnemies;
 
-    [SerializeField] private float countdownDelay;
- 
-    [SerializeField] private List<EnemyElement> ListOfEnemyToSpawn = new List<EnemyElement>();
-
-    [SerializeField] private int AvailableEnemiesIndex;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     private void Start()
     {
-        gameController = GameController.Instance;
-        if (gameController)
-        {
-            bool SurvivalMode = gameController.survivalMode;
-            int LevelDifficulty = gameController.LevelDifficulty;
+        spawnTimer = delay;
 
-            countdown = countdownDelay;
 
-            new EnemyManager(gameController, this);
+        string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
+        GuiManager.PlayTrasmition(transmitions);
 
-            if (SpawnerCoroutine == null)
-                SpawnerCoroutine = StartCoroutine(Spawn());
-        }
+        StartCoroutine(Spawn());
+
+        totalEnemies = GameController.Instance.TotalEnemies;
+
+        GameController.Instance.AddObserver(this);
     }
 
-
-    private void Update()
+    public void NewWave()
     {
-        if (spawnerState != SpawnerState.Idle)
-        {
-            Spawning();
-        }
+        GameController.Instance.NewWave();
     }
 
-    public void Spawning()
+    IEnumerator Spawn()
     {
-        if (gameController)
+        while (!gameover)
         {
-            if (gameController.IsGameOver == false)
+            if (NumberOfEnemies % GameController.Instance.NumberOfEnemiesEachWave == 0)
             {
-                //if Number of Enemies that are spawn is more that Max don't spawn anymore
-                if (gameController.CheckIfCurrentEnemiesAreMoreThanMax())
+                NewWave();
+            }
+
+            while (GuiManager.IsTrasnmiting())
+            {
+                bool isTransmiting = GuiManager.IsTrasnmiting();
+                yield return new WaitForEndOfFrame();
+            }
+
+            int wave = GameController.Instance.Wave;
+            int MaxWave = GameController.Instance.MaxWave;
+
+            int randomNumb = UnityEngine.Random.Range(0, availableEnemies);
+            EnemyElement enemyElement = enemyElements[randomNumb];
+
+
+            int repeat = enemyElement.MaxNumberInScene;
+            if (randomNumb == 0)
+            {
+                repeat = UnityEngine.Random.Range(5, 8);
+            }
+
+            for (int i = 0; i < repeat; i++)
+            {
+                NumberOfEnemies++;
+                if (NumberOfEnemies - totalEnemies > 0)
                 {
-                    spawnerState = SpawnerState.wait;
-                }
-            }
-            else if (gameController.IsGameOver == true)
-            {
-                StopCoroutine(Spawn());
-                spawnerState = SpawnerState.stopped;
-            }
-        }
-    }
+                    Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
+                    GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 
-    private IEnumerator Spawn()
-    {
-        while (gameController.IsGameOver == false)
-        {
-            switch (spawnerState)
-            {
-                case SpawnerState.stopped:
+                    BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
+                    FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
 
-                    if (gameController.CheckIfCurrentAreLessThanMax())
+                    if (followPathAI == null)
                     {
-                        spawnerState = SpawnerState.wait;
-                    }
-                    break;
-
-                case SpawnerState.wait:
-
-                    if (gameController.BossStage)
-                    {
-                        break;
-                    }
-
-                    yield return new WaitForSeconds(2.0f);
-                    if (gameController.Wave == 0 || gameController.CheckIfWeKilledEnoughEnemiesToProgress())
-                    {
-                        gameController.WaveSurvived = gameController.Wave;
-                        PlayerData playerData = DataController.GetPlayerData();
-                        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.survive);
-
-                        if (objectiveData != null)
-                        {
-                            objectiveData.UpdateProgress(gameController.WaveSurvived);
-                        }
-
-                        gameController.Wave++;
-
-                        if (gameController.survivalMode)
-                        {
-                            if (gameController.Wave % gameController.LevelIncreaseThreshold == 0)
-                            {
-                                gameController.LevelDifficuilty++;
-                            }
-
-                            if (gameController.Wave % 8 == 0)
-                            {
-                                AvailableEnemiesIndex++;
-
-                                AvailableEnemiesIndex = Mathf.Clamp(AvailableEnemiesIndex, 1, ListOfEnemyToSpawn.Count);
-                            }
-                        }
-
-                        //AvailableEnemiesIndex++;
-                        // AvailableEnemiesIndex = Mathf.Clamp(AvailableEnemiesIndex, 0, ListOfEnemyToSpawn.Count);
-
-                        GuiManager.CountdownVisibility(true);
-
-                        gameController.CurrentEnemyKilled = 0;
-                        gameController.EnemiesEscaped = 0;
-                        if (gameController.survivalMode)
-                        {
-                            if (gameController.Wave % 2 == 0 && !gameController.bossWave)
-                            {
-                                gameController.bossWave = true;
-                                bossBattleSystem.ShowBossFightWarning();
-
-                                while (GuiManager.IsTrasnmiting())
-                                {
-                                    GuiManager.CountdownVisibility(false);
-                                    yield return new WaitForSeconds(.1f);
-                                }
-
-                                while (gameController.NumberOfEnemies > 0)
-                                {
-                                    yield return null;
-                                }
-
-                                countdown = countdownDelay;
-                            }
-                        }
-                        else
-                        {
-                            if (gameController.Wave >= gameController.MaxWave)
-                            {
-                                if (!gameController.bossWave)
-                                {
-                                    gameController.bossWave = true;
-
-                                    bossBattleSystem.ShowBossFightWarning();
-                                   
-                                    while (GuiManager.IsTrasnmiting())
-                                    {
-                                        yield return new WaitForSeconds(.1f);
-                                    }
-
-                                    while (gameController.NumberOfEnemies > 0)
-                                    {
-                                        yield return null;
-                                    }
-
-                                    countdown = countdownDelay;
-                                }
-                                else
-                                {
-                                    while (gameController.BossStage)
-                                    {
-                                        yield return null;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (!gameController.survivalMode)
-                        {
-                            if (gameController.Wave == 1 && !gameController.bossWave)
-                            {
-                                yield return new WaitForSeconds(1.5f);
-
-                                string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
-                                GuiManager.PlayTrasmition(transmitions);
-                            }
-                        }
-                        else
-                        {
-                            if (gameController.Wave == 1 && !gameController.bossWave)
-                            {
-                                yield return new WaitForSeconds(1.5f);
-                                string[] transmitions = { "Wave" + gameController.Wave, "Level Difficulty " + gameController.LevelDifficuilty, " Ready!" , "GO" };
-
-                                GuiManager.PlayTrasmition(transmitions);
-                            }
-                        }
-
-                        while (GuiManager.IsTrasnmiting())
-                        {
-                            GuiManager.CountdownVisibility(false);
-                            yield return null;
-                        }
-
-                        while (countdown > 0)
-                        {
-                            countdown -= Time.deltaTime;
-
-                            GuiManager.CountdownVisibility(false);
-                            GuiManager.Countdown(countdown);
-
-                            yield return null;
-                        }
-
-                        // countdown = countdownDelay;
-                        GuiManager.CountdownVisibility(false);
-                    }
-
-                    if (gameController.IsGameOver)
-                    {
-                        yield return new WaitForSeconds(.5f);
-                        spawnerState = SpawnerState.Idle;
+                        enemGO.transform.position = spawnPos;
+                        enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
                     }
                     else
                     {
-                        spawnerState = SpawnerState.spawning;
-                    }
-                    break;
-
-                case SpawnerState.spawning:
-
-                    delay = UnityEngine.Random.Range(minDelay, maxDelay);
-
-                    yield return new WaitForSeconds(delay);
-                    if (gameController.CheckIfWeReachedSpawnLimit())
-                    {
-                        if (gameController.bossWave && !gameController.BossStage)
-                        {
-                            bossBattleSystem.StartBossFight();
-                        }
-                        else if (gameController.bossWave == false)
-                        {
-                            spawnReady = true;
-                            while (spawnReady)
-                            {
-                                int randomEnemy = UnityEngine.Random.Range(0, AvailableEnemiesIndex);
-
-                                int random = UnityEngine.Random.Range(1, 2);
-
-                                if (randomEnemy == 0)
-                                {
-                                    random = UnityEngine.Random.Range(5, 8);
-                                }
-
-                                // Debug.Log("Spawn " + random + " Of Enemies");
-                                for (int i = 0; i < random; i++)
-                                {
-                                    SpawnEnemy(randomEnemy);
-                                    yield return new WaitForSeconds(.5f);
-                                }
-
-                                spawnReady = false;
-
-                                yield return null;
-                            }
-                        }
+                        enemGO.transform.position = spawnPos;
+                        followPathAI.GeneratePath();
                     }
 
-                    spawnerState = SpawnerState.wait;
-                    break;
-                default:
-                    break;
+                    enemy.enemyElement = enemyElement;
+
+                    enemy.SetEnemyStats(LevelDifficulty);
+
+                    enemyElement.currentNumberInScene++;
+
+                    enemy.EnemyEscaped += OnEnemyEscape;
+                    enemy.EnemyDied += OnDeath;
+                    enemy.EnemyGotHit += OnHit;
+                }
+                yield return new WaitForSeconds(UnityEngine.Random.Range(2, 3));
             }
-            yield return null;
+
+            yield return new WaitForSeconds(delay);
         }
     }
 
-    public void SpawnEnemy(int randomEnemy)
+    public void OnEnemyEscape(string id, BaseEnemy baseEnemy)
     {
-        EnemyElement enemyElement = ListOfEnemyToSpawn[randomEnemy];
-        if (enemyElement.currentNumberInScene < enemyElement.MaxNumberInScene)
-        {
-            if (gameController.survivalMode)
-            {
-                EnemyManager.Instance.CreateEnemy(
-                    enemyElement, gameController.LevelDifficuilty);
-            }
-            else
-            {
-                EnemyManager.Instance.CreateEnemy(enemyElement);
-            }
-        }
+        baseEnemy.EnemyEscaped -= OnEnemyEscape;
+        baseEnemy.EnemyDied -= OnDeath;
+        baseEnemy.EnemyGotHit -= OnHit;
 
+        Debug.Log("Enemy Got Escaped");
     }
+
+    public void OnHit(string id, BaseEnemy baseEnemy)
+    {
+        Debug.Log("Enemy Got Hit");
+    }
+
+    public void OnDeath(string id, BaseEnemy baseEnemy)
+    {
+        baseEnemy.EnemyEscaped -= OnEnemyEscape;
+        baseEnemy.EnemyDied -= OnDeath;
+        baseEnemy.EnemyGotHit -= OnHit;
+
+        Debug.Log("Enemy Got Died");
+    }
+
+    public void Notify()
+    {
+        Debug.Log("Game Over");
+        StopAllCoroutines();
+        gameover = true;
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        GameController.Instance.RemoveObserver(this);
+    }
+
+
 }

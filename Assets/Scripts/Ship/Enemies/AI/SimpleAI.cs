@@ -1,8 +1,21 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class SimpleAI : BaseEnemyAI
 {
+
+    public GameObject shipPivot;
+    public Ease easeMode;
+
+    public override void Enter()
+    {
+        base.Enter();
+        shipPivot.transform.localPosition = new Vector3(0, 0, -128);
+        shipPivot.transform.DOLocalMoveZ(0, .5f).SetEase(easeMode).OnComplete(() => {
+            GetComponent<BaseEnemy>().EnableWeapon();
+        });
+    }
     public override void Move()
     {
         //With transform

@@ -26,28 +26,19 @@ public class GuiManager : Singleton<GuiManager>
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
 
-    private float slowMo;
-    private bool useSloMo;
     private bool ResultShowed = false;
     #endregion Variables
+
     private float timer;
 
-    private float delayTheSlowMoEffectTimer;
-
-    public void ToggleSlowMo(bool value)
-    {
-        useSloMo = value;
-        if (value == false)
-        {
-            Time.timeScale = 1.0f;
-        }
-    }
+ 
+ 
 
     private void OnApplicationFocus(bool focus)
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (!focus && gameController.IsGameOver == false)
+            if (!focus && GameController.IsGameOver == false)
             {
                 GameManager.PauseTheGame();
                 ShowPauseMenu(true);
@@ -59,7 +50,7 @@ public class GuiManager : Singleton<GuiManager>
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (gameController.IsGameOver == false)
+            if (GameController.IsGameOver == false)
             {
                 GameManager.PauseTheGame();
                 ShowPauseMenu(true);
@@ -69,9 +60,7 @@ public class GuiManager : Singleton<GuiManager>
 
     private void Start()
     {
-        gameController = GameController.Instance;
-
-        delayTheSlowMoEffectTimer = 4;
+        gameController = GameController.Instance; 
         timer = 1;
     }
 
@@ -82,46 +71,15 @@ public class GuiManager : Singleton<GuiManager>
             timer -= Time.deltaTime;
             if (timer <= 0)
             {
-                //pauseButton.SetActive(false);
+                pauseButton.SetActive(false);
             }
         }
         else
         {
             timer = 1;
             pauseButton.SetActive(true);
-        }
-        SlowMoEffect();
-        if (!gameController.IsGameOver)
-        {
-            if (SpawnEnemies.Instance && SpawnEnemies.Instance.spawnReady)
-            {
-                useSloMo = true;
-            }
-        }
-        else
-        {
-            useSloMo = false;
-        }
-
+        }     
     }
-
-    public void SlowMoEffect()
-    {
-        if (useSloMo && !GameManager.Paused)
-        {
-            if (IsTrasnmiting() || Input.touchCount > 0 || Input.GetMouseButton(0))
-            {
-                slowMo = 1;
-            }
-            else
-            {
-                slowMo = .3f;
-
-            }
-            Time.timeScale = slowMo;
-        }
-    }
-
 
     public void SetCountdownVisibility(bool enable)
     {
@@ -151,7 +109,8 @@ public class GuiManager : Singleton<GuiManager>
 
     public void ResumeButton()
     {
-        useSloMo = true;
+        GameController.useSloMo = true;
+
         AudioManager.PlaySound(null, "Back", 1);
         ShowPauseMenu(false);
         GameManager.PauseTheGame(false);
@@ -159,7 +118,8 @@ public class GuiManager : Singleton<GuiManager>
 
     public void PauseButton()
     {
-        useSloMo = false;
+        GameController.useSloMo = false;
+
         AudioManager.PlaySound(null, "Click", 1);
         ShowPauseMenu(true);
         GameManager.PauseTheGame();
@@ -194,7 +154,8 @@ public class GuiManager : Singleton<GuiManager>
 
     public void LoadMainMenu()
     {
-        useSloMo = false;
+        GameController.useSloMo = false;
+
         GameManager.PauseTheGame(false);
         AudioManager.PlaySound(null, "Click", 1);
         SceneLoader.Instance.LoadMainenu();
@@ -249,7 +210,8 @@ public class GuiManager : Singleton<GuiManager>
 
     public void Win()
     {
-        useSloMo = false;
+        GameController.useSloMo = false;
+
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
@@ -308,15 +270,7 @@ public class GuiManager : Singleton<GuiManager>
                 }
             }
 
-            //playerData.GotHitInGame = player.IsPlayerDamaged();
-            // playerData.TotalSuperUsed = player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
-            // playerData.WaveSurvived += SpawnEnemies.WaveSurvived;
-            // playerData.m_EnemyKilled += SpawnEnemies.EnemyKilled;
-            //playerData.TotalSuperUsed += player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
-
-
-            if (!gameController.survivalMode)
-            {
+  
                 Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
                 int missionsCompleted = 0;
                 foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
@@ -332,11 +286,6 @@ public class GuiManager : Singleton<GuiManager>
                 playerData.SetScore(levelPlayed + 1, gameController.Score);
 
                 playerData.LevelUnlocked = missionsCompleted;
-            }
-            else
-            {
-                playerData.SetScore(0, gameController.Score);
-            }
 
 
             if (GooglePlayServicesManager.Instance)
@@ -351,9 +300,9 @@ public class GuiManager : Singleton<GuiManager>
     //Game is Over
     public void GameOver()
     {
-        gameController.IsGameOver = true;
+        GameController.IsGameOver = true;
+        GameController.useSloMo = false;
 
-        useSloMo = false;
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
@@ -364,7 +313,7 @@ public class GuiManager : Singleton<GuiManager>
                 player = GameObject.FindObjectOfType<Player>();
             }
 
-            
+
 
             PlayerData playerData = DataController.GetPlayerData();
             playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
@@ -405,7 +354,6 @@ public class GuiManager : Singleton<GuiManager>
 
     public IEnumerator WinCoroutine()
     {
-        useSloMo = false;
         PlayerHUD.gameObject.SetActive(false);
         yield return new WaitForSeconds(2.0f);
         AudioManager.PlayMusic("Victory", false);

@@ -3,38 +3,38 @@ using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
+using DG.Tweening;
 
-public class BaseEnemy : Ship, IDestroyable
+public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
 {
-    private GameEventSystem gameEventSystem;
+    public Action<string, BaseEnemy> EnemyDied;
+    public Action<string, BaseEnemy> EnemyGotHit;
+    public Action<string, BaseEnemy> EnemyEscaped;
+
     protected string id;
 
     [Header("Enemy Config")]
     public BaseEnemyAI baseEnemyAI;
     protected BoxCollider boxCollider;
 
-    //public Action<BaseEnemy> onEnemyDeath;
-    //public Action<object> OnEnemyHit;
-    //public Action<BaseEnemy> onEnemyEscape;
-
-    public      bool Alive;
-    protected   bool CanAttack;
-    [SerializeField] 
-    protected   GameObject[] Weapons;
+    public bool Alive;
+    protected bool CanAttack;
     [SerializeField]
-    protected   float delayAttak = 3;
-    public      float DeathDelay;
-    protected   int currentWeaponActive;
+    protected GameObject[] Weapons;
+    [SerializeField]
+    protected float delayAttak = 3;
+    public float DeathDelay;
+    protected int currentWeaponActive;
 
     private EnemyHealthWidget healthBar;
 
     [HideInInspector] public EnemyElement enemyElement;
-   
+
     [SerializeField] private HealthBarSettings HealthBarSettings;
 
 
     //IDestroyable Values
-    public bool IsDestroyed{ get; set; } = false;
+    public bool IsDestroyed { get; set; } = false;
     public int m_ValueOfEnemy;
 
     public PoolGameObjectType[] DropItems;
@@ -43,14 +43,37 @@ public class BaseEnemy : Ship, IDestroyable
     protected float takeDamageDelay;
     protected bool EnableShield;
 
+
     private void OnDisable()
     {
-
+        RemoveAndDestroy();
     }
 
-    private void OnEnable()
+    public virtual void OnEnable()
     {
         Alive = true;
+
+        GameController gameController = GameObject.FindObjectOfType<GameController>();
+        gameController.AddObserver(this);
+        gameController.AddEnemy(this);
+
+        DisableWeapons();
+    }
+
+    public void EnableWeapon()
+    {
+        for (int i = 0; i < Weapons.Length; i++)
+        {
+            Weapons[i].SetActive(true);
+        }
+    }
+
+    public void DisableWeapons()
+    {
+        for (int i = 0; i < Weapons.Length; i++)
+        {
+            Weapons[i].SetActive(false);
+        }
     }
 
     public virtual void SetEnemyStats(int level)
@@ -89,13 +112,14 @@ public class BaseEnemy : Ship, IDestroyable
             healthBar.Initiallize(this);
         }
     }
-    public virtual void Attack(){}
+    public virtual void Attack() { }
 
-    public virtual void Enter() {}
+    public virtual void Enter() { }
 
     public void Leave()
     {
-       GameEventSystem.Call(GameEventType.Enemy_Escape,id,this);
+        EnemyEscaped?.Invoke(id, this);
+        //GameEventSystem.Call(GameEventType.Enemy_Escape,id,this);
     }
 
     public virtual void Heal(float ammount)
@@ -143,7 +167,8 @@ public class BaseEnemy : Ship, IDestroyable
 
     public virtual void Hit()
     {
-        GameEventSystem.Call(GameEventType.Enemy_Hit, id,this);
+        EnemyGotHit?.Invoke(id, this);
+        //GameEventSystem.Call(GameEventType.Enemy_Hit, id, this);
     }
 
     public virtual void Update()
@@ -155,9 +180,9 @@ public class BaseEnemy : Ship, IDestroyable
         Tick();
     }
 
-    public virtual void Tick(){}
+    public virtual void Tick() { }
 
- 
+
 
     public override void Death()
     {
@@ -168,11 +193,12 @@ public class BaseEnemy : Ship, IDestroyable
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
 
-            GameEventSystem.Call(GameEventType.Enemy_Death, id,this);
+            EnemyDied?.Invoke(id, this);
+            //GameEventSystem.Call(GameEventType.Enemy_Death, id, this);
 
 
             healthBar.Hide();
-            gameObject.SetActive(false);
+            RemoveAndDestroy();
         }
     }
 
@@ -191,5 +217,21 @@ public class BaseEnemy : Ship, IDestroyable
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
             destroyable.TakeDamage(destroyable.CurrentHealth);
         }
+    }
+
+    public void Notify()
+    {
+        Debug.Log("GameOver");
+    }
+
+    public void RemoveAndDestroy()
+    {
+        GameController gameController = GameObject.FindObjectOfType<GameController>();
+        if (gameController != null)
+        {
+            gameController.RemoveObserver(this);
+            gameController.RemoveEnemy(this);
+        }
+        gameObject.SetActive(false);
     }
 }

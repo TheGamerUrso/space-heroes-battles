@@ -42,6 +42,7 @@ public class GameOverWidget : MonoBehaviour
         {
             gameController = GameController.Instance;
         }
+
         Player player = PlayerManager.GetPlayer();
         PlayerData playerData = DataController.GetPlayerData();
 
@@ -51,17 +52,15 @@ public class GameOverWidget : MonoBehaviour
         killed = gameController.EnemySpawnedInTotal * .9f;
         collected = gameController.CoinDropInTotal * .9f;
 
-        if (gameController.survivalMode == false)
-        {
-            missionCollection = DataController.GetMissionCollection();
-            mission = missionCollection.GetMission(GameManager.LevelSelected);
-    
-            levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
-        }
-        if (!gameController.survivalMode)
-        {
-            StartCoroutine(ShowGameResults());
-        }
+
+        //Get Level Data
+        missionCollection = DataController.GetMissionCollection();
+        mission = missionCollection.GetMission(GameManager.LevelSelected);
+
+        levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+
+        StartCoroutine(ShowGameResults());
+
     }
 
 
@@ -127,14 +126,14 @@ public class GameOverWidget : MonoBehaviour
             }
         }
 
-        if(num == 4)
+        if (num == 4)
         {
             // Unlock an achievement
             // EM_GameServicesConstants.Sample_Achievement is the generated name constant
             // of an achievement named "Sample Achievement"
 #if UNITY_ANDROID
             if (GooglePlayServicesManager.Instance)
-            GooglePlayServicesManager.Instance.UnlockAchievement(GameManager.LevelSelected);
+                GooglePlayServicesManager.Instance.UnlockAchievement(GameManager.LevelSelected);
 #elif UNITY_EDITOR
      Debug.Log("UnlockAchievement"); 
 #endif
@@ -150,7 +149,7 @@ public class GameOverWidget : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-   
+
     }
 
     public void UpdateText(string text)

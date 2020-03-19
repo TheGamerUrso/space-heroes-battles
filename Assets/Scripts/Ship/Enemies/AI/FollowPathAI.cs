@@ -1,4 +1,5 @@
-﻿using TheGamerUrso;
+﻿using DG.Tweening;
+using TheGamerUrso;
 using TheGamerUrso.Utils;
 using UnityEngine;
 
@@ -29,6 +30,10 @@ public class FollowPathAI : BaseEnemyAI
     protected float pathMagnitude;
     #endregion
 
+    public GameObject shipPivot;
+    public Ease easeMode;
+
+
     public void GeneratePath()
     {
         // Debug.Log("Generate new Path");
@@ -51,7 +56,13 @@ public class FollowPathAI : BaseEnemyAI
 
         if (SpawnAtFirstPath)
         {
-            transform.localPosition = Path[0].position;
+            transform.position = Path[0].position;
+
+            shipPivot.transform.localPosition = new Vector3(0, 0, -128);
+            shipPivot.transform.DOLocalMoveZ(0, .5f).SetEase(easeMode).OnComplete(() =>
+            {
+                GetComponent<BaseEnemy>().EnableWeapon();
+            });
         }
     }
 

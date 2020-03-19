@@ -43,7 +43,6 @@ public abstract class WeaponScript : MonoBehaviour
     {
         OnStart();
         Initialize();
-
     }
 
     public virtual void Update()

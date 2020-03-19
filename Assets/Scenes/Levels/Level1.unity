@@ -551,18 +551,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   IsGameOver: 0
-  BossStage: 0
-  bossWave: 0
-  Wave: 0
   LevelDifficuilty: 1
   LevelIncreaseThreshold: 2
+  HasBoss: 0
   survivalMode: 0
+  BossStage: 0
+  Wave: 0
+  maxWave: 2
+  bossWave: 0
+  enemyKilled: 0
+  enemyEscaped: 0
   EnemiesKilled: 0
   EnemiesEscaped: 0
   NumberOfEnemies: 0
   MaxEnemiesToSpawn: 8
   EnemySpawnedInTotal: 0
-  maxWave: 1
   GameOverClip: {fileID: 8300000, guid: 15a44130960c8fe48b2e7644caba69c5, type: 3}
 --- !u!4 &1138607665
 Transform:
@@ -670,9 +673,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86585dee019c937459596ffe481fc302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BossPrefab:
-  - {fileID: 1400881148121724, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
-  gameController: {fileID: 1138607664}
 --- !u!4 &1514529027
 Transform:
   m_ObjectHideFlags: 0
@@ -3261,11 +3261,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: AvailableEnemiesIndex
-      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}

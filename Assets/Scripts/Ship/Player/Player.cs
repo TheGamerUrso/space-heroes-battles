@@ -2,7 +2,7 @@ using System.Collections;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public class Player : Ship, IDestroyable
+public class Player : Ship, IDestroyable,IEndGameObserver
 {
 
     public int playerID;
@@ -28,6 +28,20 @@ public class Player : Ship, IDestroyable
     {
         get { return Alive; }
         set { Alive = value; }
+    }
+    private void OnDestroy()
+    {
+        if (GameController.Instance != null)
+        {
+            GameController.Instance.RemoveObserver(this);
+        }
+    }
+    private void OnEnable()
+    {
+        if (GameController.Instance != null)
+        {
+            GameController.Instance.AddObserver(this);
+        }
     }
 
     public void InitIfNeeded()
@@ -302,5 +316,10 @@ public class Player : Ship, IDestroyable
     public void tempGodMode()
     {
         invisibilityTimer = 1;
+    }
+
+    public void Notify()
+    {
+        animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
     }
 }

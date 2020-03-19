@@ -183,7 +183,7 @@ public class BaseBossEnemy : BaseEnemy
             }
         }
 
-        GuiManager.Instance.ToggleSlowMo(false);
+        GameController.useSloMo = false;
     }
 
     IEnumerator DeathSequence()

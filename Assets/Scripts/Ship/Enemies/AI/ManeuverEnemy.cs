@@ -1,13 +1,16 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class ManeuverEnemy : SimpleAI
 {
     private bool firstTime;
+
     public override void Initialize()
     {
         base.Initialize();
         int waitTime = UnityEngine.Random.Range(2, 4);
         InvokeRepeating("Maneuver", 1, waitTime);
+
     }
 
     public override void Move()
@@ -32,8 +35,6 @@ public class ManeuverEnemy : SimpleAI
 
     private void Maneuver()
     {
-
-
         int random = UnityEngine.Random.Range(0, 100);
 
         if (random <= 33.33)

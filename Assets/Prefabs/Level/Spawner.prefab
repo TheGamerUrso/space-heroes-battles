@@ -59,7 +59,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -164,7 +164,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -269,7 +269,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -361,15 +361,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3ef8b3c3ff031774483ab69d48b51229, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bossWave: 0
+  gc: {fileID: 0}
+  BossBattleS: {fileID: 0}
   spawnReady: 0
-  survival: 0
   countdownDelay: 0
-  BossStage: 0
-  BossPrefab:
-  - {fileID: 3633204921840115997, guid: 71beed934e894724398ef6492d62217c, type: 3}
-  maxWave: 8
-  GameOverClip: {fileID: 8300000, guid: 5a269d157e3894447bbaca0ed5e0940f, type: 3}
   ListOfEnemyToSpawn:
   - Name: Enemy1
     gameObjectType: 14
@@ -411,4 +406,6 @@ MonoBehaviour:
     Prefab: {fileID: 909528553737987564, guid: b59411f6a2bcd4b4793baca74e43c511, type: 3}
     currentNumberInScene: 0
     MaxNumberInScene: 2
-  AvailableEnemiesIndex: 1
+  AvailableEnemiesIndex: 6
+  BossPrefab:
+  - {fileID: 1400881148121724, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
