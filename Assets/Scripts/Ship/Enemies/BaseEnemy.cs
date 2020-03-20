@@ -56,8 +56,6 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
         GameController gameController = GameObject.FindObjectOfType<GameController>();
         gameController.AddObserver(this);
         gameController.AddEnemy(this);
-
-        DisableWeapons();
     }
 
     public void EnableWeapon()

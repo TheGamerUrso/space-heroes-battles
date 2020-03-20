@@ -466,6 +466,8 @@ MonoBehaviour:
   enemyEscaped: 0
   TotalEnemies: 0
   numberOfEnemiesEachWave: 4
+  NumberOfEnemies: 0
+  EnemySpawned: []
 --- !u!4 &1138607665
 Transform:
   m_ObjectHideFlags: 0
@@ -1745,11 +1747,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
-      propertyPath: enemyElements.Array.size
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -1768,167 +1765,6 @@ PrefabInstance:
       propertyPath: gameController
       value: 
       objectReference: {fileID: 1138607664}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[0].Prefab
-      value: 
-      objectReference: {fileID: 1332800252941561598, guid: d56b4ad3aeb59f64eb13779cd4813f73,
-        type: 3}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[1].Prefab
-      value: 
-      objectReference: {fileID: 553, guid: 8c6aca03346661b43a33c7b0c3932ce4, type: 3}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[0].Name
-      value: Enemy1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[0].gameObjectType
-      value: 14
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[1].Name
-      value: Enemy2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[1].gameObjectType
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: delay
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[2].Name
-      value: Enemy3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[2].gameObjectType
-      value: 16
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[2].Prefab
-      value: 
-      objectReference: {fileID: 1332800252941561598, guid: 78c2de61abfbc2041888882a7f1b294c,
-        type: 3}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[3].Name
-      value: Enemy4
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[3].gameObjectType
-      value: 17
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[3].Prefab
-      value: 
-      objectReference: {fileID: 909528553737987564, guid: b59411f6a2bcd4b4793baca74e43c511,
-        type: 3}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[4].Name
-      value: Enemy5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[4].gameObjectType
-      value: 18
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[4].Prefab
-      value: 
-      objectReference: {fileID: 8746143244605377970, guid: 6cc9cfdfe0b5ecd4480249906c2b8249,
-        type: 3}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[5].Name
-      value: Enemy6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[5].gameObjectType
-      value: 19
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[5].Prefab
-      value: 
-      objectReference: {fileID: 8246661451200889219, guid: 7e49bedb3a3ce6d48b8131f173f7f6d9,
-        type: 3}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[6].Name
-      value: Enemy7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[6].gameObjectType
-      value: 29
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[6].Prefab
-      value: 
-      objectReference: {fileID: 4159772285747209524, guid: 4b2b188850041a34bad593d730419e77,
-        type: 3}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: availableEnemies
-      value: 6
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[6].MaxNumberInScene
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[5].MaxNumberInScene
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[4].MaxNumberInScene
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[3].MaxNumberInScene
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[2].MaxNumberInScene
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[1].MaxNumberInScene
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: enemyElements.Array.data[0].MaxNumberInScene
-      value: 5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: NumberOfEnemies
-      value: 4
-      objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189255, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
       propertyPath: m_Name

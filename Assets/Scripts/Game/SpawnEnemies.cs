@@ -18,12 +18,17 @@ public class EnemyElement
 
 public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 {
+    public Action<GameObject> OnSpawnEnemy;
+
     public EnemyElement[] enemyElements;
     [Range(0, 6)]
     public int availableEnemies;
 
     public int NumberOfEnemies = 0;
     public int LevelDifficulty = 1;
+
+    private int wave;
+    private int maxWave;
 
     private float spawnTimer;
     public float delay;
@@ -32,6 +37,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
     public bool gameover;
     private int totalEnemies;
 
+ 
 
     private void Start()
     {
@@ -43,13 +49,21 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 
         StartCoroutine(Spawn());
 
-        totalEnemies = GameController.Instance.TotalEnemies;
 
+        GameController.Instance.GameStatsChanged += GameStatsChanged;
         GameController.Instance.AddObserver(this);
+    }
+
+    public void GameStatsChanged(int wave, int maxWave, int totalEnemies)
+    {
+        this.wave = wave;
+        this.maxWave = maxWave;
+        this.totalEnemies = totalEnemies;
     }
 
     public void NewWave()
     {
+        NumberOfEnemies = 0;
         GameController.Instance.NewWave();
     }
 
@@ -68,8 +82,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
                 yield return new WaitForEndOfFrame();
             }
 
-            int wave = GameController.Instance.Wave;
-            int MaxWave = GameController.Instance.MaxWave;
 
             int randomNumb = UnityEngine.Random.Range(0, availableEnemies);
             EnemyElement enemyElement = enemyElements[randomNumb];
@@ -83,41 +95,55 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 
             for (int i = 0; i < repeat; i++)
             {
-                NumberOfEnemies++;
-                if (NumberOfEnemies - totalEnemies > 0)
+                Debug.Log(totalEnemies + " " + (totalEnemies - 1));
+                if (totalEnemies - 1 >= 0)
                 {
-                    Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
-                    GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
-
-                    BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
-                    FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
-
-                    if (followPathAI == null)
-                    {
-                        enemGO.transform.position = spawnPos;
-                        enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
-                    }
-                    else
-                    {
-                        enemGO.transform.position = spawnPos;
-                        followPathAI.GeneratePath();
-                    }
-
-                    enemy.enemyElement = enemyElement;
-
-                    enemy.SetEnemyStats(LevelDifficulty);
-
-                    enemyElement.currentNumberInScene++;
-
-                    enemy.EnemyEscaped += OnEnemyEscape;
-                    enemy.EnemyDied += OnDeath;
-                    enemy.EnemyGotHit += OnHit;
+                    SpawnEnemyElement(enemyElement);
+                    yield return new WaitForSeconds(UnityEngine.Random.Range(2, 3));
                 }
-                yield return new WaitForSeconds(UnityEngine.Random.Range(2, 3));
+                else
+                {
+                    //Boss or Gameover
+                    break;
+                }
+
             }
 
             yield return new WaitForSeconds(delay);
         }
+    }
+
+    private void SpawnEnemyElement(EnemyElement enemyElement)
+    {
+
+        Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
+        GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
+
+        BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
+        FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
+
+        if (followPathAI == null)
+        {
+            enemGO.transform.position = spawnPos;
+            enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
+        }
+        else
+        {
+            enemGO.transform.position = spawnPos;
+            followPathAI.GeneratePath();
+        }
+
+        enemy.enemyElement = enemyElement;
+
+        enemy.SetEnemyStats(LevelDifficulty);
+
+        enemyElement.currentNumberInScene++;
+
+        enemy.EnemyEscaped += OnEnemyEscape;
+        enemy.EnemyDied += OnDeath;
+        enemy.EnemyGotHit += OnHit;
+
+        OnSpawnEnemy?.Invoke(enemy.gameObject);
     }
 
     public void OnEnemyEscape(string id, BaseEnemy baseEnemy)

@@ -1,10 +1,14 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
+
 public class GameController : Singleton<GameController>
 {
+    public Action<int, int, int> GameStatsChanged;
+
     public static bool IsGameOver;
     public static bool useSloMo;
 
@@ -16,12 +20,13 @@ public class GameController : Singleton<GameController>
 
     public int TotalEnemies;
 
-   [SerializeField] private int numberOfEnemiesEachWave;
+    [SerializeField] private int numberOfEnemiesEachWave;
     public int NumberOfEnemiesEachWave
     {
         get { return numberOfEnemiesEachWave; }
     }
 
+    public int NumberOfEnemies;
     public int LevelDifficulty { get; set; }
     public float Score { get; set; }
     public int WaveSurvived { get; set; }
@@ -81,6 +86,10 @@ public class GameController : Singleton<GameController>
         }
     }
 
+
+    [SerializeField] private List<GameObject> EnemySpawned = new List<GameObject>();
+
+
     void Start()
     {
         IsGameOver = false;
@@ -103,6 +112,15 @@ public class GameController : Singleton<GameController>
 
 
         TotalEnemies = MaxWave * numberOfEnemiesEachWave;
+
+
+        GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
+
+        SpawnEnemies.Instance.OnSpawnEnemy += (x) =>
+        {
+            TotalEnemies--; GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
+            EnemySpawned.Add(x);
+        };
     }
 
     public void ToggleSlowMo(bool value)
@@ -117,8 +135,9 @@ public class GameController : Singleton<GameController>
     public void NewWave()
     {
         Wave++;
-        string[] transmitions = { "Wave " + GameController.Instance.Wave, "Enemies Approaching", "Defeat them", "Good Luck" };
-        GuiManager.PlayTrasmition(transmitions);
+        // string[] transmitions = { "Wave " + GameController.Instance.Wave, "Enemies Approaching", "Defeat them", "Good Luck" };
+        // GuiManager.PlayTrasmition(transmitions);
+        GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
     }
 
     private void Update()
@@ -133,36 +152,40 @@ public class GameController : Singleton<GameController>
 
         SlowMoEffect();
 
-        if (TotalEnemies <= 0 && !IsGameOver)
+        if (EnemySpawned.Count <= 0 && TotalEnemies <= 0 && !IsGameOver)
         {
             IsGameOver = true;
-            NotifyObservers();
             StartCoroutine(DelayWinScreen());
+
         }
 
     }
 
     IEnumerator DelayWinScreen()
     {
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(4.0f);
+        NotifyObservers();
         GuiManager.Instance.Win();
+
     }
 
     public void SlowMoEffect()
     {
+#if UNITY_ANDROID
         if (useSloMo && !GameManager.Paused)
         {
             if (Input.touchCount > 0 || Input.GetMouseButton(0))
             {
-                slowMo = 1;
+                //     slowMo = 1;
             }
             else
             {
-                slowMo = .3f;
+                //       slowMo = .3f;
 
             }
-            Time.timeScale = slowMo;
+            // Time.timeScale = slowMo;
         }
+#endif
     }
 
 
@@ -186,17 +209,19 @@ public class GameController : Singleton<GameController>
 
     public void EnemyEscaped(string id, BaseEnemy enemy)
     {
+        EnemySpawned.Remove(enemy.gameObject);
         enemyEscaped++;
-        TotalEnemies--;
+        GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
         enemy.enemyElement.currentNumberInScene--;
     }
 
     public void EnemyDied(string id, BaseEnemy enemy)
     {
+        EnemySpawned.Remove(enemy.gameObject);
         Vector3 enemyPos = enemy.transform.position;
 
         enemyKilled++;
-        TotalEnemies--;
+        GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
         enemy.enemyElement.currentNumberInScene--;
 
         PlayerData playerData = DataController.GetPlayerData();

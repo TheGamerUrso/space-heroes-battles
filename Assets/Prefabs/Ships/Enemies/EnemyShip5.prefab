@@ -191,6 +191,7 @@ GameObject:
   - component: {fileID: 3540694229060565862}
   - component: {fileID: 3956459546385333304}
   - component: {fileID: 1544188833340423206}
+  - component: {fileID: 8487830823580007566}
   m_Layer: 15
   m_Name: EnemyShip5
   m_TagString: Enemy
@@ -313,8 +314,6 @@ MonoBehaviour:
   reverse: 0
   SpawnAtFirstPath: 1
   Auto: 1
-  shipPivot: {fileID: 308680369990544806}
-  easeMode: 1
 --- !u!82 &1544188833340423206
 AudioSource:
   m_ObjectHideFlags: 0
@@ -412,6 +411,21 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8487830823580007566
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8246661451200889219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9edc1c931f490c64ba2e21d2e0f54e91, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shipPivot: {fileID: 308680369990544806}
+  easeMode: 1
+  speed: 0.25
 --- !u!1 &8246661451201790819
 GameObject:
   m_ObjectHideFlags: 0
@@ -1085,12 +1099,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
---- !u!4 &2925838335790788814 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
-    type: 3}
-  m_PrefabInstance: {fileID: 9092641069114683556}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1684985085546303762 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7587942922396688822, guid: de8ced3c47dd2904eb769194018fa913,
@@ -1103,3 +1111,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536415a8dbe428d4285ddb4634202dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2925838335790788814 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
+    type: 3}
+  m_PrefabInstance: {fileID: 9092641069114683556}
+  m_PrefabAsset: {fileID: 0}

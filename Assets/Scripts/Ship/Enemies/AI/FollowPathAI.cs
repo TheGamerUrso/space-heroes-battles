@@ -30,8 +30,8 @@ public class FollowPathAI : BaseEnemyAI
     protected float pathMagnitude;
     #endregion
 
-    public GameObject shipPivot;
-    public Ease easeMode;
+
+
 
 
     public void GeneratePath()
@@ -58,11 +58,7 @@ public class FollowPathAI : BaseEnemyAI
         {
             transform.position = Path[0].position;
 
-            shipPivot.transform.localPosition = new Vector3(0, 0, -128);
-            shipPivot.transform.DOLocalMoveZ(0, .5f).SetEase(easeMode).OnComplete(() =>
-            {
-                GetComponent<BaseEnemy>().EnableWeapon();
-            });
+         
         }
     }
 
@@ -84,7 +80,7 @@ public class FollowPathAI : BaseEnemyAI
     public override void Enter()
     {
         base.Enter();
-        currentPointToFollowIndex = 0;
+        currentPointToFollowIndex = 0;   
     }
 
     public override void Move()
