@@ -8,7 +8,7 @@ public class SimpleShipControls : MonoBehaviour
     public RotateInput rotInput;
     public float rotSpeed;
 
-    private PlayerAnimation playerAnimation;
+    private PlayerShip playerShip;
 
 
     private bool isMoving;
@@ -25,24 +25,23 @@ public class SimpleShipControls : MonoBehaviour
 
 
     private bool blockMovement;
-
-
-
     public void Start()
     {
         targetPos = transform.position;
         rotInput = new RotateInput();
-        UpdateOffset();
-        OptionScreen.OnOptionsRecieved += UpdateOffset;
-        playerAnimation = GetComponentInChildren<PlayerAnimation>();
+
+        PlayerData playerData = DataController.GetPlayerData();
+        playerData.distanceChanged = UpdateOffset;
+
         plane = new Plane(Vector3.up, transform.position);
         rigid = GetComponent<Rigidbody>();
+
+        playerShip = GetComponent<PlayerShip>();
     }
 
-    public static void UpdateOffset()
+    public static void UpdateOffset(float ammount)
     {
-        PlayerData playerData = DataController.GetPlayerData();
-        offspec = playerData.distance;
+        offspec = ammount;
     }
 
     public void SetTargetPosition()
@@ -51,7 +50,7 @@ public class SimpleShipControls : MonoBehaviour
         plane = new Plane(Vector3.up, transform.position);
         ray = Camera.main.ScreenPointToRay(mouseInput.GetTouchPosition());
         point = 0f;
-
+        offspec = 0f;
         if (plane.Raycast(ray, out point))
             targetPos = new Vector3(ray.GetPoint(point).x, yMove, ray.GetPoint(point).z) + new Vector3(0, 0, offspec);
     }
@@ -80,16 +79,20 @@ public class SimpleShipControls : MonoBehaviour
 
     public bool IsEnterOrExitAnimationState()
     {
-        return playerAnimation.GetAnimationState("Enter") == false && playerAnimation.GetAnimationState("Exit") == false;
+        return playerShip.GetAnimationState("Enter") == false && playerShip.GetAnimationState("Exit") == false;
     }
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawLine(transform.position, targetPos + new Vector3(0, 0, offspec));
+    }
     private void Move()
     {
         if (isMoving)
         {
             if (IsEnterOrExitAnimationState())
             {
-                rigid.MovePosition(Vector3.MoveTowards(transform.position, targetPos + new Vector3(0, 0, offspec), speed * Time.deltaTime));
+                transform.position = Vector3.MoveTowards(transform.position, targetPos + new Vector3(0, 0, offspec), speed * Time.deltaTime);
 
                 if (transform.position == targetPos)
                 {
@@ -102,12 +105,13 @@ public class SimpleShipControls : MonoBehaviour
     private void Update()
     {
         GetPlayerInput();
+        Move();
 
     }
 
     private void LateUpdate()
     {
-        Move();
+        
     }
 
     public void Rotate()

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerWidget : MonoBehaviour
 {
-    private Player player;
+    private PlayerShip player;
 
     private PlayerWeaponSystem playerWeaponSystem;
 
@@ -51,9 +51,10 @@ public class PlayerWidget : MonoBehaviour
     private float maxTargetHealth = 0;
 
 
-    public void SetPlayer(Player player)
+    public void SetPlayer(PlayerShip player)
     {
-        playerWeaponSystem = this.player.GetWeaponSystem();
+        this.player = player;
+        playerWeaponSystem = player.GetWeaponSystem();
 
         PowerBut.onClick.AddListener(() =>
         {

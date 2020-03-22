@@ -1,45 +1,59 @@
 ﻿using System;
 using UnityEngine;
 
-
-public static class PlayerManager
+[System.Serializable]
+public class PlayerManager
 {
+    private static PlayerManager instance;
+    private static PlayerManager Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
 
     private static GameObject currentPlayer;
-    private static PlayerShip[] listOfPlayerShips;
+    private static PlayerShipElement[] listOfPlayerShips;
 
-    public static void Initialize(PlayerShip[] newListOfPlayerShips)
+
+    public PlayerManager()
     {
-        listOfPlayerShips = newListOfPlayerShips;
-        LoadPlayerSettings();    
+        if (instance == null)
+        {
+            instance = this;
+        }
+        listOfPlayerShips = GameManager.Instance.ListOfPlayerShips();
+        LoadPlayerSettings();
     }
+
 
     public static void CreatePlayer(int id)
     {
-        CreatePlayerById(id);
+        instance.CreatePlayerById(id);
     }
 
-    public static void CreatePlayerById(int id)
+    public void CreatePlayerById(int id)
     {
         if (id >= listOfPlayerShips.Length)
         {
             id = 0;
         }
-        GameObject holder = GameObject.Find("DynamicObjects");
-        currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject, holder.transform,false);
+
+        currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
 
         currentPlayer.SetActive(true);
 
-        currentPlayer.GetComponent<Player>().SetShipStatSystem(listOfPlayerShips[id].prefab.GetShipStatsSystem());
+        currentPlayer.GetComponent<PlayerShip>().SetShipStatSystem(listOfPlayerShips[id].prefab.GetShipStatsSystem());
 
-        currentPlayer.GetComponent<Player>().SetLevelSystem(listOfPlayerShips[id].prefab.GetLevelSystem());
+        currentPlayer.GetComponent<PlayerShip>().SetLevelSystem(listOfPlayerShips[id].prefab.GetLevelSystem());
 
-        currentPlayer.GetComponent<Player>().GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
+        currentPlayer.GetComponent<PlayerShip>().GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
 
-      
+
     }
 
-    public static PlayerShip GetPlayerByID(int id)
+    public static PlayerShipElement GetPlayerByID(int id)
     {
         return listOfPlayerShips[id];
     }
@@ -52,18 +66,18 @@ public static class PlayerManager
             var Level = playerData.Level;
             var xp = playerData.xp;
             var xpToLevel = playerData.xpToLevel;
-            listOfPlayerShips[i].prefab.SetLevelSystem(new LevelSystem(Level, xp, xpToLevel,20));
+            listOfPlayerShips[i].prefab.SetLevelSystem(new LevelSystem(Level, xp, xpToLevel, 20));
             listOfPlayerShips[i].prefab.GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
         }
     }
 
-    public static Player GetPlayer()
+    public static PlayerShip GetPlayer()
     {
         if (currentPlayer == null)
         {
             int shipSelected = GameManager.CurrentHeroChoosen;
-            CreatePlayerById(shipSelected);
+            instance.CreatePlayerById(shipSelected);
         }
-        return currentPlayer.GetComponent<Player>();
+        return currentPlayer.GetComponent<PlayerShip>();
     }
 }

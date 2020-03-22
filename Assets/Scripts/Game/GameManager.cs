@@ -6,10 +6,10 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 [Serializable]
-public class PlayerShip
+public class PlayerShipElement
 {
     public string name;
-    public Player prefab;
+    public PlayerShip prefab;
 }
 
 public class GameManager : Singleton<GameManager>
@@ -32,7 +32,7 @@ public class GameManager : Singleton<GameManager>
     [Range(0, 20)]
     public int LevelDifficuilty;
 
-    [SerializeField] private PlayerShip[] players;
+    [SerializeField] private PlayerShipElement[] PlayerShips;
 
     public static int LevelSelected = 0;
 
@@ -47,27 +47,30 @@ public class GameManager : Singleton<GameManager>
     public bool useSafeMode;
     public LogBehaviour logBehaviour;
 
+
+    public PlayerShipElement[] ListOfPlayerShips()
+    {
+        return PlayerShips;
+    }
+
     public static bool IsMouseOverUI()
     {
         return EventSystem.current.IsPointerOverGameObject();
     }
 
+
     public override void Init()
     {
-        base.Init();
-
+        Debug.Log("Loading Data");
         new DataController();
-        PlayerManager.Initialize(players);
 
-        PlayerData playerData = DataController.GetPlayerData();
+        Debug.Log("Set up Players");
+        new PlayerManager();
 
-        AudioManager.Instance.SetMusicVolume(playerData.MusicVolume);
-
-        AudioManager.Instance.SetSoundVolume(playerData.SFXVolume);
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
-        GameEventSystem.OnPlayerLevelUp += ShowLevelup;
+        GameEventSystem.XpChanged += ShowLevelup;
 
         GameEventSystem.OnShipSelect += ShipSelected;
 
@@ -85,7 +88,7 @@ public class GameManager : Singleton<GameManager>
         //DataController.SavePlayerData();
     }
 
-    public void ShowLevelup()
+    public void ShowLevelup(int level, float xp, float xpToLevel)
     {
         Instance.levelupAnnouncement.SetActive(true);
     }

@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using EasyMobile;
 
+
+public delegate void DistanceChanged(float ammount);
+
 [Serializable]
 public class PlayerData
 {
+    public DistanceChanged distanceChanged;
+
     public float[] Score;
     public float[] HighScore;
     public int Coins;
@@ -31,6 +36,20 @@ public class PlayerData
     public bool AutoAttack;
     public bool mute;
     public float distance;
+
+    public float Distance
+    {
+        get
+        {
+            return distance;
+        }
+
+        set
+        {
+            distance = value;
+            distanceChanged?.Invoke(distance);
+        }
+    }
 
     public int[] Upgrades;
 

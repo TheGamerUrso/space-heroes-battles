@@ -169,7 +169,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
         Debug.Log("Enemy Got Died");
     }
 
-    public void Notify()
+    public void GameOver()
     {
         Debug.Log("Game Over");
         StopAllCoroutines();

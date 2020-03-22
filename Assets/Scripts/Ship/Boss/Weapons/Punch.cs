@@ -162,7 +162,7 @@ public class Punch : Ship, IDestroyable
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
     }
 
-    public override void ShipStartSetUp()
+    public override void ShipSetup()
     {
         if (cooldown >= 0)
         {

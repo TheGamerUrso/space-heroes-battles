@@ -11,6 +11,12 @@ public class OptionScreen : GooglePlayOptions
         base.OnOptionEnter();
     }
 
+    public void SetDistance(float distance)
+    {
+        PlayerData playerData = DataController.GetPlayerData();
+        playerData.Distance = distance;
+    }
+
     public override void ExitAndSave()
     {
         base.ExitAndSave();

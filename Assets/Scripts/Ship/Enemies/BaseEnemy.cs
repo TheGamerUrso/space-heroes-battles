@@ -17,7 +17,6 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
     public BaseEnemyAI baseEnemyAI;
     protected BoxCollider boxCollider;
 
-    public bool Alive;
     protected bool CanAttack;
     [SerializeField]
     protected GameObject[] Weapons;
@@ -26,15 +25,28 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
     public float DeathDelay;
     protected int currentWeaponActive;
 
-    private EnemyHealthWidget healthBar;
+
 
     [HideInInspector] public EnemyElement enemyElement;
 
     [SerializeField] private HealthBarSettings HealthBarSettings;
-
+    private EnemyHealthWidget healthBar;
 
     //IDestroyable Values
-    public bool IsDestroyed { get; set; } = false;
+
+    private bool Alive;
+    public bool IsDestroyed
+    {
+        get
+        {
+            return Alive;
+        }
+        set
+        {
+            Alive = value;
+        }
+    }
+
     public int m_ValueOfEnemy;
 
     public PoolGameObjectType[] DropItems;
@@ -91,9 +103,10 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
         shipStatsSystem.SetStats(levelSystem);
         bShieldModuleInstalled = false;
         boxCollider = GetComponent<BoxCollider>();
+        animator = GetComponentInChildren<Animator>();
     }
 
-    public override void ShipStartSetUp()
+    public override void ShipSetup()
     {
         if (healthBar != null)
         {
@@ -117,7 +130,6 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
     public void Leave()
     {
         EnemyEscaped?.Invoke(id, this);
-        //GameEventSystem.Call(GameEventType.Enemy_Escape,id,this);
     }
 
     public virtual void Heal(float ammount)
@@ -180,8 +192,6 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
 
     public virtual void Tick() { }
 
-
-
     public override void Death()
     {
         if (Alive)
@@ -193,7 +203,6 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
 
             EnemyDied?.Invoke(id, this);
             //GameEventSystem.Call(GameEventType.Enemy_Death, id, this);
-
 
             healthBar.Hide();
             RemoveAndDestroy();
@@ -207,7 +216,6 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
         boxCollider.enabled = enabled;
     }
 
-
     public virtual void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
@@ -217,9 +225,10 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
         }
     }
 
-    public void Notify()
+    public void GameOver()
     {
         Debug.Log("GameOver");
+        RemoveAndDestroy();
     }
 
     public void RemoveAndDestroy()

@@ -51,15 +51,15 @@ public class AudioManager : Singleton<AudioManager>
         return musicVolume;
     }
 
-    public void SetSoundVolume(float value)
+    public static void SetSoundVolume(float value)
     {
         soundVolume = value;
-        SFXMixerGroup.audioMixer.SetFloat("SoundVolume", Mathf.Log10(value) * 20);
+        Instance.SFXMixerGroup.audioMixer.SetFloat("SoundVolume", Mathf.Log10(value) * 20);
     }
-    public void SetMusicVolume(float value)
+    public static void SetMusicVolume(float value)
     {
         musicVolume = value;
-        MusicMixerGroup.audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
+       Instance.MusicMixerGroup.audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
     }
 
 
@@ -89,8 +89,21 @@ public class AudioManager : Singleton<AudioManager>
             Debug.LogWarning(e.Message, gameObject);
         }
 
-        SetMusicVolume(musicVolume);
-        SetSoundVolume(soundVolume);
+
+        PlayerData playerData = DataController.GetPlayerData();
+
+        if (playerData == null)
+        {
+            SetMusicVolume(musicVolume);
+            SetSoundVolume(soundVolume);
+        }
+        else
+        {
+            SetMusicVolume(playerData.MusicVolume);
+
+            SetSoundVolume(playerData.SFXVolume);
+        }
+      
     }
 
     public bool PlayingMusic()

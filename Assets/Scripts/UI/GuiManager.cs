@@ -9,9 +9,7 @@ using TheGamerUrso.PoolSystem;
 
 public class GuiManager : Singleton<GuiManager>
 {
-    public GameController gameController;
-
-    #region Variables
+    private GameController gc;
 
     [Header("Menu")]
     [SerializeField] private GameObject GameOverScreen;
@@ -27,12 +25,7 @@ public class GuiManager : Singleton<GuiManager>
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
 
     private bool ResultShowed = false;
-    #endregion Variables
-
     private float timer;
-
- 
- 
 
     private void OnApplicationFocus(bool focus)
     {
@@ -58,10 +51,92 @@ public class GuiManager : Singleton<GuiManager>
         }
     }
 
+    private void OnDisable()
+    {
+        GameEventSystem.PickupEvent += UpdateCoinWidgetText;
+    }
+
     private void Start()
     {
-        gameController = GameController.Instance; 
         timer = 1;
+        gc = GameObject.FindObjectOfType<GameController>();
+
+        GameEventSystem.PickupEvent += UpdateCoinWidgetText;
+
+        PlayerShip player = PlayerManager.GetPlayer();
+        player.PickUpItem += PickUpItem;
+    }
+
+    public void PickUpItem(ItemData itemData)
+    {
+        if (itemData.m_HealValue > 0)
+        {
+            CreateFloatingText("Heal up", transform.localPosition);
+
+            if (!PlayerPrefs.HasKey("HealTut"))
+            {
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(1);
+                }
+                PlayerPrefs.SetInt("HealTut", 1);
+            }
+        }
+
+        if (itemData.m_RewardAmount > 0)
+        {
+            CreateFloatingText("$", transform.localPosition);
+
+            if (!PlayerPrefs.HasKey("CoinTut"))
+            {
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(0);
+                }
+
+                itemData.ShowTutorial = true;
+
+                PlayerPrefs.SetInt("CoinTut", 1);
+            }
+        }
+
+        if (itemData.Shield)
+        {
+            CreateFloatingText("Shield Up", transform.localPosition);
+
+            if (!PlayerPrefs.HasKey("ShieldTut"))
+            {
+
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(3);
+                }
+
+                itemData.ShowTutorial = true;
+
+                PlayerPrefs.SetInt("ShieldTut", 1);
+            }
+        }
+
+        if (itemData.PowerPack)
+        {
+            CreateFloatingText("Power Up", transform.localPosition);
+
+
+            if (!PlayerPrefs.HasKey("PowerTut"))
+            {
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(2);
+                }
+
+                itemData.ShowTutorial = true;
+
+                PlayerPrefs.SetInt("PowerTut", 1);
+            }
+        }
+
+        UpdateScore(75);
     }
 
     private void Update()
@@ -78,7 +153,7 @@ public class GuiManager : Singleton<GuiManager>
         {
             timer = 1;
             pauseButton.SetActive(true);
-        }     
+        }
     }
 
     public void SetCountdownVisibility(bool enable)
@@ -109,7 +184,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public void ResumeButton()
     {
-        GameController.useSloMo = true;
+        GameEventSystem.Call(GameEventType.ToggleSlowMo, true);
 
         AudioManager.PlaySound(null, "Back", 1);
         ShowPauseMenu(false);
@@ -118,7 +193,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public void PauseButton()
     {
-        GameController.useSloMo = false;
+        GameEventSystem.Call(GameEventType.ToggleSlowMo, false);
 
         AudioManager.PlaySound(null, "Click", 1);
         ShowPauseMenu(true);
@@ -132,16 +207,16 @@ public class GuiManager : Singleton<GuiManager>
 
     public void UpdateCoinWidgetText()
     {
-        CoinWidgetText.text = string.Format("{0}", gameController.counsEarnInGame);
+        CoinWidgetText.text = string.Format("{0}", gc.counsEarnInGame);
     }
 
     public void UpdateScore(int score)
     {
-        string scoreText = string.Format("{00:00000000}", gameController.Score);
+        string scoreText = string.Format("{00:00000000}", gc.Score);
         ScoreText.text = scoreText;
     }
 
-    public void CreateFloatingText(string text, Vector3 pos)
+    public static void CreateFloatingText(string text, Vector3 pos)
     {
         GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
         m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(text, pos);
@@ -187,7 +262,8 @@ public class GuiManager : Singleton<GuiManager>
     public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
         AudioManager.PlaySound(null, "transmition", 3);
-        GuiManager.Instance.ShowTrasmition(transmitions, boss);
+        if (GuiManager.Instance)
+            GuiManager.Instance.ShowTrasmition(transmitions, boss);
     }
 
     public void ShowTrasmition(string[] transmitions, bool boss = false)
@@ -215,14 +291,16 @@ public class GuiManager : Singleton<GuiManager>
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
-            Player player = PlayerManager.GetPlayer();
+            PlayerShip player = PlayerManager.GetPlayer();
             PlayerData playerData = DataController.GetPlayerData();
-            PlayerAnimation playerAnimation = player.PlayerAnimation();
-            playerAnimation.Exit();
+
+            //TODO Exit Animatin
+
             playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+
             if (player == null)
             {
-                player = GameObject.FindObjectOfType<Player>();
+                player = GameObject.FindObjectOfType<PlayerShip>();
             }
 
             playerData.Level = player.GetLevelSystem().GetLevel();
@@ -239,7 +317,7 @@ public class GuiManager : Singleton<GuiManager>
                     case ObjectiveType.Kill:
                         if (objective.completed == false)
                         {
-                            var progressSoFar = objective.progress + gameController.CurrentEnemyKilled;
+                            var progressSoFar = objective.progress + gc.CurrentEnemyKilled;
                             objective.UpdateProgress(progressSoFar);
                         }
                         break;
@@ -261,7 +339,7 @@ public class GuiManager : Singleton<GuiManager>
                         }
                         break;
                     case ObjectiveType.survive:
-                        objective.UpdateProgress(gameController.WaveSurvived);
+                        objective.UpdateProgress(gc.WaveSurvived);
                         break;
                     case ObjectiveType.spend:
                         break;
@@ -270,22 +348,22 @@ public class GuiManager : Singleton<GuiManager>
                 }
             }
 
-  
-                Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-                int missionsCompleted = 0;
-                foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+
+            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+            int missionsCompleted = 0;
+            foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+            {
+                if (item.Value[0].completed == true)
                 {
-                    if (item.Value[0].completed == true)
-                    {
-                        missionsCompleted++;
-                    }
+                    missionsCompleted++;
                 }
+            }
 
-                int levelPlayed = GameManager.LevelSelected;
+            int levelPlayed = GameManager.LevelSelected;
 
-                playerData.SetScore(levelPlayed + 1, gameController.Score);
+            playerData.SetScore(levelPlayed + 1, gc.Score);
 
-                playerData.LevelUnlocked = missionsCompleted;
+            playerData.LevelUnlocked = missionsCompleted;
 
 
             if (GooglePlayServicesManager.Instance)
@@ -306,11 +384,11 @@ public class GuiManager : Singleton<GuiManager>
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
-            Player player = PlayerManager.GetPlayer();
+            PlayerShip player = PlayerManager.GetPlayer();
 
             if (player == null)
             {
-                player = GameObject.FindObjectOfType<Player>();
+                player = GameObject.FindObjectOfType<PlayerShip>();
             }
 
 
@@ -321,8 +399,8 @@ public class GuiManager : Singleton<GuiManager>
             playerData.xp = player.GetLevelSystem().GetXP();
             playerData.xpToLevel = player.GetLevelSystem().GetXpToLevel();
 
-            playerData.Coins += gameController.counsEarnInGame;
-            playerData.TotalKills += gameController.EnemyKilled;
+            playerData.Coins += gc.counsEarnInGame;
+            playerData.TotalKills += gc.EnemyKilled;
 
             SaveSystem.SavePlayerData();
 

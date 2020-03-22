@@ -15,11 +15,12 @@ public class PlayerWeaponSystem : MonoBehaviour
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
     public static int WeaponUpgradeCollected = 0;
-    private Player player;
-    public ShipStatsSystem ShipStatsSystem { get { return player.GetShipStatsSystem(); } }
-    private PlayerAnimation playerAnimation;
+    private PlayerShip playerShip;
+    public ShipStatsSystem ShipStatsSystem { get { 
+            return playerShip.GetShipStatsSystem(); } }
 
     [SerializeField] private int superUsed;
+
 
     
     public void ResetSuperUsedToZero()
@@ -42,32 +43,40 @@ public class PlayerWeaponSystem : MonoBehaviour
     {
         return superUsed;
     }
-    public void SetPlayerAnimation(PlayerAnimation playerAnimation)
-    {
-        this.playerAnimation = playerAnimation;
-    }
 
-    public void SetPlayer(Player player)
+    public void SetPlayer(PlayerShip player)
     {
-        this.player = player;
+        this.playerShip = player;
         for (int i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i].gameObject.activeSelf)
             {
-                Weapons[i].SetPlayerAnimation(playerAnimation);
                 Weapons[i].SetShipTransform(player.transform);
             }
         }
 
-       
-        SpecialAttacks.SetPlayerAnimation(playerAnimation);
         SpecialAttacks.SetShipTransform(player.transform);
     }
+    private void OnDestroy()
+    {
+        if (playerShip == null)
+            playerShip = GetComponentInParent<PlayerShip>();
+
+        if (playerShip != null)
+            playerShip.PlayerShipHit -= DownGradeWeapon;
+    }
+
+
 
     private void Start()
     {
-        PlayerWeaponSystem.SwitchWeapon(this, 0);
+        if (playerShip == null)
+            playerShip = GetComponentInParent<PlayerShip>();
 
+        if (playerShip != null)
+            playerShip.PlayerShipHit += DownGradeWeapon;
+
+        SwitchWeapon(this, 0);
     }
 
     public void IncreasePowerUp(float value)
@@ -170,7 +179,7 @@ public class PlayerWeaponSystem : MonoBehaviour
 
             PlayerPrefs.SetInt("UpgradeTut", 1);
         }
-        Player player = GetComponentInParent<Player>();
+        PlayerShip player = GetComponentInParent<PlayerShip>();
         if (CurrentWeapnType < 4)
         {
             if (player.CanUsePowerUpItem)
@@ -187,16 +196,19 @@ public class PlayerWeaponSystem : MonoBehaviour
             {
                 IncreasePowerUp(0.1f);
             }
-            Player.TempFireRateUpgrade = false;
+            PlayerShip.TempFireRateUpgrade = false;
             PlayerWeaponSystem.SwitchWeapon(this, CurrentWeapnType);
         }
     }
     public void DownGradeWeapon()
     {
-        if (CurrentWeapnType > 0)
+        if (playerShip.HasArmorUpgrade() == false)
         {
-            CurrentWeapnType--;
-            PlayerWeaponSystem.SwitchWeapon(this, CurrentWeapnType);
+            if (CurrentWeapnType > 0)
+            {
+                CurrentWeapnType--;
+                PlayerWeaponSystem.SwitchWeapon(this, CurrentWeapnType);
+            }
         }
     }
 
@@ -207,7 +219,7 @@ public class PlayerWeaponSystem : MonoBehaviour
 
     public void WeaponPowerUPCollected()
     {
-        Player player = GetComponentInParent<Player>();
+
         if (WeaponUpgradeCollected <= 5 && CurrentWeapnType < 4)
         {
             WeaponUpgradeCollected+=2;
@@ -216,7 +228,7 @@ public class PlayerWeaponSystem : MonoBehaviour
                 WeaponUpgradeCollected = 5;
             }
             Debug.Log("increase FireRate by " + 0.01f * WeaponUpgradeCollected);
-            player.TempFireRateBuff(0.01f * WeaponUpgradeCollected);
+            playerShip.TempFireRateBuff(0.01f * WeaponUpgradeCollected);
         }
     }
     public void ResetWeaponUpgrade()

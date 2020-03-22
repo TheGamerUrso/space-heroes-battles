@@ -4,9 +4,9 @@ using TheGamerUrso;
 
 public class Enemy : BaseEnemy
 {
-    public override void ShipStartSetUp()
+    public override void ShipSetup()
     {
-        base.ShipStartSetUp();
+        base.ShipSetup();
         id = gameObject.name;
     }
 }

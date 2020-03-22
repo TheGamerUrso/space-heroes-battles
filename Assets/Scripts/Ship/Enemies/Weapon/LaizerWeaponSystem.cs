@@ -92,7 +92,7 @@ public class LaizerWeaponSystem : MonoBehaviour
             m_BoxCollider.enabled = true;
         }
 
-        if (m_Target != null && m_Target.GetComponent<Player>() != null)
+        if (m_Target != null && m_Target.GetComponent<PlayerShipElement>() != null)
         {
             m_Target = null;
         }

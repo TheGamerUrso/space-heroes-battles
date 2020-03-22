@@ -82,7 +82,7 @@ public class GameController : Singleton<GameController>
     {
         foreach (IEndGameObserver enemy in gameObservers)
         {
-            enemy.Notify();
+            enemy.GameOver();
         }
     }
 
@@ -97,12 +97,6 @@ public class GameController : Singleton<GameController>
         Application.targetFrameRate = 60;
         AudioManager.PlayRandomMusic(true);
 
-        Player player = PlayerManager.GetPlayer();
-        PlayerWeaponSystem playerWeaponSystem =
-            player.GetWeaponSystem();
-
-        playerWeaponSystem.IncreasePowerUp(0);
-        playerWeaponSystem.ResetWeaponPowerUPCollected();
 
         MissionCollection missionCollection = DataController.GetMissionCollection();
         Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
@@ -121,6 +115,9 @@ public class GameController : Singleton<GameController>
             TotalEnemies--; GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
             EnemySpawned.Add(x);
         };
+
+
+
     }
 
     public void ToggleSlowMo(bool value)
@@ -195,10 +192,7 @@ public class GameController : Singleton<GameController>
         {
             IsGameOver = true;
 
-            if (GuiManager.Instance)
-            {
-                GuiManager.Instance.GameOver();
-            }
+            NotifyObservers();
         }
     }
 
@@ -243,17 +237,21 @@ public class GameController : Singleton<GameController>
         //Update Score
         int score = multiplayer * enemy.m_ValueOfEnemy;
         Score += score;
-        GuiManager.Instance.UpdateScore(score);
 
-        GuiManager.Instance.CreateFloatingText(string.Format("{0}", score), enemyPos);
+        if (GuiManager.Instance)
+        {
+            GuiManager.Instance.UpdateScore(score);
+            GuiManager.CreateFloatingText(string.Format("{0}", score), enemyPos);
+        }
 
         //Update Player Attributes
+
         if (PlayerManager.GetPlayer() == null)
         {
             return;
         }
 
-        Player p = PlayerManager.GetPlayer();
+        PlayerShip p = PlayerManager.GetPlayer();
         PlayerWeaponSystem playerWeaponSystem = p.GetWeaponSystem();
 
 

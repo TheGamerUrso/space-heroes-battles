@@ -1,13 +1,36 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 namespace TheGamerUrso
 {
     namespace Utils
     {
-        public static class Utilities
+          public static class Utilities
         {
+            public  static bool CheckAnimationByName(Animator animator,string AnimationHashName)
+            {
+                if (animator != null)
+                {
+                    var info = GetAnimatorStateInfo(animator);
+
+                    if (info.shortNameHash == Animator.StringToHash(AnimationHashName))
+                    {
+                        Debug.Log("Entering");
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+
+            public static AnimatorStateInfo GetAnimatorStateInfo(Animator animator,int index = 0)
+            {
+                AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(index);
+                return info;
+            }
+
 
             public static GameObject GetClosest(string Tag,Vector3 position, float maxRange)
             {

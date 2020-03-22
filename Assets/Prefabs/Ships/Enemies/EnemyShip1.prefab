@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1327135578843464774}
-  - component: {fileID: 1380974864099726096}
   m_Layer: 15
   m_Name: Ship
   m_TagString: Untagged
@@ -29,29 +28,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3755639841413639979}
-  - {fileID: 1327409868328380516}
   m_Father: {fileID: 1442525188503047933}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1380974864099726096
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332171284443893058}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1f3640811fbb9d742b60e65e165fbb66, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &1332505741425853448
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,14 +54,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332505741425853448}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6667962368788443545}
   - {fileID: 43266725922173390}
-  m_Father: {fileID: 1327135578843464774}
-  m_RootOrder: 1
+  m_Father: {fileID: 1442525188503047933}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1332800252941561598
 GameObject:
@@ -152,9 +131,7 @@ MonoBehaviour:
     xpToLevel: 100
   ShieldEffect: {fileID: 6666128051353428309}
   ExplostionEffect: 6
-  animator: {fileID: 1380974864099726096}
   baseEnemyAI: {fileID: 0}
-  Alive: 0
   Weapons: []
   delayAttak: 3
   DeathDelay: 0
@@ -332,6 +309,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shipPivot: {fileID: 3223586283285619861}
   easeMode: 1
+  speed: 0
 --- !u!1 &1332990982962192780
 GameObject:
   m_ObjectHideFlags: 0
@@ -371,6 +349,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1442525188503047933}
+  - component: {fileID: 5434079089507043312}
   m_Layer: 15
   m_Name: ShipPivot
   m_TagString: Untagged
@@ -391,9 +370,29 @@ Transform:
   m_Children:
   - {fileID: 1330038124787335770}
   - {fileID: 1327135578843464774}
+  - {fileID: 1327409868328380516}
   m_Father: {fileID: 1330112429161260340}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &5434079089507043312
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3223586283285619861}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1f3640811fbb9d742b60e65e165fbb66, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &312340080351020652
 PrefabInstance:
   m_ObjectHideFlags: 0

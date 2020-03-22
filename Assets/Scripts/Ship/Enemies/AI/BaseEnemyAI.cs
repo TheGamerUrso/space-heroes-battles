@@ -44,21 +44,9 @@ public class BaseEnemyAI : MonoBehaviour
         Initialize();
     }
 
-    public void Start()
-    {
-        m_XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
-        m_ZVel = enemy.GetShipStatsSystem().GetSpeed();
-        
-        Enter(); 
+    public void Start(){}
 
-        Direction = 0;
-    }
-
-    public virtual void Initialize()
-    {
-        Debug.Log(gameObject.name);
-        startingPosition = transform.position;
-    }
+    public virtual void Initialize(){}
 
     public virtual void InitIfNeeded()
     {
@@ -73,7 +61,7 @@ public class BaseEnemyAI : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
     {
         Move();
     }

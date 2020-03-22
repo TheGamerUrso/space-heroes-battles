@@ -102,7 +102,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7041952059570181617}
-  - component: {fileID: 3880414052547832206}
   m_Layer: 15
   m_Name: Ship
   m_TagString: Untagged
@@ -122,29 +121,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5679273919886811235}
-  - {fileID: 352108930195360651}
   m_Father: {fileID: 5615653793628905892}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &3880414052547832206
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6057253277689719555}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1f3640811fbb9d742b60e65e165fbb66, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &6482215175241735423
 GameObject:
   m_ObjectHideFlags: 0
@@ -168,15 +147,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6482215175241735423}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6606596124877415661}
   - {fileID: 6810248404150211760}
   - {fileID: 3850105755571672795}
-  m_Father: {fileID: 7041952059570181617}
-  m_RootOrder: 1
+  m_Father: {fileID: 5615653793628905892}
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8081796180073696057
 GameObject:
@@ -425,9 +404,7 @@ MonoBehaviour:
     xpToLevel: 100
   ShieldEffect: {fileID: 3847717439273420311}
   ExplostionEffect: 6
-  animator: {fileID: 3880414052547832206}
   baseEnemyAI: {fileID: 0}
-  Alive: 0
   Weapons:
   - {fileID: 3492408046204697008}
   - {fileID: 2567893285886833195}
@@ -491,6 +468,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5615653793628905892}
+  - component: {fileID: 7447336180215722993}
   m_Layer: 15
   m_Name: ShipPivot
   m_TagString: Untagged
@@ -511,9 +489,29 @@ Transform:
   m_Children:
   - {fileID: 7041952059570181617}
   - {fileID: 6585367741501296918}
+  - {fileID: 352108930195360651}
   m_Father: {fileID: 7727412285745401381}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &7447336180215722993
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8897704693328578823}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 1f3640811fbb9d742b60e65e165fbb66, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &1987446430285925368
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1045,15 +1043,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f879758ca74f5d14db1362a409f19936, type: 3}
---- !u!4 &3850105755571672795 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936,
-    type: 3}
-  m_PrefabInstance: {fileID: 7904566246223864110}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &3847717439273420311 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 6401725587664185145, guid: f879758ca74f5d14db1362a409f19936,
+    type: 3}
+  m_PrefabInstance: {fileID: 7904566246223864110}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &3850105755571672795 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936,
     type: 3}
   m_PrefabInstance: {fileID: 7904566246223864110}
   m_PrefabAsset: {fileID: 0}

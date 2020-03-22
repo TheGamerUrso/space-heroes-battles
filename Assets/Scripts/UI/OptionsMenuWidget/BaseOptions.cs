@@ -124,7 +124,7 @@ public class BaseOptions : MonoBehaviour
         PlayerData playerData = DataController.GetPlayerData();
         playerData.MusicVolume = value;
 
-        AudioManager.Instance.SetMusicVolume(value);
+        AudioManager.SetMusicVolume(value);
     }
 
     public void SetSFXVolume(float value)
@@ -132,7 +132,7 @@ public class BaseOptions : MonoBehaviour
         PlayerData playerData = DataController.GetPlayerData();
         playerData.SFXVolume = value;
 
-        AudioManager.Instance.SetSoundVolume(value);
+        AudioManager.SetSoundVolume(value);
     }
     public void Mute()
     {
@@ -217,7 +217,6 @@ public class BaseOptions : MonoBehaviour
 
     public virtual void ExitAndSave()
     {
-        SimpleShipControls.UpdateOffset();
         SaveSystem.SavePlayerData();
     }
 }

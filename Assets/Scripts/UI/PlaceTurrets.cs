@@ -10,14 +10,13 @@ public class PlaceTurrets : MonoBehaviour
 
     public void CreateTurret()
     {
-        Player player = PlayerManager.GetPlayer();
+        PlayerShip player = PlayerManager.GetPlayer();
 
         for (int i = 0; i < TurrentPlaces.Length; i++)
         {
             if (TurrentPlaces[i].childCount == 0)
             {
-                GameObject Turret = CreateNew(TurrentPlaces[i]);
-                Turret.GetComponentInChildren<PlayerWeapon>().SetPlayerAnimation(player.PlayerAnimation());    
+                GameObject Turret = CreateNew(TurrentPlaces[i]);        
                 Turret.GetComponentInChildren<PlayerWeapon>().SetShipTransform(Turret.transform);
                 Turret.transform.SetParent(TurrentPlaces[i]);
                 Turret.transform.position = TurrentPlaces[i].position;

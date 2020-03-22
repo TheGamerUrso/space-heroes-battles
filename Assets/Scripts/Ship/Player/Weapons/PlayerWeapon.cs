@@ -5,7 +5,7 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerWeapon : WeaponScript
 {
-    private PlayerAnimation playerAnimation;
+    private PlayerShip playerShip;
     public Transform shipTransform;
     private bool holdFire;
     public float SuperChargeTime { get { return shipStatsSystem.SuperChargeTime; } set { shipStatsSystem.SuperChargeTime = value; } }
@@ -26,13 +26,11 @@ public class PlayerWeapon : WeaponScript
         this.shipTransform = shipTransform;
     }
 
-    public void SetPlayerAnimation(PlayerAnimation playerAnimation)
-    {
-        this.playerAnimation = playerAnimation;
-    }
     public override void OnStart()
     {
         base.OnStart();
+
+        playerShip = GetComponentInParent<PlayerShip>();
     }
 
     public override void OnUpdate()
@@ -40,9 +38,9 @@ public class PlayerWeapon : WeaponScript
         base.OnUpdate();
         if (Time.frameCount % 1 == 0)
         {
-            if (playerAnimation != null)
+            if (playerShip != null)
             {
-                if (playerAnimation.GetAnimationState("Enter") || playerAnimation.GetAnimationState("Exit"))
+                if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
                 {
                     return;
                 }

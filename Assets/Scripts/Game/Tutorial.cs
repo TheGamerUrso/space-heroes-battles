@@ -20,6 +20,8 @@ public class Tutorial : MonoBehaviour
 
     public TutorialItem[] TutorailItemsToShow;
     private float delay = 1.0f;
+
+
     public void ShowTutorial(int itemToShowIndex)
     {
         for (int i = 0; i < TutorailItemsToShow.Length; i++)
@@ -39,7 +41,7 @@ public class Tutorial : MonoBehaviour
     {
         TutorialWindow.SetActive(false);
         Time.timeScale = 1;
-        PlayerManager.GetPlayer().GetComponent<Player>().tempGodMode();
+        PlayerManager.GetPlayer().tempGodMode();
     }
 
 

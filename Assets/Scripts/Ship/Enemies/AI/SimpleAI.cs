@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class SimpleAI : BaseEnemyAI
 {
+
+    public override void Initialize()
+    {
+        base.Initialize();
+
+        m_XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
+        m_ZVel = enemy.GetShipStatsSystem().GetSpeed();
+        Direction = 0;
+    }
+
     public override void Move()
     {
         //With transform

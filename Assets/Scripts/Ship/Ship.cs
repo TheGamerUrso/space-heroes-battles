@@ -4,14 +4,15 @@ using UnityEngine;
 public abstract class Ship : MonoBehaviour
 {
     [Header("Ship Config")]
-    protected GameManager gameManager;
     [SerializeField] protected ShipStatsSystem shipStatsSystem;
     [SerializeField] protected LevelSystem levelSystem;
+    protected Animator animator;
+
+    protected bool bShieldModuleInstalled;
+
+    [Header("Effects")]
     [SerializeField] protected GameObject ShieldEffect;
     [SerializeField] protected PoolGameObjectType ExplostionEffect;
-
-    [SerializeField] protected Animator animator;
-    protected bool bShieldModuleInstalled;
 
     #region Getters and Setters
     public int Level
@@ -54,10 +55,10 @@ public abstract class Ship : MonoBehaviour
 
     private void Start()
     {
-        ShipStartSetUp();
+        ShipSetup();
     }
 
-    public abstract void ShipStartSetUp();
+    public abstract void ShipSetup();
     public abstract void InitReferences();
     public abstract void Death();
 
@@ -65,11 +66,6 @@ public abstract class Ship : MonoBehaviour
     public float GetHealthPresentage()
     {
         return (CurrentHealth / MaxHealth)*100;
-    }
-
-    public void SetGameManager(GameManager gameManager)
-    {
-        this.gameManager = gameManager;
     }
 
     public virtual void InstallShieldModule()

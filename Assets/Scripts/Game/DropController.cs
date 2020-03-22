@@ -68,7 +68,7 @@ public class DropController : Singleton<DropController>
                 return;
             }
 
-            Player p = PlayerManager.GetPlayer();
+            PlayerShip p = PlayerManager.GetPlayer();
 
 
             bool hasShield = p.HasShieldModule();

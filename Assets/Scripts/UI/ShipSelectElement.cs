@@ -54,6 +54,7 @@ public class ShipSelectElement : MonoBehaviour
     {
         GameEventSystem.Call(GameEventType.ShipSelect, shipId);
     }
+
     public void Unlock()
     {      
         Locked = false;

@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+[Serializable]
 public class DataController
 {
     private static DataController instance;
-    public static DataController Instance
+    private static DataController Instance
     {
         get
         {
-            if (instance == null)
-            {
-                instance = new DataController();
-            }
             return instance;
         }
     }
@@ -30,7 +27,6 @@ public class DataController
     public DataController()
     {
         instance = this;
-
         missionCollection = JsonSystem.LoadMissions();
         LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
         playerData = new PlayerData();
@@ -70,32 +66,36 @@ public class DataController
 
     }
 
-    public Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
+    public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
     {
-        return playerData.ListOfLevelChallenges;
+        return instance.playerData.ListOfLevelChallenges;
     }
-    public LevelObjectiveData[] GetLevelChallegeById(string levelId)
+    public static LevelObjectiveData[] GetLevelChallegeById(string levelId)
     {
         return GetLevelObjectivesByID(levelId);
     }
 
-    public LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
+    public static LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
     {
         LevelObjectiveData[] objectives;
-        if (playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
+        if (instance.playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
         {
             return objectives;
         }
 
         return null;
     }
-    public void SetPlayerData(PlayerData playerData)
+    public static void SetPlayerData(PlayerData playerData)
     {
-        this.playerData = playerData;
+        instance.playerData = playerData;
     }
 
     public static PlayerData GetPlayerData()
     {
+        if (instance == null)
+        {
+            return new PlayerData();
+        }
         return instance.playerData;
     }
 
@@ -110,14 +110,14 @@ public class DataController
         return missionCollection;
     }
 
-    public int GetNumberOfData()
+    public static int GetNumberOfData()
     {
         return GetListOfLevelChallanges().Count;
     }
 
-    public void GenerateLevelObjectiveData()
+    public static void GenerateLevelObjectiveData()
     {
-        if (playerData.ListOfLevelChallenges.Count == 0)
+        if (instance.playerData.ListOfLevelChallenges.Count == 0)
         {
             for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length-1; i++)
             {
@@ -129,7 +129,7 @@ public class DataController
                         LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].ID, LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].Description);
                 }
 
-                playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
+                instance.playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
             }
         }
     }

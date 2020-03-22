@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 public class WinWidget : MonoBehaviour
 {
-    private Player player;
+    private PlayerShip player;
     private PlayerData playerData;
     private GameController gameController;
     [SerializeField] private MissionCollection missionCollection;

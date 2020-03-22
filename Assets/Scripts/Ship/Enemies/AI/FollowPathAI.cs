@@ -86,7 +86,7 @@ public class FollowPathAI : BaseEnemyAI
     public override void Move()
     {
         Animator animator = enemy.GetAnimator();
-        var info = animator.GetCurrentAnimatorStateInfo(0);
+        var info = Utilities.GetAnimatorStateInfo(animator);
 
         if (info.shortNameHash == enterNameHash)
         {

@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 public class GameOverWidget : MonoBehaviour
 {
-    private Player player;
+    private PlayerShipElement player;
     private PlayerData playerData;
     private GameController gameController;
 
@@ -43,7 +43,7 @@ public class GameOverWidget : MonoBehaviour
             gameController = GameController.Instance;
         }
 
-        Player player = PlayerManager.GetPlayer();
+        PlayerShip player = PlayerManager.GetPlayer();
         PlayerData playerData = DataController.GetPlayerData();
 
         UpdateScore();
