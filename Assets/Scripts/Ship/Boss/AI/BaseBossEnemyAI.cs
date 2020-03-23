@@ -34,7 +34,12 @@ public class BaseBossEnemyAI : FollowPathAI
     public float radius = 5;
     #endregion
 
-   
+    public override void InitIfNeeded()
+    {
+        base.InitIfNeeded();
+        baseBoss = GetComponent<BaseBossEnemy>();
+    }
+
     public override void Enter()
     {
         baseBoss.EnableColliders(false);
@@ -51,8 +56,7 @@ public class BaseBossEnemyAI : FollowPathAI
     }
 
     public override void Setup()
-    {
-        baseBoss = GetComponent<BaseBossEnemy>();
+    {  
         m_XVel = GetComponent<BaseEnemy>().GetShipStatsSystem().Speed;
 
         if (!CurclularMove)
@@ -66,8 +70,6 @@ public class BaseBossEnemyAI : FollowPathAI
             {
                 newList.Add(waypointsGameObject.transform.GetChild(i));
             }
-
-
             GeneratePath(newList.ToArray());
         }
     }
@@ -115,11 +117,7 @@ public class BaseBossEnemyAI : FollowPathAI
     }
 
     public void CircularMovement()
-    {
-        
-
-
-
+    {      
         angle += speed * Time.deltaTime; //if you want to switch direction, use -= instead of +=
         
         xVel = Mathf.Cos(angle) * radius + .8f;

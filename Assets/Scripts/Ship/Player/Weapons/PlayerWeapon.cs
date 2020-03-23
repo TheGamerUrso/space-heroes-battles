@@ -8,8 +8,12 @@ public class PlayerWeapon : WeaponScript
     private PlayerShip playerShip;
     public Transform shipTransform;
     private bool holdFire;
-    public float SuperChargeTime { get { return shipStatsSystem.SuperChargeTime; } set { shipStatsSystem.SuperChargeTime = value; } }
-    public float SuperDamage { get { return shipStatsSystem.SuperDamage; } set { shipStatsSystem.SuperDamage = value; } }
+
+    public float superChargeTimer;
+    public float SuperChargeTime { get { return superChargeTimer; } set { superChargeTimer = value; } }
+
+    public float superDamage;
+    public float SuperDamage { get { return superDamage; } set { superDamage = value; } }
 
     public int DamageMulitplier { get { return weaponData.multiplier; } }
 

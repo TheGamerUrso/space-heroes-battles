@@ -12,6 +12,9 @@ public class GameController : Singleton<GameController>
     public static bool IsGameOver;
     public static bool useSloMo;
 
+
+    public bool BossFight;
+
     public int Wave;
     public int MaxWave;
 
@@ -135,7 +138,8 @@ public class GameController : Singleton<GameController>
 
         playerShip.GetComponent<PlayerShip>().PlayerShipDeath += GameOver;
 
-        SpawnEnemies.Instance.StartGame();
+        if (!BossFight)
+            SpawnEnemies.Instance.StartGame();
     }
 
     public void ToggleSlowMo(bool value)

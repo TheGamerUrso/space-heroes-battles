@@ -120,7 +120,7 @@ public class BaseBossEnemy : BaseEnemy
             DisableWeapons();
         }
 
-        if (shipStatsSystem.currentHealth > 0)
+        if (CurrentHealth > 0)
         {
             Attack();
         }
@@ -184,16 +184,16 @@ public class BaseBossEnemy : BaseEnemy
         {
             for (int i = 0; i < Weapons.Length; i++)
             {
-                float newFireRate = Weapons[i].GetComponent<WeaponScript>().FireRate - .2f;
+                float newFireRate = Weapons[i].FireRate - .2f;
 
-                Weapons[i].GetComponent<WeaponScript>().FireRate = newFireRate;
+                Weapons[i].FireRate = newFireRate;
             }
         }
         else
         {
-            float newFireRate = Weapons[weaponIndex].GetComponent<WeaponScript>().FireRate - .2f;
+            float newFireRate = Weapons[weaponIndex].FireRate - .2f;
 
-            Weapons[weaponIndex].GetComponent<WeaponScript>().FireRate = newFireRate;
+            Weapons[weaponIndex].FireRate = newFireRate;
         }
     }
 

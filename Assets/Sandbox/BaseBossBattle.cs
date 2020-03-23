@@ -4,34 +4,36 @@ using UnityEngine;
 
 public class BaseBossBattle : MonoBehaviour
 {
-    public BaseBossEnemy baseBossEnemy;
+    public BaseBossEnemy bossEnemy;
+    public BaseBossEnemyAI bossAI;
     protected int phase;
     private void OnDestroy()
     {
-        baseBossEnemy.OnBossAttack -= Phases;
+        bossEnemy.OnBossAttack -= Phases;
     }
     private void Start()
     {
-        baseBossEnemy = GetComponent<BaseBossEnemy>();
-        baseBossEnemy.OnBossAttack = Phases;
+        bossAI = GetComponent<BaseBossEnemyAI>();
+        bossEnemy = GetComponent<BaseBossEnemy>();
+        bossEnemy.OnBossAttack = Phases;
     }
 
     public void Phases()
     {
-        if (phase == 0 && baseBossEnemy.GetHealtHPresentage() <= 70f)
+        if (phase == 0 && bossEnemy.GetHealtHPresentage() <= 70f)
         {
             phase = 1;
-            baseBossEnemy.SetFireRate();
+            bossEnemy.SetFireRate();
         }
-        else if (phase == 1 && baseBossEnemy.GetHealtHPresentage() <= 30f)
+        else if (phase == 1 && bossEnemy.GetHealtHPresentage() <= 30f)
         {
             phase = 2;
-            baseBossEnemy.SetFireRate();
+            bossEnemy.SetFireRate();
         }
-        else if (phase == 2 && baseBossEnemy.GetHealtHPresentage() <= 10f)
+        else if (phase == 2 && bossEnemy.GetHealtHPresentage() <= 10f)
         {
             phase = 3;
-            baseBossEnemy.SetFireRate();
+            bossEnemy.SetFireRate();
         }
     }
 }

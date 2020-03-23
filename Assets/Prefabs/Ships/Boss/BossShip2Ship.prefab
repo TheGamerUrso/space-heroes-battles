@@ -292,7 +292,6 @@ GameObject:
   - component: {fileID: 7309549720617316060}
   - component: {fileID: 465662296617436389}
   - component: {fileID: 5743645370129726073}
-  - component: {fileID: 5428931688631261447}
   m_Layer: 15
   m_Name: BossShip2Ship
   m_TagString: Enemy
@@ -358,7 +357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipStatsSystem:
-    CurrentHealth: 0
+    currentHealth: 0
     Damage: 0
     FireRate: 0
     Speed: 25
@@ -376,11 +375,9 @@ MonoBehaviour:
     xpToLevel: 100
   ShieldEffect: {fileID: 2520402327702343036}
   ExplostionEffect: 7
-  animator: {fileID: 6902708503129045204}
   baseEnemyAI: {fileID: 5743645370129726073}
-  Alive: 0
   Weapons:
-  - {fileID: 7314066710493141038}
+  - {fileID: 0}
   delayAttak: 1
   DeathDelay: 0
   enemyElement:
@@ -389,9 +386,11 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     currentNumberInScene: 0
     MaxNumberInScene: 0
+    presentage: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
   m_ValueOfEnemy: 100
   DropItems: 
+  AutoEnableWeapon: 0
   BossAI: {fileID: 0}
   ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
     type: 3}
@@ -427,19 +426,6 @@ MonoBehaviour:
   CurclularMove: 1
   angle: 1
   radius: 20
---- !u!114 &5428931688631261447
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4840490958191933900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5557c88959570469c32bc23780e760, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  baseBossEnemy: {fileID: 465662296617436389}
 --- !u!1 &6049227061383995164
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,15 +641,12 @@ MonoBehaviour:
   - {fileID: 8658170788350185538}
   - {fileID: 4234640478162528028}
   - {fileID: 3401815811684271798}
+  Cannons: []
   weaponData: {fileID: 11400000, guid: dc2e9394ed6ca3046b6d28b7d76e384b, type: 2}
   source: {fileID: 0}
   FollowRotation: 0
   delayBetweenShots: 0.3
-  delay: 0
-  Multiple: 1
-  delayTimer: 0
-  m_NumberOfBullets: 8
-  RandomRotationOnY: 1
+  autoAttack: 0
 --- !u!1 &7826898983038948128
 GameObject:
   m_ObjectHideFlags: 0

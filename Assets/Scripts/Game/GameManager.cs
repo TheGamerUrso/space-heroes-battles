@@ -78,7 +78,7 @@ public class GameManager : Singleton<GameManager>
 
         GameEventSystem.OnShipSelect += ShipSelected;
 
-       
+       // SceneManager.LoadScene("Intro", LoadSceneMode.Additive);
     }
 
     public void ShipSelected(int shipSelected)

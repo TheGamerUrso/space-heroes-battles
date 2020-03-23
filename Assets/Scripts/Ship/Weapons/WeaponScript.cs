@@ -24,14 +24,16 @@ public abstract class WeaponScript : MonoBehaviour
     protected GameObject InstansiatedProjectile;
     [SerializeField] protected bool autoAttack;
     protected float newShot;
-    protected ShipStatsSystem shipStatsSystem;
     protected Ship ship;
     #endregion
 
     #region WeaponData Getters
-    public float FireRate { get { return shipStatsSystem.FireRate; } set { shipStatsSystem.FireRate = value; } }
 
-    public float Damage { get { return shipStatsSystem.Damage; } set { shipStatsSystem.Damage = value; } }
+    private float fireRate;
+    private float damage;
+    public float FireRate { get { return fireRate; } set { fireRate = value; } }
+
+    public float Damage { get { return damage; } set { damage = value; } }
 
     public AudioClip SoundSFX { get { return weaponData.ShootSoundEffect; } private set { } }
 
@@ -68,7 +70,13 @@ public abstract class WeaponScript : MonoBehaviour
         source = GetComponent<AudioSource>();
         Cannons = transform.Cast<Transform>().ToArray();
         ship = GetComponentInParent<Ship>();
-        shipStatsSystem = ship.GetShipStatsSystem();
+        ShipStatsSystem shipStatsSystem = ship.GetShipStatsSystem();
+
+        if(shipStatsSystem != null)
+        {
+            fireRate = shipStatsSystem.FireRate;
+            damage = shipStatsSystem.Damage;
+        }
     }
 
     public virtual void OnUpdate() { }
@@ -97,17 +105,14 @@ public abstract class WeaponScript : MonoBehaviour
     }
     public float GetFireRate()
     {
-        return shipStatsSystem.FireRate;
+        return FireRate;
     }
 
     public virtual void SetFireRate(float fireRate)
     {
-        if (shipStatsSystem == null)
-        {
-            Debug.LogError(gameObject.name + " shipStatsSystem is null");
-        }
-        shipStatsSystem.FireRate = fireRate;
+        this.fireRate = fireRate;
     }
+
     #endregion
 
     public void PlayWeaponFireSound(int audioMixGroup = 0, bool usePitch = false)

@@ -9,7 +9,7 @@ public class GrenadeLauncher : Blaster
     {
         if (Time.time > newShot)
         {
-            newShot = Time.time + shipStatsSystem.FireRate;
+            newShot = Time.time + FireRate;
             int pos = Random.Range(0, Cannons.Length);
             GameObject bomb = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             bomb.transform.position = Cannons[pos].transform.position;

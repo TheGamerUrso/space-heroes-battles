@@ -37,7 +37,10 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
     public bool gameover;
     private int totalEnemies;
 
- 
+
+    public float currentNumberOfEnemies;
+
+    private bool waitForSpawn;
 
     private void Start()
     {
@@ -88,11 +91,18 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
             }
 
 
-            int randomNumb = UnityEngine.Random.Range(0, availableEnemies);
-            EnemyElement enemyElement = enemyElements[randomNumb];
+            int randomNumb = 0;
+            EnemyElement enemyElement = null;
 
+            do
+            {
+                randomNumb = UnityEngine.Random.Range(0, availableEnemies);
+                enemyElement = enemyElements[randomNumb];
+                yield return null;
+            } while (enemyElement.currentNumberInScene >= enemyElement.MaxNumberInScene);
 
-            int repeat = enemyElement.MaxNumberInScene;
+            int repeat = 1;
+
             if (randomNumb == 0)
             {
                 repeat = UnityEngine.Random.Range(5, 8);
@@ -103,8 +113,13 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
                 Debug.Log(totalEnemies + " " + (totalEnemies - 1));
                 if (totalEnemies - 1 >= 0)
                 {
+                    while (currentNumberOfEnemies > 2)
+                    {
+                        Debug.Log("Waiting");
+                        yield return new WaitForEndOfFrame();
+                    }
                     SpawnEnemyElement(enemyElement);
-                    yield return new WaitForSeconds(UnityEngine.Random.Range(2, 3));
+                    yield return new WaitForSeconds(delay);
                 }
                 else
                 {
@@ -113,14 +128,13 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
                 }
 
             }
-
-            yield return new WaitForSeconds(delay);
+            yield return new WaitForSeconds(1);
         }
     }
 
     private void SpawnEnemyElement(EnemyElement enemyElement)
     {
-
+        enemyElement.currentNumberInScene++;
         Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 
@@ -153,10 +167,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 
     public void OnEnemyEscape(string id, BaseEnemy baseEnemy)
     {
+        baseEnemy.enemyElement.currentNumberInScene--;
         baseEnemy.EnemyEscaped -= OnEnemyEscape;
         baseEnemy.EnemyDied -= OnDeath;
         baseEnemy.EnemyGotHit -= OnHit;
-
+        currentNumberOfEnemies--;
         Debug.Log("Enemy Got Escaped");
     }
 
@@ -167,10 +182,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 
     public void OnDeath(string id, BaseEnemy baseEnemy)
     {
+        baseEnemy.enemyElement.currentNumberInScene--;
         baseEnemy.EnemyEscaped -= OnEnemyEscape;
         baseEnemy.EnemyDied -= OnDeath;
         baseEnemy.EnemyGotHit -= OnHit;
-
+        currentNumberOfEnemies--;
         Debug.Log("Enemy Got Died");
     }
 
