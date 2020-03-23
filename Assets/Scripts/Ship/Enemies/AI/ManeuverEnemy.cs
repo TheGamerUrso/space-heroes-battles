@@ -5,9 +5,9 @@ public class ManeuverEnemy : SimpleAI
 {
     private bool firstTime;
 
-    public override void Initialize()
+    public override void Setup()
     {
-        base.Initialize();
+        base.Setup();
         int waitTime = UnityEngine.Random.Range(2, 4);
         InvokeRepeating("Maneuver", 1, waitTime);
 

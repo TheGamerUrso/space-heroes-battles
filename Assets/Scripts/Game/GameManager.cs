@@ -19,7 +19,7 @@ public class GameManager : Singleton<GameManager>
 
 
     public static bool Paused;
-
+    private bool firstRun;
 
     private static float DefaultTimeDeltaScale;
 
@@ -47,6 +47,8 @@ public class GameManager : Singleton<GameManager>
     public bool useSafeMode;
     public LogBehaviour logBehaviour;
 
+    private PlayerManager playerManager;
+    private DataController dataController;
 
     public PlayerShipElement[] ListOfPlayerShips()
     {
@@ -59,36 +61,39 @@ public class GameManager : Singleton<GameManager>
     }
 
 
-    public override void Init()
+    protected override void OnAwake()
     {
         Debug.Log("Loading Data");
-        new DataController();
+       new DataController();
+
+        DataController.Setup();
 
         Debug.Log("Set up Players");
         new PlayerManager();
-
+        PlayerManager.LoadPlayerSettings();
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
-        GameEventSystem.XpChanged += ShowLevelup;
+        GameEventSystem.OnPlayerLeveledUp += ShowLevelup;
 
         GameEventSystem.OnShipSelect += ShipSelected;
 
+       
     }
 
     public void ShipSelected(int shipSelected)
     {
-        GameManager.CurrentHeroChoosen = shipSelected;
+        CurrentHeroChoosen = shipSelected;
     }
 
-    public override void OnQuitGame()
+    protected override void OnCleanup()
     {
-        base.OnQuitGame();
+        base.OnCleanup();
 
         //DataController.SavePlayerData();
     }
 
-    public void ShowLevelup(int level, float xp, float xpToLevel)
+    public void ShowLevelup()
     {
         Instance.levelupAnnouncement.SetActive(true);
     }
@@ -102,9 +107,9 @@ public class GameManager : Singleton<GameManager>
         InstantiateSystemPrefabs();
 
 
-        if (debug==false)
-        SceneLoader.Instance.LoadScene("Intro");
+        OnLoadDataCompleted?.Invoke();
     }
+
     private void InstantiateSystemPrefabs()
     {
         foreach (var systemPrefab in SystemPrefabs)

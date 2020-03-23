@@ -3,7 +3,7 @@ using TheGamerUrso;
 using TheGamerUrso.Utils;
 using UnityEngine;
 
-public class FollowPathAI : BaseEnemyAI
+public class FollowPathAI : SimpleAI
 {
     #region FollowPath AI Config
     [Header("FollowPath AI Config")]
@@ -30,10 +30,6 @@ public class FollowPathAI : BaseEnemyAI
     protected float pathMagnitude;
     #endregion
 
-
-
-
-
     public void GeneratePath()
     {
         // Debug.Log("Generate new Path");
@@ -56,9 +52,7 @@ public class FollowPathAI : BaseEnemyAI
 
         if (SpawnAtFirstPath)
         {
-            transform.position = Path[0].position;
-
-         
+            transform.position = Path[0].position;        
         }
     }
 
@@ -67,8 +61,9 @@ public class FollowPathAI : BaseEnemyAI
         Path = newPath;
     }
 
-    public override void Initialize()
+    public override void Setup()
     {
+        base.Setup();
         startingPosition = transform.position;
 
         if (Path.Length == 0)
@@ -152,7 +147,7 @@ public class FollowPathAI : BaseEnemyAI
 
             if (distance > 1)
             {
-                rigid.MovePosition(transform.position + normalizedDirection * xVel * Time.deltaTime);
+                transform.position += normalizedDirection * m_ZVel * Time.deltaTime;
             }
 
             if (RotateTowardDir)
@@ -160,7 +155,7 @@ public class FollowPathAI : BaseEnemyAI
                 step = RotationSpeed * Time.deltaTime;
                 dir = (transform.position - newPos).normalized;
                 targetRotation = Vector3.Lerp(targetRotation, dir, step);
-                rigid.MoveRotation(Quaternion.LookRotation(targetRotation, Vector3.up));
+                transform.rotation = Quaternion.LookRotation(targetRotation, Vector3.up);
             }
         }
     }

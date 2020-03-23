@@ -11,6 +11,9 @@ public class GuiManager : Singleton<GuiManager>
 {
     private GameController gc;
 
+    PlayerShip playerShip;
+
+
     [Header("Menu")]
     [SerializeField] private GameObject GameOverScreen;
     [SerializeField] private GameObject WinScreen = null;
@@ -51,9 +54,14 @@ public class GuiManager : Singleton<GuiManager>
         }
     }
 
-    private void OnDisable()
+    protected override void OnCleanup()
     {
-        GameEventSystem.PickupEvent += UpdateCoinWidgetText;
+        base.OnCleanup();
+        if (playerShip != null)
+        {
+            playerShip.PickUpItem -= PickUpItem;
+            GameEventSystem.PickupEvent -= UpdateCoinWidgetText;
+        }
     }
 
     private void Start()
@@ -61,11 +69,17 @@ public class GuiManager : Singleton<GuiManager>
         timer = 1;
         gc = GameObject.FindObjectOfType<GameController>();
 
-        GameEventSystem.PickupEvent += UpdateCoinWidgetText;
 
-        PlayerShip player = PlayerManager.GetPlayer();
-        player.PickUpItem += PickUpItem;
+
+        if (playerShip == null)
+        {
+            playerShip = PlayerManager.GetPlayer();
+        }
+
+        playerShip.PickUpItem += PickUpItem;
+        GameEventSystem.PickupEvent += UpdateCoinWidgetText;
     }
+
 
     public void PickUpItem(ItemData itemData)
     {
@@ -383,21 +397,12 @@ public class GuiManager : Singleton<GuiManager>
 
         Time.timeScale = 1.0f;
         if (!ResultShowed)
-        {
-            PlayerShip player = PlayerManager.GetPlayer();
-
-            if (player == null)
-            {
-                player = GameObject.FindObjectOfType<PlayerShip>();
-            }
-
-
-
+        {   
             PlayerData playerData = DataController.GetPlayerData();
             playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-            playerData.Level = player.GetLevelSystem().GetLevel();
-            playerData.xp = player.GetLevelSystem().GetXP();
-            playerData.xpToLevel = player.GetLevelSystem().GetXpToLevel();
+            playerData.Level = playerShip.GetLevelSystem().GetLevel();
+            playerData.xp = playerShip.GetLevelSystem().GetXP();
+            playerData.xpToLevel = playerShip.GetLevelSystem().GetXpToLevel();
 
             playerData.Coins += gc.counsEarnInGame;
             playerData.TotalKills += gc.EnemyKilled;

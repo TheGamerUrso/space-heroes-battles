@@ -35,10 +35,10 @@ public class SceneLoader : Singleton<SceneLoader>
     public AudioClip appearSFX;
     public AudioClip disapearSFX;
     public AudioSource audioSouce;
-
-    public override void Init()
+    protected override void OnAwake()
     {
-        base.Init();
+        base.OnAwake();
+
         animator = GetComponentInChildren<Animator>();
         _loadOperation = new List<AsyncOperation>();
         ActiveScenes = new List<string>();

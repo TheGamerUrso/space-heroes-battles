@@ -58,10 +58,7 @@ public class BaseBossEnemy : BaseEnemy
 
         currentWeaponActive = 0;
 
-        for (int i = 0; i < Weapons.Length; i++)
-        {
-            Weapons[i].SetActive(false);
-        }
+        DisableWeapons();
     }
 
     public override void TakeDamage(float damage)
@@ -83,7 +80,7 @@ public class BaseBossEnemy : BaseEnemy
 
         base.TakeDamage(damage);
 
-        if (shipStatsSystem.CurrentHealth < 0)
+        if (shipStatsSystem.currentHealth < 0)
         {
             EnableColliders(false);
             Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
@@ -106,10 +103,7 @@ public class BaseBossEnemy : BaseEnemy
 
 
 
-        if (Weapons[0].activeSelf == false)
-        {
-            Weapons[0].SetActive(true);
-        }
+        EnableWeapon();
     }
 
     public override void Tick()
@@ -123,13 +117,10 @@ public class BaseBossEnemy : BaseEnemy
 
         if (info.shortNameHash == deathNameHash)
         {
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                Weapons[i].SetActive(false);
-            }
+            DisableWeapons();
         }
 
-        if (shipStatsSystem.CurrentHealth > 0)
+        if (shipStatsSystem.currentHealth > 0)
         {
             Attack();
         }
@@ -146,14 +137,7 @@ public class BaseBossEnemy : BaseEnemy
         else
         {
 
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                if (!Weapons[i].activeSelf)
-                {
-                    Weapons[i].SetActive(true);
-
-                }
-            }
+            EnableWeapon();
 
             OnBossAttack?.Invoke();
 
@@ -169,10 +153,7 @@ public class BaseBossEnemy : BaseEnemy
 
         EnableColliders(false);
 
-        for (int i = 0; i < currentWeaponActive; i++)
-        {
-            Weapons[i].SetActive(false);
-        }
+        DisableWeapons();
 
         EnemyProjectile[] enemyProjectiles = GameObject.FindObjectsOfType<EnemyProjectile>();
         if (enemyProjectiles.Length > 0)

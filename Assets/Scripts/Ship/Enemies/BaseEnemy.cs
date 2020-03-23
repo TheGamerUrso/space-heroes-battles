@@ -5,7 +5,7 @@ using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using DG.Tweening;
 
-public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
+public class BaseEnemy : Ship, IDestroyable
 {
     public Action<string, BaseEnemy> EnemyDied;
     public Action<string, BaseEnemy> EnemyGotHit;
@@ -19,7 +19,7 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
 
     protected bool CanAttack;
     [SerializeField]
-    protected GameObject[] Weapons;
+    protected WeaponScript[] Weapons;
     [SerializeField]
     protected float delayAttak = 3;
     public float DeathDelay;
@@ -29,7 +29,7 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
 
     [HideInInspector] public EnemyElement enemyElement;
 
-    [SerializeField] private HealthBarSettings HealthBarSettings;
+    [SerializeField] private HealthBarSettings HealthBarSettings ;
     private EnemyHealthWidget healthBar;
 
     //IDestroyable Values
@@ -54,7 +54,7 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
     protected WeaponScript weaponScript;
     protected float takeDamageDelay;
     protected bool EnableShield;
-
+    [SerializeField] protected bool AutoEnableWeapon;
 
     private void OnDisable()
     {
@@ -64,17 +64,21 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
     public virtual void OnEnable()
     {
         Alive = true;
-
+        DisableWeapons();
         GameController gameController = GameObject.FindObjectOfType<GameController>();
-        gameController.AddObserver(this);
         gameController.AddEnemy(this);
+
+        if (AutoEnableWeapon)
+        {
+            EnableWeapon();
+        }
     }
 
     public void EnableWeapon()
     {
         for (int i = 0; i < Weapons.Length; i++)
         {
-            Weapons[i].SetActive(true);
+            Weapons[i].AutoAttack = true;
         }
     }
 
@@ -82,7 +86,7 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
     {
         for (int i = 0; i < Weapons.Length; i++)
         {
-            Weapons[i].SetActive(false);
+            Weapons[i].AutoAttack = false;
         }
     }
 
@@ -134,14 +138,14 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
 
     public virtual void Heal(float ammount)
     {
-        shipStatsSystem.CurrentHealth += ammount;
+       CurrentHealth += ammount;
 
-        if (shipStatsSystem.CurrentHealth > MaxHealth)
+        if (CurrentHealth > MaxHealth)
         {
-            shipStatsSystem.CurrentHealth = MaxHealth;
+            CurrentHealth = MaxHealth;
         }
 
-        shipStatsSystem.CurrentHealth = Mathf.Clamp(shipStatsSystem.CurrentHealth, 0, MaxHealth);
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
     }
 
     public virtual void TakeDamage(float dmg)
@@ -162,9 +166,9 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
             }
             else if (bShieldModuleInstalled == false)
             {
-                shipStatsSystem.CurrentHealth -= dmg;
+                CurrentHealth -= dmg;
 
-                if (shipStatsSystem.CurrentHealth < 1)
+                if (CurrentHealth < 1)
                 {
                     Death();
                 }
@@ -225,18 +229,11 @@ public class BaseEnemy : Ship, IDestroyable,IEndGameObserver
         }
     }
 
-    public void GameOver()
-    {
-        Debug.Log("GameOver");
-        RemoveAndDestroy();
-    }
-
     public void RemoveAndDestroy()
     {
         GameController gameController = GameObject.FindObjectOfType<GameController>();
         if (gameController != null)
         {
-            gameController.RemoveObserver(this);
             gameController.RemoveEnemy(this);
         }
         gameObject.SetActive(false);

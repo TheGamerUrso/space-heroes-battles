@@ -71,9 +71,9 @@ public class GooglePlayOptions : BaseOptions
 
     public IEnumerator SignUp()
     {
-        while (!GooglePlayServicesManager.isInitialized)
+        while (!GooglePlayServicesManager.Instance)
         {
-            if (GooglePlayServicesManager.isInitialized)
+            if (GooglePlayServicesManager.Instance)
             {
                 signInBut.GetComponent<Image>().sprite = buttonSprites[0];
                 GooglePlayServicesManager.Instance.SignOut();
@@ -85,7 +85,8 @@ public class GooglePlayOptions : BaseOptions
             }
             yield return new WaitForSeconds(1);
         }
-        if (GooglePlayServicesManager.isInitialized)
+
+        if (GooglePlayServicesManager.Instance)
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[0];
         }
@@ -95,7 +96,7 @@ public class GooglePlayOptions : BaseOptions
         }
 
     }
-    
+
     public void ShowLeaderboards()
     {
         GooglePlayServicesManager.Instance.ShowLeaderboards();

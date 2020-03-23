@@ -9,7 +9,7 @@ public class FastAI : SimpleAI
     public float m_Rotation;
     public Vector2 m_Velocity;
 
-    public override void Initialize()
+    public override void Setup()
     {
         num = Random.Range(0, 2);
         SetFastEnemyDirection(num);

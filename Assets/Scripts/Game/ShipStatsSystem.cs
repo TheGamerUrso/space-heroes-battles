@@ -5,8 +5,10 @@ using UnityEngine;
 [Serializable]
 public class ShipStatsSystem
 {
+    public Action<float, float> HealthChanged;
+
     private float MaxHealth;
-    public float CurrentHealth;
+    public float currentHealth;
 
     public float Damage;
     [Range(.2f, 10)]
@@ -46,20 +48,22 @@ public class ShipStatsSystem
     {
         var multiplier = levelSystem.GetLevel() / 10;
         MaxHealth = levelSystem.GetLevel() * baseHealth;
-        CurrentHealth = MaxHealth;
+        currentHealth = MaxHealth;
         Damage = levelSystem.GetLevel() * baseDamage;
         FireRate = baseFireRate;
         SuperDamage = levelSystem.GetLevel() * baseDamage;
+
+        HealthChanged?.Invoke(currentHealth, MaxHealth);
     }
 
     public float GetHealthPressentage()
     {
-        return (CurrentHealth/MaxHealth) * 100;
+        return (currentHealth / MaxHealth) * 100;
     }
 
     public bool CheckHealthPressentage(float pressent)
     {
-        if (CurrentHealth <= (pressent * MaxHealth))
+        if (currentHealth <= (pressent * MaxHealth))
         {
             return true;
         }
@@ -81,7 +85,7 @@ public class ShipStatsSystem
 
     public float GetCurrentHealth()
     {
-        return CurrentHealth;
+        return currentHealth;
     }
 
     public float GetSpeed()

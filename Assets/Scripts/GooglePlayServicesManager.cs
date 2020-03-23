@@ -20,17 +20,10 @@ public class User
 }
 public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 {
-    public static GooglePlayServicesManager Instance;
-
-    public static bool isInitialized;
-
-    protected override void Awake()
+    protected override void OnAwake()
     {
-        base.Awake();
         if (!RuntimeManager.IsInitialized())
             RuntimeManager.Init();
-
-        DontDestroyOnLoad(gameObject);
     }
 
     private void Start()

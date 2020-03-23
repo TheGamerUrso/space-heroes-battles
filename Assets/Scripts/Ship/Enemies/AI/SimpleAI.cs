@@ -4,13 +4,18 @@ using UnityEngine;
 
 public class SimpleAI : BaseEnemyAI
 {
+    protected int Direction;
+    protected bool directionChanged;
 
-    public override void Initialize()
+    protected bool Loop;
+
+    public override void Setup()
     {
-        base.Initialize();
+        base.Setup();
 
         m_XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
         m_ZVel = enemy.GetShipStatsSystem().GetSpeed();
+
         Direction = 0;
     }
 
@@ -19,7 +24,7 @@ public class SimpleAI : BaseEnemyAI
         //With transform
         movement = (transform.forward * m_ZVel) + (transform.right * m_XVel);
         movement.x *= Direction;
-        //transform.localPosition += movement * Time.deltaTime;
+        transform.position += movement * Time.deltaTime;
 
 
         //With Translate
@@ -29,7 +34,7 @@ public class SimpleAI : BaseEnemyAI
         // rigid.AddForce(movement * 200 * Time.deltaTime);
 
         //Move Position
-         rigid.MovePosition(transform.position + (movement * Time.deltaTime));
+        //rigid.MovePosition(transform.position + (movement * Time.deltaTime));
 
         //with Velocity
 

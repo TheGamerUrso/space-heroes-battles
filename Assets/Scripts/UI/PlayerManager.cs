@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 
-[System.Serializable]
 public class PlayerManager
 {
     private static PlayerManager instance;
@@ -23,17 +22,16 @@ public class PlayerManager
         {
             instance = this;
         }
-        listOfPlayerShips = GameManager.Instance.ListOfPlayerShips();
-        LoadPlayerSettings();
+
     }
 
 
-    public static void CreatePlayer(int id)
+    public static GameObject CreatePlayer(int id)
     {
-        instance.CreatePlayerById(id);
+        return CreatePlayerById(id);
     }
 
-    public void CreatePlayerById(int id)
+    public static GameObject CreatePlayerById(int id)
     {
         if (id >= listOfPlayerShips.Length)
         {
@@ -51,6 +49,8 @@ public class PlayerManager
         currentPlayer.GetComponent<PlayerShip>().GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
 
 
+        return currentPlayer;
+
     }
 
     public static PlayerShipElement GetPlayerByID(int id)
@@ -60,6 +60,7 @@ public class PlayerManager
 
     public static void LoadPlayerSettings()
     {
+        listOfPlayerShips = GameManager.Instance.ListOfPlayerShips();
         PlayerData playerData = DataController.GetPlayerData();
         for (int i = 0; i < listOfPlayerShips.Length; i++)
         {
@@ -75,8 +76,7 @@ public class PlayerManager
     {
         if (currentPlayer == null)
         {
-            int shipSelected = GameManager.CurrentHeroChoosen;
-            instance.CreatePlayerById(shipSelected);
+            return null;
         }
         return currentPlayer.GetComponent<PlayerShip>();
     }

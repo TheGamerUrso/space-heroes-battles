@@ -2,61 +2,81 @@
 
 public class Singleton<T> : MonoBehaviour where T : Singleton<T>
 {
-    private static T instance;
+    private static T _instance;
+    private static bool _shuttingDown;
+
     public static T Instance
     {
-        get { return instance; }
-    }
-    public static bool bIsInitialized;
-    public static bool IsInitialized
-    {
-        get { return instance != null; }
+        get
+        {
+            if (_shuttingDown)
+            {
+                Debug.LogWarning($"[Singleton] Instance '{typeof(T)}' already destroyed.");
+                return null;
+            }
+
+            // Check if an instance has been set already and if not, try to find an instance of this singleton
+            // in the scene; this may happen, when a script tries to access the instance during Awake, which means
+            // the instance may not have been initialized, yet.
+            _instance = _instance ? _instance : FindObjectOfType<T>();
+            if (!_instance)
+            {
+                Debug.LogError($"[Singleton] No instance of singleton '{typeof(T)}' found!");
+            }
+
+            return _instance;
+        }
+
+        private set => _instance = value;
     }
 
-    protected virtual void Awake()
+    protected void Awake()
     {
-        if (instance == null)
+        if (Instance && Instance != this)
         {
-            instance = (T)this;
-        }
-        else if (instance != null)
-        {
-            Debug.LogWarning((T)this + "Trying to instantiate a second instance of a singleton class.");
-            DestroyImmediate(gameObject);
+            Debug.LogWarning($"[Singleton] A second instance of a singleton '{typeof(T)}' is not allowed.", this);
+
+            Destroy(gameObject);
             return;
         }
 
-        if (!bIsInitialized)
+        Instance = (T)this;
+        OnAwake();
+    }
+
+    private void OnDestroy()
+    {
+        if (_shuttingDown)
         {
-            bIsInitialized = true;
-            Instance.Init();
+            return;
+        }
+
+        OnCleanup();
+
+        if (Instance == this)
+        {
+            Instance = null;
         }
     }
 
-    public virtual void Init()
+    /// <summary>
+    /// Called during Awake. Overwrite for custom behavior during the Awake event.
+    /// </summary>
+    protected virtual void OnAwake()
     {
-
     }
 
-    protected virtual void OnDestroy()
+    /// <summary>
+    /// Called during OnDestroy. Overwrite for custom behavior during the OnDestroy event.
+    /// Note: This function is NOT called during shut down (i.e. when quitting the application).
+    /// </summary>
+    protected virtual void OnCleanup()
     {
-        if (instance == null)
-        {
-            instance = null;
-        }
     }
-
-
-
-    
 
     private void OnApplicationQuit()
     {
-        OnQuitGame();
-    }
-
-    public virtual void OnQuitGame()
-    {
-
+        _shuttingDown = true;
+        Instance = null;
     }
 }

@@ -17,9 +17,6 @@ public class PlayerWeapon : WeaponScript
 
     public bool RapidFireMoade { get { return weaponData.RapidFireMode; } private set { } }
 
-    protected bool autoAttack;
-    public bool AutoAttack { get { return autoAttack; } set { autoAttack = value; } }
-
     protected bool usePitch;
     public void SetShipTransform(Transform shipTransform)
     {

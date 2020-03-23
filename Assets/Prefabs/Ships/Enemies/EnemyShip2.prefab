@@ -51,7 +51,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &825
 Transform:
   m_ObjectHideFlags: 0
@@ -112,7 +112,7 @@ MonoBehaviour:
     CurrentHealth: 0
     Damage: 0
     FireRate: 0
-    Speed: 20
+    Speed: 12
     SuperDamage: 0
     SuperChargeTime: 0
     MagnetPower: 0
@@ -127,8 +127,9 @@ MonoBehaviour:
     xpToLevel: 100
   ShieldEffect: {fileID: 2138503217037189460}
   ExplostionEffect: 6
-  baseEnemyAI: {fileID: 0}
-  Weapons: []
+  baseEnemyAI: {fileID: 2093}
+  Weapons:
+  - {fileID: 2090}
   delayAttak: 3
   DeathDelay: 0
   enemyElement:
@@ -141,6 +142,7 @@ MonoBehaviour:
   HealthBarSettings: {fileID: 11400000, guid: b8654c602fea6e14e95f7801eafff54e, type: 2}
   m_ValueOfEnemy: 100
   DropItems: 0700000008000000090000000a000000
+  AutoEnableWeapon: 0
 --- !u!114 &2093
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -169,7 +171,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shipPivot: {fileID: 9108861751662287459}
   easeMode: 1
-  speed: 0.25
+  speed: 2
 --- !u!1 &554
 GameObject:
   m_ObjectHideFlags: 0
@@ -221,9 +223,10 @@ MonoBehaviour:
   - {fileID: 6090321455407516893}
   Cannons: []
   weaponData: {fileID: 11400000, guid: dc2e9394ed6ca3046b6d28b7d76e384b, type: 2}
-  source: {fileID: 0}
+  source: {fileID: 766476753449881079}
   FollowRotation: 0
   delayBetweenShots: 0
+  autoAttack: 0
 --- !u!82 &766476753449881079
 AudioSource:
   m_ObjectHideFlags: 0
@@ -378,7 +381,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 559}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.624, y: 0, z: -0.73}
+  m_LocalPosition: {x: -3.77, y: 0, z: 4.66}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5320012294117106356}
@@ -440,7 +443,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2826865468562347842}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.71, y: 0, z: -0.73}
+  m_LocalPosition: {x: 4.9, y: 0, z: 4.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7745562904251297025}
@@ -766,6 +769,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.z
       value: 12
       objectReference: {fileID: 0}
+    - target: {fileID: 2166578091718592748, guid: f879758ca74f5d14db1362a409f19936,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.5
+      objectReference: {fileID: 0}
     - target: {fileID: 2542704849084951094, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -844,7 +852,7 @@ PrefabInstance:
     - target: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 1.25
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}
@@ -854,7 +862,7 @@ PrefabInstance:
     - target: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 1.25
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6629711628589044426, guid: f879758ca74f5d14db1362a409f19936,
         type: 3}

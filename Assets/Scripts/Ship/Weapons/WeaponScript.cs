@@ -22,7 +22,7 @@ public abstract class WeaponScript : MonoBehaviour
     protected Coroutine ShootingCoroutine;
     [SerializeField] protected float delayBetweenShots;
     protected GameObject InstansiatedProjectile;
-
+    [SerializeField] protected bool autoAttack;
     protected float newShot;
     protected ShipStatsSystem shipStatsSystem;
     protected Ship ship;
@@ -36,6 +36,20 @@ public abstract class WeaponScript : MonoBehaviour
     public AudioClip SoundSFX { get { return weaponData.ShootSoundEffect; } private set { } }
 
     public PoolGameObjectType ProjectilePrefab { get { return weaponData.m_Projectile; } private set { } }
+
+
+    public bool AutoAttack
+    {
+        get
+        {
+            return autoAttack;
+        }
+
+        set
+        {
+            autoAttack = value;
+        }
+    }
     #endregion
 
 

@@ -3,12 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 
 public class GameController : Singleton<GameController>
 {
     public Action<int, int, int> GameStatsChanged;
-
+    private GameObject playerShip;
     public static bool IsGameOver;
     public static bool useSloMo;
 
@@ -80,7 +80,7 @@ public class GameController : Singleton<GameController>
 
     public void NotifyObservers()
     {
-        foreach (IEndGameObserver enemy in gameObservers)
+        foreach (IEndGameObserver enemy in gameObservers.ToArray())
         {
             enemy.GameOver();
         }
@@ -89,9 +89,18 @@ public class GameController : Singleton<GameController>
 
     [SerializeField] private List<GameObject> EnemySpawned = new List<GameObject>();
 
+    protected override void OnAwake()
+    {
+        Scene bootScene = SceneManager.GetSceneByName("boot");
+        if (!bootScene.isLoaded)
+        {
+            SceneManager.LoadScene("boot", LoadSceneMode.Additive);
+        }
+    }
 
     void Start()
     {
+
         IsGameOver = false;
 
         Application.targetFrameRate = 60;
@@ -118,6 +127,15 @@ public class GameController : Singleton<GameController>
 
 
 
+        if (PlayerManager.GetPlayer() == null)
+        {
+            int shipSelected = GameManager.CurrentHeroChoosen;
+            playerShip = PlayerManager.CreatePlayer(shipSelected);
+        }
+
+        playerShip.GetComponent<PlayerShip>().PlayerShipDeath += GameOver;
+
+        SpawnEnemies.Instance.StartGame();
     }
 
     public void ToggleSlowMo(bool value)
@@ -153,11 +171,16 @@ public class GameController : Singleton<GameController>
         {
             IsGameOver = true;
             StartCoroutine(DelayWinScreen());
-
         }
 
     }
+    IEnumerator DelayGameOver()
+    {
+        yield return new WaitForSeconds(4.0f);
+        NotifyObservers();
+        GuiManager.Instance.GameOver();
 
+    }
     IEnumerator DelayWinScreen()
     {
         yield return new WaitForSeconds(4.0f);
@@ -191,7 +214,7 @@ public class GameController : Singleton<GameController>
         if (IsGameOver == false)
         {
             IsGameOver = true;
-
+            StartCoroutine(DelayGameOver());
             NotifyObservers();
         }
     }

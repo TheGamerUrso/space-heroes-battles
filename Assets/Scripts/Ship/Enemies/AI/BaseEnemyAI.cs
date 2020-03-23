@@ -8,10 +8,7 @@ public class BaseEnemyAI : MonoBehaviour
 
     protected BaseEnemy enemy;
     protected Rigidbody rigid;
-
-    protected int Direction;
-    protected bool Loop;
-    protected bool directionChanged;
+ 
     protected Vector3 startingPosition;
     protected Coroutine EnterCoroutine;
     protected Vector3 dist;
@@ -29,7 +26,6 @@ public class BaseEnemyAI : MonoBehaviour
 
     public bool bAppeared, bEntered;
 
-    [Header("MinerBossAI Config")]
     protected int enterNameHash = Animator.StringToHash("Enter");
     protected int deathNameHash = Animator.StringToHash("Death");
 
@@ -41,12 +37,12 @@ public class BaseEnemyAI : MonoBehaviour
     private void Awake()
     {
         InitIfNeeded();
-        Initialize();
+
     }
 
-    public void Start(){}
+    public void Start() { Setup(); }
 
-    public virtual void Initialize(){}
+    public virtual void Setup(){}
 
     public virtual void InitIfNeeded()
     {
@@ -66,10 +62,9 @@ public class BaseEnemyAI : MonoBehaviour
         Move();
     }
 
-    public virtual void Move() { }
+    public virtual void Move(){}
 
-    public virtual void Enter(){     
-    }
+    public virtual void Enter(){}
 
     public void Leave()
     {

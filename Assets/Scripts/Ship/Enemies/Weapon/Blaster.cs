@@ -15,7 +15,7 @@ public class Blaster : WeaponScript
 
     public override void Shoot()
     {
-        if (Time.time > newShot)
+        if (Time.time > newShot && AutoAttack)
         {
             newShot = Time.time + FireRate;
 

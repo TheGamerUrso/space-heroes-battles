@@ -190,6 +190,7 @@ MonoBehaviour:
   source: {fileID: 0}
   FollowRotation: 1
   delayBetweenShots: 0
+  autoAttack: 0
 --- !u!82 &6174728767924027997
 AudioSource:
   m_ObjectHideFlags: 0
@@ -338,7 +339,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4159772285747209526
 Transform:
   m_ObjectHideFlags: 0
@@ -399,7 +400,7 @@ MonoBehaviour:
     CurrentHealth: 0
     Damage: 0
     FireRate: 0
-    Speed: 20
+    Speed: 5
     SuperDamage: 0
     SuperChargeTime: 0
     MagnetPower: 0
@@ -414,8 +415,9 @@ MonoBehaviour:
     xpToLevel: 100
   ShieldEffect: {fileID: 2727753562502703441}
   ExplostionEffect: 7
-  baseEnemyAI: {fileID: 0}
-  Weapons: []
+  baseEnemyAI: {fileID: 4159772285747209513}
+  Weapons:
+  - {fileID: 3621556418489026115}
   delayAttak: 3
   DeathDelay: 0
   enemyElement:
@@ -428,6 +430,7 @@ MonoBehaviour:
   HealthBarSettings: {fileID: 11400000, guid: b8654c602fea6e14e95f7801eafff54e, type: 2}
   m_ValueOfEnemy: 250
   DropItems: 07000000
+  AutoEnableWeapon: 0
 --- !u!114 &4159772285747209513
 MonoBehaviour:
   m_ObjectHideFlags: 0

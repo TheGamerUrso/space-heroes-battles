@@ -3,10 +3,27 @@ using UnityEngine;
 [Serializable]
 public class LevelSystem
 {
+    public Action<int, float, float> XPChanged;
+    public Action LevelUp;
 
     [Header("Level System")]
     [SerializeField]private int Level;
     [SerializeField]private float xp;
+
+    public float XP
+    {
+        get
+        {
+            return xp;
+        }
+
+        set
+        {
+            xp = value;
+            XPChanged?.Invoke(Level, xp, xpToLevel);
+        }
+    }
+
     [SerializeField]private float xpToLevel;
     [SerializeField] private int MaxLevel { get; set; }
 
@@ -35,7 +52,9 @@ public class LevelSystem
                 Level++;
                 xp -= xpToLevel;
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
+                LevelUp?.Invoke();
 
+                GameEventSystem.Call(GameEventType.Player_LevelUp);
             }
         }
         else
@@ -43,8 +62,8 @@ public class LevelSystem
             Level = MaxLevel;
             xp = 0;
         }
-
-        GameEventSystem.Call(GameEventType.Player_LevelUp, Level, xp, xpToLevel);
+        XPChanged?.Invoke(Level, xp, xpToLevel);
+        //GameEventSystem.Call(GameEventType.Player_LevelUp, Level, xp, xpToLevel);
     }
 
     public void SetLevel(int Level)

@@ -32,13 +32,13 @@ public abstract class Ship : MonoBehaviour
         set { shipStatsSystem.SetMaxHealth(value); }
     }
 
-    public float CurrentHealth{get
-        {
-            return shipStatsSystem.CurrentHealth;
-        }
+    public float CurrentHealth
+    {
+        get { return shipStatsSystem.currentHealth; }
         set
         {
-            shipStatsSystem.CurrentHealth = value;
+            shipStatsSystem.currentHealth = value;
+            shipStatsSystem.HealthChanged?.Invoke(shipStatsSystem.currentHealth, MaxHealth);
         }
     }
     #endregion

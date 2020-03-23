@@ -11,6 +11,8 @@ public enum GameEventType
 
 public class GameEventSystem
 {
+    public static Action OnPlayerLeveledUp;
+
     public static Action GameOver;
 
     public static Action PickupEvent;
@@ -44,7 +46,7 @@ public class GameEventSystem
                 OnEnemyEscape?.Invoke((string)args[0], (BaseEnemy)args[1]);
                 break;
             case GameEventType.Player_LevelUp:
-                XpChanged?.Invoke((int)args[0], (float)args[1], (float)args[2]);
+                OnPlayerLeveledUp?.Invoke();
                 break;
             case GameEventType.UpgradeBought:
                 OnUpgradeBought?.Invoke((UpgradeElement)args[0]);

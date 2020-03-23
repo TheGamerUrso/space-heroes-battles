@@ -50,7 +50,7 @@ public class BaseBossEnemyAI : FollowPathAI
         }
     }
 
-    public override void Initialize()
+    public override void Setup()
     {
         baseBoss = GetComponent<BaseBossEnemy>();
         m_XVel = GetComponent<BaseEnemy>().GetShipStatsSystem().Speed;

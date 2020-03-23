@@ -41,6 +41,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 
     private void Start()
     {
+        
+    }
+
+    public void StartGame()
+    {
         spawnTimer = delay;
 
 
@@ -174,12 +179,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
         Debug.Log("Game Over");
         StopAllCoroutines();
         gameover = true;
-    }
-
-    protected override void OnDestroy()
-    {
-        base.OnDestroy();
-        GameController.Instance.RemoveObserver(this);
     }
 
 

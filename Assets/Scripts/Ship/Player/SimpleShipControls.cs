@@ -12,7 +12,20 @@ public class SimpleShipControls : MonoBehaviour
 
 
     private bool isMoving;
-    public float speed;
+    private float speed;
+
+    public float Speed
+    {
+        get
+        {
+            return speed;
+        }
+        set
+        {
+            speed = value;
+        }
+    }
+
     private float yMove = -50;
     private static float offspec = 10;
     public Vector2 touchPosOffset;

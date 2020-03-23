@@ -22,6 +22,10 @@ public class PlayerWeaponSystem : MonoBehaviour
     [SerializeField] private int superUsed;
 
 
+    public SpecialAttack GetSpecialAttack()
+    {
+        return SpecialAttacks;
+    }
     
     public void ResetSuperUsedToZero()
     {
@@ -169,6 +173,15 @@ public class PlayerWeaponSystem : MonoBehaviour
             ActivateSpecial();
         }
 
+
+#if UNITY_EDITOR
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
+            playerWeaponSystem.IncreasePowerUp(0.5f);
+            playerWeaponSystem.WeaponPowerUPCollected();
+        }
+#endif
 
     }
     public void UpgradeWeapon()

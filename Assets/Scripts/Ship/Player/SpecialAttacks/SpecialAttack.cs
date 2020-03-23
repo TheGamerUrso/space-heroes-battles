@@ -5,9 +5,27 @@ using UnityEngine;
 [Serializable]
 public class SpecialAttack : PlayerWeapon
 {
+    public Action<float> PowerUpLevelChanged;
+
     private bool SpecialActive = false;
     private CountDownTimer m_CountDownTimer;
-    private float PowerUpLevel = 0;
+    private float powerUpLevel = 0;
+    public float PowerUpLevel
+    {
+        get
+        {
+            return powerUpLevel;
+        }
+
+        set
+        {
+            powerUpLevel = value;
+            PowerUpLevelChanged?.Invoke(powerUpLevel);
+        }
+    }
+
+
+
     private float previousRapidFireValue = 0;
     private int weaponCurrentType;
     private float playerFireRate;
@@ -112,11 +130,11 @@ public class SpecialAttack : PlayerWeapon
                 {
                     if (weaponData.SummonTurrets)
                     {
-                        PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
+                        powerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
                     }
                     else
                     {
-                        PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                        powerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
                     }
                 }
 
@@ -131,7 +149,7 @@ public class SpecialAttack : PlayerWeapon
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                PowerUpLevel = 0;
+                powerUpLevel = 0;
             }
         }
 
@@ -175,12 +193,12 @@ public class SpecialAttack : PlayerWeapon
             return;
         }
 
-        PowerUpLevel += value;
+        powerUpLevel += value;
     }
 
     public float GetPowerUpLevelPresentage()
     {
-        return PowerUpLevel;
+        return powerUpLevel;
     }
 
     public float GetPowerUpCountdown()

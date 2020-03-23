@@ -46,7 +46,7 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
             GameController.Instance.RemoveObserver(this);
         }
 
-        GameEventSystem.XpChanged -= XpChangedCallback;
+        levelSystem.XPChanged -= XpChangedCallback;
     }
 
     private void OnEnable()
@@ -56,8 +56,8 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
             GameController.Instance.AddObserver(this);
         }
 
-        GameEventSystem.XpChanged += XpChangedCallback;
-        GameEventSystem.XpChanged += XpChangedCallback;
+        levelSystem.XPChanged += XpChangedCallback;
+
     }
 
     public void InitIfNeeded()
@@ -99,7 +99,7 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
 
         shipStatsSystem.SetStats(levelSystem);
 
-        shipController.speed = shipStatsSystem.Speed;
+        shipController.Speed = shipStatsSystem.Speed;
 
 
         upgradeSystem.ApplyUpdatesToShip(shipStatsSystem);
@@ -111,7 +111,6 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
 
     public void XpChangedCallback(int level, float xp, float xpToLevel)
     {
-        Heal(MaxHealth);
         shipStatsSystem.SetStats(levelSystem);
         weaponSystem.SetPlayer(this);
     }
@@ -183,28 +182,23 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
 
     public override void Death()
     {
-        if (GuiManager.Instance)
-            GuiManager.Instance.GameOver();
-
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(ExplostionEffect);
         explostion.transform.position = transform.position;
 
-
-
+        PlayerShipDeath?.Invoke();
         gameObject.SetActive(false);
     }
 
     public void Heal(float ammount)
     {
+        CurrentHealth += ammount;
 
-        shipStatsSystem.CurrentHealth += ammount;
-
-        if (shipStatsSystem.CurrentHealth > MaxHealth)
+        if (CurrentHealth > MaxHealth)
         {
-            shipStatsSystem.CurrentHealth = MaxHealth;
+            CurrentHealth = MaxHealth;
         }
 
-        shipStatsSystem.CurrentHealth = Mathf.Clamp(shipStatsSystem.CurrentHealth, 0, MaxHealth);
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
 
         if (GetHealthPresentage() > .2f)
         {
@@ -284,7 +278,6 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
 
         if (items != null)
         {
-
             items.Action(this);
             if (items.GetItemType().PowerPack)
                 ItemCollectedEffect.Play();

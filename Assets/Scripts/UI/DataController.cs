@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-[Serializable]
 public class DataController
 {
     private static DataController instance;
@@ -27,24 +26,28 @@ public class DataController
     public DataController()
     {
         instance = this;
+    }
+
+    public static void Setup()
+    {
         missionCollection = JsonSystem.LoadMissions();
         LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        playerData = new PlayerData();
+        instance.playerData = new PlayerData();
 
-        firstRun = true;
+        int firstRunIndex = 0;
 
         if (PlayerPrefs.HasKey("FirstRun"))
         {
-            firstRun = false;
+            firstRunIndex = PlayerPrefs.GetInt("FirstRun");
         }
 
-        if (firstRun == false)
+        if (firstRunIndex == 1)
         {
             SaveSystem.LoadPlayerData();
-            gameSettings = new GameSettings(playerData.SFXVolume, playerData.MusicVolume, playerData.AutoAttack, playerData.mute, playerData.distance);
+            instance.gameSettings = new GameSettings(instance.playerData.SFXVolume, instance.playerData.MusicVolume, instance.playerData.AutoAttack, instance.playerData.mute, instance.playerData.distance);
 
 
-            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+            Dictionary<string, LevelObjectiveData[]> Challanges = instance.playerData.GetListOfObjectives();
             int missionsCompleted = 0;
             foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
             {
@@ -54,16 +57,15 @@ public class DataController
                 }
             }
 
-            playerData.LevelUnlocked = missionsCompleted;
+            instance.playerData.LevelUnlocked = missionsCompleted;
         }
-        else if (firstRun)
+        else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
             SaveSystem.SavePlayerData();
         }
 
         GenerateLevelObjectiveData();
-
     }
 
     public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
