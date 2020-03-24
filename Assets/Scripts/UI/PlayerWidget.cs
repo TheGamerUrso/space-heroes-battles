@@ -66,15 +66,17 @@ public class PlayerWidget : MonoBehaviour
         });
 
         player.GetShipStatsSystem().HealthChanged += UpdatePlayerHealth;
-
-        playerWeaponSystem.GetSpecialAttack().PowerUpLevelChanged += PowerUpLevelChanged;
+        player.GetShipStatsSystem().PowerUpLevelChanged += PowerUpLevelChanged;
 
 
         player.GetLevelSystem().XPChanged += UpdateXP;
 
         UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
+      
         UpdateXP(player.GetLevelSystem().GetLevel(), player.GetLevelSystem().GetXP(), player.GetLevelSystem().GetXpToLevel());
-        PowerUpLevelChanged(playerWeaponSystem.GetSpecialAttack().GetPowerUpLevelPresentage());
+       
+        
+        PowerUpLevelChanged(player.GetPowerUpLevelPresentage());
     }
 
     public void ActivateSpecial()
@@ -163,18 +165,18 @@ public class PlayerWidget : MonoBehaviour
     {
         var sprite = WeaponIndicatorSpritesNotActivated[0];
 
-        var collecterUpgrade = PlayerWeaponSystem.WeaponUpgradeCollected;
+        var collecterUpgrade = PlayerWeaponSystem.PowerUpCollectAmmount;
         if (m_PowerUps.fillAmount == 1 && collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+            sprite = WeaponIndicatorSpritesActivated[PlayerWeaponSystem.PowerUpCollectAmmount];
         }
         else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.PowerUpCollectAmmount];
         }
         else
         {
-            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.PowerUpCollectAmmount];
         }
 
         WeaponIndicatorImage.sprite = sprite;

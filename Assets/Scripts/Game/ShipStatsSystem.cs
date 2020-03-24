@@ -6,6 +6,8 @@ using UnityEngine;
 public class ShipStatsSystem
 {
     public Action<float, float> HealthChanged;
+    public Action<float> PowerUpLevelChanged;
+
     [Min(0)]
     private float MaxHealth;
     [Min(0)]
@@ -27,6 +29,22 @@ public class ShipStatsSystem
     [Min(0)]
     public float MagnetDistance;
 
+    [Min(0)]
+    private float powerUpLevel = 0;
+
+    public float PowerUpLevel
+    {
+        get
+        {
+            return powerUpLevel;
+        }
+
+        set
+        {
+            powerUpLevel = value;
+            PowerUpLevelChanged?.Invoke(powerUpLevel);
+        }
+    }
 
     [Header("Base Attributes")]
     public float baseDamage;

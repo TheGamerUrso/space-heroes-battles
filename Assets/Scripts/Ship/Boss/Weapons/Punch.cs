@@ -190,7 +190,7 @@ public class Punch : Ship, IDestroyable
         }
     }
 
-    public override void InitReferences()
+    public override void OnAwake()
     {
         animator = baseBossEnemy.GetAnimator();
     }

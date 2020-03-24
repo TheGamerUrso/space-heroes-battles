@@ -40,9 +40,9 @@ public class BaseBossEnemy : BaseEnemy
         currentWeaponActive = 1;
     }
 
-    public override void InitReferences()
+    public override void OnAwake()
     {
-        base.InitReferences();
+        base.OnAwake();
         BossAI = GetComponent<BaseBossEnemyAI>();
         DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
         DestroyableParts = transform.GetComponentsInChildren<IDestroyable>().Where((item) => !item.Equals(this)).ToArray();
@@ -91,12 +91,12 @@ public class BaseBossEnemy : BaseEnemy
 
     public virtual void BossHit()
     {
-        PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
-        playerWeaponSystem.IncreasePowerUp(.05f);
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        playerShip.IncreasePowerUp(.05f);
        
     }
 
-    public override void Tick()
+    public override void OnUpdate()
     {
         var info = animator.GetCurrentAnimatorStateInfo(0);
 
@@ -150,7 +150,7 @@ public class BaseBossEnemy : BaseEnemy
             }
         }
 
-        EnemyDied?.Invoke(id, this);
+        EnemyDied?.Invoke(gameObject.name, this);
 
         GameController.useSloMo = false;
     }

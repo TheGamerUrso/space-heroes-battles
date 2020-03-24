@@ -48,7 +48,12 @@ public class BaseBossBattle : MonoBehaviour
             return;
         }
 
-        GameEventSystem.BossHitEvent?.Invoke(bossEnemy.ID, bossEnemy, .05f);
+        PlayerShip player = PlayerManager.GetPlayer();
+
+        if (player != null)
+        {
+            player.IncreasePowerUp(.05f);
+        }
 
         hitIndex++;
 

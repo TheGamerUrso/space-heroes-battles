@@ -99,7 +99,7 @@ public class Items : MonoBehaviour
 
         if (itemData.PowerPack)
         {
-            player.GetWeaponSystem().WeaponPowerUPCollected();
+            player.PowerUpCollected();
         }
 
         if (AudioManager.Instance)

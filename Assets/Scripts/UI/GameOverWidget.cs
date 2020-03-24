@@ -49,7 +49,7 @@ public class GameOverWidget : MonoBehaviour
         UpdateScore();
 
         levelName = "Level" + GameManager.LevelSelected;
-        killed = gameController.EnemySpawnedInTotal * .9f;
+        killed = gameController.EnemySpawnInTotal * .9f;
         collected = gameController.CoinDropInTotal * .9f;
 
 

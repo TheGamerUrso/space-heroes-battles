@@ -34,7 +34,7 @@ public class WinWidget : MonoBehaviour
             gameController = GameController.Instance;
         }
         levelName = "Level" + GameManager.LevelSelected;
-        killed = gameController.EnemySpawnedInTotal * .9f;
+        killed = gameController.EnemySpawnInTotal * .9f;
         collected = gameController.CoinDropInTotal * .9f;
 
         player = PlayerManager.GetPlayer();
@@ -62,7 +62,7 @@ public class WinWidget : MonoBehaviour
            // Debug.Log("Challenge : Kill " + EnemyManager.EnemySpawnedInTotal * .9f + " Enemies Completed" + "(100 XP Awarded)");
         }
 
-        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged() == false)
+        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged == false)
         {
             levelObjectiveDatas[2].completed = true;
             PlayerManager.GetPlayer().GetLevelSystem().AddXP(100);

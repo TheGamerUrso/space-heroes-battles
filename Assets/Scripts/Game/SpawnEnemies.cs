@@ -16,92 +16,62 @@ public class EnemyElement
 }
 
 
-public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
+public class SpawnEnemies : Singleton<SpawnEnemies>
 {
-    public Action<GameObject> OnSpawnEnemy;
+    public Action<int, int, int> GameStatsChanged;
+    public Action<string, BaseEnemy> BossDied;
 
     public EnemyElement[] enemyElements;
 
-    public GameObject Boss;
-
+    [SerializeField] private int numberOfEnemiesEachWave;
 
     [Range(0, 6)]
     public int availableEnemies;
 
-    public int NumberOfEnemies = 0;
     public int LevelDifficulty = 1;
 
-    private int wave;
-    private int maxWave;
+    public int TotalEnemies;
 
-    private float spawnTimer;
     public float delay;
-    private bool spawnReady;
-
-    public bool gameover;
-    private int totalEnemies;
 
 
-    public float currentNumberOfEnemies;
+    public GameObject BossPrefab;
+    private GameObject currentBoss;
 
-    private bool waitForSpawn;
 
+
+    public List<GameObject> Enemies = new List<GameObject>();
+
+    public float cooldown;
+
+
+    public int EnemySpawnedInTotal { get; set; }
     private void Start()
     {
-        
-    }
-
-    public void StartGame()
-    {
-        spawnTimer = delay;
-
+        MissionCollection missionCollection = DataController.GetMissionCollection();
+        Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
+        LevelDifficulty = mission.Level;
 
         string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
         GuiManager.PlayTrasmition(transmitions);
 
         StartCoroutine(Spawn());
-
-
-        GameController.Instance.GameStatsChanged += GameStatsChanged;
-        GameController.Instance.AddObserver(this);
     }
 
-    public void GameStatsChanged(int wave, int maxWave, int totalEnemies)
-    {
-        this.wave = wave;
-        this.maxWave = maxWave;
-        this.totalEnemies = totalEnemies;
-    }
 
-    public void NewWave()
-    {
-        NumberOfEnemies = 0;
-        GameController.Instance.NewWave();
-    }
 
     IEnumerator Spawn()
     {
-        while (!gameover)
+        Debug.Log("Game Started");
+        while (TotalEnemies > 0)
         {
-
-            if (NumberOfEnemies % GameController.Instance.NumberOfEnemiesEachWave == 0)
-            {
-                NewWave();
-            }
-
             while (GuiManager.IsTrasnmiting())
             {
-                bool isTransmiting = GuiManager.IsTrasnmiting();
                 yield return new WaitForEndOfFrame();
             }
 
-            if (GameController.Instance.BossFight)
+            while (TotalEnemies > 0)
             {
-                SpawnBoss(Boss);
-            }
-            else
-            {
-
                 int randomNumb = 0;
                 EnemyElement enemyElement = null;
 
@@ -119,47 +89,53 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
                     repeat = UnityEngine.Random.Range(5, 8);
                 }
 
-
                 for (int i = 0; i < repeat; i++)
                 {
-                    Debug.Log(totalEnemies + " " + (totalEnemies - 1));
-                    if (totalEnemies - 1 >= 0)
+                    if (TotalEnemies - 1 >= 0)
                     {
-                        while (currentNumberOfEnemies > 2)
-                        {
-                            Debug.Log("Waiting");
-                            yield return new WaitForEndOfFrame();
-                        }
                         SpawnEnemyElement(enemyElement);
-                        yield return new WaitForSeconds(delay);
                     }
-                    else
-                    {
-                        //Boss or Gameover
-                        break;
-                    }
-
+                    yield return new WaitForSeconds(delay);
                 }
+
+                while (Enemies.Count >= 5)
+                {
+                    yield return new WaitForSeconds(cooldown);
+                }
+
+                yield return new WaitForSeconds(cooldown);
             }
-            yield return new WaitForSeconds(1);
+
+            string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
+            GuiManager.PlayTrasmition(transmitions, true);
+            yield return new WaitForSeconds(cooldown);
+
+            Debug.Log("Boss Battle");
+
+            SpawnBoss();
+
+            while (Enemies.Count > 0)
+            {
+                yield return new WaitForSeconds(cooldown);
+            }
         }
+        Debug.Log("Game Over");
     }
 
-    private void SpawnBoss(GameObject Boss)
+    private void SpawnBoss()
     {
-        GameObject enemGO = GameObject.Instantiate(Boss, Boss.transform.position, Quaternion.identity);
-
-        BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
-        FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
-
+        AudioManager.Instance.PlayMusicById("Boss", true);
+        currentBoss = Instantiate(BossPrefab);
+        BaseEnemy enemy = currentBoss.GetComponent<BaseEnemy>();
 
         enemy.SetEnemyStats(LevelDifficulty);
 
-        enemy.EnemyEscaped += OnEnemyEscape;
-        enemy.EnemyDied += OnDeath;
-        enemy.EnemyGotHit += OnHit;
+        enemy.EnemyEscaped = BossEscapedCallback;
+        enemy.EnemyDied += BossDiedCallback;
+        enemy.EnemyGotHit += BossGotHit;
 
-        OnSpawnEnemy?.Invoke(enemy.gameObject);
+        TotalEnemies++;
+        Enemies.Add(currentBoss);
     }
 
     private void SpawnEnemyElement(EnemyElement enemyElement)
@@ -167,7 +143,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
         enemyElement.currentNumberInScene++;
         Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
-
         BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
         FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
 
@@ -186,46 +161,63 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
 
         enemy.SetEnemyStats(LevelDifficulty);
 
-        enemyElement.currentNumberInScene++;
+        enemy.EnemyEscaped += EnemyEscapedCallback;
+        enemy.EnemyDied += EnemyDiedCallback;
+        enemy.EnemyGotHit += EnemyGotHitCallback;
 
-        enemy.EnemyEscaped += OnEnemyEscape;
-        enemy.EnemyDied += OnDeath;
-        enemy.EnemyGotHit += OnHit;
-
-        OnSpawnEnemy?.Invoke(enemy.gameObject);
+        TotalEnemies--;
+        Enemies.Add(enemGO);
     }
 
-    public void OnEnemyEscape(string id, BaseEnemy baseEnemy)
+    public void BossEscapedCallback(string id, BaseEnemy baseEnemy)
+    {
+        Enemies.Remove(baseEnemy.gameObject);
+        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
+        baseEnemy.EnemyDied -= EnemyDiedCallback;
+        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+
+    }
+
+    public void BossDiedCallback(string id, BaseEnemy baseEnemy)
+    {
+        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
+        baseEnemy.EnemyDied -= EnemyDiedCallback;
+        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+        BossDied?.Invoke(id, baseEnemy);
+        Enemies.Remove(baseEnemy.gameObject);
+        TotalEnemies--;
+    }
+
+    public void BossGotHit(string id, BaseEnemy baseEnemy)
+    {
+
+    }
+
+    public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
     {
         baseEnemy.enemyElement.currentNumberInScene--;
-        baseEnemy.EnemyEscaped -= OnEnemyEscape;
-        baseEnemy.EnemyDied -= OnDeath;
-        baseEnemy.EnemyGotHit -= OnHit;
-        currentNumberOfEnemies--;
+        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
+        baseEnemy.EnemyDied -= EnemyDiedCallback;
+        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
         Debug.Log("Enemy Got Escaped");
+        Enemies.Remove(baseEnemy.gameObject);
     }
 
-    public void OnHit(string id, BaseEnemy baseEnemy)
+    public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
         Debug.Log("Enemy Got Hit");
     }
 
-    public void OnDeath(string id, BaseEnemy baseEnemy)
+    public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
     {
         baseEnemy.enemyElement.currentNumberInScene--;
-        baseEnemy.EnemyEscaped -= OnEnemyEscape;
-        baseEnemy.EnemyDied -= OnDeath;
-        baseEnemy.EnemyGotHit -= OnHit;
-        currentNumberOfEnemies--;
+        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
+        baseEnemy.EnemyDied -= EnemyDiedCallback;
+        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+
         Debug.Log("Enemy Got Died");
-    }
 
-    public void GameOver()
-    {
-        Debug.Log("Game Over");
-        StopAllCoroutines();
-        gameover = true;
+        Enemies.Remove(baseEnemy.gameObject);
     }
-
 
 }

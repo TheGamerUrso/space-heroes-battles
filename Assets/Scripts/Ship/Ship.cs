@@ -8,7 +8,7 @@ public abstract class Ship : MonoBehaviour
     [SerializeField] protected LevelSystem levelSystem;
     protected Animator animator;
 
-    protected bool bShieldModuleInstalled;
+    protected bool HasShield;
 
     [Header("Effects")]
     [SerializeField] protected GameObject ShieldEffect;
@@ -50,7 +50,7 @@ public abstract class Ship : MonoBehaviour
 
     private void Awake()
     {
-        InitReferences();
+        OnAwake();
     }
 
     private void Start()
@@ -59,7 +59,7 @@ public abstract class Ship : MonoBehaviour
     }
 
     public abstract void ShipSetup();
-    public abstract void InitReferences();
+    public abstract void OnAwake();
     public abstract void Death();
 
     //Get Health Presentatge
@@ -70,17 +70,17 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void InstallShieldModule()
     {
-        if (bShieldModuleInstalled)
+        if (HasShield)
         {
             return;
         }
 
-        bShieldModuleInstalled = true;
+        HasShield = true;
     }
 
     public bool HasShieldModule()
     {
-        return bShieldModuleInstalled;
+        return HasShield;
     }
 
     //Setter   and Getter for LevelSystem
@@ -103,5 +103,14 @@ public abstract class Ship : MonoBehaviour
         shipStatsSystem = newshipStatsSystem;
     }
 
+    public void IncreasePowerUp(float value)
+    {
+        GetShipStatsSystem().PowerUpLevel += value;
+    }
+
+    public float GetPowerUpLevelPresentage()
+    {
+        return GetShipStatsSystem().PowerUpLevel;
+    }
 
 }

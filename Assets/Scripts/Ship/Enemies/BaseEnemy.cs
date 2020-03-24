@@ -8,12 +8,6 @@ public class BaseEnemy : Ship, IDestroyable
     public Action<string, BaseEnemy> EnemyGotHit;
     public Action<string, BaseEnemy> EnemyEscaped;
 
-    protected string id;
-    public string ID
-    {
-        get { return id; }
-    }
-
     [Header("Enemy Config")]
     public BaseEnemyAI baseEnemyAI;
     protected BoxCollider boxCollider;
@@ -33,10 +27,9 @@ public class BaseEnemy : Ship, IDestroyable
 
     [HideInInspector] public EnemyElement enemyElement;
 
-    [SerializeField] private HealthBarSettings HealthBarSettings ;
+    [SerializeField] private HealthBarSettings HealthBarSettings;
     private EnemyHealthWidget healthBar;
 
-    //IDestroyable Values
 
     private bool Alive;
     public bool IsDestroyed
@@ -54,23 +47,15 @@ public class BaseEnemy : Ship, IDestroyable
     public int m_ValueOfEnemy;
 
     public PoolGameObjectType[] DropItems;
-
     protected WeaponScript weaponScript;
     protected float takeDamageDelay;
     protected bool EnableShield;
     [SerializeField] protected bool AutoEnableWeapon;
 
-    private void OnDisable()
-    {
-        RemoveAndDestroy();
-    }
-
     public virtual void OnEnable()
     {
         Alive = true;
         DisableAllWeapons();
-        GameController gameController = GameObject.FindObjectOfType<GameController>();
-        gameController.AddEnemy(this);
 
         if (AutoEnableWeapon)
         {
@@ -78,7 +63,7 @@ public class BaseEnemy : Ship, IDestroyable
         }
     }
 
-    public void EnableWeaponById(int id,bool solo = false)
+    public void EnableWeaponById(int id, bool solo = false)
     {
         if (solo)
         {
@@ -108,7 +93,7 @@ public class BaseEnemy : Ship, IDestroyable
     {
         GetLevelSystem().SetLevel(level);
         GetShipStatsSystem().SetStats(levelSystem);
-        bShieldModuleInstalled = false;
+        HasShield = false;
 
         if (weaponScript)
         {
@@ -116,10 +101,10 @@ public class BaseEnemy : Ship, IDestroyable
         }
     }
 
-    public override void InitReferences()
+    public override void OnAwake()
     {
         shipStatsSystem.SetStats(levelSystem);
-        bShieldModuleInstalled = false;
+        HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
     }
@@ -131,15 +116,17 @@ public class BaseEnemy : Ship, IDestroyable
             healthBar.GetComponent<BaseHealthWidget>();
         }
 
-        baseEnemyAI = GetComponent<SimpleAI>();
-        ShieldEffect.SetActive(bShieldModuleInstalled);
-
         if (HealthBarSettings != null)
         {
             GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
             healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            healthBar.Setup(this,false);
+            healthBar.Setup(this, false);
         }
+
+        baseEnemyAI = GetComponent<SimpleAI>();
+        ShieldEffect.SetActive(HasShield);
+
+      
     }
     public virtual void Attack() { }
 
@@ -147,12 +134,12 @@ public class BaseEnemy : Ship, IDestroyable
 
     public void Leave()
     {
-        EnemyEscaped?.Invoke(id, this);
+        EnemyEscaped?.Invoke(gameObject.name, this);
     }
 
     public virtual void Heal(float ammount)
     {
-       CurrentHealth += ammount;
+        CurrentHealth += ammount;
 
         if (CurrentHealth > MaxHealth)
         {
@@ -173,12 +160,12 @@ public class BaseEnemy : Ship, IDestroyable
         {
             takeDamageDelay = .1f;
 
-            if (bShieldModuleInstalled == true)
+            if (HasShield == true)
             {
-                bShieldModuleInstalled = false;
-                ShieldEffect.SetActive(bShieldModuleInstalled);
+                HasShield = false;
+                ShieldEffect.SetActive(HasShield);
             }
-            else if (bShieldModuleInstalled == false)
+            else if (HasShield == false)
             {
                 CurrentHealth -= dmg;
 
@@ -195,8 +182,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public virtual void Hit()
     {
-        EnemyGotHit?.Invoke(id, this);
-        //GameEventSystem.Call(GameEventType.Enemy_Hit, id, this);
+        EnemyGotHit?.Invoke(gameObject.name, this);
     }
 
     public virtual void Update()
@@ -205,25 +191,22 @@ public class BaseEnemy : Ship, IDestroyable
         {
             takeDamageDelay -= Time.deltaTime;
         }
-        Tick();
+        OnUpdate();
     }
 
-    public virtual void Tick() { }
+    public virtual void OnUpdate() { }
 
     public override void Death()
     {
         if (Alive)
         {
             Alive = false;
-
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
-
-            EnemyDied?.Invoke(id, this);
-            //GameEventSystem.Call(GameEventType.Enemy_Death, id, this);
+            EnemyDied?.Invoke(gameObject.name, this);
 
             healthBar.Hide();
-            RemoveAndDestroy();
+            gameObject.SetActive(false);
         }
     }
 
@@ -243,13 +226,4 @@ public class BaseEnemy : Ship, IDestroyable
         }
     }
 
-    public void RemoveAndDestroy()
-    {
-        GameController gameController = GameObject.FindObjectOfType<GameController>();
-        if (gameController != null)
-        {
-            gameController.RemoveEnemy(this);
-        }
-        gameObject.SetActive(false);
-    }
 }

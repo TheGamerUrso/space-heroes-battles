@@ -4,18 +4,16 @@ using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public class PlayerShip : Ship, IDestroyable, IEndGameObserver
+public class PlayerShip : Ship, IDestroyable
 {
     public Action PlayerShipHit;
     public Action PlayerShipDeath;
     public Action<ItemData> PickUpItem;
 
-
     [Header("PlayerShip")]
     public int playerID;
-    public Player player;
 
-    private bool Alive;
+    private bool Alive = true;
     public bool IsDestroyed
     {
         get { return Alive; }
@@ -23,12 +21,9 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
     }
 
     [Header("Player Config")]
-    [SerializeField] protected UpgradeSystem upgradeSystem;
+    [SerializeField] private UpgradeSystem upgradeSystem;
     private SimpleShipControls shipController;
     private PlayerWeaponSystem weaponSystem;
-
-    public static bool TempFireRateUpgrade { get; set; }
-    public bool CanUsePowerUpItem;
 
     [Header("Extra Effects")]
     public ParticleSystem ItemCollectedEffect;
@@ -37,41 +32,38 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
     private float invisibilityTimer;
     private bool GotHit;
     private int SuperUsed;
+    public bool CanUsePowerUpItem;
+    public static bool TempFireRateUpgrade { get; set; }
+    public bool IsPlayerDamaged
+    {
+        get
+        {
+            return GotHit;
+        }
+    }
+
+    public bool HasArmorUpgrade
+    {
+        get
+        {
+            return upgradeSystem.ArmorUpgradeCheck();
+        }
+    }
 
 
     private void OnDestroy()
     {
-        if (GameController.Instance != null)
-        {
-            GameController.Instance.RemoveObserver(this);
-        }
-
         levelSystem.XPChanged -= XpChangedCallback;
     }
 
     private void OnEnable()
     {
-        if (GameController.Instance != null)
-        {
-            GameController.Instance.AddObserver(this);
-        }
-
         levelSystem.XPChanged += XpChangedCallback;
-
     }
 
-    public void InitIfNeeded()
+    public override void OnAwake()
     {
-        if (shipController == null)
-        {
-
-            shipController = GetComponent<SimpleShipControls>();
-            weaponSystem = GetComponentInChildren<PlayerWeaponSystem>();
-        }
-    }
-
-    public override void InitReferences()
-    {
+        Alive = true;
         shipController = GetComponent<SimpleShipControls>();
         weaponSystem = GetComponentInChildren<PlayerWeaponSystem>();
         animator = GetComponentInChildren<Animator>();
@@ -80,39 +72,29 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
 
     public override void ShipSetup()
     {
-        InitIfNeeded();
-
-        IsDestroyed = true;
-
         PlayerData playerData = DataController.GetPlayerData();
 
         if (playerData.Upgrades[((int)UpgradeType.Shield - 1)] == 0)
         {
-            bShieldModuleInstalled = false;
+            HasShield = false;
         }
         else
         {
-            bShieldModuleInstalled = true;
+            HasShield = true;
         }
 
-        ShieldEffect.SetActive(bShieldModuleInstalled);
+        ShieldEffect.SetActive(HasShield);
 
         shipStatsSystem.SetStats(levelSystem);
 
         shipController.Speed = shipStatsSystem.Speed;
 
-
         upgradeSystem.ApplyUpdatesToShip(shipStatsSystem);
-
-        weaponSystem.SetPlayer(this);
-
-
     }
 
     public void XpChangedCallback(int level, float xp, float xpToLevel)
     {
         shipStatsSystem.SetStats(levelSystem);
-        weaponSystem.SetPlayer(this);
     }
 
     private void Update()
@@ -124,6 +106,157 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
                 invisibilityTimer -= Time.deltaTime;
             }
         }
+    }
+
+
+
+    public void UpdateWeaponStats(float fireRate, float damage = 0)
+    {
+        WeaponScript weapon = PlayerWeaponSystem.GetCurrentActiveWeapon(weaponSystem).GetComponent<WeaponScript>();
+
+        weapon.SetFireRate(fireRate);
+        if (damage > 0)
+            weapon.SetDamage(damage);
+
+    }
+
+    public override void InstallShieldModule()
+    {
+        base.InstallShieldModule();
+        ShieldEffect.SetActive(HasShield);
+    }
+
+    public override void Death()
+    {
+        GameObject explostion = PoolManager.Instance.GetObjectFromPool(ExplostionEffect);
+        explostion.transform.position = transform.position;
+
+        PlayerShipDeath?.Invoke();
+        gameObject.SetActive(false);
+    }
+
+    public void Heal(float ammount)
+    {
+        CurrentHealth += ammount;
+
+        if (CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
+
+        if (GetHealthPresentage() > .2f)
+        {
+            //AudioManager.Instance.StopSoundEffect();
+        }
+    }
+
+    public void TakeDamage(float dmg)
+    {
+        if (IsDestroyed == false)
+        {
+            return;
+        }
+
+        if (dmg >= MaxHealth)
+        {
+            dmg = MaxHealth - 1;
+        }
+
+        if (HasShield == true)
+        {
+            HasShield = false;
+            ShieldEffect.SetActive(HasShield);
+        }
+        else if (HasShield == false)
+        {
+            if (invisibilityTimer <= 0)
+            {
+                invisibilityTimer = .25f;
+                CurrentHealth = CurrentHealth - dmg;
+
+                PlayerShipHit?.Invoke();
+
+                if (GotHit == false)
+                {
+                    PlayerData playerData = DataController.GetPlayerData();
+                    ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+                    if (objectiveData != null)
+                        objectiveData.UpdateProgress(0);
+                    GotHit = true;
+                }
+
+                if (GetHealthPresentage() < .2f)
+                {
+                    if (AudioManager.Instance)
+                        AudioManager.PlaySound(null, "Alarm", 2);
+                }
+
+                if (CurrentHealth < 1)
+                {
+                    Death();
+                }
+            }
+        }
+    }
+
+    internal void AddXP(int xPEarned)
+    {
+        levelSystem.AddXP(xPEarned);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        string gameobjectTag = other.gameObject.tag;
+        Items items = other.GetComponent<Items>();
+
+        if (gameobjectTag.Equals(Constants.ENEMYTAG))
+        {
+            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            if (destroyable != null)
+            {
+                destroyable.TakeDamage(destroyable.CurrentHealth);
+            }
+        }
+
+        if (items != null)
+        {
+            items.Action(this);
+            if (items.GetItemType().PowerPack)
+                ItemCollectedEffect.Play();
+        }
+    }
+
+
+
+    public void tempGodMode()
+    {
+        invisibilityTimer = 1;
+    }
+
+
+    public bool GetAnimationState(string id)
+    {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+        return animator.GetCurrentAnimatorStateInfo(0).IsName(id);
+    }
+
+    public void Exit()
+    {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+        animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
+    }
+
+    public void PowerUpCollected()
+    {
+        GetWeaponSystem().PowerUpCollected();
     }
 
     #region TempfireRateBuff
@@ -163,130 +296,10 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
 
     #endregion
 
-
-    public void UpdateWeaponStats(float fireRate, float damage = 0)
-    {
-        WeaponScript weapon = PlayerWeaponSystem.GetCurrentActiveWeapon(weaponSystem).GetComponent<WeaponScript>();
-
-        weapon.SetFireRate(fireRate);
-        if (damage > 0)
-            weapon.SetDamage(damage);
-
-    }
-
-    public override void InstallShieldModule()
-    {
-        base.InstallShieldModule();
-        ShieldEffect.SetActive(bShieldModuleInstalled);
-    }
-
-    public override void Death()
-    {
-        GameObject explostion = PoolManager.Instance.GetObjectFromPool(ExplostionEffect);
-        explostion.transform.position = transform.position;
-
-        PlayerShipDeath?.Invoke();
-        gameObject.SetActive(false);
-    }
-
-    public void Heal(float ammount)
-    {
-        CurrentHealth += ammount;
-
-        if (CurrentHealth > MaxHealth)
-        {
-            CurrentHealth = MaxHealth;
-        }
-
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
-
-        if (GetHealthPresentage() > .2f)
-        {
-            //AudioManager.Instance.StopSoundEffect();
-        }
-    }
-
-    public void TakeDamage(float dmg)
-    {
-        InitIfNeeded();
-        if (animator != null && animator.GetCurrentAnimatorStateInfo(0).IsName("Enter") || animator.GetCurrentAnimatorStateInfo(0).IsName("Exit"))
-        {
-            return;
-        }
-
-        if (IsDestroyed == false)
-        {
-            return;
-        }
-
-        if (dmg >= MaxHealth)
-        {
-            dmg = MaxHealth - 1;
-        }
-
-        if (bShieldModuleInstalled == true)
-        {
-            bShieldModuleInstalled = false;
-            ShieldEffect.SetActive(bShieldModuleInstalled);
-        }
-        else if (bShieldModuleInstalled == false)
-        {
-            if (invisibilityTimer <= 0)
-            {
-                invisibilityTimer = .25f;
-                CurrentHealth = CurrentHealth - dmg;
-
-                PlayerShipHit?.Invoke();
-
-                if (GotHit == false)
-                {
-                    PlayerData playerData = DataController.GetPlayerData();
-                    ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                    if (objectiveData != null)
-                        objectiveData.UpdateProgress(0);
-                    GotHit = true;
-                }
-
-                if (GetHealthPresentage() < .2f)
-                {
-                    if (AudioManager.Instance)
-                        AudioManager.PlaySound(null, "Alarm", 2);
-                }
-
-                if (CurrentHealth < 1)
-                {
-                    Death();
-                }
-            }
-        }
-    }
-
-
-    private void OnTriggerEnter(Collider other)
-    {
-        string gameobjectTag = other.gameObject.tag;
-        Items items = other.GetComponent<Items>();
-
-        if (gameobjectTag.Equals(Constants.ENEMYTAG))
-        {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            if (destroyable != null)
-            {
-                destroyable.TakeDamage(destroyable.CurrentHealth);
-            }
-        }
-
-        if (items != null)
-        {
-            items.Action(this);
-            if (items.GetItemType().PowerPack)
-                ItemCollectedEffect.Play();
-        }
-    }
+    #region Getters and Setters
 
     public PlayerWeaponSystem GetWeaponSystem()
     {
-        InitIfNeeded();
         return weaponSystem;
     }
 
@@ -295,43 +308,10 @@ public class PlayerShip : Ship, IDestroyable, IEndGameObserver
         return upgradeSystem;
     }
 
-    public bool IsPlayerDamaged()
-    {
-        return GotHit;
-    }
-
-    public void tempGodMode()
-    {
-        invisibilityTimer = 1;
-    }
-
-    public void GameOver()
-    {
-        animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
-    }
+    #endregion
 
 
-    public bool GetAnimationState(string id)
-    {
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
-        return animator.GetCurrentAnimatorStateInfo(0).IsName(id);
-    }
-
-    public void Exit()
-    {
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
-        animator.SetTrigger("Exit");
-    }
 
 
-    public bool HasArmorUpgrade()
-    {
-        return upgradeSystem.ArmorUpgradeCheck();
-    }
+  
 }

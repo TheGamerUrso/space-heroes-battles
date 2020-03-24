@@ -80,15 +80,6 @@ public class FollowPathAI : SimpleAI
 
     public override void Move()
     {
-        Animator animator = enemy.GetAnimator();
-        var info = Utilities.GetAnimatorStateInfo(animator);
-
-        if (info.shortNameHash == enterNameHash)
-        {
-            Debug.Log("Entering");
-            return;
-        }
-
         if (Path.Length > 0)
         {
             pathMagnitude = (Path[currentPointToFollowIndex].position - transform.position).magnitude;

@@ -451,6 +451,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: GUI
       objectReference: {fileID: 0}
+    - target: {fileID: 1202903970341093440, guid: 8e620df920bdb2a4196c1aa8f673fd44,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 1202903970341093447, guid: 8e620df920bdb2a4196c1aa8f673fd44,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3232,11 +3237,6 @@ PrefabInstance:
       objectReference: {fileID: 2009906903}
     - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
-      propertyPath: delay
-      value: 0.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
       propertyPath: enemyElements.Array.data[6].MaxNumberInScene
       value: 1
       objectReference: {fileID: 0}
@@ -3257,8 +3257,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
-      propertyPath: enemyElements.Array.data[0].MaxNumberInScene
-      value: 8
+      propertyPath: Boss
+      value: 
+      objectReference: {fileID: 1400881148121724, guid: b1e86a46e28d68d4691941a3da9f0c49,
+        type: 3}
+    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
+        type: 3}
+      propertyPath: availableEnemies
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189255, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
@@ -4603,31 +4609,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 4660212937986508, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4660212937986508, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4660212937986508, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4660212937986508, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -50
-      objectReference: {fileID: 0}
-    - target: {fileID: 4660212937986508, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 100.98
-      objectReference: {fileID: 0}
-    - target: {fileID: 95387336827741072, guid: b1e86a46e28d68d4691941a3da9f0c49,
-        type: 3}
-      propertyPath: m_ApplyRootMotion
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 114099360190212058, guid: b1e86a46e28d68d4691941a3da9f0c49,
         type: 3}
       propertyPath: m_Enabled
@@ -4703,11 +4684,6 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
-    - target: {fileID: 6984183554805876986, guid: b1e86a46e28d68d4691941a3da9f0c49,
-        type: 3}
-      propertyPath: speed
-      value: 2
-      objectReference: {fileID: 0}
     - target: {fileID: 7091918133643141566, guid: b1e86a46e28d68d4691941a3da9f0c49,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -4759,15 +4735,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a582be06709c734aa9415dc2f988aa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BossFight: 1
-  Wave: 0
-  MaxWave: 2
   enemyKilled: 0
   enemyEscaped: 0
-  TotalEnemies: 0
-  numberOfEnemiesEachWave: 2
-  NumberOfEnemies: 0
-  EnemySpawned: []
 --- !u!4 &2009906904
 Transform:
   m_ObjectHideFlags: 0

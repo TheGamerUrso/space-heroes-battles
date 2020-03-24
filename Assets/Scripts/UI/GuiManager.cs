@@ -338,14 +338,14 @@ public class GuiManager : Singleton<GuiManager>
                     case ObjectiveType.Use:
                         if (objective.completed == false)
                         {
-                            var progressSoFar = objective.progress + player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
+                            var progressSoFar = objective.progress + player.GetWeaponSystem().SpecialAttack.superUsed;
                             objective.UpdateProgress(progressSoFar);
                         }
                         break;
                     case ObjectiveType.Unharmed:
                         if (objective.completed == false)
                         {
-                            if (player.IsPlayerDamaged() == false)
+                            if (player.IsPlayerDamaged == false)
                             {
                                 ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
                                 objectiveData.UpdateProgress(1);

@@ -5,7 +5,7 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerWeapon : WeaponScript
 {
-    private PlayerShip playerShip;
+    protected PlayerShip playerShip;
     public Transform shipTransform;
     private bool holdFire;
 
@@ -22,6 +22,7 @@ public class PlayerWeapon : WeaponScript
     public bool RapidFireMoade { get { return weaponData.RapidFireMode; } private set { } }
 
     protected bool usePitch;
+
     public void SetShipTransform(Transform shipTransform)
     {
         this.shipTransform = shipTransform;
