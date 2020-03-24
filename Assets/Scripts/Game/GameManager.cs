@@ -74,7 +74,7 @@ public class GameManager : Singleton<GameManager>
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
-        GameEventSystem.OnPlayerLeveledUp += ShowLevelup;
+        GameEventSystem.PlayerLeveledUp += ShowLevelup;
 
         GameEventSystem.OnShipSelect += ShipSelected;
 

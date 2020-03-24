@@ -10,6 +10,7 @@ using TheGamerUrso.Utils;
 public class BaseBossEnemy : BaseEnemy
 {
     public Action OnBossAttack;
+    public Action<int, int> OnBossHit;
 
     #region Animation Config
     [Header("Animation Config")]
@@ -58,7 +59,7 @@ public class BaseBossEnemy : BaseEnemy
 
         currentWeaponActive = 0;
 
-        DisableWeapons();
+        DisableAllWeapons();
     }
 
     public override void TakeDamage(float damage)
@@ -76,7 +77,8 @@ public class BaseBossEnemy : BaseEnemy
             }
         }
 
-        BossHit();
+        hitIndex++;
+        OnBossHit?.Invoke(hitIndex, numberOfHits);
 
         base.TakeDamage(damage);
 
@@ -91,19 +93,7 @@ public class BaseBossEnemy : BaseEnemy
     {
         PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
         playerWeaponSystem.IncreasePowerUp(.05f);
-
-
-        hitIndex++;
-
-        if (hitIndex > numberOfHits)
-        {
-            hitIndex = 0;
-            BossAI.ChangeWaypoint(hitIndex);
-        }
-
-
-
-        EnableWeapon();
+       
     }
 
     public override void Tick()
@@ -117,7 +107,7 @@ public class BaseBossEnemy : BaseEnemy
 
         if (info.shortNameHash == deathNameHash)
         {
-            DisableWeapons();
+            DisableAllWeapons();
         }
 
         if (CurrentHealth > 0)
@@ -136,11 +126,7 @@ public class BaseBossEnemy : BaseEnemy
         }
         else
         {
-
-            EnableWeapon();
-
             OnBossAttack?.Invoke();
-
         }
     }
 
@@ -153,7 +139,7 @@ public class BaseBossEnemy : BaseEnemy
 
         EnableColliders(false);
 
-        DisableWeapons();
+        DisableAllWeapons();
 
         EnemyProjectile[] enemyProjectiles = GameObject.FindObjectsOfType<EnemyProjectile>();
         if (enemyProjectiles.Length > 0)
@@ -163,6 +149,8 @@ public class BaseBossEnemy : BaseEnemy
                 item.gameObject.SetActive(false);
             }
         }
+
+        EnemyDied?.Invoke(id, this);
 
         GameController.useSloMo = false;
     }

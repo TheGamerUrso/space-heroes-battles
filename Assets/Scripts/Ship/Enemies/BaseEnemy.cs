@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
-using DG.Tweening;
 
 public class BaseEnemy : Ship, IDestroyable
 {
@@ -12,6 +9,10 @@ public class BaseEnemy : Ship, IDestroyable
     public Action<string, BaseEnemy> EnemyEscaped;
 
     protected string id;
+    public string ID
+    {
+        get { return id; }
+    }
 
     [Header("Enemy Config")]
     public BaseEnemyAI baseEnemyAI;
@@ -25,7 +26,10 @@ public class BaseEnemy : Ship, IDestroyable
     public float DeathDelay;
     protected int currentWeaponActive;
 
-
+    public float DelayAttack
+    {
+        get { return delayAttak; }
+    }
 
     [HideInInspector] public EnemyElement enemyElement;
 
@@ -64,17 +68,27 @@ public class BaseEnemy : Ship, IDestroyable
     public virtual void OnEnable()
     {
         Alive = true;
-        DisableWeapons();
+        DisableAllWeapons();
         GameController gameController = GameObject.FindObjectOfType<GameController>();
         gameController.AddEnemy(this);
 
         if (AutoEnableWeapon)
         {
-            EnableWeapon();
+            EnableAllWeapon();
         }
     }
 
-    public void EnableWeapon()
+    public void EnableWeaponById(int id,bool solo = false)
+    {
+        if (solo)
+        {
+            DisableAllWeapons();
+        }
+
+        Weapons[id].AutoAttack = true;
+    }
+
+    public void EnableAllWeapon()
     {
         for (int i = 0; i < Weapons.Length; i++)
         {
@@ -82,7 +96,7 @@ public class BaseEnemy : Ship, IDestroyable
         }
     }
 
-    public void DisableWeapons()
+    public void DisableAllWeapons()
     {
         for (int i = 0; i < Weapons.Length; i++)
         {
@@ -124,7 +138,7 @@ public class BaseEnemy : Ship, IDestroyable
         {
             GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
             healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            healthBar.Initiallize(this);
+            healthBar.Setup(this,false);
         }
     }
     public virtual void Attack() { }

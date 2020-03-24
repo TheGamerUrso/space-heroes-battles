@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+public enum LevelMode
+{
+    Normal, Boss, GameOver
+}
 
 public class GameController : Singleton<GameController>
 {
@@ -12,7 +16,7 @@ public class GameController : Singleton<GameController>
     public static bool IsGameOver;
     public static bool useSloMo;
 
-
+    public LevelMode levelMode = LevelMode.Normal;
     public bool BossFight;
 
     public int Wave;
@@ -138,8 +142,7 @@ public class GameController : Singleton<GameController>
 
         playerShip.GetComponent<PlayerShip>().PlayerShipDeath += GameOver;
 
-        if (!BossFight)
-            SpawnEnemies.Instance.StartGame();
+        SpawnEnemies.Instance.StartGame();
     }
 
     public void ToggleSlowMo(bool value)
@@ -153,10 +156,18 @@ public class GameController : Singleton<GameController>
 
     public void NewWave()
     {
-        Wave++;
-        // string[] transmitions = { "Wave " + GameController.Instance.Wave, "Enemies Approaching", "Defeat them", "Good Luck" };
-        // GuiManager.PlayTrasmition(transmitions);
-        GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
+        if (levelMode == LevelMode.Normal)
+        {
+            Wave++;
+            // string[] transmitions = { "Wave " + GameController.Instance.Wave, "Enemies Approaching", "Defeat them", "Good Luck" };
+            // GuiManager.PlayTrasmition(transmitions);
+            GameStatsChanged?.Invoke(Wave, MaxWave, TotalEnemies);
+        }
+    
+        if (Wave >= MaxWave)
+        {
+            levelMode = LevelMode.Boss;
+        }
     }
 
     private void Update()
@@ -171,11 +182,15 @@ public class GameController : Singleton<GameController>
 
         SlowMoEffect();
 
-        if (EnemySpawned.Count <= 0 && TotalEnemies <= 0 && !IsGameOver)
+        if (EnemySpawned.Count <= 0 && TotalEnemies <= 0)
         {
-            IsGameOver = true;
-            StartCoroutine(DelayWinScreen());
+            if (!BossFight)
+            {
+                Win();
+            }
         }
+
+
 
     }
     IEnumerator DelayGameOver()
@@ -213,6 +228,14 @@ public class GameController : Singleton<GameController>
     }
 
 
+    public void Win()
+    {
+        if (!IsGameOver)
+        {
+            IsGameOver = true;
+            StartCoroutine(DelayWinScreen());
+        }
+    }
     public void GameOver()
     {
         if (IsGameOver == false)
@@ -238,6 +261,12 @@ public class GameController : Singleton<GameController>
 
     public void EnemyDied(string id, BaseEnemy enemy)
     {
+        if (enemy.GetComponent<BossBattleSystem>() && BossFight)
+        {
+            levelMode = LevelMode.GameOver;
+            Win();
+        }
+
         EnemySpawned.Remove(enemy.gameObject);
         Vector3 enemyPos = enemy.transform.position;
 
@@ -301,6 +330,12 @@ public class GameController : Singleton<GameController>
 
         //Drop Item
         DropController.PickRandomDropItem(enemy.transform);
+
+
+        if (enemy.GetComponent<BossBattleSystem>())
+        {
+            return;
+        }
     }
 
 

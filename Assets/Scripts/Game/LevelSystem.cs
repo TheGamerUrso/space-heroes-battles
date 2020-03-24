@@ -54,7 +54,7 @@ public class LevelSystem
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
                 LevelUp?.Invoke();
 
-                GameEventSystem.Call(GameEventType.Player_LevelUp);
+                GameEventSystem.Call(PlayerEventType.Player_LevelUp);
             }
         }
         else

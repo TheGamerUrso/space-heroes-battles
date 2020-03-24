@@ -186,7 +186,7 @@ public class Punch : Ship, IDestroyable
         {   
             GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
             healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            OnEnemyHit += initializedHealthWidget.GetComponent<BaseHealthWidget>().OnDamageTaken;
+            healthBar.Setup(this,true);
         }
     }
 

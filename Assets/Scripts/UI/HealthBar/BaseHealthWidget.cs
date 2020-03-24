@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class BaseHealthWidget : MonoBehaviour
@@ -8,27 +6,39 @@ public class BaseHealthWidget : MonoBehaviour
     public float Health { get; }
     public float currentHealth { get; set; }
 
-    public GameObject Target;
-    private Color currentColor;
-    public Color RedColor = Color.red;
-    public Color GreenColor = Color.green;
+    protected Ship Target;
+    protected Color currentColor;
 
-    public GameObject HealthBarTransform;
-    public Image HealthBarImage;
-    public Image ShieldBarImage;
+    [SerializeField] protected Color RedColor = Color.red;
+    [SerializeField] protected Color GreenColor = Color.green;
 
 
-    public Vector3 offset;
-    public virtual void OnDamageTaken(string id,object user) { }
-    public virtual void Initiallize(Ship ship)
+    [SerializeField] protected GameObject HealthBarTransform;
+
+    [SerializeField] protected Image HealthBarImage;
+    [SerializeField] protected Image ShieldBarImage;
+
+    [SerializeField] protected Vector3 offset;
+
+    public virtual void Setup(Ship ship, bool follow = true) { }
+    public virtual void Setup(Ship ship)
     {
-
+        ship.GetShipStatsSystem().HealthChanged += UpdateHealthBar;
+        Target = ship;
     }
+
+    private void Start()
+    {
+        OnStart();
+    }
+
+    public virtual void OnStart() { }
 
     private void Update()
     {
         Tick();
     }
+
     public void Show()
     {
         HealthBarTransform.SetActive(true);
@@ -39,26 +49,12 @@ public class BaseHealthWidget : MonoBehaviour
         HealthBarTransform.SetActive(false);
     }
 
-    public virtual void Refresh(IDestroyable user)
-    {
+    public virtual void Tick() { }
 
-    }
-    public virtual void Tick()
+    protected virtual void UpdateHealthBar(float currentHealth, float maxHealth)
     {
-
-    }
-    void UpdateHealthBar(Ship ship)
-    {
-        HealthBarImage.fillAmount = ship.GetHealthPresentage();
-    }
-
-    public void FolllowTarget()
-    {
-        if (Target)
-        {
-            SetHealthBarPosition(Target.transform);
-            UpdateHealthBar(Target.GetComponent<Ship>());
-        }
+        HealthBarImage.fillAmount = currentHealth / maxHealth;
+        HealthBarImage.color = Color.Lerp(RedColor, GreenColor, HealthBarImage.fillAmount);
     }
 
     public void SetHealthBarPosition(Transform transform)

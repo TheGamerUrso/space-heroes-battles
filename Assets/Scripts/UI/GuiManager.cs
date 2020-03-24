@@ -60,7 +60,7 @@ public class GuiManager : Singleton<GuiManager>
         if (playerShip != null)
         {
             playerShip.PickUpItem -= PickUpItem;
-            GameEventSystem.PickupEvent -= UpdateCoinWidgetText;
+            GameEventSystem.PickUpEvent -= UpdateCoinWidgetText;
         }
     }
 
@@ -77,7 +77,7 @@ public class GuiManager : Singleton<GuiManager>
         }
 
         playerShip.PickUpItem += PickUpItem;
-        GameEventSystem.PickupEvent += UpdateCoinWidgetText;
+        GameEventSystem.PickUpEvent += UpdateCoinWidgetText;
     }
 
 

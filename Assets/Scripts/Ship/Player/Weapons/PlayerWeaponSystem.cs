@@ -81,6 +81,14 @@ public class PlayerWeaponSystem : MonoBehaviour
             playerShip.PlayerShipHit += DownGradeWeapon;
 
         SwitchWeapon(this, 0);
+
+
+        GameEventSystem.BossHitEvent += BossHitEventCallback;
+    }
+
+    public void BossHitEventCallback(string id,BaseBossEnemy bossEnemy,float ammount)
+    {
+        IncreasePowerUp(ammount);
     }
 
     public void IncreasePowerUp(float value)

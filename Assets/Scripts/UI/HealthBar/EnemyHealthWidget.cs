@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class EnemyHealthWidget : BaseHealthWidget
 {
     private float timer;
@@ -10,40 +10,27 @@ public class EnemyHealthWidget : BaseHealthWidget
     public bool AutoHide;
 
 
-    // Start is called before the first frame update
-    void Start()
+    public override void OnStart()
     {
-        if (AutoHide)
+        base.OnStart();
+        UpdateHealthBar(100, 100);
+    }
+
+    public override void Setup(Ship ship, bool follow = true)
+    {
+        if (Target == null || Target != ship)
         {
-            Hide();
+            Target = ship;
+            ship.GetShipStatsSystem().HealthChanged += UpdateHealthBar;
+            Static = follow;
         }
     }
-    public override void Initiallize(Ship ship)
+
+    protected override void UpdateHealthBar(float currentHealth, float maxHealth)
     {
-        GameEventSystem.OnEnemyHit += OnDamageTaken;
-    }
-
-    public override void Refresh(IDestroyable user)
-    {
-        base.Refresh(user);
-        if (AutoHide)
-        {
-            Hide();
-        }
-
-        HealthBarImage.fillAmount = user.CurrentHealth / user.MaxHealth;
-        HealthBarImage.color = Color.Lerp(RedColor, GreenColor, HealthBarImage.fillAmount);
-
-    }
-    public override void OnDamageTaken(string id,object sender)
-    {
-        IDestroyable user = (IDestroyable)sender;
-        MonoBehaviour userGO = user as MonoBehaviour;
-        Ship ship = userGO.GetComponent<Ship>();
-
         if (Target == null)
         {
-            Target = userGO.gameObject;
+            return;
         }
 
         if (AutoHide)
@@ -51,7 +38,8 @@ public class EnemyHealthWidget : BaseHealthWidget
             Show();
         }
 
-        bool m_HasShield = ship.HasShieldModule();
+        bool m_HasShield = Target.HasShieldModule();
+
         if (ShieldBarImage != null)
         {
             if (m_HasShield)
@@ -66,10 +54,9 @@ public class EnemyHealthWidget : BaseHealthWidget
 
         timer = duration;
 
-        HealthBarImage.fillAmount = user.CurrentHealth / user.MaxHealth;
-
-        HealthBarImage.color = Color.Lerp(RedColor, GreenColor, HealthBarImage.fillAmount);
+        base.UpdateHealthBar(currentHealth, maxHealth);
     }
+
     public override void Tick()
     {
         base.Tick();

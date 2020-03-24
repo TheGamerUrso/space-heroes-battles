@@ -22,22 +22,7 @@ public class Boxer : BaseBossEnemy
 
     public override void BossHit()
     {
-        if (GuiManager.IsTrasnmiting() || delayAttak > 0)
-        {
-            return;
-        }
-
-        PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
-        if(playerWeaponSystem)
-        playerWeaponSystem.IncreasePowerUp(.05f);
-
-        if (Random.Range(0, 100) >= 50)
-        {
-            if (GetHealthPresentage() % 40 == 0)
-            {
-                GetComponent<BossAI>().ChangeWaypoint(hitIndex);
-            }
-        }
+ 
 
         base.BossHit();
     }

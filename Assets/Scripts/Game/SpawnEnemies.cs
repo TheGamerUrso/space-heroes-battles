@@ -21,6 +21,10 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
     public Action<GameObject> OnSpawnEnemy;
 
     public EnemyElement[] enemyElements;
+
+    public GameObject Boss;
+
+
     [Range(0, 6)]
     public int availableEnemies;
 
@@ -79,6 +83,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
     {
         while (!gameover)
         {
+
             if (NumberOfEnemies % GameController.Instance.NumberOfEnemiesEachWave == 0)
             {
                 NewWave();
@@ -90,46 +95,71 @@ public class SpawnEnemies : Singleton<SpawnEnemies>, IEndGameObserver
                 yield return new WaitForEndOfFrame();
             }
 
-
-            int randomNumb = 0;
-            EnemyElement enemyElement = null;
-
-            do
+            if (GameController.Instance.BossFight)
             {
-                randomNumb = UnityEngine.Random.Range(0, availableEnemies);
-                enemyElement = enemyElements[randomNumb];
-                yield return null;
-            } while (enemyElement.currentNumberInScene >= enemyElement.MaxNumberInScene);
-
-            int repeat = 1;
-
-            if (randomNumb == 0)
-            {
-                repeat = UnityEngine.Random.Range(5, 8);
+                SpawnBoss(Boss);
             }
-
-            for (int i = 0; i < repeat; i++)
+            else
             {
-                Debug.Log(totalEnemies + " " + (totalEnemies - 1));
-                if (totalEnemies - 1 >= 0)
+
+                int randomNumb = 0;
+                EnemyElement enemyElement = null;
+
+                do
                 {
-                    while (currentNumberOfEnemies > 2)
-                    {
-                        Debug.Log("Waiting");
-                        yield return new WaitForEndOfFrame();
-                    }
-                    SpawnEnemyElement(enemyElement);
-                    yield return new WaitForSeconds(delay);
-                }
-                else
+                    randomNumb = UnityEngine.Random.Range(0, availableEnemies);
+                    enemyElement = enemyElements[randomNumb];
+                    yield return null;
+                } while (enemyElement.currentNumberInScene >= enemyElement.MaxNumberInScene);
+
+                int repeat = 1;
+
+                if (randomNumb == 0)
                 {
-                    //Boss or Gameover
-                    break;
+                    repeat = UnityEngine.Random.Range(5, 8);
                 }
 
+
+                for (int i = 0; i < repeat; i++)
+                {
+                    Debug.Log(totalEnemies + " " + (totalEnemies - 1));
+                    if (totalEnemies - 1 >= 0)
+                    {
+                        while (currentNumberOfEnemies > 2)
+                        {
+                            Debug.Log("Waiting");
+                            yield return new WaitForEndOfFrame();
+                        }
+                        SpawnEnemyElement(enemyElement);
+                        yield return new WaitForSeconds(delay);
+                    }
+                    else
+                    {
+                        //Boss or Gameover
+                        break;
+                    }
+
+                }
             }
             yield return new WaitForSeconds(1);
         }
+    }
+
+    private void SpawnBoss(GameObject Boss)
+    {
+        GameObject enemGO = GameObject.Instantiate(Boss, Boss.transform.position, Quaternion.identity);
+
+        BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
+        FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
+
+
+        enemy.SetEnemyStats(LevelDifficulty);
+
+        enemy.EnemyEscaped += OnEnemyEscape;
+        enemy.EnemyDied += OnDeath;
+        enemy.EnemyGotHit += OnHit;
+
+        OnSpawnEnemy?.Invoke(enemy.gameObject);
     }
 
     private void SpawnEnemyElement(EnemyElement enemyElement)

@@ -11,11 +11,11 @@ public class HyperdriveEnterEffect : MonoBehaviour
 
     private void OnEnable()
     {
-        GetComponent<BaseEnemy>().DisableWeapons();
-        shipPivot.transform.localPosition = new Vector3(0, 0, -256);
-        shipPivot.transform.DOLocalMoveZ(0, speed).SetEase(easeMode).OnComplete(() =>
+        GetComponent<BaseEnemy>().DisableAllWeapons();
+        //shipPivot.transform.localPosition = new Vector3(0, 0, -256);
+        shipPivot.transform.DOLocalMoveZ(0, speed).ChangeStartValue(new Vector3(0,0,-256)).SetEase(easeMode).OnComplete(() =>
         {
-            GetComponent<BaseEnemy>().EnableWeapon();
+            GetComponent<BaseEnemy>().EnableWeaponById(0);
         });
     }
 

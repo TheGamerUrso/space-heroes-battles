@@ -6,18 +6,25 @@ using UnityEngine;
 public class ShipStatsSystem
 {
     public Action<float, float> HealthChanged;
-
+    [Min(0)]
     private float MaxHealth;
+    [Min(0)]
     public float currentHealth;
-
+    [Min(1)]
     public float Damage;
-    [Range(.2f, 10)]
-    public float FireRate;
-    public float Speed;
-    public float SuperDamage;
-    public float SuperChargeTime;
 
+    [Range(.2f, 10)]
+    [Min(.2f)]
+    public float FireRate;
+    [Min(0)]
+    public float Speed;
+    [Min(0)]
+    public float SuperDamage;
+    [Min(0)]
+    public float SuperChargeTime;
+    [Min(0)]
     public float MagnetPower;
+    [Min(0)]
     public float MagnetDistance;
 
 
