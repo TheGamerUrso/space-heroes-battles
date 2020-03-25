@@ -9,10 +9,7 @@ using TheGamerUrso.PoolSystem;
 
 public class GuiManager : Singleton<GuiManager>
 {
-    private GameController gc;
-
     PlayerShip playerShip;
-
 
     [Header("Menu")]
     [SerializeField] private GameObject GameOverScreen;
@@ -32,25 +29,26 @@ public class GuiManager : Singleton<GuiManager>
 
     private void OnApplicationFocus(bool focus)
     {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            if (!focus && GameController.IsGameOver == false)
-            {
-                GameManager.PauseTheGame();
-                ShowPauseMenu(true);
-            }
-        }
+        //if (Application.platform == RuntimePlatform.Android)
+        //{
+        //    if (!focus && GameController.IsGameOver == false)
+        //    {
+        //        GameManager.PauseTheGame();
+        //        ShowPauseMenu(true);
+        //    }
+        //}
     }
 
     private void OnApplicationPause(bool Paused)
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (GameController.IsGameOver == false)
-            {
-                GameManager.PauseTheGame();
-                ShowPauseMenu(true);
-            }
+            //TODO Update Pause
+            //if (GameController.IsGameOver == false)
+            //{
+            //    GameManager.PauseTheGame();
+            //    ShowPauseMenu(true);
+            //}
         }
     }
 
@@ -62,14 +60,14 @@ public class GuiManager : Singleton<GuiManager>
             playerShip.PickUpItem -= PickUpItem;
             GameEventSystem.PickUpEvent -= UpdateCoinWidgetText;
         }
+
+        GameController.OnGameOver -= GameOver;
+        GameController.OnWin -= Win;
     }
 
     private void Start()
     {
         timer = 1;
-        gc = GameObject.FindObjectOfType<GameController>();
-
-
 
         if (playerShip == null)
         {
@@ -78,6 +76,9 @@ public class GuiManager : Singleton<GuiManager>
 
         playerShip.PickUpItem += PickUpItem;
         GameEventSystem.PickUpEvent += UpdateCoinWidgetText;
+
+        GameController.OnGameOver += GameOver;
+        GameController.OnWin += Win;
     }
 
 
@@ -221,12 +222,14 @@ public class GuiManager : Singleton<GuiManager>
 
     public void UpdateCoinWidgetText()
     {
-        CoinWidgetText.text = string.Format("{0}", gc.counsEarnInGame);
+        //TODO Update Coin Widget
+        CoinWidgetText.text = string.Format("{0}", 0);
     }
 
     public void UpdateScore(int score)
     {
-        string scoreText = string.Format("{00:00000000}", gc.Score);
+        //TODO Update Score
+        string scoreText = string.Format("{00:00000000}", 0);
         ScoreText.text = scoreText;
     }
 
@@ -243,8 +246,6 @@ public class GuiManager : Singleton<GuiManager>
 
     public void LoadMainMenu()
     {
-        GameController.useSloMo = false;
-
         GameManager.PauseTheGame(false);
         AudioManager.PlaySound(null, "Click", 1);
         SceneLoader.Instance.LoadMainenu();
@@ -298,10 +299,8 @@ public class GuiManager : Singleton<GuiManager>
         }
     }
 
-    public void Win()
+    public void Win(GameController gc)
     {
-        GameController.useSloMo = false;
-
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
@@ -329,11 +328,14 @@ public class GuiManager : Singleton<GuiManager>
                 switch ((ObjectiveType)objective.objectiveType)
                 {
                     case ObjectiveType.Kill:
+                        
+                        //TODO Current Enemy Killed
                         if (objective.completed == false)
                         {
-                            var progressSoFar = objective.progress + gc.CurrentEnemyKilled;
+                            var progressSoFar = objective.progress + 0;
                             objective.UpdateProgress(progressSoFar);
                         }
+
                         break;
                     case ObjectiveType.Use:
                         if (objective.completed == false)
@@ -353,7 +355,8 @@ public class GuiManager : Singleton<GuiManager>
                         }
                         break;
                     case ObjectiveType.survive:
-                        objective.UpdateProgress(gc.WaveSurvived);
+                        //TODO WaveSurvived
+                        objective.UpdateProgress(0);
                         break;
                     case ObjectiveType.spend:
                         break;
@@ -374,8 +377,8 @@ public class GuiManager : Singleton<GuiManager>
             }
 
             int levelPlayed = GameManager.LevelSelected;
-
-            playerData.SetScore(levelPlayed + 1, gc.Score);
+            //TODO Score
+            playerData.SetScore(levelPlayed + 1,0);
 
             playerData.LevelUnlocked = missionsCompleted;
 
@@ -390,11 +393,8 @@ public class GuiManager : Singleton<GuiManager>
         }
     }
     //Game is Over
-    public void GameOver()
+    public void GameOver(GameController gc)
     {
-        GameController.IsGameOver = true;
-        GameController.useSloMo = false;
-
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {   
@@ -404,8 +404,10 @@ public class GuiManager : Singleton<GuiManager>
             playerData.xp = playerShip.GetLevelSystem().GetXP();
             playerData.xpToLevel = playerShip.GetLevelSystem().GetXpToLevel();
 
-            playerData.Coins += gc.counsEarnInGame;
-            playerData.TotalKills += gc.EnemyKilled;
+            //TODO Coins Earn In Game
+            //TODO Enemy Killed In Game
+            playerData.Coins += 0;
+            playerData.TotalKills += 0;
 
             SaveSystem.SavePlayerData();
 

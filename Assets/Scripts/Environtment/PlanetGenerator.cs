@@ -5,14 +5,12 @@ using UnityEngine;
 
 public class PlanetGenerator : MonoBehaviour
 {
-    public GameController gameController;
     public GameObject Planet;
     public GameObject[] Planets;
     private bool SpawnPlanets;
     void Start()
     {
         StartCoroutine(GeneratePlanet());
-        gameController = GameController.Instance;
         SpawnPlanets = true;
     }
 

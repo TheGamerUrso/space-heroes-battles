@@ -8,9 +8,10 @@ public class BaseEnemyAI : MonoBehaviour
 
     protected BaseEnemy enemy;
     protected Rigidbody rigid;
- 
-    protected Vector3 startingPosition;
+    protected Animator animator;
     protected Coroutine EnterCoroutine;
+
+    protected Vector3 startingPosition;
     protected Vector3 dist;
     protected Vector2 MaxScreenBound;
     protected Vector2 MinScreenBound;
@@ -55,6 +56,11 @@ public class BaseEnemyAI : MonoBehaviour
         {
             enemy = GetComponent<BaseEnemy>();
         }
+
+        if (animator == null)
+        {
+            animator = GetComponentInChildren<Animator>();
+        }
     }
 
     private void Update()
@@ -78,5 +84,9 @@ public class BaseEnemyAI : MonoBehaviour
         {
             Leave();
         }
+    }
+    public virtual void EnableMovement()
+    {
+
     }
 }

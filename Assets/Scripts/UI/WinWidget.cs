@@ -7,7 +7,6 @@ public class WinWidget : MonoBehaviour
 {
     private PlayerShip player;
     private PlayerData playerData;
-    private GameController gameController;
     [SerializeField] private MissionCollection missionCollection;
     [SerializeField] private Mission mission;
     [SerializeField] private TextMeshProUGUI Score = null;
@@ -29,13 +28,12 @@ public class WinWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        if (gameController==null)
-        {
-            gameController = GameController.Instance;
-        }
+        //TODO Get PlayerShip
+
         levelName = "Level" + GameManager.LevelSelected;
-        killed = gameController.EnemySpawnInTotal * .9f;
-        collected = gameController.CoinDropInTotal * .9f;
+
+        //TODO EnemySPawnInTotal * 9f
+        //TODO CoinsDropInTotal * .9f;
 
         player = PlayerManager.GetPlayer();
         playerData = DataController.GetPlayerData();
@@ -55,11 +53,13 @@ public class WinWidget : MonoBehaviour
            // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
         }
 
-        if (!levelObjectiveDatas[1].completed && gameController.EnemyKilled >= killed)
+        //TODO Enemy Killed This Round
+        float enemyKilled = 0;
+        
+        if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
         {
             levelObjectiveDatas[1].completed = true;
             PlayerManager.GetPlayer().GetLevelSystem().AddXP(75);
-           // Debug.Log("Challenge : Kill " + EnemyManager.EnemySpawnedInTotal * .9f + " Enemies Completed" + "(100 XP Awarded)");
         }
 
         if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged == false)
@@ -69,7 +69,9 @@ public class WinWidget : MonoBehaviour
            // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
         }
 
-        if (!levelObjectiveDatas[3].completed && gameController.counsEarnInGame >= 0 && gameController.counsEarnInGame >= collected)
+        float coinEarnInGame = 0;
+
+        if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
         {
             levelObjectiveDatas[3].completed = true;
             PlayerManager.GetPlayer().GetLevelSystem().AddXP(25);
@@ -83,7 +85,9 @@ public class WinWidget : MonoBehaviour
 
     private IEnumerator ShowGameResults()
     {
-        string scoreText = string.Format("{00:0000000000}", gameController.Score);
+        //TODO Get Score
+        float score = 0;
+        string scoreText = string.Format("{00:0000000000}", score);
         Score.text = scoreText;
         int ChallengeIndex = 0;
 

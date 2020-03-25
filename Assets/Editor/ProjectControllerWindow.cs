@@ -131,7 +131,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                GuiManager.Instance.GameOver();
+                GameController.OnWin?.Invoke(GameController.Instance);
             }
         }
         EditorGUILayout.EndHorizontal();

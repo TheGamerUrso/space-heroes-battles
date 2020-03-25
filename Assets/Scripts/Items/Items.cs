@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class Items : MonoBehaviour
 {
-    public GameController gc;
     private int frameInterval = 1;
     [SerializeField] private ItemData itemData;
     public LayerMask playerLayer;
@@ -37,7 +36,6 @@ public class Items : MonoBehaviour
 
     private void Start()
     {
-        gc = GameController.Instance;
         Setup();
     }
 
@@ -88,8 +86,7 @@ public class Items : MonoBehaviour
 
         if (itemData.m_RewardAmount > 0)
         {
-            if (gc)
-                gc.counsEarnInGame++;
+            //TODO Increase Coin Earn In Game
         }
 
         if (itemData.Shield)

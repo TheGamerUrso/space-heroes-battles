@@ -29,7 +29,13 @@ public class BaseEnemy : Ship, IDestroyable
 
     [SerializeField] private HealthBarSettings HealthBarSettings;
     private EnemyHealthWidget healthBar;
-
+    public EnemyHealthWidget HealthBar
+    {
+        get
+        {
+            return healthBar;
+        }
+    }
 
     private bool Alive;
     public bool IsDestroyed
@@ -128,6 +134,8 @@ public class BaseEnemy : Ship, IDestroyable
 
       
     }
+
+ 
     public virtual void Attack() { }
 
     public virtual void Enter() { }

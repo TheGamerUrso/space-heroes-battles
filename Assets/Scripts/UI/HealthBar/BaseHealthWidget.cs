@@ -39,7 +39,7 @@ public class BaseHealthWidget : MonoBehaviour
         Tick();
     }
 
-    public void Show()
+    public virtual void Show()
     {
         HealthBarTransform.SetActive(true);
     }

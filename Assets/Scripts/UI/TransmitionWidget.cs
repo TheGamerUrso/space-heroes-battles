@@ -12,7 +12,6 @@ public class TransmitionWidget : MonoBehaviour
 
     public void RecieveTransmition(string[] transmitions,bool boss = false)
     {
-        GameController.useSloMo = false;
         TransmitionText.text = "Transmition Incoming";
         this.transmitions = transmitions;
         if (IncomingTransmition == false)
@@ -41,7 +40,6 @@ public class TransmitionWidget : MonoBehaviour
 
         BossStageWarning.gameObject.SetActive(false);
         IncomingTransmition = false;
-        GameController.useSloMo = true;
     }
 
     private IEnumerator TranmisionEvent()
@@ -72,6 +70,5 @@ public class TransmitionWidget : MonoBehaviour
         yield return new WaitForSeconds(.5f);
         TransmitionWidgetPrefab.SetActive(false);
         IncomingTransmition = false;
-        GameController.useSloMo = true;
     }
 }

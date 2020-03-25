@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleBoss : Boss
+public class SimpleBoss : FirstBoss
 {
     public override void Enter()
     {

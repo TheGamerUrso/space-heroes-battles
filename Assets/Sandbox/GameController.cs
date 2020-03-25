@@ -4,42 +4,40 @@ using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+public static class GameLevel
+{
+    public static bool IsGameOver;
+    public static bool useSloMo;
+    public static int enemyKilled;
+    public static int enemyEscaped;
+
+    public static int EnemySpawnInTotal { get; set; }
+    public static int LevelDifficulty { get; set; }
+    public static float Score { get; set; }
+    public static int WaveSurvived { get; set; }
+    public static int EnemyKilled { get; set; }
+    public static int CurrentEnemyKilled { get; set; }
+    public static int CoinDropInTotal { get; set; }
+    public static int counsEarnInGame { get; set; }
+}
 
 public class GameController : Singleton<GameController>
 {
+    public static Action<GameController> OnGameOver;
+    public static Action<GameController> OnWin;
+
     private GameObject playerShip;
 
-    public static bool IsGameOver;
-    public static bool useSloMo;
+    //    private float slowMo;
 
-    public int enemyKilled;
-    public int enemyEscaped;
+    //    private float delayTheSlowMoEffectTimer;
 
-    private int Wave;
-    private int MaxWave;
-    private int TotalEnemies;
-
-
-    public int EnemySpawnInTotal { get; set; }
-    public int LevelDifficulty { get; set; }
-    public float Score { get; set; }
-    public int WaveSurvived { get; set; }
-    public int EnemyKilled { get; set; }
-    public int CurrentEnemyKilled { get; set; }
-    public int CoinDropInTotal { get; set; }
-    public int counsEarnInGame { get; set; }
-
-
-    private float slowMo;
-
-    private float delayTheSlowMoEffectTimer;
-
-    public void GameStatsChanged(int Wave, int MaxWave, int TotalEnemies)
-    {
-        this.Wave = Wave;
-        this.MaxWave = MaxWave;
-        this.TotalEnemies = TotalEnemies;
-    }
+    //    public void GameStatsChanged(int Wave, int MaxWave, int TotalEnemies)
+    //    {
+    //        this.Wave = Wave;
+    //        this.MaxWave = MaxWave;
+    //        this.TotalEnemies = TotalEnemies;
+    //    }
 
     protected override void OnAwake()
     {
@@ -50,25 +48,14 @@ public class GameController : Singleton<GameController>
         }
     }
 
+
     void Start()
     {
-        IsGameOver = false;
-
         Application.targetFrameRate = 60;
 
         if (AudioManager.Instance)
             AudioManager.PlayRandomMusic(true);
 
-        delayTheSlowMoEffectTimer = 4;
-
-        if (SpawnEnemies.Instance)
-        {
-            SpawnEnemies.Instance.GameStatsChanged += GameStatsChanged;
-            SpawnEnemies.Instance.BossDied += BossEnemyCallback;
-
-            EnemySpawnInTotal = SpawnEnemies.Instance.TotalEnemies;
-
-        }
 
         if (PlayerManager.GetPlayer() == null)
         {
@@ -76,168 +63,167 @@ public class GameController : Singleton<GameController>
             playerShip = PlayerManager.CreatePlayer(shipSelected);
         }
 
-        EnemySpawnInTotal = TotalEnemies;
-     
         playerShip.GetComponent<PlayerShip>().PlayerShipDeath += PlayerShipCallback;
 
 
     }
-
 
     private void PlayerShipCallback()
     {
         GameOver();
     }
 
-    private void BossEnemyCallback(string id, BaseEnemy bossEnemy)
-    {
-        Win();
-    }
+    //    private void BossEnemyCallback(string id, BaseEnemy bossEnemy)
+    //    {
+    //        Win();
+    //    }
 
-    public void ToggleSlowMo(bool value)
+    //    public void ToggleSlowMo(bool value)
+    //    {
+    //        useSloMo = value;
+    //        if (value == false)
+    //        {
+    //            Time.timeScale = 1.0f;
+    //        }
+    //    }
+
+
+    //    private void Update()
+    //    {
+    //        if (!IsGameOver)
+    //        {
+    //            if (AudioManager.Instance)
+    //            {
+    //                if (AudioManager.Instance.MusicIsDone())
+    //                {
+    //                    AudioManager.PlayRandomMusic();
+    //                }
+    //            }
+    //            SlowMoEffect();
+    //        }
+    //    }
+
+    public void Win()
     {
-        useSloMo = value;
-        if (value == false)
+        if (!GameLevel.IsGameOver)
         {
-            Time.timeScale = 1.0f;
+            GameLevel.IsGameOver = true;
+
+            StartCoroutine(DelayWinScreen());
         }
     }
-
-
-    private void Update()
+    public void GameOver()
     {
-        if (!IsGameOver)
+        if (GameLevel.IsGameOver == false)
         {
-            if (AudioManager.Instance)
-            {
-                if (AudioManager.Instance.MusicIsDone())
-                {
-                    AudioManager.PlayRandomMusic();
-                }
-            }
-            SlowMoEffect();
+            GameLevel.IsGameOver = true;
+            StartCoroutine(DelayGameOver());
         }
     }
 
     IEnumerator DelayGameOver()
     {
         yield return new WaitForSeconds(4.0f);
-        GuiManager.Instance.GameOver();
+        OnGameOver?.Invoke(this);
 
     }
     IEnumerator DelayWinScreen()
     {
         yield return new WaitForSeconds(4.0f);
-        GuiManager.Instance.Win();
-
+        OnWin?.Invoke(this);
     }
 
-    public void SlowMoEffect()
-    {
-#if UNITY_ANDROID
-        if (useSloMo && !GameManager.Paused)
-        {
-            if (Input.touchCount > 0 || Input.GetMouseButton(0))
-            {
-                //     slowMo = 1;
-            }
-            else
-            {
-                //       slowMo = .3f;
+    //    public void SlowMoEffect()
+    //    {
+    //#if UNITY_ANDROID
+    //        if (useSloMo && !GameManager.Paused)
+    //        {
+    //            if (Input.touchCount > 0 || Input.GetMouseButton(0))
+    //            {
+    //                //     slowMo = 1;
+    //            }
+    //            else
+    //            {
+    //                //       slowMo = .3f;
 
-            }
-            // Time.timeScale = slowMo;
-        }
-#endif
-    }
-
-
-    public void Win()
-    {
-        if (!IsGameOver)
-        {
-            IsGameOver = true;
-            StartCoroutine(DelayWinScreen());
-        }
-    }
-    public void GameOver()
-    {
-        if (IsGameOver == false)
-        {
-            IsGameOver = true;
-            StartCoroutine(DelayGameOver());
-        }
-    }
-
-    public void EnemyGotHit(string id, BaseEnemy enemy)
-    {
-
-    }
-
-    public void EnemyEscaped(string id, BaseEnemy enemy)
-    {
-        enemyEscaped++;
-    }
-
-    public void EnemyDied(string id, BaseEnemy enemy)
-    {
-        Vector3 enemyPos = enemy.transform.position;
-
-        enemyKilled++;
-
-        PlayerData playerData = DataController.GetPlayerData();
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
-
-        if (objectiveData != null)
-            objectiveData.UpdateProgress(CurrentEnemyKilled);
-
-        //Update ComboKillIndicator
-        if (ComboKillIndicator.instance)
-            ComboKillIndicator.instance.ConfirmKill();
-
-        int multiplayer = 0;
-        if (ComboKillIndicator.instance)
-        {
-            multiplayer = ComboKillIndicator.instance.GetMultiplier();
-        }
-
-        //Update Score
-        int score = multiplayer * enemy.m_ValueOfEnemy;
-        Score += score;
-
-        if (GuiManager.Instance)
-        {
-            GuiManager.Instance.UpdateScore(score);
-            GuiManager.CreateFloatingText(string.Format("{0}", score), enemyPos);
-        }
-
-        //Update Player Attributes
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        if (playerShip != null)
-        {
-            int PlayerLevel = playerShip.Level;
-            int EnemyLevel = enemy.Level;
-            int levelDiffrence = PlayerLevel / EnemyLevel;
-
-            if (levelDiffrence == 0)
-            {
-                levelDiffrence = 1;
-            }
-
-            // float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-            float XPEarned = 5 / levelDiffrence;
-            playerShip.AddXP((int)XPEarned);
-            Debug.Log(string.Format("exp = {0}\n", XPEarned));
+    //            }
+    //            // Time.timeScale = slowMo;
+    //        }
+    //#endif
+    //    }
 
 
-            playerShip.IncreasePowerUp(.1f);
-        }
 
-        DropController.PickRandomDropItem(enemy.transform);
-    }
-    public void SetLevelDifficuilty(int Level)
-    {
-        LevelDifficulty = Level;
-    }
+
+    //    public void EnemyGotHit(string id, BaseEnemy enemy)
+    //    {
+
+    //    }
+
+    //    public void EnemyEscaped(string id, BaseEnemy enemy)
+    //    {
+    //        enemyEscaped++;
+    //    }
+
+    //    public void EnemyDied(string id, BaseEnemy enemy)
+    //    {
+    //        Vector3 enemyPos = enemy.transform.position;
+
+    //        enemyKilled++;
+
+    //        PlayerData playerData = DataController.GetPlayerData();
+    //        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
+
+    //        if (objectiveData != null)
+    //            objectiveData.UpdateProgress(CurrentEnemyKilled);
+
+    //        //Update ComboKillIndicator
+    //        if (ComboKillIndicator.instance)
+    //            ComboKillIndicator.instance.ConfirmKill();
+
+    //        int multiplayer = 0;
+    //        if (ComboKillIndicator.instance)
+    //        {
+    //            multiplayer = ComboKillIndicator.instance.GetMultiplier();
+    //        }
+
+    //        //Update Score
+    //        int score = multiplayer * enemy.m_ValueOfEnemy;
+    //        Score += score;
+
+    //        if (GuiManager.Instance)
+    //        {
+    //            GuiManager.Instance.UpdateScore(score);
+    //            GuiManager.CreateFloatingText(string.Format("{0}", score), enemyPos);
+    //        }
+
+    //        //Update Player Attributes
+    //        PlayerShip playerShip = PlayerManager.GetPlayer();
+    //        if (playerShip != null)
+    //        {
+    //            int PlayerLevel = playerShip.Level;
+    //            int EnemyLevel = enemy.Level;
+    //            int levelDiffrence = PlayerLevel / EnemyLevel;
+
+    //            if (levelDiffrence == 0)
+    //            {
+    //                levelDiffrence = 1;
+    //            }
+
+    //            // float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+    //            float XPEarned = 5 / levelDiffrence;
+    //            playerShip.AddXP((int)XPEarned);
+    //            Debug.Log(string.Format("exp = {0}\n", XPEarned));
+
+
+    //            playerShip.IncreasePowerUp(.1f);
+    //        }
+
+    //        DropController.PickRandomDropItem(enemy.transform);
+    //    }
+    //    public void SetLevelDifficuilty(int Level)
+    //    {
+    //        LevelDifficulty = Level;
+    //    }
 
 }

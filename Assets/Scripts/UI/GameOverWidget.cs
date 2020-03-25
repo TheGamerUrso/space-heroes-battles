@@ -9,7 +9,6 @@ public class GameOverWidget : MonoBehaviour
 {
     private PlayerShipElement player;
     private PlayerData playerData;
-    private GameController gameController;
 
     [SerializeField] private MissionCollection missionCollection;
     [SerializeField] private Mission mission;
@@ -38,20 +37,14 @@ public class GameOverWidget : MonoBehaviour
 
     private void OnEnable()
     {
-        if (gameController == null)
-        {
-            gameController = GameController.Instance;
-        }
-
         PlayerShip player = PlayerManager.GetPlayer();
         PlayerData playerData = DataController.GetPlayerData();
 
         UpdateScore();
 
         levelName = "Level" + GameManager.LevelSelected;
-        killed = gameController.EnemySpawnInTotal * .9f;
-        collected = gameController.CoinDropInTotal * .9f;
-
+        //TODO EnemySPawnInTotal * 9f
+        //TODO CoinsDropInTotal * .9f;
 
         //Get Level Data
         missionCollection = DataController.GetMissionCollection();
@@ -142,7 +135,8 @@ public class GameOverWidget : MonoBehaviour
 
     public void UpdateScore()
     {
-        string scoreText = string.Format("{00:0000000000}", gameController.Score);
+        //TODO Update Score
+        string scoreText = string.Format("{00:0000000000}", 0);
         UpdateText(scoreText);
     }
 

@@ -78,7 +78,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1357740497020668}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 17.46}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1858856627393197627}
@@ -121,8 +121,8 @@ GameObject:
   - component: {fileID: 65213140867149424}
   - component: {fileID: 114236196184715900}
   - component: {fileID: 114099360190212058}
-  - component: {fileID: 3694194472870954604}
   - component: {fileID: 6984183554805876986}
+  - component: {fileID: 7958594226798513858}
   m_Layer: 15
   m_Name: BossShip1Ship
   m_TagString: Enemy
@@ -137,14 +137,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1400881148121724}
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.00000028088027}
   m_LocalPosition: {x: 0, y: -50, z: 100.98}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4496520287507762}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -179.99998, z: 0}
 --- !u!54 &2464397369735043055
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -172,8 +172,8 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 40.065125, y: 17.225319, z: 27.100159}
-  m_Center: {x: -0.07028198, y: 0.16679001, z: 4.32518}
+  m_Size: {x: 13.611361, y: 17.225319, z: 27.100159}
+  m_Center: {x: 0.10956478, y: 0.16679001, z: 4.32518}
 --- !u!114 &114236196184715900
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -190,7 +190,7 @@ MonoBehaviour:
     currentHealth: 0
     Damage: 0
     FireRate: 0
-    Speed: 100
+    Speed: 24
     SuperDamage: 0
     SuperChargeTime: 0
     MagnetPower: 0
@@ -239,8 +239,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bAppeared: 0
   bEntered: 0
-  PathIndex: 
-  Path: []
+  WaypointPrefab: {fileID: 1811661054583536, guid: 3d43c90d23e6d9a44bae44707ef9c210,
+    type: 3}
+  m_IsMovingVertical: 0
+  cooldown: 0
   currentPointToFollowIndex: 0
   PingPong: 1
   RotateTowardDir: 0
@@ -249,30 +251,6 @@ MonoBehaviour:
   reverse: 0
   SpawnAtFirstPath: 0
   Auto: 0
-  WaypointPrefab: {fileID: 1811661054583536, guid: 3d43c90d23e6d9a44bae44707ef9c210,
-    type: 3}
-  m_IsMovingVertical: 0
-  cooldown: 0
-  Positions: []
-  CurclularMove: 0
-  angle: 0
-  radius: 5
---- !u!114 &3694194472870954604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400881148121724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5557c88959570469c32bc23780e760, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bossEnemy: {fileID: 114236196184715900}
-  bossAI: {fileID: 114099360190212058}
-  HealthPresentage: 0
-  phase: 0
 --- !u!114 &6984183554805876986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -286,8 +264,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipPivot: {fileID: 1346500823932158}
-  easeMode: 1
-  speed: 2
+  easeMode: 28
+  speed: 4
+--- !u!114 &7958594226798513858
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400881148121724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 238ca75f78be6754e8c35c52d9979b6d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossEnemy: {fileID: 114236196184715900}
+  bossAI: {fileID: 114099360190212058}
+  HealthPresentage: 0
+  phase: 0
 --- !u!1 &1813821419264402
 GameObject:
   m_ObjectHideFlags: 0
@@ -313,7 +307,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1813821419264402}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 17.38}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7801153543704422302}
@@ -373,7 +367,7 @@ Transform:
   - {fileID: 2415226811161885119}
   m_Father: {fileID: 4286265845206674}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -15, z: 0}
 --- !u!1 &441672764712622007
 GameObject:
   m_ObjectHideFlags: 0
@@ -398,7 +392,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 441672764712622007}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.54, y: 3, z: -15.2}
+  m_LocalPosition: {x: 0.01999998, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2143037238637015554}
@@ -466,7 +460,7 @@ Transform:
   - {fileID: 3870633236776162672}
   m_Father: {fileID: 4286265845206674}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 15, z: 0}
 --- !u!1 &5305872413835294442
 GameObject:
   m_ObjectHideFlags: 0

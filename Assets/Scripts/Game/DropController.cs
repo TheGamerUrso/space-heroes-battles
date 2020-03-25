@@ -15,8 +15,6 @@ public class DropProbabilities
 
 public class DropController : Singleton<DropController>
 {
-    public GameController gameController;
-
     private float timerSincePowerUpDroped;
 
     private float frequentToDroPowerUp = .1f;
@@ -29,11 +27,6 @@ public class DropController : Singleton<DropController>
     public float shieldDropCooldown = 4;
     public float healthDropCooldown = 3;
     public float powerDropCooldown = 1;
-
-    private void Start()
-    {
-        gameController = GameController.Instance;
-    }
 
     private void Update()
     {
@@ -147,9 +140,8 @@ public class DropController : Singleton<DropController>
                 extraDrop.transform.rotation = Quaternion.identity;
             }
 
-            gameController.CoinDropInTotal++;
-
-            return;
+            //TODO Coins Drop In Total ++
+             return;
         }
 
     }

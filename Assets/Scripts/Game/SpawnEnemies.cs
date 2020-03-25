@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
@@ -35,6 +36,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public float delay;
 
 
+    private bool BossBattleInitiated;
     public GameObject BossPrefab;
     private GameObject currentBoss;
 
@@ -43,7 +45,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public List<GameObject> Enemies = new List<GameObject>();
 
     public float cooldown;
-
+    private EnemyElement enemyElement = null;
 
     public int EnemySpawnedInTotal { get; set; }
     private void Start()
@@ -58,12 +60,12 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         StartCoroutine(Spawn());
     }
 
-
+   
 
     IEnumerator Spawn()
     {
         Debug.Log("Game Started");
-        while (TotalEnemies > 0)
+        while (!BossBattleInitiated)
         {
             while (GuiManager.IsTrasnmiting())
             {
@@ -73,14 +75,12 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             while (TotalEnemies > 0)
             {
                 int randomNumb = 0;
-                EnemyElement enemyElement = null;
 
-                do
-                {
-                    randomNumb = UnityEngine.Random.Range(0, availableEnemies);
-                    enemyElement = enemyElements[randomNumb];
-                    yield return null;
-                } while (enemyElement.currentNumberInScene >= enemyElement.MaxNumberInScene);
+
+                List<EnemyElement> tempList = enemyElements.Where(x => (x.currentNumberInScene < x.MaxNumberInScene)).ToList();
+
+                randomNumb = UnityEngine.Random.Range(0, availableEnemies);
+                enemyElement = tempList[randomNumb];
 
                 int repeat = 1;
 
@@ -98,26 +98,26 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                     yield return new WaitForSeconds(delay);
                 }
 
-                while (Enemies.Count >= 5)
-                {
-                    yield return new WaitForSeconds(cooldown);
-                }
-
                 yield return new WaitForSeconds(cooldown);
             }
 
-            string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
-            GuiManager.PlayTrasmition(transmitions, true);
+            GuiManager.PlayTrasmition(null, true);
+
             yield return new WaitForSeconds(cooldown);
-
-            Debug.Log("Boss Battle");
-
-            SpawnBoss();
 
             while (Enemies.Count > 0)
             {
                 yield return new WaitForSeconds(cooldown);
             }
+
+            if (!BossBattleInitiated)
+            {
+                BossBattleInitiated = true;
+                Debug.Log("Boss Battle");
+
+                SpawnBoss();
+            }
+
         }
         Debug.Log("Game Over");
     }
