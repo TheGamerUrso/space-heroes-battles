@@ -17,7 +17,7 @@ public class FirstBossAI : BaseBossEnemyAI
 
     protected Vector3 targetRotation;
 
-    [SerializeField] protected bool reverse;
+    [SerializeField] protected bool reverse;    
     [SerializeField] protected bool SpawnAtFirstPath;
     [SerializeField] protected bool Auto;
     private Vector3 newPos;

@@ -81,17 +81,23 @@ public class BaseEnemy : Ship, IDestroyable
 
     public void EnableAllWeapon()
     {
-        for (int i = 0; i < Weapons.Length; i++)
+        if (Weapons.Length > 0)
         {
-            Weapons[i].AutoAttack = true;
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                Weapons[i].AutoAttack = true;
+            }
         }
     }
 
     public void DisableAllWeapons()
     {
-        for (int i = 0; i < Weapons.Length; i++)
+        if (Weapons.Length > 0)
         {
-            Weapons[i].AutoAttack = false;
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                Weapons[i].AutoAttack = false;
+            }
         }
     }
 
@@ -230,7 +236,8 @@ public class BaseEnemy : Ship, IDestroyable
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            destroyable.TakeDamage(destroyable.CurrentHealth);
+            destroyable.TakeDamage(destroyable.CurrentHealth/2);
+            TakeDamage(destroyable.CurrentHealth / 2);
         }
     }
 

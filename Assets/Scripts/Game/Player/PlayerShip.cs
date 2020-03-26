@@ -211,15 +211,6 @@ public class PlayerShip : Ship, IDestroyable
         string gameobjectTag = other.gameObject.tag;
         Items items = other.GetComponent<Items>();
 
-        if (gameobjectTag.Equals(Constants.ENEMYTAG))
-        {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            if (destroyable != null)
-            {
-                destroyable.TakeDamage(destroyable.CurrentHealth);
-            }
-        }
-
         if (items != null)
         {
             items.Action(this);

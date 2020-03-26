@@ -4,74 +4,88 @@ using UnityEngine;
 
 public class ArtilleryProjectile : EnemyProjectile
 {
-    public Vector3 target;
-    public GameObject TargetPrefab;
-    public GameObject WarningSignalPrefab;
-    private GameObject WarningSignal;
-
+    public PlayerShip playerShip;
     public float timer = 5;
-
-    public float yVel;
-
     public bool fall;
-
-    public float distFromTarget;
-
-    public GameObject Player;
-
-    private void OnEnable()
+    public Vector3 TargetPos;
+    public GameObject warningPrefab;
+    private SizeByDistance warning;
+    public float distance;
+    public override void OnStart()
     {
-        Player = GameObject.FindGameObjectWithTag("Player");
+        base.OnStart();
         timer = 4;
         fall = false;
-        StartCoroutine(GetTarget());
-    }
-    public override void SetInitialReference()
-    {
-        base.SetInitialReference();
-    }
 
-    private void Update()
-    {
-        timer -= Time.deltaTime;
-        if (timer < 0)
+        if (warning == null)
         {
-            fall = true;
-        }
-    }
-
-    IEnumerator GetTarget()
-    {
-
-        while (!fall)
-        {
-            target = new Vector3(Player.transform.position.x, -50, Player.transform.position.z) + new Vector3(Random.insideUnitCircle.x * 5, 0, Random.insideUnitCircle.y * 5);
-            yield return null;
+            GameObject warningGO = Instantiate(warningPrefab);
+            warning = warningGO.GetComponent<SizeByDistance>();      
         }
 
+        warning.Setup(transform);
+        warning.Hide();
+    }
+
+    public override void Setup(Vector3 shootDir, float dmg)
+    {
+        base.Setup(shootDir, dmg);
+        timer = 4;
+        fall = false;
+        if (warning == null)
+        {
+            GameObject warningGO = Instantiate(warningPrefab);
+            warning = warningGO.GetComponent<SizeByDistance>();
+            warning.Setup(transform);
+        }
+
+        warning.Hide();
     }
 
     public override void Movement()
     {
+        timer -= Time.deltaTime;
+
+        if (timer < 0)
+        {
+            fall = true;
+        }
 
         if (!fall)
         {
-            Vector3 direction = (speed *
-                transform.up) + (speed / 2) * transform.forward;
-            rigid.MovePosition(transform.position + direction * Time.deltaTime);
+            playerShip = PlayerManager.GetPlayer();
+
+            if (playerShip != null)
+            {
+                TargetPos = playerShip.transform.position;
+            }
+            else
+            {
+                TargetPos = new Vector3(0, 0, 0);
+            }
+            warning.transform.position = new Vector3(TargetPos.x, -50, TargetPos.z);
+
+            transform.position += Vector3.up * speed * Time.deltaTime;
         }
         else if (fall)
         {
-            Vector3 direction = target - transform.position;
-            direction.Normalize();
-            Debug.DrawRay(transform.position, direction, Color.green);
-            rigid.MovePosition(transform.position + direction * speed * Time.deltaTime);
-
-            if (Vector3.Distance(target, transform.position) < 2)
+            if (TargetPos != null)
             {
-                DestoryNow();
+                distance = Vector3.Distance(TargetPos, transform.position);
+
+                warning.Show();
+                   
+                transform.position = Vector3.MoveTowards(transform.position, TargetPos, 1);
+
+
+                if (distance < 1)
+                {
+                    DestoryNow();
+                }
+     
             }
         }
+
     }
 
 }

@@ -1,44 +1,59 @@
 ﻿using System.Collections;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class ArtilleryWeapon : WeaponScript
 {
-    [Header("Artillery")]
-    public GameObject TargetPrefab;
-    public Vector3[] Positions;
-    public Transform[] artilleryTargets;
-    private GameObject tarGO;
-    public GameObject BulletPrefab;
+    public float cooldown;
+    private int numberOfAttacks;
+    public bool attack;
 
-    public override void Initialize()
+    public override void OnUpdate()
     {
-        base.Initialize();
+        base.OnUpdate();
+        
+        Shoot();
 
-        StartCoroutine(ShootDelay());
+        if (!attack)
+        {
+            cooldown -= Time.deltaTime;
+        }
+
+        if (cooldown <= 0 && !attack)
+        {
+            cooldown = 2;
+            numberOfAttacks = 0;
+            attack = true;
+        }
+
+        if (numberOfAttacks > 3)
+        {
+            attack = false;
+        }
     }
+
 
     public override void Shoot()
     {
-        for (int i = 0; i < 4; i++)
+        if (Time.time > newShot && AutoAttack && attack)
         {
-            GameObject bullet = Instantiate(BulletPrefab, transform.position, Quaternion.identity);
-        }
-    }
+            newShot = Time.time + FireRate;
 
-    private IEnumerator ShootDelay()
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(delayBetweenShots);
-            float randomDelay = UnityEngine.Random.Range(.4f, 1);
-            for (int i = 0; i < Random.Range(2, 4); i++)
+            PlayWeaponFireSound();
+
+            for (int i = 0; i < Cannons.Length; i++)
             {
-                GameObject bullet = Instantiate(BulletPrefab, transform.position, Quaternion.Euler(0,0,0));
-                ArtilleryProjectile artilleryProjectile = bullet.GetComponent<ArtilleryProjectile>();
-                artilleryProjectile.Damage = Damage;
-                yield return new WaitForSeconds(randomDelay);
+                InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+                Vector3 dir = Cannons[i].position + Cannons[i].up;
+                Vector3 shootDir = (dir - Cannons[i].position).normalized;
+                InstansiatedProjectile.transform.position = Cannons[i].position;
+                InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
+                InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, Damage);
             }
-            delayBetweenShots = UnityEngine.Random.Range(4, 6);
+
+            numberOfAttacks++;
+           
         }
     }
 }
+

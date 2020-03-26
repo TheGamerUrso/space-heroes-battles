@@ -6,6 +6,7 @@ using System.Linq;
 using Random = UnityEngine.Random;
 using System.Collections;
 using TheGamerUrso.Utils;
+using System.Collections.Generic;
 
 public class BaseBossEnemy : BaseEnemy
 {
@@ -31,7 +32,7 @@ public class BaseBossEnemy : BaseEnemy
 
     #region Destroyable Parts Cofig
     [Header("Destroyable Parts Cofig")]
-    [SerializeField] protected IDestroyable[] DestroyableParts;
+    [SerializeField] protected List<IDestroyable> DestroyableParts = new List<IDestroyable>();
     #endregion
 
     public override void Enter()
@@ -39,23 +40,23 @@ public class BaseBossEnemy : BaseEnemy
         EnableColliders(false);
         currentWeaponActive = 1;
     }
+    public void AddDamagablePart(IDestroyable part)
+    {
+        DestroyableParts.Add(part);
+
+        MonoBehaviour go = part as MonoBehaviour;
+        if (go != this)
+        {
+            part.MaxHealth = MaxHealth / 2;
+            part.CurrentHealth = part.MaxHealth;
+        }
+    }
 
     public override void OnAwake()
     {
         base.OnAwake();
         BossAI = GetComponent<BaseBossEnemyAI>();
         DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
-        DestroyableParts = transform.GetComponentsInChildren<IDestroyable>().Where((item) => !item.Equals(this)).ToArray();
-
-        for (int i = 0; i < DestroyableParts.Length; i++)
-        {
-            MonoBehaviour go = DestroyableParts[i] as MonoBehaviour;
-            if (go != this)
-            {
-                DestroyableParts[i].MaxHealth = MaxHealth / 2;
-                DestroyableParts[i].CurrentHealth = DestroyableParts[i].MaxHealth;
-            }
-        }
 
         currentWeaponActive = 0;
 
@@ -93,7 +94,7 @@ public class BaseBossEnemy : BaseEnemy
     {
         PlayerShip playerShip = PlayerManager.GetPlayer();
         playerShip.IncreasePowerUp(.05f);
-       
+
     }
 
     public override void OnUpdate()
@@ -150,7 +151,7 @@ public class BaseBossEnemy : BaseEnemy
         return shipStatsSystem.GetHealthPressentage();
     }
 
-    public void SetFireRate(int weaponIndex = 0,bool all = true)
+    public void SetFireRate(int weaponIndex = 0, bool all = true)
     {
         if (all)
         {

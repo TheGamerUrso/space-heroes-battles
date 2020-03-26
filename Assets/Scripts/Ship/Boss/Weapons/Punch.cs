@@ -2,204 +2,116 @@
 using System.Collections;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
-
-public class Punch : Ship, IDestroyable
+using DG.Tweening;
+public class Punch : MonoBehaviour, IDestroyable
 {
-    public string id;
-    public event Action<string,object> OnEnemyHit = delegate { };
-    public Transform[] Waypoints;
-
-
-    public HealthBarSettings HealthBarSettings;
-    private EnemyHealthWidget healthBar;
-
-    public int currentWaypoint;
-    public float cooldown;
-    public int delay;
-
-    public bool isDestroyed = false;
-
-
-
-    protected float takeDamageDelay;
-    public GameObject FireEffect;
+    public Action<bool> Attacked;
 
     public BaseBossEnemy baseBossEnemy;
+    public bool isAlive;
+    public GameObject fireEffect;
 
-    #region Getters and Setters
+    public Animator animator;
+    public float damage;
     public bool IsDestroyed
     {
         get
         {
-            return isDestroyed;
+            return !isAlive;
         }
         set
         {
-            isDestroyed = value;
+            isAlive = value;
         }
     }
-    #endregion
+
+    public float maxHealth = 100;
+    public float MaxHealth
+    {
+        get
+        {
+            return maxHealth;
+        }
+        set
+        {
+            maxHealth = value;
+        }
+    }
+
+    public float currentHealth;
+    public float CurrentHealth
+    {
+        get
+        {
+            return currentHealth;
+        }
+        set
+        {
+            currentHealth = value;
+        }
+    }
+
+    public float HealthPresentage
+    {
+        get
+        {
+            return currentHealth / maxHealth;
+        }
+    }
+
 
     private void Start()
     {
-        id = gameObject.name + UnityEngine.Random.Range(1,1000);
+        currentHealth = maxHealth;
+        baseBossEnemy.AddDamagablePart(this);
+        fireEffect.SetActive(false);
+        isAlive = true;
+        animator = GetComponent<Animator>();
+ 
+
     }
 
-    private void Update()
+    public void Attack(Action<bool> callback)
     {
-      
-        var info = animator.GetCurrentAnimatorStateInfo(0);
-
-        if (info.shortNameHash == Animator.StringToHash("Enter")){
-            return;
-        }
-
-        if (isDestroyed == false)
-        {
-            float dist = (transform.position - Waypoints[0].position).magnitude;
-
-            if (dist <= 1)
-            {
-                cooldown -= Time.deltaTime;
-                if (cooldown <= 0)
-                {
-                    if (GuiManager.IsTrasnmiting())
-                    {
-                        return;
-                    }
-                    StartCoroutine(PunchCoroutine());
-                }
-            }
-
-            if (takeDamageDelay >= 0)
-            {
-                takeDamageDelay -= Time.deltaTime;
-            }
-
-            transform.position = Vector3.MoveTowards(transform.position, Waypoints[currentWaypoint].position, 1);
-        }
-        else
-        {
-            transform.position = Vector3.MoveTowards(transform.position, Waypoints[0].position, 1);
-        }
+        Attacked = callback;
+        StartCoroutine(AttackCoroutine());
     }
 
-    private IEnumerator PunchCoroutine()
+    IEnumerator AttackCoroutine()
     {
-        currentWaypoint = 1;
-        yield return new WaitForSeconds(UnityEngine.Random.Range(2,3));
-        currentWaypoint = 0;
-        cooldown = UnityEngine.Random.Range(2, 4);
+        animator.SetTrigger("Attack");
+        Attacked?.Invoke(true);
+        yield return new WaitForSeconds(2.0f);
+        Attacked?.Invoke(false);
+
     }
 
     public void TakeDamage(float dmg)
     {
-        if (GuiManager.IsTrasnmiting())
+        if (isAlive)
         {
-            return;
-        }
-        CurrentHealth -= dmg;
-        Debug.Log(GetHealthPresentage());
-        if (GetHealthPresentage() <= 50)
-        {
-            if (FireEffect && !FireEffect.activeSelf)
-                FireEffect.SetActive(true);
-        }
-
-        if (CurrentHealth <= 0)
-        {
-            CurrentHealth = 0;
-            if (isDestroyed == false)
+            currentHealth -= dmg;
+            if (currentHealth <= 0)
             {
-                Death();
+                isAlive = false;
+                currentHealth = 0;
+                fireEffect.SetActive(true);
             }
         }
-
-        OnEnemyHit?.Invoke(id,this);
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        GameObject obj = other.gameObject;
         string gameobjectTag = other.gameObject.tag;
-
-        if (other.tag.Equals(Constants.PLAYTERTAG))
+        if (gameobjectTag.Equals(Constants.PLAYTERTAG))
         {
-            if (takeDamageDelay <= 0)
+            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            if (destroyable != null)
             {
-                takeDamageDelay = .2f;
-
-                TakeDamage(12.5f);
-            }
-        }
-
-        PlayerProjectile playerProjectile = other.GetComponent<PlayerProjectile>();
-
-        if (playerProjectile)
-        {
-            if (takeDamageDelay <= 0)
-            {
-                takeDamageDelay = .2f;
-
-                if (playerProjectile)
-                {
-                    TakeDamage(playerProjectile.Damage);
-                }
+                destroyable.TakeDamage(damage);
             }
         }
     }
 
-    public void Heal(float ammount)
-    {
-        CurrentHealth += ammount;
 
-        if (CurrentHealth > MaxHealth)
-        {
-            CurrentHealth = MaxHealth;
-        }
-
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
-    }
-
-    public override void ShipSetup()
-    {
-        if (cooldown >= 0)
-        {
-            cooldown = UnityEngine.Random.Range(2, 4);
-        }
-        else
-        {
-            cooldown = 0;
-        }
-        GetShipStatsSystem().ReplaceBaseStats(baseBossEnemy.GetShipStatsSystem());
-
-        GetLevelSystem().SetLevel(baseBossEnemy.GetLevelSystem().GetLevel());
-
-        GetShipStatsSystem().SetStats(levelSystem);
-
-
-        if (FireEffect)
-            FireEffect.SetActive(false);
-
-        if (HealthBarSettings != null)
-        {   
-            GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
-            healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            healthBar.Setup(this,true);
-        }
-    }
-
-    public override void OnAwake()
-    {
-        animator = baseBossEnemy.GetAnimator();
-    }
-
-    public override void Death()
-    {
-        GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
-        explostion.transform.position = transform.position;
-        isDestroyed = true;
-
-    }
 }

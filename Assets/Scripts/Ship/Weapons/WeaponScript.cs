@@ -29,8 +29,8 @@ public abstract class WeaponScript : MonoBehaviour
 
     #region WeaponData Getters
 
-    private float fireRate;
-    private float damage;
+    public float fireRate;
+    public float damage;
     public float FireRate { get { return fireRate; } set { fireRate = value; } }
 
     public float Damage { get { return damage; } set { damage = value; } }
@@ -70,12 +70,15 @@ public abstract class WeaponScript : MonoBehaviour
         source = GetComponent<AudioSource>();
         Cannons = transform.Cast<Transform>().ToArray();
         ship = GetComponentInParent<Ship>();
-        ShipStatsSystem shipStatsSystem = ship.GetShipStatsSystem();
-
-        if(shipStatsSystem != null)
+        if (ship != null)
         {
-            fireRate = shipStatsSystem.FireRate;
-            damage = shipStatsSystem.Damage;
+            ShipStatsSystem shipStatsSystem = ship.GetShipStatsSystem();
+
+            if (shipStatsSystem != null)
+            {
+                fireRate = shipStatsSystem.FireRate;
+                damage = shipStatsSystem.Damage;
+            }
         }
     }
 

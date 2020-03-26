@@ -90,36 +90,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e89b43b1647c1641892bda46ab199d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStatsSystem:
-    CurrentHealth: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 0
-    SuperDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
-    baseDamage: 12.5
-    baseHealth: 25
-    baseFireRate: 0.4
-    baseSpecialCountdown: 1
-  levelSystem:
-    Level: 1
-    xp: 0
-    xpToLevel: 100
-  ShieldEffect: {fileID: 0}
-  ExplostionEffect: 0
-  animator: {fileID: 0}
-  Waypoints:
-  - {fileID: 54325789905394203}
-  - {fileID: 8422144760793232399}
-  HealthBarSettings: {fileID: 11400000, guid: b8654c602fea6e14e95f7801eafff54e, type: 2}
-  currentWaypoint: 0
-  cooldown: 0
-  delay: 0
-  isDestroyed: 0
-  FireEffect: {fileID: 5768390619022060291}
   baseBossEnemy: {fileID: 0}
+  isAlive: 0
+  fireEffect: {fileID: 0}
+  animator: {fileID: 0}
+  maxHealth: 0
+  currentHealth: 0
+  cooldown: 0
 --- !u!1 &2562734657307126536
 GameObject:
   m_ObjectHideFlags: 0
@@ -554,6 +531,7 @@ GameObject:
   - component: {fileID: 8893096453290627022}
   - component: {fileID: 2225113596045459281}
   - component: {fileID: 5157364096292476427}
+  - component: {fileID: 262419746777697991}
   m_Layer: 15
   m_Name: Left_Hand
   m_TagString: Enemy
@@ -603,36 +581,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6e89b43b1647c1641892bda46ab199d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStatsSystem:
-    CurrentHealth: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 0
-    SuperDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
-    baseDamage: 12.5
-    baseHealth: 25
-    baseFireRate: 0.4
-    baseSpecialCountdown: 1
-  levelSystem:
-    Level: 1
-    xp: 0
-    xpToLevel: 100
-  ShieldEffect: {fileID: 0}
-  ExplostionEffect: 0
-  animator: {fileID: 0}
-  Waypoints:
-  - {fileID: 6949546852919749906}
-  - {fileID: 2043521772540774762}
-  HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
-  currentWaypoint: 0
-  cooldown: 0
-  delay: 0
-  isDestroyed: 0
-  FireEffect: {fileID: 6316799047002470978}
   baseBossEnemy: {fileID: 0}
+  isAlive: 0
+  fireEffect: {fileID: 0}
+  animator: {fileID: 0}
+  maxHealth: 0
+  currentHealth: 0
+  cooldown: 0
+--- !u!95 &262419746777697991
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9178525307169890463}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 0}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1001 &3622755721156564002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -640,11 +614,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 8893096453290627022}
     m_Modifications:
-    - target: {fileID: 7345188892768120416, guid: 8f2279e46585d8a44813077d43a2dea5,
-        type: 3}
-      propertyPath: m_Name
-      value: FX_Fire
-      objectReference: {fileID: 0}
     - target: {fileID: 6603635211196780070, guid: 8f2279e46585d8a44813077d43a2dea5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -700,17 +669,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7345188892768120416, guid: 8f2279e46585d8a44813077d43a2dea5,
+        type: 3}
+      propertyPath: m_Name
+      value: FX_Fire
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f2279e46585d8a44813077d43a2dea5, type: 3}
 --- !u!4 &7629746613604866564 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6603635211196780070, guid: 8f2279e46585d8a44813077d43a2dea5,
-    type: 3}
-  m_PrefabInstance: {fileID: 3622755721156564002}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &6316799047002470978 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7345188892768120416, guid: 8f2279e46585d8a44813077d43a2dea5,
     type: 3}
   m_PrefabInstance: {fileID: 3622755721156564002}
   m_PrefabAsset: {fileID: 0}
@@ -721,11 +689,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 5905300924923117723}
     m_Modifications:
-    - target: {fileID: 7345188892768120416, guid: 8f2279e46585d8a44813077d43a2dea5,
-        type: 3}
-      propertyPath: m_Name
-      value: FX_Fire
-      objectReference: {fileID: 0}
     - target: {fileID: 6603635211196780070, guid: 8f2279e46585d8a44813077d43a2dea5,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -781,14 +744,13 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7345188892768120416, guid: 8f2279e46585d8a44813077d43a2dea5,
+        type: 3}
+      propertyPath: m_Name
+      value: FX_Fire
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8f2279e46585d8a44813077d43a2dea5, type: 3}
---- !u!1 &5768390619022060291 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7345188892768120416, guid: 8f2279e46585d8a44813077d43a2dea5,
-    type: 3}
-  m_PrefabInstance: {fileID: 3882712923148633443}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7946313374494788421 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6603635211196780070, guid: 8f2279e46585d8a44813077d43a2dea5,
@@ -882,6 +844,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1993428461247126029, guid: dd950f0cf6e68a54d80d2e3c116d2149,
+        type: 3}
+      propertyPath: m_Layer
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 2526123864095629380, guid: dd950f0cf6e68a54d80d2e3c116d2149,
         type: 3}
       propertyPath: m_LocalScale.x
@@ -911,11 +878,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993428461247126029, guid: dd950f0cf6e68a54d80d2e3c116d2149,
-        type: 3}
-      propertyPath: m_Layer
-      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd950f0cf6e68a54d80d2e3c116d2149, type: 3}
@@ -1012,6 +974,11 @@ PrefabInstance:
       propertyPath: m_LocalScale.y
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1993428461247126029, guid: dd950f0cf6e68a54d80d2e3c116d2149,
+        type: 3}
+      propertyPath: m_Layer
+      value: 17
+      objectReference: {fileID: 0}
     - target: {fileID: 2526123864095629380, guid: dd950f0cf6e68a54d80d2e3c116d2149,
         type: 3}
       propertyPath: m_LocalPosition.y
@@ -1051,11 +1018,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1993428461247126029, guid: dd950f0cf6e68a54d80d2e3c116d2149,
-        type: 3}
-      propertyPath: m_Layer
-      value: 17
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dd950f0cf6e68a54d80d2e3c116d2149, type: 3}

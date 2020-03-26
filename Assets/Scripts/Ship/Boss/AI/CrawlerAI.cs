@@ -46,7 +46,7 @@ public class CrawlerAI : BaseBossEnemyAI
         Vector3 newPos = transform.position;
         newPos.x = xVel;
         newPos.z = zVel;
-        transform.position = newPos;
+        transform.position = Vector3.MoveTowards(transform.position, newPos, .5f);
     }
    
 

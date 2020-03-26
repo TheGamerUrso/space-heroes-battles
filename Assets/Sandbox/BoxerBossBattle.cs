@@ -13,7 +13,7 @@ public class BoxerBossBattle : BaseBossBattle
         {
             if (HealthPresentage % 40 == 0)
             {
-                GetComponent<FirstBossAI>().ChangeWaypoint(hitIndex);
+                
             }
         }
     }
