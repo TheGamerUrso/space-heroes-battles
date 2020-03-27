@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class EnemyElement
@@ -19,12 +20,16 @@ public class EnemyElement
 
 public class SpawnEnemies : Singleton<SpawnEnemies>
 {
+    public Action SpawnEnded;
     public Action<int, int, int> GameStatsChanged;
     public Action<string, BaseEnemy> BossDied;
 
     public EnemyElement[] enemyElements;
+    public bool HasBoss;
 
     [SerializeField] private int numberOfEnemiesEachWave;
+    [Range(1, 16)]
+    [SerializeField] private int waves;
 
     [Range(0, 6)]
     public int availableEnemies;
@@ -50,17 +55,29 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public int EnemySpawnedInTotal { get; set; }
     private void Start()
     {
-        MissionCollection missionCollection = DataController.GetMissionCollection();
-        Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
-        LevelDifficulty = mission.Level;
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
+            {
+                Debug.Log("Gameplay Scene active");
+                continue;
+            }
+            Debug.Log("Not Gameplay Scene active");
+            MissionCollection missionCollection = DataController.GetMissionCollection();
+            Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
+            LevelDifficulty = mission.Level;
+        }
+
 
         string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
         GuiManager.PlayTrasmition(transmitions);
 
+        TotalEnemies = numberOfEnemiesEachWave * waves;
+
         StartCoroutine(Spawn());
     }
 
-   
+
 
     IEnumerator Spawn()
     {
@@ -109,17 +126,22 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             {
                 yield return new WaitForSeconds(cooldown);
             }
-
-            if (!BossBattleInitiated)
+            if (HasBoss)
             {
-                BossBattleInitiated = true;
-                Debug.Log("Boss Battle");
+                if (!BossBattleInitiated)
+                {
+                    BossBattleInitiated = true;
+                    Debug.Log("Boss Battle");
 
-                SpawnBoss();
+                    SpawnBoss();
+                }
             }
-
         }
         Debug.Log("Game Over");
+        if (HasBoss)
+        {
+            SpawnEnded?.Invoke();
+        }
     }
 
     private void SpawnBoss()

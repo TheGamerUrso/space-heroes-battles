@@ -16,12 +16,12 @@ public class EnemyHealthWidget : BaseHealthWidget
         UpdateHealthBar(100, 100);
     }
 
-    public override void Setup(Ship ship, bool follow = true)
+    public override void Setup(IDestroyable ship, bool follow = true)
     {
         if (Target == null || Target != ship)
         {
             Target = ship;
-            ship.GetShipStatsSystem().HealthChanged += UpdateHealthBar;
+            ship.OnHealthChange += UpdateHealthBar;
             Static = follow;
         }
     }
@@ -37,21 +37,24 @@ public class EnemyHealthWidget : BaseHealthWidget
         {
             Show();
         }
-
-        bool m_HasShield = Target.HasShieldModule();
-
-        if (ShieldBarImage != null)
+        Ship ship = Target as Ship;
+        if (ship != null)
         {
-            if (m_HasShield)
-            {
-                ShieldBarImage.fillAmount = 1;
-            }
-            else
-            {
-                ShieldBarImage.fillAmount = 0;
-            }
-        }
+            bool m_HasShield = ship.HasShieldModule();
 
+            if (ShieldBarImage != null)
+            {
+                if (m_HasShield)
+                {
+                    ShieldBarImage.fillAmount = 1;
+                }
+                else
+                {
+                    ShieldBarImage.fillAmount = 0;
+                }
+            }
+
+        }
         timer = duration;
 
         base.UpdateHealthBar(currentHealth, maxHealth);
@@ -63,7 +66,11 @@ public class EnemyHealthWidget : BaseHealthWidget
         if (!Static)
         {
             if (Target != null)
-                SetHealthBarPosition(Target.transform);
+            {
+                MonoBehaviour go = Target as MonoBehaviour;
+                if (go != null)
+                    SetHealthBarPosition(go.transform);
+            }
         }
 
         if (AutoHide)

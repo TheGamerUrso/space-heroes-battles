@@ -50,6 +50,8 @@ public class SimpleShipControls : MonoBehaviour
         rigid = GetComponent<Rigidbody>();
 
         playerShip = GetComponent<PlayerShip>();
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = false;
     }
 
     public static void UpdateOffset(float ammount)

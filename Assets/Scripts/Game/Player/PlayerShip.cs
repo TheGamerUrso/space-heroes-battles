@@ -50,6 +50,17 @@ public class PlayerShip : Ship, IDestroyable
         }
     }
 
+    public Action<float, float> OnHealthChange
+    {
+        get
+        {
+            return shipStatsSystem.HealthChanged;
+        }
+        set
+        {
+            shipStatsSystem.HealthChanged = value;
+        }
+    }
 
     private void OnDestroy()
     {

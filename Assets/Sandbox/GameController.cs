@@ -41,11 +41,18 @@ public class GameController : Singleton<GameController>
 
     protected override void OnAwake()
     {
-        Scene bootScene = SceneManager.GetSceneByName("boot");
-        if (!bootScene.isLoaded)
+#if UNITY_EDITOR
+        for (int i = 0; i < SceneManager.sceneCount; i++)
         {
+            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
+            {
+                Debug.Log("boot found skip");
+                return;
+            }
+            Debug.Log("Boot not found Loading");
             SceneManager.LoadScene("boot", LoadSceneMode.Additive);
         }
+#endif
     }
 
 
@@ -65,6 +72,9 @@ public class GameController : Singleton<GameController>
 
         playerShip.GetComponent<PlayerShip>().PlayerShipDeath += PlayerShipCallback;
 
+
+        SpawnEnemies spawn = GameObject.FindObjectOfType<SpawnEnemies>();
+        spawn.SpawnEnded = () => { GameOver(); };
 
     }
 

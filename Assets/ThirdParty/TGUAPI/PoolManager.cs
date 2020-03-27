@@ -54,7 +54,8 @@ namespace TheGamerUrso
             Asteroid8,
             Asteroid9,
             Enemy7,
-            Boss3Artilery
+            Boss3Artilery,
+            BossProjectile1
         }
 
         public class PoolManager : Singleton<PoolManager>

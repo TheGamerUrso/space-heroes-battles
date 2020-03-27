@@ -9,13 +9,10 @@ public class Intro_UI : MonoBehaviour
     private void Start()
     {
         animator = GetComponent<Animator>();
-        Intro.OnIntroClickContinueHandled += FadeOut;
+        GameObject.FindObjectOfType<IntroScreen>().onIntroClickContinue += () =>
+        {
+            animator.SetTrigger("FadeOut");
+        };
     }
-
-    public void FadeOut()
-    {
-        animator.SetTrigger("FadeOut");
-    }
-
 }
 

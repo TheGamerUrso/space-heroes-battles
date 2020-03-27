@@ -423,20 +423,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a582be06709c734aa9415dc2f988aa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsGameOver: 0
-  BossStage: 0
-  bossWave: 0
-  Wave: 0
-  LevelDifficuilty: 1
-  LevelIncreaseThreshold: 2
-  survivalMode: 0
-  EnemiesKilled: 0
-  EnemiesEscaped: 0
-  NumberOfEnemies: 0
-  MaxEnemiesToSpawn: 8
-  EnemySpawnedInTotal: 0
-  maxWave: 8
-  GameOverClip: {fileID: 8300000, guid: 15a44130960c8fe48b2e7644caba69c5, type: 3}
 --- !u!4 &203327527
 Transform:
   m_ObjectHideFlags: 0
@@ -6819,9 +6805,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86585dee019c937459596ffe481fc302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BossPrefab:
-  - {fileID: 9045726662814918861, guid: 55a5ffd6205fb4244a81cf1af8e8df36, type: 3}
-  gameController: {fileID: 0}
 --- !u!4 &1983577523
 Transform:
   m_ObjectHideFlags: 0
@@ -6974,6 +6957,12 @@ PrefabInstance:
       propertyPath: ListOfEnemyToSpawn.Array.data[6].MaxNumberInScene
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
+        type: 3}
+      propertyPath: BossPrefab
+      value: 
+      objectReference: {fileID: 9045726662814918861, guid: 55a5ffd6205fb4244a81cf1af8e8df36,
+        type: 3}
     - target: {fileID: 7569038437137189255, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
       propertyPath: m_Name

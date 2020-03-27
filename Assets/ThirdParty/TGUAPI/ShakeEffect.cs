@@ -47,15 +47,20 @@ public class ShakeEffect : MonoBehaviour
     }
     private void Start()
     {
-        if (playerShip == null)
-            playerShip = PlayerManager.GetPlayer();
+      
 
-        if (playerShip != null)
-            playerShip.PlayerShipHit += StartEffect;
     }
 
     void Update()
     {
+        if (playerShip == null)
+        {
+            playerShip = PlayerManager.GetPlayer();
+
+            if (playerShip != null)
+                playerShip.PlayerShipHit += StartEffect;
+        }
+
         if (shakeDuration > 0)
         {
             camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;

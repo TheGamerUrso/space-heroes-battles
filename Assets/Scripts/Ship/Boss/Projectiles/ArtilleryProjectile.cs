@@ -14,7 +14,7 @@ public class ArtilleryProjectile : EnemyProjectile
     public override void OnStart()
     {
         base.OnStart();
-        timer = 4;
+        timer = 1;
         fall = false;
 
         if (warning == null)
@@ -30,7 +30,7 @@ public class ArtilleryProjectile : EnemyProjectile
     public override void Setup(Vector3 shootDir, float dmg)
     {
         base.Setup(shootDir, dmg);
-        timer = 4;
+        timer = 1;
         fall = false;
         if (warning == null)
         {
@@ -66,19 +66,23 @@ public class ArtilleryProjectile : EnemyProjectile
             warning.transform.position = new Vector3(TargetPos.x, -50, TargetPos.z);
 
             transform.position += Vector3.up * speed * Time.deltaTime;
+
+            speed = 60;
         }
         else if (fall)
         {
+            speed = 120;
             if (TargetPos != null)
             {
                 distance = Vector3.Distance(TargetPos, transform.position);
 
                 warning.Show();
-                   
-                transform.position = Vector3.MoveTowards(transform.position, TargetPos, 1);
 
+                transform.position += transform.forward * speed * Time.deltaTime;
 
-                if (distance < 1)
+                transform.LookAt(TargetPos);
+
+                if (distance < 2)
                 {
                     DestoryNow();
                 }

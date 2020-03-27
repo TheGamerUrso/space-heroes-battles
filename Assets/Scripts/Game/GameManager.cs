@@ -64,7 +64,7 @@ public class GameManager : Singleton<GameManager>
     protected override void OnAwake()
     {
         Debug.Log("Loading Data");
-       new DataController();
+        new DataController();
 
         DataController.Setup();
 
@@ -78,7 +78,8 @@ public class GameManager : Singleton<GameManager>
 
         GameEventSystem.OnShipSelect += ShipSelected;
 
-       // SceneManager.LoadScene("Intro", LoadSceneMode.Additive);
+
+
     }
 
     public void ShipSelected(int shipSelected)
@@ -108,6 +109,20 @@ public class GameManager : Singleton<GameManager>
 
 
         OnLoadDataCompleted?.Invoke();
+
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
+            {
+                Debug.Log("boot found skip");
+            }
+
+            if (SceneManager.sceneCount <= 1)
+            {
+                Debug.Log("Continue");
+                SceneLoader.Instance.LoadLevel("Intro");
+            }   
+        }
     }
 
     private void InstantiateSystemPrefabs()

@@ -5,6 +5,7 @@ using UnityEngine;
 using DG.Tweening;
 public class Punch : MonoBehaviour, IDestroyable
 {
+    public Action<float, float> HealthChanged;
     public Action<bool> Attacked;
 
     public BaseBossEnemy baseBossEnemy;
@@ -13,6 +14,9 @@ public class Punch : MonoBehaviour, IDestroyable
 
     public Animator animator;
     public float damage;
+
+    public GameObject prepareToAttack;
+
     public bool IsDestroyed
     {
         get
@@ -59,6 +63,27 @@ public class Punch : MonoBehaviour, IDestroyable
         }
     }
 
+    [SerializeField] private HealthBarSettings HealthBarSettings;
+    private EnemyHealthWidget healthBar;
+    public EnemyHealthWidget HealthBar
+    {
+        get
+        {
+            return healthBar;
+        }
+    }
+
+    public Action<float, float> OnHealthChange
+    {
+        get
+        {
+            return HealthChanged;
+        }
+        set
+        {
+            HealthChanged = value;
+        }
+    }
 
     private void Start()
     {
@@ -67,7 +92,21 @@ public class Punch : MonoBehaviour, IDestroyable
         fireEffect.SetActive(false);
         isAlive = true;
         animator = GetComponent<Animator>();
- 
+
+        if (healthBar != null)
+        {
+            healthBar.GetComponent<BaseHealthWidget>();
+        }
+
+        if (HealthBarSettings != null)
+        {
+            GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
+            healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
+            healthBar.Setup(this, false);
+            healthBar.Show();
+            initializedHealthWidget.SetActive(true);
+        }
+
 
     }
 
@@ -79,10 +118,13 @@ public class Punch : MonoBehaviour, IDestroyable
 
     IEnumerator AttackCoroutine()
     {
-        animator.SetTrigger("Attack");
+        prepareToAttack.SetActive(true);
+        yield return new WaitForSeconds(1.0f);
+        animator.SetTrigger("Attack");      
         Attacked?.Invoke(true);
         yield return new WaitForSeconds(2.0f);
         Attacked?.Invoke(false);
+        prepareToAttack.SetActive(false);
 
     }
 
@@ -95,8 +137,11 @@ public class Punch : MonoBehaviour, IDestroyable
             {
                 isAlive = false;
                 currentHealth = 0;
+                GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
+                explostion.transform.position = transform.position;
                 fireEffect.SetActive(true);
             }
+            OnHealthChange?.Invoke(currentHealth, maxHealth);
         }
     }
 

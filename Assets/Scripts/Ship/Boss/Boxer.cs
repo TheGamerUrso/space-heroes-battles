@@ -7,14 +7,17 @@ public class Boxer : BaseBossEnemy
 {
     public override void TakeDamage(float damage)
     {
-        foreach (IDestroyable item in DestroyableParts)
+        if (DestroyableParts.Count > 0)
         {
-            if (item.IsDestroyed == false)
+            foreach (IDestroyable item in DestroyableParts)
             {
-                return;
+                if (item.IsDestroyed == false)
+                {
+                    return;
+                }
             }
-        }
 
+        }
 
         base.TakeDamage(damage);
     }

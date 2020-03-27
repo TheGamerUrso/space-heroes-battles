@@ -27,7 +27,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 9f327c06f8120874aa029411cd0352cb, type: 2}
+  m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -97,7 +97,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
-  m_LightingDataAsset: {fileID: 112000000, guid: bae48e865d549734cb0cdbc745ecdbff,
+  m_LightingDataAsset: {fileID: 112000000, guid: bf26b2463cfceec42bfbf1f6dabe3ecc,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -436,11 +436,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
-      propertyPath: BossPrefab.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
@@ -459,12 +454,6 @@ PrefabInstance:
       propertyPath: AvailableEnemiesIndex
       value: 2
       objectReference: {fileID: 0}
-    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
-        type: 3}
-      propertyPath: BossPrefab.Array.data[0]
-      value: 
-      objectReference: {fileID: 1400881148121724, guid: b1e86a46e28d68d4691941a3da9f0c49,
-        type: 3}
     - target: {fileID: 7569038437137189255, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
       propertyPath: m_Name
@@ -501,9 +490,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86585dee019c937459596ffe481fc302, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BossPrefab:
-  - {fileID: 9045726662814918861, guid: 55a5ffd6205fb4244a81cf1af8e8df36, type: 3}
-  gameController: {fileID: 0}
 --- !u!4 &367606728
 Transform:
   m_ObjectHideFlags: 0
@@ -965,11 +951,21 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7b49642bd85a2ef49875fd3d4fdde13d, type: 3}
---- !u!4 &874340708 stripped
+--- !u!4 &874340708
 Transform:
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 874340707}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1250895528}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1919604211}
+  m_Father: {fileID: 1756311580}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &876372667
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,6 +1404,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1250895528
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 874340707}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 874340708}
+  m_Layer: 0
+  m_Name: StarfieldSpawner (Missing Prefab)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1001 &1289361276
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6856,20 +6868,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a582be06709c734aa9415dc2f988aa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsGameOver: 0
-  BossStage: 0
-  bossWave: 0
-  Wave: 0
-  LevelDifficuilty: 1
-  LevelIncreaseThreshold: 2
-  survivalMode: 0
-  EnemiesKilled: 0
-  EnemiesEscaped: 0
-  NumberOfEnemies: 0
-  MaxEnemiesToSpawn: 8
-  EnemySpawnedInTotal: 0
-  maxWave: 8
-  GameOverClip: {fileID: 8300000, guid: 15a44130960c8fe48b2e7644caba69c5, type: 3}
 --- !u!4 &1723108932
 Transform:
   m_ObjectHideFlags: 0
@@ -7010,6 +7008,36 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1812688074}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1919604210
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 874340707}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1919604211}
+  m_Layer: 0
+  m_Name: Missing Prefab (Dummy)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1919604211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 874340707}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1919604210}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 874340708}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1970422411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7017,6 +7045,37 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 4169762112776524599, guid: 2e61b2bf5911ce943878fab05fb53f61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169762113355879870, guid: 2e61b2bf5911ce943878fab05fb53f61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169762113453520545, guid: 2e61b2bf5911ce943878fab05fb53f61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169762113453520546, guid: 2e61b2bf5911ce943878fab05fb53f61,
+        type: 3}
+      propertyPath: profile
+      value: 
+      objectReference: {fileID: 11400000, guid: e833fc0ccff88d44fa69144a83a45533,
+        type: 2}
+    - target: {fileID: 4169762113942332982, guid: 2e61b2bf5911ce943878fab05fb53f61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 4169762114390946276, guid: 2e61b2bf5911ce943878fab05fb53f61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5046707522985360924, guid: 2e61b2bf5911ce943878fab05fb53f61,
         type: 3}
       propertyPath: m_RenderShadows

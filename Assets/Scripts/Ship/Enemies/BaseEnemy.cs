@@ -49,6 +49,17 @@ public class BaseEnemy : Ship, IDestroyable
             Alive = value;
         }
     }
+    public Action<float, float> OnHealthChange
+    {
+        get
+        {
+            return shipStatsSystem.HealthChanged;
+        }
+        set
+        {
+            shipStatsSystem.HealthChanged = value;
+        }
+    }
 
     public int m_ValueOfEnemy;
 
