@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
-
+using TheGamerUrso.SceneLoader;
 public class StoryController : MonoBehaviour
 {
     public GameObject StoryCanvas;

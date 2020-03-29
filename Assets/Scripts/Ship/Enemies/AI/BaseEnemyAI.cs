@@ -65,6 +65,11 @@ public class BaseEnemyAI : MonoBehaviour
 
     private void Update()
     {
+      
+    }
+
+    private void LateUpdate()
+    {
         Move();
     }
 

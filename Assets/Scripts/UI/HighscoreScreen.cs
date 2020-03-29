@@ -6,7 +6,7 @@ public class HighscoreScreen : MonoBehaviour
     private PlayerData playerData;
     public TextMeshProUGUI[] HighScore;
 
-    private void OnEnable()
+    private void Start()
     {
         UpdateScore();
     }
@@ -14,8 +14,6 @@ public class HighscoreScreen : MonoBehaviour
     public void UpdateScore()
     {
         PlayerData playerData = DataController.GetPlayerData();
-
-
 
         MissionCollection missionCollection = DataController.GetMissionCollection();
 

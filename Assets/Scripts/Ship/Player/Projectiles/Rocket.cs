@@ -17,7 +17,7 @@ public class Rocket : PlayerProjectile
                 Debug.Log("Attacking " + m_Target, gameObject);
             }else if(m_Target == null)
             {
-                shootDir = transform.forward;
+                shootDir = Vector3.forward;
             }
         }
     }
@@ -32,9 +32,7 @@ public class Rocket : PlayerProjectile
         if (HomeMissleType)
         {
             if (m_Target != null)
-            {
-                Debug.DrawLine(transform.position, m_Target.transform.position, Color.red);
-
+            {          
                 shootDir = (m_Target.transform.position - transform.position).normalized;
 
                 if (!m_Target.activeInHierarchy)
@@ -45,13 +43,14 @@ public class Rocket : PlayerProjectile
             }
             else if (m_Target == null)
             {
-                shootDir = transform.forward;
+                shootDir = Vector3.forward;
             }
 
-        
-            transform.position += shootDir * speed * Time.deltaTime;
+            Debug.DrawRay(transform.position, shootDir, Color.red);
 
-            transform.rotation = Quaternion.LookRotation(shootDir);
+            transform.Translate(shootDir * speed * Time.deltaTime, Space.World);
+
+            transform.rotation = Quaternion.LookRotation(shootDir,transform.up);
         }
 
 

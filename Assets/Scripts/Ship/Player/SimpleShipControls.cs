@@ -107,12 +107,14 @@ public class SimpleShipControls : MonoBehaviour
         {
             if (IsEnterOrExitAnimationState())
             {
-                transform.position = Vector3.MoveTowards(transform.position, targetPos + new Vector3(0, 0, offspec), speed * Time.deltaTime);
+                Vector3 direction = targetPos + new Vector3(0, 0, offspec) - transform.position;
 
-                if (transform.position == targetPos)
-                {
-                    isMoving = false;
+                if (direction.magnitude > 1) {
+
+                    Debug.DrawRay(this.transform.position, direction, Color.red);
+                    transform.Translate(direction.normalized * speed * Time.deltaTime,Space.World);
                 }
+
             }
         }
     }
@@ -120,13 +122,13 @@ public class SimpleShipControls : MonoBehaviour
     private void Update()
     {
         GetPlayerInput();
-        Move();
+ 
 
     }
 
     private void LateUpdate()
     {
-        
+        Move();
     }
 
     public void Rotate()

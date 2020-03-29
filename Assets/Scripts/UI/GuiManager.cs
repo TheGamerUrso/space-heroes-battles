@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using EasyMobile;
 using TheGamerUrso.PoolSystem;
+using TheGamerUrso.SceneLoader;
 
 public class GuiManager : Singleton<GuiManager>
 {

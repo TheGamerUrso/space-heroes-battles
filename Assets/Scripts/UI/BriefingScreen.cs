@@ -46,14 +46,10 @@ public class BriefingScreen : MonoBehaviour
         }
     }
 
-    private void Awake()
-    {
-        InitizeBriefingScreen();
-    }
-
     private void Start()
     {
         dialogueManager = DialogueManager.Instance;
+        InitizeBriefingScreen();
     }
 
     public void InitizeBriefingScreen()

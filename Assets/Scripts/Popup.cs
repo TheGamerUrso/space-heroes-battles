@@ -29,10 +29,14 @@ public class Popup : MonoBehaviour
     }
     public static void Show(popupType popupType,string message = "",bool autoClose = false)
     {
-        popups[popupType].SetActive(true);
-        popups[popupType].GetComponent<SystemMessageWidget>().SetWidgetText(message);
-        if (autoClose) {
-            popups[popupType].GetComponent<SystemMessageWidget>().AutoClose();
+        if (popups.ContainsKey(popupType))
+        {
+            popups[popupType].SetActive(true);
+            popups[popupType].GetComponent<SystemMessageWidget>().SetWidgetText(message);
+            if (autoClose)
+            {
+                popups[popupType].GetComponent<SystemMessageWidget>().AutoClose();
+            }
         }
     }
 

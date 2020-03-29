@@ -7,8 +7,7 @@ using System;
 [RequireComponent(typeof(CanvasGroup))]
 public class UIView : MonoBehaviour
 {
- 
-   
+    public float speed;
     private CanvasGroup canvasGroup;
     public bool ViewIsActive
     {
@@ -24,7 +23,7 @@ public class UIView : MonoBehaviour
     public void Open()
     {
         Debug.Log(gameObject.name + " Open");
-        canvasGroup.DOFade(1, 1).OnComplete(() =>
+        canvasGroup.DOFade(1, speed).OnComplete(() =>
         {
             canvasGroup.blocksRaycasts = true;
             canvasGroup.interactable = true;
@@ -36,7 +35,7 @@ public class UIView : MonoBehaviour
         if (canvasGroup != null)
         {
             canvasGroup.interactable = false;
-            canvasGroup.DOFade(0, 1).OnComplete(() =>
+            canvasGroup.DOFade(0, speed).OnComplete(() =>
             {
                 canvasGroup.blocksRaycasts = false;
             });

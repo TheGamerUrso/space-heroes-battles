@@ -38,7 +38,7 @@ public abstract class Projectile : MonoBehaviour
     }
     public virtual void Setup(Vector3 shootDir,float dmg = 1) { }
     public virtual void OnStart() { }
-    private void Update() => Movement();
+    private void LateUpdate() => Movement();
 
     public abstract void Movement();
 

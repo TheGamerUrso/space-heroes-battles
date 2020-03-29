@@ -138,14 +138,13 @@ public class FollowPathAI : SimpleAI
 
             if (distance > 1)
             {
-                transform.position += normalizedDirection * m_ZVel * Time.deltaTime;
+                transform.Translate(normalizedDirection * m_ZVel * Time.deltaTime,Space.World);
             }
 
             if (RotateTowardDir)
             {
                 step = RotationSpeed * Time.deltaTime;
-                dir = (transform.position - newPos).normalized;
-                targetRotation = Vector3.Lerp(targetRotation, dir, step);
+                targetRotation = Vector3.Lerp(targetRotation, normalizedDirection, step);
                 transform.rotation = Quaternion.LookRotation(targetRotation, Vector3.up);
             }
         }

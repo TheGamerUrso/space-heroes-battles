@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using TheGamerUrso.SceneLoader;
 public class IntroScreen : MonoBehaviour
 {
     public delegate void OnIntroClickContinue();

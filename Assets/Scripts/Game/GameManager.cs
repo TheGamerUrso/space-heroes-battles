@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-
+using TheGamerUrso.SceneLoader;
 [Serializable]
 public class PlayerShipElement
 {
@@ -120,7 +120,7 @@ public class GameManager : Singleton<GameManager>
             if (SceneManager.sceneCount <= 1)
             {
                 Debug.Log("Continue");
-                SceneLoader.Instance.LoadLevel("Intro");
+                SceneLoader.Instance.LoadLevel("SplashScreen");
             }   
         }
     }

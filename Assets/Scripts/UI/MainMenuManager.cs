@@ -4,6 +4,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms;
+using TheGamerUrso.SceneLoader;
+using UnityEngine.SceneManagement;
+
 public class MainMenuManager : Singleton<MainMenuManager>
 {
     public TextMeshProUGUI PlayerXPText;
@@ -30,7 +33,24 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         GooglePlayServicesManager.Instance.ShowAchievementa();
     }
+    protected override void OnAwake()
+    {
 
+        base.OnAwake();
+#if UNITY_EDITOR
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
+            {
+                Debug.Log("boot found skip");
+                return;
+            }
+            Debug.Log("Boot not found Loading");
+            SceneManager.LoadScene("boot", LoadSceneMode.Additive);
+        }
+
+#endif
+    }
     private void Start()
     {
         version.text = "ver " + Application.version;
