@@ -20,10 +20,12 @@ public class ShipSelect : MonoBehaviour
     public void Initialize()
     {
         PlayerData playerData = DataController.GetPlayerData();
+
         foreach (GameObject item in Ships)
         {
             item.SetActive(false);
         }
+
         if (playerData.UnlockedHeroes.Length == 0)
         {
             playerData.UnlockedHeroes[0] = 1;

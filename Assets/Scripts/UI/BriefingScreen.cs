@@ -119,7 +119,6 @@ public class BriefingScreen : MonoBehaviour
         GameManager.LevelSelected = level.mission.ID;
 
         RefreshLevelObjectiveData();
-        survivalScreen.SetActive(false);
         ShowStoryButton.SetActive(true);
         currentMission = DataController.GetMission(level.mission.ID);
         LevelDetailPreview.sprite = sprites[currentMission.SpriteID];

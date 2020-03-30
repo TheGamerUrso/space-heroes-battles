@@ -53,7 +53,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     }
     private void Start()
     {
-        version.text = "ver " + Application.version;
+        //version.text = "ver " + Application.version;
         GameManager.PauseTheGame(false);
         AudioManager.PlayMusic("Menu");
         PlayerData playerData = DataController.GetPlayerData();

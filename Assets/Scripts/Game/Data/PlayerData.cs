@@ -67,6 +67,7 @@ public class PlayerData
         GotHitInGame = false;
         PlayedGame = false;
         UnlockedHeroes = new int[4];
+        UnlockedHeroes[0] = 1;
         Upgrades = new int[Enum.GetValues(typeof(UpgradeType)).Length - 1];
         Level = 1;
         xp = 0;

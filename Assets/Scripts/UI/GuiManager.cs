@@ -157,19 +157,19 @@ public class GuiManager : Singleton<GuiManager>
 
     private void Update()
     {
-        if (Time.timeScale == 1)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                pauseButton.SetActive(false);
-            }
-        }
-        else
-        {
-            timer = 1;
-            pauseButton.SetActive(true);
-        }
+        //if (Time.timeScale == 1)
+        //{
+        //    timer -= Time.deltaTime;
+        //    if (timer <= 0)
+        //    {
+        //        pauseButton.SetActive(false);
+        //    }
+        //}
+        //else
+        //{
+        //    timer = 1;
+        //    pauseButton.SetActive(true);
+        //}
     }
 
     public void SetCountdownVisibility(bool enable)
