@@ -24,7 +24,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public Action<int, int, int> GameStatsChanged;
     public Action<string, BaseEnemy> BossDied;
 
-    public EnemyElement[] enemyElements;
+    public List<EnemyElement> enemyElements;
+    public Dictionary<string,EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
     public bool HasBoss;
 
     [SerializeField] private int numberOfEnemiesEachWave;
@@ -52,6 +53,9 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public float cooldown;
     private EnemyElement enemyElement = null;
 
+    public List<EnemyElement> availableEnemie;
+    public List<EnemyElement> tempList;
+
     public int EnemySpawnedInTotal { get; set; }
     private void Start()
     {
@@ -66,6 +70,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             MissionCollection missionCollection = DataController.GetMissionCollection();
             Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
             LevelDifficulty = mission.Level;
+
         }
 
 
@@ -73,6 +78,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         GuiManager.PlayTrasmition(transmitions);
 
         TotalEnemies = numberOfEnemiesEachWave * waves;
+
+        for (int i = 0; i < availableEnemies; i++)
+        {
+            ListOfEnemyElements.Add(enemyElements[i].Name, enemyElements[i]);
+        }
 
         StartCoroutine(Spawn());
     }
@@ -93,10 +103,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             {
                 int randomNumb = 0;
 
+                availableEnemie = enemyElements.GetRange(0, availableEnemies);
+                tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene)).ToList();
 
-                List<EnemyElement> tempList = enemyElements.Where(x => (x.currentNumberInScene < x.MaxNumberInScene)).ToList();
+                randomNumb = UnityEngine.Random.Range(0, tempList.Count);
 
-                randomNumb = UnityEngine.Random.Range(0, availableEnemies);
                 enemyElement = tempList[randomNumb];
 
                 int repeat = 1;

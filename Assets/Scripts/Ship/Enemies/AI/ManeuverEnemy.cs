@@ -15,14 +15,8 @@ public class ManeuverEnemy : SimpleAI
 
     public override void Move()
     {
-        movement = (transform.forward * m_ZVel) + (transform.right * m_XVel);
-        movement.x *= Direction;
-        transform.position += movement * Time.deltaTime;
-        CheckOutOfSight();
-    }
+        base.Move();
 
-    private void LateUpdate()
-    {
         if (transform.position.x > Constants.m_XMax)
         {
             Direction = 1;

@@ -50,6 +50,15 @@ public class PlayerWidget : MonoBehaviour
     private float targetHealth = 0;
     private float maxTargetHealth = 0;
 
+    private void OnDestroy()
+    {
+        if (player != null)
+        {
+            player.GetShipStatsSystem().HealthChanged -= UpdatePlayerHealth;
+            player.GetShipStatsSystem().PowerUpLevelChanged -= PowerUpLevelChanged;
+            player.GetLevelSystem().XPChanged -= UpdateXP;
+        }
+    }
 
     public void SetPlayer(PlayerShip player)
     {

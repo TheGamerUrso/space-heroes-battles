@@ -52,6 +52,12 @@ namespace TheGamerUrso
                 DontDestroyOnLoad(gameObject);
                 Hide();
             }
+            public void ResetLevel()
+            {
+                BlockRaycast.enabled = true;
+
+                StartCoroutine(ShowLoadingScreen(SceneManager.GetActiveScene().name));
+            }
 
             public void LoadScene(string level)
             {

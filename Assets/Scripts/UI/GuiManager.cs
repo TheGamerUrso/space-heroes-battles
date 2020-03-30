@@ -195,7 +195,7 @@ public class GuiManager : Singleton<GuiManager>
     {
         AudioManager.PlaySound(null, "Click", 1);
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        SceneLoader.Instance.ResetLevel();
     }
 
     public void ResumeButton()
