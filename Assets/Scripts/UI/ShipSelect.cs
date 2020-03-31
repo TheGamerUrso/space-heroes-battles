@@ -29,10 +29,11 @@ public class ShipSelect : MonoBehaviour
         if (playerData.UnlockedHeroes.Length == 0)
         {
             playerData.UnlockedHeroes[0] = 1;
+            shipSelectElement[0].Unlock();
         }
 
 
-        for (int i = 0; i < shipSelectElement.Length; i++)
+        for (int i = 1; i < shipSelectElement.Length; i++)
         {
             if (playerData.UnlockedHeroes[i] > 0)
             {

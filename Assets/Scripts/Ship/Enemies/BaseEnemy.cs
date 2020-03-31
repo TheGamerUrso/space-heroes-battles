@@ -248,7 +248,7 @@ public class BaseEnemy : Ship, IDestroyable
         {
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
             destroyable.TakeDamage(destroyable.CurrentHealth/2);
-            TakeDamage(destroyable.CurrentHealth / 2);
+            TakeDamage(CurrentHealth);
         }
     }
 

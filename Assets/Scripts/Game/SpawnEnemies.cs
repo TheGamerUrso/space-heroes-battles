@@ -25,7 +25,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public Action<string, BaseEnemy> BossDied;
 
     public List<EnemyElement> enemyElements;
-    public Dictionary<string,EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
+    public Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
     public bool HasBoss;
 
     [SerializeField] private int numberOfEnemiesEachWave;
@@ -129,7 +129,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                 yield return new WaitForSeconds(cooldown);
             }
 
-            GuiManager.PlayTrasmition(null, true);
+            if (HasBoss)
+                GuiManager.PlayTrasmition(null, true);
 
             yield return new WaitForSeconds(cooldown);
 
@@ -137,6 +138,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             {
                 yield return new WaitForSeconds(cooldown);
             }
+
             if (HasBoss)
             {
                 if (!BossBattleInitiated)
@@ -147,9 +149,15 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                     SpawnBoss();
                 }
             }
+            else
+            {
+                BossBattleInitiated = true;
+            }
         }
+
         Debug.Log("Game Over");
-        if (HasBoss)
+
+        if (!HasBoss)
         {
             SpawnEnded?.Invoke();
         }

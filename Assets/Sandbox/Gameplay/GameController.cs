@@ -74,7 +74,7 @@ public class GameController : Singleton<GameController>
 
 
         SpawnEnemies spawn = GameObject.FindObjectOfType<SpawnEnemies>();
-        spawn.SpawnEnded = () => { GameOver(); };
+        spawn.SpawnEnded = () => { Win(); };
 
     }
 
