@@ -5,17 +5,18 @@ using UnityEngine;
 [Serializable]
 public class SpecialAttack : PlayerWeapon
 {
+    [Header("Special Attack")]
     public Action<int> OnSuperWeapoUsed;
     public int superUsed { get; set; }
 
     public bool SpecialActive = false;
-    private CountDownTimer m_CountDownTimer;
-    private float previousRapidFireValue = 0;
-    private int weaponCurrentType;
-    private float playerFireRate;
-    private float turretDuration;
+    protected CountDownTimer m_CountDownTimer;
 
-    private PlayerWeapon[] playerWeapons;
+    public float superChargeTimer;
+    public float SuperChargeTime
+    {
+        get { return superChargeTimer; }
+    }
 
     public void IncreaseSuperUsed()
     {
@@ -27,14 +28,16 @@ public class SpecialAttack : PlayerWeapon
             objectiveData.UpdateProgress(superUsed);
         }
     }
-
-    private void Start()
+    public override void OnStart()
     {
-        superUsed = 0;
-        playerShip = GetComponentInParent<PlayerShip>();
+        base.OnStart();
+        GameLevel.SuperUsed = 0;
+        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
+        superChargeTimer = playerShip.SuperChargeTime;
+        damage = playerShip.SuperDamage;
     }
 
-    public void ActivateSpecial()
+    public virtual void ActivateSpecial()
     {
         if (SpecialActive == false)
         {
@@ -42,93 +45,34 @@ public class SpecialAttack : PlayerWeapon
 
             OnSuperWeapoUsed?.Invoke(superUsed);
 
-            if (RapidFireMoade)
-            {
-                if (playerWeapons == null)
-                {
-                    playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
-                }
-
-                playerFireRate = playerWeapons[0].FireRate;
-                weaponCurrentType = playerShip.getCurrentWeaponType;
-
-                playerShip.SwitchWeapon(4);
-
-                foreach (PlayerWeapon item in playerWeapons)
-                {
-                    item.FireRate = 0.2f;
-                }
-            }
-
-
-
-            if (weaponData.SummonTurrets)
-            {
-                turretDuration = SuperChargeTime;
-                GetComponentInChildren<PlaceTurrets>().CreateTurret();
-                turretDuration = GetComponentInChildren<PlaceTurrets>().TurretPrefab.GetComponent<Turret>().TTL;
-            }
-
             SpecialActive = true;
         }
     }
 
-    public void DeactivateSpecial()
+    public virtual void DeactivateSpecial()
     {
-        if (SpecialActive)
-        {
-            if (weaponData.RapidFireMode)
-            {
-                if (playerWeapons == null)
-                {
-                    playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
-                }
-                foreach (PlayerWeapon item in playerWeapons)
-                {
-                    item.SetFireRate(playerFireRate);
-                }
-
-                playerShip.SwitchWeapon(weaponCurrentType);
-            }
-
-            SpecialActive = false;
-        }
+        SpecialActive = false;
     }
+
     public override void OnUpdate()
     {
-        if (playerShip == null)
-        {
-            playerShip = PlayerManager.GetPlayer();
-        }
-
+        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
         if (SpecialActive)
         {
+         
             ActivateSpecial();
+
             if (m_CountDownTimer == null)
-            {
-                if (weaponData.SummonTurrets)
-                {
-                    m_CountDownTimer = new CountDownTimer(turretDuration);
-                }
-                else
-                {
-                    m_CountDownTimer = new CountDownTimer(SuperChargeTime);
-                }
-            }
+                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
             {
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    if (weaponData.SummonTurrets)
-                    {
-                        playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
-                    }
-                    else
-                    {
-                        playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
-                    }
+
+                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+
                 }
 
                 if (playerShip.HealthPresentage <= .5f)
@@ -156,27 +100,7 @@ public class SpecialAttack : PlayerWeapon
 
     public override void Shoot()
     {
-        if (weaponData.SuperRockFireMode)
-        {
-            if (SpecialActive)
-            {
-                if (Time.time > newShot)
-                {
-                    newShot = Time.time + GetFireRate();
-                    GameObject rocket =
-                        PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
 
-                    rocket.transform.position = transform.position;
-
-                    rocket.GetComponent<Rocket>().Damage = Damage;
-
-                    rocket.GetComponent<Rocket>().HomeMissleType = weaponData.m_HomeMissleUpgrade;
-
-                    PlayWeaponFireSound();
-
-                }
-            }
-        }
     }
 
     public float GetPowerUpCountdown()

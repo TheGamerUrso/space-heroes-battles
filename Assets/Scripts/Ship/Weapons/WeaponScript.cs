@@ -9,22 +9,25 @@ using UnityEngine.Audio;
 public abstract class WeaponScript : MonoBehaviour
 {
     #region Weapon Variables
+    protected Ship ship;
+    public WeaponData weaponData;
+    [SerializeField] protected AudioSource source;
+
     [Header("Weapon")]
     [SerializeField]
     protected List<WeaponFireEffect> particleSFX = new List<WeaponFireEffect>();
     [SerializeField] protected Transform[] Cannons;
-    public WeaponData weaponData;
+   
     protected int Radius;
     protected int Angle;
-    [SerializeField] protected AudioSource source;
-    [SerializeField] protected bool FollowRotation;
-    protected Vector3 direction;
+
+
     protected Coroutine ShootingCoroutine;
     [SerializeField] protected float delayBetweenShots;
     protected GameObject InstansiatedProjectile;
     [SerializeField] protected bool autoAttack;
     protected float newShot;
-    protected Ship ship;
+
     #endregion
 
     #region WeaponData Getters

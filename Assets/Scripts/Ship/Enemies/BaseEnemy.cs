@@ -28,7 +28,7 @@ public class BaseEnemy : Ship
     [HideInInspector] public EnemyElement enemyElement;
 
     [SerializeField] private HealthBarSettings HealthBarSettings;
-    
+
     protected EnemyHealthWidget healthBar;
     public EnemyHealthWidget HealthBar
     {
@@ -48,16 +48,8 @@ public class BaseEnemy : Ship
     protected WeaponScript weaponScript;
     [SerializeField] protected bool AutoEnableWeapon;
 
-    public virtual void OnEnable()
-    {
-        Alive = true;
-        DisableAllWeapons();
 
-        if (AutoEnableWeapon)
-        {
-            EnableAllWeapon();
-        }
-    }
+
 
     public void EnableWeaponById(int id, bool solo = false)
     {
@@ -131,10 +123,20 @@ public class BaseEnemy : Ship
         SetStats(level);
     }
 
- 
+
     public virtual void Attack() { }
 
-    public virtual void Enter() { }
+    public override void Enter()
+    {
+        Alive = true;
+        DisableAllWeapons();
+
+        if (AutoEnableWeapon)
+        {
+            EnableAllWeapon();
+        }
+
+    }
 
     public void Leave()
     {
@@ -214,7 +216,7 @@ public class BaseEnemy : Ship
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            destroyable.TakeDamage(destroyable.MaxHealth/2);
+            destroyable.TakeDamage(destroyable.MaxHealth / 2);
             TakeDamage(CurrentHealth);
         }
     }

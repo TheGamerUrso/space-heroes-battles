@@ -108,7 +108,7 @@ public class PlayerShip : Ship, IDestroyable
     #region Weapons
     [SerializeField] private PlayerWeapon[] Weapons;
     [SerializeField] private SpecialAttack specialAttack = null;
-    [SerializeField] private WeaponScript rocketLauncher = null;
+
 
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
@@ -410,7 +410,6 @@ public class PlayerShip : Ship, IDestroyable
 
 
         UpdateWeaponStats(FireRate - fireRate);
-
     }
 
     public void GiveTemporaryFireRateBuff()

@@ -1,43 +1,68 @@
 ﻿using UnityEngine;
 
-public class Turret : MonoBehaviour
+public class Turret : MonoBehaviour, IDestroyable
 {
-    public int Health = 1;
-    public float TTL = 10;
-
-    public PlayerShip player;
-
+    private PlayerShip player;
     public PlayerWeapon playerWeapon;
-
-    public void SetShipStats(PlayerShip player)
+    public bool IsAlive;
+    public bool IsDestroyed
     {
-        this.player = player;
-        SetDamage();
-    }
-
-    public void SetDamage()
-    {
-        playerWeapon.SetDamage(player.Damage / 2);
-    }
-
-    private void Update()
-    {
-        TTL -= Time.deltaTime;
-        if (TTL < 0 || Health < 0)
+        get
         {
-            Destroy(gameObject);
+            return !IsAlive;
         }
+        set { IsAlive = value; }
+    }
+
+    public float maxHealth;
+    public float MaxHealth
+    {
+        get { return maxHealth; }
+        set
+        {
+            maxHealth = value;
+        }
+    }
+
+    public float currentHealth;
+    public float CurrentHealth
+    {
+        get { return currentHealth; }
+        set { currentHealth = value; }
+    }
+
+    private void OnEnable()
+    {
+        if (player == null)
+        {
+            player = PlayerManager.GetPlayer();
+        }
+        playerWeapon.damage = player.SuperDamage;
+    }
+
+    public void Deactivate()
+    {
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Constants.ENEMYTAG))
         {
-            Health--;
+            currentHealth--;
         }
         if (other.tag.Equals(Constants.ENEMYPROJECTILETAG))
         {
-            Health--;
+            currentHealth--;
+        }
+    }
+
+    public void TakeDamage(float dmg)
+    {
+        currentHealth -= dmg;
+        if (currentHealth < 0)
+        {
+            Destroy(gameObject);
         }
     }
 }

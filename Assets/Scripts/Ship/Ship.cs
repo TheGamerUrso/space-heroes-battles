@@ -116,7 +116,7 @@ public abstract class Ship : MonoBehaviour, IDestroyable
         }
     }
 
-    [Range(1,20)]
+    [Range(1, 20)]
     public int level;
     public int Level
     {
@@ -127,8 +127,6 @@ public abstract class Ship : MonoBehaviour, IDestroyable
         set
         {
             level = value;
-            OnLevelUp?.Invoke(level);
-            GameEventSystem.Call(PlayerEventType.Player_LevelUp);
         }
     }
 
@@ -149,6 +147,15 @@ public abstract class Ship : MonoBehaviour, IDestroyable
     [SerializeField] protected GameObject ShieldEffect;
     [SerializeField] protected PoolGameObjectType ExplostionEffect;
 
+    private void OnEnable()
+    {
+        Enter();
+    }
+
+    public virtual void Enter()
+    {
+
+    }
     private void Awake()
     {
         OnAwake();
@@ -190,7 +197,7 @@ public abstract class Ship : MonoBehaviour, IDestroyable
         Speed = shipStats.baseSpeed;
 
         Damage = Level * shipStats.baseDamage;
-      
+
         FireRate = shipStats.baseFireRate;
 
         Damage = Level * shipStats.baseDamage;
@@ -207,7 +214,8 @@ public abstract class Ship : MonoBehaviour, IDestroyable
 
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
     }
-    public void AddXP(int ammount)
+
+    public void AddXP(float ammount)
     {
         if (level < MaxLevel)
         {
@@ -217,6 +225,9 @@ public abstract class Ship : MonoBehaviour, IDestroyable
                 Level++;
                 XP -= xpToLevel;
                 xpToLevel = (level / 10 + level % 10) * 100 * Mathf.Pow(10, level / 10);
+                OnLevelUp?.Invoke(level);
+                GameEventSystem.Call(PlayerEventType.Player_LevelUp);
+                SetStats(level);
             }
         }
         else
@@ -225,10 +236,12 @@ public abstract class Ship : MonoBehaviour, IDestroyable
             xp = 0;
         }
     }
+
     public void OnXPValueChanged(HealthChanged callback)
     {
         OnHealthChanged += callback;
     }
+
     public void OnHealthValueChanged(HealthChanged callback)
     {
         OnHealthChanged += callback;

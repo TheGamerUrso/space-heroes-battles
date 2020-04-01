@@ -19,6 +19,9 @@ public static class GameLevel
     public static int CurrentEnemyKilled { get; set; }
     public static int CoinDropInTotal { get; set; }
     public static int counsEarnInGame { get; set; }
+
+
+    public static int SuperUsed { get; set; }
 }
 
 public class GameController : Singleton<GameController>

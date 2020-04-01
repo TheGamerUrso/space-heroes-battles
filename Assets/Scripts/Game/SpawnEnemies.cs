@@ -55,8 +55,10 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public List<EnemyElement> availableEnemie;
     public List<EnemyElement> tempList;
+    public bool pause;
 
     public int EnemySpawnedInTotal { get; set; }
+
     private void Start()
     {
         for (int i = 0; i < SceneManager.sceneCount; i++)
@@ -87,7 +89,14 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         StartCoroutine(Spawn());
     }
 
-
+    private void LateUpdate()
+    {
+        pause = false;
+        if (Enemies.Count >= 8)
+        {
+            pause = true;
+        }
+    }
 
     IEnumerator Spawn()
     {
@@ -105,10 +114,36 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
                 availableEnemie = enemyElements.GetRange(0, availableEnemies);
                 tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene)).ToList();
+                var range = 0;
 
-                randomNumb = UnityEngine.Random.Range(0, tempList.Count);
+                for (int i = 0; i < tempList.Count; i++)
+                {
+                    if (tempList[i].presentage > 0f)
+                    {
+                        range += tempList[i].presentage;
+                    }
+                }
 
-                enemyElement = tempList[randomNumb];
+                var rand = UnityEngine.Random.Range(0, range);
+                var top = 0;
+
+                for (int i = 0; i < tempList.Count; i++)
+                {
+                    top += tempList[i].presentage;
+                    if (rand < top)
+                    {
+                        enemyElement = tempList[i];
+                        randomNumb = i;
+                        break;
+                    }
+                }
+                
+                while (pause)
+                {
+                    yield return new WaitForEndOfFrame();
+                }
+
+               // randomNumb = UnityEngine.Random.Range(0, tempList.Count); 
 
                 int repeat = 1;
 
@@ -127,6 +162,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                 }
 
                 yield return new WaitForSeconds(cooldown);
+
+                
             }
 
             if (HasBoss)
@@ -227,11 +264,29 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         BossDied?.Invoke(id, baseEnemy);
         Enemies.Remove(baseEnemy.gameObject);
         TotalEnemies--;
+
+
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        int dif = baseEnemy.level - playerShip.level;
+        if (dif > 0)
+        {
+            float level = 25 / baseEnemy.level;
+            playerShip.AddXP(baseEnemy.level);
+        }
+        GameLevel.Score += 100;
+
+
+        for (int i = 0; i < UnityEngine.Random.Range(4,8); i++)
+        {
+            DropController.PickRandomDropItem(baseEnemy.transform);
+        }
+
     }
 
     public void BossGotHit(string id, BaseEnemy baseEnemy)
     {
-
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        playerShip.PowerUpLevel += .1f;
     }
 
     public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
@@ -248,6 +303,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
         Debug.Log("Enemy Got Hit");
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        playerShip.PowerUpLevel += .1f;
     }
 
     public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
@@ -262,6 +319,15 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         Debug.Log("Enemy Got Died");
         DropController.PickRandomDropItem(baseEnemy.transform);
         Enemies.Remove(baseEnemy.gameObject);
+
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        int dif = playerShip.level - baseEnemy.level;
+        if (dif >= 0)
+        {
+            float xp = 25 / baseEnemy.level;
+            playerShip.AddXP(xp);
+        }
+        GameLevel.Score += 100;
     }
 
 }

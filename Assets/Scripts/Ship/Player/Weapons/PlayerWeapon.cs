@@ -5,21 +5,11 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerWeapon : WeaponScript
 {
-    protected PlayerShip playerShip;
     public Transform shipTransform;
     private bool holdFire;
 
-    public float superChargeTimer;
-    public float SuperChargeTime { get { return superChargeTimer; } set { superChargeTimer = value; } }
-
-    public float superDamage;
-    public float SuperDamage { get { return superDamage; } set { superDamage = value; } }
-
     public int DamageMulitplier { get { return weaponData.multiplier; } }
 
-    public bool HomeMissleUpgrade { get { return weaponData.m_HomeMissleUpgrade; } }
-
-    public bool RapidFireMoade { get { return weaponData.RapidFireMode; } private set { } }
 
     protected bool usePitch;
 
@@ -31,8 +21,6 @@ public class PlayerWeapon : WeaponScript
     public override void OnStart()
     {
         base.OnStart();
-
-        playerShip = GetComponentInParent<PlayerShip>();
     }
 
     public override void OnUpdate()
@@ -40,13 +28,20 @@ public class PlayerWeapon : WeaponScript
         base.OnUpdate();
         if (Time.frameCount % 1 == 0)
         {
-            if (playerShip != null)
+            if (ship != null)
             {
-                if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
+                PlayerShip playerShip = ship.GetComponent<PlayerShip>();
+
+
+                if (playerShip != null)
                 {
-                    return;
+                    if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
+                    {
+                        return;
+                    }
                 }
             }
+        
 
             if (Input.touchCount > 0)
             {

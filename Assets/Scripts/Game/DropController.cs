@@ -8,8 +8,7 @@ using UnityEngine;
 public class DropProbabilities
 {
     public string Name;
-    public float weight;
-    public Vector2 range;
+    public int chance;
     public PoolGameObjectType DropItemsType;
 }
 
@@ -72,7 +71,29 @@ public class DropController : Singleton<DropController>
 
             do
             {
-                itemTypeToSpawn = ListOfDropItems[UnityEngine.Random.Range(0, ListOfDropItems.Count)].DropItemsType;
+
+                var range = 0;
+
+                for (int i = 0; i < ListOfDropItems.Count; i++)
+                {
+                    if (ListOfDropItems[i].chance > 0f)
+                    {
+                        range += ListOfDropItems[i].chance;
+                    }
+                }
+
+                var rand = UnityEngine.Random.Range(0, range);
+                var top = 0;
+
+                for (int i = 0; i < ListOfDropItems.Count; i++)
+                {
+                    top += ListOfDropItems[i].chance;
+                    if (rand < top)
+                    {
+                        itemTypeToSpawn = ListOfDropItems[i].DropItemsType;
+                        break;
+                    }
+                }            
 
                 if (itemTypeToSpawn == PoolGameObjectType.ItemShield)
                 {

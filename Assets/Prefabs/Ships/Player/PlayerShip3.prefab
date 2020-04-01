@@ -1,35 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &40664134782339240
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3319582580395722132}
-  m_Layer: 11
-  m_Name: Cannon1
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &3319582580395722132
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 40664134782339240}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 6641291017111851838}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1657020372006141905
 GameObject:
   m_ObjectHideFlags: 0
@@ -93,63 +63,6 @@ MonoBehaviour:
   fireRate: 0
   damage: 0
   shipTransform: {fileID: 0}
-  superChargeTimer: 0
-  superDamage: 0
---- !u!1 &2136498334594254995
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8816166471720170216}
-  - component: {fileID: 319952924309095344}
-  m_Layer: 11
-  m_Name: TurretPlaces
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8816166471720170216
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2136498334594254995}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 7192678397885861421}
-  - {fileID: 7430133945530807324}
-  m_Father: {fileID: 6641291017111851838}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &319952924309095344
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2136498334594254995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 982ce667ccb983e4995568627b599bd9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  player: {fileID: 0}
-  TurrentPlaces:
-  - {fileID: 7192678397885861421}
-  - {fileID: 7430133945530807324}
-  TurretPrefab: {fileID: 5089846288024431909, guid: aa65eca192146014baeea36adcd65f9a,
-    type: 3}
-  numberOfTurret: 0
-  Turrents:
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &2640992793129728498
 GameObject:
   m_ObjectHideFlags: 0
@@ -182,36 +95,6 @@ Transform:
   - {fileID: 6644282250158323880}
   m_Father: {fileID: 6643966822035450366}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3728991329956688420
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7430133945530807324}
-  m_Layer: 11
-  m_Name: 'Turret '
-  m_TagString: Untagged
-  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7430133945530807324
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3728991329956688420}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8, y: 1, z: -8}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8816166471720170216}
-  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5303515566254289389
 GameObject:
@@ -275,6 +158,88 @@ Transform:
   m_Father: {fileID: 8623874417518195650}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 20, z: 0}
+--- !u!1 &6107806570724032506
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4627021017525652829}
+  - component: {fileID: 3709093859757610385}
+  m_Layer: 11
+  m_Name: Turrets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4627021017525652829
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6107806570724032506}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 4380862218033425196}
+  - {fileID: 6664829715453110067}
+  m_Father: {fileID: 6641588154157045068}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3709093859757610385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6107806570724032506}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 982ce667ccb983e4995568627b599bd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TurrentPlaces:
+  - {fileID: 4380862218033425196}
+  - {fileID: 6664829715453110067}
+  TurretPrefab: {fileID: 5089846288024431909, guid: aa65eca192146014baeea36adcd65f9a,
+    type: 3}
+  numberOfTurret: 2
+  Turrents: []
+--- !u!1 &6322268760120144790
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4380862218033425196}
+  m_Layer: 11
+  m_Name: GameObject
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4380862218033425196
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6322268760120144790}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4627021017525652829}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6396911589151343563
 GameObject:
   m_ObjectHideFlags: 0
@@ -305,6 +270,36 @@ Transform:
   - {fileID: 1837625001425826851}
   m_Father: {fileID: 8623874417518195650}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &6445866687567036924
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6664829715453110067}
+  m_Layer: 11
+  m_Name: GameObject (1)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6664829715453110067
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6445866687567036924}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10, y: 0, z: -10}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4627021017525652829}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6620424675869107106
 GameObject:
@@ -391,9 +386,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6641588154157045068}
-  - component: {fileID: 6751520592689820144}
+  - component: {fileID: 1230926538284351243}
   m_Layer: 11
-  m_Name: RocketLauncher
+  m_Name: TurretSuper
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -411,10 +406,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6644328339156988334}
+  - {fileID: 4627021017525652829}
   m_Father: {fileID: 6644282250158323880}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6751520592689820144
+--- !u!114 &1230926538284351243
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -423,13 +419,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 6638509405297660382}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3afda1a44e3538e43a11116be0b6747f, type: 3}
+  m_Script: {fileID: 11500000, guid: 915e34a2305d71943a27025407d7023c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  particleSFX:
-  - {fileID: 0}
+  particleSFX: []
   Cannons: []
-  weaponData: {fileID: 11400000, guid: 5335abedcec35db4fb77339073e3e136, type: 2}
+  weaponData: {fileID: 11400000, guid: 73bfd5308d0fe16499dff24d401459c9, type: 2}
   source: {fileID: 0}
   FollowRotation: 0
   delayBetweenShots: 0
@@ -437,8 +432,10 @@ MonoBehaviour:
   fireRate: 0
   damage: 0
   shipTransform: {fileID: 0}
+  SpecialActive: 0
   superChargeTimer: 0
-  superDamage: 0
+  turretDuration: 1
+  Turrets: {fileID: 3709093859757610385}
 --- !u!1 &6638521807005975462
 GameObject:
   m_ObjectHideFlags: 0
@@ -710,8 +707,6 @@ MonoBehaviour:
   fireRate: 0
   damage: 0
   shipTransform: {fileID: 0}
-  superChargeTimer: 0
-  superDamage: 0
 --- !u!1 &6638972229341356302
 GameObject:
   m_ObjectHideFlags: 0
@@ -769,8 +764,6 @@ MonoBehaviour:
   fireRate: 0
   damage: 0
   shipTransform: {fileID: 0}
-  superChargeTimer: 0
-  superDamage: 0
 --- !u!1 &6639039457527134700
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,70 +932,9 @@ Transform:
   - {fileID: 6641464221643216012}
   - {fileID: 8623874417518195650}
   - {fileID: 6641588154157045068}
-  - {fileID: 6641291017111851838}
   m_Father: {fileID: 8997339917576187133}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6639128996365401872
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6641291017111851838}
-  - component: {fileID: 6751479238491873474}
-  m_Layer: 11
-  m_Name: SpecialAttack
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &6641291017111851838
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6639128996365401872}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 3319582580395722132}
-  - {fileID: 8816166471720170216}
-  m_Father: {fileID: 6644282250158323880}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6751479238491873474
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6639128996365401872}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3dee868ba4c91714083d588cf071b219, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  particleSFX:
-  - {fileID: 0}
-  - {fileID: 0}
-  Cannons: []
-  weaponData: {fileID: 11400000, guid: 73bfd5308d0fe16499dff24d401459c9, type: 2}
-  source: {fileID: 0}
-  FollowRotation: 0
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  shipTransform: {fileID: 0}
-  superChargeTimer: 0
-  superDamage: 0
-  SpecialActive: 0
 --- !u!1 &6639138798883156386
 GameObject:
   m_ObjectHideFlags: 0
@@ -1062,8 +994,6 @@ MonoBehaviour:
   fireRate: 0
   damage: 0
   shipTransform: {fileID: 0}
-  superChargeTimer: 0
-  superDamage: 0
 --- !u!1 &6640432803389515636
 GameObject:
   m_ObjectHideFlags: 0
@@ -1119,8 +1049,6 @@ MonoBehaviour:
   fireRate: 0
   damage: 0
   shipTransform: {fileID: 0}
-  superChargeTimer: 0
-  superDamage: 0
 --- !u!1 &6640480245209577306
 GameObject:
   m_ObjectHideFlags: 0
@@ -1231,7 +1159,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &6643966822035450366
 Transform:
   m_ObjectHideFlags: 0
@@ -1332,6 +1260,7 @@ MonoBehaviour:
   Damage: 0
   xpToLevel: 0
   xp: 0
+  maxLevel: 0
   level: 0
   ShieldEffect: {fileID: 3639260257090773083}
   ExplostionEffect: 0
@@ -1350,8 +1279,7 @@ MonoBehaviour:
   - {fileID: 6751712437248883658}
   - {fileID: 6751643282018932896}
   - {fileID: 758445965696700512}
-  specialAttack: {fileID: 6751479238491873474}
-  rocketLauncher: {fileID: 6751520592689820144}
+  specialAttack: {fileID: 1230926538284351243}
   PowerUpCollectAmmount: 0
 --- !u!1 &6827624257066997467
 GameObject:
@@ -1418,36 +1346,6 @@ Transform:
   m_Father: {fileID: 8623874417518195650}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 10, z: 0}
---- !u!1 &9126146672697223813
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7192678397885861421}
-  m_Layer: 11
-  m_Name: Turret
-  m_TagString: Untagged
-  m_Icon: {fileID: 6519382022992737161, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &7192678397885861421
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9126146672697223813}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8, y: 1, z: -8}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 8816166471720170216}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &35669280138721365
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1517,15 +1415,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
---- !u!198 &6988866165280999393 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
-    type: 3}
-  m_PrefabInstance: {fileID: 35669280138721365}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6254267961876232255 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
+    type: 3}
+  m_PrefabInstance: {fileID: 35669280138721365}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6988866165280999393 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
     type: 3}
   m_PrefabInstance: {fileID: 35669280138721365}
   m_PrefabAsset: {fileID: 0}
@@ -1630,15 +1528,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
---- !u!198 &7481264731719360835 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
-    type: 3}
-  m_PrefabInstance: {fileID: 527206033204420343}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &5900882705140506269 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
+    type: 3}
+  m_PrefabInstance: {fileID: 527206033204420343}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &7481264731719360835 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
     type: 3}
   m_PrefabInstance: {fileID: 527206033204420343}
   m_PrefabAsset: {fileID: 0}
@@ -2238,15 +2136,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aba38ed180b781a40a5dee8fc9195081, type: 3}
---- !u!4 &1387533736273963291 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2136116237267725865, guid: aba38ed180b781a40a5dee8fc9195081,
-    type: 3}
-  m_PrefabInstance: {fileID: 1073124390661752626}
-  m_PrefabAsset: {fileID: 0}
 --- !u!198 &1387533736273963289 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 2136116237267725867, guid: aba38ed180b781a40a5dee8fc9195081,
+    type: 3}
+  m_PrefabInstance: {fileID: 1073124390661752626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1387533736273963291 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2136116237267725865, guid: aba38ed180b781a40a5dee8fc9195081,
     type: 3}
   m_PrefabInstance: {fileID: 1073124390661752626}
   m_PrefabAsset: {fileID: 0}
@@ -2829,15 +2727,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
---- !u!198 &6840212306611867295 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
-    type: 3}
-  m_PrefabInstance: {fileID: 4498701718800232747}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7555843865714110785 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
+    type: 3}
+  m_PrefabInstance: {fileID: 4498701718800232747}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &6840212306611867295 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
     type: 3}
   m_PrefabInstance: {fileID: 4498701718800232747}
   m_PrefabAsset: {fileID: 0}
@@ -3088,15 +2986,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
---- !u!198 &2779850955949561 stripped
-ParticleSystem:
-  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
-    type: 3}
-  m_PrefabInstance: {fileID: 6956418722317728333}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3908859970815080999 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
+    type: 3}
+  m_PrefabInstance: {fileID: 6956418722317728333}
+  m_PrefabAsset: {fileID: 0}
+--- !u!198 &2779850955949561 stripped
+ParticleSystem:
+  m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
     type: 3}
   m_PrefabInstance: {fileID: 6956418722317728333}
   m_PrefabAsset: {fileID: 0}
@@ -3274,15 +3172,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
---- !u!4 &4090944878709680385 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
-    type: 3}
-  m_PrefabInstance: {fileID: 7958091606819826027}
-  m_PrefabAsset: {fileID: 0}
 --- !u!198 &1077235100399081183 stripped
 ParticleSystem:
   m_CorrespondingSourceObject: {fileID: 6954624053921316788, guid: de8ced3c47dd2904eb769194018fa913,
+    type: 3}
+  m_PrefabInstance: {fileID: 7958091606819826027}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4090944878709680385 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
     type: 3}
   m_PrefabInstance: {fileID: 7958091606819826027}
   m_PrefabAsset: {fileID: 0}
@@ -3332,12 +3230,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
---- !u!4 &2965558292595838820 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
-    type: 3}
-  m_PrefabInstance: {fileID: 9192657284211232526}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &1648081047112756920 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7587942922396688822, guid: de8ced3c47dd2904eb769194018fa913,
@@ -3350,3 +3242,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 536415a8dbe428d4285ddb4634202dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!4 &2965558292595838820 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913,
+    type: 3}
+  m_PrefabInstance: {fileID: 9192657284211232526}
+  m_PrefabAsset: {fileID: 0}

@@ -2,13 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RapidFireAttack : SpecialAttack
+public class TurretSuper : SpecialAttack
 {
-    protected PlayerWeapon[] playerWeapons;
-    protected float previousRapidFireValue = 0;
-    protected int weaponCurrentType;
-    protected float playerFireRate;
-    private bool RapidFireModeOn;
+    public float turretDuration;
+    public PlaceTurrets Turrets;
+    public override void OnStart()
+    {
+        base.OnStart(); 
+        
+        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
+        turretDuration = playerShip.SuperChargeTime;
+    }
+
     public override void ActivateSpecial()
     {
         if (SpecialActive == false)
@@ -17,20 +22,8 @@ public class RapidFireAttack : SpecialAttack
 
             OnSuperWeapoUsed?.Invoke(superUsed);
 
-            if (playerWeapons == null)
-            {
-                playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
-            }
-
-            playerFireRate = playerWeapons[0].FireRate;
-            weaponCurrentType = ship.GetComponent<PlayerShip>().getCurrentWeaponType;
-
-            ship.GetComponent<PlayerShip>().SwitchWeapon(4);
-
-            foreach (PlayerWeapon item in playerWeapons)
-            {
-                item.FireRate = 0.2f;
-            }
+            turretDuration = SuperChargeTime;
+            Turrets.CreateTurret();
 
             SpecialActive = true;
         }
@@ -39,18 +32,7 @@ public class RapidFireAttack : SpecialAttack
     {
         if (SpecialActive)
         {
-            if (playerWeapons == null)
-            {
-                playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
-            }
-
-            foreach (PlayerWeapon item in playerWeapons)
-            {
-                item.SetFireRate(playerFireRate);
-            }
-
-            ship.GetComponent<PlayerShip>().SwitchWeapon(weaponCurrentType);
-
+            Turrets.DeactiveTurret();
             base.DeactivateSpecial();
         }
     }
@@ -58,13 +40,15 @@ public class RapidFireAttack : SpecialAttack
     public override void OnUpdate()
     {
         base.OnUpdate();
+
         PlayerShip playerShip = ship.GetComponent<PlayerShip>();
+
         if (SpecialActive)
         {
             ActivateSpecial();
             if (m_CountDownTimer == null)
             {
-                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
+                m_CountDownTimer = new CountDownTimer(turretDuration);
             }
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
@@ -72,7 +56,7 @@ public class RapidFireAttack : SpecialAttack
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
                 }
 
                 if (playerShip.HealthPresentage <= .5f)
@@ -97,17 +81,4 @@ public class RapidFireAttack : SpecialAttack
             ActivateSpecial();
         }
     }
-
-    public override void Shoot()
-    {
-        if (SpecialActive)
-        {
-            if (Time.time > newShot)
-            {
-
-
-            }
-        }
-    }
-
 }
