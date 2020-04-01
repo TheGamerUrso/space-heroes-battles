@@ -242,6 +242,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
         Debug.Log("Enemy Got Escaped");
         Enemies.Remove(baseEnemy.gameObject);
+        GameLevel.enemyEscaped++;
     }
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
@@ -255,9 +256,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
         baseEnemy.EnemyDied -= EnemyDiedCallback;
         baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+        GameLevel.CurrentEnemyKilled++;
+        GameLevel.enemyKilled++;
 
         Debug.Log("Enemy Got Died");
-
+        DropController.PickRandomDropItem(baseEnemy.transform);
         Enemies.Remove(baseEnemy.gameObject);
     }
 

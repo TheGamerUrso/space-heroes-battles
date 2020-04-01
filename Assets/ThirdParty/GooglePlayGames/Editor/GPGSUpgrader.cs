@@ -98,8 +98,7 @@ namespace GooglePlayGames.Editor
             {
                 GPGSUtil.GenerateAndroidManifest();
             }
-
-            AssetDatabase.Refresh();
+                  
             Debug.Log("GPGSUpgrader done");
         }
 

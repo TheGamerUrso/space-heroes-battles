@@ -440,23 +440,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e90bb14539fc94a42ad830a40d40e990, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStatsSystem:
-    currentHealth: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 0
-    SuperDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
-    baseDamage: 12.5
-    baseHealth: 25
-    baseFireRate: 0.5
-    baseSpecialCountdown: 1
-  levelSystem:
-    Level: 1
-    xp: 0
-    xpToLevel: 100
+  shipStats: {fileID: 11400000, guid: c2deb9cb3d84ade46afbba5ed58fe6ff, type: 2}
+  FireRate: 0
+  Speed: 0
+  currentHealth: 0
+  Damage: 0
+  xpToLevel: 0
+  xp: 0
+  level: 0
   ShieldEffect: {fileID: 2520402327702343036}
   ExplostionEffect: 7
   baseEnemyAI: {fileID: 5551472741575618557}
@@ -473,7 +464,6 @@ MonoBehaviour:
     presentage: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
   m_ValueOfEnemy: 0
-  DropItems: 
   AutoEnableWeapon: 0
   BossAI: {fileID: 5551472741575618557}
   ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
@@ -660,6 +650,8 @@ MonoBehaviour:
   FollowRotation: 0
   delayBetweenShots: 0.3
   autoAttack: 0
+  fireRate: 0
+  damage: 0
 --- !u!1 &7826898983038948128
 GameObject:
   m_ObjectHideFlags: 0

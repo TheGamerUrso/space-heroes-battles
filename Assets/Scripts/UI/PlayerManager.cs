@@ -41,12 +41,17 @@ public class PlayerManager
         currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
 
         currentPlayer.SetActive(true);
+        int level = listOfPlayerShips[id].prefab.level;
+        float xp = listOfPlayerShips[id].prefab.xp;
+        float xpToLevel = listOfPlayerShips[id].prefab.xpToLevel;
 
-        currentPlayer.GetComponent<PlayerShip>().SetShipStatSystem(listOfPlayerShips[id].prefab.GetShipStatsSystem());
+        currentPlayer.GetComponent<PlayerShip>().level = level;
+        currentPlayer.GetComponent<PlayerShip>().xp = xp;
+        currentPlayer.GetComponent<PlayerShip>().xpToLevel = xpToLevel;
 
-        currentPlayer.GetComponent<PlayerShip>().SetLevelSystem(listOfPlayerShips[id].prefab.GetLevelSystem());
+        currentPlayer.GetComponent<PlayerShip>().SetStats(level);
 
-        currentPlayer.GetComponent<PlayerShip>().GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
+        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(DataController.GetPlayerData());
 
 
         return currentPlayer;
@@ -67,8 +72,13 @@ public class PlayerManager
             var Level = playerData.Level;
             var xp = playerData.xp;
             var xpToLevel = playerData.xpToLevel;
-            listOfPlayerShips[i].prefab.SetLevelSystem(new LevelSystem(Level, xp, xpToLevel, 20));
-            listOfPlayerShips[i].prefab.GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
+            listOfPlayerShips[i].prefab.level = Level;
+            listOfPlayerShips[i].prefab.xp = xp;
+            listOfPlayerShips[i].prefab.xpToLevel = xpToLevel;
+            listOfPlayerShips[i].prefab.MaxLevel = 20;
+
+
+            listOfPlayerShips[i].prefab.SetPlayerData(DataController.GetPlayerData());
         }
     }
 

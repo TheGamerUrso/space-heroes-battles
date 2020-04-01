@@ -65,7 +65,7 @@ public class DropController : Singleton<DropController>
 
 
             bool hasShield = p.HasShieldModule();
-            bool fullHealth = p.GetHealthPresentage() == 100;
+            bool fullHealth = p.HealthPresentage == 100;
             bool dropExtra = false;
 
             PoolGameObjectType itemTypeToSpawn = ListOfDropItems[0].DropItemsType;
@@ -138,6 +138,7 @@ public class DropController : Singleton<DropController>
                 GameObject extraDrop = PoolManager.Instance.GetObjectFromPool(ListOfDropItems[0].DropItemsType);
                 extraDrop.transform.position = transform.position;
                 extraDrop.transform.rotation = Quaternion.identity;
+                GameLevel.CoinDropInTotal++;
             }
 
             //TODO Coins Drop In Total ++

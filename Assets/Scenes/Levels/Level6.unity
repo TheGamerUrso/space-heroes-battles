@@ -52,11 +52,11 @@ LightmapSettings:
     m_AlbedoBoost: 1
     m_EnvironmentLightingMode: 1
     m_EnableBakedLightmaps: 1
-    m_EnableRealtimeLightmaps: 1
+    m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
     serializedVersion: 12
     m_Resolution: 2
-    m_BakeResolution: 40
+    m_BakeResolution: 32
     m_AtlasSize: 512
     m_AO: 0
     m_AOMaxDistance: 1
@@ -76,10 +76,10 @@ LightmapSettings:
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 256
-    m_PVRBounces: 2
+    m_PVRBounces: 1
     m_PVREnvironmentSampleCount: 256
     m_PVREnvironmentReferencePointCount: 2048
-    m_PVRFilteringMode: 2
+    m_PVRFilteringMode: 1
     m_PVRDenoiserTypeDirect: 0
     m_PVRDenoiserTypeIndirect: 1
     m_PVRDenoiserTypeAO: 1
@@ -96,7 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
-  m_LightingDataAsset: {fileID: 112000000, guid: 58b97de0368f0244882dedc50aa34981,
+  m_LightingDataAsset: {fileID: 112000000, guid: 6840c1ac4f0564244a6d073240eec049,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -617,6 +617,11 @@ PrefabInstance:
         type: 3}
       propertyPath: availableEnemies
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
+        type: 3}
+      propertyPath: HasBoss
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189255, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}
@@ -1233,10 +1238,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.1
   xScrollSpeed: 0
-  rend: {fileID: 805036768}
+  offset: 0
+  offXset: 0
+  sinMove: 0
   frequently: 0
   magnitute: 0
-  sinMove: 0
 --- !u!23 &805036768
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1514,10 +1520,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.2
   xScrollSpeed: 0
-  rend: {fileID: 1052674666}
+  offset: 0
+  offXset: 0
+  sinMove: 0
   frequently: 0
   magnitute: 0
-  sinMove: 0
 --- !u!23 &1052674666
 MeshRenderer:
   m_ObjectHideFlags: 0

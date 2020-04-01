@@ -5,18 +5,19 @@ public class Turret : MonoBehaviour
     public int Health = 1;
     public float TTL = 10;
 
-    public ShipStats shipStats;
+    public PlayerShip player;
+
     public PlayerWeapon playerWeapon;
 
-    public void SetShipStats(ShipStats shipStats)
+    public void SetShipStats(PlayerShip player)
     {
-        this.shipStats = shipStats;
+        this.player = player;
         SetDamage();
     }
 
     public void SetDamage()
     {
-        playerWeapon.SetDamage(shipStats.Damage / 2);
+        playerWeapon.SetDamage(player.Damage / 2);
     }
 
     private void Update()

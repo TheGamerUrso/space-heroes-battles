@@ -42,7 +42,7 @@ public class FirstBossAI : BaseBossEnemyAI
     {
         base.Setup();
 
-        m_ZVel = baseBoss.GetShipStatsSystem().Speed;
+        m_ZVel = baseBoss.Speed;
 
         startingPosition = transform.position;
 

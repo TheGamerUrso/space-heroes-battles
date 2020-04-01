@@ -7,8 +7,6 @@ public class PlayerWidget : MonoBehaviour
 {
     private PlayerShip player;
 
-    private PlayerWeaponSystem playerWeaponSystem;
-
     private static string ReadyStringKey = "Ready";
     private static string ActiveStringKey = "Active";
 
@@ -54,35 +52,31 @@ public class PlayerWidget : MonoBehaviour
     {
         if (player != null)
         {
-            player.GetShipStatsSystem().HealthChanged -= UpdatePlayerHealth;
-            player.GetShipStatsSystem().PowerUpLevelChanged -= PowerUpLevelChanged;
-            player.GetLevelSystem().XPChanged -= UpdateXP;
+            player.OnHealthChanged -= UpdatePlayerHealth;
+            player.PowerUpLevelChanged -= PowerUpLevelChanged;
+            player.OnXpChanged -= UpdateXP;
         }
     }
 
     public void SetPlayer(PlayerShip player)
     {
         this.player = player;
-        playerWeaponSystem = player.GetWeaponSystem();
 
         PowerBut.onClick.AddListener(() =>
         {
-            if (playerWeaponSystem)
-            {
-
-                playerWeaponSystem.ActivateSpecial();
-            }
+                ActivateSpecial();
+            
         });
 
-        player.GetShipStatsSystem().HealthChanged += UpdatePlayerHealth;
-        player.GetShipStatsSystem().PowerUpLevelChanged += PowerUpLevelChanged;
+        player.OnHealthChanged += UpdatePlayerHealth;
+        player.PowerUpLevelChanged += PowerUpLevelChanged;
 
 
-        player.GetLevelSystem().XPChanged += UpdateXP;
+        player.OnXpChanged += UpdateXP;
 
         UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
       
-        UpdateXP(player.GetLevelSystem().GetLevel(), player.GetLevelSystem().GetXP(), player.GetLevelSystem().GetXpToLevel());
+        UpdateXP(player.level, player.xp, player.xpToLevel);
        
         
         PowerUpLevelChanged(player.GetPowerUpLevelPresentage());
@@ -174,18 +168,18 @@ public class PlayerWidget : MonoBehaviour
     {
         var sprite = WeaponIndicatorSpritesNotActivated[0];
 
-        var collecterUpgrade = PlayerWeaponSystem.PowerUpCollectAmmount;
+        var collecterUpgrade = player.PowerUpCollectAmmount;
         if (m_PowerUps.fillAmount == 1 && collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesActivated[PlayerWeaponSystem.PowerUpCollectAmmount];
+            sprite = WeaponIndicatorSpritesActivated[player.PowerUpCollectAmmount];
         }
         else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.PowerUpCollectAmmount];
+            sprite = WeaponIndicatorSpritesNotActivated[player.PowerUpCollectAmmount];
         }
         else
         {
-            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.PowerUpCollectAmmount];
+            sprite = WeaponIndicatorSpritesNotActivated[player.PowerUpCollectAmmount];
         }
 
         WeaponIndicatorImage.sprite = sprite;

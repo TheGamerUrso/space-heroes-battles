@@ -18,11 +18,16 @@ public class EnemyHealthWidget : BaseHealthWidget
 
     public override void Setup(IDestroyable ship, bool follow = true)
     {
+     
         if (Target == null || Target != ship)
         {
-            Target = ship;
-            ship.OnHealthChange += UpdateHealthBar;
-            Static = follow;
+            MonoBehaviour monoGO = ship as MonoBehaviour;
+            if (monoGO != null)
+            {
+                Ship shipGo = monoGO.GetComponent<Ship>();
+                shipGo.OnHealthChanged += UpdateHealthBar;
+                Target = ship;
+            }
         }
     }
 

@@ -34,7 +34,7 @@ public class BaseBossEnemyAI : BaseEnemyAI
 
     public override void Setup()
     {
-        m_XVel = GetComponent<BaseEnemy>().GetShipStatsSystem().Speed;
+        m_XVel = GetComponent<BaseEnemy>().Speed;
     }
 
     public virtual void ChangeWaypointByIndex(int currentPointToFollowIndex)

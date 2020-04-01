@@ -317,9 +317,9 @@ public class GuiManager : Singleton<GuiManager>
                 player = GameObject.FindObjectOfType<PlayerShip>();
             }
 
-            playerData.Level = player.GetLevelSystem().GetLevel();
-            playerData.xp = player.GetLevelSystem().GetXP();
-            playerData.xpToLevel = player.GetLevelSystem().GetXpToLevel();
+            playerData.Level = player.level;
+            playerData.xp = player.xp;
+            playerData.xpToLevel = player.xpToLevel;
 
             //Save Game Data
             playerData.PlayedGame = true;
@@ -341,7 +341,7 @@ public class GuiManager : Singleton<GuiManager>
                     case ObjectiveType.Use:
                         if (objective.completed == false)
                         {
-                            var progressSoFar = objective.progress + player.GetWeaponSystem().SpecialAttack.superUsed;
+                            var progressSoFar = objective.progress + player.GetSpecialAttack().superUsed;
                             objective.UpdateProgress(progressSoFar);
                         }
                         break;
@@ -401,9 +401,9 @@ public class GuiManager : Singleton<GuiManager>
         {   
             PlayerData playerData = DataController.GetPlayerData();
             playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-            playerData.Level = playerShip.GetLevelSystem().GetLevel();
-            playerData.xp = playerShip.GetLevelSystem().GetXP();
-            playerData.xpToLevel = playerShip.GetLevelSystem().GetXpToLevel();
+            playerData.Level = playerShip.level;
+            playerData.xp = playerShip.xp;
+            playerData.xpToLevel = playerShip.xpToLevel;
 
             //TODO Coins Earn In Game
             //TODO Enemy Killed In Game

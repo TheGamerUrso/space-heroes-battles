@@ -3207,10 +3207,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.1
   xScrollSpeed: 0
-  rend: {fileID: 938040840}
+  offset: 0
+  offXset: 0
+  sinMove: 0
   frequently: 0
   magnitute: 0
-  sinMove: 0
 --- !u!23 &938040840
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -4248,6 +4249,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: EnemyShip6
       objectReference: {fileID: 0}
+    - target: {fileID: 4159772285747209524, guid: 4b2b188850041a34bad593d730419e77,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -4256,12 +4262,12 @@ PrefabInstance:
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -50
       objectReference: {fileID: 0}
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
@@ -4271,7 +4277,7 @@ PrefabInstance:
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
@@ -4281,7 +4287,7 @@ PrefabInstance:
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
@@ -4296,12 +4302,17 @@ PrefabInstance:
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 4159772285747209526, guid: 4b2b188850041a34bad593d730419e77,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4159772285747209527, guid: 4b2b188850041a34bad593d730419e77,
+        type: 3}
+      propertyPath: level
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4b2b188850041a34bad593d730419e77, type: 3}
@@ -4406,6 +4417,10 @@ PrefabInstance:
     - target: {fileID: 825, guid: 8c6aca03346661b43a33c7b0c3932ce4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2088, guid: 8c6aca03346661b43a33c7b0c3932ce4, type: 3}
+      propertyPath: level
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 8c6aca03346661b43a33c7b0c3932ce4, type: 3}
@@ -5574,7 +5589,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1400881148121724, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4660212937986508, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
       propertyPath: m_LocalPosition.x
@@ -5791,10 +5806,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.2
   xScrollSpeed: 0
-  rend: {fileID: 2121093195}
+  offset: 0
+  offXset: 0
+  sinMove: 0
   frequently: 0
   magnitute: 0
-  sinMove: 0
 --- !u!23 &2121093195
 MeshRenderer:
   m_ObjectHideFlags: 0

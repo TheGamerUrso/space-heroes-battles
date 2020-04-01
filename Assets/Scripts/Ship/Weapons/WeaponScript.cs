@@ -72,13 +72,8 @@ public abstract class WeaponScript : MonoBehaviour
         ship = GetComponentInParent<Ship>();
         if (ship != null)
         {
-            ShipStatsSystem shipStatsSystem = ship.GetShipStatsSystem();
-
-            if (shipStatsSystem != null)
-            {
-                fireRate = shipStatsSystem.FireRate;
-                damage = shipStatsSystem.Damage;
-            }
+            fireRate = ship.FireRate;
+            damage = ship.Damage;
         }
     }
 

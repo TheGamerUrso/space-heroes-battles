@@ -2,7 +2,7 @@
 
 public class PlaceTurrets : MonoBehaviour
 {
-    public ShipStats shipStats;
+    public PlayerShip player;
     public Transform[] TurrentPlaces;
     public GameObject TurretPrefab;
     public int numberOfTurret;
@@ -10,8 +10,7 @@ public class PlaceTurrets : MonoBehaviour
 
     public void CreateTurret()
     {
-        PlayerShip player = PlayerManager.GetPlayer();
-
+        player = PlayerManager.GetPlayer();
         for (int i = 0; i < TurrentPlaces.Length; i++)
         {
             if (TurrentPlaces[i].childCount == 0)
@@ -28,9 +27,10 @@ public class PlaceTurrets : MonoBehaviour
 
     public GameObject CreateNew(Transform parent)
     {
+        player = PlayerManager.GetPlayer();
         GameObject tur = Instantiate(TurretPrefab, transform.position, Quaternion.identity);
 
-        tur.GetComponent<Turret>().SetShipStats(shipStats);
+        tur.GetComponent<Turret>().SetShipStats(player);
         return tur;
     }
 }

@@ -49,7 +49,7 @@ public class WinWidget : MonoBehaviour
         {
             levelObjectiveDatas[0].completed = true;
 
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(50);
+            player.AddXP(50);
            // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
         }
 
@@ -59,13 +59,13 @@ public class WinWidget : MonoBehaviour
         if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
         {
             levelObjectiveDatas[1].completed = true;
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(75);
+            player.AddXP(75);
         }
 
         if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged == false)
         {
             levelObjectiveDatas[2].completed = true;
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(100);
+            player.AddXP(100);
            // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
         }
 
@@ -74,7 +74,7 @@ public class WinWidget : MonoBehaviour
         if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
         {
             levelObjectiveDatas[3].completed = true;
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(25);
+            player.AddXP(25);
            // Debug.Log("Challenge : Earn " + SpawnEnemies.CoinDropInTotal * .9f + " Completed" + "(100 XP Awarded)");
         }
 

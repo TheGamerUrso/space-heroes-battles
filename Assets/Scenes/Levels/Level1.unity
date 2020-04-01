@@ -79,7 +79,7 @@ LightmapSettings:
     m_PVRBounces: 0
     m_PVREnvironmentSampleCount: 256
     m_PVREnvironmentReferencePointCount: 2048
-    m_PVRFilteringMode: 2
+    m_PVRFilteringMode: 1
     m_PVRDenoiserTypeDirect: 0
     m_PVRDenoiserTypeIndirect: 0
     m_PVRDenoiserTypeAO: 1
@@ -2113,10 +2113,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.1
   xScrollSpeed: 0
-  rend: {fileID: 1855360611}
+  offset: 0
+  offXset: 0
+  sinMove: 0
   frequently: 0
   magnitute: 0
-  sinMove: 0
 --- !u!23 &1855360611
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2243,10 +2244,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.2
   xScrollSpeed: 0
-  rend: {fileID: 2079739526}
+  offset: 0
+  offXset: 0
+  sinMove: 0
   frequently: 0
   magnitute: 0
-  sinMove: 0
 --- !u!23 &2079739526
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -2932,6 +2934,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1156773779}
     m_Modifications:
+    - target: {fileID: 8325115859066102203, guid: be5779fd863b308468c009c505ea0bbf,
+        type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 043587ab36e00784bbb6d03427813d9b, type: 2}
     - target: {fileID: 8325115859066102205, guid: be5779fd863b308468c009c505ea0bbf,
         type: 3}
       propertyPath: m_Enabled

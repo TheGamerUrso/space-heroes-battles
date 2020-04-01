@@ -57,7 +57,7 @@ LightmapSettings:
   m_LightmapEditorSettings:
     serializedVersion: 12
     m_Resolution: 2
-    m_BakeResolution: 40
+    m_BakeResolution: 32
     m_AtlasSize: 512
     m_AO: 0
     m_AOMaxDistance: 1
@@ -77,10 +77,10 @@ LightmapSettings:
     m_PVRSampling: 1
     m_PVRDirectSampleCount: 32
     m_PVRSampleCount: 256
-    m_PVRBounces: 2
+    m_PVRBounces: 1
     m_PVREnvironmentSampleCount: 256
     m_PVREnvironmentReferencePointCount: 2048
-    m_PVRFilteringMode: 2
+    m_PVRFilteringMode: 1
     m_PVRDenoiserTypeDirect: 0
     m_PVRDenoiserTypeIndirect: 1
     m_PVRDenoiserTypeAO: 1
@@ -97,7 +97,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
-  m_LightingDataAsset: {fileID: 112000000, guid: 410381633db39754da2115f7d80967e6,
+  m_LightingDataAsset: {fileID: 112000000, guid: 782913ed7592ec64f9ba1cc834a68556,
     type: 2}
   m_UseShadowmask: 0
 --- !u!196 &4
@@ -939,10 +939,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: 0.5
   xScrollSpeed: 0
-  rend: {fileID: 1023722116}
+  offset: 0
+  offXset: 0
+  sinMove: 1
   frequently: 0
   magnitute: 0
-  sinMove: 1
 --- !u!23 &1023722116
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1150,10 +1151,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scrollSpeed: -0.05
   xScrollSpeed: 0
-  rend: {fileID: 1203903468}
+  offset: 0
+  offXset: 0
+  sinMove: 0
   frequently: 0
   magnitute: 0
-  sinMove: 0
 --- !u!23 &1203903468
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1942,6 +1944,11 @@ PrefabInstance:
         type: 3}
       propertyPath: availableEnemies
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 7569038437137189253, guid: 17506dfe880e19b409167cb4853c08e6,
+        type: 3}
+      propertyPath: HasBoss
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7569038437137189255, guid: 17506dfe880e19b409167cb4853c08e6,
         type: 3}

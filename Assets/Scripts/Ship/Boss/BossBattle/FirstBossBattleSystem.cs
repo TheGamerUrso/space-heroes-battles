@@ -6,7 +6,7 @@ public class FirstBossBattleSystem : BaseBossBattle
 {
     public override void Phases()
     {
-        HealthPresentage = bossEnemy.GetHealtHPresentage();
+        HealthPresentage = bossEnemy.HealthPresentage;
         if (phase == 0 && HealthPresentage <= 80f)
         {
             phase = 1;

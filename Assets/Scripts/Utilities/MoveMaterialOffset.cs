@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class MoveMaterialOffset : MonoBehaviour {
     private string offsetKey = "_MainTex";
-    public float scrollSpeed = 0.5F;
-    public float xScrollSpeed = 0;
-    public Renderer rend;
+    [SerializeField] private float scrollSpeed = 0.5F;
+    [SerializeField] private float xScrollSpeed = 0;
+    
+    private Renderer rend;
 
-    private float offset;
-    private float offXset;
+    [SerializeField] private float offset;
+    [SerializeField] private float offXset;
 
-    public float frequently;
-    public float magnitute;
-    public bool sinMove;
+    [SerializeField] private bool sinMove;
+    [SerializeField] private float frequently;
+    [SerializeField] private float magnitute;
+
+
     void Start()
     {
         rend = GetComponent<Renderer>();

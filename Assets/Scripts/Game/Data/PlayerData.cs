@@ -173,10 +173,10 @@ public class PlayerData
 
     public void Save()
     {
-        LevelSystem levelSystem = PlayerManager.GetPlayerByID(currentSelectedShip).prefab.GetLevelSystem();
-        Level = levelSystem.GetLevel();
-        xp = levelSystem.GetXP();
-        xpToLevel = levelSystem.GetXpToLevel();
+        PlayerShip playerShip = PlayerManager.GetPlayerByID(currentSelectedShip).prefab;
+        Level = playerShip.level;
+        xp = playerShip.xp;
+        xpToLevel = playerShip.xpToLevel;
     }
 
 
@@ -213,10 +213,10 @@ public class PlayerData
 
     public void EarnXP(float ammount)
     {
-        LevelSystem levelSystem = PlayerManager.GetPlayerByID(currentSelectedShip).prefab.GetLevelSystem();
-        levelSystem.AddXP((int)ammount);
-        Level = levelSystem.GetLevel();
-        xp = levelSystem.GetXP();
-        xpToLevel = levelSystem.GetXpToLevel();
+        PlayerShip playerShip = PlayerManager.GetPlayerByID(currentSelectedShip).prefab;
+        playerShip.AddXP((int)ammount);
+        Level = playerShip.level;
+        xp = playerShip.xp;
+        xpToLevel = playerShip.xpToLevel;
     }
 }

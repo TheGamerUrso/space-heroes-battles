@@ -15,7 +15,6 @@ public class SpecialAttack : PlayerWeapon
     private float playerFireRate;
     private float turretDuration;
 
-    private PlayerWeaponSystem playerWeaponSystem;
     private PlayerWeapon[] playerWeapons;
 
     public void IncreaseSuperUsed()
@@ -32,6 +31,7 @@ public class SpecialAttack : PlayerWeapon
     private void Start()
     {
         superUsed = 0;
+        playerShip = GetComponentInParent<PlayerShip>();
     }
 
     public void ActivateSpecial()
@@ -39,11 +39,6 @@ public class SpecialAttack : PlayerWeapon
         if (SpecialActive == false)
         {
             AudioManager.PlaySound(null, "Super", 3);
-
-            if (playerWeaponSystem == null)
-            {
-                playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
-            }
 
             OnSuperWeapoUsed?.Invoke(superUsed);
 
@@ -55,9 +50,9 @@ public class SpecialAttack : PlayerWeapon
                 }
 
                 playerFireRate = playerWeapons[0].FireRate;
-                weaponCurrentType = playerWeaponSystem.getCurrentWeaponType;
+                weaponCurrentType = playerShip.getCurrentWeaponType;
 
-                PlayerWeaponSystem.SwitchWeapon(playerWeaponSystem, 4);
+                playerShip.SwitchWeapon(4);
 
                 foreach (PlayerWeapon item in playerWeapons)
                 {
@@ -93,12 +88,7 @@ public class SpecialAttack : PlayerWeapon
                     item.SetFireRate(playerFireRate);
                 }
 
-                if (playerWeaponSystem == null)
-                {
-                    playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
-                }
-
-                PlayerWeaponSystem.SwitchWeapon(playerWeaponSystem, weaponCurrentType);
+                playerShip.SwitchWeapon(weaponCurrentType);
             }
 
             SpecialActive = false;
@@ -133,15 +123,15 @@ public class SpecialAttack : PlayerWeapon
                 {
                     if (weaponData.SummonTurrets)
                     {
-                        playerShip.GetShipStatsSystem().PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
+                        playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
                     }
                     else
                     {
-                        playerShip.GetShipStatsSystem().PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                        playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
                     }
                 }
 
-                if (playerShip.GetHealthPresentage() <= .5f)
+                if (playerShip.HealthPresentage <= .5f)
                 {
                     playerShip.Heal(.1f);
                 }
@@ -152,7 +142,7 @@ public class SpecialAttack : PlayerWeapon
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerShip.GetShipStatsSystem().PowerUpLevel = 0;
+                playerShip.PowerUpLevel = 0;
             }
         }
 

@@ -43,10 +43,10 @@ public class Items : MonoBehaviour
     {
         PlayerShip player = PlayerManager.GetPlayer();
 
-        if (itemData.m_RewardAmount > 0 && player.GetUpgradeSystem().GetMagnetPower() > 0)
+        if (itemData.m_RewardAmount > 0 && player.GetMagnetPower() > 0)
         {
-            magnetPower = 10 + player.GetUpgradeSystem().GetMagnetPower();
-            magnetDistance = 25 + player.GetUpgradeSystem().GetMagnetDistanceUpgrade();
+            magnetPower = 10 + player.GetMagnetPower();
+            magnetDistance = 25 + player.GetMagnetDistanceUpgrade();
         }
 
         int dir = Random.Range(-1, 1);
@@ -87,6 +87,8 @@ public class Items : MonoBehaviour
         if (itemData.m_RewardAmount > 0)
         {
             //TODO Increase Coin Earn In Game
+  
+            GameLevel.counsEarnInGame++;
         }
 
         if (itemData.Shield)

@@ -83,7 +83,7 @@ public class BaseBossEnemy : BaseEnemy
 
         base.TakeDamage(damage);
 
-        if (shipStatsSystem.currentHealth < 0)
+        if (currentHealth < 0)
         {
             EnableColliders(false);
             Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
@@ -144,11 +144,6 @@ public class BaseBossEnemy : BaseEnemy
     {
         yield return new WaitForSeconds(4.0f);
         base.Death();
-    }
-
-    public float GetHealtHPresentage()
-    {
-        return shipStatsSystem.GetHealthPressentage();
     }
 
     public void SetFireRate(int weaponIndex = 0, bool all = true)

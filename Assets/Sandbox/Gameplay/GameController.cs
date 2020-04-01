@@ -75,7 +75,10 @@ public class GameController : Singleton<GameController>
 
         SpawnEnemies spawn = GameObject.FindObjectOfType<SpawnEnemies>();
         spawn.SpawnEnded = () => { Win(); };
+        GameLevel.IsGameOver = false;
 
+        GameLevel.CurrentEnemyKilled = 0;
+        GameLevel.counsEarnInGame = 0;
     }
 
     private void PlayerShipCallback()

@@ -108,6 +108,8 @@ MonoBehaviour:
   FollowRotation: 1
   delayBetweenShots: 0
   autoAttack: 0
+  fireRate: 0
+  damage: 0
 --- !u!1 &1400881148121724
 GameObject:
   m_ObjectHideFlags: 0
@@ -186,23 +188,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 57b021d75c87f4248803f7c8556fc1c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStatsSystem:
-    currentHealth: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 24
-    SuperDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
-    baseDamage: 12.5
-    baseHealth: 1250
-    baseFireRate: 1.4
-    baseSpecialCountdown: 1
-  levelSystem:
-    Level: 1
-    xp: 0
-    xpToLevel: 100
+  shipStats: {fileID: 11400000, guid: 9b06dd89b05be994d9fc22c678cf3ba9, type: 2}
+  FireRate: 0
+  Speed: 0
+  currentHealth: 0
+  Damage: 0
+  xpToLevel: 0
+  xp: 0
+  level: 0
   ShieldEffect: {fileID: 8147525768907002281}
   ExplostionEffect: 6
   baseEnemyAI: {fileID: 114099360190212058}
@@ -220,7 +213,6 @@ MonoBehaviour:
     presentage: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
   m_ValueOfEnemy: 100
-  DropItems: 
   AutoEnableWeapon: 0
   BossAI: {fileID: 114099360190212058}
   ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
@@ -239,9 +231,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bAppeared: 0
   bEntered: 0
-  WaypointPrefab: {fileID: 1811661054583536, guid: 3d43c90d23e6d9a44bae44707ef9c210,
-    type: 3}
-  m_IsMovingVertical: 0
   cooldown: 0
   currentPointToFollowIndex: 0
   PingPong: 1
@@ -251,6 +240,9 @@ MonoBehaviour:
   reverse: 0
   SpawnAtFirstPath: 0
   Auto: 0
+  WaypointPrefab: {fileID: 1811661054583536, guid: 3d43c90d23e6d9a44bae44707ef9c210,
+    type: 3}
+  m_IsMovingVertical: 0
 --- !u!114 &6984183554805876986
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -337,6 +329,8 @@ MonoBehaviour:
   FollowRotation: 1
   delayBetweenShots: 0
   autoAttack: 0
+  fireRate: 0
+  damage: 0
 --- !u!1 &34919499715813744
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,6 +540,8 @@ MonoBehaviour:
   FollowRotation: 1
   delayBetweenShots: 0
   autoAttack: 0
+  fireRate: 0
+  damage: 0
   Target: {fileID: 0}
   playerLastLocation: {x: 0, y: 0, z: 0}
 --- !u!1001 &21060501055672507

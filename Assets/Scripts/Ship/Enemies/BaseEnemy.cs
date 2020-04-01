@@ -2,7 +2,7 @@
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public class BaseEnemy : Ship, IDestroyable
+public class BaseEnemy : Ship
 {
     public Action<string, BaseEnemy> EnemyDied;
     public Action<string, BaseEnemy> EnemyGotHit;
@@ -28,7 +28,8 @@ public class BaseEnemy : Ship, IDestroyable
     [HideInInspector] public EnemyElement enemyElement;
 
     [SerializeField] private HealthBarSettings HealthBarSettings;
-    private EnemyHealthWidget healthBar;
+    
+    protected EnemyHealthWidget healthBar;
     public EnemyHealthWidget HealthBar
     {
         get
@@ -37,36 +38,14 @@ public class BaseEnemy : Ship, IDestroyable
         }
     }
 
-    private bool Alive;
-    public bool IsDestroyed
-    {
-        get
-        {
-            return Alive;
-        }
-        set
-        {
-            Alive = value;
-        }
-    }
-    public Action<float, float> OnHealthChange
-    {
-        get
-        {
-            return shipStatsSystem.HealthChanged;
-        }
-        set
-        {
-            shipStatsSystem.HealthChanged = value;
-        }
-    }
+
 
     public int m_ValueOfEnemy;
 
-    public PoolGameObjectType[] DropItems;
-    protected WeaponScript weaponScript;
     protected float takeDamageDelay;
     protected bool EnableShield;
+
+    protected WeaponScript weaponScript;
     [SerializeField] protected bool AutoEnableWeapon;
 
     public virtual void OnEnable()
@@ -114,8 +93,8 @@ public class BaseEnemy : Ship, IDestroyable
 
     public virtual void SetEnemyStats(int level)
     {
-        GetLevelSystem().SetLevel(level);
-        GetShipStatsSystem().SetStats(levelSystem);
+        this.level = level;
+        SetStats(level);
         HasShield = false;
 
         if (weaponScript)
@@ -126,7 +105,7 @@ public class BaseEnemy : Ship, IDestroyable
 
     public override void OnAwake()
     {
-        shipStatsSystem.SetStats(levelSystem);
+        SetStats(level);
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
@@ -149,7 +128,7 @@ public class BaseEnemy : Ship, IDestroyable
         baseEnemyAI = GetComponent<SimpleAI>();
         ShieldEffect.SetActive(HasShield);
 
-      
+        SetStats(level);
     }
 
  
@@ -162,19 +141,7 @@ public class BaseEnemy : Ship, IDestroyable
         EnemyEscaped?.Invoke(gameObject.name, this);
     }
 
-    public virtual void Heal(float ammount)
-    {
-        CurrentHealth += ammount;
-
-        if (CurrentHealth > MaxHealth)
-        {
-            CurrentHealth = MaxHealth;
-        }
-
-        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
-    }
-
-    public virtual void TakeDamage(float dmg)
+    public override void TakeDamage(float dmg)
     {
         if (Alive == false)
         {
@@ -247,7 +214,7 @@ public class BaseEnemy : Ship, IDestroyable
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            destroyable.TakeDamage(destroyable.CurrentHealth/2);
+            destroyable.TakeDamage(destroyable.MaxHealth/2);
             TakeDamage(CurrentHealth);
         }
     }

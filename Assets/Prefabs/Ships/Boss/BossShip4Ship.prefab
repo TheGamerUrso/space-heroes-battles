@@ -222,30 +222,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b2588cd97a37645b56607f87dcd2a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStatsSystem:
-    CurrentHealth: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 50
-    SuperDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
-    baseDamage: 12.5
-    baseHealth: 1250
-    baseFireRate: 0.8
-    baseSpecialCountdown: 1
-  levelSystem:
-    Level: 1
-    xp: 0
-    xpToLevel: 100
+  shipStats: {fileID: 11400000, guid: 69b42675001a626439b6e8b20717dbc2, type: 2}
+  FireRate: 0
+  Speed: 0
+  currentHealth: 0
+  Damage: 0
+  xpToLevel: 0
+  xp: 0
+  level: 0
   ShieldEffect: {fileID: 1512342256574877601}
   ExplostionEffect: 6
-  animator: {fileID: 8997901948444743969}
   baseEnemyAI: {fileID: 9045726662814918859}
-  Alive: 0
   Weapons:
-  - {fileID: 9046161308298879779}
+  - {fileID: 0}
   delayAttak: 3
   DeathDelay: 0
   enemyElement:
@@ -254,9 +243,10 @@ MonoBehaviour:
     Prefab: {fileID: 0}
     currentNumberInScene: 0
     MaxNumberInScene: 0
+    presentage: 0
   HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
   m_ValueOfEnemy: 500
-  DropItems: 08000000
+  AutoEnableWeapon: 0
   BossAI: {fileID: 9045726662814918859}
   ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
     type: 3}
@@ -274,26 +264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bAppeared: 0
   bEntered: 0
-  PathIndex: 
-  Path: []
-  currentPointToFollowIndex: 0
-  PingPong: 1
-  RotateTowardDir: 0
-  Reset: 0
-  RotationSpeed: 0
-  reverse: 0
-  SpawnAtFirstPath: 0
-  Auto: 0
-  WaypointPrefab: {fileID: 6703628987737136979, guid: d1a54488334813a4bb52fd03795941de,
-    type: 3}
-  m_IsMovingVertical: 0
   cooldown: 1
-  Positions:
-  - {x: 0.8, y: -50, z: 100}
-  - {x: 0.8, y: -50, z: 100}
-  CurclularMove: 0
-  angle: 0
-  radius: 5
 --- !u!114 &3253328677664083071
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -306,7 +277,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 07ac21fabb17e1a409ee79b98123ea22, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  baseBossEnemy: {fileID: 9045726662814918858}
+  bossEnemy: {fileID: 0}
+  bossAI: {fileID: 0}
+  HealthPresentage: 0
+  phase: 0
 --- !u!1 &9046161308298879779
 GameObject:
   m_ObjectHideFlags: 0
@@ -368,15 +342,14 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  Cannons: []
   weaponData: {fileID: 11400000, guid: 3abe3156ae1ac80488b6ae5633accdb3, type: 2}
   source: {fileID: 7297356080784055246}
   FollowRotation: 1
   delayBetweenShots: 0
-  delay: 0
-  Multiple: 0
-  delayTimer: 0
-  m_NumberOfBullets: 0
-  RandomRotationOnY: 0
+  autoAttack: 0
+  fireRate: 0
+  damage: 0
 --- !u!82 &7297356080784055246
 AudioSource:
   m_ObjectHideFlags: 0

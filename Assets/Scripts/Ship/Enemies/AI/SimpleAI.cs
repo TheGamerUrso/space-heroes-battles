@@ -13,8 +13,8 @@ public class SimpleAI : BaseEnemyAI
     {
         base.Setup();
 
-        m_XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
-        m_ZVel = enemy.GetShipStatsSystem().GetSpeed();
+        m_XVel = enemy.Speed / 2;
+        m_ZVel = enemy.Speed;
 
         Direction = 0;
     }
@@ -28,7 +28,7 @@ public class SimpleAI : BaseEnemyAI
 
 
         //With Translate
-        //  transform.Translate(movement * Time.deltaTime,Space.Self);
+        //transform.Translate(movement * Time.deltaTime,Space.Self);
 
         //With AddForce
         // rigid.AddForce(movement * 200 * Time.deltaTime);

@@ -170,23 +170,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4237b3175d47f43a49e3ee38849178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStatsSystem:
-    currentHealth: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 15
-    SuperDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
-    baseDamage: 12.5
-    baseHealth: 50
-    baseFireRate: 2.5
-    baseSpecialCountdown: 1
-  levelSystem:
-    Level: 100
-    xp: 0
-    xpToLevel: 100
+  shipStats: {fileID: 11400000, guid: e6b5cb12865b13e49bb53773a59e26fd, type: 2}
+  FireRate: 0
+  Speed: 0
+  currentHealth: 0
+  Damage: 0
+  xpToLevel: 0
+  xp: 0
+  maxLevel: 0
+  level: 0
   ShieldEffect: {fileID: 5123420270638370231}
   ExplostionEffect: 6
   baseEnemyAI: {fileID: 4585798423900489478}
@@ -203,7 +195,6 @@ MonoBehaviour:
     presentage: 0
   HealthBarSettings: {fileID: 11400000, guid: b8654c602fea6e14e95f7801eafff54e, type: 2}
   m_ValueOfEnemy: 100
-  DropItems: 07000000080000000a00000009000000
   AutoEnableWeapon: 1
 --- !u!114 &4585798423900489478
 MonoBehaviour:
