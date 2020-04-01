@@ -20,6 +20,8 @@ public class EnemyElement
 
 public class SpawnEnemies : Singleton<SpawnEnemies>
 {
+    public Action<BaseEnemy> EnemyDied;
+
     public Action SpawnEnded;
     public Action<int, int, int> GameStatsChanged;
     public Action<string, BaseEnemy> BossDied;
@@ -137,13 +139,13 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                         break;
                     }
                 }
-                
+
                 while (pause)
                 {
                     yield return new WaitForEndOfFrame();
                 }
 
-               // randomNumb = UnityEngine.Random.Range(0, tempList.Count); 
+                // randomNumb = UnityEngine.Random.Range(0, tempList.Count); 
 
                 int repeat = 1;
 
@@ -163,7 +165,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
                 yield return new WaitForSeconds(cooldown);
 
-                
+
             }
 
             if (HasBoss)
@@ -267,16 +269,36 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
 
         PlayerShip playerShip = PlayerManager.GetPlayer();
-        int dif = baseEnemy.level - playerShip.level;
-        if (dif > 0)
+        int PlayerLevel = playerShip.Level;
+
+        int EnemyLevel = baseEnemy.level;
+
+        int levelDiffrence = PlayerLevel / EnemyLevel;
+
+        if (levelDiffrence == 0)
         {
-            float level = 25 / baseEnemy.level;
-            playerShip.AddXP(baseEnemy.level);
+            levelDiffrence = 1;
         }
-        GameLevel.Score += 100;
+
+        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+
+        playerShip.AddXP(XPEarned);
+
+        playerShip.IncreasePowerUp(.1f);
+
+        //int dif = baseEnemy.level - playerShip.level;
+        //if (dif > 0)
+        //{
+        //    float level = 25 / baseEnemy.level;
+        //    playerShip.AddXP(baseEnemy.level);
+        //}
+
+        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
+
+        GameSession.Score += score;
 
 
-        for (int i = 0; i < UnityEngine.Random.Range(4,8); i++)
+        for (int i = 0; i < UnityEngine.Random.Range(4, 8); i++)
         {
             DropController.PickRandomDropItem(baseEnemy.transform);
         }
@@ -297,7 +319,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
         Debug.Log("Enemy Got Escaped");
         Enemies.Remove(baseEnemy.gameObject);
-        GameLevel.enemyEscaped++;
+        GameSession.enemyEscaped++;
     }
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
@@ -313,21 +335,46 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
         baseEnemy.EnemyDied -= EnemyDiedCallback;
         baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
-        GameLevel.CurrentEnemyKilled++;
-        GameLevel.enemyKilled++;
+
+        GameSession.CurrentEnemyKilled++;
+        GameSession.enemyKilled++;
 
         Debug.Log("Enemy Got Died");
         DropController.PickRandomDropItem(baseEnemy.transform);
         Enemies.Remove(baseEnemy.gameObject);
 
         PlayerShip playerShip = PlayerManager.GetPlayer();
-        int dif = playerShip.level - baseEnemy.level;
-        if (dif >= 0)
+        int PlayerLevel = playerShip.Level;
+
+        int EnemyLevel = baseEnemy.level;
+
+        int levelDiffrence = PlayerLevel / EnemyLevel;
+
+        if (levelDiffrence == 0)
         {
-            float xp = 25 / baseEnemy.level;
-            playerShip.AddXP(xp);
+            levelDiffrence = 1;
         }
-        GameLevel.Score += 100;
+
+        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+
+        playerShip.AddXP(XPEarned);
+
+        playerShip.IncreasePowerUp(.1f);
+
+        //int dif = baseEnemy.level - playerShip.level;
+        //if (dif > 0)
+        //{
+        //    float level = 25 / baseEnemy.level;
+        //    playerShip.AddXP(baseEnemy.level);
+        //}
+
+        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
+
+        GameSession.Score += score;
+
+        EnemyDied?.Invoke(baseEnemy);
+
+
     }
 
 }

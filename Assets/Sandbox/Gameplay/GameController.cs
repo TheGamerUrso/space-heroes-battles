@@ -4,24 +4,118 @@ using System.Collections.Generic;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-public static class GameLevel
+
+public static class GameSession
 {
     public static bool IsGameOver;
-    public static bool useSloMo;
+    public static int EnemySpawnInTotal { get; set; }
+
+    public static float score;
+    public static float Score
+    {
+        get
+        {
+            return score;
+        }
+
+        set
+        {
+            score = value; 
+        }
+    }
+
+    public static int WaveSurvived { get; set; }
+
+    private static int currentEnemyKilled;
+
+    public static int CurrentEnemyKilled
+    {
+        get
+        {
+            return currentEnemyKilled;
+        }
+
+        set
+        {
+
+            currentEnemyKilled = value;
+            PlayerData playerData = DataController.GetPlayerData();
+            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
+            if (objectiveData != null)
+                objectiveData.UpdateProgress(currentEnemyKilled);
+        }
+    }
+   
+    public static int counsEarnInGame { get; set; }
+
+    private static int superUsed;
+    public static int SuperUsed
+    {
+
+        get
+        {
+            return superUsed;
+        }
+
+        set
+        {
+            superUsed = value;
+            PlayerData playerData = DataController.GetPlayerData();
+            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
+            if (objectiveData != null)
+                objectiveData.UpdateProgress(superUsed);
+        }
+    }
+
+    private static bool getDamaged;
+
+    public static bool GotDamaged
+    {
+        get
+        {
+            return getDamaged;
+        }
+
+        set
+        {
+            getDamaged = value;
+            PlayerData playerData = DataController.GetPlayerData();
+            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+            if (objectiveData != null)
+                objectiveData.UpdateProgress(1);
+        }
+    }
+
+    public static int multiplier { get; set; }
+
     public static int enemyKilled;
     public static int enemyEscaped;
 
-    public static int EnemySpawnInTotal { get; set; }
+    public static void Reset()
+    {
+        IsGameOver = false;
+        EnemySpawnInTotal = 0;
+        Score = 0;
+        WaveSurvived = 0;
+        currentEnemyKilled = 0;
+        currentEnemyKilled = 0;
+        counsEarnInGame = 0;
+        superUsed = 0;
+        getDamaged = false;
+        multiplier = 0;
+
+        enemyKilled = 0;
+        enemyEscaped = 0;
+    }
+}
+
+public static class GameLevel
+{   
+    public static bool useSloMo;
+   
     public static int LevelDifficulty { get; set; }
-    public static float Score { get; set; }
-    public static int WaveSurvived { get; set; }
     public static int EnemyKilled { get; set; }
-    public static int CurrentEnemyKilled { get; set; }
     public static int CoinDropInTotal { get; set; }
-    public static int counsEarnInGame { get; set; }
-
-
-    public static int SuperUsed { get; set; }
 }
 
 public class GameController : Singleton<GameController>
@@ -31,16 +125,9 @@ public class GameController : Singleton<GameController>
 
     private GameObject playerShip;
 
-    //    private float slowMo;
+    private float slowMo;
+    private float delayTheSlowMoEffectTimer;
 
-    //    private float delayTheSlowMoEffectTimer;
-
-    //    public void GameStatsChanged(int Wave, int MaxWave, int TotalEnemies)
-    //    {
-    //        this.Wave = Wave;
-    //        this.MaxWave = MaxWave;
-    //        this.TotalEnemies = TotalEnemies;
-    //    }
 
     protected override void OnAwake()
     {
@@ -78,10 +165,9 @@ public class GameController : Singleton<GameController>
 
         SpawnEnemies spawn = GameObject.FindObjectOfType<SpawnEnemies>();
         spawn.SpawnEnded = () => { Win(); };
-        GameLevel.IsGameOver = false;
+        
+        GameSession.Reset();
 
-        GameLevel.CurrentEnemyKilled = 0;
-        GameLevel.counsEarnInGame = 0;
     }
 
     private void PlayerShipCallback()
@@ -121,18 +207,21 @@ public class GameController : Singleton<GameController>
 
     public void Win()
     {
-        if (!GameLevel.IsGameOver)
+        if (!GameSession.IsGameOver)
         {
-            GameLevel.IsGameOver = true;
+            GameSession.IsGameOver = true;
 
             StartCoroutine(DelayWinScreen());
         }
     }
     public void GameOver()
     {
-        if (GameLevel.IsGameOver == false)
+        if (GameSession.IsGameOver == false)
         {
-            GameLevel.IsGameOver = true;
+            GameSession.IsGameOver = true;
+
+          
+
             StartCoroutine(DelayGameOver());
         }
     }
@@ -146,100 +235,18 @@ public class GameController : Singleton<GameController>
     IEnumerator DelayWinScreen()
     {
         yield return new WaitForSeconds(4.0f);
+
+        PlayerData playerData = DataController.GetPlayerData();
+        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+        if (objectiveData != null)
+            objectiveData.UpdateProgress(1);
+
+        playerData.Coins += GameSession.counsEarnInGame;
+        playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+
+
+        playerData.Save();
         OnWin?.Invoke(this);
     }
-
-    //    public void SlowMoEffect()
-    //    {
-    //#if UNITY_ANDROID
-    //        if (useSloMo && !GameManager.Paused)
-    //        {
-    //            if (Input.touchCount > 0 || Input.GetMouseButton(0))
-    //            {
-    //                //     slowMo = 1;
-    //            }
-    //            else
-    //            {
-    //                //       slowMo = .3f;
-
-    //            }
-    //            // Time.timeScale = slowMo;
-    //        }
-    //#endif
-    //    }
-
-
-
-
-    //    public void EnemyGotHit(string id, BaseEnemy enemy)
-    //    {
-
-    //    }
-
-    //    public void EnemyEscaped(string id, BaseEnemy enemy)
-    //    {
-    //        enemyEscaped++;
-    //    }
-
-    //    public void EnemyDied(string id, BaseEnemy enemy)
-    //    {
-    //        Vector3 enemyPos = enemy.transform.position;
-
-    //        enemyKilled++;
-
-    //        PlayerData playerData = DataController.GetPlayerData();
-    //        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
-
-    //        if (objectiveData != null)
-    //            objectiveData.UpdateProgress(CurrentEnemyKilled);
-
-    //        //Update ComboKillIndicator
-    //        if (ComboKillIndicator.instance)
-    //            ComboKillIndicator.instance.ConfirmKill();
-
-    //        int multiplayer = 0;
-    //        if (ComboKillIndicator.instance)
-    //        {
-    //            multiplayer = ComboKillIndicator.instance.GetMultiplier();
-    //        }
-
-    //        //Update Score
-    //        int score = multiplayer * enemy.m_ValueOfEnemy;
-    //        Score += score;
-
-    //        if (GuiManager.Instance)
-    //        {
-    //            GuiManager.Instance.UpdateScore(score);
-    //            GuiManager.CreateFloatingText(string.Format("{0}", score), enemyPos);
-    //        }
-
-    //        //Update Player Attributes
-    //        PlayerShip playerShip = PlayerManager.GetPlayer();
-    //        if (playerShip != null)
-    //        {
-    //            int PlayerLevel = playerShip.Level;
-    //            int EnemyLevel = enemy.Level;
-    //            int levelDiffrence = PlayerLevel / EnemyLevel;
-
-    //            if (levelDiffrence == 0)
-    //            {
-    //                levelDiffrence = 1;
-    //            }
-
-    //            // float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-    //            float XPEarned = 5 / levelDiffrence;
-    //            playerShip.AddXP((int)XPEarned);
-    //            Debug.Log(string.Format("exp = {0}\n", XPEarned));
-
-
-    //            playerShip.IncreasePowerUp(.1f);
-    //        }
-
-    //        DropController.PickRandomDropItem(enemy.transform);
-    //    }
-    //    public void SetLevelDifficuilty(int Level)
-    //    {
-    //        LevelDifficulty = Level;
-    //    }
 
 }

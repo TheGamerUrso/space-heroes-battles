@@ -45,6 +45,7 @@ public class SimpleShipControls : MonoBehaviour
 
         PlayerData playerData = DataController.GetPlayerData();
         playerData.distanceChanged = UpdateOffset;
+        offspec = playerData.distance;
 
         plane = new Plane(Vector3.up, transform.position);
         rigid = GetComponent<Rigidbody>();

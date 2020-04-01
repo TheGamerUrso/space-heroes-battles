@@ -37,6 +37,7 @@ public class BaseBossEnemy : BaseEnemy
 
     public override void Enter()
     {
+        base.Enter();
         EnableColliders(false);
         currentWeaponActive = 1;
     }

@@ -24,6 +24,12 @@ public class ComboKillIndicator : MonoBehaviour
 
     private void Start()
     {
+        SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        if(spawnEnemies != null)
+        {
+            spawnEnemies.EnemyDied = ConfirmKill;
+        }
+
         HideWindow();
 
         if (playerShip == null)
@@ -48,7 +54,7 @@ public class ComboKillIndicator : MonoBehaviour
         return Multiplier;
     }
 
-    public void ConfirmKill()
+    public void ConfirmKill(BaseEnemy baseEnemy)
     {
         if (!PlayerPrefs.HasKey("KillMultiTut"))
         {
@@ -59,9 +65,9 @@ public class ComboKillIndicator : MonoBehaviour
         if (timerCooldown <= 0)
         {
             animator.SetTrigger("KillConfirm");
-            if (this.Multiplier < 4)
+            if (GameSession.multiplier < 4)
             {
-                this.Multiplier++;
+                GameSession.multiplier++;
             }
             ShowWindow();
             RefreshText();

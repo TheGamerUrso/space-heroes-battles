@@ -80,8 +80,20 @@ public class GuiManager : Singleton<GuiManager>
 
         GameController.OnGameOver += GameOver;
         GameController.OnWin += Win;
+
+        SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.EnemyDied = EnemyDiedCallback;
+        }
     }
 
+    public void EnemyDiedCallback(BaseEnemy baseEnemy)
+    {
+        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
+        UpdateScore(score);
+        GuiManager.CreateFloatingText(string.Format("{0}", score), baseEnemy.transform.position);
+    }
 
     public void PickUpItem(ItemData itemData)
     {

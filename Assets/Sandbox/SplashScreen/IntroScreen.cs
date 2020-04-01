@@ -23,21 +23,23 @@ public class IntroScreen : MonoBehaviour
             }
             Debug.Log("Boot not found Loading");
             SceneManager.LoadScene("boot", LoadSceneMode.Additive);
+
         }
 #endif
+
+
     }
 
     void Start()
     {
+        PlayerData playerData = DataController.GetPlayerData();
 
         for (int i = 0; i < Ships.Length; i++)
         {
             Ships[i].SetActive(false);
         }
 
-        PlayerData playerData = DataController.GetPlayerData();
         Ships[playerData.currentSelectedShip].SetActive(true);
-
 
         AudioManager.PlayMusic("Intro");
     }

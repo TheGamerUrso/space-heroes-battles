@@ -78,7 +78,7 @@ public class WinWidget : MonoBehaviour
            // Debug.Log("Challenge : Earn " + SpawnEnemies.CoinDropInTotal * .9f + " Completed" + "(100 XP Awarded)");
         }
 
-
+        
 
         StartCoroutine(ShowGameResults());
     }

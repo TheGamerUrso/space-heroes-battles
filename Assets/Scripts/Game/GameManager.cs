@@ -12,6 +12,7 @@ public class PlayerShipElement
     public PlayerShip prefab;
 }
 
+
 public class GameManager : Singleton<GameManager>
 {
     public delegate void OnLoadData();
@@ -61,6 +62,11 @@ public class GameManager : Singleton<GameManager>
     }
 
 
+    private void OnApplicationQuit()
+    {
+        SaveSystem.SavePlayerData();
+    }
+
     protected override void OnAwake()
     {
         Debug.Log("Loading Data");
@@ -77,9 +83,6 @@ public class GameManager : Singleton<GameManager>
         GameEventSystem.PlayerLeveledUp += ShowLevelup;
 
         GameEventSystem.OnShipSelect += ShipSelected;
-
-
-
     }
 
     public void ShipSelected(int shipSelected)
@@ -104,7 +107,9 @@ public class GameManager : Singleton<GameManager>
         DOTween.Init(autoKillMode, useSafeMode, logBehaviour);
 
         DontDestroyOnLoad(gameObject);
+       
         _instancedSystemPrefabs = new List<GameObject>();
+       
         InstantiateSystemPrefabs();
 
 
@@ -124,7 +129,24 @@ public class GameManager : Singleton<GameManager>
             }   
         }
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.currentSelectedShip = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.currentSelectedShip = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.currentSelectedShip = 2;
+        }
+    }
     private void InstantiateSystemPrefabs()
     {
         foreach (var systemPrefab in SystemPrefabs)

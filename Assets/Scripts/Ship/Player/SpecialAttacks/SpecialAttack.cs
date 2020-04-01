@@ -31,7 +31,7 @@ public class SpecialAttack : PlayerWeapon
     public override void OnStart()
     {
         base.OnStart();
-        GameLevel.SuperUsed = 0;
+        GameSession.SuperUsed = 0;
         PlayerShip playerShip = ship.GetComponent<PlayerShip>();
         superChargeTimer = playerShip.SuperChargeTime;
         damage = playerShip.SuperDamage;

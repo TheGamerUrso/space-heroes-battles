@@ -1,8 +1,12 @@
-﻿using TheGamerUrso.PoolSystem;
+﻿using System;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class Blaster : WeaponScript
 {
+    public Action<bool> AboutToShoot;
+    public float timer;
+
     public override void Initialize()
     {
         base.Initialize();
@@ -15,8 +19,16 @@ public class Blaster : WeaponScript
 
     public override void Shoot()
     {
+        timer = newShot - Time.time;
+
+        if (timer < 1.5f)
+        {
+            AboutToShoot?.Invoke(true);
+        }
+
         if (Time.time > newShot && AutoAttack)
         {
+            AboutToShoot?.Invoke(false);
             newShot = Time.time + FireRate;
 
             PlayWeaponFireSound();

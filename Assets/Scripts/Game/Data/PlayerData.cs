@@ -78,6 +78,7 @@ public class PlayerData
         AutoAttack = true;
         mute = false;
         distance = 3;
+
     }
 
     public void SetScore(int level, float score)
