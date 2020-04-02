@@ -1,47 +1,73 @@
-﻿using UnityEngine;
+﻿using TheGamerUrso.PoolSystem;
+using UnityEngine;
+using TheGamerUrso;
 
-public class RocketLauncher : WeaponScript
+public class RocketLauncher : SpecialAttack
 {
-    public override void Shoot()
+    public override void OnUpdate()
     {
-        if (HomeMissleUpgrade)
+        base.OnUpdate();
+
+        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
+
+        if (SpecialActive)
         {
-            HomeMissle();
+            ActivateSpecial();
+            if (m_CountDownTimer == null)
+            {
+                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
+            }
+
+            if (m_CountDownTimer.m_CountdownTimer >= 0)
+            {
+                m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
+                if (m_CountDownTimer.countToZero())
+                {
+                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                }
+
+                if (playerShip.HealthPresentage <= .5f)
+                {
+                    playerShip.Heal(.1f);
+                }
+
+                Shoot();
+            }
+            else
+            {
+                DeactivateSpecial();
+                m_CountDownTimer = null;
+                playerShip.PowerUpLevel = 0;
+            }
+        }
+
+        float powerLevel = playerShip.GetPowerUpLevelPresentage();
+
+        if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
+        {
+            ActivateSpecial();
         }
     }
 
-    public void HomeMissle()
+    public override void Shoot()
     {
-        var middle = transform.position + new Vector3(0, 0, 1);
-        if (weaponData.m_HomeMissleUpgrade &&
-            weaponData.m_NumberOfMissiles > 0 &&
-            !weaponData.m_RocketUpgrade)
+        if (SpecialActive)
         {
-            if (Input.GetKeyDown(KeyCode.F))
+            if (Time.time > newShot)
             {
-                if (Time.time > newShot)
-                {
-                    newShot = Time.time + FireRate;
-                    GameObject rocket = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
-                    rocket.transform.position = transform.position;
-                    /*
-                    GameObject newBullet = Instantiate(weaponData.m_Projectile, middle,
-                        Quaternion.Euler(new Vector3(0, 0, 0)));
-                        */
+                newShot = Time.time + GetFireRate();
+                GameObject rocket =
+                    PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
 
-                    rocket.GetComponent<Rocket>().setDamage(Damage);
-                    rocket.GetComponent<Rocket>().HomeMissleType = false;
-                    weaponData.m_NumberOfMissiles--;
+                rocket.transform.position = transform.position;
 
-                    PlayWeaponFireSound();
-                }
+                rocket.GetComponent<Rocket>().Damage = Damage;
+
+                PlayWeaponFireSound();
+
             }
         }
     }
 
-    public override void Initialize()
-    {
-        AutoAttack = true;
-    }
 
 }

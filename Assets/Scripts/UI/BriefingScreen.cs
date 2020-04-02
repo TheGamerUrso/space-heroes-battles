@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,6 @@ public class BriefingScreen : MonoBehaviour
 
     public List<GameObject> ListOfLevelElements;
 
-
     public float delay;
 
     [SerializeField] private Mission currentMission;
@@ -27,7 +27,6 @@ public class BriefingScreen : MonoBehaviour
     private LevelObjectiveData[] levelObjectiveDatas;
 
     public GameObject ShowStoryButton;
-    public GameObject survivalScreen;
     public GameObject announcementMessage;
 
     public void RefreshLevelElementByID(int CompleteLevelIndex)
@@ -40,19 +39,15 @@ public class BriefingScreen : MonoBehaviour
         for (int i = 0; i < ListOfLevelElements.Count; i++)
         {
             GameObject levelElement = ListOfLevelElements[i];
-            
+
             levelElement.GetComponent<LevelElement>().Refresh();
         }
-    }
-
-    private void Awake()
-    {
-        InitizeBriefingScreen();
     }
 
     private void Start()
     {
         dialogueManager = DialogueManager.Instance;
+        InitizeBriefingScreen();
     }
 
     public void InitizeBriefingScreen()
@@ -83,6 +78,7 @@ public class BriefingScreen : MonoBehaviour
         PlayerData playerData = DataController.GetPlayerData();
         Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
         int missionsCompleted = 0;
+       
         foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
         {
             if (item.Value[0].completed == true)
@@ -93,31 +89,13 @@ public class BriefingScreen : MonoBehaviour
 
         playerData.LevelUnlocked = missionsCompleted;
 
-
-        if (playerData.LevelUnlocked >= missionCollection.Missions.Length)
-        {
-
-            if (!PlayerPrefs.HasKey("SurvivalUnlocked") || PlayerPrefs.GetInt("SurvivalUnlocked") == 0)
-            {
-                announcementMessage.SetActive(true);
-                PlayerPrefs.SetInt("SurvivalUnlocked", 1);
-            }
-
-            level = new Level("Survival Mode", null,null, true, true);
-
-            GameObject LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
-            levelElement = LevelElementGO.GetComponent<LevelElement>();
-            levelElement.SetLevelElement(level, StartMissionBriefing);
-
-        }
-
         for (int i = 0; i < missionCollection.Missions.Length; i++)
         {
             Mission missionItem = missionCollection.Missions[i];
             LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
 
-            level = new Level(missionItem.Title,missionItem, sprites[missionItem.SpriteID], false, true);
-           
+            level = new Level(missionItem.Title, missionItem, sprites[missionItem.SpriteID], false, true);
+
             if (missionItem.ID <= playerData.LevelUnlocked)
             {
                 level.interactable = true;
@@ -132,41 +110,21 @@ public class BriefingScreen : MonoBehaviour
         }
 
         GameObject emptyLevelElement = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
-        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("",null,null,false,false), null);
+        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("", null, null, false, false), null);
     }
 
     public void StartMissionBriefing(Level level)
     {
-        if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
-        {
-            ScreenManager.Instance.Open("Briefing");
-            GameManager.LevelSelected = level.mission.ID;
+        ScreenManager.Instance.Open("Briefing");
+        GameManager.LevelSelected = level.mission.ID;
 
-            RefreshLevelObjectiveData();
-            survivalScreen.SetActive(false);
-            ShowStoryButton.SetActive(true);
-            currentMission = DataController.GetMission(level.mission.ID);
-            LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
-            LevelDetailLevelTItle.text = currentMission.Title;
-            SetMission(currentMission);
-
-            dialogueManager.ShowStory(GameManager.LevelSelected);
-        }
-        else if (level.ID.Contains("Survival"))
-        {
-            ScreenManager.Instance.Open("Briefing");
-            GameManager.LevelSelected = -1;
-            survivalScreen.SetActive(true);
-            ShowStoryButton.SetActive(false);
-            HideLevelObjectives();
-            LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
-            LevelDetailLevelTItle.text = "Survival";
-            SetMission(currentMission);
-        }
-        else
-        {
-            return;
-        }
+        RefreshLevelObjectiveData();
+        ShowStoryButton.SetActive(true);
+        currentMission = DataController.GetMission(level.mission.ID);
+        LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
+        LevelDetailLevelTItle.text = currentMission.Title;
+        SetMission(currentMission);
+        dialogueManager.ShowStory(GameManager.LevelSelected);
     }
 
     public string GetStory(int missionIndex)

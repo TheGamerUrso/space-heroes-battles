@@ -1,4 +1,6 @@
-﻿public interface IDestroyable
+﻿using System;
+
+public interface IDestroyable
 {
     bool IsDestroyed { get; set; }
     float MaxHealth { get; set; }

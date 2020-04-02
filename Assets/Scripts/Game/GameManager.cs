@@ -1,93 +1,162 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
+using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
+using TheGamerUrso.SceneLoader;
 [Serializable]
-public class PlayerShip
+public class PlayerShipElement
 {
     public string name;
-    public Player prefab;
+    public PlayerShip prefab;
 }
 
 
-public enum GameStates
+public class GameManager : Singleton<GameManager>
 {
-    Menu, Game, GameOver, Debug
-}
+    public delegate void OnLoadData();
+    public event OnLoadData OnLoadDataCompleted;
 
-public class GameManager : MonoSingleton<GameManager>
-{
-    private GameStates currentGameState;
+
     public static bool Paused;
-    private State[] ListOfStates;
-    private static State currentState;
-    private float DefaultTimeDeltaScale;
+    private bool firstRun;
 
-    public int counsEarnInGame;
-    public int coinDropInTotal;
-    public int score;
-    public int MaxLevelUnlocked = 5;
-    public int CurrentHeroChoosen;
+    private static float DefaultTimeDeltaScale;
+
+    public static int counsEarnInGame;
+    public static int coinDropInTotal;
+    public static int score;
+    public static int MaxLevelUnlocked = 5;
+    public static int CurrentHeroChoosen;
 
     [Range(0, 20)]
     public int LevelDifficuilty;
 
-    [SerializeField] private PlayerShip[] players;
+    [SerializeField] private PlayerShipElement[] PlayerShips;
 
     public static int LevelSelected = 0;
 
     public GameObject levelupAnnouncement;
 
+    public bool debug;
 
-    public override void Init()
+    public GameObject[] SystemPrefabs;
+    private List<GameObject> _instancedSystemPrefabs;
+
+    public bool autoKillMode;
+    public bool useSafeMode;
+    public LogBehaviour logBehaviour;
+
+    private PlayerManager playerManager;
+    private DataController dataController;
+
+    public PlayerShipElement[] ListOfPlayerShips()
     {
-        base.Init();
-        new DataController();
-
+        return PlayerShips;
     }
 
-    public override void OnQuitGame()
+    public static bool IsMouseOverUI()
     {
-        base.OnQuitGame();
+        return EventSystem.current.IsPointerOverGameObject();
+    }
+
+
+    private void OnApplicationQuit()
+    {
+        SaveSystem.SavePlayerData();
+    }
+
+    protected override void OnAwake()
+    {
+        Debug.Log("Loading Data");
+        new DataController();
+
+        DataController.Setup();
+
+        Debug.Log("Set up Players");
+        new PlayerManager();
+        PlayerManager.LoadPlayerSettings();
+
+        DefaultTimeDeltaScale = Time.fixedDeltaTime;
+
+        GameEventSystem.PlayerLeveledUp += ShowLevelup;
+
+        GameEventSystem.OnShipSelect += ShipSelected;
+    }
+
+    public void ShipSelected(int shipSelected)
+    {
+        CurrentHeroChoosen = shipSelected;
+    }
+
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
 
         //DataController.SavePlayerData();
     }
 
-    public static void ShowLevelup()
+    public void ShowLevelup()
     {
-        GameManager.instance.levelupAnnouncement.SetActive(true);
+        Instance.levelupAnnouncement.SetActive(true);
     }
 
     private void Start()
     {
-        if (LevelDifficuilty > 0)
+        DOTween.Init(autoKillMode, useSafeMode, logBehaviour);
+
+        DontDestroyOnLoad(gameObject);
+       
+        _instancedSystemPrefabs = new List<GameObject>();
+       
+        InstantiateSystemPrefabs();
+
+
+        OnLoadDataCompleted?.Invoke();
+
+        for (int i = 0; i < SceneManager.sceneCount; i++)
         {
-            SpawnEnemies.SetLevelDifficuilty(LevelDifficuilty);
+            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
+            {
+                Debug.Log("boot found skip");
+            }
+
+            if (SceneManager.sceneCount <= 1)
+            {
+                Debug.Log("Continue");
+                SceneLoader.Instance.LoadLevel("SplashScreen");
+            }   
         }
-
-        new PlayerManager(players);
-        MenuState menuState = new MenuState(this);
-        MainGameState mainGameState = new MainGameState(this);
-        GameOverState gameOverState = new GameOverState(this);
-
-        ListOfStates = new State[]{
-            menuState,mainGameState,gameOverState
-            };
-
-        SetState(currentGameState);
-
-        PlayerData playerData = DataController.GetPlayerData();
- 
-        AudioManager.instance.SetMusicVolume(playerData.MusicVolume);
-
-        AudioManager.instance.SetSoundVolume(playerData.SFXVolume);
-
-        DefaultTimeDeltaScale = Time.fixedDeltaTime;
-
-
-  
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.currentSelectedShip = 0;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.currentSelectedShip = 1;
+        }
+        if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.currentSelectedShip = 2;
+        }
+    }
+    private void InstantiateSystemPrefabs()
+    {
+        foreach (var systemPrefab in SystemPrefabs)
+        {
+            var prefabInstance = Instantiate(systemPrefab);
+            _instancedSystemPrefabs.Add(prefabInstance);
+        }
     }
 
-    public void PauseTheGame(bool value = true)
+    public static void PauseTheGame(bool value = true)
     {
         if (value)
         {
@@ -101,27 +170,5 @@ public class GameManager : MonoSingleton<GameManager>
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
             Paused = false;
         }
-    }
-
-    public void SetState(GameStates gameState)
-    {
-        if (currentState != null)
-        {
-           currentState.OnStateExit();
-        }
-
-       currentGameState = gameState;
-
-        currentState = ListOfStates[(int)gameState];
-
-        if (currentState != null)
-        {
-           currentState.OnStateEnter();
-        }
-    }
-
-    public GameStates GetCurrentState()
-    {
-        return currentGameState;
     }
 }

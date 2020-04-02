@@ -1,10 +1,12 @@
 ﻿using System.Collections;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class SpreadWeapon : WeaponScript
 {
     public bool m_Shooting;
     public int m_NumberOfBullets;
+
     private void OnEnable()
     {
         m_Shooting = false;
@@ -28,7 +30,7 @@ public class SpreadWeapon : WeaponScript
             GameObject newBullet = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             newBullet.transform.position = transform.position;
             newBullet.transform.rotation = Quaternion.Euler(new Vector3(0, posToShoot, 0));
-            newBullet.GetComponent<Projectile>().setDamage(Damage);
+            newBullet.GetComponent<Projectile>().Damage = Damage;
             posToShoot += Angle;
             yield return new WaitForSeconds(delayBetweenShots);
             PlayWeaponFireSound();

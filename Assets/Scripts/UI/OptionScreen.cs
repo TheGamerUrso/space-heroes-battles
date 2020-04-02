@@ -6,24 +6,30 @@ using UnityEngine.UI;
 
 public class OptionScreen : GooglePlayOptions
 {
-    private MainMenuManager mainMenuManager;
-
     public override void OnOptionEnter()
     {
         base.OnOptionEnter();
-        if (mainMenuManager == null)
-            mainMenuManager = MainMenuManager.instance;
+    }
+
+    public void SetDistance(float distance)
+    {
+        PlayerData playerData = DataController.GetPlayerData();
+        playerData.Distance = distance;
     }
 
     public override void ExitAndSave()
     {
         base.ExitAndSave();
-        if (mainMenuManager)
-        {
-            mainMenuManager.ShowMessage("Settings Saved");
-        }
+        Popup.Show(Popup.popupType.error, "Settings Saved", true);
+        StartCoroutine(SaveAndExitCoroutine());
     }
 
+    private IEnumerator SaveAndExitCoroutine()
+    {
+
+        yield return new WaitForSeconds(1);
+        ScreenManager.Instance.Close();
+    }
 
 
 }

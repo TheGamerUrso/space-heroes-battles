@@ -17,6 +17,16 @@ public class ShakeEffect : MonoBehaviour
 
     Vector3 originalPos;
 
+
+    private PlayerShip playerShip;
+    private void OnDestroy()
+    {
+        if (playerShip == null)
+            playerShip = PlayerManager.GetPlayer();
+
+        if (playerShip != null)
+            playerShip.PlayerShipHit -= StartEffect;
+    }
     void OnEnable()
     {
         originalPos = camTransform.localPosition;
@@ -28,8 +38,6 @@ public class ShakeEffect : MonoBehaviour
         {
             camTransform = GetComponent(typeof(Transform)) as Transform;
         }
-
-       
     }
 
     public void StartEffect()
@@ -37,9 +45,22 @@ public class ShakeEffect : MonoBehaviour
         shakeDuration = .5f;
 
     }
+    private void Start()
+    {
+      
+
+    }
 
     void Update()
     {
+        if (playerShip == null)
+        {
+            playerShip = PlayerManager.GetPlayer();
+
+            if (playerShip != null)
+                playerShip.PlayerShipHit += StartEffect;
+        }
+
         if (shakeDuration > 0)
         {
             camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;

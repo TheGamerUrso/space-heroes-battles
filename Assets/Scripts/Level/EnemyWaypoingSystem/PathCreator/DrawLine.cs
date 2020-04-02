@@ -14,8 +14,7 @@ public class DrawLine : MonoBehaviour
         Nodes = transforms.ToArray();
     }
 
-    // Start is called before the first frame update
-    private void Start()
+    private void OnDrawGizmosSelected()
     {
         int prevPoint = 0;
         for (int i = 0; i < Nodes.Length; i++)
@@ -24,20 +23,8 @@ public class DrawLine : MonoBehaviour
             {
                 prevPoint = i - 1;
             }
-           // Debug.DrawLine(Nodes[prevPoint].position, Nodes[i].position, Color.red);
-        }
-    }
-
-    private void Update()
-    {
-        int prevPoint = 0;
-        for (int i = 0; i < Nodes.Length; i++)
-        {
-            if (i > 0)
-            {
-                prevPoint = i - 1;
-            }
-            //Debug.DrawLine(Nodes[prevPoint].position, Nodes[i].position, Color.red);
+            Gizmos.color = Color.red;
+            Gizmos.DrawLine(Nodes[prevPoint].position, Nodes[i].position);
         }
     }
 }

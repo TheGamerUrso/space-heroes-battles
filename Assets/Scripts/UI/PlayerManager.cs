@@ -1,83 +1,93 @@
 ﻿using System;
 using UnityEngine;
 
-
-public class PlayerManager{
+public class PlayerManager
+{
     private static PlayerManager instance;
-    public static PlayerManager Instance
+    private static PlayerManager Instance
     {
         get
         {
-            if (instance == null)
-            {
-                instance = new PlayerManager(new PlayerShip[0]);
-            }
             return instance;
         }
     }
 
+    private static GameObject currentPlayer;
+    private static PlayerShipElement[] listOfPlayerShips;
 
-    private GameObject currentPlayer;
-    private PlayerShip[] players;
 
-    public PlayerManager(PlayerShip[] players)
+    public PlayerManager()
     {
-        instance = this;
-        this.players = players;
-        LoadPlayerSettings();
-       
+        if (instance == null)
+        {
+            instance = this;
+        }
+
     }
 
-    public static void CreatePlayer(int id)
+
+    public static GameObject CreatePlayer(int id)
     {
-        instance.CreatePlayerById(id);
+        return CreatePlayerById(id);
     }
 
-    public void CreatePlayerById(int id)
+    public static GameObject CreatePlayerById(int id)
     {
-        if (id >= players.Length)
+        if (id >= listOfPlayerShips.Length)
         {
             id = 0;
         }
 
-        currentPlayer = GameObject.Instantiate(players[id].prefab.gameObject);
+        currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
 
         currentPlayer.SetActive(true);
+        int level = listOfPlayerShips[id].prefab.level;
+        float xp = listOfPlayerShips[id].prefab.xp;
+        float xpToLevel = listOfPlayerShips[id].prefab.xpToLevel;
 
-        currentPlayer.GetComponent<Player>().SetShipStatSystem(players[id].prefab.GetShipStatsSystem());
+        currentPlayer.GetComponent<PlayerShip>().level = level;
+        currentPlayer.GetComponent<PlayerShip>().xp = xp;
+        currentPlayer.GetComponent<PlayerShip>().xpToLevel = xpToLevel;
 
-        currentPlayer.GetComponent<Player>().SetLevelSystem(players[id].prefab.GetLevelSystem());
+        currentPlayer.GetComponent<PlayerShip>().SetStats(level);
 
-        currentPlayer.GetComponent<Player>().GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
+        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(DataController.GetPlayerData());
 
-      
+
+        return currentPlayer;
+
     }
 
-    public PlayerShip GetPlayerByID(int id)
+    public static PlayerShipElement GetPlayerByID(int id)
     {
-        return players[id];
+        return listOfPlayerShips[id];
     }
 
-    public void LoadPlayerSettings()
+    public static void LoadPlayerSettings()
     {
+        listOfPlayerShips = GameManager.Instance.ListOfPlayerShips();
         PlayerData playerData = DataController.GetPlayerData();
-        for (int i = 0; i < players.Length; i++)
+        for (int i = 0; i < listOfPlayerShips.Length; i++)
         {
             var Level = playerData.Level;
             var xp = playerData.xp;
             var xpToLevel = playerData.xpToLevel;
-            players[i].prefab.SetLevelSystem(new LevelSystem(Level, xp, xpToLevel,20));
-            players[i].prefab.GetUpgradeSystem().SetPlayerData(DataController.GetPlayerData());
+            listOfPlayerShips[i].prefab.level = Level;
+            listOfPlayerShips[i].prefab.xp = xp;
+            listOfPlayerShips[i].prefab.xpToLevel = xpToLevel;
+            listOfPlayerShips[i].prefab.MaxLevel = 20;
+
+
+            listOfPlayerShips[i].prefab.SetPlayerData(DataController.GetPlayerData());
         }
     }
 
-    public static Player GetPlayer()
+    public static PlayerShip GetPlayer()
     {
-        if (instance.currentPlayer == null)
+        if (currentPlayer == null)
         {
-            int shipSelected = GameManager.instance.CurrentHeroChoosen;
-            instance.CreatePlayerById(shipSelected);
+            return null;
         }
-        return Instance.currentPlayer.GetComponent<Player>();
+        return currentPlayer.GetComponent<PlayerShip>();
     }
 }

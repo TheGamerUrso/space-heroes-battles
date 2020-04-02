@@ -4,22 +4,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using EasyMobile;
+using TheGamerUrso.PoolSystem;
+using TheGamerUrso.SceneLoader;
 
-public class GuiManager : MonoBehaviour
+public class GuiManager : Singleton<GuiManager>
 {
-
-    private static GuiManager instance;
-
-    public static GuiManager Instance
-    {
-        get
-        {
-            return instance;
-        }
-        private set { instance = value; }
-    }
-
-    #region Variables
+    PlayerShip playerShip;
 
     [Header("Menu")]
     [SerializeField] private GameObject GameOverScreen;
@@ -34,105 +25,164 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
 
-    private float slowMo;
-    private bool useSloMo;
     private bool ResultShowed = false;
-    #endregion Variables
     private float timer;
-
-    private float delayTheSlowMoEffectTimer;
-
-    public void ToggleSlowMo(bool value)
-    {
-        useSloMo = value;
-        if (value == false)
-        {
-            Time.timeScale = 1.0f;
-        }
-    }
 
     private void OnApplicationFocus(bool focus)
     {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            if (GameManager.instance.GetCurrentState() != GameStates.Game)
-            {
-                return;
-            }
-
-            if (!focus && SpawnEnemies.GameOver == false)
-            {
-                GameManager.instance.PauseTheGame();
-                ShowPauseMenu(true);
-            }
-        }
+        //if (Application.platform == RuntimePlatform.Android)
+        //{
+        //    if (!focus && GameController.IsGameOver == false)
+        //    {
+        //        GameManager.PauseTheGame();
+        //        ShowPauseMenu(true);
+        //    }
+        //}
     }
 
     private void OnApplicationPause(bool Paused)
     {
-        if (GameManager.instance.GetCurrentState() != GameStates.Game)
-        {
-            return;
-        }
-
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (SpawnEnemies.GameOver == false)
-            {
-                GameManager.instance.PauseTheGame();
-                ShowPauseMenu(true);
-            }
+            //TODO Update Pause
+            //if (GameController.IsGameOver == false)
+            //{
+            //    GameManager.PauseTheGame();
+            //    ShowPauseMenu(true);
+            //}
         }
+    }
+
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+        if (playerShip != null)
+        {
+            playerShip.PickUpItem -= PickUpItem;
+            GameEventSystem.PickUpEvent -= UpdateCoinWidgetText;
+        }
+
+        GameController.OnGameOver -= GameOver;
+        GameController.OnWin -= Win;
     }
 
     private void Start()
     {
-        instance = this;
-        delayTheSlowMoEffectTimer = 4;
         timer = 1;
+
+        if (playerShip == null)
+        {
+            playerShip = PlayerManager.GetPlayer();
+        }
+
+        playerShip.PickUpItem += PickUpItem;
+        GameEventSystem.PickUpEvent += UpdateCoinWidgetText;
+
+        GameController.OnGameOver += GameOver;
+        GameController.OnWin += Win;
+
+        SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.EnemyDied = EnemyDiedCallback;
+        }
     }
+
+    public void EnemyDiedCallback(BaseEnemy baseEnemy)
+    {
+        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
+        UpdateScore(score);
+        GuiManager.CreateFloatingText(string.Format("{0}", score), baseEnemy.transform.position);
+    }
+
+    public void PickUpItem(ItemData itemData)
+    {
+        if (itemData.m_HealValue > 0)
+        {
+            CreateFloatingText("Heal up", transform.localPosition);
+
+            if (!PlayerPrefs.HasKey("HealTut"))
+            {
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(1);
+                }
+                PlayerPrefs.SetInt("HealTut", 1);
+            }
+        }
+
+        if (itemData.m_RewardAmount > 0)
+        {
+            CreateFloatingText("$", transform.localPosition);
+
+            if (!PlayerPrefs.HasKey("CoinTut"))
+            {
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(0);
+                }
+
+                itemData.ShowTutorial = true;
+
+                PlayerPrefs.SetInt("CoinTut", 1);
+            }
+        }
+
+        if (itemData.Shield)
+        {
+            CreateFloatingText("Shield Up", transform.localPosition);
+
+            if (!PlayerPrefs.HasKey("ShieldTut"))
+            {
+
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(3);
+                }
+
+                itemData.ShowTutorial = true;
+
+                PlayerPrefs.SetInt("ShieldTut", 1);
+            }
+        }
+
+        if (itemData.PowerPack)
+        {
+            CreateFloatingText("Power Up", transform.localPosition);
+
+
+            if (!PlayerPrefs.HasKey("PowerTut"))
+            {
+                if (Tutorial.Instance)
+                {
+                    Tutorial.Instance.ShowTutorial(2);
+                }
+
+                itemData.ShowTutorial = true;
+
+                PlayerPrefs.SetInt("PowerTut", 1);
+            }
+        }
+
+        UpdateScore(75);
+    }
+
     private void Update()
     {
-        SlowMoEffect();
-
-        if (Time.timeScale == 1)
-        {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
-            {
-                pauseButton.SetActive(false);
-            }
-        }
-        else
-        {
-            timer = 1;
-            pauseButton.SetActive(true);
-        }
-
-        if (SpawnEnemies.Instance.spawnReady)
-        {
-            useSloMo = true;
-        }
-
+        //if (Time.timeScale == 1)
+        //{
+        //    timer -= Time.deltaTime;
+        //    if (timer <= 0)
+        //    {
+        //        pauseButton.SetActive(false);
+        //    }
+        //}
+        //else
+        //{
+        //    timer = 1;
+        //    pauseButton.SetActive(true);
+        //}
     }
-
-    public void SlowMoEffect()
-    {
-        if (useSloMo && !GameManager.Paused)
-        {
-            if (IsTrasnmiting() || Input.touchCount > 0 || Input.GetMouseButton(0))
-            {
-                slowMo = 1;
-            }
-            else
-            {
-                slowMo = .3f;
-
-            }
-            Time.timeScale = slowMo;
-        }
-    }
-
 
     public void SetCountdownVisibility(bool enable)
     {
@@ -145,7 +195,7 @@ public class GuiManager : MonoBehaviour
     }
     public static void Countdown(float countdown)
     {
-        GuiManager.instance.CountdownText(countdown);
+        GuiManager.Instance.CountdownText(countdown);
     }
 
     public void CountdownText(float countdown)
@@ -155,25 +205,27 @@ public class GuiManager : MonoBehaviour
 
     public void ReplayButton()
     {
-        AudioManager.PlaySound("Click", 1);
-        GameManager.instance.SetState(GameStates.Game);
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        AudioManager.PlaySound(null, "Click", 1);
+
+        SceneLoader.Instance.ResetLevel();
     }
 
     public void ResumeButton()
     {
-        useSloMo = true;
-        AudioManager.PlaySound("Back", 1);
+        GameEventSystem.Call(GameEventType.ToggleSlowMo, true);
+
+        AudioManager.PlaySound(null, "Back", 1);
         ShowPauseMenu(false);
-        GameManager.instance.PauseTheGame(false);
+        GameManager.PauseTheGame(false);
     }
 
     public void PauseButton()
     {
-        useSloMo = false;
-        AudioManager.PlaySound("Click", 1);
+        GameEventSystem.Call(GameEventType.ToggleSlowMo, false);
+
+        AudioManager.PlaySound(null, "Click", 1);
         ShowPauseMenu(true);
-        GameManager.instance.PauseTheGame();
+        GameManager.PauseTheGame();
     }
 
     public void ShowPauseMenu(bool value)
@@ -183,16 +235,18 @@ public class GuiManager : MonoBehaviour
 
     public void UpdateCoinWidgetText()
     {
-        CoinWidgetText.text = string.Format("{0}", SpawnEnemies.counsEarnInGame);
+        //TODO Update Coin Widget
+        CoinWidgetText.text = string.Format("{0}", 0);
     }
 
     public void UpdateScore(int score)
     {
-        string scoreText = string.Format("{00:00000000}", SpawnEnemies.Score);
+        //TODO Update Score
+        string scoreText = string.Format("{00:00000000}", 0);
         ScoreText.text = scoreText;
     }
 
-    public void CreateFloatingText(string text, Vector3 pos)
+    public static void CreateFloatingText(string text, Vector3 pos)
     {
         GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
         m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(text, pos);
@@ -205,10 +259,9 @@ public class GuiManager : MonoBehaviour
 
     public void LoadMainMenu()
     {
-        useSloMo = false;
-        Time.timeScale = 1.0f;
-        AudioManager.PlaySound("Click", 1);
-        SceneLoader.instance.LoadMainenu();
+        GameManager.PauseTheGame(false);
+        AudioManager.PlaySound(null, "Click", 1);
+        SceneLoader.Instance.LoadMainenu();
         GameObject activeMenuGO = null;
 
         if (WinScreen.activeSelf)
@@ -236,8 +289,9 @@ public class GuiManager : MonoBehaviour
 
     public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
-        AudioManager.PlaySound("transmition", 3);
-        GuiManager.instance.ShowTrasmition(transmitions, boss);
+        AudioManager.PlaySound(null, "transmition", 3);
+        if (GuiManager.Instance)
+            GuiManager.Instance.ShowTrasmition(transmitions, boss);
     }
 
     public void ShowTrasmition(string[] transmitions, bool boss = false)
@@ -258,105 +312,89 @@ public class GuiManager : MonoBehaviour
         }
     }
 
-    //Game is Over
-    public void GameOver()
+    public void Win(GameController gc)
     {
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {
-            Player player = PlayerManager.GetPlayer();
+            PlayerShip player = PlayerManager.GetPlayer();
+            PlayerData playerData = DataController.GetPlayerData();
+
+            //TODO Exit Animatin
+
+            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
 
             if (player == null)
             {
-                player = GameObject.FindObjectOfType<Player>();
+                player = GameObject.FindObjectOfType<PlayerShip>();
             }
 
-            PlayerData playerData = DataController.GetPlayerData();
+            playerData.Level = player.level;
+            playerData.xp = player.xp;
+            playerData.xpToLevel = player.xpToLevel;
 
-            playerData.Level = player.GetLevelSystem().GetLevel();
-            playerData.xp = player.GetLevelSystem().GetXP();
-            playerData.xpToLevel = player.GetLevelSystem().GetXpToLevel();
-
-
-            if (player.GetHealthPresentage() > 0)
+            //Save Game Data
+            playerData.PlayedGame = true;
+            for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
             {
-                //Save Game Data
-                playerData.PlayedGame = true;
-                for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
+                ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
+                switch ((ObjectiveType)objective.objectiveType)
                 {
-                    ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
-                    switch ((ObjectiveType)objective.objectiveType)
-                    {
-                        case ObjectiveType.Kill:
-                            if (objective.completed == false)
+                    case ObjectiveType.Kill:
+                        
+                        //TODO Current Enemy Killed
+                        if (objective.completed == false)
+                        {
+                            var progressSoFar = objective.progress + 0;
+                            objective.UpdateProgress(progressSoFar);
+                        }
+
+                        break;
+                    case ObjectiveType.Use:
+                        if (objective.completed == false)
+                        {
+                            var progressSoFar = objective.progress + player.GetSpecialAttack().superUsed;
+                            objective.UpdateProgress(progressSoFar);
+                        }
+                        break;
+                    case ObjectiveType.Unharmed:
+                        if (objective.completed == false)
+                        {
+                            if (player.IsPlayerDamaged == false)
                             {
-                                var progressSoFar = objective.progress + SpawnEnemies.CurrentEnemyKilled;
-                                objective.UpdateProgress(progressSoFar);
+                                ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+                                objectiveData.UpdateProgress(1);
                             }
-                            break;
-                        case ObjectiveType.Use:
-                            if (objective.completed == false)
-                            {
-                                var progressSoFar = objective.progress + player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
-                                objective.UpdateProgress(progressSoFar);
-                            }
-                            break;
-                        case ObjectiveType.Unharmed:
-                            if (objective.completed == false)
-                            {
-                                if (player.IsPlayerDamaged() == false)
-                                {
-                                    ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                                    objectiveData.UpdateProgress(1);
-                                }
-                            }
-                            break;
-                        case ObjectiveType.survive:
-                            objective.UpdateProgress(SpawnEnemies.WaveSurvived);
-                            break;
-                        case ObjectiveType.spend:
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    case ObjectiveType.survive:
+                        //TODO WaveSurvived
+                        objective.UpdateProgress(0);
+                        break;
+                    case ObjectiveType.spend:
+                        break;
+                    default:
+                        break;
                 }
             }
 
-            //playerData.GotHitInGame = player.IsPlayerDamaged();
-            // playerData.TotalSuperUsed = player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
-            // playerData.WaveSurvived += SpawnEnemies.WaveSurvived;
-            // playerData.m_EnemyKilled += SpawnEnemies.EnemyKilled;
-            //playerData.TotalSuperUsed += player.GetWeaponSystem().GetHowManyTimesSuperIsUsed();
 
-
-
-            if (!SpawnEnemies.Instance.survival)
+            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+            int missionsCompleted = 0;
+            foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
             {
-                Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-                int missionsCompleted = 0;
-                foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+                if (item.Value[0].completed == true)
                 {
-                    if (item.Value[0].completed == true)
-                    {
-                        missionsCompleted++;
-                    }
+                    missionsCompleted++;
                 }
-
-                int levelPlayed = GameManager.LevelSelected;
-
-                playerData.SetScore(levelPlayed + 1, SpawnEnemies.Score);
-
-                playerData.LevelUnlocked = missionsCompleted;
-            }
-            else
-            {
-                playerData.SetScore(0, SpawnEnemies.Score);
             }
 
-            playerData.Coins += SpawnEnemies.counsEarnInGame;
-            playerData.TotalKills += SpawnEnemies.EnemyKilled;
+            int levelPlayed = GameManager.LevelSelected;
+            //TODO Score
+            playerData.SetScore(levelPlayed + 1,0);
 
-            SaveSystem.SavePlayerData();
+            playerData.LevelUnlocked = missionsCompleted;
+
 
             if (GooglePlayServicesManager.Instance)
             {
@@ -364,45 +402,59 @@ public class GuiManager : MonoBehaviour
                 GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
             }
 
+            StartCoroutine(WinCoroutine());
+        }
+    }
+    //Game is Over
+    public void GameOver(GameController gc)
+    {
+        Time.timeScale = 1.0f;
+        if (!ResultShowed)
+        {   
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+            playerData.Level = playerShip.level;
+            playerData.xp = playerShip.xp;
+            playerData.xpToLevel = playerShip.xpToLevel;
+
+            //TODO Coins Earn In Game
+            //TODO Enemy Killed In Game
+            playerData.Coins += 0;
+            playerData.TotalKills += 0;
+
+            SaveSystem.SavePlayerData();
+
+
+            if (GooglePlayServicesManager.Instance)
+            {
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+            }
 
             ResultShowed = true;
 
-            if (player.GetHealthPresentage() > 0)
-            {
-                StartCoroutine(WinCoroutine());
-            }
-            else
-            {
-                StartCoroutine(GameOverCoroutine());
-            }
+            StartCoroutine(GameOverCoroutine());
+
         }
     }
 
     private IEnumerator GameOverCoroutine()
     {
-        useSloMo = false;
+
         PlayerHUD.gameObject.SetActive(false);
-        AudioManager.SetMusic("GameOver", false);
+        AudioManager.PlayMusic("GameOver", false);
 
 
         yield return new WaitForSeconds(2.0f);
-
-
-
-        GameManager.instance.SetState(GameStates.GameOver);
-
-
 
         GameOverScreen.gameObject.SetActive(true);
     }
 
     public IEnumerator WinCoroutine()
     {
-        useSloMo = false;
-        PlayerHUD.gameObject.SetActive(false); 
+        PlayerHUD.gameObject.SetActive(false);
         yield return new WaitForSeconds(2.0f);
-        AudioManager.SetMusic("Victory", false);
-        GameManager.instance.SetState(GameStates.GameOver);
+        AudioManager.PlayMusic("Victory", false);
 
         yield return new WaitForSeconds(2.0f);
 

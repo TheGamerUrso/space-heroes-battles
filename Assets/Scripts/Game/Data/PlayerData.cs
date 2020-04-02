@@ -1,9 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using EasyMobile;
+
+
+public delegate void DistanceChanged(float ammount);
 
 [Serializable]
 public class PlayerData
 {
+    public DistanceChanged distanceChanged;
+
     public float[] Score;
     public float[] HighScore;
     public int Coins;
@@ -31,6 +37,20 @@ public class PlayerData
     public bool mute;
     public float distance;
 
+    public float Distance
+    {
+        get
+        {
+            return distance;
+        }
+
+        set
+        {
+            distance = value;
+            distanceChanged?.Invoke(distance);
+        }
+    }
+
     public int[] Upgrades;
 
     public PlayerData()
@@ -47,6 +67,7 @@ public class PlayerData
         GotHitInGame = false;
         PlayedGame = false;
         UnlockedHeroes = new int[4];
+        UnlockedHeroes[0] = 1;
         Upgrades = new int[Enum.GetValues(typeof(UpgradeType)).Length - 1];
         Level = 1;
         xp = 0;
@@ -57,6 +78,7 @@ public class PlayerData
         AutoAttack = true;
         mute = false;
         distance = 3;
+
     }
 
     public void SetScore(int level, float score)
@@ -67,7 +89,7 @@ public class PlayerData
             {
                 HighScore[level] = score;
                 if (GooglePlayServicesManager.Instance)
-                    GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EasyMobile.EM_GameServicesConstants.Leaderboard_Survival_Mode);
+                  GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
 
             }
             Score[level] = score;
@@ -152,10 +174,10 @@ public class PlayerData
 
     public void Save()
     {
-        LevelSystem levelSystem = PlayerManager.Instance.GetPlayerByID(currentSelectedShip).prefab.GetLevelSystem();
-        Level = levelSystem.GetLevel();
-        xp = levelSystem.GetXP();
-        xpToLevel = levelSystem.GetXpToLevel();
+        PlayerShip playerShip = PlayerManager.GetPlayerByID(currentSelectedShip).prefab;
+        Level = playerShip.level;
+        xp = playerShip.xp;
+        xpToLevel = playerShip.xpToLevel;
     }
 
 
@@ -192,10 +214,10 @@ public class PlayerData
 
     public void EarnXP(float ammount)
     {
-        LevelSystem levelSystem = PlayerManager.Instance.GetPlayerByID(currentSelectedShip).prefab.GetLevelSystem();
-        levelSystem.AddXP((int)ammount);
-        Level = levelSystem.GetLevel();
-        xp = levelSystem.GetXP();
-        xpToLevel = levelSystem.GetXpToLevel();
+        PlayerShip playerShip = PlayerManager.GetPlayerByID(currentSelectedShip).prefab;
+        playerShip.AddXP((int)ammount);
+        Level = playerShip.level;
+        xp = playerShip.xp;
+        xpToLevel = playerShip.xpToLevel;
     }
 }

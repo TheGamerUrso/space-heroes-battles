@@ -600,8 +600,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1516043914186958875}
   - component: {fileID: 8353961484022733478}
-  - component: {fileID: 7114843857215795437}
-  - component: {fileID: 759573315069726817}
   - component: {fileID: 1633859240550188457}
   - component: {fileID: 501362840757501092}
   - component: {fileID: 4179667959142801688}
@@ -647,40 +645,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7633828462799446269}
   m_CullTransparentMesh: 0
---- !u!114 &7114843857215795437
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7633828462799446269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreLayout: 0
-  m_MinWidth: -1
-  m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: -1
-  m_FlexibleWidth: -1
-  m_FlexibleHeight: -1
-  m_LayoutPriority: 1
---- !u!114 &759573315069726817
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7633828462799446269}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_HorizontalFit: 0
-  m_VerticalFit: 0
 --- !u!114 &1633859240550188457
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -724,7 +688,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 501362840757501092}
         m_MethodName: SelectShip
         m_Mode: 3
         m_Arguments:
@@ -747,13 +711,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47ef751a146c61149bdb107d7b68e7d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ID: 1
   shipSelectData: {fileID: 11400000, guid: dd5e3708cdab9cf45a560a6d4a496f3c, type: 2}
   Locked: 0
   PurchaseButton: {fileID: 1633859240550188457}
   Icon: {fileID: 5970891323575755282}
   LockImage: {fileID: 5745653566983330612}
   CostText: {fileID: 6697418264764883492}
-  Cost: 0
 --- !u!114 &4179667959142801688
 MonoBehaviour:
   m_ObjectHideFlags: 0

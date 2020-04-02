@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Audio;
+
 
 [Serializable]
 public class AudioTrack
@@ -10,34 +12,57 @@ public class AudioTrack
     public AudioClip audioClip;
 }
 
-public class AudioManager : MonoSingleton<AudioManager>
+public class AudioManager : Singleton<AudioManager>
 {
     // public static AudioManager instance;
-    public AudioTrack[] SoundCLips;
+    [HideInInspector] public List<AudioTrack> SoundClips = new List<AudioTrack>();
+    [HideInInspector] public List<AudioTrack> MusicClips = new List<AudioTrack>();
 
-    public AudioTrack[] MusicClips;
-    public AudioSource MusicSource;
-    public AudioSource SFXSource;
-    public AudioSource[] SfxSources;
+    public AudioSource BackgroundMusic;
+
+    private static float musicVolume = 0.75f;
+    private static float soundVolume = 0.75f;
 
     public AudioMixerGroup MusicMixerGroup;
     public AudioMixerGroup SFXMixerGroup;
 
-    public AudioMixerGroup[] audioMixerGroups;
 
     public Dictionary<string, AudioClip> ListOfSoundClips = new Dictionary<string, AudioClip>();
 
     public Dictionary<string, AudioClip> ListOfAudioClips = new Dictionary<string, AudioClip>();
 
+    [HideInInspector] public bool fadeIn = false;
+    [HideInInspector] public bool fadeOut = false;
 
-    public void SetSoundVolume(float value)
+    [HideInInspector] public bool crossfade = false;
+    [HideInInspector] public float targetVolume;
+
+    public bool MusicIsDone()
     {
-        SFXMixerGroup.audioMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);
+        return !BackgroundMusic.isPlaying;
     }
-    public void SetMusicVolume(float value)
+
+    public float GetSoundVolume()
     {
-        audioMixerGroups[0].audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
+        return soundVolume;
     }
+    public float GetMusicVolume()
+    {
+        return musicVolume;
+    }
+
+    public static void SetSoundVolume(float value)
+    {
+        soundVolume = value;
+        Instance.SFXMixerGroup.audioMixer.SetFloat("SoundVolume", Mathf.Log10(value) * 20);
+    }
+    public static void SetMusicVolume(float value)
+    {
+        musicVolume = value;
+       Instance.MusicMixerGroup.audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
+    }
+
+
     private void Start()
     {
         try
@@ -51,9 +76,10 @@ public class AudioManager : MonoSingleton<AudioManager>
         {
             Debug.LogWarning(e.Message, gameObject);
         }
+
         try
         {
-            foreach (AudioTrack item in SoundCLips)
+            foreach (AudioTrack item in SoundClips)
             {
                 ListOfSoundClips.Add(item.Name, item.audioClip);
             }
@@ -62,48 +88,66 @@ public class AudioManager : MonoSingleton<AudioManager>
         {
             Debug.LogWarning(e.Message, gameObject);
         }
-    }
 
-    public bool DonePlaying()
-    {
-        return !MusicSource.isPlaying;
+
+        PlayerData playerData = DataController.GetPlayerData();
+
+        if (playerData == null)
+        {
+            SetMusicVolume(musicVolume);
+            SetSoundVolume(soundVolume);
+        }
+        else
+        {
+            SetMusicVolume(playerData.MusicVolume);
+
+            SetSoundVolume(playerData.SFXVolume);
+        }
+      
     }
 
     public bool PlayingMusic()
     {
-        if (MusicSource.isPlaying)
+        if (BackgroundMusic.isPlaying)
         {
             return true;
         }
         return false;
     }
 
-    public static void PlaySound(string IdTrack, int mixGroupIndex, bool repeat = false)
-    {
-        AudioManager.instance.PlaySoundById(IdTrack, mixGroupIndex);
-    }
-
     public static void PlayRandomMusic(bool force = false)
     {
-        AudioManager.instance.PlayRandomSong(force);
+        if (Instance)
+            AudioManager.Instance.PlayRandomSong(force);
     }
 
-    public static void SetMusic(string IdTrack, bool loop = true)
+    public static void PlayMusic(string IdTrack, bool loop = true)
     {
-
-        AudioManager.instance.SetMusicByName(IdTrack, loop);
+        if (Instance)
+            AudioManager.Instance.PlayMusicById(IdTrack, loop);
     }
 
-    public void SetMusicByName(string IdTrack, bool loop = true)
+    public static void PlaySound(AudioSource source, string IdTrack, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+    {
+        if (Instance)
+            AudioManager.Instance.PlaySoundByClip(source, IdTrack, mixGroupIndex, usePitch, minRange, maxRange);
+    }
+    public static void PlaySound(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+    {
+        if (Instance)
+            AudioManager.Instance.PlaySoundByClip(source, clip, mixGroupIndex, usePitch, minRange, maxRange);
+    }
+
+    public void PlayMusicById(string IdTrack, bool loop = true)
     {
         AudioClip randomClip;
         if (ListOfAudioClips.TryGetValue(IdTrack, out randomClip))
         {
-            if (MusicSource.clip == null || (MusicSource.clip != randomClip || !MusicSource.isPlaying))
+            if (BackgroundMusic.clip == null || (BackgroundMusic.clip != randomClip || !BackgroundMusic.isPlaying))
             {
-                MusicSource.loop = loop;
-                MusicSource.clip = randomClip;
-                MusicSource.Play();
+                BackgroundMusic.loop = loop;
+                BackgroundMusic.clip = randomClip;
+                BackgroundMusic.Play();
             }
         }
     }
@@ -112,124 +156,184 @@ public class AudioManager : MonoSingleton<AudioManager>
     {
         if (!PlayingMusic() || force)
         {
-            string idTrack = "Music";
+            string idTrack = "Track";
             var number = UnityEngine.Random.Range(1, 8);
 
             AudioClip randomClip;
             if (ListOfAudioClips.TryGetValue(idTrack + number, out randomClip))
             {
-                if (MusicSource.clip != randomClip || !MusicSource.isPlaying)
+                if (BackgroundMusic.clip != randomClip || !BackgroundMusic.isPlaying)
                 {
-                    MusicSource.loop = true;
-                    MusicSource.clip = randomClip;
-                    MusicSource.Play();
+                    BackgroundMusic.loop = true;
+                    BackgroundMusic.clip = randomClip;
+                    PlayMusic(randomClip);
                 }
             }
         }
     }
-
-    public void StopSoundEffect()
+    public void PlaySoundByClip(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
-        SFXSource.Stop();
-    }
-    public void PlaySoundById(string IdTrack, int mixGroupIndex, bool repeat = false)
-    {
-        AudioMixerGroup previous = SFXSource.outputAudioMixerGroup;
-        AudioClip audioClip;
-        if (ListOfSoundClips.TryGetValue(IdTrack, out audioClip))
+        if (source == null)
         {
-            SFXSource.outputAudioMixerGroup = audioMixerGroups[mixGroupIndex];
-            if (repeat)
-            {
-                SFXSource.clip = audioClip;
-                SFXSource.loop = true;
-                SFXSource.Play();
-            }
-            else
-            {
-                SFXSource.PlayOneShot(audioClip);
-            }
-
+            source = BackgroundMusic;
         }
-        SFXSource.outputAudioMixerGroup = previous;
+
+        if (usePitch)
+        {
+            float prevPitch = source.pitch;
+            source.pitch = UnityEngine.Random.Range(minRange, maxRange);
+        }
+
+        source.PlayOneShot(clip);
+
     }
 
-    public void PlaySound(string IdTrack)
+    public void PlaySoundByClip(AudioSource source, string IdTrack, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
         AudioClip audioClip;
         if (ListOfSoundClips.TryGetValue(IdTrack, out audioClip))
         {
-            SFXSource.PlayOneShot(audioClip);
-        }
-    }
+            if (source == null)
+            {
+                source = BackgroundMusic;
+            }
 
-
-    public static void PlaySound(AudioSource source, AudioClip audioClip, int mixGroupIndex = 0, bool usePitch = false)
-    {
-        AudioManager.instance.PlaySoundByClip(source, audioClip, mixGroupIndex, usePitch);
-    }
-
-    public void PlaySoundByClip(AudioSource source, AudioClip audioClip, int mixGroupIndex = 0, bool usePitch = false)
-    {
-        if (source != null)
-        {
             if (usePitch)
             {
-                PlaySoundWithRandomPitch(source, audioClip, 2, 3);
+                float prevPitch = source.pitch;
+                source.pitch = UnityEngine.Random.Range(minRange, maxRange);
             }
-            else
-            {
-                source.PlayOneShot(audioClip);
-            }
-        }
-        else {
-            if (SFXSource != null)
-            {
-                if (mixGroupIndex == 0)
-                {
-                    if (usePitch)
-                    {
-                        PlaySoundWithRandomPitch(SfxSources[mixGroupIndex],audioClip, 2, 3);
-                    }
-                    else
-                    {
-                        SfxSources[mixGroupIndex].pitch = 1;
-                        SfxSources[mixGroupIndex].PlayOneShot(audioClip);
-                    }
 
-                }
-                else if (mixGroupIndex == 1)
-                {
-                    SfxSources[mixGroupIndex].PlayOneShot(audioClip);
-                }
-                else if (mixGroupIndex == 2)
-                {
-                    SfxSources[mixGroupIndex].PlayOneShot(audioClip);
-                }
-                else if (mixGroupIndex == 3)
-                {
-                    PlaySoundWithRandomPitch(SfxSources[mixGroupIndex],audioClip,.8f, 1);
-                }
-                else if (mixGroupIndex == 4)
-                {
-                    PlaySoundWithRandomPitch(SfxSources[mixGroupIndex],audioClip, .2f, 0.9f);
-                }
-                else
-                {
-                    SfxSources[mixGroupIndex].PlayOneShot(audioClip);
-                }
-            }
+            source.PlayOneShot(audioClip);
         }
     }
 
-    public void PlaySoundWithRandomPitch(AudioSource source,AudioClip audioClip, float minRange, float maxRange)
+    public void PlayPrevious()
     {
-        float prevPitch = source.pitch;
+        int currentTrack = 0;
+        for (int i = 0; i < MusicClips.Count; i++)
+        {
+            if (MusicClips[i].audioClip == BackgroundMusic.clip)
+            {
+                currentTrack = i;
+                break;
+            }
+        }
 
-        source.pitch = UnityEngine.Random.Range(minRange, maxRange);
+        currentTrack--;
 
-        source.PlayOneShot(audioClip);
+        if (currentTrack < 0)
+        {
+            currentTrack = MusicClips.Count - 1;
+        }
 
-        //SfxSources[mixGroupIndex].pitch = prevPitch;
+        PlayMusic(MusicClips[currentTrack].audioClip);
+    }
+
+    public void PlayNext()
+    {
+        int currentTrack = 0;
+        for (int i = 0; i < MusicClips.Count; i++)
+        {
+            if (MusicClips[i].audioClip == BackgroundMusic.clip)
+            {
+                currentTrack = i;
+                break;
+            }
+        }
+
+        currentTrack++;
+
+        if (currentTrack >= MusicClips.Count)
+        {
+            currentTrack = 0;
+        }
+
+        PlayMusic(MusicClips[currentTrack].audioClip);
+    }
+
+    public void PlayMusic(AudioClip clip)
+    {
+        if (!crossfade)
+        {
+            crossfade = true;
+            StartCoroutine(Crossfade(clip));
+        }
+    }
+
+    public void StopMusic()
+    {
+        if (!crossfade)
+        {
+            StartCoroutine(FadeOut());
+        }
+    }
+
+    void Update()
+    {
+        if (crossfade)
+        {
+            if (fadeIn)
+            {
+                targetVolume += Time.deltaTime;
+            }
+
+            if (fadeOut)
+            {
+                targetVolume -= Time.deltaTime;
+            }
+            BackgroundMusic.volume = targetVolume;
+        }
+    }
+
+    IEnumerator FadeOut()
+    {
+        crossfade = true;
+        if (BackgroundMusic.isPlaying)
+        {
+            while (targetVolume > 0)
+            {
+                fadeOut = true;
+                yield return null;
+            }
+            BackgroundMusic.Stop();
+        }
+
+        crossfade = false;
+    }
+
+    IEnumerator Crossfade(AudioClip clip)
+    {
+        targetVolume = 1;
+
+        if (BackgroundMusic.isPlaying)
+        {
+            while (targetVolume > 0)
+            {
+                fadeOut = true;
+                yield return null;
+            }
+            BackgroundMusic.Stop();
+        }
+
+        fadeOut = false;
+
+        yield return new WaitForSeconds(.1f);
+
+        BackgroundMusic.clip = clip;
+        BackgroundMusic.Play();
+
+
+
+        targetVolume = 0;
+        while (targetVolume <= 1)
+        {
+            fadeIn = true;
+            yield return null;
+        }
+
+
+        fadeIn = false;
+        crossfade = false;
     }
 }

@@ -11,6 +11,7 @@ public class UIScreens
 
 public class ScreenManager : MonoBehaviour
 {
+    public Action<string, bool> OnScreenChanged;
     public static ScreenManager Instance;
     private AudioManager AudioAPI;
     public UIScreens[] MainMenuScreens;
@@ -21,14 +22,26 @@ public class ScreenManager : MonoBehaviour
         Instance = this;
     }
 
+    public GameObject GetUIScreen(string name)
+    {
+        for (int i = 0; i < MainMenuScreens.Length; i++)
+        {
+            if (MainMenuScreens[i].Name.Equals("name"))
+            {
+                return MainMenuScreens[i].m_UIElement;
+            }
+        }
+        return null;
+    }
     private void Start()
     {
-        AudioAPI =  AudioManager.instance;
+        AudioAPI =  AudioManager.Instance;
         foreach (UIScreens item in MainMenuScreens)
         {
             if (item.Name.Equals("Upgrades") || item.Name.Equals("Levels"))
             {
-                item.m_UIElement.SetActive(false);
+                item.m_UIElement.GetComponent<UIView>().Close();
+                OnScreenChanged?.Invoke(item.Name, false);          
             }
         }
     }
@@ -88,11 +101,11 @@ public class ScreenManager : MonoBehaviour
 
     IEnumerator MenuSwitcher(bool open)
     {
-        AudioManager.PlaySound("Click", 1);
+        AudioManager.PlaySound(null,"Click", 1);
 
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.m_UIElement.activeSelf)
+            if (item.m_UIElement.GetComponent<UIView>().ViewIsActive)
             {
                 previousScreen = item.Name;
             }
@@ -105,12 +118,14 @@ public class ScreenManager : MonoBehaviour
             if (item.Name.Equals("Menu"))
             {
                 if (open)
-                {
-                    item.m_UIElement.SetActive(true);
+                {                
+                    item.m_UIElement.GetComponent<UIView>().Open();
+                    OnScreenChanged?.Invoke(item.Name, true);
                 }
                 else
-                {
-                    item.m_UIElement.SetActive(false);
+                {           
+                    item.m_UIElement.GetComponent<UIView>().Close();
+                    OnScreenChanged?.Invoke(item.Name, false);
                 }
             }
         }
@@ -150,7 +165,7 @@ public class ScreenManager : MonoBehaviour
     {
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.m_UIElement.activeSelf && item.Name.Equals("Options") || item.Name.Equals("HighScore"))
+            if (item.m_UIElement.GetComponent<UIView>().ViewIsActive && item.Name.Equals("Options") || item.Name.Equals("HighScore"))
             {
                 return true;
             }
@@ -160,7 +175,7 @@ public class ScreenManager : MonoBehaviour
 
     public void Close()
     {
-        AudioManager.PlaySound("Back", 1);
+        AudioManager.PlaySound(null,"Back", 1);
         if (string.IsNullOrEmpty(previousScreen) || previousScreen.Equals("Menu") || !OptionsOrHighscoreOpen())
         {
             CloseMenu();
@@ -171,8 +186,9 @@ public class ScreenManager : MonoBehaviour
             {
                 if (item.Name.Equals(previousScreen))
                 {
-                    item.m_UIElement.SetActive(true);
-
+        
+                    item.m_UIElement.GetComponent<UIView>().Open();
+                    OnScreenChanged?.Invoke(item.Name, true);
                     if (IsScrene(previousScreen, "Levels") || IsScrene(previousScreen, "Upgrades"))
                     {
                         previousScreen = "Quest";
@@ -184,26 +200,17 @@ public class ScreenManager : MonoBehaviour
                 }
                 else
                 {
-                    item.m_UIElement.SetActive(false);
+                    item.m_UIElement.GetComponent<UIView>().Close();
+                    OnScreenChanged?.Invoke(item.Name, false);
                 }
             }
         }
     }
 
-    public void ShowMessage(string text)
-    {
-        Open("Error");
-        foreach (UIScreens item in MainMenuScreens)
-        {
-            if (item.Name.Equals("Error"))
-            {
-                item.m_UIElement.gameObject.GetComponent<SystemMessageWidget>().SetWidgetText(text);
-            }
-        }
-    }
+
     IEnumerator SwitchScreen(string Id)
     {
-        AudioManager.PlaySound("Click", 1);
+        AudioManager.PlaySound(null,"Click", 1);
         if (Id.Equals("Menu"))
         {
             OpenMenu();
@@ -214,16 +221,19 @@ public class ScreenManager : MonoBehaviour
             {
                 if (item.Name.Equals(Id))
                 {
-                    item.m_UIElement.SetActive(true);
+                    item.m_UIElement.GetComponent<UIView>().Open();
+                    OnScreenChanged?.Invoke(item.Name, true);
                 }
                 else
                 {
-                    if (item.m_UIElement.activeSelf)
+                    if (item.m_UIElement.GetComponent<UIView>().ViewIsActive)
                     {
                         if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
                             previousScreen = item.Name;
                     }
-                    item.m_UIElement.SetActive(false);
+
+                    item.m_UIElement.GetComponent<UIView>().Close();
+                    OnScreenChanged?.Invoke(item.Name, false);
                 }
             }
         }

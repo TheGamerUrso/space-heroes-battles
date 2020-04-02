@@ -4,10 +4,11 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms;
-public class MainMenuManager : MonoBehaviour
-{
-    public static MainMenuManager instance;
+using TheGamerUrso.SceneLoader;
+using UnityEngine.SceneManagement;
 
+public class MainMenuManager : Singleton<MainMenuManager>
+{
     public TextMeshProUGUI PlayerXPText;
     public TextMeshProUGUI PlayerLevelText;
 
@@ -17,20 +18,12 @@ public class MainMenuManager : MonoBehaviour
     private int levelIndex;
     private string levelName;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-    }
 
     public void ShowProfile()
     {
 
-
-
     }
+
     public void ShowLeaderboards()
     {
         GooglePlayServicesManager.Instance.ShowLeaderboards();
@@ -40,16 +33,35 @@ public class MainMenuManager : MonoBehaviour
     {
         GooglePlayServicesManager.Instance.ShowAchievementa();
     }
+    protected override void OnAwake()
+    {
 
+        base.OnAwake();
+#if UNITY_EDITOR
+        for (int i = 0; i < SceneManager.sceneCount; i++)
+        {
+            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
+            {
+                Debug.Log("boot found skip");
+                return;
+            }
+            Debug.Log("Boot not found Loading");
+            SceneManager.LoadScene("boot", LoadSceneMode.Additive);
+        }
+
+#endif
+    }
     private void Start()
     {
-        version.text = "ver " + Application.version;
+        //version.text = "ver " + Application.version;
+        GameManager.PauseTheGame(false);
+        AudioManager.PlayMusic("Menu");
+        PlayerData playerData = DataController.GetPlayerData();
+        playerData.GotHitInGame = false;
+        playerData.PlayedGame = false;
 
-        AudioManager.SetMusic("Menu");
-
+        Application.targetFrameRate = 30;
     }
-
-
 
     public void QuitButtonEvent()
     {
@@ -60,19 +72,10 @@ public class MainMenuManager : MonoBehaviour
     {
         levelIndex = GameManager.LevelSelected;
         levelName = string.Format("Level" + (levelIndex + 1));
-        SceneLoader.instance.LoadScene(levelName);
+        SceneLoader.Instance.LoadScene(levelName);
+
     }
 
-    public void ShowMessage(string text)
-    {
-        StartCoroutine(SaveAndExitCoroutine());
-        ScreenManager.Instance.ShowMessage(text);
-    }
 
-    private IEnumerator SaveAndExitCoroutine()
-    {
-        yield return new WaitForSeconds(1);
-        ScreenManager.Instance.Close();
-    }
 
 }

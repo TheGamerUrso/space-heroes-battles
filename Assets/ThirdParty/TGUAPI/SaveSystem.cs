@@ -47,7 +47,7 @@ public static class SaveSystem
         if (!File.Exists(playerDataPath))
         {
             playerData = new PlayerData();
-            DataController.Instance.SetPlayerData(playerData);
+            DataController.SetPlayerData(playerData);
         }
 
         FileStream file = new FileStream(playerDataPath, FileMode.Open);
@@ -56,7 +56,7 @@ public static class SaveSystem
         {
             BinaryFormatter formatter = new BinaryFormatter();
             playerData = (PlayerData)formatter.Deserialize(file);
-            DataController.Instance.SetPlayerData(playerData);
+            DataController.SetPlayerData(playerData);
         }
         catch (SerializationException e)
         {

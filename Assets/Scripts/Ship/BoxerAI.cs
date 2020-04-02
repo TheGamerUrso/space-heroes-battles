@@ -1,35 +1,55 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
+using DG.Tweening;
 public class BoxerAI : BaseBossEnemyAI
 {
-
-    public override IEnumerator MoveVerticalWithDelay(int hitIndex)
+    public Punch[] punches;
+    public bool attacking;
+    public GameObject ShipPivot;
+    public Ease ease;
+    public float speed;
+    public override void Enter()
     {
-        int waitTime = Random.Range(2, 4);
-        int waitTillComeBack = Random.Range(2, 4);
-
-        while (pathMagnitude > 1)
-        {
-            yield return new WaitForSeconds(waitTime);
-        }
-
-        if (currentPointToFollowIndex == 0)
-        {
-            currentPointToFollowIndex = 1;
-        }
-        else if (currentPointToFollowIndex == 1)
-        {
-            currentPointToFollowIndex = 0;
-        }
-
-        yield return new WaitForSeconds(waitTillComeBack);
-        currentPointToFollowIndex = 0;
-
-        yield return new WaitForSeconds(1);
-        m_IsMovingVertical = false;
-        cooldown = Random.Range(4, 6);
-        hitIndex = 0;
+        base.Enter();
     }
+
+    public override void Setup()
+    {
+        base.Setup();
+        cooldown = UnityEngine.Random.Range(4, 8);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(ShipPivot.transform.DOMoveX(-1, speed).SetEase(ease));
+        seq.Append(ShipPivot.transform.DOMoveX(1, speed).SetEase(ease));
+        seq.Append(ShipPivot.transform.DOMoveX(0, speed).SetEase(ease));
+        seq.SetLoops(-1).Play();
+    }
+
+    public override void Move()
+    {
+        if (baseBoss.CurrentHealth > 0)
+        {
+            if (!attacking && cooldown > 0)
+            {
+                cooldown -= Time.deltaTime;
+            }
+
+            if (cooldown <= 0)
+            {
+                if (punches.Length > 0)
+                {
+                    List<Punch> newList = punches.Where(x => x.currentHealth > 0).ToList();
+                    int rand = UnityEngine.Random.Range(0, newList.Count);              
+                    if (newList.Count > 0)
+                    {
+                        cooldown = UnityEngine.Random.Range(4, 8);
+                        newList[rand].Attack((x) => { attacking = x; Debug.Log("Punch" + attacking); });
+                    }
+                }
+            }
+        }
+    }
+
 }

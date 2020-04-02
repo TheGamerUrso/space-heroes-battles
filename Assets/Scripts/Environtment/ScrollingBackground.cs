@@ -15,9 +15,9 @@ public class ScrollingBackground : MonoBehaviour
         verticalSize = boxCollider.bounds.size.z + 50;
     }
 
-    private void FixedUpdate()
+    private void LateUpdate()
     {
-        transform.position -= transform.forward * speed * Time.deltaTime;
+        transform.Translate(-transform.forward * speed * Time.deltaTime);
         //transform.Translate(-transform.forward * speed * Time.deltaTime);
         // if (OutOfRange())
         // {

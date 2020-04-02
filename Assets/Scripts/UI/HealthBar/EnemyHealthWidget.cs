@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using DG.Tweening;
 public class EnemyHealthWidget : BaseHealthWidget
 {
     private float timer;
@@ -10,73 +10,72 @@ public class EnemyHealthWidget : BaseHealthWidget
     public bool AutoHide;
 
 
-    // Start is called before the first frame update
-    void Start()
+    public override void OnStart()
     {
-        if (AutoHide)
+        base.OnStart();
+        UpdateHealthBar(100, 100);
+    }
+
+    public override void Setup(IDestroyable ship, bool follow = true)
+    {
+     
+        if (Target == null || Target != ship)
         {
-            Hide();
+            MonoBehaviour monoGO = ship as MonoBehaviour;
+            if (monoGO != null)
+            {
+                Ship shipGo = monoGO.GetComponent<Ship>();
+                shipGo.OnHealthChanged += UpdateHealthBar;
+                Target = ship;
+            }
         }
     }
-    public override void Initiallize(Ship ship)
+
+    protected override void UpdateHealthBar(float currentHealth, float maxHealth)
     {
-        ship.GetComponent<BaseEnemy>().OnEnemyHit = OnDamageTaken;
-    }
-
-    public override void Refresh(IDestroyable user)
-    {
-        base.Refresh(user);
-        if (AutoHide)
-        {
-            Hide();
-        }
-
-        HealthBarImage.fillAmount = user.CurrentHealth / user.MaxHealth;
-        HealthBarImage.color = Color.Lerp(RedColor, GreenColor, HealthBarImage.fillAmount);
-
-    }
-    public override void OnDamageTaken(object sender)
-    {
-        IDestroyable user = (IDestroyable)sender;
-        MonoBehaviour userGO = user as MonoBehaviour;
-        Ship ship = userGO.GetComponent<Ship>();
-
         if (Target == null)
         {
-            Target = userGO.gameObject;
+            return;
         }
 
         if (AutoHide)
         {
             Show();
         }
-
-        bool m_HasShield = ship.HasShieldModule();
-        if (ShieldBarImage != null)
+        Ship ship = Target as Ship;
+        if (ship != null)
         {
-            if (m_HasShield)
-            {
-                ShieldBarImage.fillAmount = 1;
-            }
-            else
-            {
-                ShieldBarImage.fillAmount = 0;
-            }
-        }
+            bool m_HasShield = ship.HasShieldModule();
 
+            if (ShieldBarImage != null)
+            {
+                if (m_HasShield)
+                {
+                    ShieldBarImage.fillAmount = 1;
+                }
+                else
+                {
+                    ShieldBarImage.fillAmount = 0;
+                }
+            }
+
+        }
         timer = duration;
 
-        HealthBarImage.fillAmount = user.CurrentHealth / user.MaxHealth;
-
-        HealthBarImage.color = Color.Lerp(RedColor, GreenColor, HealthBarImage.fillAmount);
+        base.UpdateHealthBar(currentHealth, maxHealth);
     }
+
     public override void Tick()
     {
         base.Tick();
         if (!Static)
         {
             if (Target != null)
-                SetHealthBarPosition(Target.transform);
+            {
+                MonoBehaviour go = Target as MonoBehaviour;
+                if (go != null)
+                    SetHealthBarPosition(go.transform);
+            }
         }
 
         if (AutoHide)

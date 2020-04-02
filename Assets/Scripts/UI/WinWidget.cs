@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 public class WinWidget : MonoBehaviour
 {
-    private Player player;
+    private PlayerShip player;
     private PlayerData playerData;
     [SerializeField] private MissionCollection missionCollection;
     [SerializeField] private Mission mission;
@@ -18,11 +18,22 @@ public class WinWidget : MonoBehaviour
     public LevelObjectivesElement[] levelObjectives;
     public LevelObjectiveData[] levelObjectiveDatas;
 
+    public AudioClip audioClip;
+    public AudioSource audioSource;
+
+    public void PlaySound()
+    {
+        audioSource.PlayOneShot(audioClip);
+    }
+
     private void OnEnable()
     {
+        //TODO Get PlayerShip
+
         levelName = "Level" + GameManager.LevelSelected;
-        killed = EnemyManager.EnemySpawnedInTotal * .9f;
-        collected = SpawnEnemies.CoinDropInTotal * .9f;
+
+        //TODO EnemySPawnInTotal * 9f
+        //TODO CoinsDropInTotal * .9f;
 
         player = PlayerManager.GetPlayer();
         playerData = DataController.GetPlayerData();
@@ -38,40 +49,45 @@ public class WinWidget : MonoBehaviour
         {
             levelObjectiveDatas[0].completed = true;
 
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(50);
+            player.AddXP(50);
            // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
         }
 
-        if (!levelObjectiveDatas[1].completed && SpawnEnemies.EnemyKilled >= killed)
+        //TODO Enemy Killed This Round
+        float enemyKilled = 0;
+        
+        if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
         {
             levelObjectiveDatas[1].completed = true;
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(75);
-           // Debug.Log("Challenge : Kill " + EnemyManager.EnemySpawnedInTotal * .9f + " Enemies Completed" + "(100 XP Awarded)");
+            player.AddXP(75);
         }
 
-        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged() == false)
+        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged == false)
         {
             levelObjectiveDatas[2].completed = true;
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(100);
+            player.AddXP(100);
            // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
         }
 
-        if (!levelObjectiveDatas[3].completed && SpawnEnemies.counsEarnInGame >= 0 && SpawnEnemies.counsEarnInGame >= collected)
+        float coinEarnInGame = 0;
+
+        if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
         {
             levelObjectiveDatas[3].completed = true;
-            PlayerManager.GetPlayer().GetLevelSystem().AddXP(25);
+            player.AddXP(25);
            // Debug.Log("Challenge : Earn " + SpawnEnemies.CoinDropInTotal * .9f + " Completed" + "(100 XP Awarded)");
         }
 
-
+        
 
         StartCoroutine(ShowGameResults());
     }
 
-
     private IEnumerator ShowGameResults()
     {
-        string scoreText = string.Format("{00:0000000000}", SpawnEnemies.Score);
+        //TODO Get Score
+        float score = 0;
+        string scoreText = string.Format("{00:0000000000}", score);
         Score.text = scoreText;
         int ChallengeIndex = 0;
 

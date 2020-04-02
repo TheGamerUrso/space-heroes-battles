@@ -1,26 +1,22 @@
+using DG.Tweening;
 using UnityEngine;
 
 public class ManeuverEnemy : SimpleAI
 {
     private bool firstTime;
-    public override void Initialize()
+
+    public override void Setup()
     {
-        base.Initialize();
+        base.Setup();
         int waitTime = UnityEngine.Random.Range(2, 4);
         InvokeRepeating("Maneuver", 1, waitTime);
+
     }
 
     public override void Move()
     {
-        movement = (-transform.forward * m_ZVel) + (-transform.right * m_XVel);
-        movement.x *= Direction;
-        //transform.localPosition += movement * Time.deltaTime;
-        rigid.MovePosition(transform.position + movement * Time.deltaTime);
-        CheckOutOfSight();
-    }
+        base.Move();
 
-    private void LateUpdate()
-    {
         if (transform.position.x > Constants.m_XMax)
         {
             Direction = 1;
@@ -33,8 +29,6 @@ public class ManeuverEnemy : SimpleAI
 
     private void Maneuver()
     {
-
-
         int random = UnityEngine.Random.Range(0, 100);
 
         if (random <= 33.33)

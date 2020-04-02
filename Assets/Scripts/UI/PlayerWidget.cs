@@ -5,9 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerWidget : MonoBehaviour
 {
-    private Player player;
-
-    private PlayerWeaponSystem playerWeaponSystem;
+    private PlayerShip player;
 
     private static string ReadyStringKey = "Ready";
     private static string ActiveStringKey = "Active";
@@ -50,27 +48,77 @@ public class PlayerWidget : MonoBehaviour
     private float targetHealth = 0;
     private float maxTargetHealth = 0;
 
-
-    public void SetPlayer(Player player)
+    private void OnDestroy()
     {
-        playerWeaponSystem = this.player.GetWeaponSystem();
+        if (player != null)
+        {
+            player.OnHealthChanged -= UpdatePlayerHealth;
+            player.PowerUpLevelChanged -= PowerUpLevelChanged;
+            player.OnXpChanged -= UpdateXP;
+        }
+    }
+
+    public void SetPlayer(PlayerShip player)
+    {
+        this.player = player;
 
         PowerBut.onClick.AddListener(() =>
         {
-            if (playerWeaponSystem)
-            {
-              
-                playerWeaponSystem.ActivateSpecial();
-            }
+                ActivateSpecial();
+            
         });
 
+        player.OnHealthChanged += UpdatePlayerHealth;
+        player.PowerUpLevelChanged += PowerUpLevelChanged;
 
+
+        player.OnXpChanged += UpdateXP;
+
+        UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
+      
+        UpdateXP(player.level, player.xp, player.xpToLevel);
+       
+        
+        PowerUpLevelChanged(player.GetPowerUpLevelPresentage());
     }
 
     public void ActivateSpecial()
     {
         PowerBut.interactable = false;
         PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+    }
+
+
+    public void PowerUpLevelChanged(float playerPowerUp)
+    {
+        if (playerPowerUp >= 1)
+        {
+            if (!PlayerPrefs.HasKey("SuperTut"))
+            {
+                Tutorial.Instance.ShowTutorial(4);
+
+                PlayerPrefs.SetInt("SuperTut", 1);
+            }
+            PowerBut.interactable = true;
+            PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+        }
+        else
+        {
+            PowerBut.interactable = false;
+            PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+        }
+
+        m_PowerUps.fillAmount = playerPowerUp;
+
+        if (m_PowerUps.fillAmount == 1)
+        {
+            RefreshWeaponIndicatorSprite();
+        }
+
+        if (m_PowerUps.fillAmount < 1)
+        {
+            RefreshWeaponIndicatorSprite();
+        }
     }
 
     private void Update()
@@ -92,65 +140,13 @@ public class PlayerWidget : MonoBehaviour
                 return;
             }
         }
-
-        if (Time.frameCount % 1 == 0)
-        {
-            float playerPowerUp = 0;
-
-            playerPowerUp = playerWeaponSystem.GetPowerUpLevelPresentage();
-
-            if (playerPowerUp >= 1)
-            {
-                if (!PlayerPrefs.HasKey("SuperTut"))
-                {
-                    Tutorial.Instance.ShowTutorial(4);
-
-                    PlayerPrefs.SetInt("SuperTut", 1);
-                }
-                PowerBut.interactable = true;
-                PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
-            }
-            else
-            {
-                PowerBut.interactable = false;
-                PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
-            }
-
-            m_PowerUps.fillAmount = playerPowerUp;
-
-            if (m_PowerUps.fillAmount == 1)
-            {
-                RefreshWeaponIndicatorSprite();
-            }
-
-            if (m_PowerUps.fillAmount < 1)
-            {
-                RefreshWeaponIndicatorSprite();
-            }
-
-
-
-#if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.T))
-            {
-                PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
-                playerWeaponSystem.IncreasePowerUp(0.5f);
-                playerWeaponSystem.WeaponPowerUPCollected();
-            }
-#endif
-
-
-            LevelSystem levelSystem = player.GetLevelSystem();
-            UpdateXP(levelSystem);
-            UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
-        }
     }
 
-    public void UpdateXP(LevelSystem levelSystem)
+    public void UpdateXP(int lvl, float xp, float xpToLevel)
     {
-        XPBar.maxValue = levelSystem.GetXpToLevel();
-        XPBar.value = levelSystem.GetXP();
-        XPStatus.text = string.Format("{0}/{1}", levelSystem.GetXP(), levelSystem.GetXpToLevel());
+        XPBar.maxValue = xpToLevel;
+        XPBar.value = xp;
+        XPStatus.text = string.Format("{0}/{1}", xp, xpToLevel);
     }
 
     public void UpdatePlayerHealth(float CurrentHealth, float MaxHealth)
@@ -171,19 +167,19 @@ public class PlayerWidget : MonoBehaviour
     public void RefreshWeaponIndicatorSprite()
     {
         var sprite = WeaponIndicatorSpritesNotActivated[0];
-        
-        var collecterUpgrade = PlayerWeaponSystem.WeaponUpgradeCollected;
+
+        var collecterUpgrade = player.PowerUpCollectAmmount;
         if (m_PowerUps.fillAmount == 1 && collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+            sprite = WeaponIndicatorSpritesActivated[player.PowerUpCollectAmmount];
         }
-        else if(collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
+        else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+            sprite = WeaponIndicatorSpritesNotActivated[player.PowerUpCollectAmmount];
         }
         else
         {
-            sprite = WeaponIndicatorSpritesNotActivated[PlayerWeaponSystem.WeaponUpgradeCollected];
+            sprite = WeaponIndicatorSpritesNotActivated[player.PowerUpCollectAmmount];
         }
 
         WeaponIndicatorImage.sprite = sprite;

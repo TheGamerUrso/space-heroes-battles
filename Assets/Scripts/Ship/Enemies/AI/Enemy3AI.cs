@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Enemy3AI : SimpleAI
 {
+    private GameObject target;
     public float changeWaypointTimer;
     public Transform[] Waypoints;
     public int currentWaypoint;
@@ -16,9 +17,9 @@ public class Enemy3AI : SimpleAI
         }
         else
         {
-            GameObject player = GameObject.FindObjectOfType<Player>().gameObject;
+            target = GameObject.FindObjectOfType<PlayerShip>().gameObject;
 
-            Vector3 diffrence = player.transform.position - transform.position;
+            Vector3 diffrence = target.transform.position - transform.position;
             lookAt(transform, -diffrence);
         }
 

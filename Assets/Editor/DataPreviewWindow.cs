@@ -8,19 +8,19 @@ public class DataPreviewWindow : EditorWindow
     Vector2 scrollPos;
     Vector2 LevelChallengesScrollPos;
     //private SpawnEnemies spawnEnemies;
-    private Player player;
+    private PlayerShipElement player;
 
     private string CoinToEarnText;
     private int coinsToEarn;
 
     //private string titleString = "Project Controls";
     //private string scenePath = "Assets/Scenes";
-   // private string TestModeStrig = "TestMode";
+    // private string TestModeStrig = "TestMode";
 
     //private string BaseXpToEarn = "";
     //private float xpToEarn;
 
-    public Player currentPlayer;
+    public PlayerShipElement currentPlayer;
 
     public Vector3 PosInWorld;
     public Vector3 resets;
@@ -41,14 +41,13 @@ public class DataPreviewWindow : EditorWindow
         //    currentPlayer = PlayerManager.instance.GetPlayer();
         PlayerData playerData = null;
 
-        if (DataController.Instance != null)
-        {
-            playerData = DataController.GetPlayerData();
-        }
+
+        playerData = DataController.GetPlayerData();
+
 
         if (Application.isPlaying && playerData != null)
         {
-       
+
 
             string PlayerDataText =
                 "Level : " + playerData.Level + "\n" +
@@ -69,13 +68,13 @@ public class DataPreviewWindow : EditorWindow
 
                 for (int i = 0; i < playerData.Upgrades.Length; i++)
                 {
-                    GUILayout.Label(values[i], EditorStyles.boldLabel,GUILayout.Width(64), GUILayout.Height(64));
-                    GUILayout.Box(""+playerData.Upgrades[i],GUILayout.Width(32),GUILayout.Height(32));
+                    GUILayout.Label(values[i], EditorStyles.boldLabel, GUILayout.Width(64), GUILayout.Height(64));
+                    GUILayout.Box("" + playerData.Upgrades[i], GUILayout.Width(32), GUILayout.Height(32));
                 }
             }
             GUILayout.EndVertical();
             GUILayout.Space(2);
-            LevelChallengesScrollPos = EditorGUILayout.BeginScrollView(LevelChallengesScrollPos,GUILayout.Height(150));
+            LevelChallengesScrollPos = EditorGUILayout.BeginScrollView(LevelChallengesScrollPos, GUILayout.Height(150));
             GUILayout.Label("Objective Data", EditorStyles.boldLabel);
             GUILayout.BeginHorizontal();
 
@@ -102,8 +101,8 @@ public class DataPreviewWindow : EditorWindow
             for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
             {
                 GUILayout.BeginVertical();
-                GUILayout.Label(""+ playerData.ListOfOnGoingObjectives[i].Id, EditorStyles.boldLabel);
-                objectivesString = ""+ playerData.ListOfOnGoingObjectives[i].progress + ":" + playerData.ListOfOnGoingObjectives[i].requirment ;
+                GUILayout.Label("" + playerData.ListOfOnGoingObjectives[i].Id, EditorStyles.boldLabel);
+                objectivesString = "" + playerData.ListOfOnGoingObjectives[i].progress + ":" + playerData.ListOfOnGoingObjectives[i].requirment;
                 GUILayout.Box(objectivesString);
                 GUILayout.EndVertical();
             }

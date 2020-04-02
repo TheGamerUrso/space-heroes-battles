@@ -1,34 +1,19 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 [Serializable]
 public class DropProbabilities
 {
     public string Name;
+    public int chance;
     public PoolGameObjectType DropItemsType;
 }
 
-public class DropController : MonoBehaviour
+public class DropController : Singleton<DropController>
 {
-    private static DropController instance;
-
-    public static DropController Instance
-    {
-        get
-        {
-            try
-            {
-                return instance;
-            }
-            catch (NullReferenceException e)
-            {
-                Debug.LogWarning(e.Message);
-            }
-            return null;
-        }
-    }
-
     private float timerSincePowerUpDroped;
 
     private float frequentToDroPowerUp = .1f;
@@ -41,14 +26,10 @@ public class DropController : MonoBehaviour
     public float shieldDropCooldown = 4;
     public float healthDropCooldown = 3;
     public float powerDropCooldown = 1;
-    private void Awake()
-    {
-        instance = this;
-    }
 
     private void Update()
     {
-        if(powerDropCooldown > 0)
+        if (powerDropCooldown > 0)
         {
             powerDropCooldown -= Time.deltaTime;
         }
@@ -66,7 +47,7 @@ public class DropController : MonoBehaviour
 
     public static void PickRandomDropItem(Transform transform)
     {
-        DropController.instance.PickRandomEnemyToSpawn(transform);
+        Instance.PickRandomEnemyToSpawn(transform);
     }
 
     public void PickRandomEnemyToSpawn(Transform transform)
@@ -79,18 +60,40 @@ public class DropController : MonoBehaviour
                 return;
             }
 
-            Player p = PlayerManager.GetPlayer();
+            PlayerShip p = PlayerManager.GetPlayer();
 
 
             bool hasShield = p.HasShieldModule();
-            bool fullHealth = p.GetHealthPresentage() == 100;
+            bool fullHealth = p.HealthPresentage == 100;
             bool dropExtra = false;
 
             PoolGameObjectType itemTypeToSpawn = ListOfDropItems[0].DropItemsType;
 
             do
             {
-                itemTypeToSpawn = ListOfDropItems[UnityEngine.Random.Range(0, ListOfDropItems.Count)].DropItemsType;
+
+                var range = 0;
+
+                for (int i = 0; i < ListOfDropItems.Count; i++)
+                {
+                    if (ListOfDropItems[i].chance > 0f)
+                    {
+                        range += ListOfDropItems[i].chance;
+                    }
+                }
+
+                var rand = UnityEngine.Random.Range(0, range);
+                var top = 0;
+
+                for (int i = 0; i < ListOfDropItems.Count; i++)
+                {
+                    top += ListOfDropItems[i].chance;
+                    if (rand < top)
+                    {
+                        itemTypeToSpawn = ListOfDropItems[i].DropItemsType;
+                        break;
+                    }
+                }            
 
                 if (itemTypeToSpawn == PoolGameObjectType.ItemShield)
                 {
@@ -111,7 +114,7 @@ public class DropController : MonoBehaviour
                     if (!fullHealth && healthDropCooldown < 0)
                     {
                         itemTypeToSpawn = ListOfDropItems[3].DropItemsType;
-                        healthDropCooldown = UnityEngine.Random.Range(2, 8); 
+                        healthDropCooldown = UnityEngine.Random.Range(2, 8);
                         break;
                     }
                     else
@@ -125,7 +128,7 @@ public class DropController : MonoBehaviour
                     if (powerDropCooldown < 0)
                     {
                         itemTypeToSpawn = ListOfDropItems[1].DropItemsType;
-                        powerDropCooldown = UnityEngine.Random.Range(2, 4); 
+                        powerDropCooldown = UnityEngine.Random.Range(2, 4);
                         break;
                     }
                     else
@@ -156,11 +159,11 @@ public class DropController : MonoBehaviour
                 GameObject extraDrop = PoolManager.Instance.GetObjectFromPool(ListOfDropItems[0].DropItemsType);
                 extraDrop.transform.position = transform.position;
                 extraDrop.transform.rotation = Quaternion.identity;
+                GameLevel.CoinDropInTotal++;
             }
 
-            SpawnEnemies.CoinDropInTotal++;
-
-            return;
+            //TODO Coins Drop In Total ++
+             return;
         }
 
     }

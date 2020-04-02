@@ -9,10 +9,6 @@ public class ShipEventArgs : System.EventArgs
 
 public class ShipSelect : MonoBehaviour
 {
-    public delegate void OnShipSelect(object sender, ShipEventArgs e);
-
-    public static OnShipSelect ShipSelected;
-
     public GameObject[] Ships;
     private int currentShip;
     public ShipSelectElement[] shipSelectElement;
@@ -24,17 +20,20 @@ public class ShipSelect : MonoBehaviour
     public void Initialize()
     {
         PlayerData playerData = DataController.GetPlayerData();
+
         foreach (GameObject item in Ships)
         {
             item.SetActive(false);
         }
+
         if (playerData.UnlockedHeroes.Length == 0)
         {
             playerData.UnlockedHeroes[0] = 1;
+            shipSelectElement[0].Unlock();
         }
 
 
-        for (int i = 0; i < shipSelectElement.Length; i++)
+        for (int i = 1; i < shipSelectElement.Length; i++)
         {
             if (playerData.UnlockedHeroes[i] > 0)
             {
@@ -58,9 +57,11 @@ public class ShipSelect : MonoBehaviour
         }
 
         if (GooglePlayServicesManager.Instance)
-            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Heroes_Assemble, num);
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
 
-        SelectShip(currentShip);
+        GameEventSystem.OnShipSelect += SelectShip;
+
+        SelectShip(0);
     }
 
     private void Start()
@@ -70,25 +71,13 @@ public class ShipSelect : MonoBehaviour
 
     public void Unlock()
     {
-
-        PlayerData playerData = DataController.GetPlayerData();
-
-        if (shipSelectElement[currentShip] != null)
-        {
-            shipSelectElement[currentShip].Purchase();
-            if (shipSelectElement[currentShip].Locked == false)
-            {
-                SelectShip(currentShip);
-            }
-            playerData.UnlockedHeroes[currentShip] = 1;
-        }
+        shipSelectElement[currentShip].Purchase();
     }
 
     public void SelectShip(int shipID)
     {
-
         PlayerData playerData = DataController.GetPlayerData();
-        ShipEventArgs e = shipSelectElement[shipID].Select();
+
         currentShip = shipID;
 
         foreach (GameObject item in Ships)
@@ -98,17 +87,16 @@ public class ShipSelect : MonoBehaviour
 
         Ships[currentShip].SetActive(true);
 
-        GameManager.instance.CurrentHeroChoosen = currentShip;
 
         UISelectButton.SetActive(true);
         UIUnlockButton.SetActive(false);
 
-        if (e.selectElement.Locked)
+        if (playerData.UnlockedHeroes[currentShip] == 0)
         {
             UISelectButton.SetActive(false);
             UIUnlockButton.SetActive(true);
         }
-        else if (e.selectElement.Locked == false)
+        else if (playerData.UnlockedHeroes[currentShip] == 1)
         {
             playerData.currentSelectedShip = currentShip;
         }

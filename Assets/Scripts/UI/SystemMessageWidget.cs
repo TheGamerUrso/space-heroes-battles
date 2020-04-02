@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class SystemMessageWidget : MonoBehaviour
@@ -11,7 +12,16 @@ public class SystemMessageWidget : MonoBehaviour
         m_Canvas.SetActive(value);
     }
 
+    public void AutoClose()
+    {
+        StartCoroutine(Close());
+    }
 
+    IEnumerator Close()
+    {
+        yield return new WaitForSeconds(1.0f);
+        Enabled(false);
+    }
 
     public void SetWidgetText(string score)
     {

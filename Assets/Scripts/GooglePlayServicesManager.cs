@@ -18,33 +18,17 @@ public class User
 
 
 }
-public class GooglePlayServicesManager : MonoBehaviour
+public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 {
-    public static GooglePlayServicesManager Instance;
-
-    public static bool isInitialized;
-
-    private void Awake()
+    protected override void OnAwake()
     {
-        if (Instance == null)
-        {
-            Instance = this;
-
-            if (!RuntimeManager.IsInitialized())
-                RuntimeManager.Init();
-
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-
+        if (!RuntimeManager.IsInitialized())
+            RuntimeManager.Init();
     }
 
     private void Start()
     {
-        // Managed init respects the Max Login Requests value
+        //Managed init respects the Max Login Requests value
         if (!GameServices.IsInitialized())
         {
             GameServices.Init();
@@ -54,6 +38,7 @@ public class GooglePlayServicesManager : MonoBehaviour
     public bool GetInitialized()
     {
         return GameServices.IsInitialized();
+        return false;
     }
 
     public User GetUserInfo()
@@ -61,8 +46,9 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         return new User(GameServices.LocalUser.image, GameServices.LocalUser.userName);
 #else
-        return new User(null,"Over9000");
+        return new User(null, "Over9000");
 #endif
+        return null;
     }
 
 
@@ -75,10 +61,11 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
             GameServices.ReportScore(score, leaderboard);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
+
 
     public void ReportAchivementProgress(string achievement, float ammount)
     {
@@ -92,10 +79,11 @@ public class GooglePlayServicesManager : MonoBehaviour
 
             GameServices.ReportAchievementProgress(achievement, ammount);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
+
 
     public void UnlockAchivement(string achievement)
     {
@@ -109,7 +97,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 
             GameServices.UnlockAchievement(achievement);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+                Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
@@ -168,7 +156,7 @@ public class GooglePlayServicesManager : MonoBehaviour
 
             GameServices.UnlockAchievement(achievementToUnlock);
 #elif UNITY_IOS
-        Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+                    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
         }
     }
@@ -184,10 +172,10 @@ public class GooglePlayServicesManager : MonoBehaviour
         else
         {
             GameServices.Init();    // start a new initialization process
-#elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
-#endif
         }
+#elif UNITY_IOS
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+#endif
     }
 
     public void AddScore(long score)
@@ -195,15 +183,16 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         GameServices.ReportScore(score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
 #elif UNITY_IOS
-    Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show achievements UI: The user is not logged in to Game Center.");
 #endif
     }
 
     public void ShowLeaderboards()
     {
+#if UNITY_ANDROID
         if (GameServices.IsInitialized())
         {
-#if UNITY_ANDROID
+
             // Check for initialization before showing leaderboard UI
             if (GameServices.IsInitialized())
             {
@@ -213,19 +202,22 @@ public class GooglePlayServicesManager : MonoBehaviour
             {
 
                 GameServices.Init();    // start a new initialization process
-#elif UNITY_IOS
-    Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
-#endif
             }
+#elif UNITY_IOS
+            Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
+#endif
+
         }
     }
+
+
 
     public void SignIn()
     {
 #if UNITY_ANDROID
         GameServices.ManagedInit();
 #elif UNITY_IOS
-    Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
+            Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
     }
 
@@ -234,10 +226,11 @@ public class GooglePlayServicesManager : MonoBehaviour
 #if UNITY_ANDROID
         GameServices.SignOut();
 #elif UNITY_IOS
-        Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
+                Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
 #endif
     }
 }
+
 
 
 

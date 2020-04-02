@@ -8,12 +8,10 @@ public class BaseEnemyAI : MonoBehaviour
 
     protected BaseEnemy enemy;
     protected Rigidbody rigid;
-
-    protected int Direction;
-    protected bool Loop;
-    protected bool directionChanged;
-    protected Vector3 startingPosition;
+    protected Animator animator;
     protected Coroutine EnterCoroutine;
+
+    protected Vector3 startingPosition;
     protected Vector3 dist;
     protected Vector2 MaxScreenBound;
     protected Vector2 MinScreenBound;
@@ -29,36 +27,23 @@ public class BaseEnemyAI : MonoBehaviour
 
     public bool bAppeared, bEntered;
 
-    [Header("MinerBossAI Config")]
     protected int enterNameHash = Animator.StringToHash("Enter");
     protected int deathNameHash = Animator.StringToHash("Death");
 
-    private void OnEnable()
+    public void OnEnable()
     {
-        Appear();
+        Enter();
     }
 
     private void Awake()
     {
         InitIfNeeded();
-        Initialize();
+
     }
 
-    public void Start()
-    {
-        m_XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
-        m_ZVel = enemy.GetShipStatsSystem().GetSpeed();
-        
-        Enter(); 
+    public void Start() { Setup(); }
 
-        Direction = 0;
-    }
-
-    public virtual void Initialize()
-    {
-        Debug.Log(gameObject.name);
-        startingPosition = transform.position;
-    }
+    public virtual void Setup(){}
 
     public virtual void InitIfNeeded()
     {
@@ -71,43 +56,26 @@ public class BaseEnemyAI : MonoBehaviour
         {
             enemy = GetComponent<BaseEnemy>();
         }
-    }
 
-    public IEnumerator EnterAnimationCoroutine()
-    {
-        while (transform.GetChild(1).transform.localScale.x < 1)
+        if (animator == null)
         {
-            Vector3 NewSize = transform.GetChild(1).transform.localScale;
-            NewSize.x += Time.deltaTime;
-            NewSize.y += Time.deltaTime;
-            NewSize.z += Time.deltaTime;
-            if (NewSize.x > 1)
-            {
-                NewSize = Vector3.one;
-            }
-            transform.GetChild(1).transform.localScale = NewSize;
-            yield return null;
+            animator = GetComponentInChildren<Animator>();
         }
     }
 
-    private void FixedUpdate()
+    private void Update()
+    {
+      
+    }
+
+    private void LateUpdate()
     {
         Move();
     }
 
-    public virtual void Move() { }
+    public virtual void Move(){}
 
-    public virtual void Appear()
-    {
-        if (EnterCoroutine != null)
-        {
-            StopCoroutine(EnterAnimationCoroutine());
-        }
-
-        StartCoroutine(EnterAnimationCoroutine());
-    }
-    public virtual void Enter(){     
-    }
+    public virtual void Enter(){}
 
     public void Leave()
     {
@@ -121,5 +89,9 @@ public class BaseEnemyAI : MonoBehaviour
         {
             Leave();
         }
+    }
+    public virtual void EnableMovement()
+    {
+
     }
 }

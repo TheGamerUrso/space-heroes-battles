@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class FollowAI : SimpleAI {
     public GameObject m_Target;
     private Vector3 ShootDirection;
     public float speed;
-    public override void Initialize()
+    public override void Setup()
     {
         m_Target = GameObject.FindGameObjectWithTag("Player");
         RotationExtentionUtilities.UpdateShipRotation(transform,new Vector3(-m_XVel, 0, m_ZVel));
@@ -22,7 +23,7 @@ public class FollowAI : SimpleAI {
 
         if (Utilities.GameObjectIsOutOfCameraVision(transform, -150))
         {
-            Initialize();
+            Setup();
         }
     }
 

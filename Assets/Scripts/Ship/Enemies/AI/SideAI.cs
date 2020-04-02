@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso;
+using TheGamerUrso.Utils;
 using UnityEngine;
 public enum DirectionType
 {
@@ -17,7 +18,7 @@ public class SideAI : SimpleAI
     public Vector2 m_YVelSpeedRange;
     private Vector3 m_StartingPosition;
 
-    public override void Initialize()
+    public override void Setup()
     {
         m_LeftStartingPoint = new Vector3(Constants.m_XMin, 0, Constants.m_ZMax);
         m_RightStartingPoint = new Vector3(Constants.m_XMax, 0, Constants.m_ZMax);

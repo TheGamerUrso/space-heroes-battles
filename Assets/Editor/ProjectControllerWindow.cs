@@ -6,7 +6,7 @@ using UnityEngine;
 public class ProjectControllerWindow : EditorWindow
 {
     //private SpawnEnemies spawnEnemies;
-    private Player player;
+    private PlayerShip player;
 
     private string CoinToEarnText;
     private int coinsToEarn;
@@ -18,7 +18,7 @@ public class ProjectControllerWindow : EditorWindow
     private string BaseXpToEarn = "";
     private float xpToEarn;
 
-    public Player currentPlayer;
+    public PlayerShipElement currentPlayer;
 
     public Vector3 PosInWorld;
     public Vector3 resets;
@@ -66,7 +66,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                DataController.Instance.SetPlayerData(new PlayerData());
+                DataController.SetPlayerData(new PlayerData());
                 SaveSystem.LoadPlayerData();
             }
         }
@@ -104,7 +104,7 @@ public class ProjectControllerWindow : EditorWindow
             {
                 if (player == null)
                 {
-                    player = GameObject.FindObjectOfType<Player>();
+                    player = GameObject.FindObjectOfType<PlayerShip>();
                 }
 
                 player.GetComponent<BoxCollider>().enabled = !player.GetComponent<BoxCollider>().enabled;
@@ -131,7 +131,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                GuiManager.Instance.GameOver();
+                GameController.OnWin?.Invoke(GameController.Instance);
             }
         }
         EditorGUILayout.EndHorizontal();

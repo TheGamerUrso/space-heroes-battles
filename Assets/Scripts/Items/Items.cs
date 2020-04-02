@@ -4,13 +4,13 @@ public class Items : MonoBehaviour
 {
     private int frameInterval = 1;
     [SerializeField] private ItemData itemData;
+    public LayerMask playerLayer;
 
     private static string CollectKey = "Collect";
     private static string ResetKey = "Reset";
     public Animator animator;
 
     public BoxCollider boxCollider;
-    private GameObject model;
 
     private float m_XVel;
     private float m_YVel;
@@ -19,13 +19,9 @@ public class Items : MonoBehaviour
     [SerializeField] private Vector2 m_RandomXVelValues = new Vector2();
     [SerializeField] private Vector2 m_RandomZVelValues = new Vector2();
 
-    private Vector3 m_Rotation = new Vector3(0, 1, 0);
-    private GameObject TargetToMoveTo;
 
-    public float magnetPower;
+    private float magnetPower;
     private float magnetDistance = 25;
-    private Player player;
-    bool MagnetActive;
 
     public ItemData GetItemType()
     {
@@ -40,27 +36,17 @@ public class Items : MonoBehaviour
 
     private void Start()
     {
-        Initialize();
-    }
-    public void SetPlayer(Player player)
-    {
-        this.player = player;
+        Setup();
     }
 
-    public void Initialize()
+    public void Setup()
     {
-        SetPlayer(PlayerManager.GetPlayer());
-        TargetToMoveTo = player.gameObject;
+        PlayerShip player = PlayerManager.GetPlayer();
 
-        if (itemData.m_RewardAmount > 0 && player.GetUpgradeSystem().GetMagnetPower() > 0)
+        if (itemData.m_RewardAmount > 0 && player.GetMagnetPower() > 0)
         {
-            MagnetActive = true;
-        }
-
-        if (MagnetActive)
-        {
-            magnetPower = 10 + player.GetUpgradeSystem().GetMagnetPower();
-            magnetDistance = 25 + player.GetUpgradeSystem().GetMagnetDistanceUpgrade();
+            magnetPower = 10 + player.GetMagnetPower();
+            magnetDistance = 25 + player.GetMagnetDistanceUpgrade();
         }
 
         int dir = Random.Range(-1, 1);
@@ -84,111 +70,66 @@ public class Items : MonoBehaviour
         }
     }
 
-    public void Action()
+    public void Action(PlayerShip player)
     {
-
         if (boxCollider)
         {
             boxCollider.enabled = false;
         }
 
         animator.SetTrigger(CollectKey);
+
         if (itemData.m_HealValue > 0)
         {
             player.Heal(player.Level * itemData.m_HealValue);
-            GuiManager.Instance.CreateFloatingText("Heal up", transform.localPosition);
-            if (AudioManager.instance)
-            {
-                AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
-            }
-            if (!PlayerPrefs.HasKey("HealTut"))
-            {
-                Tutorial.Instance.ShowTutorial(1);
-                PlayerPrefs.SetInt("HealTut", 1);
-            }
         }
 
         if (itemData.m_RewardAmount > 0)
         {
-            SpawnEnemies.counsEarnInGame++;
-            GuiManager.Instance.CreateFloatingText("$", transform.localPosition);
-            if (AudioManager.instance)
-            {
-                AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 3);
-            }
-
-            GuiManager.Instance.UpdateCoinWidgetText();
-
-
-            if (!PlayerPrefs.HasKey("CoinTut"))
-            {
-                Tutorial.Instance.ShowTutorial(0);
-                itemData.ShowTutorial = true;
-                PlayerPrefs.SetInt("CoinTut", 1);
-            }
+            //TODO Increase Coin Earn In Game
+  
+            GameSession.counsEarnInGame++;
         }
 
         if (itemData.Shield)
         {
             player.InstallShieldModule();
-            GuiManager.Instance.CreateFloatingText("Shield Up", transform.localPosition);
-            if (AudioManager.instance)
-            {
-                AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
-            }
-            if (!PlayerPrefs.HasKey("ShieldTut"))
-            {
-                Tutorial.Instance.ShowTutorial(3);
-                itemData.ShowTutorial = true;
-                PlayerPrefs.SetInt("ShieldTut", 1);
-            }
         }
 
         if (itemData.PowerPack)
         {
-            PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
-            playerWeaponSystem.WeaponPowerUPCollected();
-            GuiManager.Instance.CreateFloatingText("Power Up", transform.localPosition);
-
-            if (AudioManager.instance)
-            {
-                AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
-            }
-
-            if (!PlayerPrefs.HasKey("PowerTut"))
-            {
-                Tutorial.Instance.ShowTutorial(2);
-                itemData.ShowTutorial = true;
-                PlayerPrefs.SetInt("PowerTut", 1);
-            }
-
-
-
+            player.PowerUpCollected();
         }
 
-
-        GuiManager.Instance.UpdateScore(75);
-
+        if (AudioManager.Instance)
+        {
+            AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
+        }
         Invoke("SetGameObjectOff", 1);
     }
 
-    private void SetGameObjectOff()
+    private void OnDrawGizmosSelected()
     {
-        gameObject.SetActive(false);
+        Gizmos.DrawWireSphere(transform.position, magnetDistance);
     }
 
     public void Movement()
     {
-        float distance = 0;
 
-        if (player != null)
+        Collider[] colliders = Physics.OverlapSphere(transform.position, magnetDistance, playerLayer);
+        if (colliders.Length > 0)
         {
-            distance = Vector3.Magnitude(transform.localPosition - TargetToMoveTo.transform.localPosition);
-        }
-
-        if (player != null && magnetPower > 0 && distance < magnetDistance)
-        {
-            transform.localPosition = Vector3.MoveTowards(transform.localPosition, TargetToMoveTo.transform.localPosition, magnetPower * Time.deltaTime);
+            foreach (Collider item in colliders)
+            {
+                if (item.tag.Equals("Player"))
+                {
+                    GameObject target = item.gameObject;
+                    if (magnetPower > 0)
+                    {
+                        transform.localPosition = Vector3.MoveTowards(transform.localPosition, target.transform.localPosition, magnetPower * Time.deltaTime);
+                    }
+                }
+            }
         }
         else
         {
@@ -204,4 +145,5 @@ public class Items : MonoBehaviour
 
         transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, Constants.m_XMin, Constants.m_XMax), transform.localPosition.y, transform.localPosition.z);
     }
+
 }

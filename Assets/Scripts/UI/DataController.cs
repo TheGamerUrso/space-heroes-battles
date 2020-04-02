@@ -6,14 +6,10 @@ using UnityEngine;
 public class DataController
 {
     private static DataController instance;
-    public static DataController Instance
+    private static DataController Instance
     {
         get
         {
-            if (instance == null)
-            {
-                instance = new DataController();
-            }
             return instance;
         }
     }
@@ -30,25 +26,28 @@ public class DataController
     public DataController()
     {
         instance = this;
+    }
 
+    public static void Setup()
+    {
         missionCollection = JsonSystem.LoadMissions();
         LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        playerData = new PlayerData();
+        instance.playerData = new PlayerData();
 
-        firstRun = true;
+        int firstRunIndex = 0;
 
         if (PlayerPrefs.HasKey("FirstRun"))
         {
-            firstRun = false;
+            firstRunIndex = PlayerPrefs.GetInt("FirstRun");
         }
 
-        if (firstRun == false)
+        if (firstRunIndex == 1)
         {
             SaveSystem.LoadPlayerData();
-            gameSettings = new GameSettings(playerData.SFXVolume, playerData.MusicVolume, playerData.AutoAttack, playerData.mute, playerData.distance);
+            instance.gameSettings = new GameSettings(instance.playerData.SFXVolume, instance.playerData.MusicVolume, instance.playerData.AutoAttack, instance.playerData.mute, instance.playerData.distance);
 
 
-            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+            Dictionary<string, LevelObjectiveData[]> Challanges = instance.playerData.GetListOfObjectives();
             int missionsCompleted = 0;
             foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
             {
@@ -58,44 +57,47 @@ public class DataController
                 }
             }
 
-            playerData.LevelUnlocked = missionsCompleted;
+            instance.playerData.LevelUnlocked = missionsCompleted;
         }
-        else if (firstRun)
+        else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
             SaveSystem.SavePlayerData();
         }
 
         GenerateLevelObjectiveData();
-
     }
 
-    public Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
+    public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
     {
-        return playerData.ListOfLevelChallenges;
+        return instance.playerData.ListOfLevelChallenges;
     }
-    public LevelObjectiveData[] GetLevelChallegeById(string levelId)
+    public static LevelObjectiveData[] GetLevelChallegeById(string levelId)
     {
         return GetLevelObjectivesByID(levelId);
     }
 
-    public LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
+    public static LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
     {
         LevelObjectiveData[] objectives;
-        if (playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
+        if (instance.playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
         {
             return objectives;
         }
 
         return null;
     }
-    public void SetPlayerData(PlayerData playerData)
+    public static void SetPlayerData(PlayerData playerData)
     {
-        this.playerData = playerData;
+        instance.playerData = playerData;
     }
 
     public static PlayerData GetPlayerData()
     {
+        if (instance == null)
+        {
+            return new PlayerData();
+        }
         return instance.playerData;
     }
 
@@ -110,14 +112,14 @@ public class DataController
         return missionCollection;
     }
 
-    public int GetNumberOfData()
+    public static int GetNumberOfData()
     {
         return GetListOfLevelChallanges().Count;
     }
 
-    public void GenerateLevelObjectiveData()
+    public static void GenerateLevelObjectiveData()
     {
-        if (playerData.ListOfLevelChallenges.Count == 0)
+        if (instance.playerData.ListOfLevelChallenges.Count == 0)
         {
             for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length-1; i++)
             {
@@ -129,7 +131,7 @@ public class DataController
                         LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].ID, LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].Description);
                 }
 
-                playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
+                instance.playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
             }
         }
     }

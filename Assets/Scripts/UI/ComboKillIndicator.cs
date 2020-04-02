@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class ComboKillIndicator : MonoBehaviour
 {
+    private PlayerShip playerShip;
+
+
     public GameObject Window;
     public TextMeshProUGUI MultiplierText;
     public int Multiplier;
@@ -10,10 +13,30 @@ public class ComboKillIndicator : MonoBehaviour
     public Animator animator;
     private float timerCooldown = 1;
     public static ComboKillIndicator instance;
+    private void OnDestroy()
+    {
+        if (playerShip == null)
+            playerShip = PlayerManager.GetPlayer();
+
+        if (playerShip != null)
+            playerShip.PlayerShipHit -= ZeroMiltiplier;
+    }
 
     private void Start()
     {
+        SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        if(spawnEnemies != null)
+        {
+            spawnEnemies.EnemyDied = ConfirmKill;
+        }
+
         HideWindow();
+
+        if (playerShip == null)
+            playerShip = PlayerManager.GetPlayer();
+
+        if (playerShip != null)
+            playerShip.PlayerShipHit += ZeroMiltiplier;
     }
 
     public void ShowWindow()
@@ -31,7 +54,7 @@ public class ComboKillIndicator : MonoBehaviour
         return Multiplier;
     }
 
-    public void ConfirmKill()
+    public void ConfirmKill(BaseEnemy baseEnemy)
     {
         if (!PlayerPrefs.HasKey("KillMultiTut"))
         {
@@ -42,9 +65,9 @@ public class ComboKillIndicator : MonoBehaviour
         if (timerCooldown <= 0)
         {
             animator.SetTrigger("KillConfirm");
-            if (this.Multiplier < 4)
+            if (GameSession.multiplier < 4)
             {
-                this.Multiplier++;
+                GameSession.multiplier++;
             }
             ShowWindow();
             RefreshText();

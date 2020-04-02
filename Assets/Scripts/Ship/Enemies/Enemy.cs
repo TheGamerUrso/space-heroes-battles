@@ -4,5 +4,4 @@ using TheGamerUrso;
 
 public class Enemy : BaseEnemy
 {
- 
 }

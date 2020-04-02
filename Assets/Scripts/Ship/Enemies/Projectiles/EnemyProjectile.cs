@@ -1,41 +1,39 @@
 using TheGamerUrso;
+using TheGamerUrso.PoolSystem;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class EnemyProjectile : Projectile
 {
-    public Player Target;
+    public GameObject Target;
     public Vector3 TargetLastPosition;
-    private IDestroyable target;
-    private GameObject explosion;
 
-    private void FixedUpdate()
+    public bool FollowTarget;
+
+    private void OnDisable()
     {
-        Movement();
+        if (trailRenderer)
+            trailRenderer.Clear();
     }
 
+    public override void Setup(Vector3 shootDir, float dmg)
+    {
+        this.shootDir = shootDir;
+       // transform.eulerAngles = new Vector3(0, Utilities.GetAngleFromVectorFloat3D(shootDir), 0);
+        if (dmg > 0)
+            Damage = dmg;
+    }
     public override void Movement()
     {
-        if (FollowTarget)
-        {
-            // Aim bullet in player's direction.
-            rigid.MovePosition(transform.position - TargetLastPosition * speed * Time.deltaTime);
-            //  transform.position -= TargetLastPosition * speed * Time.deltaTime;
-        }
-        else
-        {
-            rigid.MovePosition(transform.position - transform.forward * speed * Time.deltaTime);
-            // transform.position -= transform.forward * speed * Time.deltaTime;
-        }
+        transform.position += shootDir * speed * Time.deltaTime;
 
-        Vector3 worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
-        Vector3 ScreenToViewpoint = Camera.main.ScreenToViewportPoint(worldToScreen);
-
-        if(transform.position.z < Constants.m_ZMin )
+ 
+        if (transform.position.z < Constants.m_ZMin)
         {
             gameObject.SetActive(false);
         }
-
     }
+
     public override void DestoryNow()
     {
         explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
@@ -48,22 +46,8 @@ public class EnemyProjectile : Projectile
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            destroyable.TakeDamage(Damage);
+            destroyable.TakeDamage(damage);
             DestoryNow();
         }
-    }
-
-    public void GetTargetLastPosition()
-    {
-        Target = GameObject.FindObjectOfType<Player>();
-        if (Target)
-        {
-            TargetLastPosition = (transform.position - Target.transform.position).normalized;
-        }
-    }
-
-    public void SetFollowTarget(bool value)
-    {
-        FollowTarget = value;
     }
 }
