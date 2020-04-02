@@ -43,7 +43,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public float delay;
 
-
+    private bool GameEnded;
     private bool BossBattleInitiated;
     public GameObject BossPrefab;
     private GameObject currentBoss;
@@ -103,7 +103,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     IEnumerator Spawn()
     {
         Debug.Log("Game Started");
-        while (!BossBattleInitiated)
+        while (!GameEnded)
         {
             while (GuiManager.IsTrasnmiting())
             {
@@ -187,19 +187,20 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
                     SpawnBoss();
                 }
+
+
+                while (BossBattleInitiated)
+                {
+                    yield return new WaitForSeconds(1.0f);
+                }
             }
             else
             {
-                BossBattleInitiated = true;
+                GameEnded = true;
             }
         }
 
-        Debug.Log("Game Over");
-
-        if (!HasBoss)
-        {
-            SpawnEnded?.Invoke();
-        }
+        SpawnEnded?.Invoke();
     }
 
     private void SpawnBoss()
@@ -263,7 +264,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
         baseEnemy.EnemyDied -= EnemyDiedCallback;
         baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
-        BossDied?.Invoke(id, baseEnemy);
+
         Enemies.Remove(baseEnemy.gameObject);
         TotalEnemies--;
 
@@ -302,6 +303,9 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         {
             DropController.PickRandomDropItem(baseEnemy.transform);
         }
+        BossBattleInitiated = false;
+        GameEnded = true;
+
 
     }
 
