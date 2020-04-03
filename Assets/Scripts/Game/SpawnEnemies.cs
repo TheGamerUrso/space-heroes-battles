@@ -294,7 +294,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         //    playerShip.AddXP(baseEnemy.level);
         //}
 
-        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
+        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
 
         GameSession.Score += score;
 
@@ -340,8 +340,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         baseEnemy.EnemyDied -= EnemyDiedCallback;
         baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
 
-        GameSession.CurrentEnemyKilled++;
-        GameSession.enemyKilled++;
+
 
         Debug.Log("Enemy Got Died");
         DropController.PickRandomDropItem(baseEnemy.transform);
@@ -372,9 +371,12 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         //    playerShip.AddXP(baseEnemy.level);
         //}
 
-        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
+        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
 
+        GameSession.CurrentEnemyKilled++;
+        GameSession.enemyKilled++;
         GameSession.Score += score;
+        GameSession.Multiplier++;
 
         EnemyDied?.Invoke(baseEnemy);
 

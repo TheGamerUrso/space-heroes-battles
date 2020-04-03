@@ -88,7 +88,7 @@ public class Items : MonoBehaviour
         {
             //TODO Increase Coin Earn In Game
   
-            GameSession.counsEarnInGame++;
+            GameSession.CoinEarnInGame++;
         }
 
         if (itemData.Shield)

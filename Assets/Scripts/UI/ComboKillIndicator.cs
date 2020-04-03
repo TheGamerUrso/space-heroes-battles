@@ -5,14 +5,13 @@ public class ComboKillIndicator : MonoBehaviour
 {
     private PlayerShip playerShip;
 
-
     public GameObject Window;
     public TextMeshProUGUI MultiplierText;
-    public int Multiplier;
 
     public Animator animator;
     private float timerCooldown = 1;
     public static ComboKillIndicator instance;
+
     private void OnDestroy()
     {
         if (playerShip == null)
@@ -24,12 +23,6 @@ public class ComboKillIndicator : MonoBehaviour
 
     private void Start()
     {
-        SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
-        if(spawnEnemies != null)
-        {
-            spawnEnemies.EnemyDied = ConfirmKill;
-        }
-
         HideWindow();
 
         if (playerShip == null)
@@ -37,6 +30,9 @@ public class ComboKillIndicator : MonoBehaviour
 
         if (playerShip != null)
             playerShip.PlayerShipHit += ZeroMiltiplier;
+
+
+        GameSession.OnMultiplierChanged += OnMultiplierChanged;
     }
 
     public void ShowWindow()
@@ -49,13 +45,9 @@ public class ComboKillIndicator : MonoBehaviour
         Window.SetActive(false);
     }
 
-    public int GetMultiplier()
+    public void OnMultiplierChanged(int multiplier)
     {
-        return Multiplier;
-    }
 
-    public void ConfirmKill(BaseEnemy baseEnemy)
-    {
         if (!PlayerPrefs.HasKey("KillMultiTut"))
         {
             Tutorial.Instance.ShowTutorial(6);
@@ -65,13 +57,13 @@ public class ComboKillIndicator : MonoBehaviour
         if (timerCooldown <= 0)
         {
             animator.SetTrigger("KillConfirm");
-            if (GameSession.multiplier < 4)
-            {
-                GameSession.multiplier++;
-            }
+
             ShowWindow();
-            RefreshText();
+            RefreshText(multiplier);
         }
+
+        
+
     }
 
     public void Update()
@@ -84,14 +76,12 @@ public class ComboKillIndicator : MonoBehaviour
 
     public void ZeroMiltiplier()
     {
-        this.Multiplier = 0;
-        RefreshText();
         HideWindow();
     }
 
-    public void RefreshText()
+    public void RefreshText(int multiplier)
     {
-        MultiplierText.text = string.Format("x{0}", Multiplier);
+        MultiplierText.text = string.Format("x{0}", multiplier);
     }
 
     private void Awake()

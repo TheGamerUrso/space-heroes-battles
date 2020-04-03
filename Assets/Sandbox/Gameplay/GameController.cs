@@ -5,118 +5,6 @@ using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class GameSession
-{
-    public static bool IsGameOver;
-    public static int EnemySpawnInTotal { get; set; }
-
-    public static float score;
-    public static float Score
-    {
-        get
-        {
-            return score;
-        }
-
-        set
-        {
-            score = value; 
-        }
-    }
-
-    public static int WaveSurvived { get; set; }
-
-    private static int currentEnemyKilled;
-
-    public static int CurrentEnemyKilled
-    {
-        get
-        {
-            return currentEnemyKilled;
-        }
-
-        set
-        {
-
-            currentEnemyKilled = value;
-            PlayerData playerData = DataController.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
-            if (objectiveData != null)
-                objectiveData.UpdateProgress(currentEnemyKilled);
-        }
-    }
-   
-    public static int counsEarnInGame { get; set; }
-
-    private static int superUsed;
-    public static int SuperUsed
-    {
-
-        get
-        {
-            return superUsed;
-        }
-
-        set
-        {
-            superUsed = value;
-            PlayerData playerData = DataController.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
-            if (objectiveData != null)
-                objectiveData.UpdateProgress(superUsed);
-        }
-    }
-
-    private static bool getDamaged;
-
-    public static bool GotDamaged
-    {
-        get
-        {
-            return getDamaged;
-        }
-
-        set
-        {
-            getDamaged = value;
-            PlayerData playerData = DataController.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-            if (objectiveData != null)
-                objectiveData.UpdateProgress(1);
-        }
-    }
-
-    public static int multiplier { get; set; }
-
-    public static int enemyKilled;
-    public static int enemyEscaped;
-
-    public static void Reset()
-    {
-        IsGameOver = false;
-        EnemySpawnInTotal = 0;
-        Score = 0;
-        WaveSurvived = 0;
-        currentEnemyKilled = 0;
-        currentEnemyKilled = 0;
-        counsEarnInGame = 0;
-        superUsed = 0;
-        getDamaged = false;
-        multiplier = 0;
-
-        enemyKilled = 0;
-        enemyEscaped = 0;
-    }
-}
-
-public static class GameLevel
-{   
-    public static bool useSloMo;
-   
-    public static int LevelDifficulty { get; set; }
-    public static int EnemyKilled { get; set; }
-    public static int CoinDropInTotal { get; set; }
-}
 
 public class GameController : Singleton<GameController>
 {
@@ -244,7 +132,7 @@ public class GameController : Singleton<GameController>
         if (objectiveData != null)
             objectiveData.UpdateProgress(1);
 
-        playerData.Coins += GameSession.counsEarnInGame;
+        playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
 
 

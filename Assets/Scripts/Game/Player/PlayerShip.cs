@@ -333,6 +333,8 @@ public class PlayerShip : Ship, IDestroyable
                 invisibilityTimer = .25f;
                 CurrentHealth = CurrentHealth - dmg;
 
+                GameSession.Multiplier = 1;
+
                 PlayerShipHit?.Invoke();
 
                 if (GotHit == false)

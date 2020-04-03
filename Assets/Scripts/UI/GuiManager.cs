@@ -59,11 +59,13 @@ public class GuiManager : Singleton<GuiManager>
         if (playerShip != null)
         {
             playerShip.PickUpItem -= PickUpItem;
-            GameEventSystem.PickUpEvent -= UpdateCoinWidgetText;
         }
 
         GameController.OnGameOver -= GameOver;
         GameController.OnWin -= Win;
+
+        GameSession.OnCoinValueChanged -= UpdateCoinWidgetText;
+        GameSession.OnScoreValueChanged -= UpdateScore;
     }
 
     private void Start()
@@ -75,8 +77,12 @@ public class GuiManager : Singleton<GuiManager>
             playerShip = PlayerManager.GetPlayer();
         }
 
+
         playerShip.PickUpItem += PickUpItem;
-        GameEventSystem.PickUpEvent += UpdateCoinWidgetText;
+
+        GameSession.OnCoinValueChanged += UpdateCoinWidgetText;
+        GameSession.OnScoreValueChanged += UpdateScore;
+
 
         GameController.OnGameOver += GameOver;
         GameController.OnWin += Win;
@@ -90,8 +96,8 @@ public class GuiManager : Singleton<GuiManager>
 
     public void EnemyDiedCallback(BaseEnemy baseEnemy)
     {
-        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
-        UpdateScore(score);
+        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
+        GameSession.score = score;
         GuiManager.CreateFloatingText(string.Format("{0}", score), baseEnemy.transform.position);
     }
 
@@ -233,16 +239,14 @@ public class GuiManager : Singleton<GuiManager>
         PauseScreen.SetActive(value);
     }
 
-    public void UpdateCoinWidgetText()
+    public void UpdateCoinWidgetText(int coin)
     {
-        //TODO Update Coin Widget
-        CoinWidgetText.text = string.Format("{0}", 0);
+        CoinWidgetText.text = string.Format("{0}", coin);
     }
 
     public void UpdateScore(int score)
     {
-        //TODO Update Score
-        string scoreText = string.Format("{00:00000000}", 0);
+        string scoreText = string.Format("{00:00000000}", score);
         ScoreText.text = scoreText;
     }
 
