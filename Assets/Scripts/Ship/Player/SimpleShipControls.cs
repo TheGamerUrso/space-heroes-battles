@@ -104,6 +104,11 @@ public class SimpleShipControls : MonoBehaviour
     }
     private void Move()
     {
+        if (GameSession.IsGameOver)
+        {
+            return;
+        }
+
         if (isMoving)
         {
             if (IsEnterOrExitAnimationState())

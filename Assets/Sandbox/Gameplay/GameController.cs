@@ -234,6 +234,9 @@ public class GameController : Singleton<GameController>
     }
     IEnumerator DelayWinScreen()
     {
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        playerShip.Exit();
+
         yield return new WaitForSeconds(4.0f);
 
         PlayerData playerData = DataController.GetPlayerData();
