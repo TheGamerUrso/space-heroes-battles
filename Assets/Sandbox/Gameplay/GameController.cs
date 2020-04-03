@@ -33,6 +33,13 @@ public class GameController : Singleton<GameController>
 #endif
     }
 
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+
+        playerShip.GetComponent<PlayerShip>().PlayerShipDeath -= PlayerShipCallback;
+    }
+
 
     void Start()
     {
@@ -62,37 +69,6 @@ public class GameController : Singleton<GameController>
     {
         GameOver();
     }
-
-    //    private void BossEnemyCallback(string id, BaseEnemy bossEnemy)
-    //    {
-    //        Win();
-    //    }
-
-    //    public void ToggleSlowMo(bool value)
-    //    {
-    //        useSloMo = value;
-    //        if (value == false)
-    //        {
-    //            Time.timeScale = 1.0f;
-    //        }
-    //    }
-
-
-    //    private void Update()
-    //    {
-    //        if (!IsGameOver)
-    //        {
-    //            if (AudioManager.Instance)
-    //            {
-    //                if (AudioManager.Instance.MusicIsDone())
-    //                {
-    //                    AudioManager.PlayRandomMusic();
-    //                }
-    //            }
-    //            SlowMoEffect();
-    //        }
-    //    }
-
     public void Win()
     {
         if (!GameSession.IsGameOver)
@@ -106,9 +82,7 @@ public class GameController : Singleton<GameController>
     {
         if (GameSession.IsGameOver == false)
         {
-            GameSession.IsGameOver = true;
-
-          
+            GameSession.IsGameOver = true; 
 
             StartCoroutine(DelayGameOver());
         }
@@ -129,6 +103,7 @@ public class GameController : Singleton<GameController>
 
         PlayerData playerData = DataController.GetPlayerData();
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+       
         if (objectiveData != null)
             objectiveData.UpdateProgress(1);
 

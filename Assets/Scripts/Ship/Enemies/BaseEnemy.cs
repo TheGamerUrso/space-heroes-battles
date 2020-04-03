@@ -49,7 +49,7 @@ public class BaseEnemy : Ship
     [SerializeField] protected bool AutoEnableWeapon;
 
 
-
+    private SpawnEnemies spawnEnemies;
 
     public void EnableWeaponById(int id, bool solo = false)
     {
@@ -95,12 +95,49 @@ public class BaseEnemy : Ship
         }
     }
 
+    private void OnDisable()
+    {
+        if (spawnEnemies == null)
+        {
+            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        }
+
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.UnregisterEnemy(this);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (spawnEnemies == null)
+        {
+            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        }
+
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.UnregisterEnemy(this);
+        }
+    }
+
     public override void OnAwake()
     {
         SetStats(level);
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
+
+        if (spawnEnemies == null)
+        {
+            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        }
+
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.RegisterEnemy(this);
+        }
+
     }
 
     public override void ShipSetup()

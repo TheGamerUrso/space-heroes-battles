@@ -211,10 +211,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
         enemy.SetEnemyStats(LevelDifficulty);
 
-        enemy.EnemyEscaped = BossEscapedCallback;
-        enemy.EnemyDied += BossDiedCallback;
-        enemy.EnemyGotHit += BossGotHit;
-
         TotalEnemies++;
         Enemies.Add(currentBoss);
     }
@@ -242,10 +238,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
         enemy.SetEnemyStats(LevelDifficulty);
 
-        enemy.EnemyEscaped += EnemyEscapedCallback;
-        enemy.EnemyDied += EnemyDiedCallback;
-        enemy.EnemyGotHit += EnemyGotHitCallback;
-
         TotalEnemies--;
         Enemies.Add(enemGO);
     }
@@ -253,18 +245,10 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public void BossEscapedCallback(string id, BaseEnemy baseEnemy)
     {
         Enemies.Remove(baseEnemy.gameObject);
-        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
-        baseEnemy.EnemyDied -= EnemyDiedCallback;
-        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
-
     }
 
     public void BossDiedCallback(string id, BaseEnemy baseEnemy)
     {
-        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
-        baseEnemy.EnemyDied -= EnemyDiedCallback;
-        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
-
         Enemies.Remove(baseEnemy.gameObject);
         TotalEnemies--;
 
@@ -318,9 +302,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
     {
         baseEnemy.enemyElement.currentNumberInScene--;
-        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
-        baseEnemy.EnemyDied -= EnemyDiedCallback;
-        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
         Debug.Log("Enemy Got Escaped");
         Enemies.Remove(baseEnemy.gameObject);
         GameSession.enemyEscaped++;
@@ -336,11 +317,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
     {
         baseEnemy.enemyElement.currentNumberInScene--;
-        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
-        baseEnemy.EnemyDied -= EnemyDiedCallback;
-        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
-
-
 
         Debug.Log("Enemy Got Died");
         DropController.PickRandomDropItem(baseEnemy.transform);
@@ -381,6 +357,20 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         EnemyDied?.Invoke(baseEnemy);
 
 
+    }
+
+    public void UnregisterEnemy(BaseEnemy baseEnemy)
+    {
+        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
+        baseEnemy.EnemyDied -= EnemyDiedCallback;
+        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+    }
+
+    public void RegisterEnemy(BaseEnemy baseEnemy)
+    {
+        baseEnemy.EnemyEscaped += EnemyEscapedCallback;
+        baseEnemy.EnemyDied += EnemyDiedCallback;
+        baseEnemy.EnemyGotHit += EnemyGotHitCallback;
     }
 
 }

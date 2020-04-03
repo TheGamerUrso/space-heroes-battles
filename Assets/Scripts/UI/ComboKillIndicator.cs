@@ -4,13 +4,11 @@ using UnityEngine;
 public class ComboKillIndicator : MonoBehaviour
 {
     private PlayerShip playerShip;
-
     public GameObject Window;
     public TextMeshProUGUI MultiplierText;
 
     public Animator animator;
     private float timerCooldown = 1;
-    public static ComboKillIndicator instance;
 
     private void OnDestroy()
     {
@@ -19,6 +17,9 @@ public class ComboKillIndicator : MonoBehaviour
 
         if (playerShip != null)
             playerShip.PlayerShipHit -= ZeroMiltiplier;
+
+
+        GameSession.OnMultiplierChanged -= OnMultiplierChanged;
     }
 
     private void Start()
@@ -84,11 +85,4 @@ public class ComboKillIndicator : MonoBehaviour
         MultiplierText.text = string.Format("x{0}", multiplier);
     }
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-    }
 }
