@@ -41,6 +41,7 @@ public class BaseBossEnemy : BaseEnemy
         EnableColliders(false);
         currentWeaponActive = 1;
     }
+
     public void AddDamagablePart(IDestroyable part)
     {
         DestroyableParts.Add(part);
