@@ -22,10 +22,11 @@ public class BaseOptions : MonoBehaviour
     protected GameObject Distance_Controls;
 
     protected RectTransform rectTransform;
-    public GameObject DistanceSelectionIndicator;
     public Button ShortButton;
     public Button MidButton;
     public Button LongButton;
+    public GameObject[] select;
+
     public void OnEnable()
     {
         OnOptionEnter();
@@ -39,22 +40,17 @@ public class BaseOptions : MonoBehaviour
 
     public virtual void OnOptionEnter()
     {
-        if (rectTransform == null)
-            rectTransform = DistanceSelectionIndicator.GetComponent<RectTransform>();
-
         InitializeOptions();
         //RefreshAutoFire();
         // RefreshGlobalMute();
         UpdateDistance();
         //SaveSystem.LoadGameSettings(gameObject);
-        UpdateDistanceOptionSelection();
         UpdateAudioVolume();
     }
 
     public virtual void InitializeOptions()
     {
         InitializeAudioOptions();
-        InitializeDistanceOptions();
     }
 
     public void UpdateAudioVolume()
@@ -77,48 +73,7 @@ public class BaseOptions : MonoBehaviour
             SetSFXVolume(value);
         });
     }
-    public void InitializeDistanceOptions()
-    {
-        UpdateDistanceOptionSelection();
 
-        ShortButton.onClick.AddListener(() =>
-        {
-            rectTransform.localPosition = ShortButton.transform.localPosition;
-        });
-
-        MidButton.onClick.AddListener(() =>
-        {
-            rectTransform.localPosition = MidButton.transform.localPosition;
-        });
-
-        LongButton.onClick.AddListener(() =>
-        {
-            rectTransform.localPosition = LongButton.transform.localPosition;
-        });
-    }
-    public void UpdateDistanceOptionSelection()
-    {
-        PlayerData playerData = DataController.GetPlayerData();
-        for (int i = 0; i < Distances.Length; i++)
-        {
-            if (Distances[i] == playerData.distance)
-            {
-                if (i == 0)
-                {
-                    rectTransform.localPosition = ShortButton.transform.localPosition;
-                }
-                else if (i == 1)
-                {
-                    rectTransform.localPosition = MidButton.transform.localPosition;
-                }
-                else if (i == 2)
-                {
-                    rectTransform.localPosition = LongButton.transform.localPosition;
-                }
-            }
-        }
-
-    }
     public void SetMusicVolume(float value)
     {
         PlayerData playerData = DataController.GetPlayerData();
@@ -163,21 +118,20 @@ public class BaseOptions : MonoBehaviour
 
         RefreshAutoFire();
     }
+
     public void UpdateDistance()
     {
         PlayerData playerData = DataController.GetPlayerData();
-        var distance = playerData.distance;
-        if (distance == Distances[0])
+        for (int i = 0; i < Distances.Length; i++)
         {
-            rectTransform.localPosition = ShortButton.transform.localPosition;
-        }
-        else if (distance == Distances[1])
-        {
-            rectTransform.localPosition = MidButton.transform.localPosition;
-        }
-        else if (distance == Distances[2])
-        {
-            rectTransform.localPosition = LongButton.transform.localPosition;
+            if (Distances[i] == playerData.distance)
+            {
+                select[i].SetActive(true);
+            }
+            else
+            {
+                select[i].SetActive(false);
+            }
         }
     }
 

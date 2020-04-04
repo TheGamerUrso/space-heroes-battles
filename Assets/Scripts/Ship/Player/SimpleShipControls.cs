@@ -66,7 +66,6 @@ public class SimpleShipControls : MonoBehaviour
         plane = new Plane(Vector3.up, transform.position);
         ray = Camera.main.ScreenPointToRay(mouseInput.GetTouchPosition());
         point = 0f;
-        offspec = 0f;
         if (plane.Raycast(ray, out point))
             targetPos = new Vector3(ray.GetPoint(point).x, yMove, ray.GetPoint(point).z) + new Vector3(0, 0, offspec);
     }

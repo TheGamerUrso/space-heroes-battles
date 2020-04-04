@@ -12,6 +12,8 @@ public class PauseMenuOptionScreen : BaseOptions
     private Mission mission;
     private LevelObjectiveData[] levelObjectiveDatas;
 
+
+
     public override void InitializeOptions()
     {
         base.InitializeOptions();

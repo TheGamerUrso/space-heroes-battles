@@ -147,15 +147,21 @@ public abstract class Ship : MonoBehaviour, IDestroyable
     [SerializeField] protected GameObject ShieldEffect;
     [SerializeField] protected PoolGameObjectType ExplostionEffect;
 
+
+    private void OnDestroy()
+    {
+        OnCleanUp();
+    }
+
+    public virtual void OnCleanUp() { }
+
     private void OnEnable()
     {
         Enter();
     }
 
-    public virtual void Enter()
-    {
+    public virtual void Enter() { }
 
-    }
     private void Awake()
     {
         OnAwake();
@@ -165,6 +171,7 @@ public abstract class Ship : MonoBehaviour, IDestroyable
     {
         ShipSetup();
     }
+
 
     public abstract void ShipSetup();
     public abstract void OnAwake();

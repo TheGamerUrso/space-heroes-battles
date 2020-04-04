@@ -133,11 +133,6 @@ public class BaseEnemy : Ship
             spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
         }
 
-        if (spawnEnemies != null)
-        {
-            spawnEnemies.RegisterEnemy(this);
-        }
-
     }
 
     public override void ShipSetup()
@@ -166,11 +161,17 @@ public class BaseEnemy : Ship
     public override void Enter()
     {
         Alive = true;
+
         DisableAllWeapons();
 
         if (AutoEnableWeapon)
         {
             EnableAllWeapon();
+        }
+
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.RegisterEnemy(this);
         }
 
     }
