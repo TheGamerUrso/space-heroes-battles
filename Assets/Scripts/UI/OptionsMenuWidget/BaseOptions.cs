@@ -171,6 +171,6 @@ public class BaseOptions : MonoBehaviour
 
     public virtual void ExitAndSave()
     {
-        SaveSystem.SavePlayerData();
+        SaveSystem.SaveGame();
     }
 }

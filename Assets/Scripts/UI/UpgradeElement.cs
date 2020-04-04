@@ -33,10 +33,11 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
     public bool CheckAvailable(bool showError = false)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerShipData  playerShipData = DataController.GetPlayerData().GetCurrentPlayerShipData();
+
         if (upgradeData.MaxLevel > 0)
         {
-            if (playerData.Level >= upgradeData.LevelRequirementPerLevel[currentUpgradeIndex])
+            if (playerShipData.level >= upgradeData.LevelRequirementPerLevel[currentUpgradeIndex])
             {
                 if(showError)
                 Popup.Show(Popup.popupType.message, "Need Lv " + upgradeData.LevelRequirementPerLevel[currentUpgradeIndex].ToString());
@@ -45,7 +46,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
         }
         else if (upgradeData.MaxLevel == 0)
         {
-            if (playerData.Upgrades[(int)(upgradeData.upgradeType)-1] == 0)
+            if (playerShipData.Upgrades[(int)(upgradeData.upgradeType)-1] == 0)
             {
                 if (showError)
                     Popup.Show(Popup.popupType.message, "Cannot Upgrade Anymore");
@@ -62,10 +63,10 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
     public void Initialize()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerShipData playerShipData = DataController.GetPlayerData().GetCurrentPlayerShipData();
         if (upgradeData.MaxLevel > 0)
         {
-            currentUpgradeIndex = playerData.Upgrades[(int)(upgradeData.upgradeType)];
+            currentUpgradeIndex = playerShipData.Upgrades[(int)(upgradeData.upgradeType)];
 
             Cost = upgradeData.CostPerLevel[currentUpgradeIndex];
             NammeText.text = upgradeData.upgradeType.ToString();
@@ -81,7 +82,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
         }
         else if (upgradeData.MaxLevel == 0)
         {
-            currentUpgradeIndex = playerData.Upgrades[(int)(upgradeData.upgradeType)-1];
+            currentUpgradeIndex = playerShipData.Upgrades[(int)(upgradeData.upgradeType)-1];
             Cost = upgradeData.Cost;
             NammeText.text = upgradeData.upgradeType.ToString();
             CostText.text = string.Format("{0}", Cost);
@@ -146,19 +147,20 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
     public void RefreshUpgradeElement()
     {
         PlayerData playerData = DataController.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
         NammeText.text = upgradeData.upgradeType.ToString();
 
         if (upgradeData.MaxLevel > 0)
         {
-            currentUpgradeIndex = playerData.Upgrades[(int)(upgradeData.upgradeType)];
+            currentUpgradeIndex = playerShipData.Upgrades[(int)(upgradeData.upgradeType)];
             Cost = upgradeData.CostPerLevel[currentUpgradeIndex];
 
             progressBar.fillAmount = (float)currentUpgradeIndex / 10;
 
         }else if(upgradeData.MaxLevel == 0)
         {
-            currentUpgradeIndex = playerData.Upgrades[((int)(upgradeData.upgradeType) - 1)];
+            currentUpgradeIndex = playerShipData.Upgrades[((int)(upgradeData.upgradeType) - 1)];
             Cost = upgradeData.Cost; 
             progressBar.fillAmount = (float)currentUpgradeIndex;
         }

@@ -64,19 +64,19 @@ public class GameManager : Singleton<GameManager>
 
     private void OnApplicationQuit()
     {
-        SaveSystem.SavePlayerData();
+        SaveSystem.SaveGame();
     }
 
     protected override void OnAwake()
     {
         Debug.Log("Loading Data");
-        new DataController();
+        DataController dc = new DataController(this);
 
-        DataController.Setup();
+        dc.Setup(PlayerShips.Length);
 
         Debug.Log("Set up Players");
-        new PlayerManager();
-        PlayerManager.LoadPlayerSettings();
+        PlayerManager pm = new PlayerManager(this, dc);
+        pm.LoadPlayerSettings();
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
@@ -107,9 +107,9 @@ public class GameManager : Singleton<GameManager>
         DOTween.Init(autoKillMode, useSafeMode, logBehaviour);
 
         DontDestroyOnLoad(gameObject);
-       
+
         _instancedSystemPrefabs = new List<GameObject>();
-       
+
         InstantiateSystemPrefabs();
 
 
@@ -126,7 +126,7 @@ public class GameManager : Singleton<GameManager>
             {
                 Debug.Log("Continue");
                 SceneLoader.Instance.LoadLevel("SplashScreen");
-            }   
+            }
         }
     }
     private void Update()
@@ -134,17 +134,23 @@ public class GameManager : Singleton<GameManager>
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             PlayerData playerData = DataController.GetPlayerData();
-            playerData.currentSelectedShip = 0;
+            playerData.CurrrentSelectedShip = 0;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             PlayerData playerData = DataController.GetPlayerData();
-            playerData.currentSelectedShip = 1;
+            playerData.CurrrentSelectedShip = 1;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             PlayerData playerData = DataController.GetPlayerData();
-            playerData.currentSelectedShip = 2;
+            playerData.CurrrentSelectedShip = 2;
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.EarnXP(10);
         }
     }
     private void InstantiateSystemPrefabs()

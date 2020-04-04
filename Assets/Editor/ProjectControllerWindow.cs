@@ -67,7 +67,7 @@ public class ProjectControllerWindow : EditorWindow
             if (EditorApplication.isPlaying)
             {
                 DataController.SetPlayerData(new PlayerData());
-                SaveSystem.LoadPlayerData();
+                SaveSystem.LoadGame();
             }
         }
 
@@ -75,7 +75,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                SaveSystem.SavePlayerData();
+                SaveSystem.SaveGame();
             }
         }
         EditorGUILayout.EndVertical();

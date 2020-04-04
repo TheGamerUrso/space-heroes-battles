@@ -14,8 +14,8 @@ public class DataController
         }
     }
 
+    private GameManager gm;
     private PlayerData playerData;
-
     private GameSettings gameSettings;
 
     private static MissionCollection missionCollection;
@@ -23,16 +23,21 @@ public class DataController
 
     private bool firstRun;
 
-    public DataController()
+    public DataController(GameManager gm)
     {
-        instance = this;
+        if (instance == null)
+        {
+            this.gm = gm;
+            instance = this;
+        }
     }
 
-    public static void Setup()
+    public void Setup(int playerShips = 3)
     {
         missionCollection = JsonSystem.LoadMissions();
         LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        instance.playerData = new PlayerData();
+        instance.playerData = new PlayerData(playerShips);
+
 
         int firstRunIndex = 0;
 
@@ -43,8 +48,9 @@ public class DataController
 
         if (firstRunIndex == 1)
         {
-            SaveSystem.LoadPlayerData();
-            instance.gameSettings = new GameSettings(instance.playerData.SFXVolume, instance.playerData.MusicVolume, instance.playerData.AutoAttack, instance.playerData.mute, instance.playerData.distance);
+            SaveSystem.LoadGame();
+
+            GameSettings.Initialize(instance.playerData.SFXVolume, instance.playerData.MusicVolume, instance.playerData.AutoAttack, instance.playerData.mute, instance.playerData.distance);
 
 
             Dictionary<string, LevelObjectiveData[]> Challanges = instance.playerData.GetListOfObjectives();
@@ -62,10 +68,13 @@ public class DataController
         else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
-            SaveSystem.SavePlayerData();
+            SaveSystem.SaveGame();
         }
 
         GenerateLevelObjectiveData();
+
+
+
     }
 
     public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
@@ -121,7 +130,7 @@ public class DataController
     {
         if (instance.playerData.ListOfLevelChallenges.Count == 0)
         {
-            for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length-1; i++)
+            for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length - 1; i++)
             {
                 int size = LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length;
                 LevelObjectiveData[] objectiveListData = new LevelObjectiveData[size];

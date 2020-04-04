@@ -152,8 +152,8 @@ public class PlayerShip : Ship, IDestroyable
         SwitchWeapon(0);
 
         PlayerData playerData = DataController.GetPlayerData();
-
-        if (playerData.Upgrades[((int)UpgradeType.Shield - 1)] == 0)
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+        if (playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] == 0)
         {
             HasShield = false;
         }
@@ -571,16 +571,18 @@ public class PlayerShip : Ship, IDestroyable
         var GameControllerActivtateDistanceValue = 0;
         var GameControllerSuperTime = 0;
         var GameControllerSuperDamage = 0;
-        PlayerData playerData = DataController.GetPlayerData();
+
+        PlayerShipData playerShipData = DataController.GetPlayerData().GetCurrentPlayerShipData();
+
         if (GameManager.Instance)
         {
-            GameControllerSpeedValue = playerData.Upgrades[(int)UpgradeType.Speed];
-            GameControllerDamageValue = playerData.Upgrades[(int)UpgradeType.Damage];
-            GameControllerFireRateValue = playerData.Upgrades[(int)UpgradeType.FireRate];
-            GameControllerMagnetPowerValue = playerData.Upgrades[(int)UpgradeType.MagnetStrength];
-            GameControllerActivtateDistanceValue = playerData.Upgrades[(int)UpgradeType.MagnetDistance];
-            GameControllerSuperTime = playerData.Upgrades[(int)UpgradeType.SuperrechargeTime];
-            GameControllerSuperDamage = playerData.Upgrades[(int)UpgradeType.SuperDamage];
+            GameControllerSpeedValue = playerShipData.Upgrades[(int)UpgradeType.Speed];
+            GameControllerDamageValue = playerShipData.Upgrades[(int)UpgradeType.Damage];
+            GameControllerFireRateValue = playerShipData.Upgrades[(int)UpgradeType.FireRate];
+            GameControllerMagnetPowerValue = playerShipData.Upgrades[(int)UpgradeType.MagnetStrength];
+            GameControllerActivtateDistanceValue = playerShipData.Upgrades[(int)UpgradeType.MagnetDistance];
+            GameControllerSuperTime = playerShipData.Upgrades[(int)UpgradeType.SuperrechargeTime];
+            GameControllerSuperDamage = playerShipData.Upgrades[(int)UpgradeType.SuperDamage];
         }
 
 
@@ -647,17 +649,17 @@ public class PlayerShip : Ship, IDestroyable
 
     public void RefreshUpgradeData()
     {
-        PlayerData playerData = DataController.GetPlayerData();
-        GameControllerSpeedValue = playerData.Upgrades[(int)UpgradeType.Speed];
-        GameControllerDamageValue = playerData.Upgrades[(int)UpgradeType.Damage];
-        GameControllerFireRateValue = playerData.Upgrades[(int)UpgradeType.FireRate];
-        GameControllerMagnetPowerValue = playerData.Upgrades[(int)UpgradeType.MagnetStrength];
-        GameControllerActivtateDistanceValue = playerData.Upgrades[(int)UpgradeType.MagnetDistance];
-        GameControllerSuperTime = playerData.Upgrades[(int)UpgradeType.SuperrechargeTime];
-        GameControllerSuperDamage = playerData.Upgrades[(int)UpgradeType.SuperDamage];
+        PlayerShipData playerShipData = DataController.GetPlayerData().GetCurrentPlayerShipData();
+        GameControllerSpeedValue = playerShipData.Upgrades[(int)UpgradeType.Speed];
+        GameControllerDamageValue = playerShipData.Upgrades[(int)UpgradeType.Damage];
+        GameControllerFireRateValue = playerShipData.Upgrades[(int)UpgradeType.FireRate];
+        GameControllerMagnetPowerValue = playerShipData.Upgrades[(int)UpgradeType.MagnetStrength];
+        GameControllerActivtateDistanceValue = playerShipData.Upgrades[(int)UpgradeType.MagnetDistance];
+        GameControllerSuperTime = playerShipData.Upgrades[(int)UpgradeType.SuperrechargeTime];
+        GameControllerSuperDamage = playerShipData.Upgrades[(int)UpgradeType.SuperDamage];
 
 
-        if (playerData.Upgrades[(int)UpgradeType.ArmorUpgrade - 1] == 1)
+        if (playerShipData.Upgrades[(int)UpgradeType.ArmorUpgrade - 1] == 1)
         {
             armorUpgrade = true;
         }

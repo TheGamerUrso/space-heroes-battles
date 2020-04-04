@@ -6,12 +6,13 @@ using UnityEngine;
 
 public static class SaveSystem
 {
-    public static string playerDataPath = Application.persistentDataPath + "/playerData.dat";
+    public static string playerDataPath = Application.persistentDataPath + "/gameSave.dat";
 
     public static void Delete()
     {
         if (Directory.Exists(Application.persistentDataPath))
         {
+            PlayerPrefs.DeleteAll();
             Directory.Delete(Application.persistentDataPath, true);
         }
         else
@@ -20,29 +21,33 @@ public static class SaveSystem
         }
     }
 
-    public static void SavePlayerData()
+    public static void SaveGame()
     {
         FileStream file = new FileStream(playerDataPath, FileMode.OpenOrCreate);
-
-        try
+        GameSave gameSave = new GameSave();
+        PlayerData playerData = DataController.GetPlayerData();
+        if (playerData != null)
         {
-            BinaryFormatter formatter = new BinaryFormatter();
-            PlayerData playerData = DataController.GetPlayerData();
-            formatter.Serialize(file, playerData);
-        }
-        catch (SerializationException e)
-        {
-            Debug.LogError("There was an issue serializing this data:  " + e.Message);
-        }
-        finally
-        {
-            file.Close();
+            playerData.Save();
+            try
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(file, gameSave);
+            }
+            catch (SerializationException e)
+            {
+                Debug.LogError("There was an issue serializing this data:  " + e.Message);
+            }
+            finally
+            {
+                file.Close();
+            }
         }
     }
 
-    public static void LoadPlayerData()
+    public static void LoadGame()
     {
-        PlayerData playerData;
+        PlayerData playerData = new PlayerData();
 
         if (!File.Exists(playerDataPath))
         {
@@ -55,8 +60,8 @@ public static class SaveSystem
         try
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            playerData = (PlayerData)formatter.Deserialize(file);
-            DataController.SetPlayerData(playerData);
+            GameSave gameSave = (GameSave)formatter.Deserialize(file);
+            playerData.Load();
         }
         catch (SerializationException e)
         {

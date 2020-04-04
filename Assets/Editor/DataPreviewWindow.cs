@@ -39,10 +39,8 @@ public class DataPreviewWindow : EditorWindow
 
         //if (PlayerManager.instance)
         //    currentPlayer = PlayerManager.instance.GetPlayer();
-        PlayerData playerData = null;
-
-
-        playerData = DataController.GetPlayerData();
+        PlayerData playerData = DataController.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
 
         if (Application.isPlaying && playerData != null)
@@ -50,7 +48,7 @@ public class DataPreviewWindow : EditorWindow
 
 
             string PlayerDataText =
-                "Level : " + playerData.Level + "\n" +
+                "Level : " + playerShipData.level + "\n" +
                 "HighScore : " + playerData.HighScore + "\n" +
                 "GotHitInGame : " + playerData.GotHitInGame +
                 "AutoAttack : " + playerData.AutoAttack + "\n" +
@@ -62,14 +60,14 @@ public class DataPreviewWindow : EditorWindow
 
             GUILayout.Box(guiContent);
             GUILayout.BeginHorizontal();
-            if (playerData.Upgrades.Length > 0)
+            if (playerShipData.Upgrades.Length > 0)
             {
                 string[] values = Enum.GetNames(typeof(UpgradeType));
 
-                for (int i = 0; i < playerData.Upgrades.Length; i++)
+                for (int i = 0; i < playerShipData.Upgrades.Length; i++)
                 {
                     GUILayout.Label(values[i], EditorStyles.boldLabel, GUILayout.Width(64), GUILayout.Height(64));
-                    GUILayout.Box("" + playerData.Upgrades[i], GUILayout.Width(32), GUILayout.Height(32));
+                    GUILayout.Box("" + playerShipData.Upgrades[i], GUILayout.Width(32), GUILayout.Height(32));
                 }
             }
             GUILayout.EndVertical();

@@ -323,19 +323,18 @@ public class GuiManager : Singleton<GuiManager>
         {
             PlayerShip player = PlayerManager.GetPlayer();
             PlayerData playerData = DataController.GetPlayerData();
+            PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
-            //TODO Exit Animatin
-
-            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+            playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
 
             if (player == null)
             {
                 player = GameObject.FindObjectOfType<PlayerShip>();
             }
 
-            playerData.Level = player.level;
-            playerData.xp = player.xp;
-            playerData.xpToLevel = player.xpToLevel;
+            playerShipData.level = player.level;
+            playerShipData.xp = player.xp;
+            playerShipData.xpToLevel = player.xpToLevel;
 
             //Save Game Data
             playerData.PlayedGame = true;
@@ -416,17 +415,18 @@ public class GuiManager : Singleton<GuiManager>
         if (!ResultShowed)
         {   
             PlayerData playerData = DataController.GetPlayerData();
-            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-            playerData.Level = playerShip.level;
-            playerData.xp = playerShip.xp;
-            playerData.xpToLevel = playerShip.xpToLevel;
+            PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+            playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+            playerShipData.level = playerShip.level;
+            playerShipData.xp = playerShip.xp;
+            playerShipData.xpToLevel = playerShip.xpToLevel;
 
             //TODO Coins Earn In Game
             //TODO Enemy Killed In Game
             playerData.Coins += 0;
             playerData.TotalKills += 0;
 
-            SaveSystem.SavePlayerData();
+            SaveSystem.SaveGame();
 
 
             if (GooglePlayServicesManager.Instance)

@@ -77,8 +77,19 @@ public class ShipSelect : MonoBehaviour
     public void SelectShip(int shipID)
     {
         PlayerData playerData = DataController.GetPlayerData();
+        playerData.CurrrentSelectedShip = shipID;
 
         currentShip = shipID;
+
+        Refresh();
+    }
+
+    public void Refresh()
+    {
+        PlayerData playerData = DataController.GetPlayerData();
+
+        UISelectButton.SetActive(true);
+        UIUnlockButton.SetActive(false);
 
         foreach (GameObject item in Ships)
         {
@@ -86,10 +97,6 @@ public class ShipSelect : MonoBehaviour
         }
 
         Ships[currentShip].SetActive(true);
-
-
-        UISelectButton.SetActive(true);
-        UIUnlockButton.SetActive(false);
 
         if (playerData.UnlockedHeroes[currentShip] == 0)
         {

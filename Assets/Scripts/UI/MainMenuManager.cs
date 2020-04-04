@@ -18,7 +18,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     private int levelIndex;
     private string levelName;
 
-
+    private PlayerShipData playerShipData = new PlayerShipData();
     public void ShowProfile()
     {
 
@@ -51,6 +51,28 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
 #endif
     }
+
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+
+        PlayerData playerData = DataController.GetPlayerData();
+        playerData.OnShipSelectValueChanged -= OnShipSelectValueChanged;
+
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        playerData.OnXpValueChanged -= XpLevelChanged;
+     
+
+    }
+
+    public void OnShipSelectValueChanged(int selection)
+    {
+        PlayerData playerData = DataController.GetPlayerData();
+        playerData.currentSelectedShip = selection;
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+    }
+
     private void Start()
     {
         //version.text = "ver " + Application.version;
@@ -61,8 +83,46 @@ public class MainMenuManager : Singleton<MainMenuManager>
         playerData.PlayedGame = false;
 
         Application.targetFrameRate = 30;
+
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+        playerData.OnXpValueChanged += XpLevelChanged;
+
+        playerData.OnShipSelectValueChanged += OnShipSelectValueChanged;
+        XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
     }
 
+    public void LevelValueChanged(int lvl)
+    {
+        PlayerLevelText.text = string.Format("Level \n {0}",lvl);
+
+    }
+
+    public void XpLevelChanged(int lvl, float xp, float xpToLevel)
+    {
+        if (playerShipData.level >= playerShipData.MaxLevel)
+        {
+            PlayerLevelText.text = "" + playerShipData.level;
+            PlayerXPText.text = "Maxed";
+        }
+        else
+        {
+            PlayerLevelText.text = "" + playerShipData.level;
+
+            PlayerXPText.text = string.Format("{0}/{1}",
+             playerShipData.xp,
+                Mathf.Round(playerShipData.xpToLevel));
+        }
+
+        LevelValueChanged(lvl);
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            PlayerData playerData = DataController.GetPlayerData();
+            playerData.EarnXP(100);
+        }
+    }
     public void QuitButtonEvent()
     {
         Application.Quit();

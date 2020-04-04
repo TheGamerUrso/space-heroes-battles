@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ShipSelectElement : MonoBehaviour
 {
+    public ShipSelect shipSelect;
     public int ID;
     public ShipSelectData shipSelectData;
     public bool Locked;
@@ -17,7 +18,7 @@ public class ShipSelectElement : MonoBehaviour
     {
         Icon.sprite = shipSelectData.Icon;
         CostText.text = shipSelectData.Cost.ToString();
-        if(shipSelectData.Cost == 0)
+        if (shipSelectData.Cost == 0)
         {
             Unlock();
         }
@@ -50,16 +51,12 @@ public class ShipSelectElement : MonoBehaviour
         CostText.gameObject.SetActive(true);
     }
 
-    public void SelectShip(int shipId)
-    {
-        GameEventSystem.Call(GameEventType.ShipSelect, shipId);
-    }
-
     public void Unlock()
-    {      
+    {
         Locked = false;
         LockImage.gameObject.SetActive(Locked);
         CostText.gameObject.SetActive(false);
+
     }
 
     public void Purchase()
@@ -71,15 +68,13 @@ public class ShipSelectElement : MonoBehaviour
             {
                 Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
                 playerData.Coins -= shipSelectData.Cost;
+                playerData.UnlockedHeroes[playerData.currentSelectedShip] = 1;
                 Unlock();
             }
             else
             {
                 Popup.Show(Popup.popupType.message, "Not Enough Coins", true);
             }
-        }
-        else
-        {
         }
     }
 }

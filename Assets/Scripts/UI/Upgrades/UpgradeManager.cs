@@ -30,7 +30,7 @@ public class UpgradeManager : MonoBehaviour
 
     public void Save()
     {
-        SaveSystem.SavePlayerData();
+        SaveSystem.SaveGame();
     }
 
 }
