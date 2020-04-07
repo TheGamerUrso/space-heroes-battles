@@ -71,7 +71,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                 continue;
             }
             Debug.Log("Not Gameplay Scene active");
-            MissionCollection missionCollection = DataController.GetMissionCollection();
+            MissionCollection missionCollection = DataController.Instance.GetMissionCollection();
             Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
             LevelDifficulty = mission.Level;
 

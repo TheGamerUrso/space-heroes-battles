@@ -43,7 +43,7 @@ public class SimpleShipControls : MonoBehaviour
         targetPos = transform.position;
         rotInput = new RotateInput();
 
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = DataController.Instance.GetPlayerData();
         playerData.distanceChanged = UpdateOffset;
         offspec = playerData.distance;
 

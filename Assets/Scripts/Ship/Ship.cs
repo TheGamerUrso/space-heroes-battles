@@ -208,6 +208,8 @@ public abstract class Ship : MonoBehaviour, IDestroyable
         FireRate = shipStats.baseFireRate;
 
         Damage = Level * shipStats.baseDamage;
+
+        MaxLevel = 20;
     }
 
     public virtual void Heal(float ammount)

@@ -24,15 +24,13 @@ public static class SaveSystem
     public static void SaveGame()
     {
         FileStream file = new FileStream(playerDataPath, FileMode.OpenOrCreate);
-        GameSave gameSave = new GameSave();
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = DataController.Instance.GetPlayerData();
         if (playerData != null)
         {
-            playerData.Save();
             try
             {
                 BinaryFormatter formatter = new BinaryFormatter();
-                formatter.Serialize(file, gameSave);
+                formatter.Serialize(file, playerData);
             }
             catch (SerializationException e)
             {
@@ -52,7 +50,7 @@ public static class SaveSystem
         if (!File.Exists(playerDataPath))
         {
             playerData = new PlayerData();
-            DataController.SetPlayerData(playerData);
+            DataController.Instance.SetPlayerData(playerData);
         }
 
         FileStream file = new FileStream(playerDataPath, FileMode.Open);
@@ -60,8 +58,8 @@ public static class SaveSystem
         try
         {
             BinaryFormatter formatter = new BinaryFormatter();
-            GameSave gameSave = (GameSave)formatter.Deserialize(file);
-            playerData.Load();
+            playerData = (PlayerData)formatter.Deserialize(file);
+            DataController.Instance.SetPlayerData(playerData);
         }
         catch (SerializationException e)
         {

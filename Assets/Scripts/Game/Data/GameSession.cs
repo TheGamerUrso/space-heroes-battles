@@ -43,7 +43,7 @@
         {
 
             currentEnemyKilled = value;
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData = DataController.Instance.GetPlayerData();
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
             if (objectiveData != null)
                 objectiveData.UpdateProgress(currentEnemyKilled);
@@ -79,7 +79,7 @@
         set
         {
             superUsed = value;
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData = DataController.Instance.GetPlayerData();
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
             if (objectiveData != null)
                 objectiveData.UpdateProgress(superUsed);
@@ -98,7 +98,7 @@
         set
         {
             getDamaged = value;
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData = DataController.Instance.GetPlayerData();
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
             if (objectiveData != null)
                 objectiveData.UpdateProgress(1);

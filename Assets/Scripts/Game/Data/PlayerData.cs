@@ -9,11 +9,13 @@ public delegate void ShipSelectValueChanged(int selection);
 [Serializable]
 public class PlayerData
 {
-    public XpValueChanged OnXpValueChanged;
-    public XpValueChanged OnLevelValueChanged;
-    public DistanceChanged distanceChanged;
-    public ShipSelectValueChanged OnShipSelectValueChanged;
+    [NonSerialized] public XpValueChanged OnXpValueChanged;
+    [NonSerialized] public XpValueChanged OnLevelValueChanged;
+    [NonSerialized] public DistanceChanged distanceChanged;
+    [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
 
+
+    public float[] score;
     public float[] Score;
     public float[] HighScore;
     public int Coins;
@@ -70,7 +72,6 @@ public class PlayerData
             distanceChanged?.Invoke(distance);
         }
     }
-
     public int Level
     {
         get
@@ -202,64 +203,6 @@ public class PlayerData
         mute = GameSettings.mute;
         distance = GameSettings.distance;
     }
-
-
-    public void Load()
-    {
-        Score = GameSave.Score;
-        HighScore = GameSave.HighScore;
-
-        Coins = GameSave.Coins;
-        LevelUnlocked = GameSave.LevelUnlocked;
-        TotalMoneySpend = GameSave.TotalMoneySpend;
-        TotalSuperUsed = GameSave.TotalSuperUsed;
-        WaveSurvived = GameSave.WaveSurvived;
-        m_EnemyKilled = GameSave.m_EnemyKilled;
-        GotHitInGame = GameSave.GotHitInGame;
-        PlayedGame = GameSave.PlayedGame;
-        currentSelectedShip = GameSave.currentSelectedShip;
-        UnlockedHeroes = GameSave.UnlockedHeroes;
-
-        ListOfLevelChallenges = GameSave.ListOfLevelChallenges;
-        ListOfOnGoingObjectives = GameSave.ListOfOnGoingObjectives;
-        playerShipData = GameSave.playerShipData;
-
-        SFXVolume = GameSave.SFXVolume;
-        MusicVolume = GameSave.MusicVolume;
-        AutoAttack = GameSave.AutoAttack;
-        mute = GameSave.mute;
-        distance = GameSave.distance;
-    }
-
-    public void Save()
-    {
-        GameSave.Score = Score;
-        GameSave.HighScore = HighScore;
-
-        GameSave.Coins = Coins;
-        GameSave.LevelUnlocked = LevelUnlocked;
-        GameSave.TotalMoneySpend = TotalMoneySpend;
-        GameSave.TotalSuperUsed = TotalSuperUsed;
-        GameSave.WaveSurvived = WaveSurvived;
-        GameSave.m_EnemyKilled = m_EnemyKilled;
-        GameSave.GotHitInGame = GotHitInGame;
-        GameSave.PlayedGame = PlayedGame;
-        GameSave.currentSelectedShip = currentSelectedShip;
-        GameSave.UnlockedHeroes = UnlockedHeroes;
-
-        GameSave.ListOfLevelChallenges = ListOfLevelChallenges;
-        GameSave.ListOfOnGoingObjectives = ListOfOnGoingObjectives;
-        GameSave.playerShipData = playerShipData;
-
-
-        GameSave.SFXVolume = SFXVolume;
-        GameSave.MusicVolume = MusicVolume;
-        GameSave.AutoAttack = AutoAttack;
-        GameSave.mute = mute;
-        GameSave.distance = distance;
-
-    }
-
 
     public void SetMoneySpend(int ammount)
     {

@@ -70,12 +70,11 @@ public class GameManager : Singleton<GameManager>
     protected override void OnAwake()
     {
         Debug.Log("Loading Data");
-        DataController dc = new DataController(this);
-
-        dc.Setup(PlayerShips.Length);
+        dataController = GetComponent<DataController>();
+        dataController.Setup(this,PlayerShips.Length);
 
         Debug.Log("Set up Players");
-        PlayerManager pm = new PlayerManager(this, dc);
+        PlayerManager pm = new PlayerManager(this, dataController);
         pm.LoadPlayerSettings();
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
@@ -133,23 +132,23 @@ public class GameManager : Singleton<GameManager>
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             playerData.CurrrentSelectedShip = 0;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             playerData.CurrrentSelectedShip = 1;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             playerData.CurrrentSelectedShip = 2;
         }
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             playerData.EarnXP(10);
         }
     }

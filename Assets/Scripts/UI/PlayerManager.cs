@@ -55,7 +55,7 @@ public class PlayerManager
 
         currentPlayer.GetComponent<PlayerShip>().SetStats(level);
 
-        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(DataController.GetPlayerData());
+        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(DataController.Instance.GetPlayerData());
 
 
         return currentPlayer;

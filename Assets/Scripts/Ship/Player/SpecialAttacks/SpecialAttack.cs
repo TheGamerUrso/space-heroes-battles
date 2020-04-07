@@ -20,7 +20,7 @@ public class SpecialAttack : PlayerWeapon
 
     public void IncreaseSuperUsed()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = DataController.Instance.GetPlayerData();
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
         superUsed++;
         if (objectiveData != null)

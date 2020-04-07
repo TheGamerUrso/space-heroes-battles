@@ -18,7 +18,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
     private int levelIndex;
     private string levelName;
 
-    private PlayerShipData playerShipData = new PlayerShipData();
+    private PlayerShipData playerShipData;
+
     public void ShowProfile()
     {
 
@@ -35,7 +36,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
     }
     protected override void OnAwake()
     {
-
         base.OnAwake();
 #if UNITY_EDITOR
         for (int i = 0; i < SceneManager.sceneCount; i++)
@@ -50,24 +50,26 @@ public class MainMenuManager : Singleton<MainMenuManager>
         }
 
 #endif
+
+
+        //version.text = "ver " + Application.version;
+        GameManager.PauseTheGame(false);
+        AudioManager.PlayMusic("Menu");
+        Application.targetFrameRate = 30;
     }
 
     protected override void OnCleanup()
     {
         base.OnCleanup();
 
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         playerData.OnShipSelectValueChanged -= OnShipSelectValueChanged;
-
-        playerShipData = playerData.GetCurrentPlayerShipData();
         playerData.OnXpValueChanged -= XpLevelChanged;
-     
-
     }
 
     public void OnShipSelectValueChanged(int selection)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         playerData.currentSelectedShip = selection;
         playerShipData = playerData.GetCurrentPlayerShipData();
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
@@ -75,16 +77,13 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Start()
     {
-        //version.text = "ver " + Application.version;
-        GameManager.PauseTheGame(false);
-        AudioManager.PlayMusic("Menu");
-        PlayerData playerData = DataController.GetPlayerData();
+
+        PlayerData playerData = DataController.Instance.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
 
-        Application.targetFrameRate = 30;
 
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
         playerData.OnXpValueChanged += XpLevelChanged;
 
         playerData.OnShipSelectValueChanged += OnShipSelectValueChanged;
@@ -119,7 +118,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             playerData.EarnXP(100);
         }
     }

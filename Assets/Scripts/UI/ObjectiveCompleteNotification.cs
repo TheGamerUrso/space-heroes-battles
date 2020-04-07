@@ -31,7 +31,7 @@ public class ObjectiveCompleteNotification : MonoBehaviour
     {
         timer = delay;
         animator = GetComponent<Animator>();
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         if (playerData.ListOfOnGoingObjectives.Count > 0)
             ListOfObjectiveData = playerData.ListOfOnGoingObjectives;
         content.SetActive(false);

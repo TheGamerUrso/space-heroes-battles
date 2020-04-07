@@ -31,7 +31,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void RefreshElement()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         int coins = playerData.Coins;
         if (coins >= shipSelectData.Cost)
         {
@@ -61,7 +61,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void Purchase()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         if (Locked)
         {
             if (playerData.Coins >= shipSelectData.Cost)

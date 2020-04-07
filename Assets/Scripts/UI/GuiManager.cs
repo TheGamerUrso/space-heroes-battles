@@ -322,7 +322,7 @@ public class GuiManager : Singleton<GuiManager>
         if (!ResultShowed)
         {
             PlayerShip player = PlayerManager.GetPlayer();
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
             playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
@@ -414,7 +414,7 @@ public class GuiManager : Singleton<GuiManager>
         Time.timeScale = 1.0f;
         if (!ResultShowed)
         {   
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
             playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
             playerShipData.level = playerShip.level;

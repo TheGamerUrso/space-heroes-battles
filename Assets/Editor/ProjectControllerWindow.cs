@@ -66,7 +66,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                DataController.SetPlayerData(new PlayerData());
+                DataController.Instance.SetPlayerData(new PlayerData());
                 SaveSystem.LoadGame();
             }
         }
@@ -90,7 +90,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                PlayerData playerData = DataController.GetPlayerData();
+                PlayerData playerData =  DataController.Instance.GetPlayerData();
                 playerData.EarnXP(xpToEarn);
             }
         }
@@ -121,7 +121,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                PlayerData playerData = DataController.GetPlayerData();
+                PlayerData playerData =  DataController.Instance.GetPlayerData();
                 playerData.Coins += coinsToEarn;
             }
         }
@@ -172,8 +172,8 @@ public class ProjectControllerWindow : EditorWindow
 
         if (GUILayout.Button("Complete First Challenge"))
         {
-            PlayerData playerData = DataController.GetPlayerData();
-            MissionCollection missionCollection = DataController.GetMissionCollection();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
+            MissionCollection missionCollection = DataController.Instance.GetMissionCollection();
             Mission mission = missionCollection.GetMission(playerData.LevelUnlocked++);
 
             LevelObjectiveData[] levelObjectiveDatas = playerData.GetLevelObjectives("Level" + mission.ID);
@@ -218,7 +218,7 @@ public class ProjectControllerWindow : EditorWindow
 
     public void CompleteObjective(int index)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         if ((ObjectiveType)playerData.ListOfOnGoingObjectives[index].objectiveType == ObjectiveType.Unharmed)
         {
             playerData.PlayedGame = true;

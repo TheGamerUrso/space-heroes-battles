@@ -19,7 +19,7 @@ public class ShipSelect : MonoBehaviour
 
     public void Initialize()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
 
         foreach (GameObject item in Ships)
         {
@@ -76,7 +76,7 @@ public class ShipSelect : MonoBehaviour
 
     public void SelectShip(int shipID)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         playerData.CurrrentSelectedShip = shipID;
 
         currentShip = shipID;
@@ -86,7 +86,7 @@ public class ShipSelect : MonoBehaviour
 
     public void Refresh()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
 
         UISelectButton.SetActive(true);
         UIUnlockButton.SetActive(false);

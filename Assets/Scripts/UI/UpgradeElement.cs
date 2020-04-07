@@ -33,7 +33,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
     public bool CheckAvailable(bool showError = false)
     {
-        PlayerShipData  playerShipData = DataController.GetPlayerData().GetCurrentPlayerShipData();
+        PlayerShipData  playerShipData = DataController.Instance.GetPlayerData().GetCurrentPlayerShipData();
 
         if (upgradeData.MaxLevel > 0)
         {
@@ -63,7 +63,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
     public void Initialize()
     {
-        PlayerShipData playerShipData = DataController.GetPlayerData().GetCurrentPlayerShipData();
+        PlayerShipData playerShipData = DataController.Instance.GetPlayerData().GetCurrentPlayerShipData();
         if (upgradeData.MaxLevel > 0)
         {
             currentUpgradeIndex = playerShipData.Upgrades[(int)(upgradeData.upgradeType)];
@@ -100,7 +100,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
     {
         if (CheckAvailable(true))
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  DataController.Instance.GetPlayerData();
             AudioManager.PlaySound(null, "Click", 1);
 
 
@@ -146,7 +146,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
     public void RefreshUpgradeElement()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
         NammeText.text = upgradeData.upgradeType.ToString();

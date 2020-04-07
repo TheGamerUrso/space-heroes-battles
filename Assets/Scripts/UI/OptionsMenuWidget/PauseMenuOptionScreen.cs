@@ -19,8 +19,8 @@ public class PauseMenuOptionScreen : BaseOptions
         base.InitializeOptions();
         string levelName = "Level" + GameManager.LevelSelected;
 
-        playerData = DataController.GetPlayerData();
-        listOfMission = DataController.GetMissionCollection();
+        playerData =  DataController.Instance.GetPlayerData();
+        listOfMission = DataController.Instance.GetMissionCollection();
         mission = listOfMission.GetMission(GameManager.LevelSelected);
         MissionTitle.text = mission.Title;
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);

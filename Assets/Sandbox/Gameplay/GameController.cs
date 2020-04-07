@@ -96,22 +96,21 @@ public class GameController : Singleton<GameController>
     }
     IEnumerator DelayWinScreen()
     {
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        playerShip.Exit();
-
-        yield return new WaitForSeconds(4.0f);
-
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = DataController.Instance.GetPlayerData();
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-       
+
         if (objectiveData != null)
             objectiveData.UpdateProgress(1);
 
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
 
+        yield return new WaitForSeconds(4.0f);
 
-        playerData.Save();
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        playerShip.Exit();
+
+    
         OnWin?.Invoke(this);
     }
 

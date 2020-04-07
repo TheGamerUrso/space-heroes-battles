@@ -3,19 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class DataController
+public class DataController : Singleton<DataController>
 {
-    private static DataController instance;
-    private static DataController Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
-
     private GameManager gm;
-    private PlayerData playerData;
+    public PlayerData playerData;
     private GameSettings gameSettings;
 
     private static MissionCollection missionCollection;
@@ -23,20 +14,13 @@ public class DataController
 
     private bool firstRun;
 
-    public DataController(GameManager gm)
+    public void Setup(GameManager gm,int playerShips = 3)
     {
-        if (instance == null)
-        {
-            this.gm = gm;
-            instance = this;
-        }
-    }
+        this.gm = gm;
 
-    public void Setup(int playerShips = 3)
-    {
         missionCollection = JsonSystem.LoadMissions();
         LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        instance.playerData = new PlayerData(playerShips);
+        playerData = new PlayerData(playerShips);
 
 
         int firstRunIndex = 0;
@@ -50,10 +34,15 @@ public class DataController
         {
             SaveSystem.LoadGame();
 
-            GameSettings.Initialize(instance.playerData.SFXVolume, instance.playerData.MusicVolume, instance.playerData.AutoAttack, instance.playerData.mute, instance.playerData.distance);
+            GameSettings.Initialize(
+                playerData.SFXVolume, 
+                playerData.MusicVolume, 
+                playerData.AutoAttack, 
+                playerData.mute, 
+                playerData.distance);
 
 
-            Dictionary<string, LevelObjectiveData[]> Challanges = instance.playerData.GetListOfObjectives();
+            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
             int missionsCompleted = 0;
             foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
             {
@@ -63,7 +52,7 @@ public class DataController
                 }
             }
 
-            instance.playerData.LevelUnlocked = missionsCompleted;
+            playerData.LevelUnlocked = missionsCompleted;
         }
         else if (firstRunIndex == 0)
         {
@@ -77,58 +66,54 @@ public class DataController
 
     }
 
-    public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
+    public Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
     {
-        return instance.playerData.ListOfLevelChallenges;
+        return playerData.ListOfLevelChallenges;
     }
-    public static LevelObjectiveData[] GetLevelChallegeById(string levelId)
+    public LevelObjectiveData[] GetLevelChallegeById(string levelId)
     {
         return GetLevelObjectivesByID(levelId);
     }
 
-    public static LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
+    public LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
     {
         LevelObjectiveData[] objectives;
-        if (instance.playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
+        if (playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
         {
             return objectives;
         }
 
         return null;
     }
-    public static void SetPlayerData(PlayerData playerData)
+    public void SetPlayerData(PlayerData playerData)
     {
-        instance.playerData = playerData;
+        this.playerData = playerData;
     }
 
-    public static PlayerData GetPlayerData()
+    public PlayerData GetPlayerData()
     {
-        if (instance == null)
-        {
-            return new PlayerData();
-        }
-        return instance.playerData;
+        return playerData;
     }
 
 
-    public static Mission GetMission(int index)
+    public Mission GetMission(int index)
     {
         return missionCollection.GetMission(index);
     }
 
-    public static MissionCollection GetMissionCollection()
+    public MissionCollection GetMissionCollection()
     {
         return missionCollection;
     }
 
-    public static int GetNumberOfData()
+    public int GetNumberOfData()
     {
         return GetListOfLevelChallanges().Count;
     }
 
-    public static void GenerateLevelObjectiveData()
+    public void GenerateLevelObjectiveData()
     {
-        if (instance.playerData.ListOfLevelChallenges.Count == 0)
+        if (playerData.ListOfLevelChallenges.Count == 0)
         {
             for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length - 1; i++)
             {
@@ -140,7 +125,7 @@ public class DataController
                         LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].ID, LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].Description);
                 }
 
-                instance.playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
+                playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
             }
         }
     }

@@ -32,7 +32,7 @@ public class IntroScreen : MonoBehaviour
 
     void Start()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = DataController.Instance.GetPlayerData();
 
         for (int i = 0; i < Ships.Length; i++)
         {

@@ -12,7 +12,7 @@ public class XPBarWidget : MonoBehaviour
 
     private void Start()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  DataController.Instance.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         var Level = playerShipData.level;
         var xp = playerShipData.xp;

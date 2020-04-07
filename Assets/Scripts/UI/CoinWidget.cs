@@ -7,7 +7,7 @@ public class CoinWidget : MonoBehaviour
 
     private void Update()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = DataController.Instance.GetPlayerData();
         CoinText.text = "" + playerData.Coins;
     }
 }
