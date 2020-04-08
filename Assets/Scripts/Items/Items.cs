@@ -86,8 +86,6 @@ public class Items : MonoBehaviour
 
         if (itemData.m_RewardAmount > 0)
         {
-            //TODO Increase Coin Earn In Game
-  
             GameSession.CoinEarnInGame++;
         }
 
@@ -105,12 +103,17 @@ public class Items : MonoBehaviour
         {
             AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
         }
-        Invoke("SetGameObjectOff", 1);
+        Invoke("DestroyNow", .2f);
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawWireSphere(transform.position, magnetDistance);
+    }
+
+    public void DestroyNow()
+    {
+        gameObject.SetActive(false);
     }
 
     public void Movement()
