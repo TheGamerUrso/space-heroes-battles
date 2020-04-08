@@ -96,7 +96,7 @@ public class GameController : Singleton<GameController>
     }
     IEnumerator DelayWinScreen()
     {
-        PlayerData playerData = DataController.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
 
         if (objectiveData != null)

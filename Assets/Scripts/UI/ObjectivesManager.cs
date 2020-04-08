@@ -21,7 +21,7 @@ public class ObjectivesManager : MonoBehaviour
     public void CreateNewObjective()
     {
         ListOfAvailableObjectiveTypes = Enum.GetValues(typeof(ObjectiveType)).Cast<ObjectiveType>().ToList();
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
         for (int i = 0; i < 3; i++)
         {
@@ -86,7 +86,7 @@ public class ObjectivesManager : MonoBehaviour
 
     public void CheckObjective(object sender, ObjectiveEventArgs e)
     {
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
         ObjectiveData objectiveData = e.objectiveData;
         ListOfObjectives.Remove(objectiveData.Id);
@@ -141,7 +141,7 @@ public class ObjectivesManager : MonoBehaviour
 
     public void GenerateNewObjectives()
     {
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
         foreach (var item in playerData.ListOfOnGoingObjectives.ToList())
         {
@@ -162,7 +162,7 @@ public class ObjectivesManager : MonoBehaviour
 
     public void InitializeObjectives()
     {
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         if (playerData.ListOfOnGoingObjectives.Count > 0)
         {
             var objectiveIndex = 0;

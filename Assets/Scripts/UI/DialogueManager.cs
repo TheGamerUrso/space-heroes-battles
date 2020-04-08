@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Doozy.Engine.UI;
+using System;
 using UnityEngine;
 
 [Serializable]
@@ -14,7 +15,7 @@ public class Dialogue
 public class DialogueManager : MonoBehaviour
 {
     public static DialogueManager Instance;
-    public ConversationWidget ConversationWidget;
+    public UIView ConversationWidget;
     private int currentMission;
 
     private void Awake()
@@ -24,16 +25,16 @@ public class DialogueManager : MonoBehaviour
 
     public void Open()
     {
-        Mission mission = DataController.Instance.GetMission(currentMission);
-        ConversationWidget.SetStory(mission.Description);
-        ConversationWidget.gameObject.SetActive(true);
+   
+        Mission mission = GameManager.Instance.GetMission(currentMission);
+        ConversationWidget.GetComponent<ConversationWidget>().SetStory(mission.Description);
 
-
+        ConversationWidget.Show();
     }
 
     public void Close()
     {
-        ConversationWidget.gameObject.SetActive(false);
+        ConversationWidget.Hide();
     }
 
     public bool StoryWindowIsOpen()

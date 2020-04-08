@@ -16,7 +16,7 @@ public class SimpleShipControls : MonoBehaviour
 
     private Plane plane;
     private Ray ray;
-    private Vector3 offspec;
+    public Vector3 offspec;
 
     private Touch currentTouch;
     private Vector2 currentTouchPos;
@@ -26,19 +26,20 @@ public class SimpleShipControls : MonoBehaviour
     public float sensitivityScale = .1f;
 
     private Vector3 direction;
-    public float distance;
-
 
 
     public void Start()
     {
         targetPos = transform.position;
 
-        PlayerData playerData = DataController.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+
         playerData.distanceChanged = UpdateOffset;
-        offspec = new Vector3(0, 0, playerData.distance);
+
+        offspec = new Vector3(0, 0, playerData.Distance);
 
         plane = new Plane(Vector3.up, transform.position);
+
     }
 
     public void UpdateOffset(float ammount)
@@ -94,9 +95,6 @@ public class SimpleShipControls : MonoBehaviour
 
     private void Move()
     {
-        Debug.DrawRay(this.transform.position, direction, Color.red);
-
-
         //Vector3 initPos = Vector3.zero;
 
         //if (Input.GetMouseButtonDown(0))
@@ -113,7 +111,7 @@ public class SimpleShipControls : MonoBehaviour
 
         if (direction.magnitude > .1f)
         {
-            transform.Translate(direction * Speed * movementSensitivity * Time.deltaTime, Space.World);
+            transform.Translate((direction + offspec) * Speed * movementSensitivity * Time.deltaTime, Space.World);
         }
 
 
@@ -122,7 +120,6 @@ public class SimpleShipControls : MonoBehaviour
     private void Update()
     {
         direction = targetPos - transform.position;
-        distance = direction.magnitude;
 
         if (direction.magnitude >= .1f)
         {
@@ -134,12 +131,36 @@ public class SimpleShipControls : MonoBehaviour
         }
 
         movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
-
-        Debug.Log(Input.GetAxis("Mouse X"));
-        if (Input.GetMouseButton(0))
+   
+        if ((Input.touchCount > 0 || Input.GetMouseButton(0))&& !IsMouseOverUI())
         {
             SetTargetPosition();
             Rotate();
+        }
+    }
+    public static bool IsMouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }
+
+    private void LateUpdate()
+    {
+        Move();
+    }
+
+    public void Rotate()
+    {
+        var rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
+
+        if (rotVelocity > .1f || rotVelocity < -.1f)
+        {
+            Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
+            ShipModel.transform.localEulerAngles = new Vector3(
+                targetEulerAngels.x
+              , targetEulerAngels.y,
+                Mathf.LerpAngle(
+                  targetEulerAngels.z,
+             rotVelocity, .1f));
         }
         else
         {
@@ -150,20 +171,6 @@ public class SimpleShipControls : MonoBehaviour
               , targetEulerAngels.y,
                     Mathf.LerpAngle(targetEulerAngels.z, 0, .1f));
         }
-    }
-
-    private void LateUpdate()
-    {
-        Move();
-    }
-
-    public void Rotate()
-    {
-        Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
-        ShipModel.transform.localEulerAngles = new Vector3(targetEulerAngels.x
-          , targetEulerAngels.y, Mathf.LerpAngle(
-              targetEulerAngels.z,
-          -Input.GetAxisRaw("Mouse X") * tilt, .2f));
     }
 
     public bool CheckIfTouchIsOverUI(Touch touch)
@@ -224,7 +231,7 @@ public class SimpleShipControls : MonoBehaviour
     {
         targetPos = transform.position;
 
-        PlayerData playerData = DataController.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         playerData.distanceChanged = UpdateOffset;
         offspec = playerData.distance;
 

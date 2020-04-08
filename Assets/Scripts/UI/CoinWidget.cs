@@ -5,9 +5,9 @@ public class CoinWidget : MonoBehaviour
 {
     public TextMeshProUGUI CoinText;
 
-    private void Update()
+    private void LateUpdatae()
     {
-        PlayerData playerData = DataController.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         CoinText.text = "" + playerData.Coins;
     }
 }

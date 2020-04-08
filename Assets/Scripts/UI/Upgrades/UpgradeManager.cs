@@ -23,7 +23,7 @@ public class UpgradeManager : MonoBehaviour
 
     public void Refresh(UpgradeElement upgradeElement)
     {
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         playerData.SetUpgrade(upgradeElement);
         RefreshUpgrades();
     }

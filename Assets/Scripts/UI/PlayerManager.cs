@@ -16,7 +16,7 @@ public class PlayerManager
     private static PlayerShipElement[] listOfPlayerShips;
 
 
-    public PlayerManager(GameManager gm,DataController dc)
+    public PlayerManager(GameManager gm,GameManager dc)
     {
         if (instance == null)
         {
@@ -28,7 +28,7 @@ public class PlayerManager
     }
 
     private GameManager gm;
-    private DataController dc;
+    private GameManager dc;
 
     public static GameObject CreatePlayer(int id)
     {
@@ -55,7 +55,7 @@ public class PlayerManager
 
         currentPlayer.GetComponent<PlayerShip>().SetStats(level);
 
-        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(DataController.Instance.GetPlayerData());
+        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(GameManager.Instance.GetPlayerData());
 
 
         return currentPlayer;

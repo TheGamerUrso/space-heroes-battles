@@ -48,19 +48,18 @@ public class GameManager : Singleton<GameManager>
     public bool useSafeMode;
     public LogBehaviour logBehaviour;
 
-    private PlayerManager playerManager;
-    private DataController dataController;
+
+    public PlayerData playerData;
+    private GameSettings gameSettings;
+
+
+    private static MissionCollection missionCollection;
+    private static LevelObjectiveCollection LevelObjectiveCollection;
 
     public PlayerShipElement[] ListOfPlayerShips()
     {
         return PlayerShips;
     }
-
-    public static bool IsMouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
-    }
-
 
     private void OnApplicationQuit()
     {
@@ -70,11 +69,10 @@ public class GameManager : Singleton<GameManager>
     protected override void OnAwake()
     {
         Debug.Log("Loading Data");
-        dataController = GetComponent<DataController>();
-        dataController.Setup(this,PlayerShips.Length);
+        Setup(PlayerShips.Length);
 
         Debug.Log("Set up Players");
-        PlayerManager pm = new PlayerManager(this, dataController);
+        PlayerManager pm = new PlayerManager(this, GameManager.Instance);
         pm.LoadPlayerSettings();
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
@@ -93,7 +91,7 @@ public class GameManager : Singleton<GameManager>
     {
         base.OnCleanup();
 
-        //DataController.SavePlayerData();
+        //GameManager.SavePlayerData();
     }
 
     public void ShowLevelup()
@@ -114,41 +112,37 @@ public class GameManager : Singleton<GameManager>
 
         OnLoadDataCompleted?.Invoke();
 
-        for (int i = 0; i < SceneManager.sceneCount; i++)
+        if (SceneManager.sceneCount > 1)
         {
-            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
-            {
-                Debug.Log("boot found skip");
-            }
-
-            if (SceneManager.sceneCount <= 1)
-            {
-                Debug.Log("Continue");
-                SceneLoader.Instance.LoadLevel("SplashScreen");
-            }
+            Debug.Log("boot found skip");
+        }
+        else if (SceneManager.sceneCount <= 1)
+        {
+            Debug.Log("Continue");
+            SceneLoader.Instance.LoadLevel("SplashScreen");
         }
     }
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            PlayerData playerData =  DataController.Instance.GetPlayerData();
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
             playerData.CurrrentSelectedShip = 0;
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            PlayerData playerData =  DataController.Instance.GetPlayerData();
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
             playerData.CurrrentSelectedShip = 1;
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            PlayerData playerData =  DataController.Instance.GetPlayerData();
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
             playerData.CurrrentSelectedShip = 2;
         }
 
         if (Input.GetKeyDown(KeyCode.T))
         {
-            PlayerData playerData =  DataController.Instance.GetPlayerData();
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
             playerData.EarnXP(10);
         }
     }
@@ -174,6 +168,118 @@ public class GameManager : Singleton<GameManager>
             Time.timeScale = 1;
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
             Paused = false;
+        }
+    }
+
+
+    public void Setup(int playerShips = 3)
+    {
+        missionCollection = JsonSystem.LoadMissions();
+        LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
+        playerData = new PlayerData(playerShips);
+
+
+        int firstRunIndex = 0;
+
+        if (PlayerPrefs.HasKey("FirstRun"))
+        {
+            firstRunIndex = PlayerPrefs.GetInt("FirstRun");
+        }
+
+        if (firstRunIndex == 1)
+        {
+            SaveSystem.LoadGame();
+
+            GameSettings.Initialize(
+                playerData.SFXVolume,
+                playerData.MusicVolume,
+                playerData.AutoAttack,
+                playerData.mute,
+                playerData.distance);
+
+
+            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+            int missionsCompleted = 0;
+            foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+            {
+                if (item.Value[0].completed == true)
+                {
+                    missionsCompleted++;
+                }
+            }
+
+            playerData.LevelUnlocked = missionsCompleted;
+        }
+        else if (firstRunIndex == 0)
+        {
+            PlayerPrefs.SetInt("FirstRun", 1);
+            SaveSystem.SaveGame();
+        }
+
+        GenerateLevelObjectiveData();
+    }
+
+    public Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
+    {
+        return playerData.ListOfLevelChallenges;
+    }
+    public LevelObjectiveData[] GetLevelChallegeById(string levelId)
+    {
+        return GetLevelObjectivesByID(levelId);
+    }
+
+    public LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
+    {
+        LevelObjectiveData[] objectives;
+        if (playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
+        {
+            return objectives;
+        }
+
+        return null;
+    }
+    public void SetPlayerData(PlayerData playerData)
+    {
+        this.playerData = playerData;
+    }
+
+    public PlayerData GetPlayerData()
+    {
+        return playerData;
+    }
+
+
+    public Mission GetMission(int index)
+    {
+        return missionCollection.GetMission(index);
+    }
+
+    public MissionCollection GetMissionCollection()
+    {
+        return missionCollection;
+    }
+
+    public int GetNumberOfData()
+    {
+        return GetListOfLevelChallanges().Count;
+    }
+
+    public void GenerateLevelObjectiveData()
+    {
+        if (playerData.ListOfLevelChallenges.Count == 0)
+        {
+            for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length - 1; i++)
+            {
+                int size = LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length;
+                LevelObjectiveData[] objectiveListData = new LevelObjectiveData[size];
+                for (int x = 0; x < LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length; x++)
+                {
+                    objectiveListData[x] = new LevelObjectiveData(
+                        LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].ID, LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].Description);
+                }
+
+                playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
+            }
         }
     }
 }

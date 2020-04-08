@@ -38,7 +38,7 @@ public class GameOverWidget : MonoBehaviour
     private void OnEnable()
     {
         PlayerShip player = PlayerManager.GetPlayer();
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
         UpdateScore();
 
@@ -47,7 +47,7 @@ public class GameOverWidget : MonoBehaviour
         //TODO CoinsDropInTotal * .9f;
 
         //Get Level Data
-        missionCollection = DataController.Instance.GetMissionCollection();
+        missionCollection = GameManager.Instance.GetMissionCollection();
         mission = missionCollection.GetMission(GameManager.LevelSelected);
 
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);

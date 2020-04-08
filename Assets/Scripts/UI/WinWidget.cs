@@ -36,12 +36,12 @@ public class WinWidget : MonoBehaviour
         //TODO CoinsDropInTotal * .9f;
 
         player = PlayerManager.GetPlayer();
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
         playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
 
-        missionCollection = DataController.Instance.GetMissionCollection();
+        missionCollection = GameManager.Instance.GetMissionCollection();
         mission = missionCollection.GetMission(GameManager.LevelSelected);
 
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);

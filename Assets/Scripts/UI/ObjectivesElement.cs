@@ -61,7 +61,7 @@ public class ObjectivesElement : MonoBehaviour
 
         if (!objectiveData.claimed && objectiveData.completed)
         {
-            PlayerData playerData =  DataController.Instance.GetPlayerData();
+            PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
             switch ((ObjectiveType)objectiveData.objectiveType)
             {

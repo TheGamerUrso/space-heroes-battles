@@ -151,7 +151,7 @@ public class PlayerShip : Ship, IDestroyable
 
         SwitchWeapon(0);
 
-        PlayerData playerData = DataController.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
         if (playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] == 0)
         {
@@ -338,7 +338,7 @@ public class PlayerShip : Ship, IDestroyable
 
                 if (GotHit == false)
                 {
-                    PlayerData playerData = DataController.Instance.GetPlayerData();
+                    PlayerData playerData = GameManager.Instance.GetPlayerData();
                     ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
                     if (objectiveData != null)
                         objectiveData.UpdateProgress(0);
@@ -570,7 +570,7 @@ public class PlayerShip : Ship, IDestroyable
         var GameControllerActivtateDistanceValue = 0;
         var GameControllerSuperTime = 0;
         var GameControllerSuperDamage = 0;
-        PlayerData playerData = DataController.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
         if (GameManager.Instance)
@@ -648,7 +648,7 @@ public class PlayerShip : Ship, IDestroyable
 
     public void RefreshUpgradeData()
     {
-        PlayerShipData playerShipData = DataController.Instance.GetPlayerData().GetCurrentPlayerShipData();
+        PlayerShipData playerShipData = GameManager.Instance.GetPlayerData().GetCurrentPlayerShipData();
         GameControllerSpeedValue = playerShipData.Upgrades[(int)UpgradeType.Speed];
         GameControllerDamageValue = playerShipData.Upgrades[(int)UpgradeType.Damage];
         GameControllerFireRateValue = playerShipData.Upgrades[(int)UpgradeType.FireRate];

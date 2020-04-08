@@ -37,24 +37,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
     protected override void OnAwake()
     {
         base.OnAwake();
-#if UNITY_EDITOR
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
-            {
-                Debug.Log("boot found skip");
-                return;
-            }
-            Debug.Log("Boot not found Loading");
-            SceneManager.LoadScene("boot", LoadSceneMode.Additive);
-        }
-
-#endif
-
-
         //version.text = "ver " + Application.version;
-        GameManager.PauseTheGame(false);
-        AudioManager.PlayMusic("Menu");
+        //GameManager.PauseTheGame(false);
+        //AudioManager.PlayMusic("Menu");
         Application.targetFrameRate = 30;
     }
 
@@ -62,14 +47,14 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         base.OnCleanup();
 
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         playerData.OnShipSelectValueChanged -= OnShipSelectValueChanged;
         playerData.OnXpValueChanged -= XpLevelChanged;
     }
 
     public void OnShipSelectValueChanged(int selection)
     {
-        PlayerData playerData =  DataController.Instance.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         playerData.currentSelectedShip = selection;
         playerShipData = playerData.GetCurrentPlayerShipData();
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
@@ -77,8 +62,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Start()
     {
-
-        PlayerData playerData = DataController.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
 
@@ -118,7 +102,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            PlayerData playerData =  DataController.Instance.GetPlayerData();
+            PlayerData playerData =  GameManager.Instance.GetPlayerData();
             playerData.EarnXP(100);
         }
     }
