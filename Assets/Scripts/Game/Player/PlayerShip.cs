@@ -164,7 +164,6 @@ public class PlayerShip : Ship, IDestroyable
 
         ShieldEffect.SetActive(HasShield);
 
-        shipController.Speed = Speed;
     }
 
     private void Update()

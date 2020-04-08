@@ -35,9 +35,7 @@ namespace TheGamerUrso
             public GameObject Content;
 
             public string currentLevelLoaded;
-            public AudioClip appearSFX;
-            public AudioClip disapearSFX;
-            public AudioSource audioSouce;
+
             protected override void OnAwake()
             {
                 base.OnAwake();
@@ -173,7 +171,6 @@ namespace TheGamerUrso
             {
                 if (animator)
                 {
-                    audioSouce.PlayOneShot(disapearSFX);
                     animator.ResetTrigger("Open");
                     animator.SetTrigger("Close");
                 }
@@ -185,7 +182,6 @@ namespace TheGamerUrso
             {
                 if (animator)
                 {
-                    audioSouce.PlayOneShot(appearSFX);
                     animator.ResetTrigger("Close");
                     animator.SetTrigger("Open");
                 }
