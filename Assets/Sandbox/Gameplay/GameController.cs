@@ -51,7 +51,7 @@ public class GameController : Singleton<GameController>
 
         if (PlayerManager.GetPlayer() == null)
         {
-            int shipSelected = GameManager.CurrentHeroChoosen;
+            int shipSelected = GameManager.Instance.GetPlayerData().currentSelectedShip;
             playerShip = PlayerManager.CreatePlayer(shipSelected);
         }
 

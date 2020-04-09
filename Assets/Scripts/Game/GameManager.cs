@@ -28,7 +28,7 @@ public class GameManager : Singleton<GameManager>
     public static int coinDropInTotal;
     public static int score;
     public static int MaxLevelUnlocked = 5;
-    public static int CurrentHeroChoosen;
+
 
     [Range(0, 20)]
     public int LevelDifficuilty;
@@ -79,12 +79,6 @@ public class GameManager : Singleton<GameManager>
 
         GameEventSystem.PlayerLeveledUp += ShowLevelup;
 
-        GameEventSystem.OnShipSelect += ShipSelected;
-    }
-
-    public void ShipSelected(int shipSelected)
-    {
-        CurrentHeroChoosen = shipSelected;
     }
 
     protected override void OnCleanup()
@@ -196,7 +190,6 @@ public class GameManager : Singleton<GameManager>
                 playerData.AutoAttack,
                 playerData.mute,
                 playerData.distance);
-
 
             Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
             int missionsCompleted = 0;
