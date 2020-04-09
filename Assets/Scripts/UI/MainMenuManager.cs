@@ -38,8 +38,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         base.OnAwake();
         //version.text = "ver " + Application.version;
-        //GameManager.PauseTheGame(false);
-        //AudioManager.PlayMusic("Menu");
+        GameManager.PauseTheGame(false);
+        AudioManager.PlayMusic("Menu");
         Application.targetFrameRate = 30;
     }
 

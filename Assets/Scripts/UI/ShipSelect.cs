@@ -9,6 +9,7 @@ public class ShipEventArgs : System.EventArgs
 
 public class ShipSelect : MonoBehaviour
 {
+    public Camera shipCameraPreview;
     public GameObject[] Ships;
     private int currentShip;
     public ShipSelectElement[] shipSelectElement;
@@ -16,15 +17,18 @@ public class ShipSelect : MonoBehaviour
     public GameObject UIUnlockButton;
     public GameObject UISelectButton;
 
+    public LayerMask Ship1Layermask;
+    public LayerMask Ship2Layermask;
+    public LayerMask Ship3Layermask;
 
     public void Initialize()
     {
         PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
-        foreach (GameObject item in Ships)
-        {
-            item.SetActive(false);
-        }
+        //foreach (GameObject item in Ships)
+        //{
+        //    item.SetActive(false);
+        //}
 
         if (playerData.UnlockedHeroes.Length == 0)
         {
@@ -61,7 +65,9 @@ public class ShipSelect : MonoBehaviour
 
         GameEventSystem.OnShipSelect += SelectShip;
 
-        SelectShip(0);
+        playerData.CurrrentSelectedShip = currentShip;
+
+        SelectShip(playerData.CurrrentSelectedShip);
     }
 
     private void Start()
@@ -75,28 +81,41 @@ public class ShipSelect : MonoBehaviour
     }
 
     public void SelectShip(int shipID)
-    {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
-        playerData.CurrrentSelectedShip = shipID;
-
+    {    
         currentShip = shipID;
+     
 
         Refresh();
     }
 
     public void Refresh()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
-
         UISelectButton.SetActive(true);
         UIUnlockButton.SetActive(false);
 
-        foreach (GameObject item in Ships)
+       // foreach (GameObject item in Ships)
+       // {
+      //      item.SetActive(false);
+      //  }
+
+        if (currentShip == 0)
         {
-            item.SetActive(false);
+            shipCameraPreview.cullingMask = Ship1Layermask;
+        }
+        else if (currentShip == 1)
+        {
+            shipCameraPreview.cullingMask = Ship2Layermask;
+        }
+        else if(currentShip == 2)
+        {
+            shipCameraPreview.cullingMask = Ship3Layermask;
         }
 
-        Ships[currentShip].SetActive(true);
+
+        //   Ships[currentShip].SetActive(true);
+
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        playerData.CurrrentSelectedShip = currentShip;
 
         if (playerData.UnlockedHeroes[currentShip] == 0)
         {
@@ -111,6 +130,6 @@ public class ShipSelect : MonoBehaviour
 
     public void DoneSelect()
     {
-        gameObject.SetActive(false);
+        ScreenManager.Instance.Close();
     }
 }

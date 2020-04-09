@@ -31,8 +31,16 @@ public class ShipSelectElement : MonoBehaviour
 
     public void RefreshElement()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+
+        if (playerData.UnlockedHeroes[0] > 0)
+        {
+            CostText.gameObject.SetActive(false);
+            return;
+        }
+
         int coins = playerData.Coins;
+
         if (coins >= shipSelectData.Cost)
         {
             CostText.color = Color.green;
@@ -41,6 +49,7 @@ public class ShipSelectElement : MonoBehaviour
         {
             CostText.color = Color.red;
         }
+        CostText.text = "" + shipSelectData.Cost;
     }
 
 
@@ -61,7 +70,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void Purchase()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         if (Locked)
         {
             if (playerData.Coins >= shipSelectData.Cost)

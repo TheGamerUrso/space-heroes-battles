@@ -22,6 +22,7 @@ public class SimpleShipControls : MonoBehaviour
     private Vector2 currentTouchPos;
 
     private float yMove = -50;
+
     public float movementSensitivity = .1f;
     public float sensitivityScale = .1f;
 
@@ -132,7 +133,7 @@ public class SimpleShipControls : MonoBehaviour
 
         movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
    
-        if ((Input.touchCount > 0 || Input.GetMouseButton(0))&& !IsMouseOverUI())
+        if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
         {
             SetTargetPosition();
             Rotate();
