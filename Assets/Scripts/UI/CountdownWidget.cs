@@ -17,7 +17,7 @@ public class CountdownWidget : SystemMessageWidget
 
 	void Update () {
 
-		if (m_Canvas.activeSelf) {
+		if (uiView.isActiveAndEnabled) {
 			m_Size += m_Speed * Time.deltaTime;
 			m_Countdown.transform.localScale = new Vector3 (m_Size, m_Size, m_Size);
         }

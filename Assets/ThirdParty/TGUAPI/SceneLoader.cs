@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Doozy.Engine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,11 +31,15 @@ namespace TheGamerUrso
             private Animator animator;
             public Image progressBar;
 
-            public Image BlockRaycast;
+            public CanvasGroup BlockRaycast;
             public GameObject ProgressBarPanel;
             public GameObject Content;
 
             public string currentLevelLoaded;
+
+            public UIView LoadingScreen;
+
+            public GateControl[] Gates;
 
             protected override void OnAwake()
             {
@@ -52,14 +57,11 @@ namespace TheGamerUrso
             }
             public void ResetLevel()
             {
-                BlockRaycast.enabled = true;
-
                 StartCoroutine(ShowLoadingScreen(SceneManager.GetActiveScene().name));
             }
 
             public void LoadScene(string level)
             {
-                BlockRaycast.enabled = true;
                 StartCoroutine(ShowLoadingScreen(level));
             }
 
@@ -160,33 +162,27 @@ namespace TheGamerUrso
 
             private IEnumerator ShowLoadingScreen(string level)
             {
-                ShowProgressBar();
-
+                Show();
                 yield return new WaitForSeconds(2.0f);
-
                 StartCoroutine(LoadSceneAsync(level));
             }
 
-            private void ShowProgressBar()
+            private void Show()
             {
-                if (animator)
+                BlockRaycast.blocksRaycasts = true;
+                foreach (GateControl gate in Gates)
                 {
-                    animator.ResetTrigger("Open");
-                    animator.SetTrigger("Close");
+                    gate.CloseGate();
                 }
-                Content.gameObject.SetActive(true);
-                ProgressBarPanel.SetActive(true);
             }
 
             private void Hide()
             {
-                if (animator)
+                BlockRaycast.blocksRaycasts = false;
+                foreach (GateControl gate in Gates)
                 {
-                    animator.ResetTrigger("Close");
-                    animator.SetTrigger("Open");
+                    gate.OpenGate();
                 }
-                Content.gameObject.SetActive(false);
-                BlockRaycast.enabled = false;
             }
         }
     }

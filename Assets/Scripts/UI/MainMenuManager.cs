@@ -76,7 +76,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     public void LevelValueChanged(int lvl)
     {
-        PlayerLevelText.text = string.Format("Level \n {0}",lvl);
+        PlayerLevelText.text = string.Format("{0}",lvl);
 
     }
 

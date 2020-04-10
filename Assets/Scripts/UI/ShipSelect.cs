@@ -73,6 +73,7 @@ public class ShipSelect : MonoBehaviour
     private void Start()
     {
         Initialize();
+        Refresh();
     }
 
     public void Unlock()
