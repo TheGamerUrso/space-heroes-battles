@@ -169,6 +169,7 @@ namespace TheGamerUrso
 
             private void Show()
             {
+                Content.SetActive(true);
                 BlockRaycast.blocksRaycasts = true;
                 foreach (GateControl gate in Gates)
                 {
@@ -178,6 +179,7 @@ namespace TheGamerUrso
 
             private void Hide()
             {
+                Content.SetActive(false);
                 BlockRaycast.blocksRaycasts = false;
                 foreach (GateControl gate in Gates)
                 {

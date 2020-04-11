@@ -56,7 +56,7 @@ LightmapSettings:
   m_LightmapEditorSettings:
     serializedVersion: 12
     m_Resolution: 2
-    m_BakeResolution: 20
+    m_BakeResolution: 6
     m_AtlasSize: 128
     m_AO: 0
     m_AOMaxDistance: 1
@@ -64,8 +64,9 @@ LightmapSettings:
     m_CompAOExponentDirect: 0
     m_ExtractAmbientOcclusion: 0
     m_Padding: 2
-    m_LightmapParameters: {fileID: 0}
-    m_LightmapsBakeMode: 1
+    m_LightmapParameters: {fileID: 15203, guid: 0000000000000000f000000000000000,
+      type: 0}
+    m_LightmapsBakeMode: 0
     m_TextureCompression: 1
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
@@ -74,12 +75,12 @@ LightmapSettings:
     m_MixedBakeMode: 2
     m_BakeBackend: 1
     m_PVRSampling: 1
-    m_PVRDirectSampleCount: 24
+    m_PVRDirectSampleCount: 16
     m_PVRSampleCount: 128
     m_PVRBounces: 0
-    m_PVREnvironmentSampleCount: 42
+    m_PVREnvironmentSampleCount: 128
     m_PVREnvironmentReferencePointCount: 2048
-    m_PVRFilteringMode: 0
+    m_PVRFilteringMode: 1
     m_PVRDenoiserTypeDirect: 1
     m_PVRDenoiserTypeIndirect: 1
     m_PVRDenoiserTypeAO: 1
@@ -636,7 +637,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 781889039963423563}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
@@ -8388,7 +8389,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 509.5151, y: 0}
+  m_AnchoredPosition: {x: 508.77133, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &614805098
@@ -8901,6 +8902,7 @@ GameObject:
   - component: {fileID: 688702058}
   - component: {fileID: 688702057}
   - component: {fileID: 688702056}
+  - component: {fileID: 688702059}
   m_Layer: 0
   m_Name: MainCamera
   m_TagString: MainCamera
@@ -8973,6 +8975,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 60, y: 0, z: 0}
+--- !u!114 &688702059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 688702055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff26db721962cdf4a8edcdfa9a767d2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  profile: {fileID: 11400000, guid: 02929737baf41bf46957fc01db4fd3f5, type: 2}
 --- !u!1 &849558115
 GameObject:
   m_ObjectHideFlags: 0
@@ -15834,7 +15849,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 501.0151, y: 0}
+  m_AnchoredPosition: {x: 500.27133, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2117471621154879995
@@ -25725,7 +25740,7 @@ PrefabInstance:
     - target: {fileID: 4046137001571571649, guid: 0c622863e84e96241941f05743c00246,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 484.5151
+      value: 483.77133
       objectReference: {fileID: 0}
     - target: {fileID: 4046137001571571649, guid: 0c622863e84e96241941f05743c00246,
         type: 3}
@@ -36474,7 +36489,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 3895766557983815307}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.47887588
+  m_Size: 0.4793453
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -41484,7 +41499,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 7538900136240633159}
   m_HandleRect: {fileID: 2322125905515465252}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:

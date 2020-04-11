@@ -446,7 +446,7 @@ public class GuiManager : Singleton<GuiManager>
     {
 
         PlayerHUD.gameObject.SetActive(false);
-        AudioManager.PlayMusic("GameOver", false);
+
 
 
         yield return new WaitForSeconds(2.0f);
@@ -456,9 +456,8 @@ public class GuiManager : Singleton<GuiManager>
 
     public IEnumerator WinCoroutine()
     {
-        PlayerHUD.gameObject.SetActive(false);
-        yield return new WaitForSeconds(2.0f);
         AudioManager.PlayMusic("Victory", false);
+        PlayerHUD.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2.0f);
 

@@ -648,7 +648,14 @@ public class PlayerShip : Ship, IDestroyable
 
     public void RefreshUpgradeData()
     {
-        PlayerShipData playerShipData = GameManager.Instance.GetPlayerData().GetCurrentPlayerShipData();
+        if (playerData == null)
+        {
+            playerData = new PlayerData();
+            Debug.LogWarning(gameObject.name + " :PlayerData Not Found", gameObject);
+        }
+
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
         GameControllerSpeedValue = playerShipData.Upgrades[(int)UpgradeType.Speed];
         GameControllerDamageValue = playerShipData.Upgrades[(int)UpgradeType.Damage];
         GameControllerFireRateValue = playerShipData.Upgrades[(int)UpgradeType.FireRate];

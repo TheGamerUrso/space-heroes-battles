@@ -200,6 +200,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             }
         }
 
+        yield return new WaitForSeconds(4.0f);
         SpawnEnded?.Invoke();
     }
 
@@ -287,6 +288,9 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         {
             DropController.PickRandomDropItem(baseEnemy.transform);
         }
+
+
+
         BossBattleInitiated = false;
         GameEnded = true;
 
@@ -361,16 +365,34 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public void UnregisterEnemy(BaseEnemy baseEnemy)
     {
-        baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
-        baseEnemy.EnemyDied -= EnemyDiedCallback;
-        baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+        if (baseEnemy.GetComponent<BaseBossEnemy>() != null)
+        {
+            baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
+            baseEnemy.EnemyDied -= BossDiedCallback;
+            baseEnemy.EnemyGotHit -= BossGotHit;
+        }
+        else
+        {
+            baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
+            baseEnemy.EnemyDied -= EnemyDiedCallback;
+            baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+        }
     }
 
     public void RegisterEnemy(BaseEnemy baseEnemy)
     {
-        baseEnemy.EnemyEscaped += EnemyEscapedCallback;
-        baseEnemy.EnemyDied += EnemyDiedCallback;
-        baseEnemy.EnemyGotHit += EnemyGotHitCallback;
+        if (baseEnemy.GetComponent<BaseBossEnemy>() != null)
+        {
+            baseEnemy.EnemyEscaped += EnemyEscapedCallback;
+            baseEnemy.EnemyDied += BossDiedCallback;
+            baseEnemy.EnemyGotHit += BossGotHit;
+        }
+        else
+        {
+            baseEnemy.EnemyEscaped += EnemyEscapedCallback;
+            baseEnemy.EnemyDied += EnemyDiedCallback;
+            baseEnemy.EnemyGotHit += EnemyGotHitCallback;
+        }
     }
 
 }

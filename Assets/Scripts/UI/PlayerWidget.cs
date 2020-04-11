@@ -76,7 +76,7 @@ public class PlayerWidget : MonoBehaviour
 
         UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
       
-        UpdateXP(player.level, player.xp, player.xpToLevel);
+        UpdateXP(player.level, Mathf.Abs(player.xp), player.xpToLevel);
        
         
         PowerUpLevelChanged(player.GetPowerUpLevelPresentage());

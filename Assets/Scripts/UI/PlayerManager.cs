@@ -45,9 +45,13 @@ public class PlayerManager
         currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
 
         currentPlayer.SetActive(true);
-        int level = listOfPlayerShips[id].prefab.level;
-        float xp = listOfPlayerShips[id].prefab.xp;
-        float xpToLevel = listOfPlayerShips[id].prefab.xpToLevel;
+
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
+        int level = playerShipData.level;
+        float xp = playerShipData.xp;
+        float xpToLevel = playerShipData.xpToLevel;
 
         currentPlayer.GetComponent<PlayerShip>().level = level;
         currentPlayer.GetComponent<PlayerShip>().xp = xp;
@@ -55,7 +59,7 @@ public class PlayerManager
 
         currentPlayer.GetComponent<PlayerShip>().SetStats(level);
 
-        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(GameManager.Instance.GetPlayerData());
+        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(playerData);
 
 
         return currentPlayer;

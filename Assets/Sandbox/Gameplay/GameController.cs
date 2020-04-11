@@ -91,6 +91,7 @@ public class GameController : Singleton<GameController>
     IEnumerator DelayGameOver()
     {
         yield return new WaitForSeconds(4.0f);
+        AudioManager.PlayMusic("GameOver", false);
         OnGameOver?.Invoke(this);
 
     }

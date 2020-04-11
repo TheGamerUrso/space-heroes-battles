@@ -5,11 +5,13 @@ using UnityEngine;
 
 public delegate void XpValueChanged(int level, float xp, float xpToLevel);
 public delegate void DistanceChanged(float ammount);
+public delegate void CoinValueChanged(int ammount);
 public delegate void ShipSelectValueChanged(int selection);
 [Serializable]
 public class PlayerData
 {
     [NonSerialized] public XpValueChanged OnXpValueChanged;
+    [NonSerialized] public CoinValueChanged OnCoinValueChanged;
     [NonSerialized] public XpValueChanged OnLevelValueChanged;
     [NonSerialized] public DistanceChanged distanceChanged;
     [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
@@ -18,7 +20,23 @@ public class PlayerData
     public float[] score;
     public float[] Score;
     public float[] HighScore;
-    public int Coins;
+    
+    
+    public int coins;
+    public int Coins
+    {
+        get
+        {
+            return coins;
+        }
+        set
+        {
+            coins = value;
+            OnCoinValueChanged?.Invoke(coins);
+        }
+    }
+
+
     public int TotalKills;
     public int LevelUnlocked;
     public int TotalMoneySpend;

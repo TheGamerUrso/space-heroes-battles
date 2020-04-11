@@ -4,10 +4,25 @@ using UnityEngine;
 public class CoinWidget : MonoBehaviour
 {
     public TextMeshProUGUI CoinText;
+    private PlayerData playerData;
 
-    private void LateUpdatae()
+    private void OnDestroy()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        CoinText.text = "" + playerData.Coins;
+        playerData = GameManager.Instance.GetPlayerData();
+        playerData.OnCoinValueChanged -= UpdateCoins;
+    }
+
+    private void Start()
+    {
+        playerData = GameManager.Instance.GetPlayerData();
+        UpdateCoins(playerData.Coins);
+
+
+        playerData.OnCoinValueChanged += UpdateCoins;
+    }
+
+    public void UpdateCoins(int coins)
+    {
+        CoinText.text = "" + coins;
     }
 }
