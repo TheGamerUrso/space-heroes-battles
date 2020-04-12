@@ -9,9 +9,9 @@ public class Boxer : BaseBossEnemy
     {
         if (DestroyableParts.Count > 0)
         {
-            foreach (IDestroyable item in DestroyableParts)
+            foreach (IDamagable item in DestroyableParts)
             {
-                if (item.IsDestroyed == false)
+                if (item.CurrentHealth <= 0)
                 {
                     return;
                 }
@@ -25,7 +25,7 @@ public class Boxer : BaseBossEnemy
 
     public override void BossHit()
     {
- 
+
 
         base.BossHit();
     }

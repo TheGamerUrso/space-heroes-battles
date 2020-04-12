@@ -2,31 +2,32 @@ using UnityEngine;
 
 public class Items : MonoBehaviour
 {
-    private int frameInterval = 1;
-    [SerializeField] private ItemData itemData;
+    public string id;
+    public string ID
+    {
+        get { return id; }
+    }
+
+    protected int frameInterval = 1;
+    [SerializeField] protected ItemData itemData;
     public LayerMask playerLayer;
 
-    private static string CollectKey = "Collect";
-    private static string ResetKey = "Reset";
-    public Animator animator;
+    protected static string CollectKey = "Collect";
+    protected static string ResetKey = "Reset";
+    [SerializeField] protected Animator animator;
 
     public BoxCollider boxCollider;
 
-    private float m_XVel;
-    private float m_YVel;
-    private float m_ZVel;
+    protected float m_XVel;
+    protected float m_YVel;
+    protected float m_ZVel;
 
-    [SerializeField] private Vector2 m_RandomXVelValues = new Vector2();
-    [SerializeField] private Vector2 m_RandomZVelValues = new Vector2();
+    [SerializeField] protected Vector2 m_RandomXVelValues = new Vector2();
+    [SerializeField] protected Vector2 m_RandomZVelValues = new Vector2();
 
 
-    private float magnetPower;
-    private float magnetDistance = 25;
-
-    public ItemData GetItemType()
-    {
-        return itemData;
-    }
+    protected float magnetPower;
+    protected float magnetDistance = 25;
 
     private void OnEnable()
     {
@@ -70,41 +71,6 @@ public class Items : MonoBehaviour
         }
     }
 
-    public void Action(PlayerShip player)
-    {
-        if (boxCollider)
-        {
-            boxCollider.enabled = false;
-        }
-
-        animator.SetTrigger(CollectKey);
-
-        if (itemData.m_HealValue > 0)
-        {
-            player.Heal(player.Level * itemData.m_HealValue);
-        }
-
-        if (itemData.m_RewardAmount > 0)
-        {
-            GameSession.CoinEarnInGame++;
-        }
-
-        if (itemData.Shield)
-        {
-            player.InstallShieldModule();
-        }
-
-        if (itemData.PowerPack)
-        {
-            player.PowerUpCollected();
-        }
-
-        if (AudioManager.Instance)
-        {
-            AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
-        }
-        Invoke("DestroyNow", .2f);
-    }
 
     private void OnDrawGizmosSelected()
     {

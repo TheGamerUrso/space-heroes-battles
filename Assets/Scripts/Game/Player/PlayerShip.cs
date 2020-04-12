@@ -5,14 +5,12 @@ using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
-public class PlayerShip : Ship, IDestroyable
+public class PlayerShip : Ship, IDamagable
 {
     public Action<float> PowerUpLevelChanged;
     public Action PlayerShipHit;
     public Action PlayerShipDeath;
     public Action<ItemData> PickUpItem;
-
-    public int playerID;
 
     private PlayerData playerData;
 
@@ -28,7 +26,7 @@ public class PlayerShip : Ship, IDestroyable
     private float invisibilityTimer;
     private bool GotHit;
     private int SuperUsed;
-    public bool CanUsePowerUpItem;
+    [HideInInspector] public bool CanUsePowerUpItem;
     public static bool TempFireRateUpgrade { get; set; }
     public bool IsPlayerDamaged
     {
@@ -73,13 +71,13 @@ public class PlayerShip : Ship, IDestroyable
     */
     #region Attributes
     [Min(0)]
-    public float SuperDamage;
+    [HideInInspector] public float SuperDamage;
     [Min(0)]
-    public float SuperChargeTime;
+    [HideInInspector] public float SuperChargeTime;
     [Min(0)]
-    public float MagnetPower;
+    [HideInInspector] public float MagnetPower;
     [Min(0)]
-    public float MagnetDistance;
+    [HideInInspector] public float MagnetDistance;
 
     [Min(0)]
     private float powerUpLevel = 0;
@@ -112,7 +110,7 @@ public class PlayerShip : Ship, IDestroyable
 
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
-    public int PowerUpCollectAmmount = 0;
+    [HideInInspector]public int PowerUpCollectAmmount = 0;
 
 
     private int currentWeapon;
@@ -174,9 +172,8 @@ public class PlayerShip : Ship, IDestroyable
             {
                 invisibilityTimer -= Time.deltaTime;
             }
+            WeaponSystem();
         }
-
-        WeaponSystem();
     }
 
     public void WeaponSystem()
@@ -310,7 +307,7 @@ public class PlayerShip : Ship, IDestroyable
 
     public override void TakeDamage(float dmg)
     {
-        if (IsDestroyed == false)
+        if (IsAlive == false)
         {
             return;
         }
@@ -362,12 +359,12 @@ public class PlayerShip : Ship, IDestroyable
     private void OnTriggerEnter(Collider other)
     {
         string gameobjectTag = other.gameObject.tag;
-        Items items = other.GetComponent<Items>();
+        IPickable items = other.GetComponent<IPickable>();
 
         if (items != null)
         {
             items.Action(this);
-            if (items.GetItemType().PowerPack)
+            if (items.ID.Equals("PowerUP"))
                 ItemCollectedEffect.Play();
         }
     }

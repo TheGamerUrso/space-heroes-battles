@@ -6,7 +6,7 @@ public class BaseHealthWidget : MonoBehaviour
     public float Health { get; }
     public float currentHealth { get; set; }
 
-    protected IDestroyable Target;
+    protected IDamagable Target;
     protected Color currentColor;
 
     [SerializeField] protected Color RedColor = Color.red;
@@ -20,8 +20,8 @@ public class BaseHealthWidget : MonoBehaviour
 
     [SerializeField] protected Vector3 offset;
 
-    public virtual void Setup(IDestroyable ship, bool follow = true) { }
-    public virtual void Setup(IDestroyable ship)
+    public virtual void Setup(IDamagable ship, bool follow = true) { }
+    public virtual void Setup(IDamagable ship)
     {
         MonoBehaviour monoGO = ship as MonoBehaviour;
         if (monoGO != null)

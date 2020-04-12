@@ -32,7 +32,7 @@ public class BaseBossEnemy : BaseEnemy
 
     #region Destroyable Parts Cofig
     [Header("Destroyable Parts Cofig")]
-    [SerializeField] protected List<IDestroyable> DestroyableParts = new List<IDestroyable>();
+    [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
     #endregion
 
     public override void Enter()
@@ -42,7 +42,7 @@ public class BaseBossEnemy : BaseEnemy
         currentWeaponActive = 1;
     }
 
-    public void AddDamagablePart(IDestroyable part)
+    public void AddDamagablePart(IDamagable part)
     {
         DestroyableParts.Add(part);
 
@@ -72,9 +72,9 @@ public class BaseBossEnemy : BaseEnemy
             return;
         }
 
-        foreach (IDestroyable item in DestroyableParts)
+        foreach (IDamagable item in DestroyableParts)
         {
-            if (item.IsDestroyed == false)
+            if (item.CurrentHealth <= 0)
             {
                 return;
             }

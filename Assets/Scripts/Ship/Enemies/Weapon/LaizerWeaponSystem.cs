@@ -113,7 +113,7 @@ public class LaizerWeaponSystem : MonoBehaviour
         }
 
         float damage = 1f;
-        m_Target.GetComponent<IDestroyable>().TakeDamage(damage);
+        m_Target.GetComponent<IDamagable>().TakeDamage(damage);
 
         HitingSomeone = false;
         if (Physics.Raycast(transform.position, transform.forward, out hit))

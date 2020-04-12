@@ -3,7 +3,7 @@ using System.Collections;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using DG.Tweening;
-public class Punch : MonoBehaviour, IDestroyable
+public class Punch : MonoBehaviour, IDamagable
 {
     protected bool Alive;
     public bool IsDestroyed
@@ -135,7 +135,7 @@ public class Punch : MonoBehaviour, IDestroyable
 
         if (gameobjectTag.Equals(Constants.PLAYTERTAG))
         {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            IDamagable destroyable = other.GetComponent<IDamagable>();
             if (destroyable != null)
             {
                 destroyable.TakeDamage(damage);

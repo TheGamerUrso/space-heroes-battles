@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class HealthItem:Items,IPickable
+public class PowerPack : Items, IPickable
 {
     public void Action(PlayerShip player)
     {
@@ -11,10 +11,8 @@ public class HealthItem:Items,IPickable
 
         animator.SetTrigger(CollectKey);
 
-        if (itemData.m_HealValue > 0)
-        {
-            player.Heal(player.Level * itemData.m_HealValue);
-        }
+        player.PowerUpCollected();
+
 
         if (AudioManager.Instance)
         {

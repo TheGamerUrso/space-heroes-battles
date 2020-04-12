@@ -16,7 +16,7 @@ public class EnemyHealthWidget : BaseHealthWidget
         UpdateHealthBar(100, 100);
     }
 
-    public override void Setup(IDestroyable ship, bool follow = true)
+    public override void Setup(IDamagable ship, bool follow = true)
     {
      
         if (Target == null || Target != ship)

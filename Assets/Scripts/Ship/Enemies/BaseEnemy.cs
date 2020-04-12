@@ -2,7 +2,7 @@
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public class BaseEnemy : Ship
+public class BaseEnemy : Ship, IDamagable
 {
     public Action<string, BaseEnemy> EnemyDied;
     public Action<string, BaseEnemy> EnemyGotHit;
@@ -253,7 +253,7 @@ public class BaseEnemy : Ship
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            IDamagable destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(destroyable.MaxHealth / 2);
             TakeDamage(CurrentHealth);
         }

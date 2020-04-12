@@ -66,6 +66,7 @@ MeshRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
   m_PreserveUVs: 0
   m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
@@ -88,8 +89,8 @@ GameObject:
   m_Component:
   - component: {fileID: 4917881421448074}
   - component: {fileID: 65484635875251190}
-  - component: {fileID: 114350980707372870}
   - component: {fileID: 8970166768472135580}
+  - component: {fileID: 8380831147717115124}
   m_Layer: 19
   m_Name: CoinItem
   m_TagString: Collectable
@@ -125,24 +126,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 2.4615006, y: 2.455368, z: 0.5}
   m_Center: {x: 0.10779691, y: -0.29153442, z: 0}
---- !u!114 &114350980707372870
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1229202716366748}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc31c7db6671ad740ab590d576f90cf7, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  itemData: {fileID: 11400000, guid: e4a53124a33354f4c96852da0bbd5639, type: 2}
-  animator: {fileID: 8046069264919143922}
-  boxCollider: {fileID: 65484635875251190}
-  m_RandomXVelValues: {x: -25, y: 25}
-  m_RandomZVelValues: {x: -10, y: -25}
-  magnetPower: 0
 --- !u!82 &8970166768472135580
 AudioSource:
   m_ObjectHideFlags: 0
@@ -240,6 +223,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8380831147717115124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1229202716366748}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c1c512d9d92a444e818b5e77ae191c8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: Coin
+  itemData: {fileID: 11400000, guid: e4a53124a33354f4c96852da0bbd5639, type: 2}
+  playerLayer:
+    serializedVersion: 2
+    m_Bits: 2048
+  animator: {fileID: 8046069264919143922}
+  boxCollider: {fileID: 65484635875251190}
+  m_RandomXVelValues: {x: -25, y: 25}
+  m_RandomZVelValues: {x: -10, y: -25}
 --- !u!1 &1984049598111058
 GameObject:
   m_ObjectHideFlags: 0

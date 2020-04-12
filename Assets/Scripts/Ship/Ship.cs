@@ -1,10 +1,13 @@
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public abstract class Ship : MonoBehaviour, IDestroyable
+public abstract class Ship : MonoBehaviour
 {
+    public int Id;
+
     protected bool Alive;
-    public bool IsDestroyed
+
+    public bool IsAlive
     {
         get
         {
@@ -26,19 +29,19 @@ public abstract class Ship : MonoBehaviour, IDestroyable
     [Range(.2f, 10)]
 
     [Min(.2f)]
-    public float FireRate;
+    [HideInInspector] public float FireRate;
 
     [Min(0)]
-    public float Speed;
+    [HideInInspector] public float Speed;
 
     [Min(25)]
-    protected float maxHealth;
+    [HideInInspector] protected float maxHealth;
 
     [Min(0)]
     public float currentHealth;
 
     [Min(12.5f)]
-    public float Damage;
+    [HideInInspector] public float Damage;
 
     public float CurrentHealth
     {
@@ -85,9 +88,9 @@ public abstract class Ship : MonoBehaviour, IDestroyable
     public delegate void LevelUp(int level);
     public event LevelUp OnLevelUp;
 
-    public float xpToLevel;
+    [HideInInspector] public float xpToLevel;
 
-    public float xp;
+    [HideInInspector] public float xp;
     public float XP
     {
         get
@@ -103,7 +106,7 @@ public abstract class Ship : MonoBehaviour, IDestroyable
     }
 
     [Min(20)]
-    public int maxLevel;
+    [HideInInspector] public int maxLevel;
     public int MaxLevel
     {
         get
@@ -210,6 +213,8 @@ public abstract class Ship : MonoBehaviour, IDestroyable
         Damage = Level * shipStats.baseDamage;
 
         MaxLevel = 20;
+
+        xpToLevel = 100;
     }
 
     public virtual void Heal(float ammount)

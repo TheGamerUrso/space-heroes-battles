@@ -30,26 +30,25 @@ public class GuiManager : Singleton<GuiManager>
 
     private void OnApplicationFocus(bool focus)
     {
-        //if (Application.platform == RuntimePlatform.Android)
-        //{
-        //    if (!focus && GameController.IsGameOver == false)
-        //    {
-        //        GameManager.PauseTheGame();
-        //        ShowPauseMenu(true);
-        //    }
-        //}
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!focus && GameSession.IsGameOver == false)
+            {
+                //GameManager.PauseTheGame();
+                //ShowPauseMenu(Paused);
+            }
+        }
     }
 
     private void OnApplicationPause(bool Paused)
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            //TODO Update Pause
-            //if (GameController.IsGameOver == false)
-            //{
-            //    GameManager.PauseTheGame();
-            //    ShowPauseMenu(true);
-            //}
+            if (GameSession.IsGameOver == false)
+            {
+                //GameManager.PauseTheGame();
+                //ShowPauseMenu(Paused);
+            }
         }
     }
 

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Turret : MonoBehaviour, IDestroyable
+public class Turret : MonoBehaviour, IDamagable
 {
     private PlayerShip player;
     public PlayerWeapon playerWeapon;

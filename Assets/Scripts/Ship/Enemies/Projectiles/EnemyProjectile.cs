@@ -45,7 +45,7 @@ public class EnemyProjectile : Projectile
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            IDamagable destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(damage);
             DestoryNow();
         }
