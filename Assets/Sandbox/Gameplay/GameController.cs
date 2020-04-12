@@ -19,7 +19,6 @@ public class GameController : Singleton<GameController>
 
     protected override void OnAwake()
     {
-#if UNITY_EDITOR
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             if (SceneManager.GetSceneAt(i).name.Equals("boot"))
@@ -30,7 +29,6 @@ public class GameController : Singleton<GameController>
             Debug.Log("Boot not found Loading");
             SceneManager.LoadScene("boot", LoadSceneMode.Additive);
         }
-#endif
     }
 
     protected override void OnCleanup()
