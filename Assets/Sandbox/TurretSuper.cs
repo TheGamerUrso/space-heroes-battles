@@ -20,7 +20,8 @@ public class TurretSuper : SpecialAttack
         {
             AudioManager.PlaySound(null, "Super", 3);
 
-            OnSuperWeapoUsed?.Invoke(superUsed);
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            playerData.superUsed++;
 
             turretDuration = SuperChargeTime;
             Turrets.CreateTurret();

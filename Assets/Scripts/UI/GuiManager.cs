@@ -317,123 +317,17 @@ public class GuiManager : Singleton<GuiManager>
 
     public void Win(GameController gc)
     {
-        Time.timeScale = 1.0f;
+  
         if (!ResultShowed)
         {
-            PlayerShip player = PlayerManager.GetPlayer();
-            PlayerData playerData =  GameManager.Instance.GetPlayerData();
-            PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-
-            playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-
-            if (player == null)
-            {
-                player = GameObject.FindObjectOfType<PlayerShip>();
-            }
-
-            playerShipData.level = player.level;
-            playerShipData.xp = player.xp;
-            playerShipData.xpToLevel = player.xpToLevel;
-
-            //Save Game Data
-            playerData.PlayedGame = true;
-            for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
-            {
-                ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
-                switch ((ObjectiveType)objective.objectiveType)
-                {
-                    case ObjectiveType.Kill:
-                        
-                        //TODO Current Enemy Killed
-                        if (objective.completed == false)
-                        {
-                            var progressSoFar = objective.progress + 0;
-                            objective.UpdateProgress(progressSoFar);
-                        }
-
-                        break;
-                    case ObjectiveType.Use:
-                        if (objective.completed == false)
-                        {
-                            var progressSoFar = objective.progress + player.GetSpecialAttack().superUsed;
-                            objective.UpdateProgress(progressSoFar);
-                        }
-                        break;
-                    case ObjectiveType.Unharmed:
-                        if (objective.completed == false)
-                        {
-                            if (player.IsPlayerDamaged == false)
-                            {
-                                ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                                objectiveData.UpdateProgress(1);
-                            }
-                        }
-                        break;
-                    case ObjectiveType.survive:
-                        //TODO WaveSurvived
-                        objective.UpdateProgress(0);
-                        break;
-                    case ObjectiveType.spend:
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-
-            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-            int missionsCompleted = 0;
-            foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-            {
-                if (item.Value[0].completed == true)
-                {
-                    missionsCompleted++;
-                }
-            }
-
-            int levelPlayed = GameManager.LevelSelected;
-            //TODO Score
-            playerData.SetScore(levelPlayed + 1,0);
-
-            playerData.LevelUnlocked = missionsCompleted;
-
-
-            if (GooglePlayServicesManager.Instance)
-            {
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
-            }
-
             StartCoroutine(WinCoroutine());
         }
     }
     //Game is Over
     public void GameOver(GameController gc)
     {
-        Time.timeScale = 1.0f;
         if (!ResultShowed)
-        {   
-            PlayerData playerData =  GameManager.Instance.GetPlayerData();
-            PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-            playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-            playerShipData.level = playerShip.level;
-            playerShipData.xp = playerShip.xp;
-            playerShipData.xpToLevel = playerShip.xpToLevel;
-
-            //TODO Coins Earn In Game
-            //TODO Enemy Killed In Game
-            playerData.Coins += 0;
-            playerData.TotalKills += 0;
-
-            SaveSystem.SaveGame();
-
-
-            if (GooglePlayServicesManager.Instance)
-            {
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
-            }
-
+        {       
             ResultShowed = true;
 
             StartCoroutine(GameOverCoroutine());

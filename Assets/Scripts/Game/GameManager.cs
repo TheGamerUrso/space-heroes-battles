@@ -79,22 +79,6 @@ public class GameManager : Singleton<GameManager>
 
         GameEventSystem.PlayerLeveledUp += ShowLevelup;
 
-    }
-
-    protected override void OnCleanup()
-    {
-        base.OnCleanup();
-
-        //GameManager.SavePlayerData();
-    }
-
-    public void ShowLevelup()
-    {
-        Instance.levelupAnnouncement.SetActive(true);
-    }
-
-    private void Start()
-    {
         DOTween.Init(autoKillMode, useSafeMode, logBehaviour);
 
         DontDestroyOnLoad(gameObject);
@@ -106,6 +90,20 @@ public class GameManager : Singleton<GameManager>
 
         OnLoadDataCompleted?.Invoke();
 
+    }
+
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+    }
+
+    public void ShowLevelup()
+    {
+        Instance.levelupAnnouncement.SetActive(true);
+    }
+
+    private void Start()
+    {
         if (SceneManager.sceneCount > 1)
         {
             Debug.Log("boot found skip");

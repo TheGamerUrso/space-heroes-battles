@@ -5,6 +5,7 @@ using UnityEngine;
 
 public delegate void XpValueChanged(int level, float xp, float xpToLevel);
 public delegate void DistanceChanged(float ammount);
+public delegate void SuperUseValueChanged(float ammount);
 public delegate void CoinValueChanged(int ammount);
 public delegate void ShipSelectValueChanged(int selection);
 [Serializable]
@@ -15,6 +16,7 @@ public class PlayerData
     [NonSerialized] public XpValueChanged OnLevelValueChanged;
     [NonSerialized] public DistanceChanged distanceChanged;
     [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
+    [NonSerialized] public SuperUseValueChanged OnSuperUseValueChanged;
 
 
     public float[] score;
@@ -45,6 +47,16 @@ public class PlayerData
     public int m_EnemyKilled;
     public bool GotHitInGame;
     public bool PlayedGame;
+
+    public int superUsed;
+    public int SuperUsed
+    {
+        get { return superUsed; }
+        set { 
+            superUsed = value;
+            OnSuperUseValueChanged?.Invoke(superUsed);       
+        }
+    }
 
 
     public int currentSelectedShip;
@@ -136,7 +148,7 @@ public class PlayerData
         MusicVolume = .7f;
         AutoAttack = true;
         mute = false;
-        distance = 3;
+        distance = 5;
         playerShipData = new PlayerShipData[3];
         for (int i = 0; i < playerShipData.Length; i++)
         {

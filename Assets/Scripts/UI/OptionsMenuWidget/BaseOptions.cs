@@ -10,7 +10,7 @@ public class BaseOptions : MonoBehaviour
     public delegate void OnOptionsChanged();
     public static event OnOptionsChanged OnOptionsRecieved;
 
-    protected float[] Distances = { 3, 4, 5 };
+    protected float[] Distances = { 5, 10, 15 };
     public AudioMixerGroup MusicMixerGroup;
     public AudioMixerGroup SFXMixerGroup;
 

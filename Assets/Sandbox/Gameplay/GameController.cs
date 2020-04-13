@@ -58,7 +58,7 @@ public class GameController : Singleton<GameController>
 
         SpawnEnemies spawn = GameObject.FindObjectOfType<SpawnEnemies>();
         spawn.SpawnEnded = () => { Win(); };
-        
+
         GameSession.Reset();
 
     }
@@ -80,7 +80,32 @@ public class GameController : Singleton<GameController>
     {
         if (GameSession.IsGameOver == false)
         {
-            GameSession.IsGameOver = true; 
+            GameSession.IsGameOver = true;
+
+            Time.timeScale = 1.0f;
+
+            PlayerShip playerShip = PlayerManager.GetPlayer();
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
+            playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+            playerShipData.level = playerShip.level;
+            playerShipData.xp = playerShip.xp;
+            playerShipData.xpToLevel = playerShip.xpToLevel;
+
+            //TODO Coins Earn In Game
+            //TODO Enemy Killed In Game
+            playerData.Coins += 0;
+            playerData.TotalKills += 0;
+
+            SaveSystem.SaveGame();
+
+
+            if (GooglePlayServicesManager.Instance)
+            {
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+            }
 
             StartCoroutine(DelayGameOver());
         }
@@ -95,21 +120,98 @@ public class GameController : Singleton<GameController>
     }
     IEnumerator DelayWinScreen()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+        Time.timeScale = 1.0f;
 
-        if (objectiveData != null)
-            objectiveData.UpdateProgress(1);
+        PlayerShip player = PlayerManager.GetPlayer();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
+        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+
+        if (player == null)
+        {
+            player = GameObject.FindObjectOfType<PlayerShip>();
+        }
+
+        playerShipData.level = player.level;
+        playerShipData.xp = player.xp;
+        playerShipData.xpToLevel = player.xpToLevel;
+        //Save Game Data
+        playerData.PlayedGame = true;
+
+        for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
+        {
+            ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
+            switch ((ObjectiveType)objective.objectiveType)
+            {
+                case ObjectiveType.Kill:
+                    if (objective.completed == false)
+                    {
+                        var progressSoFar = objective.progress + 0;
+                        objective.UpdateProgress(progressSoFar);
+                    }
+
+                    break;
+                case ObjectiveType.Use:
+                    if (objective.completed == false)
+                    {
+                        objective.UpdateProgress(playerData.superUsed);
+                    }
+                    break;
+                case ObjectiveType.Unharmed:
+                    if (objective.completed == false)
+                    {
+                        if (player.IsPlayerDamaged == false)
+                        {
+                            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+                            objectiveData.UpdateProgress(1);
+                        }
+                    }
+                    break;
+                case ObjectiveType.survive:
+                    var surviveProgress = objective.progress;
+                    surviveProgress++;
+                    objective.UpdateProgress(surviveProgress);
+                    break;
+                case ObjectiveType.spend:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+        int missionsCompleted = 0;
+        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+        {
+            if (item.Value[0].completed == true)
+            {
+                missionsCompleted++;
+            }
+        }
+        int levelPlayed = GameManager.LevelSelected;
+
+        playerData.SetScore(levelPlayed + 1, 0);
+
+        playerData.LevelUnlocked = missionsCompleted;
 
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+
+
+        if (GooglePlayServicesManager.Instance)
+        {
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+        }
+
 
         yield return new WaitForSeconds(4.0f);
 
         PlayerShip playerShip = PlayerManager.GetPlayer();
         playerShip.Exit();
 
-    
+
         OnWin?.Invoke(this);
     }
 
