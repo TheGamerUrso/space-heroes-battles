@@ -82,7 +82,7 @@ public class ComboKillIndicator : MonoBehaviour
 
     public void RefreshText(int multiplier)
     {
-        MultiplierText.text = string.Format("x{0}", multiplier);
+        MultiplierText.text = "x" + multiplier;
     }
 
 }

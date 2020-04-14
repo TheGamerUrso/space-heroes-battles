@@ -89,15 +89,14 @@ public class GuiManager : Singleton<GuiManager>
         SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
         if (spawnEnemies != null)
         {
-            spawnEnemies.EnemyDied = EnemyDiedCallback;
+            spawnEnemies.EnemyDied += EnemyDiedCallback;
         }
     }
 
     public void EnemyDiedCallback(BaseEnemy baseEnemy)
     {
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
-        GameSession.score = score;
-        GuiManager.CreateFloatingText(string.Format("{0}", score), baseEnemy.transform.position);
+        GuiManager.CreateFloatingText(score.ToString(), baseEnemy.transform.position);
     }
 
     public void PickUpItem(ItemData itemData)
@@ -196,30 +195,26 @@ public class GuiManager : Singleton<GuiManager>
 
     public static void CountdownVisibility(bool enable)
     {
-        GuiManager.Instance.SetCountdownVisibility(enable);
+        Instance.SetCountdownVisibility(enable);
     }
     public static void Countdown(float countdown)
     {
-        GuiManager.Instance.CountdownText(countdown);
+        Instance.CountdownText(countdown);
     }
 
     public void CountdownText(float countdown)
     {
-        CountdownWidgetText.text = string.Format("{0}", Mathf.Round(countdown));
+        CountdownWidgetText.text = Mathf.Round(countdown).ToString();
     }
 
     public void ReplayButton()
     {
-        AudioManager.PlaySound(null, "Click", 1);
-
         SceneLoader.Instance.ResetLevel();
     }
 
     public void ResumeButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, true);
-
-        AudioManager.PlaySound(null, "Back", 1);
         ShowPauseMenu(false);
         GameManager.PauseTheGame(false);
     }
@@ -227,8 +222,6 @@ public class GuiManager : Singleton<GuiManager>
     public void PauseButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, false);
-
-        AudioManager.PlaySound(null, "Click", 1);
         ShowPauseMenu(true);
         GameManager.PauseTheGame();
     }
@@ -240,7 +233,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public void UpdateCoinWidgetText(int coin)
     {
-        CoinWidgetText.text = string.Format("{0}", coin);
+        CoinWidgetText.text = coin.ToString();
     }
 
     public void UpdateScore(int score)
@@ -263,7 +256,6 @@ public class GuiManager : Singleton<GuiManager>
     public void LoadMainMenu()
     {
         GameManager.PauseTheGame(false);
-        AudioManager.PlaySound(null, "Click", 1);
         SceneLoader.Instance.LoadMainenu();
         GameObject activeMenuGO = null;
 
@@ -286,7 +278,9 @@ public class GuiManager : Singleton<GuiManager>
 
     IEnumerator DelayCloseMenu(GameObject Menu, float time)
     {
-        yield return new WaitForSeconds(time);
+        WaitForSeconds delay = new WaitForSeconds(time);
+
+        yield return delay;
         Menu.SetActive(false);
     }
 
@@ -340,8 +334,6 @@ public class GuiManager : Singleton<GuiManager>
 
         PlayerHUD.gameObject.SetActive(false);
 
-
-
         yield return new WaitForSeconds(2.0f);
 
         GameOverScreen.gameObject.SetActive(true);
@@ -350,6 +342,7 @@ public class GuiManager : Singleton<GuiManager>
     public IEnumerator WinCoroutine()
     {
         AudioManager.PlayMusic("Victory", false);
+
         PlayerHUD.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2.0f);

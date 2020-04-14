@@ -44,10 +44,13 @@ public class Items : MonoBehaviour
     {
         PlayerShip player = PlayerManager.GetPlayer();
 
-        if (itemData.m_RewardAmount > 0 && player.GetMagnetPower() > 0)
+        if (itemData.m_RewardAmount > 0)
         {
-            magnetPower = 10 + player.GetMagnetPower();
-            magnetDistance = 25 + player.GetMagnetDistanceUpgrade();
+            if (player.GetMagnetPower() > 0)
+            {
+                magnetPower = 10 + player.GetMagnetPower();
+                magnetDistance = 25 + player.GetMagnetDistanceUpgrade();
+            }
         }
 
         int dir = Random.Range(-1, 1);
@@ -58,16 +61,11 @@ public class Items : MonoBehaviour
 
     public void Update()
     {
-        if (Time.frameCount % frameInterval == 0)
+        Movement();
+
+        if (transform.position.z < Constants.m_ZMin)
         {
-            Movement();
-
-            if (transform.position.z < Constants.m_ZMin)
-            {
-                gameObject.SetActive(false);
-
-                //  Destroy(gameObject);
-            }
+            gameObject.SetActive(false);
         }
     }
 
@@ -86,11 +84,12 @@ public class Items : MonoBehaviour
     {
 
         Collider[] colliders = Physics.OverlapSphere(transform.position, magnetDistance, playerLayer);
-        if (colliders.Length > 0)
+        if (colliders.Length > 0 && magnetPower > 0)
         {
-            foreach (Collider item in colliders)
+            for (int i = 0; i < colliders.Length; i++)
             {
-                if (item.tag.Equals("Player"))
+                Collider item = colliders[i];
+                if (item.CompareTag("Player"))
                 {
                     GameObject target = item.gameObject;
                     if (magnetPower > 0)
@@ -104,7 +103,9 @@ public class Items : MonoBehaviour
         {
             Vector3 movement = (-transform.forward * m_ZVel) + (-transform.right * m_XVel);
 
-            transform.localPosition += movement * Time.deltaTime;
+            Vector3 newPos = transform.localPosition;
+            newPos += movement * Time.deltaTime;
+            transform.localPosition = newPos;
 
             if (transform.position.x < Constants.m_XMin || transform.position.x > Constants.m_XMax)
             {

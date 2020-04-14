@@ -42,9 +42,9 @@ public class PlayerProjectile : Projectile
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals(Constants.ENEMYTAG))
+        if (other.CompareTag("Enemy"))
         {
-            IDamagable destroyable = other.GetComponent<IDamagable>();
+            var destroyable = other.GetComponent<IDamagable>();
             if (destroyable != null)
             {
                 destroyable.TakeDamage(damage);

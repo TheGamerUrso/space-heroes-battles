@@ -72,14 +72,6 @@ public class BaseBossEnemy : BaseEnemy
             return;
         }
 
-        foreach (IDamagable item in DestroyableParts)
-        {
-            if (item.CurrentHealth <= 0)
-            {
-                return;
-            }
-        }
-
         hitIndex++;
         OnBossHit?.Invoke(hitIndex, numberOfHits);
 

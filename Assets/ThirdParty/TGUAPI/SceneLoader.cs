@@ -126,17 +126,22 @@ namespace TheGamerUrso
 
             private IEnumerator LoadSceneAsync(string levelName, float delay = 0)
             {
-                foreach (var item in ActiveScenes)
+                for (int i = 0; i < ActiveScenes.Count; i++)
                 {
+                    string item = ActiveScenes[i];
                     UnloadLevel(item);
                 }
-
+      
                 ActiveScenes.Clear();
+
+                WaitForEndOfFrame waitForEndFrame = new WaitForEndOfFrame();
 
                 while (unloading)
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return waitForEndFrame;
+
                 }
+                System.GC.Collect();
 
                 AsyncOperation ao = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
                 ao.completed += OnLoadOperationComplete;
@@ -163,7 +168,9 @@ namespace TheGamerUrso
             private IEnumerator ShowLoadingScreen(string level)
             {
                 Show();
-                yield return new WaitForSeconds(2.0f);
+
+                WaitForSeconds waitForSec = new WaitForSeconds(2.0f);
+                yield return waitForSec;
                 StartCoroutine(LoadSceneAsync(level));
             }
 
@@ -171,8 +178,9 @@ namespace TheGamerUrso
             {
                 Content.SetActive(true);
                 BlockRaycast.blocksRaycasts = true;
-                foreach (GateControl gate in Gates)
+                for (int i = 0; i < Gates.Length; i++)
                 {
+                    GateControl gate = Gates[i];
                     gate.CloseGate();
                 }
             }
@@ -181,8 +189,9 @@ namespace TheGamerUrso
             {
                 Content.SetActive(false);
                 BlockRaycast.blocksRaycasts = false;
-                foreach (GateControl gate in Gates)
+                for (int i = 0; i < Gates.Length; i++)
                 {
+                    GateControl gate = Gates[i];
                     gate.OpenGate();
                 }
             }

@@ -22,6 +22,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 {
     public Action<BaseEnemy> EnemyDied;
 
+    PlayerShip playerShip;
+
     public Action SpawnEnded;
     public Action<int, int, int> GameStatsChanged;
     public Action<string, BaseEnemy> BossDied;
@@ -41,13 +43,14 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public int TotalEnemies;
 
-    public float delay;
+    public float delay = 0;
 
     private bool GameEnded;
     private bool BossBattleInitiated;
     public GameObject BossPrefab;
     private GameObject currentBoss;
 
+    private PlayerData playerData;
 
 
     public List<GameObject> Enemies = new List<GameObject>();
@@ -61,8 +64,17 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public int EnemySpawnedInTotal { get; set; }
 
+
+    public void InitReference(PlayerData playerData, PlayerShip playerShip)
+    {
+        this.playerData = playerData;
+        this.playerShip = playerShip;
+    }
+
     private void Start()
     {
+        playerShip = PlayerManager.GetPlayer();
+
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
@@ -103,11 +115,17 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     IEnumerator Spawn()
     {
         Debug.Log("Game Started");
+        WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
+        WaitForSeconds waitForSec = new WaitForSeconds(delay);
+        WaitForSeconds waitForCooldown = new WaitForSeconds(cooldown);
+        WaitForSeconds waitforOneSec = new WaitForSeconds(1);
+        WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
+
         while (!GameEnded)
         {
             while (GuiManager.IsTrasnmiting())
             {
-                yield return new WaitForEndOfFrame();
+                yield return waitForEndOfFrame;
             }
 
             while (TotalEnemies > 0)
@@ -142,7 +160,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
                 while (pause)
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return waitForEndOfFrame;
                 }
 
                 // randomNumb = UnityEngine.Random.Range(0, tempList.Count); 
@@ -160,10 +178,10 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                     {
                         SpawnEnemyElement(enemyElement);
                     }
-                    yield return new WaitForSeconds(delay);
+                    yield return waitForSec;
                 }
 
-                yield return new WaitForSeconds(cooldown);
+                yield return waitForCooldown;
 
 
             }
@@ -171,11 +189,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             if (HasBoss)
                 GuiManager.PlayTrasmition(null, true);
 
-            yield return new WaitForSeconds(cooldown);
+            yield return waitForCooldown;
 
             while (Enemies.Count > 0)
             {
-                yield return new WaitForSeconds(cooldown);
+                yield return waitForCooldown;
             }
 
             if (HasBoss)
@@ -191,7 +209,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
                 while (BossBattleInitiated)
                 {
-                    yield return new WaitForSeconds(1.0f);
+                    yield return waitforOneSec;
                 }
             }
             else
@@ -200,7 +218,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             }
         }
 
-        yield return new WaitForSeconds(4.0f);
+        yield return waitForFourSeconds;
         SpawnEnded?.Invoke();
     }
 
@@ -251,50 +269,20 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public void BossDiedCallback(string id, BaseEnemy baseEnemy)
     {
         Enemies.Remove(baseEnemy.gameObject);
+
         TotalEnemies--;
 
+        EnemyDied?.Invoke(baseEnemy);
 
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        int PlayerLevel = playerShip.Level;
+        int rand = UnityEngine.Random.Range(4, 8);
 
-        int EnemyLevel = baseEnemy.level;
-
-        int levelDiffrence = PlayerLevel / EnemyLevel;
-
-        if (levelDiffrence == 0)
-        {
-            levelDiffrence = 1;
-        }
-
-        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-
-        playerShip.AddXP(XPEarned);
-
-        playerShip.IncreasePowerUp(.1f);
-
-        //int dif = baseEnemy.level - playerShip.level;
-        //if (dif > 0)
-        //{
-        //    float level = 25 / baseEnemy.level;
-        //    playerShip.AddXP(baseEnemy.level);
-        //}
-
-        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
-
-        GameSession.Score += score;
-
-
-        for (int i = 0; i < UnityEngine.Random.Range(4, 8); i++)
+        for (int i = 0; i < rand; i++)
         {
             DropController.PickRandomDropItem(baseEnemy.transform);
         }
 
-
-
         BossBattleInitiated = false;
         GameEnded = true;
-
-
     }
 
     public void BossGotHit(string id, BaseEnemy baseEnemy)
@@ -306,14 +294,14 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
     {
         baseEnemy.enemyElement.currentNumberInScene--;
-        Debug.Log("Enemy Got Escaped");
+        // Debug.Log("Enemy Got Escaped");
         Enemies.Remove(baseEnemy.gameObject);
         GameSession.enemyEscaped++;
     }
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
-        Debug.Log("Enemy Got Hit");
+        // Debug.Log("Enemy Got Hit");
         PlayerShip playerShip = PlayerManager.GetPlayer();
         playerShip.PowerUpLevel += .1f;
     }
@@ -322,45 +310,11 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     {
         baseEnemy.enemyElement.currentNumberInScene--;
 
-        Debug.Log("Enemy Got Died");
-        DropController.PickRandomDropItem(baseEnemy.transform);
         Enemies.Remove(baseEnemy.gameObject);
 
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        int PlayerLevel = playerShip.Level;
-
-        int EnemyLevel = baseEnemy.level;
-
-        int levelDiffrence = PlayerLevel / EnemyLevel;
-
-        if (levelDiffrence == 0)
-        {
-            levelDiffrence = 1;
-        }
-
-        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-
-        playerShip.AddXP(XPEarned);
-
-        playerShip.IncreasePowerUp(.1f);
-
-        //int dif = baseEnemy.level - playerShip.level;
-        //if (dif > 0)
-        //{
-        //    float level = 25 / baseEnemy.level;
-        //    playerShip.AddXP(baseEnemy.level);
-        //}
-
-        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
-
-        GameSession.CurrentEnemyKilled++;
-        GameSession.enemyKilled++;
-        GameSession.Score += score;
-        GameSession.Multiplier++;
+        DropController.PickRandomDropItem(baseEnemy.transform);
 
         EnemyDied?.Invoke(baseEnemy);
-
-
     }
 
     public void UnregisterEnemy(BaseEnemy baseEnemy)

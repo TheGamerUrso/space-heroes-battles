@@ -11,7 +11,12 @@ public class GameController : Singleton<GameController>
     public static Action<GameController> OnGameOver;
     public static Action<GameController> OnWin;
 
-    private GameObject playerShip;
+    private GameObject player;
+    private PlayerData playerData;
+    private PlayerShip playerShip;
+
+
+    private SpawnEnemies spawn;
 
     private float slowMo;
     private float delayTheSlowMoEffectTimer;
@@ -35,7 +40,9 @@ public class GameController : Singleton<GameController>
     {
         base.OnCleanup();
 
-        playerShip.GetComponent<PlayerShip>().PlayerShipDeath -= PlayerShipCallback;
+        playerShip.PlayerShipDeath -= PlayerShipCallback;
+        spawn.SpawnEnded -= Win;
+        spawn.EnemyDied -= EnemyDied;
     }
 
 
@@ -49,18 +56,54 @@ public class GameController : Singleton<GameController>
 
         if (PlayerManager.GetPlayer() == null)
         {
-            int shipSelected = GameManager.Instance.GetPlayerData().currentSelectedShip;
-            playerShip = PlayerManager.CreatePlayer(shipSelected);
+            playerData = GameManager.Instance.GetPlayerData();
+            int shipSelected = playerData.currentSelectedShip;
+            player = PlayerManager.CreatePlayer(shipSelected);
         }
 
-        playerShip.GetComponent<PlayerShip>().PlayerShipDeath += PlayerShipCallback;
+        playerShip = player.GetComponent<PlayerShip>();
+        playerShip.PlayerShipDeath += PlayerShipCallback;
 
 
-        SpawnEnemies spawn = GameObject.FindObjectOfType<SpawnEnemies>();
-        spawn.SpawnEnded = () => { Win(); };
+        spawn = GameObject.FindObjectOfType<SpawnEnemies>();
+        spawn.SpawnEnded += Win;
+        spawn.EnemyDied += EnemyDied;
 
         GameSession.Reset();
 
+
+        spawn.InitReference(playerData, playerShip);
+    }
+
+    private void EnemyDied(BaseEnemy baseEnemy)
+    {
+        int PlayerLevel = playerShip.Level;
+        int EnemyLevel = baseEnemy.level;
+        int levelDiffrence = PlayerLevel / EnemyLevel;
+
+        if (levelDiffrence == 0)
+        {
+            levelDiffrence = 1;
+        }
+
+        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+        playerShip.AddXP(XPEarned);
+        playerShip.IncreasePowerUp(.1f);
+
+        ////int dif = baseEnemy.level - playerShip.level;
+        ////if (dif > 0)
+        ////{
+        ////    float level = 25 / baseEnemy.level;
+        ////    playerShip.AddXP(baseEnemy.level);
+        ////}
+
+        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
+
+        GameSession.CurrentEnemyKilled++;
+        GameSession.enemyKilled++;
+        GameSession.Score = score;
+        Debug.Log("" + GameSession.score);
+        GameSession.Multiplier++;
     }
 
     private void PlayerShipCallback()

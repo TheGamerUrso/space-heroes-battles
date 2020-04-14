@@ -23,7 +23,7 @@
 
         set
         {
-            score = value;
+            score += value;
             OnScoreValueChanged?.Invoke(score);
         }
     }

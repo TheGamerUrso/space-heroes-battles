@@ -236,7 +236,6 @@ public class BaseEnemy : Ship, IDamagable
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
             EnemyDied?.Invoke(gameObject.name, this);
-
             healthBar.Hide();
             gameObject.SetActive(false);
         }

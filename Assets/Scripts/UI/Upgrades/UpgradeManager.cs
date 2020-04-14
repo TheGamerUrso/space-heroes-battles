@@ -3,22 +3,35 @@
 public class UpgradeManager : MonoBehaviour
 {
     public UpgradeElement[] upgradeElements;
+
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
+
+
+    private void OnDestroy()
+    {
+        GameEventSystem.OnUpgradeBought -= Refresh;
+    }
+
     private void Start()
     {
-        GameEventSystem.OnUpgradeBought = Refresh;
+        playerData = GameManager.Instance.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        GameEventSystem.OnUpgradeBought += Refresh;
     }
 
     public void RefreshUpgrades()
     {
         for (int i = 0; i < upgradeElements.Length; i++)
         {
-            upgradeElements[i].RefreshUpgradeElement();
+            UpgradeElement upgradeElement = upgradeElements[i];
+            upgradeElement.RefreshUpgradeElement();
         }
     }
 
     public void Refresh(UpgradeElement upgradeElement)
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+
         playerData.SetUpgrade(upgradeElement);
         RefreshUpgrades();
     }

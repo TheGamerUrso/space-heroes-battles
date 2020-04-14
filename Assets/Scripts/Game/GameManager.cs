@@ -5,6 +5,8 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using TheGamerUrso.SceneLoader;
+using System.Collections;
+
 [Serializable]
 public class PlayerShipElement
 {
@@ -162,18 +164,11 @@ public class GameManager : Singleton<GameManager>
             Paused = false;
         }
     }
-
-
-    public void Setup(int playerShips = 3)
+    IEnumerator StartUp()
     {
-        missionCollection = JsonSystem.LoadMissions();
-        LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        playerData = new PlayerData(playerShips);
-
-
         int firstRunIndex = 0;
 
-        if (PlayerPrefs.HasKey("FirstRun"))
+        if (PlayerPrefs.HasKey("FirstRun"))   
         {
             firstRunIndex = PlayerPrefs.GetInt("FirstRun");
         }
@@ -208,6 +203,16 @@ public class GameManager : Singleton<GameManager>
         }
 
         GenerateLevelObjectiveData();
+        yield return null;
+    }
+
+    public void Setup(int playerShips = 3)
+    {
+        missionCollection = JsonSystem.LoadMissions();
+        LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
+        playerData = new PlayerData(playerShips);
+
+        StartCoroutine(StartUp());
     }
 
     public Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()

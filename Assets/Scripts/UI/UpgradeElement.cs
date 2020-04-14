@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class UpgradeElement : MonoBehaviour, IPointerClickHandler
+public class UpgradeElement : MonoBehaviour
 {
     public UpgradeData upgradeData;
     public TextMeshProUGUI CostText;
@@ -25,16 +25,20 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
     public Image NotAvailableImage;
     public TextMeshProUGUI NotAvailbleText;
 
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
+    private ObjectiveData objectiveData;
 
     private void OnEnable()
     {
+        playerData = GameManager.Instance.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.spend);
         RefreshUpgradeElement();
     }
 
     public bool CheckAvailable(bool showError = false)
-    {
-        PlayerShipData  playerShipData = GameManager.Instance.GetPlayerData().GetCurrentPlayerShipData();
-
+    {  
         if (upgradeData.MaxLevel > 0)
         {
             if (playerShipData.level >= upgradeData.LevelRequirementPerLevel[currentUpgradeIndex])
@@ -63,19 +67,22 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
     public void Initialize()
     {
-        PlayerShipData playerShipData = GameManager.Instance.GetPlayerData().GetCurrentPlayerShipData();
+        playerData = GameManager.Instance.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.spend);
+
         if (upgradeData.MaxLevel > 0)
         {
             currentUpgradeIndex = playerShipData.Upgrades[(int)(upgradeData.upgradeType)];
 
             Cost = upgradeData.CostPerLevel[currentUpgradeIndex];
             NammeText.text = upgradeData.upgradeType.ToString();
-            CostText.text = string.Format("{0}", Cost);
+            CostText.text = Cost.ToString();
             UpgradeIcon.sprite = upgradeData.sprite;
 
             if (currentUpgradeIndex <= upgradeData.LevelRequirementPerLevel.Length - 1)
             {
-                CostText.text = "Maxed";
+                CostText.text = Constants.UpgradeMaxedOut;
                 NotAvailableImage.gameObject.SetActive(false);
                 NotAvailbleText.gameObject.SetActive(false);
             }
@@ -85,7 +92,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
             currentUpgradeIndex = playerShipData.Upgrades[(int)(upgradeData.upgradeType)-1];
             Cost = upgradeData.Cost;
             NammeText.text = upgradeData.upgradeType.ToString();
-            CostText.text = string.Format("{0}", Cost);
+            CostText.text = Cost.ToString();
             UpgradeIcon.sprite = upgradeData.sprite;
 
             if (currentUpgradeIndex == 1)
@@ -100,13 +107,9 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
     {
         if (CheckAvailable(true))
         {
-            PlayerData playerData =  GameManager.Instance.GetPlayerData();
-            AudioManager.PlaySound(null, "Click", 1);
-
-
             if (playerData.Coins < Cost)
             {
-                Popup.Show(Popup.popupType.message, "Cannot Afford it yet");
+                Popup.Show(Popup.popupType.message,Constants.CannotAffordIt);
                 return;
             }
 
@@ -114,7 +117,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
             {
                 if (upgradeData.CostPerLevel.Length - 1 <= currentUpgradeIndex)
                 {
-                    CostText.text = "Maxed";
+                    CostText.text = Constants.UpgradeMaxedOut;
                     return;
                 }
 
@@ -122,10 +125,10 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
             }else if(upgradeData.MaxLevel == 0)
             {
                 currentUpgradeIndex = 1;
-                CostText.text = "Out of Stock";
+                CostText.text = Constants.OutOfStock;
             }
 
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.spend);
+            objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.spend);
 
             if (objectiveData != null)
             {
@@ -139,15 +142,11 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
 
             RefreshUpgradeElement();
         }
-
-
-        RefreshUpgradeElement();
     }
 
     public void RefreshUpgradeElement()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
 
         NammeText.text = upgradeData.upgradeType.ToString();
 
@@ -165,7 +164,7 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
             progressBar.fillAmount = (float)currentUpgradeIndex;
         }
 
-        CostText.text = string.Format("{0}", Cost);
+        CostText.text = Cost.ToString();
         refreshUpgradeScreenDelay = 1;
 
 
@@ -189,13 +188,13 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
             NotAvailbleText.gameObject.SetActive(true);
             if (upgradeData.MaxLevel > 0)
             {
-                NotAvailbleText.text = string.Format("Unlocked at lvl {0}", upgradeData.LevelRequirementPerLevel[currentUpgradeIndex]);
+                NotAvailbleText.text = Constants.UnlockedAtLvl + upgradeData.LevelRequirementPerLevel[currentUpgradeIndex];
             }
         }
 
         if (currentUpgradeIndex == 1 && upgradeData.MaxLevel == 0)
         {
-            CostText.text = "Out of Stock";
+            CostText.text = Constants.OutOfStock;
             NotAvailableImage.gameObject.SetActive(false);
             NotAvailbleText.gameObject.SetActive(false);
         }
@@ -203,20 +202,11 @@ public class UpgradeElement : MonoBehaviour, IPointerClickHandler
         {
             if (upgradeData.CostPerLevel.Length - 1 <= currentUpgradeIndex)
             {
-                CostText.text = "Maxed";
+                CostText.text = Constants.UpgradeMaxedOut;
                 CostText.color = Color.white;
                 NotAvailableImage.gameObject.SetActive(false);
                 NotAvailbleText.gameObject.SetActive(false);
             }
         }
-    }
-
-    public void OnPointerClick(PointerEventData eventData)
-    {
-        GameObject objectClicked = eventData.pointerPress;
-        UpgradeElement upgradeElement = objectClicked.GetComponent<UpgradeElement>();
-        //Debug.Log("Clicked" + upgradeElement.upgradeData.upgradeType);
-
-        Purshase();
     }
 }

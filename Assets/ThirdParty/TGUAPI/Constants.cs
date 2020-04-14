@@ -76,4 +76,17 @@ public class Constants
     public static string SurviveObjectiveKeyTwo = "SurviveObjective2";
     public static string SpendObjectiveKey = "SpendObjective1";
     public static string SpendObjectiveKeyTwo = "SpendObjective2";
+
+
+
+    /**
+     * Upgrade Element
+     */
+    public static string UpgradeMaxedOut = "Maxed";
+    public static string OutOfStock = "Maxed";
+    public static string UnlockedAtLvl = "Unlocked at lvl";
+
+    public static string CannotAffordIt = "Cannot Afford it yet";
+
 }
+
