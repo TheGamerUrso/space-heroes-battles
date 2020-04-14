@@ -74,7 +74,6 @@ public class PlayerManager
     public void LoadPlayerSettings()
     {
         listOfPlayerShips = gm.ListOfPlayerShips();
-
     }
 
     public static PlayerShip GetPlayer()
