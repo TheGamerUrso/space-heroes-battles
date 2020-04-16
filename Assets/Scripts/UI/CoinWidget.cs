@@ -8,17 +8,14 @@ public class CoinWidget : MonoBehaviour
 
     private void OnDestroy()
     {
-        playerData = GameManager.Instance.GetPlayerData();
         playerData.OnCoinValueChanged -= UpdateCoins;
     }
 
     private void Start()
     {
         playerData = GameManager.Instance.GetPlayerData();
-        UpdateCoins(playerData.Coins);
-
-
         playerData.OnCoinValueChanged += UpdateCoins;
+        UpdateCoins(playerData.Coins);
     }
 
     public void UpdateCoins(int coins)
