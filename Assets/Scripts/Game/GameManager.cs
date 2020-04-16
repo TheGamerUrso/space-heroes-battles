@@ -113,7 +113,7 @@ public class GameManager : Singleton<GameManager>
         else if (SceneManager.sceneCount <= 1)
         {
             Debug.Log("Continue");
-            SceneLoader.Instance.LoadLevel("SplashScreen");
+            SceneLoader.Instance.LoadLevel("Intro");
         }
     }
     private void Update()

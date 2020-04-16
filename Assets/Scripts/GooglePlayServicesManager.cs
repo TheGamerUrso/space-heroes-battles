@@ -9,7 +9,6 @@ public class User
     public Texture2D userIcon;
     public string username;
 
-
     public User(Texture2D userIcon, string username)
     {
         this.userIcon = userIcon;
@@ -38,7 +37,6 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
     public bool GetInitialized()
     {
         return GameServices.IsInitialized();
-        return false;
     }
 
     public User GetUserInfo()
@@ -48,7 +46,6 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 #else
         return new User(null, "Over9000");
 #endif
-        return null;
     }
 
 
