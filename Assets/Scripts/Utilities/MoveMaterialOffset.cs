@@ -21,6 +21,7 @@ public class MoveMaterialOffset : MonoBehaviour {
     {
         rend = GetComponent<Renderer>();
     }
+
     void Update()
     {
         if (sinMove == false)
@@ -33,6 +34,7 @@ public class MoveMaterialOffset : MonoBehaviour {
             offset = Mathf.Sin(Time.time * frequently) * magnitute;
             offXset = Mathf.Sin(Time.time * frequently) * magnitute;
         }
+
         rend.material.SetTextureOffset(offsetKey, new Vector2(offXset, offset));
     }
 }

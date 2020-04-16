@@ -125,6 +125,8 @@ public class GameController : Singleton<GameController>
         {
             GameSession.IsGameOver = true;
 
+            spawn.GameOver();
+
             Time.timeScale = 1.0f;
 
             PlayerShip playerShip = PlayerManager.GetPlayer();

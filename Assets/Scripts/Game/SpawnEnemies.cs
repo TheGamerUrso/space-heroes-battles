@@ -128,7 +128,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                 yield return waitForEndOfFrame;
             }
 
-            while (TotalEnemies > 0)
+            while (TotalEnemies > 0 && !GameEnded)
             {
                 int randomNumb = 0;
 
@@ -214,12 +214,21 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             }
             else
             {
-                GameEnded = true;
+                GameOver();
             }
         }
 
         yield return waitForFourSeconds;
-        SpawnEnded?.Invoke();
+
+        if (!GameSession.IsGameOver)
+        {
+            SpawnEnded?.Invoke();
+        }
+    }
+
+    public void GameOver()
+    {
+        GameEnded = true;
     }
 
     private void SpawnBoss()
