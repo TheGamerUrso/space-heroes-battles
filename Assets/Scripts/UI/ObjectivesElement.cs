@@ -61,34 +61,34 @@ public class ObjectivesElement : MonoBehaviour
 
         if (!objectiveData.claimed && objectiveData.completed)
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
             switch ((ObjectiveType)objectiveData.objectiveType)
             {
                 case ObjectiveType.Kill:
-                    DataController.GetPlayerData().AddCoin(40);
-                    DataController.GetPlayerData().EarnXP(10);
+                    playerData.AddCoin(40);
+                    playerData.EarnXP(10);
                     break;
                 case ObjectiveType.Use:
-                    DataController.GetPlayerData().AddCoin(40);
-                    DataController.GetPlayerData().EarnXP(10);
-                    DataController.GetPlayerData().SetTotalSuperUsed(0);
+                    playerData.AddCoin(40);
+                    playerData.EarnXP(10);
+                    playerData.SetTotalSuperUsed(0);
                     break;
                 case ObjectiveType.Unharmed:
-                    DataController.GetPlayerData().AddCoin(40);
-                    DataController.GetPlayerData().EarnXP(10);
-                    DataController.GetPlayerData().SetHitInGame(false);
+                    playerData.AddCoin(40);
+                    playerData.EarnXP(10);
+                    playerData.SetHitInGame(false);
                     break;
                 case ObjectiveType.survive:
-                    DataController.GetPlayerData().AddCoin(40);
-                    DataController.GetPlayerData().EarnXP(10);
-                    DataController.GetPlayerData().SetWaveSurvived(0);
+                    playerData.AddCoin(40);
+                    playerData.EarnXP(10);
+                    playerData.SetWaveSurvived(0);
                     break;
                 case ObjectiveType.spend:
                     int moneySpend = objectiveData.progress;
-                    DataController.GetPlayerData().AddCoin(moneySpend / 3);
-                    DataController.GetPlayerData().EarnXP(10);
-                    DataController.GetPlayerData().SetMoneySpend(0);
+                    playerData.AddCoin(moneySpend / 3);
+                    playerData.EarnXP(10);
+                    playerData.SetMoneySpend(0);
                     break;
 
                 default:

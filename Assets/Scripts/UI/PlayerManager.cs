@@ -16,15 +16,19 @@ public class PlayerManager
     private static PlayerShipElement[] listOfPlayerShips;
 
 
-    public PlayerManager()
+    public PlayerManager(GameManager gm,GameManager dc)
     {
         if (instance == null)
         {
+            this.gm = gm;
+            this.dc = dc;
             instance = this;
         }
 
     }
 
+    private GameManager gm;
+    private GameManager dc;
 
     public static GameObject CreatePlayer(int id)
     {
@@ -41,9 +45,13 @@ public class PlayerManager
         currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
 
         currentPlayer.SetActive(true);
-        int level = listOfPlayerShips[id].prefab.level;
-        float xp = listOfPlayerShips[id].prefab.xp;
-        float xpToLevel = listOfPlayerShips[id].prefab.xpToLevel;
+
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
+        int level = playerShipData.level;
+        float xp = playerShipData.xp;
+        float xpToLevel = playerShipData.xpToLevel;
 
         currentPlayer.GetComponent<PlayerShip>().level = level;
         currentPlayer.GetComponent<PlayerShip>().xp = xp;
@@ -51,7 +59,7 @@ public class PlayerManager
 
         currentPlayer.GetComponent<PlayerShip>().SetStats(level);
 
-        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(DataController.GetPlayerData());
+        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(playerData);
 
 
         return currentPlayer;
@@ -63,23 +71,9 @@ public class PlayerManager
         return listOfPlayerShips[id];
     }
 
-    public static void LoadPlayerSettings()
+    public void LoadPlayerSettings()
     {
-        listOfPlayerShips = GameManager.Instance.ListOfPlayerShips();
-        PlayerData playerData = DataController.GetPlayerData();
-        for (int i = 0; i < listOfPlayerShips.Length; i++)
-        {
-            var Level = playerData.Level;
-            var xp = playerData.xp;
-            var xpToLevel = playerData.xpToLevel;
-            listOfPlayerShips[i].prefab.level = Level;
-            listOfPlayerShips[i].prefab.xp = xp;
-            listOfPlayerShips[i].prefab.xpToLevel = xpToLevel;
-            listOfPlayerShips[i].prefab.MaxLevel = 20;
-
-
-            listOfPlayerShips[i].prefab.SetPlayerData(DataController.GetPlayerData());
-        }
+        listOfPlayerShips = gm.ListOfPlayerShips();
     }
 
     public static PlayerShip GetPlayer()

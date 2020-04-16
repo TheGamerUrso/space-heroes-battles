@@ -90,7 +90,7 @@ public class AudioManager : Singleton<AudioManager>
         }
 
 
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
         if (playerData == null)
         {

@@ -30,26 +30,25 @@ public class GuiManager : Singleton<GuiManager>
 
     private void OnApplicationFocus(bool focus)
     {
-        //if (Application.platform == RuntimePlatform.Android)
-        //{
-        //    if (!focus && GameController.IsGameOver == false)
-        //    {
-        //        GameManager.PauseTheGame();
-        //        ShowPauseMenu(true);
-        //    }
-        //}
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!focus && GameSession.IsGameOver == false)
+            {
+                //GameManager.PauseTheGame();
+                //ShowPauseMenu(Paused);
+            }
+        }
     }
 
     private void OnApplicationPause(bool Paused)
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            //TODO Update Pause
-            //if (GameController.IsGameOver == false)
-            //{
-            //    GameManager.PauseTheGame();
-            //    ShowPauseMenu(true);
-            //}
+            if (GameSession.IsGameOver == false)
+            {
+                //GameManager.PauseTheGame();
+                //ShowPauseMenu(Paused);
+            }
         }
     }
 
@@ -59,11 +58,13 @@ public class GuiManager : Singleton<GuiManager>
         if (playerShip != null)
         {
             playerShip.PickUpItem -= PickUpItem;
-            GameEventSystem.PickUpEvent -= UpdateCoinWidgetText;
         }
 
         GameController.OnGameOver -= GameOver;
         GameController.OnWin -= Win;
+
+        GameSession.OnCoinValueChanged -= UpdateCoinWidgetText;
+        GameSession.OnScoreValueChanged -= UpdateScore;
     }
 
     private void Start()
@@ -75,8 +76,12 @@ public class GuiManager : Singleton<GuiManager>
             playerShip = PlayerManager.GetPlayer();
         }
 
+
         playerShip.PickUpItem += PickUpItem;
-        GameEventSystem.PickUpEvent += UpdateCoinWidgetText;
+
+        GameSession.OnCoinValueChanged += UpdateCoinWidgetText;
+        GameSession.OnScoreValueChanged += UpdateScore;
+
 
         GameController.OnGameOver += GameOver;
         GameController.OnWin += Win;
@@ -84,15 +89,14 @@ public class GuiManager : Singleton<GuiManager>
         SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
         if (spawnEnemies != null)
         {
-            spawnEnemies.EnemyDied = EnemyDiedCallback;
+            spawnEnemies.EnemyDied += EnemyDiedCallback;
         }
     }
 
     public void EnemyDiedCallback(BaseEnemy baseEnemy)
     {
-        int score = GameSession.multiplier * baseEnemy.m_ValueOfEnemy;
-        UpdateScore(score);
-        GuiManager.CreateFloatingText(string.Format("{0}", score), baseEnemy.transform.position);
+        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
+        GuiManager.CreateFloatingText(score.ToString(), baseEnemy.transform.position);
     }
 
     public void PickUpItem(ItemData itemData)
@@ -191,30 +195,26 @@ public class GuiManager : Singleton<GuiManager>
 
     public static void CountdownVisibility(bool enable)
     {
-        GuiManager.Instance.SetCountdownVisibility(enable);
+        Instance.SetCountdownVisibility(enable);
     }
     public static void Countdown(float countdown)
     {
-        GuiManager.Instance.CountdownText(countdown);
+        Instance.CountdownText(countdown);
     }
 
     public void CountdownText(float countdown)
     {
-        CountdownWidgetText.text = string.Format("{0}", Mathf.Round(countdown));
+        CountdownWidgetText.text = Mathf.Round(countdown).ToString();
     }
 
     public void ReplayButton()
     {
-        AudioManager.PlaySound(null, "Click", 1);
-
         SceneLoader.Instance.ResetLevel();
     }
 
     public void ResumeButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, true);
-
-        AudioManager.PlaySound(null, "Back", 1);
         ShowPauseMenu(false);
         GameManager.PauseTheGame(false);
     }
@@ -222,8 +222,6 @@ public class GuiManager : Singleton<GuiManager>
     public void PauseButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, false);
-
-        AudioManager.PlaySound(null, "Click", 1);
         ShowPauseMenu(true);
         GameManager.PauseTheGame();
     }
@@ -233,16 +231,14 @@ public class GuiManager : Singleton<GuiManager>
         PauseScreen.SetActive(value);
     }
 
-    public void UpdateCoinWidgetText()
+    public void UpdateCoinWidgetText(int coin)
     {
-        //TODO Update Coin Widget
-        CoinWidgetText.text = string.Format("{0}", 0);
+        CoinWidgetText.text = coin.ToString();
     }
 
     public void UpdateScore(int score)
     {
-        //TODO Update Score
-        string scoreText = string.Format("{00:00000000}", 0);
+        string scoreText = string.Format("{00:00000000}", score);
         ScoreText.text = scoreText;
     }
 
@@ -260,7 +256,6 @@ public class GuiManager : Singleton<GuiManager>
     public void LoadMainMenu()
     {
         GameManager.PauseTheGame(false);
-        AudioManager.PlaySound(null, "Click", 1);
         SceneLoader.Instance.LoadMainenu();
         GameObject activeMenuGO = null;
 
@@ -283,7 +278,9 @@ public class GuiManager : Singleton<GuiManager>
 
     IEnumerator DelayCloseMenu(GameObject Menu, float time)
     {
-        yield return new WaitForSeconds(time);
+        WaitForSeconds delay = new WaitForSeconds(time);
+
+        yield return delay;
         Menu.SetActive(false);
     }
 
@@ -314,123 +311,17 @@ public class GuiManager : Singleton<GuiManager>
 
     public void Win(GameController gc)
     {
-        Time.timeScale = 1.0f;
+  
         if (!ResultShowed)
         {
-            PlayerShip player = PlayerManager.GetPlayer();
-            PlayerData playerData = DataController.GetPlayerData();
-
-            //TODO Exit Animatin
-
-            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-
-            if (player == null)
-            {
-                player = GameObject.FindObjectOfType<PlayerShip>();
-            }
-
-            playerData.Level = player.level;
-            playerData.xp = player.xp;
-            playerData.xpToLevel = player.xpToLevel;
-
-            //Save Game Data
-            playerData.PlayedGame = true;
-            for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
-            {
-                ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
-                switch ((ObjectiveType)objective.objectiveType)
-                {
-                    case ObjectiveType.Kill:
-                        
-                        //TODO Current Enemy Killed
-                        if (objective.completed == false)
-                        {
-                            var progressSoFar = objective.progress + 0;
-                            objective.UpdateProgress(progressSoFar);
-                        }
-
-                        break;
-                    case ObjectiveType.Use:
-                        if (objective.completed == false)
-                        {
-                            var progressSoFar = objective.progress + player.GetSpecialAttack().superUsed;
-                            objective.UpdateProgress(progressSoFar);
-                        }
-                        break;
-                    case ObjectiveType.Unharmed:
-                        if (objective.completed == false)
-                        {
-                            if (player.IsPlayerDamaged == false)
-                            {
-                                ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                                objectiveData.UpdateProgress(1);
-                            }
-                        }
-                        break;
-                    case ObjectiveType.survive:
-                        //TODO WaveSurvived
-                        objective.UpdateProgress(0);
-                        break;
-                    case ObjectiveType.spend:
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-
-            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-            int missionsCompleted = 0;
-            foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-            {
-                if (item.Value[0].completed == true)
-                {
-                    missionsCompleted++;
-                }
-            }
-
-            int levelPlayed = GameManager.LevelSelected;
-            //TODO Score
-            playerData.SetScore(levelPlayed + 1,0);
-
-            playerData.LevelUnlocked = missionsCompleted;
-
-
-            if (GooglePlayServicesManager.Instance)
-            {
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
-            }
-
             StartCoroutine(WinCoroutine());
         }
     }
     //Game is Over
     public void GameOver(GameController gc)
     {
-        Time.timeScale = 1.0f;
         if (!ResultShowed)
-        {   
-            PlayerData playerData = DataController.GetPlayerData();
-            playerData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-            playerData.Level = playerShip.level;
-            playerData.xp = playerShip.xp;
-            playerData.xpToLevel = playerShip.xpToLevel;
-
-            //TODO Coins Earn In Game
-            //TODO Enemy Killed In Game
-            playerData.Coins += 0;
-            playerData.TotalKills += 0;
-
-            SaveSystem.SavePlayerData();
-
-
-            if (GooglePlayServicesManager.Instance)
-            {
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
-                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
-            }
-
+        {       
             ResultShowed = true;
 
             StartCoroutine(GameOverCoroutine());
@@ -442,8 +333,6 @@ public class GuiManager : Singleton<GuiManager>
     {
 
         PlayerHUD.gameObject.SetActive(false);
-        AudioManager.PlayMusic("GameOver", false);
-
 
         yield return new WaitForSeconds(2.0f);
 
@@ -452,9 +341,9 @@ public class GuiManager : Singleton<GuiManager>
 
     public IEnumerator WinCoroutine()
     {
-        PlayerHUD.gameObject.SetActive(false);
-        yield return new WaitForSeconds(2.0f);
         AudioManager.PlayMusic("Victory", false);
+
+        PlayerHUD.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2.0f);
 

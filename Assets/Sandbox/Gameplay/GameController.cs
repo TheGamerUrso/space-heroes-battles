@@ -5,125 +5,18 @@ using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public static class GameSession
-{
-    public static bool IsGameOver;
-    public static int EnemySpawnInTotal { get; set; }
-
-    public static float score;
-    public static float Score
-    {
-        get
-        {
-            return score;
-        }
-
-        set
-        {
-            score = value; 
-        }
-    }
-
-    public static int WaveSurvived { get; set; }
-
-    private static int currentEnemyKilled;
-
-    public static int CurrentEnemyKilled
-    {
-        get
-        {
-            return currentEnemyKilled;
-        }
-
-        set
-        {
-
-            currentEnemyKilled = value;
-            PlayerData playerData = DataController.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
-            if (objectiveData != null)
-                objectiveData.UpdateProgress(currentEnemyKilled);
-        }
-    }
-   
-    public static int counsEarnInGame { get; set; }
-
-    private static int superUsed;
-    public static int SuperUsed
-    {
-
-        get
-        {
-            return superUsed;
-        }
-
-        set
-        {
-            superUsed = value;
-            PlayerData playerData = DataController.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
-            if (objectiveData != null)
-                objectiveData.UpdateProgress(superUsed);
-        }
-    }
-
-    private static bool getDamaged;
-
-    public static bool GotDamaged
-    {
-        get
-        {
-            return getDamaged;
-        }
-
-        set
-        {
-            getDamaged = value;
-            PlayerData playerData = DataController.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-            if (objectiveData != null)
-                objectiveData.UpdateProgress(1);
-        }
-    }
-
-    public static int multiplier { get; set; }
-
-    public static int enemyKilled;
-    public static int enemyEscaped;
-
-    public static void Reset()
-    {
-        IsGameOver = false;
-        EnemySpawnInTotal = 0;
-        Score = 0;
-        WaveSurvived = 0;
-        currentEnemyKilled = 0;
-        currentEnemyKilled = 0;
-        counsEarnInGame = 0;
-        superUsed = 0;
-        getDamaged = false;
-        multiplier = 0;
-
-        enemyKilled = 0;
-        enemyEscaped = 0;
-    }
-}
-
-public static class GameLevel
-{   
-    public static bool useSloMo;
-   
-    public static int LevelDifficulty { get; set; }
-    public static int EnemyKilled { get; set; }
-    public static int CoinDropInTotal { get; set; }
-}
 
 public class GameController : Singleton<GameController>
 {
     public static Action<GameController> OnGameOver;
     public static Action<GameController> OnWin;
 
-    private GameObject playerShip;
+    private GameObject player;
+    private PlayerData playerData;
+    private PlayerShip playerShip;
+
+
+    private SpawnEnemies spawn;
 
     private float slowMo;
     private float delayTheSlowMoEffectTimer;
@@ -131,7 +24,6 @@ public class GameController : Singleton<GameController>
 
     protected override void OnAwake()
     {
-#if UNITY_EDITOR
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             if (SceneManager.GetSceneAt(i).name.Equals("boot"))
@@ -142,7 +34,15 @@ public class GameController : Singleton<GameController>
             Debug.Log("Boot not found Loading");
             SceneManager.LoadScene("boot", LoadSceneMode.Additive);
         }
-#endif
+    }
+
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+
+        playerShip.PlayerShipDeath -= PlayerShipCallback;
+        spawn.SpawnEnded -= Win;
+        spawn.EnemyDied -= EnemyDied;
     }
 
 
@@ -156,55 +56,60 @@ public class GameController : Singleton<GameController>
 
         if (PlayerManager.GetPlayer() == null)
         {
-            int shipSelected = GameManager.CurrentHeroChoosen;
-            playerShip = PlayerManager.CreatePlayer(shipSelected);
+            playerData = GameManager.Instance.GetPlayerData();
+            int shipSelected = playerData.currentSelectedShip;
+            player = PlayerManager.CreatePlayer(shipSelected);
         }
 
-        playerShip.GetComponent<PlayerShip>().PlayerShipDeath += PlayerShipCallback;
+        playerShip = player.GetComponent<PlayerShip>();
+        playerShip.PlayerShipDeath += PlayerShipCallback;
 
 
-        SpawnEnemies spawn = GameObject.FindObjectOfType<SpawnEnemies>();
-        spawn.SpawnEnded = () => { Win(); };
-        
+        spawn = GameObject.FindObjectOfType<SpawnEnemies>();
+        spawn.SpawnEnded += Win;
+        spawn.EnemyDied += EnemyDied;
+
         GameSession.Reset();
 
+
+        spawn.InitReference(playerData, playerShip);
+    }
+
+    private void EnemyDied(BaseEnemy baseEnemy)
+    {
+        int PlayerLevel = playerShip.Level;
+        int EnemyLevel = baseEnemy.level;
+        int levelDiffrence = PlayerLevel / EnemyLevel;
+
+        if (levelDiffrence == 0)
+        {
+            levelDiffrence = 1;
+        }
+
+        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+        playerShip.AddXP(XPEarned);
+        playerShip.IncreasePowerUp(.1f);
+
+        ////int dif = baseEnemy.level - playerShip.level;
+        ////if (dif > 0)
+        ////{
+        ////    float level = 25 / baseEnemy.level;
+        ////    playerShip.AddXP(baseEnemy.level);
+        ////}
+
+        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
+
+        GameSession.CurrentEnemyKilled++;
+        GameSession.enemyKilled++;
+        GameSession.Score = score;
+        Debug.Log("" + GameSession.score);
+        GameSession.Multiplier++;
     }
 
     private void PlayerShipCallback()
     {
         GameOver();
     }
-
-    //    private void BossEnemyCallback(string id, BaseEnemy bossEnemy)
-    //    {
-    //        Win();
-    //    }
-
-    //    public void ToggleSlowMo(bool value)
-    //    {
-    //        useSloMo = value;
-    //        if (value == false)
-    //        {
-    //            Time.timeScale = 1.0f;
-    //        }
-    //    }
-
-
-    //    private void Update()
-    //    {
-    //        if (!IsGameOver)
-    //        {
-    //            if (AudioManager.Instance)
-    //            {
-    //                if (AudioManager.Instance.MusicIsDone())
-    //                {
-    //                    AudioManager.PlayRandomMusic();
-    //                }
-    //            }
-    //            SlowMoEffect();
-    //        }
-    //    }
-
     public void Win()
     {
         if (!GameSession.IsGameOver)
@@ -220,7 +125,32 @@ public class GameController : Singleton<GameController>
         {
             GameSession.IsGameOver = true;
 
-          
+            spawn.GameOver();
+
+            Time.timeScale = 1.0f;
+
+            PlayerShip playerShip = PlayerManager.GetPlayer();
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
+            playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+            playerShipData.level = playerShip.level;
+            playerShipData.xp = playerShip.xp;
+            playerShipData.xpToLevel = playerShip.xpToLevel;
+
+            //TODO Coins Earn In Game
+            //TODO Enemy Killed In Game
+            playerData.Coins += 0;
+            playerData.TotalKills += 0;
+
+            SaveSystem.SaveGame();
+
+
+            if (GooglePlayServicesManager.Instance)
+            {
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+                GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+            }
 
             StartCoroutine(DelayGameOver());
         }
@@ -229,23 +159,104 @@ public class GameController : Singleton<GameController>
     IEnumerator DelayGameOver()
     {
         yield return new WaitForSeconds(4.0f);
+        AudioManager.PlayMusic("GameOver", false);
         OnGameOver?.Invoke(this);
 
     }
     IEnumerator DelayWinScreen()
     {
-        yield return new WaitForSeconds(4.0f);
+        Time.timeScale = 1.0f;
 
-        PlayerData playerData = DataController.GetPlayerData();
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-        if (objectiveData != null)
-            objectiveData.UpdateProgress(1);
+        PlayerShip player = PlayerManager.GetPlayer();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
-        playerData.Coins += GameSession.counsEarnInGame;
+        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+
+        if (player == null)
+        {
+            player = GameObject.FindObjectOfType<PlayerShip>();
+        }
+
+        playerShipData.level = player.level;
+        playerShipData.xp = player.xp;
+        playerShipData.xpToLevel = player.xpToLevel;
+        //Save Game Data
+        playerData.PlayedGame = true;
+
+        for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
+        {
+            ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
+            switch ((ObjectiveType)objective.objectiveType)
+            {
+                case ObjectiveType.Kill:
+                    if (objective.completed == false)
+                    {
+                        var progressSoFar = objective.progress + 0;
+                        objective.UpdateProgress(progressSoFar);
+                    }
+
+                    break;
+                case ObjectiveType.Use:
+                    if (objective.completed == false)
+                    {
+                        objective.UpdateProgress(playerData.superUsed);
+                    }
+                    break;
+                case ObjectiveType.Unharmed:
+                    if (objective.completed == false)
+                    {
+                        if (player.IsPlayerDamaged == false)
+                        {
+                            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+                            objectiveData.UpdateProgress(1);
+                        }
+                    }
+                    break;
+                case ObjectiveType.survive:
+                    var surviveProgress = objective.progress;
+                    surviveProgress++;
+                    objective.UpdateProgress(surviveProgress);
+                    break;
+                case ObjectiveType.spend:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+        int missionsCompleted = 0;
+        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+        {
+            if (item.Value[0].completed == true)
+            {
+                missionsCompleted++;
+            }
+        }
+        int levelPlayed = GameManager.LevelSelected;
+
+        playerData.SetScore(levelPlayed + 1, 0);
+
+        playerData.LevelUnlocked = missionsCompleted;
+
+        playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
 
 
-        playerData.Save();
+        if (GooglePlayServicesManager.Instance)
+        {
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+        }
+
+
+        yield return new WaitForSeconds(4.0f);
+
+        PlayerShip playerShip = PlayerManager.GetPlayer();
+        playerShip.Exit();
+
+
         OnWin?.Invoke(this);
     }
 

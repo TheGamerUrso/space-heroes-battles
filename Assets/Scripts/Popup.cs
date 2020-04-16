@@ -31,7 +31,7 @@ public class Popup : MonoBehaviour
     {
         if (popups.ContainsKey(popupType))
         {
-            popups[popupType].SetActive(true);
+            popups[popupType].GetComponent<SystemMessageWidget>().Enabled(true);
             popups[popupType].GetComponent<SystemMessageWidget>().SetWidgetText(message);
             if (autoClose)
             {

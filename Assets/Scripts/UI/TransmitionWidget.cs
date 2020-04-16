@@ -29,14 +29,17 @@ public class TransmitionWidget : MonoBehaviour
 
     private IEnumerator WarningBossIncomingEvent()
     {
+      
+
         AnimationClip[] animatorClipInfo = BossStageWarning.runtimeAnimatorController.animationClips;
         float length = animatorClipInfo[0].length;
+        WaitForSeconds delay = new WaitForSeconds(length);
 
         IncomingTransmition = true;
 
         BossStageWarning.gameObject.SetActive(true);
 
-        yield return new WaitForSeconds(length);
+        yield return delay;
 
         BossStageWarning.gameObject.SetActive(false);
         IncomingTransmition = false;
@@ -44,30 +47,34 @@ public class TransmitionWidget : MonoBehaviour
 
     private IEnumerator TranmisionEvent()
     {
+        WaitForSeconds delay = new WaitForSeconds(.25f);
+        WaitForSeconds SecondDelay = new WaitForSeconds(.5f);
+        WaitForSeconds ThirdDelay = new WaitForSeconds(2.5f);
+
         IncomingTransmition = true;
         TransmitionWidgetPrefab.SetActive(true);
         for (int i = 0; i < 3; i++)
         {
             TransmitionWidgetPrefab.SetActive(false);
-            yield return new WaitForSeconds(.25f);
+            yield return delay;
             TransmitionWidgetPrefab.SetActive(true);
-            yield return new WaitForSeconds(.25f);
+            yield return delay;
         }
 
         TransmitionWidgetPrefab.SetActive(false);
-        yield return new WaitForSeconds(.5f);
+        yield return SecondDelay;
 
         TransmitionWidgetPrefab.SetActive(true);
         for (int i = 0; i < transmitions.Length; i++)
         {
             TransmitionWidgetPrefab.SetActive(true);
             TransmitionText.text = transmitions[i];
-            yield return new WaitForSeconds(2.5f);
+            yield return ThirdDelay;
             TransmitionWidgetPrefab.SetActive(false);
-            yield return new WaitForSeconds(.25f);
+            yield return delay;
         }
 
-        yield return new WaitForSeconds(.5f);
+        yield return SecondDelay;
         TransmitionWidgetPrefab.SetActive(false);
         IncomingTransmition = false;
     }

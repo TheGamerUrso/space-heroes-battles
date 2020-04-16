@@ -2,7 +2,7 @@
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public class BaseEnemy : Ship
+public class BaseEnemy : Ship, IDamagable
 {
     public Action<string, BaseEnemy> EnemyDied;
     public Action<string, BaseEnemy> EnemyGotHit;
@@ -49,7 +49,7 @@ public class BaseEnemy : Ship
     [SerializeField] protected bool AutoEnableWeapon;
 
 
-
+    private SpawnEnemies spawnEnemies;
 
     public void EnableWeaponById(int id, bool solo = false)
     {
@@ -95,12 +95,44 @@ public class BaseEnemy : Ship
         }
     }
 
+    private void OnDisable()
+    {
+        if (spawnEnemies == null)
+        {
+            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        }
+
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.UnregisterEnemy(this);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (spawnEnemies == null)
+        {
+            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        }
+
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.UnregisterEnemy(this);
+        }
+    }
+
     public override void OnAwake()
     {
         SetStats(level);
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
+
+        if (spawnEnemies == null)
+        {
+            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+        }
+
     }
 
     public override void ShipSetup()
@@ -129,11 +161,17 @@ public class BaseEnemy : Ship
     public override void Enter()
     {
         Alive = true;
+
         DisableAllWeapons();
 
         if (AutoEnableWeapon)
         {
             EnableAllWeapon();
+        }
+
+        if (spawnEnemies != null)
+        {
+            spawnEnemies.RegisterEnemy(this);
         }
 
     }
@@ -198,7 +236,6 @@ public class BaseEnemy : Ship
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
             EnemyDied?.Invoke(gameObject.name, this);
-
             healthBar.Hide();
             gameObject.SetActive(false);
         }
@@ -215,7 +252,7 @@ public class BaseEnemy : Ship
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            IDamagable destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(destroyable.MaxHealth / 2);
             TakeDamage(CurrentHealth);
         }

@@ -94,7 +94,7 @@ public class LevelElement : MonoBehaviour
     {
         if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
         {
-            PlayerData playerData = DataController.GetPlayerData();
+            PlayerData playerData =  GameManager.Instance.GetPlayerData();
             if (level.mission != null)
             {
                 if (level.mission.ID <= playerData.LevelUnlocked)

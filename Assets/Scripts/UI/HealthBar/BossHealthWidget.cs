@@ -25,7 +25,7 @@ public class BossHealthWidget : EnemyHealthWidget
         HealthBarTransform.transform.DOScaleX(1, 2).SetAs(tParams);
     }
 
-    public override void Setup(IDestroyable ship, bool follow = false)
+    public override void Setup(IDamagable ship, bool follow = false)
     {
         base.Setup(ship);
     }

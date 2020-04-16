@@ -9,7 +9,6 @@ public class User
     public Texture2D userIcon;
     public string username;
 
-
     public User(Texture2D userIcon, string username)
     {
         this.userIcon = userIcon;
@@ -38,7 +37,6 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
     public bool GetInitialized()
     {
         return GameServices.IsInitialized();
-        return false;
     }
 
     public User GetUserInfo()
@@ -48,7 +46,6 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 #else
         return new User(null, "Over9000");
 #endif
-        return null;
     }
 
 
@@ -189,6 +186,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 
     public void ShowLeaderboards()
     {
+
 #if UNITY_ANDROID
         if (GameServices.IsInitialized())
         {
@@ -203,11 +201,14 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 
                 GameServices.Init();    // start a new initialization process
             }
+        }
 #elif UNITY_IOS
+        else{
             Debug.Log("Cannot show leaderboard UI: The user is not logged in to Game Center.");
-#endif
+
 
         }
+#endif
     }
 
 

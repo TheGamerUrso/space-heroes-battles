@@ -9,6 +9,7 @@ public class IntroScreen : MonoBehaviour
     public OnIntroClickContinue onIntroClickContinue;
     public GameObject[] Ships;
     private bool clicked;
+    public GameObject pressToContinue;
 
 
     private void Awake()
@@ -32,7 +33,7 @@ public class IntroScreen : MonoBehaviour
 
     void Start()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
 
         for (int i = 0; i < Ships.Length; i++)
         {
@@ -51,6 +52,7 @@ public class IntroScreen : MonoBehaviour
             clicked = true;
             onIntroClickContinue?.Invoke();
             StartCoroutine(Fade());
+            pressToContinue.gameObject.SetActive(false);
         }
     }
 

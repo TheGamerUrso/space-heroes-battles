@@ -13,9 +13,9 @@ public class HighscoreScreen : MonoBehaviour
 
     public void UpdateScore()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
 
-        MissionCollection missionCollection = DataController.GetMissionCollection();
+        MissionCollection missionCollection = GameManager.Instance.GetMissionCollection();
 
         int numberOfLevels = missionCollection.Missions.Length;
 

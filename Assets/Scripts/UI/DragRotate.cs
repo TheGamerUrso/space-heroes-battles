@@ -31,7 +31,7 @@ public class DragRotate : MonoBehaviour, IDragHandler, IEndDragHandler
     {
         AutoRotate = false;
         GetComponent<Button>().interactable = false;
-        float clampedRotateSpeed = Mathf.Clamp(Input.GetAxis("HorizontalMouse"),-RotateSpeed, RotateSpeed);
+        float clampedRotateSpeed = Mathf.Clamp(Input.GetAxis("Mouse X"),-RotateSpeed, RotateSpeed);
         RotateTarget.transform.Rotate(new Vector3(0, clampedRotateSpeed, 0));
     }
 

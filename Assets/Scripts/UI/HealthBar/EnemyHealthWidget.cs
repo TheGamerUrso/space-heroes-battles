@@ -16,7 +16,7 @@ public class EnemyHealthWidget : BaseHealthWidget
         UpdateHealthBar(100, 100);
     }
 
-    public override void Setup(IDestroyable ship, bool follow = true)
+    public override void Setup(IDamagable ship, bool follow = true)
     {
      
         if (Target == null || Target != ship)
@@ -25,8 +25,21 @@ public class EnemyHealthWidget : BaseHealthWidget
             if (monoGO != null)
             {
                 Ship shipGo = monoGO.GetComponent<Ship>();
-                shipGo.OnHealthChanged += UpdateHealthBar;
-                Target = ship;
+                if (shipGo != null)
+                {
+                    shipGo.OnHealthChanged += UpdateHealthBar;
+                    Target = ship;
+                }
+                else
+                {
+                    Punch shipAccesory = monoGO.GetComponent<Punch>();
+                    if (shipAccesory != null)
+                    {
+                        Debug.Log("shipAccesory not found");
+                        shipAccesory.OnHealthChanged += UpdateHealthBar;
+                        Target = ship;
+                    }
+                }
             }
         }
     }

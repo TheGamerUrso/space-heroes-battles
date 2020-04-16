@@ -70,8 +70,6 @@ public class FirstBossAI : BaseBossEnemyAI
     {
         if (baseBoss.CurrentHealth > 0)
         {
-            baseBoss.EnableColliders(true);
-
             if (cooldown > 0)
             {
                 cooldown -= Time.deltaTime;

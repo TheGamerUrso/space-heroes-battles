@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Doozy.Engine.UI;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -30,14 +31,16 @@ namespace TheGamerUrso
             private Animator animator;
             public Image progressBar;
 
-            public Image BlockRaycast;
+            public CanvasGroup BlockRaycast;
             public GameObject ProgressBarPanel;
             public GameObject Content;
 
             public string currentLevelLoaded;
-            public AudioClip appearSFX;
-            public AudioClip disapearSFX;
-            public AudioSource audioSouce;
+
+            public UIView LoadingScreen;
+
+            public GateControl[] Gates;
+
             protected override void OnAwake()
             {
                 base.OnAwake();
@@ -54,14 +57,11 @@ namespace TheGamerUrso
             }
             public void ResetLevel()
             {
-                BlockRaycast.enabled = true;
-
                 StartCoroutine(ShowLoadingScreen(SceneManager.GetActiveScene().name));
             }
 
             public void LoadScene(string level)
             {
-                BlockRaycast.enabled = true;
                 StartCoroutine(ShowLoadingScreen(level));
             }
 
@@ -126,17 +126,22 @@ namespace TheGamerUrso
 
             private IEnumerator LoadSceneAsync(string levelName, float delay = 0)
             {
-                foreach (var item in ActiveScenes)
+                for (int i = 0; i < ActiveScenes.Count; i++)
                 {
+                    string item = ActiveScenes[i];
                     UnloadLevel(item);
                 }
-
+      
                 ActiveScenes.Clear();
+
+                WaitForEndOfFrame waitForEndFrame = new WaitForEndOfFrame();
 
                 while (unloading)
                 {
-                    yield return new WaitForEndOfFrame();
+                    yield return waitForEndFrame;
+
                 }
+                System.GC.Collect();
 
                 AsyncOperation ao = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
                 ao.completed += OnLoadOperationComplete;
@@ -162,35 +167,33 @@ namespace TheGamerUrso
 
             private IEnumerator ShowLoadingScreen(string level)
             {
-                ShowProgressBar();
+                Show();
 
-                yield return new WaitForSeconds(2.0f);
-
+                WaitForSeconds waitForSec = new WaitForSeconds(2.0f);
+                yield return waitForSec;
                 StartCoroutine(LoadSceneAsync(level));
             }
 
-            private void ShowProgressBar()
+            private void Show()
             {
-                if (animator)
+                Content.SetActive(true);
+                BlockRaycast.blocksRaycasts = true;
+                for (int i = 0; i < Gates.Length; i++)
                 {
-                    audioSouce.PlayOneShot(disapearSFX);
-                    animator.ResetTrigger("Open");
-                    animator.SetTrigger("Close");
+                    GateControl gate = Gates[i];
+                    gate.CloseGate();
                 }
-                Content.gameObject.SetActive(true);
-                ProgressBarPanel.SetActive(true);
             }
 
             private void Hide()
             {
-                if (animator)
+                Content.SetActive(false);
+                BlockRaycast.blocksRaycasts = false;
+                for (int i = 0; i < Gates.Length; i++)
                 {
-                    audioSouce.PlayOneShot(appearSFX);
-                    animator.ResetTrigger("Close");
-                    animator.SetTrigger("Open");
+                    GateControl gate = Gates[i];
+                    gate.OpenGate();
                 }
-                Content.gameObject.SetActive(false);
-                BlockRaycast.enabled = false;
             }
         }
     }

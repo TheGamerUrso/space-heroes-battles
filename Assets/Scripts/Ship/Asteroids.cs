@@ -2,7 +2,7 @@
 using TheGamerUrso;
 using UnityEngine;
 
-public class Asteroids : MonoBehaviour, IDestroyable
+public class Asteroids : MonoBehaviour, IDamagable
 {
     public Action<float, float> HealthChanged;
 

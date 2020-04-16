@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class GooglePlayOptions : BaseOptions
 {
     public GameObject profile;
-    public RawImage userIcon;
     public TextMeshProUGUI username;
 
 

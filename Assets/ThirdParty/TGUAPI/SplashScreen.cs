@@ -6,9 +6,8 @@ using UnityEngine.UI;
 using TheGamerUrso.SceneLoader;
 public class SplashScreen : MonoBehaviour
 {
-    public GooglePlayServicesManager googlePlayServicesManager;
-    public float targetTime = 60.0f;
-    public GameObject GoogleServicesNotify;
+
+    public Image progressbar;
 
     private void Awake()
     {
@@ -21,41 +20,19 @@ public class SplashScreen : MonoBehaviour
         LoadGame();
     }
 
-    private void Update()
-    {
-        //  targetTime -= Time.deltaTime;
-        // targetTime = Mathf.Clamp(targetTime, 0, 60);
-        // if (targetTime <= 0.0f)
-        // {
-        //     async.allowSceneActivation = true;
-        //}
-    }
-
-    public void SignIn()
-    {
-        GooglePlayServicesManager.Instance.SignIn();
-    }
-
-    public void ContinueWithoutLogIn()
-    {
-        GoogleServicesNotify.SetActive(false);
-    }
-
     public void LoadGame()
     {
-        SceneLoader.Instance.LoadScene("Intro");
+        StartCoroutine(LoadNext());
     }
 
-    void OnUserLoginSucceeded()
+    IEnumerator LoadNext()
     {
-        Debug.Log("User logged in successfully.");
-        GoogleServicesNotify.SetActive(false);
-    }
+        AsyncOperation async = SceneManager.LoadSceneAsync("boot");
 
-    void OnUserLoginFailed()
-    {
-        Debug.Log("User login failed.");
-        GoogleServicesNotify.SetActive(true);
+        while (!async.isDone)
+        {
+            progressbar.fillAmount = async.progress;
+            yield return null;
+        }
     }
-
 }

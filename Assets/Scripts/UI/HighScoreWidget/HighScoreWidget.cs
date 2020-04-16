@@ -12,7 +12,7 @@ public class HighScoreWidget : MonoBehaviour
     public GameObject Window;
 
     void Start () {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         string highscore = string.Format("{0:0000000000}", playerData.HighScore);
         string score = string.Format("{0:0000000000}", playerData.Score);
 

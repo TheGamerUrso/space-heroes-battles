@@ -69,13 +69,13 @@ public class BriefingScreen : MonoBehaviour
 
     public void MissionBriefingInit()
     {
-        missionCollection = DataController.GetMissionCollection();
+        missionCollection = GameManager.Instance.GetMissionCollection();
         Button missionButton;
         LevelElement levelElement;
         Level level;
         Image LevelImage;
 
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
         int missionsCompleted = 0;
        
@@ -120,7 +120,7 @@ public class BriefingScreen : MonoBehaviour
 
         RefreshLevelObjectiveData();
         ShowStoryButton.SetActive(true);
-        currentMission = DataController.GetMission(level.mission.ID);
+        currentMission = GameManager.Instance.GetMission(level.mission.ID);
         LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
         LevelDetailLevelTItle.text = currentMission.Title;
         SetMission(currentMission);
@@ -129,7 +129,7 @@ public class BriefingScreen : MonoBehaviour
 
     public string GetStory(int missionIndex)
     {
-        currentMission = DataController.GetMission(missionIndex);
+        currentMission = GameManager.Instance.GetMission(missionIndex);
         return currentMission.Description;
     }
 
@@ -142,7 +142,7 @@ public class BriefingScreen : MonoBehaviour
     }
     public void RefreshLevelObjectiveData()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         levelObjectiveDatas = playerData.GetLevelObjectivesByID("Level" + GameManager.LevelSelected);
         if (levelObjectiveDatas != null)
         {

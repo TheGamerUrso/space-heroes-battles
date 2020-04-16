@@ -18,9 +18,6 @@ public class ConversationWidget : MonoBehaviour
         StartCoroutine(AnimateText(Text));
         ActualTextShowned = string.Empty;
         StoryText.text = ActualTextShowned;
-        StoryText.GetComponent<RectTransform>().transform.localPosition = new Vector3(0, -1578, 0);
-
-
         contentSizeFitter.enabled = false;
     }
 

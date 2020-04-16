@@ -25,7 +25,9 @@ public class EnemyProjectile : Projectile
     }
     public override void Movement()
     {
-        transform.position += shootDir * speed * Time.deltaTime;
+        Vector3 newPos = transform.position;
+        newPos += shootDir * speed * Time.deltaTime;
+        transform.position = newPos;
 
  
         if (transform.position.z < Constants.m_ZMin)
@@ -43,9 +45,9 @@ public class EnemyProjectile : Projectile
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals(Constants.PLAYTERTAG))
+        if (other.CompareTag("Player"))
         {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            var destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(damage);
             DestoryNow();
         }

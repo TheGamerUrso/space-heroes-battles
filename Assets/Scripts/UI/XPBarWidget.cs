@@ -4,37 +4,39 @@ using UnityEngine.UI;
 
 public class XPBarWidget : MonoBehaviour
 {
-    public PlayerShip player;
+    public PlayerShipData playerShipData;
     private PlayerData playerData;
     public TextMeshProUGUI PlayerXPText;
     public TextMeshProUGUI PlayerLevelText;
     private int currentSelectShip;
 
     private void Start()
-    {       
-        PlayerData playerData = DataController.GetPlayerData();
-        var Level = playerData.Level;
-        var xp = playerData.xp;
-        var xpToLevel = playerData.xpToLevel;
+    {
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        var Level = playerShipData.level;
+        var xp = playerShipData.xp;
+        var xpToLevel = playerShipData.xpToLevel;
         currentSelectShip = playerData.currentSelectedShip;
 
-        player = PlayerManager.GetPlayerByID(playerData.currentSelectedShip).prefab;
+
+
     }
 
     public void UpdateXPBarWidget(int lvl,float xp ,float xpToLevel)
     {
-        if (player.level >= player.MaxLevel)
+        if (playerShipData.level >= playerShipData.MaxLevel)
         {
-            PlayerLevelText.text = "" + player.level;
+            PlayerLevelText.text = "" + playerShipData.level;
             PlayerXPText.text = "Maxed";
         }
         else
         {
-            PlayerLevelText.text = "" + player.level;
+            PlayerLevelText.text = "" + playerShipData.level;
 
             PlayerXPText.text = string.Format("{0}/{1}",
-             player.xp,
-                Mathf.Round(player.xpToLevel));
+             playerShipData.xp,
+                Mathf.Round(playerShipData.xpToLevel));
         }
     }
 }

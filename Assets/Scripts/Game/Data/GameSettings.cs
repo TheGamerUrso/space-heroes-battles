@@ -1,28 +1,28 @@
 ﻿[System.Serializable]
 public class GameSettings
 {
-    public float SFXVolume;
-    public float MusicVolume;
-    public bool AutoAttack;
-    public bool mute;
-    public float distance;
+    public static float SFXVolume;
+    public static float MusicVolume;
+    public static bool AutoAttack;
+    public static bool mute;
+    public static float distance;
 
-    public GameSettings()
+    public static void Initialize()
     {
         SFXVolume = .7f;
         MusicVolume = .7f;
         AutoAttack = true;
-        this.mute = false;
-        this.distance = 5;
+        mute = false;
+        distance = 5;
     }
 
-    public GameSettings(float sFXVolume, float musicVolume, bool autoAttack, bool mute, float distance)
+    public static void Initialize(float sFXVolume, float musicVolume, bool autoAttack, bool mute, float distance)
     {
-        SFXVolume = sFXVolume;
-        MusicVolume = musicVolume;
-        AutoAttack = autoAttack;
-        this.mute = mute;
-        this.distance = distance;
+        GameSettings.SFXVolume = sFXVolume;
+        GameSettings.MusicVolume = musicVolume;
+        GameSettings.AutoAttack = autoAttack;
+        GameSettings.mute = mute;
+        GameSettings.distance = distance;
     }
 
 }

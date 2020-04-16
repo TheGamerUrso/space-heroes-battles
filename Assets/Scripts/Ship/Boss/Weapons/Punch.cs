@@ -3,33 +3,51 @@ using System.Collections;
 using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using DG.Tweening;
-public class Punch : MonoBehaviour, IDestroyable
+public class Punch : MonoBehaviour, IDamagable
 {
-    public Action<float, float> HealthChanged;
-    public Action<bool> Attacked;
-
-    public BaseBossEnemy baseBossEnemy;
-    public bool isAlive;
-    public GameObject fireEffect;
-
-    public Animator animator;
-    public float damage;
-
-    public GameObject prepareToAttack;
-
+    protected bool Alive;
     public bool IsDestroyed
     {
         get
         {
-            return !isAlive;
+            return Alive;
         }
         set
         {
-            isAlive = value;
+            Alive = value;
         }
     }
 
-    public float maxHealth = 100;
+    /**
+   * Attributes
+   */
+    #region Attributes
+    public delegate void HealthChanged(float currentHealth, float maxHealth);
+    public event HealthChanged OnHealthChanged;
+
+
+    [Min(25)]
+    public float maxHealth;
+
+    [Min(0)]
+    public float currentHealth;
+
+    [Min(12.5f)]
+    public float Damage;
+
+    public float CurrentHealth
+    {
+        get
+        {
+            return currentHealth;
+        }
+        set
+        {
+            currentHealth = value;
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+        }
+    }
+
     public float MaxHealth
     {
         get
@@ -42,26 +60,29 @@ public class Punch : MonoBehaviour, IDestroyable
         }
     }
 
-    public float currentHealth;
-    public float CurrentHealth
-    {
-        get
-        {
-            return currentHealth;
-        }
-        set
-        {
-            currentHealth = value;
-        }
-    }
-
     public float HealthPresentage
     {
         get
         {
-            return currentHealth / maxHealth;
+            return (CurrentHealth / MaxHealth) * 100;
         }
     }
+    #endregion Attributes
+
+    public Action<bool> Attacked;
+
+    public BaseBossEnemy baseBossEnemy;
+    public bool isAlive;
+    public GameObject fireEffect;
+
+    public float damage;
+
+    public GameObject prepareToAttack;
+
+    protected Animator animator;
+
+    [Header("Effects")]
+    [SerializeField] protected PoolGameObjectType ExplostionEffect;
 
     [SerializeField] private HealthBarSettings HealthBarSettings;
     private EnemyHealthWidget healthBar;
@@ -71,43 +92,6 @@ public class Punch : MonoBehaviour, IDestroyable
         {
             return healthBar;
         }
-    }
-
-    public Action<float, float> OnHealthChange
-    {
-        get
-        {
-            return HealthChanged;
-        }
-        set
-        {
-            HealthChanged = value;
-        }
-    }
-
-    private void Start()
-    {
-        currentHealth = maxHealth;
-        baseBossEnemy.AddDamagablePart(this);
-        fireEffect.SetActive(false);
-        isAlive = true;
-        animator = GetComponent<Animator>();
-
-        if (healthBar != null)
-        {
-            healthBar.GetComponent<BaseHealthWidget>();
-        }
-
-        if (HealthBarSettings != null)
-        {
-            GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
-            healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            healthBar.Setup(this, false);
-            healthBar.Show();
-            initializedHealthWidget.SetActive(true);
-        }
-
-
     }
 
     public void Attack(Action<bool> callback)
@@ -132,7 +116,7 @@ public class Punch : MonoBehaviour, IDestroyable
     {
         if (isAlive)
         {
-            currentHealth -= dmg;
+            CurrentHealth -= dmg;
             if (currentHealth <= 0)
             {
                 isAlive = false;
@@ -141,16 +125,17 @@ public class Punch : MonoBehaviour, IDestroyable
                 explostion.transform.position = transform.position;
                 fireEffect.SetActive(true);
             }
-            OnHealthChange?.Invoke(currentHealth, maxHealth);
+   
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
         string gameobjectTag = other.gameObject.tag;
+
         if (gameobjectTag.Equals(Constants.PLAYTERTAG))
         {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
+            IDamagable destroyable = other.GetComponent<IDamagable>();
             if (destroyable != null)
             {
                 destroyable.TakeDamage(damage);
@@ -158,5 +143,47 @@ public class Punch : MonoBehaviour, IDestroyable
         }
     }
 
+    private void Awake()
+    {
+        OnAwake();
+    }
 
+    private void Start()
+    {
+        ShipSetup();
+    }
+
+    public void ShipSetup()
+    {
+        maxHealth = baseBossEnemy.MaxHealth;
+        currentHealth = maxHealth;
+        baseBossEnemy.AddDamagablePart(this);
+        fireEffect.SetActive(false);
+        isAlive = true;
+        animator = GetComponent<Animator>();
+
+        if (healthBar != null)
+        {
+            healthBar.GetComponent<BaseHealthWidget>();
+        }
+
+        if (HealthBarSettings != null)
+        {
+            GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
+            healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
+            healthBar.Setup(this, true);
+            healthBar.Show();
+            initializedHealthWidget.SetActive(true);
+        }
+    }
+
+    public void OnAwake()
+    {
+      
+    }
+
+    public void Death()
+    {
+
+    }
 }

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections;
 using UnityEngine;
+using Doozy.Engine.UI;
 
 [Serializable]
 public class UIScreens
 {
     public string Name;
-    public GameObject m_UIElement;
+    public UIView m_UIElement;
 }
 
 public class ScreenManager : MonoBehaviour
@@ -28,7 +29,7 @@ public class ScreenManager : MonoBehaviour
         {
             if (MainMenuScreens[i].Name.Equals("name"))
             {
-                return MainMenuScreens[i].m_UIElement;
+                return MainMenuScreens[i].m_UIElement.gameObject;
             }
         }
         return null;
@@ -40,7 +41,7 @@ public class ScreenManager : MonoBehaviour
         {
             if (item.Name.Equals("Upgrades") || item.Name.Equals("Levels"))
             {
-                item.m_UIElement.GetComponent<UIView>().Close();
+                item.m_UIElement.gameObject.SetActive(false);
                 OnScreenChanged?.Invoke(item.Name, false);          
             }
         }
@@ -105,7 +106,7 @@ public class ScreenManager : MonoBehaviour
 
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.m_UIElement.GetComponent<UIView>().ViewIsActive)
+            if (item.m_UIElement.IsVisible)
             {
                 previousScreen = item.Name;
             }
@@ -118,13 +119,13 @@ public class ScreenManager : MonoBehaviour
             if (item.Name.Equals("Menu"))
             {
                 if (open)
-                {                
-                    item.m_UIElement.GetComponent<UIView>().Open();
+                {
+                    item.m_UIElement.Show();
                     OnScreenChanged?.Invoke(item.Name, true);
                 }
                 else
-                {           
-                    item.m_UIElement.GetComponent<UIView>().Close();
+                {
+                    item.m_UIElement.Hide();
                     OnScreenChanged?.Invoke(item.Name, false);
                 }
             }
@@ -165,7 +166,7 @@ public class ScreenManager : MonoBehaviour
     {
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.m_UIElement.GetComponent<UIView>().ViewIsActive && item.Name.Equals("Options") || item.Name.Equals("HighScore"))
+            if (item.m_UIElement.IsVisible && item.Name.Equals("Options") || item.Name.Equals("HighScore"))
             {
                 return true;
             }
@@ -186,8 +187,8 @@ public class ScreenManager : MonoBehaviour
             {
                 if (item.Name.Equals(previousScreen))
                 {
-        
-                    item.m_UIElement.GetComponent<UIView>().Open();
+
+                    item.m_UIElement.Show();
                     OnScreenChanged?.Invoke(item.Name, true);
                     if (IsScrene(previousScreen, "Levels") || IsScrene(previousScreen, "Upgrades"))
                     {
@@ -200,7 +201,7 @@ public class ScreenManager : MonoBehaviour
                 }
                 else
                 {
-                    item.m_UIElement.GetComponent<UIView>().Close();
+                    item.m_UIElement.Hide();
                     OnScreenChanged?.Invoke(item.Name, false);
                 }
             }
@@ -221,18 +222,18 @@ public class ScreenManager : MonoBehaviour
             {
                 if (item.Name.Equals(Id))
                 {
-                    item.m_UIElement.GetComponent<UIView>().Open();
+                    item.m_UIElement.Show();
                     OnScreenChanged?.Invoke(item.Name, true);
                 }
                 else
                 {
-                    if (item.m_UIElement.GetComponent<UIView>().ViewIsActive)
+                    if (item.m_UIElement.IsVisible)
                     {
                         if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
                             previousScreen = item.Name;
                     }
 
-                    item.m_UIElement.GetComponent<UIView>().Close();
+                    item.m_UIElement.Hide();
                     OnScreenChanged?.Invoke(item.Name, false);
                 }
             }

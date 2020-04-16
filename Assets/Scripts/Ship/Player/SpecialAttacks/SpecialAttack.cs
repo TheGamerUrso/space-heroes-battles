@@ -5,9 +5,13 @@ using UnityEngine;
 [Serializable]
 public class SpecialAttack : PlayerWeapon
 {
-    [Header("Special Attack")]
-    public Action<int> OnSuperWeapoUsed;
-    public int superUsed { get; set; }
+
+    public int superUsed;
+    public int SuperUsed
+    {
+        get { return superUsed; }
+        set { superUsed = value; }
+    }
 
     public bool SpecialActive = false;
     protected CountDownTimer m_CountDownTimer;
@@ -20,14 +24,10 @@ public class SpecialAttack : PlayerWeapon
 
     public void IncreaseSuperUsed()
     {
-        PlayerData playerData = DataController.GetPlayerData();
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
-        superUsed++;
-        if (objectiveData != null)
-        {
-            objectiveData.UpdateProgress(superUsed);
-        }
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        playerData.SuperUsed++;
     }
+
     public override void OnStart()
     {
         base.OnStart();
@@ -43,7 +43,8 @@ public class SpecialAttack : PlayerWeapon
         {
             AudioManager.PlaySound(null, "Super", 3);
 
-            OnSuperWeapoUsed?.Invoke(superUsed);
+            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            playerData.superUsed++;
 
             SpecialActive = true;
         }

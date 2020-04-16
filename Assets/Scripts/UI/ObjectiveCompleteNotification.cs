@@ -22,6 +22,7 @@ public class ObjectiveCompleteNotification : MonoBehaviour
     private bool showing;
     private float delayBetweenNotificaitons;
     private Queue<ObjectiveData> ObjectiveFinished = new Queue<ObjectiveData>();
+    private ObjectiveData objectiveData;
     private void Awake()
     {
         Instance = this;
@@ -31,7 +32,7 @@ public class ObjectiveCompleteNotification : MonoBehaviour
     {
         timer = delay;
         animator = GetComponent<Animator>();
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         if (playerData.ListOfOnGoingObjectives.Count > 0)
             ListOfObjectiveData = playerData.ListOfOnGoingObjectives;
         content.SetActive(false);
@@ -41,6 +42,7 @@ public class ObjectiveCompleteNotification : MonoBehaviour
     {
         ObjectiveFinished.Enqueue(objectiveData);
     }
+
     private void Update()
     {
         if (Time.frameCount % 1 == 0)
@@ -58,14 +60,8 @@ public class ObjectiveCompleteNotification : MonoBehaviour
 
             if (ObjectiveFinished.Count > 0 && !showing)
             {
-                ObjectiveData objectiveData = ObjectiveFinished.Dequeue();
+                objectiveData = ObjectiveFinished.Dequeue();
                 ShowNotification(objectiveData);
-            }
-
-            if (Input.GetKeyDown(KeyCode.N))
-            {
-                int num = Random.Range(0, 100);
-                AddToQue(new ObjectiveData(0, "test" + num, 0, num, num, "Test Notification"));
             }
         }
     }
@@ -74,7 +70,7 @@ public class ObjectiveCompleteNotification : MonoBehaviour
     {
         showing = true;
         content.SetActive(true);
-        Title.text = string.Format("{0} Quest Completed \n Ready to Claim", (ObjectiveType)objectiveData.objectiveType);
+        Title.text = ((ObjectiveType)objectiveData.objectiveType).ToString() + "Quest Completed \n Ready to Claim";
         animator.SetBool("Show", showing);
 
     }
