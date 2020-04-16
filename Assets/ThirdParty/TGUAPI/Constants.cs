@@ -83,10 +83,12 @@ public class Constants
      * Upgrade Element
      */
     public static string UpgradeMaxedOut = "Maxed";
-    public static string OutOfStock = "Maxed";
-    public static string UnlockedAtLvl = "Unlocked at lvl";
 
-    public static string CannotAffordIt = "Cannot Afford it yet";
+    public static string OutOfStock = "Installed";
+
+    public static string UnlockedAtLvl = "Unlocked at Lv";
+
+    public static string CannotAffordIt = "Insufficient funds";
 
 }
 

@@ -1,44 +1,74 @@
-﻿using UnityEngine;
+﻿using Boo.Lang;
+using UnityEngine;
 
-public class UpgradeManager : MonoBehaviour
+public class UpgradeManager : Singleton<UpgradeManager>
 {
+    public delegate void Purschase();
+    public Purschase OnPurschase;
+
     public UpgradeElement[] upgradeElements;
 
     private PlayerData playerData;
     private PlayerShipData playerShipData;
+    private ObjectiveData objectiveData;
 
-
-    private void OnDestroy()
+    protected override void OnCleanup()
     {
-        GameEventSystem.OnUpgradeBought -= Refresh;
+        base.OnCleanup();
+
+    }
+
+    public void Notify()
+    {
+        OnPurschase?.Invoke();
+    }
+
+    public void SubscribePurchasable(IPurchasable purchasable)
+    {
+        OnPurschase += purchasable.OnPurschase;
+    }
+
+    public void UnsubscribePurchasable(IPurchasable purchasable)
+    {
+        OnPurschase -= purchasable.OnPurschase;
     }
 
     private void Start()
     {
         playerData = GameManager.Instance.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-        GameEventSystem.OnUpgradeBought += Refresh;
-    }
 
-    public void RefreshUpgrades()
-    {
         for (int i = 0; i < upgradeElements.Length; i++)
         {
             UpgradeElement upgradeElement = upgradeElements[i];
-            upgradeElement.RefreshUpgradeElement();
+            upgradeElement.InitUpgradeElement(this);
+            upgradeElement.OnPurchased += Purchase;
         }
     }
 
-    public void Refresh(UpgradeElement upgradeElement)
+    public void Purchase(UpgradeElement upgradeElement)
     {
+        objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.spend);
 
-        playerData.SetUpgrade(upgradeElement);
-        RefreshUpgrades();
+        if (objectiveData != null)
+        {
+            var progress = objectiveData.progress + upgradeElement.Cost;
+            objectiveData.UpdateProgress(progress);
+        }
+
+        if (upgradeElement.upgradeData.MaxLevel > 0)
+        {
+            playerData.SetUpgrade((int)(upgradeElement.upgradeData.upgradeType), upgradeElement.Level);
+        }
+        else if (upgradeElement.upgradeData.MaxLevel == 0)
+        {
+            playerData.SetUpgrade((int)(upgradeElement.upgradeData.upgradeType - 1), upgradeElement.Level);
+        }
+
+        Notify();
+
+
     }
 
-    public void Save()
-    {
-        SaveSystem.SaveGame();
-    }
 
 }

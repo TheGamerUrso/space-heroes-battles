@@ -4,7 +4,6 @@ using UnityEngine;
 using System;
 using UnityEngine.Events;
 
-
 public enum BossEventType {
     BossDeath, BossHit,BossChangePhase
 }
@@ -54,7 +53,6 @@ public class GameEventSystem
     public static Action<string,BaseBossEnemy,float> BossHitEvent;
     public static Action<string, BaseBossEnemy> BossDied;
     public static Action<string, BaseBossEnemy,int> BossPhaseChanged;
-
 
     public static void Call(BossEventType eventType, params object[] args)
     {
@@ -117,8 +115,7 @@ public class GameEventSystem
                 break;
             case GameEventType.ShipSelect:
                 OnShipSelect?.Invoke((int)args[0]);
-                break;
-        
+                break;      
             default:
                 break;
         }
