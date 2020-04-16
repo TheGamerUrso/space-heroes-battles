@@ -294,14 +294,12 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
     {
         baseEnemy.enemyElement.currentNumberInScene--;
-        // Debug.Log("Enemy Got Escaped");
         Enemies.Remove(baseEnemy.gameObject);
         GameSession.enemyEscaped++;
     }
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
-        // Debug.Log("Enemy Got Hit");
         PlayerShip playerShip = PlayerManager.GetPlayer();
         playerShip.PowerUpLevel += .1f;
     }

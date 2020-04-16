@@ -216,7 +216,6 @@ public class PlayerData
         {
             return objectives;
         }
-
         return null;
     }
 
@@ -292,17 +291,10 @@ public class PlayerData
         }
     }
 
-    public void SetUpgrade(UpgradeElement upgradeElement)
+    public void SetUpgrade(int upgrade,int value)
     {
         PlayerShipData playerShipData1 = playerShipData[currentSelectedShip];
-        if (upgradeElement.upgradeData.MaxLevel > 0)
-        {
-            playerShipData1.Upgrades[(int)(upgradeElement.upgradeData.upgradeType)] = upgradeElement.currentUpgradeIndex;
-        }
-        else if (upgradeElement.upgradeData.MaxLevel == 0)
-        {
-            playerShipData1.Upgrades[((int)(upgradeElement.upgradeData.upgradeType) - 1)] = upgradeElement.currentUpgradeIndex;
-        }
+        playerShipData1.Upgrades[upgrade] = value;
         SaveSystem.SaveGame();
     }
 
