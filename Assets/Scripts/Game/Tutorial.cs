@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.PlayerLoop;
 
 [System.Serializable]
 public class TutorialItem
@@ -11,55 +12,48 @@ public class TutorialItem
     public GameObject prefabItem;
 }
 
-public class Tutorial : MonoBehaviour
+public class Tutorial : Singleton<Tutorial>
 {
-    public static Tutorial Instance;
-
-    public GameObject TutorialWindow;
     public UIView TutorialView;
 
     public TMPro.TextMeshProUGUI Title;
     public TMPro.TextMeshProUGUI Description;
 
     public TutorialItem[] TutorailItemsToShow;
-    private float delay = 1.0f;
 
+    private void Start()
+    {
+        TutorialView.Hide();
+    }
 
     public void ShowTutorial(int itemToShowIndex)
     {
-        TutorialWindow.SetActive(true);
-        StartCoroutine(TutorialCoroutine(itemToShowIndex));
-    }
-
-    IEnumerator TutorialCoroutine(int itemToShowIndex)
-    {
+        TutorialView.Show();
         for (int i = 0; i < TutorailItemsToShow.Length; i++)
         {
             TutorailItemsToShow[i].prefabItem.SetActive(false);
-      
+
         }
 
         Title.text = TutorailItemsToShow[itemToShowIndex].Name;
         Description.text = TutorailItemsToShow[itemToShowIndex].Description;
-
         TutorailItemsToShow[itemToShowIndex].prefabItem.SetActive(true);
 
-        TutorialView.Show(true);
         Time.timeScale = 0;
-        yield return null;
+    }
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            ShowTutorial(0);
+        }
     }
 
     public void Close()
     {
-        TutorialWindow.SetActive(false);
-        TutorialView.Show(false);
+        TutorialView.Hide();
         Time.timeScale = 1;
         PlayerManager.GetPlayer().tempGodMode();
     }
-    void Start()
-    {
-        Instance = this;
-    }
-
 
 }
