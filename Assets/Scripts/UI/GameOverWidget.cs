@@ -38,11 +38,34 @@ public class GameOverWidget : MonoBehaviour
     private void OnEnable()
     {
         PlayerShip player = PlayerManager.GetPlayer();
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
 
         UpdateScore();
 
         levelName = "Level" + GameManager.LevelSelected;
+
+
+
+        if (levelName.Equals("Level0"))
+        {
+            playerData.SurvivalScore = GameSession.score;
+            if (playerData.SurvivalScore < playerData.SurvivalHighScore)
+            {
+                playerData.SurvivalHighScore = playerData.SurvivalScore;
+            }
+            // Unlock an achievement
+            // EM_GameServicesConstants.Sample_Achievement is the generated name constant
+            // of an achievement named "Sample Achievement"
+#if UNITY_ANDROID
+            if (GooglePlayServicesManager.Instance)
+                GooglePlayServicesManager.Instance.ReportLeaderboards(playerData.SurvivalHighScore, EM_GameServicesConstants.Leaderboard_Survival_Mode);
+#elif UNITY_EDITOR
+     Debug.Log("UnlockAchievement"); 
+#endif
+
+            return;
+        }
+
         //TODO EnemySPawnInTotal * 9f
         //TODO CoinsDropInTotal * .9f;
 
@@ -53,8 +76,8 @@ public class GameOverWidget : MonoBehaviour
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
         StartCoroutine(ShowGameResults());
-
     }
+
 
 
     private IEnumerator ShowGameResults()

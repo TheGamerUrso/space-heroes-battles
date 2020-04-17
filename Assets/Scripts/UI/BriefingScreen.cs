@@ -89,6 +89,16 @@ public class BriefingScreen : MonoBehaviour
 
         playerData.LevelUnlocked = missionsCompleted;
 
+        LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
+
+        level = new Level("Survival", null,null, true, false);
+
+        levelElement = LevelElementGO.GetComponent<LevelElement>();
+
+        levelElement.SetLevelElement(level, StartMissionBriefing);
+
+        ListOfLevelElements.Add(LevelElementGO);
+
         for (int i = 0; i < missionCollection.Missions.Length; i++)
         {
             Mission missionItem = missionCollection.Missions[i];
@@ -115,16 +125,27 @@ public class BriefingScreen : MonoBehaviour
 
     public void StartMissionBriefing(Level level)
     {
-        ScreenManager.Instance.Open("Briefing");
-        GameManager.LevelSelected = level.mission.ID;
+        if (level.ID.Contains("Survival"))
+        {
+            ScreenManager.Instance.Open("Briefing");
+            GameManager.LevelSelected = -1;
+            RefreshLevelObjectiveData();
+            ShowStoryButton.SetActive(true);
+            LevelDetailLevelTItle.text = "Survival";
+        }
+        else
+        {
+            ScreenManager.Instance.Open("Briefing");
+            GameManager.LevelSelected = level.mission.ID;
 
-        RefreshLevelObjectiveData();
-        ShowStoryButton.SetActive(true);
-        currentMission = GameManager.Instance.GetMission(level.mission.ID);
-        LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
-        LevelDetailLevelTItle.text = currentMission.Title;
-        SetMission(currentMission);
-        dialogueManager.ShowStory(GameManager.LevelSelected);
+            RefreshLevelObjectiveData();
+            ShowStoryButton.SetActive(true);
+            currentMission = GameManager.Instance.GetMission(level.mission.ID);
+            LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
+            LevelDetailLevelTItle.text = currentMission.Title;
+            SetMission(currentMission);
+            dialogueManager.ShowStory(GameManager.LevelSelected);
+        }
     }
 
     public string GetStory(int missionIndex)

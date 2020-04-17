@@ -23,7 +23,6 @@ public class BaseBossEnemy : BaseEnemy
     #region Boss Config
     [Header("Boss Config")]
     public BaseBossEnemyAI BossAI;
-    protected GameObject bossWidget;
     protected int hitIndex;
     protected int numberOfHits;
     public GameObject ExplosionsDeathEffect;
@@ -59,6 +58,8 @@ public class BaseBossEnemy : BaseEnemy
         base.OnAwake();
         BossAI = GetComponent<BaseBossEnemyAI>();
         DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
+
+        SetEnemyStats(1);
 
         currentWeaponActive = 0;
 
@@ -130,7 +131,10 @@ public class BaseBossEnemy : BaseEnemy
                 item.gameObject.SetActive(false);
             }
         }
-
+        if (healthBar != null)
+        {
+            Destroy(healthBar);
+        }
         EnemyDied?.Invoke(gameObject.name, this);
     }
 

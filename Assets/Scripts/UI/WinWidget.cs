@@ -32,14 +32,26 @@ public class WinWidget : MonoBehaviour
 
         levelName = "Level" + GameManager.LevelSelected;
 
+        if (levelName.Equals("Level0"))
+        {
+            return;
+        }
+
         //TODO EnemySPawnInTotal * 9f
         //TODO CoinsDropInTotal * .9f;
 
         player = PlayerManager.GetPlayer();
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
         playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+
+        levelName = "Level" + GameManager.LevelSelected;
+
+        if (levelName.Equals("Level0"))
+        {
+            return;
+        }
 
         missionCollection = GameManager.Instance.GetMissionCollection();
         mission = missionCollection.GetMission(GameManager.LevelSelected);
@@ -51,12 +63,12 @@ public class WinWidget : MonoBehaviour
             levelObjectiveDatas[0].completed = true;
 
             player.AddXP(50);
-           // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
+            // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
         }
 
         //TODO Enemy Killed This Round
         float enemyKilled = 0;
-        
+
         if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
         {
             levelObjectiveDatas[1].completed = true;
@@ -67,7 +79,7 @@ public class WinWidget : MonoBehaviour
         {
             levelObjectiveDatas[2].completed = true;
             player.AddXP(100);
-           // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
+            // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
         }
 
         float coinEarnInGame = 0;
@@ -76,10 +88,8 @@ public class WinWidget : MonoBehaviour
         {
             levelObjectiveDatas[3].completed = true;
             player.AddXP(25);
-           // Debug.Log("Challenge : Earn " + SpawnEnemies.CoinDropInTotal * .9f + " Completed" + "(100 XP Awarded)");
+            // Debug.Log("Challenge : Earn " + SpawnEnemies.CoinDropInTotal * .9f + " Completed" + "(100 XP Awarded)");
         }
-
-        
 
         StartCoroutine(ShowGameResults());
     }

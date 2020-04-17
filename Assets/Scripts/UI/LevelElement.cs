@@ -44,9 +44,6 @@ public class LevelElement : MonoBehaviour
                 Debug.Log("Pressed" + "Level " + level.mission.Level + " Button");
                 buttonAction.Invoke(level);
             });
-
-   
-
         }
         else if (level.ID.Contains("Survival"))
         {     
@@ -54,6 +51,7 @@ public class LevelElement : MonoBehaviour
 
             button.onClick.AddListener(() =>
             {
+                Debug.Log("Pressed" + "Survival Mode");
                 buttonAction.Invoke(level);
             });
 

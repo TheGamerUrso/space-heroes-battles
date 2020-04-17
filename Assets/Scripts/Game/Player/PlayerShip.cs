@@ -386,6 +386,15 @@ public class PlayerShip : Ship, IDamagable
         return animator.GetCurrentAnimatorStateInfo(0).IsName(id);
     }
 
+    public override void Enter()
+    {
+        if (animator == null)
+        {
+            animator = GetComponent<Animator>();
+        }
+        animator.SetTrigger(Constants.PLAYERENTERSTRINGKEY);
+    }
+
     public void Exit()
     {
         if (animator == null)
