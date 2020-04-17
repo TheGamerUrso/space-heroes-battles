@@ -61,11 +61,6 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
         return false;
     }
 
-    private void OnDestroy()
-    {
-        upgradeManager.UnsubscribePurchasable(this);
-    }
-
     private void Start()
     {
         InitUpgradeElement(UpgradeManager.Instance);

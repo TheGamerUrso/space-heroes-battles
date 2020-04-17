@@ -15,7 +15,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
     protected override void OnCleanup()
     {
         base.OnCleanup();
-
+        OnPurschase = null;
     }
 
     public void Notify()
