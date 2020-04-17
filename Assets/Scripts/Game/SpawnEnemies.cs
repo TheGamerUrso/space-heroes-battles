@@ -128,7 +128,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
         while (!GameEnded)
         {
-            while (GuiManager.IsTrasnmiting())
+            while (GuiManager.Instance.IsTrasnmiting() || GameEnded)
             {
                 yield return waitForEndOfFrame;
             }

@@ -22,12 +22,12 @@ public class SurvivalMode : SpawnEnemies
                 Debug.Log("Gameplay Scene active");
                 continue;
             }
-            Debug.Log("Not Gameplay Scene active");         
+            Debug.Log("Not Gameplay Scene active");
         }
 
         LevelDifficulty = 1;
 
-        string[] transmitions = { "Wave:" + waves, "Survive", "Good Luck" };
+        string[] transmitions = { "Wave:\n" + waves, "Survive", "Good Luck" };
         GuiManager.PlayTrasmition(transmitions);
 
         TotalEnemies = numberOfEnemiesEachWave * 2;
@@ -53,6 +53,9 @@ public class SurvivalMode : SpawnEnemies
 
         if (waves > 0 && waves % 2 == 0)
         {
+
+
+
             availableEnemies++;
 
             if (availableEnemies > enemyElements.Count)
@@ -66,7 +69,7 @@ public class SurvivalMode : SpawnEnemies
             HasBoss = true;
         }
 
-        string[] transmitions = { "Wave:" + waves, "Survive", "Good Luck" };
+        string[] transmitions = { "Wave:\n" + waves };
         GuiManager.PlayTrasmition(transmitions);
 
         TotalEnemies = numberOfEnemiesEachWave * 2;
@@ -83,7 +86,7 @@ public class SurvivalMode : SpawnEnemies
 
         while (!GameEnded)
         {
-            while (GuiManager.IsTrasnmiting())
+            while (GuiManager.Instance.IsTrasnmiting())
             {
                 yield return waitForEndOfFrame;
             }
@@ -181,7 +184,10 @@ public class SurvivalMode : SpawnEnemies
                     yield return null;
                 }
 
-                LevelDifficulty++;
+                if (AudioManager.Instance)
+                    AudioManager.PlayRandomMusic(true);
+
+                LevelDifficulty += 4;
             }
 
             NewWave();

@@ -68,7 +68,7 @@ public class BaseBossEnemy : BaseEnemy
 
     public override void TakeDamage(float damage)
     {
-        if (GuiManager.IsTrasnmiting() || delayAttak > 0)
+        if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0)
         {
             return;
         }

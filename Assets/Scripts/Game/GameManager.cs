@@ -20,6 +20,9 @@ public class GameManager : Singleton<GameManager>
     public delegate void OnLoadData();
     public event OnLoadData OnLoadDataCompleted;
 
+    public delegate void PauseGame(bool value);
+    public PauseGame OnPauseGame;
+
 
     public static bool Paused;
     private bool firstRun;
@@ -115,6 +118,8 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("Continue");
             SceneLoader.Instance.LoadLevel("Intro");
         }
+
+        GameEventSystem.OnPauseGame += PauseTheGame;
     }
 
     private void InstantiateSystemPrefabs()
@@ -126,9 +131,11 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public static void PauseTheGame(bool value = true)
+    public void PauseTheGame(bool value)
     {
-        if (value)
+        Paused = value;
+
+        if (Paused)
         {
             Time.timeScale = 0;
             Time.fixedDeltaTime = 0;

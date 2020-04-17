@@ -128,6 +128,9 @@
     public static int enemyEscaped;
     public static bool SurvivalMode;
 
+
+    public static bool Transmiting;
+
     public static void Reset()
     {
         IsGameOver = false;

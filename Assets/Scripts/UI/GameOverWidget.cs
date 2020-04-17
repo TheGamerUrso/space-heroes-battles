@@ -7,20 +7,20 @@ using UnityEngine.UI;
 
 public class GameOverWidget : MonoBehaviour
 {
-    private PlayerShipElement player;
-    private PlayerData playerData;
+    protected PlayerShipElement player;
+    protected PlayerData playerData;
 
     [SerializeField] private MissionCollection missionCollection;
     [SerializeField] private Mission mission;
-    private string levelName;
-    private float killed;
-    private float collected;
+    protected string levelName;
+    protected float killed;
+    protected float collected;
 
     public TextMeshProUGUI m_Text;
     public Button m_PlayAgainButton;
     public Button m_QuitButton;
     public GameObject m_Canvas;
-    private Animator animator;
+    protected Animator animator;
 
     [Header("GameOver Widget Config")]
     public LevelObjectivesElement[] levelObjectives;
@@ -35,36 +35,19 @@ public class GameOverWidget : MonoBehaviour
         audioSource.PlayOneShot(audioClip);
     }
 
-    private void OnEnable()
+    protected virtual void OnEnable()
     {
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
         PlayerShip player = PlayerManager.GetPlayer();
         PlayerData playerData = GameManager.Instance.GetPlayerData();
 
         UpdateScore();
 
         levelName = "Level" + GameManager.LevelSelected;
-
-
-
-        if (levelName.Equals("Level0"))
-        {
-            playerData.SurvivalScore = GameSession.score;
-            if (playerData.SurvivalScore < playerData.SurvivalHighScore)
-            {
-                playerData.SurvivalHighScore = playerData.SurvivalScore;
-            }
-            // Unlock an achievement
-            // EM_GameServicesConstants.Sample_Achievement is the generated name constant
-            // of an achievement named "Sample Achievement"
-#if UNITY_ANDROID
-            if (GooglePlayServicesManager.Instance)
-                GooglePlayServicesManager.Instance.ReportLeaderboards(playerData.SurvivalHighScore, EM_GameServicesConstants.Leaderboard_Survival_Mode);
-#elif UNITY_EDITOR
-     Debug.Log("UnlockAchievement"); 
-#endif
-
-            return;
-        }
 
         //TODO EnemySPawnInTotal * 9f
         //TODO CoinsDropInTotal * .9f;

@@ -28,7 +28,7 @@ public class FirstBossBattleSystem : BaseBossBattle
 
     public override void BossHit(int hitIndex, int numberOfHits)
     {
-        if (GuiManager.IsTrasnmiting() || bossEnemy.DelayAttack > 0)
+        if (GuiManager.Instance.IsTrasnmiting() || bossEnemy.DelayAttack > 0)
         {
             return;
         }

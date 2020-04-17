@@ -40,6 +40,11 @@ public class BaseOptions : MonoBehaviour
 
     public virtual void OnOptionEnter()
     {
+        if (GameManager.Instance == null)
+        {
+            return;
+        }
+
         InitializeOptions();
         //RefreshAutoFire();
         // RefreshGlobalMute();
@@ -55,7 +60,8 @@ public class BaseOptions : MonoBehaviour
 
     public void UpdateAudioVolume()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         MusicVolume.value = playerData.MusicVolume;
         SFXVolume.value = playerData.SFXVolume;
     }
@@ -76,7 +82,7 @@ public class BaseOptions : MonoBehaviour
 
     public void SetMusicVolume(float value)
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         playerData.MusicVolume = value;
 
         AudioManager.SetMusicVolume(value);
@@ -84,14 +90,14 @@ public class BaseOptions : MonoBehaviour
 
     public void SetSFXVolume(float value)
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         playerData.SFXVolume = value;
 
         AudioManager.SetSoundVolume(value);
     }
     public void Mute()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         bool mute = playerData.mute;
         if (mute)
         {
@@ -105,7 +111,7 @@ public class BaseOptions : MonoBehaviour
     }
     public void ToggleAutoFire()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         bool autofire = playerData.AutoAttack;
         if (autofire)
         {
@@ -121,7 +127,7 @@ public class BaseOptions : MonoBehaviour
 
     public void UpdateDistance()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         for (int i = 0; i < Distances.Length; i++)
         {
             if (Distances[i] == playerData.distance)
@@ -137,7 +143,7 @@ public class BaseOptions : MonoBehaviour
 
     public void RefreshGlobalMute()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         bool mute = playerData.mute;
         if (mute)
         {
@@ -150,7 +156,7 @@ public class BaseOptions : MonoBehaviour
     }
     public void RefreshAutoFire()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
         bool autofire = playerData.AutoAttack;
         if (autofire)
         {
@@ -163,7 +169,7 @@ public class BaseOptions : MonoBehaviour
     }
     public void SetDistance(int distance)
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = GameManager.Instance.GetPlayerData();
 
         playerData.Distance = Distances[distance - 1];
         UpdateDistance();
