@@ -6,7 +6,7 @@ using UnityEngine;
 public class GrenadeProjectile : EnemyProjectile
 {
 
-    [SerializeField] private float duration = 1;
+    [SerializeField] private float duration = 2;
     public float startDuration;
 
     public GameObject Ball;
@@ -34,7 +34,7 @@ public class GrenadeProjectile : EnemyProjectile
         , new Vector3(0,320,0), new Vector3(0,340,0), new Vector3(0,360,0)};
     }
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
         duration = startDuration;
         exploded = false;

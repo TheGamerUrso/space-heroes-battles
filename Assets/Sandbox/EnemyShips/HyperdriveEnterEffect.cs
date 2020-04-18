@@ -8,14 +8,27 @@ public class HyperdriveEnterEffect : MonoBehaviour
     public GameObject shipPivot;
     public Ease easeMode;
     public float speed;
-    private BaseEnemyAI baseEnemyAI;
-    private BaseEnemy baseEnemy;
+    protected BaseEnemyAI baseEnemyAI;
+    protected BaseEnemy baseEnemy;
+
+
     private void Awake()
+    {
+        OnAwake();
+    }
+
+    private void OnEnable()
+    {
+        OnActivated();
+    }
+
+    public virtual void OnAwake()
     {
         baseEnemyAI = GetComponent<BaseEnemyAI>();
         baseEnemy = GetComponent<BaseEnemy>();
     }
-    private void OnEnable()
+
+    public virtual void OnActivated()
     {
         baseEnemy.EnableColliders(false);
         GetComponent<BaseEnemy>().DisableAllWeapons();

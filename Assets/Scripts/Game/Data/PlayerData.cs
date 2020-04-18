@@ -18,6 +18,8 @@ public class PlayerData
     [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
     [NonSerialized] public SuperUseValueChanged OnSuperUseValueChanged;
 
+    public long SurvivalScore;
+    public long SurvivalHighScore;
 
     public float[] score;
     public float[] Score;

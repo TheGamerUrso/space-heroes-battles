@@ -7,15 +7,16 @@ using UnityEngine.UI;
 using EasyMobile;
 using TheGamerUrso.PoolSystem;
 using TheGamerUrso.SceneLoader;
+using Doozy.Engine.UI;
 
 public class GuiManager : Singleton<GuiManager>
 {
     PlayerShip playerShip;
 
     [Header("Menu")]
-    [SerializeField] private GameObject GameOverScreen;
-    [SerializeField] private GameObject WinScreen = null;
-    [SerializeField] private GameObject PauseScreen;
+    [SerializeField] private UIView GameOverScreen;
+    [SerializeField] private UIView WinScreen = null;
+    [SerializeField] private UIView PauseScreen;
     [SerializeField] private GameObject pauseButton;
 
     [Header("PlayerHUD")]
@@ -26,6 +27,7 @@ public class GuiManager : Singleton<GuiManager>
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
 
     private bool ResultShowed = false;
+    private TransmitionWidget transmittionWidget;
     private float timer;
 
     private void OnApplicationFocus(bool focus)
@@ -34,8 +36,7 @@ public class GuiManager : Singleton<GuiManager>
         {
             if (!focus && GameSession.IsGameOver == false)
             {
-                //GameManager.PauseTheGame();
-                //ShowPauseMenu(Paused);
+                GameEventSystem.Call(GameEventType.PauseGame, focus);
             }
         }
     }
@@ -46,8 +47,7 @@ public class GuiManager : Singleton<GuiManager>
         {
             if (GameSession.IsGameOver == false)
             {
-                //GameManager.PauseTheGame();
-                //ShowPauseMenu(Paused);
+                GameEventSystem.Call(GameEventType.PauseGame, Paused);
             }
         }
     }
@@ -65,6 +65,13 @@ public class GuiManager : Singleton<GuiManager>
 
         GameSession.OnCoinValueChanged -= UpdateCoinWidgetText;
         GameSession.OnScoreValueChanged -= UpdateScore;
+    }
+
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+
+        transmittionWidget = FindObjectOfType<TransmitionWidget>();
     }
 
     private void Start()
@@ -91,6 +98,9 @@ public class GuiManager : Singleton<GuiManager>
         {
             spawnEnemies.EnemyDied += EnemyDiedCallback;
         }
+
+
+        GameEventSystem.OnPauseGame += ShowPauseMenu;
     }
 
     public void EnemyDiedCallback(BaseEnemy baseEnemy)
@@ -215,21 +225,27 @@ public class GuiManager : Singleton<GuiManager>
     public void ResumeButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, true);
-        ShowPauseMenu(false);
-        GameManager.PauseTheGame(false);
+        GameEventSystem.Call(GameEventType.PauseGame, false);
     }
 
     public void PauseButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, false);
-        ShowPauseMenu(true);
-        GameManager.PauseTheGame();
+        GameEventSystem.Call(GameEventType.PauseGame, true);
     }
 
     public void ShowPauseMenu(bool value)
     {
-        PauseScreen.SetActive(value);
+        if (value)
+        {
+            PauseScreen.Show();
+        }
+        else if (!value)
+        {
+            PauseScreen.Hide();
+        }
     }
+
 
     public void UpdateCoinWidgetText(int coin)
     {
@@ -255,19 +271,19 @@ public class GuiManager : Singleton<GuiManager>
 
     public void LoadMainMenu()
     {
-        GameManager.PauseTheGame(false);
+        GameEventSystem.Call(GameEventType.PauseGame, false);
         SceneLoader.Instance.LoadMainenu();
-        GameObject activeMenuGO = null;
+        UIView activeMenuGO = null;
 
-        if (WinScreen.activeSelf)
+        if (WinScreen.IsActive())
         {
             activeMenuGO = WinScreen;
         }
-        else if (GameOverScreen.activeSelf)
+        else if (GameOverScreen.IsActive())
         {
             activeMenuGO = GameOverScreen;
         }
-        else if (PauseScreen.activeSelf)
+        else if (PauseScreen.IsActive())
         {
             activeMenuGO = PauseScreen;
         }
@@ -276,32 +292,30 @@ public class GuiManager : Singleton<GuiManager>
             StartCoroutine(DelayCloseMenu(activeMenuGO, 1));
     }
 
-    IEnumerator DelayCloseMenu(GameObject Menu, float time)
+    IEnumerator DelayCloseMenu(UIView Menu, float time)
     {
         WaitForSeconds delay = new WaitForSeconds(time);
-
         yield return delay;
-        Menu.SetActive(false);
+        Menu.Hide();
     }
 
     public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
         AudioManager.PlaySound(null, "transmition", 3);
-        if (GuiManager.Instance)
-            GuiManager.Instance.ShowTrasmition(transmitions, boss);
+        Instance.ShowTrasmition(transmitions, boss);
     }
 
     public void ShowTrasmition(string[] transmitions, bool boss = false)
     {
-        if (GameObject.FindObjectOfType<TransmitionWidget>())
-            GameObject.FindObjectOfType<TransmitionWidget>().RecieveTransmition(transmitions, boss);
+        if (transmittionWidget)
+            transmittionWidget.RecieveTransmition(transmitions, boss);
     }
 
-    public static bool IsTrasnmiting()
+    public bool IsTrasnmiting()
     {
-        if (GameObject.FindObjectOfType<TransmitionWidget>())
+        if (transmittionWidget != null)
         {
-            return GameObject.FindObjectOfType<TransmitionWidget>().IncomingTransmition;
+            return transmittionWidget.IncomingTransmition;
         }
         else
         {
@@ -311,7 +325,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public void Win(GameController gc)
     {
-  
+
         if (!ResultShowed)
         {
             StartCoroutine(WinCoroutine());
@@ -321,7 +335,7 @@ public class GuiManager : Singleton<GuiManager>
     public void GameOver(GameController gc)
     {
         if (!ResultShowed)
-        {       
+        {
             ResultShowed = true;
 
             StartCoroutine(GameOverCoroutine());
@@ -336,7 +350,7 @@ public class GuiManager : Singleton<GuiManager>
 
         yield return new WaitForSeconds(2.0f);
 
-        GameOverScreen.gameObject.SetActive(true);
+        GameOverScreen.gameObject.GetComponent<UIView>().Show();
     }
 
     public IEnumerator WinCoroutine()

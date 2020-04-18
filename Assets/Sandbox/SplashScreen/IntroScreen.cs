@@ -27,8 +27,6 @@ public class IntroScreen : MonoBehaviour
 
         }
 #endif
-
-
     }
 
     void Start()

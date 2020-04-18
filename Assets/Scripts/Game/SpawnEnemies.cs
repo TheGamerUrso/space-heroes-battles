@@ -22,7 +22,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 {
     public Action<BaseEnemy> EnemyDied;
 
-    PlayerShip playerShip;
+   protected PlayerShip playerShip;
 
     public Action SpawnEnded;
     public Action<int, int, int> GameStatsChanged;
@@ -32,9 +32,9 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     public Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
     public bool HasBoss;
 
-    [SerializeField] private int numberOfEnemiesEachWave;
+    [SerializeField] protected int numberOfEnemiesEachWave;
     [Range(1, 16)]
-    [SerializeField] private int waves;
+    [SerializeField] protected int waves;
 
     [Range(0, 6)]
     public int availableEnemies;
@@ -45,18 +45,18 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public float delay = 0;
 
-    private bool GameEnded;
-    private bool BossBattleInitiated;
+
     public GameObject BossPrefab;
-    private GameObject currentBoss;
 
-    private PlayerData playerData;
-
+    protected bool GameEnded;
+    protected bool BossBattleInitiated;
+    protected GameObject currentBoss;
+    protected PlayerData playerData;
 
     public List<GameObject> Enemies = new List<GameObject>();
 
     public float cooldown;
-    private EnemyElement enemyElement = null;
+    protected EnemyElement enemyElement = null;
 
     public List<EnemyElement> availableEnemie;
     public List<EnemyElement> tempList;
@@ -71,7 +71,12 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         this.playerShip = playerShip;
     }
 
-    private void Start()
+    public void Start()
+    {
+        OnStart();
+    }
+
+    public virtual void OnStart()
     {
         playerShip = PlayerManager.GetPlayer();
 
@@ -103,7 +108,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         StartCoroutine(Spawn());
     }
 
-    private void LateUpdate()
+    public void LateUpdate()
     {
         pause = false;
         if (Enemies.Count >= 8)
@@ -112,7 +117,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         }
     }
 
-    IEnumerator Spawn()
+    IEnumerator  Spawn()
     {
         Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
@@ -123,7 +128,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
         while (!GameEnded)
         {
-            while (GuiManager.IsTrasnmiting())
+            while (GuiManager.Instance.IsTrasnmiting() || GameEnded)
             {
                 yield return waitForEndOfFrame;
             }
@@ -231,7 +236,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         GameEnded = true;
     }
 
-    private void SpawnBoss()
+    protected void SpawnBoss()
     {
         AudioManager.Instance.PlayMusicById("Boss", true);
         currentBoss = Instantiate(BossPrefab);
@@ -243,7 +248,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         Enemies.Add(currentBoss);
     }
 
-    private void SpawnEnemyElement(EnemyElement enemyElement)
+    protected void SpawnEnemyElement(EnemyElement enemyElement)
     {
         enemyElement.currentNumberInScene++;
         Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
@@ -275,7 +280,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         Enemies.Remove(baseEnemy.gameObject);
     }
 
-    public void BossDiedCallback(string id, BaseEnemy baseEnemy)
+    public virtual void BossDiedCallback(string id, BaseEnemy baseEnemy)
     {
         Enemies.Remove(baseEnemy.gameObject);
 

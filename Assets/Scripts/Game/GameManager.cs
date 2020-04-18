@@ -20,6 +20,9 @@ public class GameManager : Singleton<GameManager>
     public delegate void OnLoadData();
     public event OnLoadData OnLoadDataCompleted;
 
+    public delegate void PauseGame(bool value);
+    public PauseGame OnPauseGame;
+
 
     public static bool Paused;
     private bool firstRun;
@@ -115,31 +118,10 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("Continue");
             SceneLoader.Instance.LoadLevel("Intro");
         }
-    }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
-            playerData.CurrrentSelectedShip = 0;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
-            playerData.CurrrentSelectedShip = 1;
-        }
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
-            playerData.CurrrentSelectedShip = 2;
-        }
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
-            playerData.EarnXP(10);
-        }
+        GameEventSystem.OnPauseGame += PauseTheGame;
     }
+
     private void InstantiateSystemPrefabs()
     {
         foreach (var systemPrefab in SystemPrefabs)
@@ -149,9 +131,11 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public static void PauseTheGame(bool value = true)
+    public void PauseTheGame(bool value)
     {
-        if (value)
+        Paused = value;
+
+        if (Paused)
         {
             Time.timeScale = 0;
             Time.fixedDeltaTime = 0;
@@ -164,11 +148,16 @@ public class GameManager : Singleton<GameManager>
             Paused = false;
         }
     }
-    IEnumerator StartUp()
+
+    public void Setup(int playerShips = 3)
     {
+        missionCollection = JsonSystem.LoadMissions();
+        LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
+        playerData = new PlayerData(playerShips);
+
         int firstRunIndex = 0;
 
-        if (PlayerPrefs.HasKey("FirstRun"))   
+        if (PlayerPrefs.HasKey("FirstRun"))
         {
             firstRunIndex = PlayerPrefs.GetInt("FirstRun");
         }
@@ -203,16 +192,6 @@ public class GameManager : Singleton<GameManager>
         }
 
         GenerateLevelObjectiveData();
-        yield return null;
-    }
-
-    public void Setup(int playerShips = 3)
-    {
-        missionCollection = JsonSystem.LoadMissions();
-        LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        playerData = new PlayerData(playerShips);
-
-        StartCoroutine(StartUp());
     }
 
     public Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()

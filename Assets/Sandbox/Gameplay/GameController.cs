@@ -110,6 +110,7 @@ public class GameController : Singleton<GameController>
     {
         GameOver();
     }
+  
     public void Win()
     {
         if (!GameSession.IsGameOver)
@@ -119,6 +120,7 @@ public class GameController : Singleton<GameController>
             StartCoroutine(DelayWinScreen());
         }
     }
+  
     public void GameOver()
     {
         if (GameSession.IsGameOver == false)
