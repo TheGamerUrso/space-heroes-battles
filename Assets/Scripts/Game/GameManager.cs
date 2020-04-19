@@ -118,8 +118,6 @@ public class GameManager : Singleton<GameManager>
             Debug.Log("Continue");
             SceneLoader.Instance.LoadLevel("Intro");
         }
-
-        GameEventSystem.OnPauseGame += PauseTheGame;
     }
 
     private void InstantiateSystemPrefabs()
@@ -147,6 +145,8 @@ public class GameManager : Singleton<GameManager>
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
             Paused = false;
         }
+
+        OnPauseGame?.Invoke(Paused);
     }
 
     public void Setup(int playerShips = 3)

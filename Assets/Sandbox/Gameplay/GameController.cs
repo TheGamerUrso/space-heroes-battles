@@ -110,7 +110,7 @@ public class GameController : Singleton<GameController>
     {
         GameOver();
     }
-  
+
     public void Win()
     {
         if (!GameSession.IsGameOver)
@@ -120,7 +120,7 @@ public class GameController : Singleton<GameController>
             StartCoroutine(DelayWinScreen());
         }
     }
-  
+
     public void GameOver()
     {
         if (GameSession.IsGameOver == false)
@@ -250,6 +250,45 @@ public class GameController : Singleton<GameController>
         {
             GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
             GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+        }
+        var levelName = "Level" + GameManager.LevelSelected;
+        var killed = 0.0f;
+        var collected = 0.0f;
+        var missionCollection = GameManager.Instance.GetMissionCollection();
+        var mission = missionCollection.GetMission(GameManager.LevelSelected);
+
+        var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+
+        if (levelObjectiveDatas[0].completed == false)
+        {
+            levelObjectiveDatas[0].completed = true;
+
+            player.AddXP(50);
+            // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
+        }
+
+        float enemyKilled = 0;
+
+        if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
+        {
+            levelObjectiveDatas[1].completed = true;
+            player.AddXP(75);
+        }
+
+        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged == false)
+        {
+            levelObjectiveDatas[2].completed = true;
+            player.AddXP(100);
+            // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
+        }
+
+        float coinEarnInGame = 0;
+
+        if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
+        {
+            levelObjectiveDatas[3].completed = true;
+            player.AddXP(25);
+            // Debug.Log("Challenge : Earn " + SpawnEnemies.CoinDropInTotal * .9f + " Completed" + "(100 XP Awarded)");
         }
 
 

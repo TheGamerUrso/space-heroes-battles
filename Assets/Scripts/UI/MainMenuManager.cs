@@ -39,9 +39,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
         base.OnAwake();
         //version.text = "ver " + Application.version;
 
-        GameEventSystem.Call(GameEventType.PauseGame, false);
-
-       //GameManager.PauseTheGame(false);
+        GameManager.Instance.PauseTheGame(false);
 
         AudioManager.PlayMusic("Menu");
         Application.targetFrameRate = 30;

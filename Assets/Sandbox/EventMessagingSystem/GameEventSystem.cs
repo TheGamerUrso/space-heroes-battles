@@ -20,7 +20,7 @@ public enum PlayerEventType
 
 public enum GameEventType
 {
-   GameOver, UpgradeBought, ShipSelect,ToggleSlowMo,PauseGame
+   GameOver, UpgradeBought, ShipSelect,ToggleSlowMo
 }
 
 public class GameEventSystem
@@ -40,7 +40,6 @@ public class GameEventSystem
     public static Action<int> OnShipSelect;
     public static Action<UpgradeElement> OnUpgradeBought;
     public static Action<bool> ToggleSlowMo;
-    public static Action<bool> OnPauseGame;
 
     /**
      * Enemy Events
@@ -117,9 +116,6 @@ public class GameEventSystem
                 break;
             case GameEventType.ShipSelect:
                 OnShipSelect?.Invoke((int)args[0]);
-                break;
-            case GameEventType.PauseGame:
-                OnPauseGame?.Invoke((bool)args[0]);
                 break;
             default:
                 break;

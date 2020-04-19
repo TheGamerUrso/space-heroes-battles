@@ -36,7 +36,7 @@ public class GuiManager : Singleton<GuiManager>
         {
             if (!focus && GameSession.IsGameOver == false)
             {
-                GameEventSystem.Call(GameEventType.PauseGame, focus);
+                GameManager.Instance.PauseTheGame(focus);
             }
         }
     }
@@ -47,7 +47,7 @@ public class GuiManager : Singleton<GuiManager>
         {
             if (GameSession.IsGameOver == false)
             {
-                GameEventSystem.Call(GameEventType.PauseGame, Paused);
+                GameManager.Instance.PauseTheGame(Paused);
             }
         }
     }
@@ -63,6 +63,8 @@ public class GuiManager : Singleton<GuiManager>
         GameController.OnGameOver -= GameOver;
         GameController.OnWin -= Win;
 
+
+        GameManager.Instance.OnPauseGame -= ShowPauseMenu;
         GameSession.OnCoinValueChanged -= UpdateCoinWidgetText;
         GameSession.OnScoreValueChanged -= UpdateScore;
     }
@@ -100,7 +102,7 @@ public class GuiManager : Singleton<GuiManager>
         }
 
 
-        GameEventSystem.OnPauseGame += ShowPauseMenu;
+        GameManager.Instance.OnPauseGame += ShowPauseMenu;
     }
 
     public void EnemyDiedCallback(BaseEnemy baseEnemy)
@@ -225,13 +227,13 @@ public class GuiManager : Singleton<GuiManager>
     public void ResumeButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, true);
-        GameEventSystem.Call(GameEventType.PauseGame, false);
+        GameManager.Instance.PauseTheGame(false);
     }
 
     public void PauseButton()
     {
         GameEventSystem.Call(GameEventType.ToggleSlowMo, false);
-        GameEventSystem.Call(GameEventType.PauseGame, true);
+        GameManager.Instance.PauseTheGame(true);
     }
 
     public void ShowPauseMenu(bool value)
@@ -271,8 +273,8 @@ public class GuiManager : Singleton<GuiManager>
 
     public void LoadMainMenu()
     {
-        GameEventSystem.Call(GameEventType.PauseGame, false);
         SceneLoader.Instance.LoadMainenu();
+
         UIView activeMenuGO = null;
 
         if (WinScreen.IsActive())
@@ -325,22 +327,11 @@ public class GuiManager : Singleton<GuiManager>
 
     public void Win(GameController gc)
     {
-
-        if (!ResultShowed)
-        {
-            StartCoroutine(WinCoroutine());
-        }
+        StartCoroutine(WinCoroutine());
     }
-    //Game is Over
     public void GameOver(GameController gc)
     {
-        if (!ResultShowed)
-        {
-            ResultShowed = true;
-
-            StartCoroutine(GameOverCoroutine());
-
-        }
+        StartCoroutine(GameOverCoroutine());
     }
 
     private IEnumerator GameOverCoroutine()
@@ -350,7 +341,7 @@ public class GuiManager : Singleton<GuiManager>
 
         yield return new WaitForSeconds(2.0f);
 
-        GameOverScreen.gameObject.GetComponent<UIView>().Show();
+        GameOverScreen.Show();
     }
 
     public IEnumerator WinCoroutine()
@@ -361,6 +352,8 @@ public class GuiManager : Singleton<GuiManager>
 
         yield return new WaitForSeconds(2.0f);
 
-        WinScreen.gameObject.SetActive(true);
+        WinScreen.Show();
+        WinScreen.GetComponent
+            <WinWidget>().ShowGameResult();
     }
 }

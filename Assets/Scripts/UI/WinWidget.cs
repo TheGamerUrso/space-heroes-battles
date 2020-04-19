@@ -26,7 +26,7 @@ public class WinWidget : MonoBehaviour
         audioSource.PlayOneShot(audioClip);
     }
 
-    private void OnEnable()
+   public void ShowGameResult()
     {
         //TODO Get PlayerShip
 
@@ -53,44 +53,7 @@ public class WinWidget : MonoBehaviour
             return;
         }
 
-        missionCollection = GameManager.Instance.GetMissionCollection();
-        mission = missionCollection.GetMission(GameManager.LevelSelected);
-
-        levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
-
-        if (levelObjectiveDatas[0].completed == false)
-        {
-            levelObjectiveDatas[0].completed = true;
-
-            player.AddXP(50);
-            // Debug.Log("Challenge : Complete the Mission (100 XP Awarded)");
-        }
-
-        //TODO Enemy Killed This Round
-        float enemyKilled = 0;
-
-        if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
-        {
-            levelObjectiveDatas[1].completed = true;
-            player.AddXP(75);
-        }
-
-        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && player.IsPlayerDamaged == false)
-        {
-            levelObjectiveDatas[2].completed = true;
-            player.AddXP(100);
-            // Debug.Log("Challenge : Do Not Get Hit Completed (100 XP Awarded)");
-        }
-
-        float coinEarnInGame = 0;
-
-        if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
-        {
-            levelObjectiveDatas[3].completed = true;
-            player.AddXP(25);
-            // Debug.Log("Challenge : Earn " + SpawnEnemies.CoinDropInTotal * .9f + " Completed" + "(100 XP Awarded)");
-        }
-
+    
         StartCoroutine(ShowGameResults());
     }
 
