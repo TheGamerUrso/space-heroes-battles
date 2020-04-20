@@ -55,7 +55,7 @@ public class GameResults : MonoBehaviour
         string scoreText = string.Format("{00:0000000000}", GameSession.score);
         m_Text.text = scoreText;
 
-        levelName = "Level" + GameManager.LevelSelected;
+        levelName = "Level" + GameManager.LevelIndexSelected;
         highscore.SetActive(false);
         playerData.SurvivalScore = GameSession.score;
         if (playerData.SurvivalScore > playerData.SurvivalHighScore)

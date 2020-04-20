@@ -1,5 +1,6 @@
 using EasyMobile;
 using System.Collections;
+using TheGamerUrso.SceneLoader;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,59 +10,33 @@ public class GameOverWidget : MonoBehaviour
 {
     protected PlayerShipElement player;
     protected PlayerData playerData;
-
-    [SerializeField] private MissionCollection missionCollection;
-    [SerializeField] private Mission mission;
-    protected string levelName;
-    protected float killed;
-    protected float collected;
-
+    private string levelName;
     public TextMeshProUGUI m_Text;
     public Button m_PlayAgainButton;
     public Button m_QuitButton;
     public GameObject m_Canvas;
-    protected Animator animator;
 
     [Header("GameOver Widget Config")]
     public LevelObjectivesElement[] levelObjectives;
-    public LevelObjectiveData[] levelObjectiveDatas;
+    private LevelObjectiveData[] levelObjectiveDatas;
 
-
-    public AudioClip audioClip;
-    public AudioSource audioSource;
-
-    public void PlaySound()
-    {
-        audioSource.PlayOneShot(audioClip);
-    }
-
-    protected virtual void OnEnable()
+    public void ShowGameResult()
     {
         if (GameManager.Instance == null)
         {
             return;
         }
 
-        PlayerShip player = PlayerManager.GetPlayer();
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        float score = GameSession.score;
+        string scoreText = string.Format("{00:0000000000}", score);
+        m_Text.text = scoreText;
 
-        UpdateScore();
-
-        levelName = "Level" + GameManager.LevelSelected;
-
-        //TODO EnemySPawnInTotal * 9f
-        //TODO CoinsDropInTotal * .9f;
-
-        //Get Level Data
-        missionCollection = GameManager.Instance.GetMissionCollection();
-        mission = missionCollection.GetMission(GameManager.LevelSelected);
+        levelName = "Level" + GameManager.LevelIndexSelected;
 
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
         StartCoroutine(ShowGameResults());
     }
-
-
 
     private IEnumerator ShowGameResults()
     {
@@ -114,46 +89,14 @@ public class GameOverWidget : MonoBehaviour
         levelObjectives[ChallengeIndex].RefreshLevelObjectiveEement();
 
         levelObjectives[ChallengeIndex].CheckComplete();
-
-        int num = 0;
-
-        for (int i = 0; i < levelObjectives.Length; i++)
-        {
-            if (levelObjectives[i].levelObjectiveData.completed)
-            {
-                num++;
-            }
-        }
-
-        if (num == 4)
-        {
-            // Unlock an achievement
-            // EM_GameServicesConstants.Sample_Achievement is the generated name constant
-            // of an achievement named "Sample Achievement"
-#if UNITY_ANDROID
-            if (GooglePlayServicesManager.Instance)
-                GooglePlayServicesManager.Instance.UnlockAchievement(GameManager.LevelSelected);
-#elif UNITY_EDITOR
-     Debug.Log("UnlockAchievement"); 
-#endif
-        }
     }
 
-    public void UpdateScore()
+    public void ReplayButton()
     {
-        //TODO Update Score
-        string scoreText = string.Format("{00:0000000000}", 0);
-        UpdateText(scoreText);
+        SceneLoader.Instance.ResetLevel();
     }
-
-    private void Start()
+    public void LoadMainMenu()
     {
-        animator = GetComponent<Animator>();
-
-    }
-
-    public void UpdateText(string text)
-    {
-        m_Text.text = text;
+        GuiManager.Instance.LoadMainMenu();
     }
 }

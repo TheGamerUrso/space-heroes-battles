@@ -583,7 +583,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1486496059286568653}
         m_MethodName: ReplayButton
         m_Mode: 1
         m_Arguments:
@@ -635,13 +635,14 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1486496059286568655}
-  - component: {fileID: 1486496059286568653}
   - component: {fileID: 1486496059286568654}
   - component: {fileID: 1762940229810859675}
   - component: {fileID: 5800336483549989280}
   - component: {fileID: 7912411884267175779}
   - component: {fileID: 607691413632780506}
   - component: {fileID: 1710164092421314069}
+  - component: {fileID: 1628039651477499148}
+  - component: {fileID: 1486496059286568653}
   m_Layer: 5
   m_Name: GameOverMenu
   m_TagString: Untagged
@@ -658,7 +659,7 @@ RectTransform:
   m_GameObject: {fileID: 1486496059286568648}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 7660869291361753090}
   m_Father: {fileID: 0}
@@ -669,39 +670,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 1080, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &1486496059286568653
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1486496059286568648}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4e9eba2f4075e449bf300cfc5dc2ea6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  missionCollection:
-    Missions: []
-    MissionName: 
-  mission:
-    ID: 0
-    SpriteID: 0
-    Level: 0
-    Title: 
-    Description: 
-  m_Text: {fileID: 1486496058370584256}
-  m_PlayAgainButton: {fileID: 1486496059007784242}
-  m_QuitButton: {fileID: 1486496060158348669}
-  m_Canvas: {fileID: 108594395540288875}
-  levelObjectives:
-  - {fileID: 5965090913704664068}
-  - {fileID: 3128505040620307102}
-  - {fileID: 6716575575929720119}
-  - {fileID: 929995218640651083}
-  levelObjectiveDatas: []
-  audioClip: {fileID: 8300000, guid: 12493c0312bb89a419cf7c6bd6bb9e87, type: 3}
-  audioSource: {fileID: 1762940229810859675}
 --- !u!95 &1486496059286568654
 Animator:
   serializedVersion: 3
@@ -825,9 +793,9 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1486496059286568648}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
-  m_RenderMode: 2
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -835,7 +803,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -1643,7 +1611,50 @@ MonoBehaviour:
   UpdateShowProgressorOnHide: 0
   UseCustomStartAnchoredPosition: 0
   ViewCategory: Game
-  ViewName: Pause
+  ViewName: GameOver
+--- !u!114 &1628039651477499148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486496059286568648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_UiScaleMode: 1
+  m_ReferencePixelsPerUnit: 100
+  m_ScaleFactor: 1
+  m_ReferenceResolution: {x: 1080, y: 1920}
+  m_ScreenMatchMode: 0
+  m_MatchWidthOrHeight: 0.5
+  m_PhysicalUnit: 3
+  m_FallbackScreenDPI: 96
+  m_DefaultSpriteDPI: 96
+  m_DynamicPixelsPerUnit: 1
+--- !u!114 &1486496059286568653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486496059286568648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4e9eba2f4075e449bf300cfc5dc2ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Text: {fileID: 1486496058370584256}
+  m_PlayAgainButton: {fileID: 1486496059007784242}
+  m_QuitButton: {fileID: 1486496060158348669}
+  m_Canvas: {fileID: 108594395540288875}
+  levelObjectives:
+  - {fileID: 5965090913704664068}
+  - {fileID: 3128505040620307102}
+  - {fileID: 6716575575929720119}
+  - {fileID: 929995218640651083}
 --- !u!1 &1486496059334013024
 GameObject:
   m_ObjectHideFlags: 0
@@ -2261,7 +2272,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1486496059286568653}
         m_MethodName: LoadMainMenu
         m_Mode: 1
         m_Arguments:

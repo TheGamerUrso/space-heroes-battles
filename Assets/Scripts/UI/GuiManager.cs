@@ -342,6 +342,7 @@ public class GuiManager : Singleton<GuiManager>
         yield return new WaitForSeconds(2.0f);
 
         GameOverScreen.Show();
+        GameOverScreen.GetComponent<GameOverWidget>().ShowGameResult();
     }
 
     public IEnumerator WinCoroutine()

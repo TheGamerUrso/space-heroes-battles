@@ -66,8 +66,6 @@ public class UpgradeManager : Singleton<UpgradeManager>
         }
 
         Notify();
-
-
     }
 
 

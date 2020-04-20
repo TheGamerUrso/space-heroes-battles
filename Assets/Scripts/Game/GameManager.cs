@@ -40,7 +40,7 @@ public class GameManager : Singleton<GameManager>
 
     [SerializeField] private PlayerShipElement[] PlayerShips;
 
-    public static int LevelSelected = 0;
+    public static int LevelIndexSelected = 0;
 
     public GameObject levelupAnnouncement;
 

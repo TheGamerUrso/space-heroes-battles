@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ObjectivesManager : MonoBehaviour
+public class QuestManager : MonoBehaviour
 {
 
     public Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
@@ -178,5 +178,10 @@ public class ObjectivesManager : MonoBehaviour
             }
         }
         else { CreateNewObjective(); }
+    }
+
+    public void PlayButton()
+    {
+        ScreenManager.Instance.Open("Levels");
     }
 }

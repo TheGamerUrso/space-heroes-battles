@@ -3,66 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using TheGamerUrso.SceneLoader;
+
 public class WinWidget : MonoBehaviour
 {
-    private PlayerShip player;
     private PlayerData playerData;
-    [SerializeField] private MissionCollection missionCollection;
-    [SerializeField] private Mission mission;
+
     [SerializeField] private TextMeshProUGUI Score = null;
     private string levelName;
-    private float killed;
-    private float collected;
 
     [Header("Win Widget Config")]
     public LevelObjectivesElement[] levelObjectives;
-    public LevelObjectiveData[] levelObjectiveDatas;
+    private LevelObjectiveData[] levelObjectiveDatas;
 
-    public AudioClip audioClip;
-    public AudioSource audioSource;
-
-    public void PlaySound()
+    public void ShowGameResult()
     {
-        audioSource.PlayOneShot(audioClip);
-    }
+        int levelIndex = GameManager.LevelIndexSelected;
+        int levelSelected = (levelIndex + 1);
+        var levelName = "Level" + levelSelected;
 
-   public void ShowGameResult()
-    {
-        //TODO Get PlayerShip
-
-        levelName = "Level" + GameManager.LevelSelected;
+        playerData = GameManager.Instance.GetPlayerData();
+        levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
         if (levelName.Equals("Level0"))
         {
             return;
         }
 
-        //TODO EnemySPawnInTotal * 9f
-        //TODO CoinsDropInTotal * .9f;
-
-        player = PlayerManager.GetPlayer();
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-
-        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-
-        levelName = "Level" + GameManager.LevelSelected;
-
-        if (levelName.Equals("Level0"))
-        {
-            return;
-        }
-
-    
         StartCoroutine(ShowGameResults());
     }
 
     private IEnumerator ShowGameResults()
     {
-        //TODO Get Score
-        float score = 0;
+        float score = GameSession.score;
         string scoreText = string.Format("{00:0000000000}", score);
         Score.text = scoreText;
+
+
+
         int ChallengeIndex = 0;
 
         foreach (LevelObjectivesElement item in levelObjectives)
@@ -112,5 +90,14 @@ public class WinWidget : MonoBehaviour
         levelObjectives[ChallengeIndex].RefreshLevelObjectiveEement();
 
         levelObjectives[ChallengeIndex].CheckComplete();
+    }
+
+    public void ReplayButton()
+    {
+        SceneLoader.Instance.ResetLevel();
+    }
+    public void LoadMainMenu()
+    {
+        GuiManager.Instance.LoadMainMenu();
     }
 }

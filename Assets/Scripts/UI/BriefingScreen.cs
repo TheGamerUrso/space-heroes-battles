@@ -128,7 +128,7 @@ public class BriefingScreen : MonoBehaviour
         if (level.ID.Contains("Survival"))
         {
             ScreenManager.Instance.Open("Briefing");
-            GameManager.LevelSelected = -1;
+            GameManager.LevelIndexSelected = -1;
             RefreshLevelObjectiveData();
             ShowStoryButton.SetActive(true);
             LevelDetailLevelTItle.text = "Survival";
@@ -136,7 +136,7 @@ public class BriefingScreen : MonoBehaviour
         else
         {
             ScreenManager.Instance.Open("Briefing");
-            GameManager.LevelSelected = level.mission.ID;
+            GameManager.LevelIndexSelected = level.mission.ID;
 
             RefreshLevelObjectiveData();
             ShowStoryButton.SetActive(true);
@@ -144,7 +144,7 @@ public class BriefingScreen : MonoBehaviour
             LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
             LevelDetailLevelTItle.text = currentMission.Title;
             SetMission(currentMission);
-            dialogueManager.ShowStory(GameManager.LevelSelected);
+            dialogueManager.ShowStory(GameManager.LevelIndexSelected);
         }
     }
 
@@ -164,7 +164,7 @@ public class BriefingScreen : MonoBehaviour
     public void RefreshLevelObjectiveData()
     {
         PlayerData playerData =  GameManager.Instance.GetPlayerData();
-        levelObjectiveDatas = playerData.GetLevelObjectivesByID("Level" + GameManager.LevelSelected);
+        levelObjectiveDatas = playerData.GetLevelObjectivesByID("Level" + GameManager.LevelIndexSelected);
         if (levelObjectiveDatas != null)
         {
             for (int i = 0; i < levelObjectivesElement.Length; i++)

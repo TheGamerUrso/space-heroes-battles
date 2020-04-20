@@ -36,7 +36,7 @@ public class LevelObjectivesElement : MonoBehaviour
         completedSprite.gameObject.SetActive(false);
         failSpriet.gameObject.SetActive(false);
 
-        ID                      = GameManager.LevelSelected;
+        ID                      = GameManager.LevelIndexSelected;
         DescriptionText.text    = levelObjectiveData.description;
 
         if (levelObjectiveData.completed)

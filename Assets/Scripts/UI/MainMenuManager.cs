@@ -12,19 +12,11 @@ public class MainMenuManager : Singleton<MainMenuManager>
     public TextMeshProUGUI PlayerXPText;
     public TextMeshProUGUI PlayerLevelText;
 
-    [SerializeField] private TextMeshProUGUI version;
-
-
     private int levelIndex;
     private string levelName;
 
     private PlayerShipData playerShipData;
-
-    public void ShowProfile()
-    {
-
-    }
-
+    private PlayerData playerData;
     public void ShowLeaderboards()
     {
         GooglePlayServicesManager.Instance.ShowLeaderboards();
@@ -37,10 +29,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
     protected override void OnAwake()
     {
         base.OnAwake();
-        //version.text = "ver " + Application.version;
 
         GameManager.Instance.PauseTheGame(false);
-
         AudioManager.PlayMusic("Menu");
         Application.targetFrameRate = 30;
     }
@@ -49,14 +39,12 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         base.OnCleanup();
 
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         playerData.OnShipSelectValueChanged -= OnShipSelectValueChanged;
         playerData.OnXpValueChanged -= XpLevelChanged;
     }
 
     public void OnShipSelectValueChanged(int selection)
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         playerData.currentSelectedShip = selection;
         playerShipData = playerData.GetCurrentPlayerShipData();
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
@@ -64,7 +52,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Start()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        playerData = GameManager.Instance.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
 
@@ -104,7 +92,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         if (Input.GetKeyDown(KeyCode.T))
         {
-            PlayerData playerData =  GameManager.Instance.GetPlayerData();
             playerData.EarnXP(100);
         }
     }
@@ -115,10 +102,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     public void PlayGame()
     {
-        levelIndex = GameManager.LevelSelected;
+        levelIndex = GameManager.LevelIndexSelected;
         levelName = string.Format("Level" + (levelIndex + 1));
         SceneLoader.Instance.LoadScene(levelName);
-
     }
 
 

@@ -21,11 +21,11 @@ public class PauseMenuOptionScreen : BaseOptions
             return;
         }
 
-        string levelName = "Level" + GameManager.LevelSelected;
+        string levelName = "Level" + GameManager.LevelIndexSelected;
 
         playerData =  GameManager.Instance.GetPlayerData();
         listOfMission = GameManager.Instance.GetMissionCollection();
-        mission = listOfMission.GetMission(GameManager.LevelSelected);
+        mission = listOfMission.GetMission(GameManager.LevelIndexSelected);
         MissionTitle.text = mission.Title;
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
         for (int i = 0; i < LevelObjectivesElements.Length; i++)

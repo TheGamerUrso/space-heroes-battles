@@ -89,7 +89,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             }
             Debug.Log("Not Gameplay Scene active");
             MissionCollection missionCollection = GameManager.Instance.GetMissionCollection();
-            Mission mission = missionCollection.GetMission(GameManager.LevelSelected);
+            Mission mission = missionCollection.GetMission(GameManager.LevelIndexSelected);
             LevelDifficulty = mission.Level;
 
         }
@@ -99,6 +99,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         GuiManager.PlayTrasmition(transmitions);
 
         TotalEnemies = numberOfEnemiesEachWave * waves;
+
+        GameSession.EnemySpawnInTotal = TotalEnemies;
 
         for (int i = 0; i < availableEnemies; i++)
         {

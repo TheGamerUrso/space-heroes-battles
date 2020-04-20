@@ -11,7 +11,7 @@
     public static MultiplierChanged OnMultiplierChanged;
 
     public static bool IsGameOver;
-    public static int EnemySpawnInTotal { get; set; }
+    public static int EnemySpawnInTotal;
 
     public static int score;
     public static int Score
@@ -134,7 +134,6 @@
     public static void Reset()
     {
         IsGameOver = false;
-        EnemySpawnInTotal = 0;
         score = 0;
         WaveSurvived = 0;
         currentEnemyKilled = 0;
