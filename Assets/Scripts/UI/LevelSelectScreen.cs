@@ -69,7 +69,7 @@ public class LevelSelectScreen : MonoBehaviour
 
         SetLevelSelectButtons();
 
-        LevelDetailScreen.Instance.SetDetails(currentMission, sprites[0]);
+        LevelDetailScreen.Instance.Setup();
     }
 
     public void SetLevelSelectButtons()

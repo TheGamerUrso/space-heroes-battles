@@ -71,6 +71,8 @@ public class GameController : Singleton<GameController>
         spawn.EnemyDied += EnemyDied;
 
         spawn.InitReference(playerData, playerShip);
+
+        GameSession.Reset();
     }
 
     private void EnemyDied(BaseEnemy baseEnemy)
@@ -162,15 +164,11 @@ public class GameController : Singleton<GameController>
         Time.timeScale = 1.0f;
 
         playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+        PlayerChallengesCheck();
 
         PlayerQuestCheck();
 
-        UnlockNextMission();
-
         UpdateAchievements();
-
-        PlayerChallengesCheck();
-
 
         yield return new WaitForSeconds(4.0f);
 
@@ -263,6 +261,8 @@ public class GameController : Singleton<GameController>
 #elif UNITY_EDITOR
      Debug.Log("UnlockAchievement"); 
 #endif
+
+        UnlockNextMission();
     }
 
     public void PlayerQuestCheck()

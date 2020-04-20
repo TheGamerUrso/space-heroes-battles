@@ -14,23 +14,36 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
     private Mission currentMission;
     public LevelObjectivesElement[] levelObjectivesElement;
     private LevelObjectiveData[] levelObjectiveDatas;
+    private PlayerData playerData;
+    private Dictionary<string, LevelObjectiveData[]> Challanges;
+
+    public void Setup()
+    {
+        if (playerData == null)
+            playerData = PersistantData.GetPlayerData();
+
+        if (Challanges == null)
+            Challanges = playerData.GetListOfObjectives();
+    }
 
     public void SetDetails(Mission mission, Sprite sprite)
     {
+
         if (mission == null)
         {
             LevelDetailLevelTItle.text = "Survival";
+            HideLevelObjectives();
             return;
         }
 
-        PlayerData playerData = PersistantData.GetPlayerData();
-        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
         currentMission = mission;
 
         ShowStoryButton.SetActive(true);
 
         LevelDetailPreview.sprite = sprite;
-        LevelDetailLevelTItle.text = currentMission.Title;    
+        LevelDetailLevelTItle.text = currentMission.Title;
+
+        levelObjectiveDatas = Challanges["Level"+(currentMission.ID + 1)];
 
         RefreshLevelObjectiveData();
     }
@@ -77,7 +90,7 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
     public void RefreshLevelObjectiveData()
     {
         PlayerData playerData = PersistantData.GetPlayerData();
-        levelObjectiveDatas = playerData.GetLevelObjectivesByID("Level" + GameManager.LevelIndexSelected);
+
         if (levelObjectiveDatas != null)
         {
             for (int i = 0; i < levelObjectivesElement.Length; i++)
