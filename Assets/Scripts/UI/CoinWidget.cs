@@ -13,7 +13,7 @@ public class CoinWidget : MonoBehaviour
 
     private void Start()
     {
-        playerData = GameManager.Instance.GetPlayerData();
+        playerData = PersistantData.GetPlayerData();
         playerData.OnCoinValueChanged += UpdateCoins;
         UpdateCoins(playerData.Coins);
     }

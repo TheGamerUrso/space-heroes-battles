@@ -11,8 +11,7 @@ public class SurvivalPauseMenuOptionScreen : BaseOptions
     public override void InitializeOptions()
     {
         base.InitializeOptions();
-        if (GameManager.Instance != null)
-            playerData = GameManager.Instance.GetPlayerData();
+        playerData = PersistantData.GetPlayerData();
     }
 
     public override void OnOptionEnter()

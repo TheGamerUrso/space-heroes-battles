@@ -46,24 +46,7 @@ public class PlayerManager
 
         currentPlayer.SetActive(true);
 
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-
-        int level = playerShipData.level;
-        float xp = playerShipData.xp;
-        float xpToLevel = playerShipData.xpToLevel;
-
-        currentPlayer.GetComponent<PlayerShip>().level = level;
-        currentPlayer.GetComponent<PlayerShip>().xp = xp;
-        currentPlayer.GetComponent<PlayerShip>().xpToLevel = xpToLevel;
-
-        currentPlayer.GetComponent<PlayerShip>().SetStats(level);
-
-        currentPlayer.GetComponent<PlayerShip>().SetPlayerData(playerData);
-
-
         return currentPlayer;
-
     }
 
     public static PlayerShipElement GetPlayerByID(int id)

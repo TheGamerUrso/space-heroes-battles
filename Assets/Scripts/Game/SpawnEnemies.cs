@@ -88,7 +88,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                 continue;
             }
             Debug.Log("Not Gameplay Scene active");
-            MissionCollection missionCollection = GameManager.Instance.GetMissionCollection();
+            MissionCollection missionCollection = PersistantData.GetMissionCollection();
             Mission mission = missionCollection.GetMission(GameManager.LevelIndexSelected);
             LevelDifficulty = mission.Level;
 
@@ -303,8 +303,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public void BossGotHit(string id, BaseEnemy baseEnemy)
     {
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        playerShip.PowerUpLevel += .1f;
+        playerData.PowerUpLevel += .1f;
     }
 
     public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
@@ -316,8 +315,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        playerShip.PowerUpLevel += .1f;
+        playerData.PowerUpLevel += .1f;
     }
 
     public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)

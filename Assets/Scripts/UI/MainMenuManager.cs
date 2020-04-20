@@ -52,7 +52,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Start()
     {
-        playerData = GameManager.Instance.GetPlayerData();
+        playerData = PersistantData.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
 

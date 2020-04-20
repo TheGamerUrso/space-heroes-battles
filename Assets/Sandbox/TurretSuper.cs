@@ -6,12 +6,11 @@ public class TurretSuper : SpecialAttack
 {
     public float turretDuration;
     public PlaceTurrets Turrets;
+
     public override void OnStart()
     {
-        base.OnStart(); 
-        
-        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
-        turretDuration = playerShip.SuperChargeTime;
+        base.OnStart();
+        turretDuration = playerShipData.SuperChargeTime;
     }
 
     public override void ActivateSpecial()
@@ -20,7 +19,6 @@ public class TurretSuper : SpecialAttack
         {
             AudioManager.PlaySound(null, "Super", 3);
 
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
             playerData.superUsed++;
 
             turretDuration = SuperChargeTime;
@@ -57,7 +55,7 @@ public class TurretSuper : SpecialAttack
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
+                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
                 }
 
                 if (playerShip.HealthPresentage <= .5f)
@@ -71,7 +69,7 @@ public class TurretSuper : SpecialAttack
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerShip.PowerUpLevel = 0;
+                playerData.PowerUpLevel = 0;
             }
         }
 

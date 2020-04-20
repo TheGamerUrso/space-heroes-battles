@@ -10,7 +10,7 @@ public class CoinUIText : MonoBehaviour
 
     public void Update()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         int value = playerData.Coins;
         string formatedText = string.Format("{0}", value);
         UpdateText(formatedText);

@@ -32,7 +32,7 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
         {
             GameManager.LevelIndexSelected = currentMission.ID;
             ShowStoryButton.SetActive(true);
-            currentMission = GameManager.Instance.GetMission(currentMission.ID);
+            currentMission = PersistantData.GetMission(currentMission.ID);
             LevelDetailPreview.sprite = level.sprite;
             LevelDetailLevelTItle.text = currentMission.Title;
         }

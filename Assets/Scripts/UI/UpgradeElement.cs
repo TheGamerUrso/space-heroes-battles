@@ -41,7 +41,7 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
 
     private void OnEnable()
     {
-        playerData = GameManager.Instance.GetPlayerData();
+        playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         RefreshUpgradeElement();
     }
@@ -71,7 +71,6 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
         this.upgradeManager = upgradeManager;
         upgradeManager.SubscribePurchasable(this);
 
-        playerData = GameManager.Instance.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
 

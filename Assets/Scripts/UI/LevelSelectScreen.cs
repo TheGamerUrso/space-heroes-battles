@@ -8,7 +8,7 @@ public class LevelSelectScreen : MonoBehaviour {
 
     public Sprite[] sprites;
 
-
+    private PlayerData playerData;
     public GameObject LevelsParentTransform;
     public GameObject LevelElementPrefab;
 
@@ -67,13 +67,14 @@ public class LevelSelectScreen : MonoBehaviour {
 
     public void MissionBriefingInit()
     {
-        missionCollection = GameManager.Instance.GetMissionCollection();
+        playerData = PersistantData.GetPlayerData();
+        missionCollection = PersistantData.GetMissionCollection();
         Button missionButton;
         LevelElement levelElement;
         Level level;
         Image LevelImage;
 
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+
         Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
         int missionsCompleted = 0;
        
@@ -136,7 +137,7 @@ public class LevelSelectScreen : MonoBehaviour {
             GameManager.LevelIndexSelected = level.mission.ID;
 
             RefreshLevelObjectiveData();
-            currentMission = GameManager.Instance.GetMission(level.mission.ID);
+            currentMission = PersistantData.GetMission(level.mission.ID);
 
             LevelDetailScreen.Instance.SetDetails(currentMission.Title, sprites[currentMission.SpriteID]);
 
@@ -148,7 +149,7 @@ public class LevelSelectScreen : MonoBehaviour {
 
     public string GetStory(int missionIndex)
     {
-        currentMission = GameManager.Instance.GetMission(missionIndex);
+        currentMission = PersistantData.GetMission(missionIndex);
         return currentMission.Description;
     }
 
@@ -161,7 +162,6 @@ public class LevelSelectScreen : MonoBehaviour {
     }
     public void RefreshLevelObjectiveData()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
         levelObjectiveDatas = playerData.GetLevelObjectivesByID("Level" + GameManager.LevelIndexSelected);
         if (levelObjectiveDatas != null)
         {

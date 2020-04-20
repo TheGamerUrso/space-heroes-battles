@@ -5,6 +5,8 @@ using UnityEngine;
 [Serializable]
 public class SpecialAttack : PlayerWeapon
 {
+    public PlayerData playerData;
+    public PlayerShipData playerShipData;
 
     public int superUsed;
     public int SuperUsed
@@ -24,7 +26,7 @@ public class SpecialAttack : PlayerWeapon
 
     public void IncreaseSuperUsed()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         playerData.SuperUsed++;
     }
 
@@ -32,9 +34,10 @@ public class SpecialAttack : PlayerWeapon
     {
         base.OnStart();
         GameSession.SuperUsed = 0;
-        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
-        superChargeTimer = playerShip.SuperChargeTime;
-        damage = playerShip.SuperDamage;
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        superChargeTimer = playerShipData.SuperChargeTime;
+        damage = playerShipData.SuperDamage;
     }
 
     public virtual void ActivateSpecial()
@@ -43,7 +46,7 @@ public class SpecialAttack : PlayerWeapon
         {
             AudioManager.PlaySound(null, "Super", 3);
 
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            PlayerData playerData = PersistantData.GetPlayerData();
             playerData.superUsed++;
 
             SpecialActive = true;
@@ -72,7 +75,7 @@ public class SpecialAttack : PlayerWeapon
                 if (m_CountDownTimer.countToZero())
                 {
 
-                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
 
                 }
 
@@ -87,7 +90,7 @@ public class SpecialAttack : PlayerWeapon
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerShip.PowerUpLevel = 0;
+                playerData.PowerUpLevel = 0;
             }
         }
 

@@ -39,7 +39,7 @@ public class DataPreviewWindow : EditorWindow
 
         //if (PlayerManager.instance)
         //    currentPlayer = PlayerManager.instance.GetPlayer();
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
 

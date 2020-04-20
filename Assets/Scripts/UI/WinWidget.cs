@@ -22,7 +22,7 @@ public class WinWidget : MonoBehaviour
         int levelSelected = (levelIndex + 1);
         var levelName = "Level" + levelSelected;
 
-        playerData = GameManager.Instance.GetPlayerData();
+        playerData = PersistantData.GetPlayerData();
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
         if (levelName.Equals("Level0"))

@@ -4,6 +4,8 @@ using EasyMobile;
 using UnityEngine;
 
 public delegate void XpValueChanged(int level, float xp, float xpToLevel);
+public delegate void LevelUp(int level);
+
 public delegate void DistanceChanged(float ammount);
 public delegate void SuperUseValueChanged(float ammount);
 public delegate void CoinValueChanged(int ammount);
@@ -17,16 +19,45 @@ public class PlayerData
     [NonSerialized] public DistanceChanged distanceChanged;
     [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
     [NonSerialized] public SuperUseValueChanged OnSuperUseValueChanged;
+    [NonSerialized] public Action<float> PowerUpLevelChanged;
+    [NonSerialized] public LevelUp OnLevelUp;
 
+
+    #region Player Statistics
     public long SurvivalScore;
     public long SurvivalHighScore;
 
     public float[] score;
     public float[] Score;
     public float[] HighScore;
-    
-    
+
     public int coins;
+    public int TotalKills;
+    public int LevelUnlocked;
+    public int TotalMoneySpend;
+    public int TotalSuperUsed;
+    public int WaveSurvived;
+    public int m_EnemyKilled;
+    public bool GotHitInGame;
+    public bool PlayedGame;
+    public int superUsed;
+    public int[] UnlockedHeroes;
+
+    public bool TempFireRateUpgrade { get; set; }
+    public float powerUpLevel = 0;
+    public int PowerUpCollectAmmount = 0;
+    #endregion
+
+    #region Player Settings
+    public int currentSelectedShip;
+    public float SFXVolume;
+    public float MusicVolume;
+    public bool AutoAttack;
+    public bool mute;
+    public float distance;
+    #endregion
+
+    #region Properties
     public int Coins
     {
         get
@@ -39,18 +70,6 @@ public class PlayerData
             OnCoinValueChanged?.Invoke(coins);
         }
     }
-
-
-    public int TotalKills;
-    public int LevelUnlocked;
-    public int TotalMoneySpend;
-    public int TotalSuperUsed;
-    public int WaveSurvived;
-    public int m_EnemyKilled;
-    public bool GotHitInGame;
-    public bool PlayedGame;
-
-    public int superUsed;
     public int SuperUsed
     {
         get { return superUsed; }
@@ -59,10 +78,6 @@ public class PlayerData
             OnSuperUseValueChanged?.Invoke(superUsed);       
         }
     }
-
-
-    public int currentSelectedShip;
-
     public int CurrrentSelectedShip
     {
         get
@@ -76,21 +91,6 @@ public class PlayerData
             OnShipSelectValueChanged?.Invoke(value);
         }
     }
-
-
-    public int[] UnlockedHeroes;
-
-    public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
-    public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
-
-    public PlayerShipData[] playerShipData = new PlayerShipData[3];
-
-    public float SFXVolume;
-    public float MusicVolume;
-    public bool AutoAttack;
-    public bool mute;
-    public float distance;
-
     public float Distance
     {
         get
@@ -117,7 +117,6 @@ public class PlayerData
             GameEventSystem.Call(PlayerEventType.Player_LevelUp);
         }
     }
-
     public float XP
     {
         get
@@ -130,6 +129,28 @@ public class PlayerData
             OnXpValueChanged?.Invoke(GetCurrentPlayerShipData().level, GetCurrentPlayerShipData().xp, GetCurrentPlayerShipData().xpToLevel);
         }
     }
+    public float PowerUpLevel
+    {
+        get
+        {
+            return powerUpLevel;
+        }
+
+        set
+        {
+            powerUpLevel = value;
+            PowerUpLevelChanged?.Invoke(powerUpLevel);
+        }
+    }
+
+
+    #endregion
+
+
+    public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
+    public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
+
+    public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
     public PlayerData(int number = 3)
     {
@@ -273,6 +294,7 @@ public class PlayerData
     {
         return playerShipData[currentSelectedShip];
     }
+
     public void EarnXP(float ammount)
     {
         PlayerShipData playerShipData1 = playerShipData[currentSelectedShip];
@@ -284,6 +306,8 @@ public class PlayerData
                 Level++;
                 XP -= playerShipData1.xpToLevel;
                 playerShipData1.xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
+                OnLevelUp?.Invoke(Level);
+                GameEventSystem.Call(PlayerEventType.Player_LevelUp);
             }
         }
         else
@@ -299,5 +323,12 @@ public class PlayerData
         playerShipData1.Upgrades[upgrade] = value;
         SaveSystem.SaveGame();
     }
-
+    public void IncreasePowerUp(float value)
+    {
+        PowerUpLevel += value;
+    }
+    public float GetPowerUpLevelPresentage()
+    {
+        return PowerUpLevel;
+    }
 }

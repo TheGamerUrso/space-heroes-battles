@@ -33,11 +33,11 @@ public class FirstBossBattleSystem : BaseBossBattle
             return;
         }
 
-        PlayerShip player = PlayerManager.GetPlayer();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
-        if (player != null)
+        if (playerData != null)
         {
-            player.IncreasePowerUp(.05f);
+            playerData.IncreasePowerUp(.05f);
         }
 
         hitIndex++;

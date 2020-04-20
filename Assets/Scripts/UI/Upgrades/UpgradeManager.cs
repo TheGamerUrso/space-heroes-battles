@@ -35,7 +35,7 @@ public class UpgradeManager : Singleton<UpgradeManager>
 
     private void Start()
     {
-        playerData = GameManager.Instance.GetPlayerData();
+        playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         for (int i = 0; i < upgradeElements.Length; i++)

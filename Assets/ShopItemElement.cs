@@ -9,7 +9,7 @@ public class ShopItemElement : UpgradeElement
         this.upgradeManager = upgradeManager;
         upgradeManager.SubscribePurchasable(this);
 
-        playerData = GameManager.Instance.GetPlayerData();
+        playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         level = playerShipData.Upgrades[(int)(upgradeData.upgradeType) - 1];

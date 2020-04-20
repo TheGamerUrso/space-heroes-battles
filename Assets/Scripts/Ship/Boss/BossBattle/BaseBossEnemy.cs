@@ -87,8 +87,13 @@ public class BaseBossEnemy : BaseEnemy
 
     public virtual void BossHit()
     {
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        playerShip.IncreasePowerUp(.05f);
+        PlayerData playerData = PersistantData.GetPlayerData();
+
+        if (playerData != null)
+        {
+            playerData.IncreasePowerUp(.05f);
+        }
+
 
     }
 

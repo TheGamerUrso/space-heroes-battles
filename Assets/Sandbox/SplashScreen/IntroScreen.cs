@@ -31,7 +31,7 @@ public class IntroScreen : MonoBehaviour
 
     void Start()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
         for (int i = 0; i < Ships.Length; i++)
         {

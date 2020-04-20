@@ -50,7 +50,7 @@ public class GameResults : MonoBehaviour
         }
 
         PlayerShip player = PlayerManager.GetPlayer();
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
         string scoreText = string.Format("{00:0000000000}", GameSession.score);
         m_Text.text = scoreText;

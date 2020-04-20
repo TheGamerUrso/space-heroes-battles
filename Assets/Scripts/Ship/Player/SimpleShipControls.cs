@@ -33,7 +33,7 @@ public class SimpleShipControls : MonoBehaviour
     {
         targetPos = transform.position;
 
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
         playerData.distanceChanged = UpdateOffset;
 

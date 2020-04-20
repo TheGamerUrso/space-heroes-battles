@@ -23,7 +23,7 @@ public class ShipSelect : MonoBehaviour
 
     public void Initialize()
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
         //foreach (GameObject item in Ships)
         //{
@@ -115,7 +115,7 @@ public class ShipSelect : MonoBehaviour
 
         //   Ships[currentShip].SetActive(true);
 
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         playerData.CurrrentSelectedShip = currentShip;
 
         if (playerData.UnlockedHeroes[currentShip] == 0)

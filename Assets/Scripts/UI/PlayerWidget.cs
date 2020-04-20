@@ -5,7 +5,9 @@ using UnityEngine.UI;
 
 public class PlayerWidget : MonoBehaviour
 {
-    private PlayerShip player;
+    public PlayerShip player;
+    public PlayerData playerData;
+    public PlayerShipData playerShipData;
 
     private static string ReadyStringKey = "Ready";
     private static string ActiveStringKey = "Active";
@@ -53,9 +55,16 @@ public class PlayerWidget : MonoBehaviour
         if (player != null)
         {
             player.OnHealthChanged -= UpdatePlayerHealth;
-            player.PowerUpLevelChanged -= PowerUpLevelChanged;
-            player.OnXpChanged -= UpdateXP;
+            playerData.PowerUpLevelChanged -= PowerUpLevelChanged;
+            playerData.OnXpValueChanged -= UpdateXP;
         }
+    }
+
+    private void Start()
+    {
+        player = PlayerManager.GetPlayer();
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
     }
 
     public void SetPlayer(PlayerShip player)
@@ -69,17 +78,17 @@ public class PlayerWidget : MonoBehaviour
         });
 
         player.OnHealthChanged += UpdatePlayerHealth;
-        player.PowerUpLevelChanged += PowerUpLevelChanged;
+        playerData.PowerUpLevelChanged += PowerUpLevelChanged;
 
 
-        player.OnXpChanged += UpdateXP;
+        playerData.OnXpValueChanged += UpdateXP;
 
         UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
       
-        UpdateXP(player.level, Mathf.Abs(player.xp), Mathf.Abs(player.xpToLevel));
+        UpdateXP(playerShipData.level, Mathf.Abs(playerShipData.xp), Mathf.Abs(playerShipData.xpToLevel));
        
         
-        PowerUpLevelChanged(player.GetPowerUpLevelPresentage());
+        PowerUpLevelChanged(playerData.GetPowerUpLevelPresentage());
     }
 
     public void ActivateSpecial()
@@ -168,18 +177,18 @@ public class PlayerWidget : MonoBehaviour
     {
         var sprite = WeaponIndicatorSpritesNotActivated[0];
 
-        var collecterUpgrade = player.PowerUpCollectAmmount;
+        var collecterUpgrade = playerData.PowerUpCollectAmmount;
         if (m_PowerUps.fillAmount == 1 && collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesActivated[player.PowerUpCollectAmmount];
+            sprite = WeaponIndicatorSpritesActivated[playerData.PowerUpCollectAmmount];
         }
         else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesNotActivated[player.PowerUpCollectAmmount];
+            sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerUpCollectAmmount];
         }
         else
         {
-            sprite = WeaponIndicatorSpritesNotActivated[player.PowerUpCollectAmmount];
+            sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerUpCollectAmmount];
         }
 
         WeaponIndicatorImage.sprite = sprite;

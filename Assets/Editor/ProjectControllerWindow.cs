@@ -66,8 +66,8 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                GameManager.Instance.SetPlayerData(new PlayerData());
-                SaveSystem.LoadGame();
+                PersistantData.ReplacePlayerData(new PlayerData());
+                PersistantData.Load();
             }
         }
 
@@ -75,7 +75,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                SaveSystem.SaveGame();
+                PersistantData.Save();
             }
         }
         EditorGUILayout.EndVertical();
@@ -90,7 +90,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                PlayerData playerData =  GameManager.Instance.GetPlayerData();
+                PlayerData playerData = PersistantData.GetPlayerData();
                 playerData.EarnXP(xpToEarn);
             }
         }
@@ -121,7 +121,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                PlayerData playerData =  GameManager.Instance.GetPlayerData();
+                PlayerData playerData = PersistantData.GetPlayerData();
                 playerData.Coins += coinsToEarn;
             }
         }
@@ -172,8 +172,8 @@ public class ProjectControllerWindow : EditorWindow
 
         if (GUILayout.Button("Complete First Challenge"))
         {
-            PlayerData playerData =  GameManager.Instance.GetPlayerData();
-            MissionCollection missionCollection = GameManager.Instance.GetMissionCollection();
+            PlayerData playerData = PersistantData.GetPlayerData();
+            MissionCollection missionCollection = PersistantData.GetMissionCollection();
             Mission mission = missionCollection.GetMission(playerData.LevelUnlocked++);
 
             LevelObjectiveData[] levelObjectiveDatas = playerData.GetLevelObjectives("Level" + mission.ID);
@@ -218,7 +218,7 @@ public class ProjectControllerWindow : EditorWindow
 
     public void CompleteObjective(int index)
     {
-        PlayerData playerData =  GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         if ((ObjectiveType)playerData.ListOfOnGoingObjectives[index].objectiveType == ObjectiveType.Unharmed)
         {
             playerData.PlayedGame = true;

@@ -31,7 +31,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void RefreshElement()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
         if (playerData.UnlockedHeroes[0] > 0)
         {
@@ -70,7 +70,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void Purchase()
     {
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         if (Locked)
         {
             if (playerData.Coins >= shipSelectData.Cost)

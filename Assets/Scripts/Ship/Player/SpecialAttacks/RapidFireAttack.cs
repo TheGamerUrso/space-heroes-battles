@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class RapidFireAttack : SpecialAttack
 {
+
     protected PlayerWeapon[] playerWeapons;
     protected float previousRapidFireValue = 0;
     protected int weaponCurrentType;
@@ -15,7 +16,7 @@ public class RapidFireAttack : SpecialAttack
         {
             AudioManager.PlaySound(null, "Super", 3);
 
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            PlayerData playerData = PersistantData.GetPlayerData();
             playerData.superUsed++;
 
             if (playerWeapons == null)
@@ -73,7 +74,7 @@ public class RapidFireAttack : SpecialAttack
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
                 }
 
                 if (playerShip.HealthPresentage <= .5f)
@@ -87,11 +88,11 @@ public class RapidFireAttack : SpecialAttack
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerShip.PowerUpLevel = 0;
+                playerData.PowerUpLevel = 0;
             }
         }
 
-        float powerLevel = playerShip.GetPowerUpLevelPresentage();
+        float powerLevel = playerData.GetPowerUpLevelPresentage();
 
         if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
         {

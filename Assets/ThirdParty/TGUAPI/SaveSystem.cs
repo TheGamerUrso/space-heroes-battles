@@ -24,7 +24,7 @@ public static class SaveSystem
     public static void SaveGame()
     {
         FileStream file = new FileStream(playerDataPath, FileMode.OpenOrCreate);
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         if (playerData != null)
         {
             try
@@ -50,7 +50,7 @@ public static class SaveSystem
         if (!File.Exists(playerDataPath))
         {
             playerData = new PlayerData();
-            GameManager.Instance.SetPlayerData(playerData);
+            PersistantData.ReplacePlayerData(playerData);
         }
 
         FileStream file = new FileStream(playerDataPath, FileMode.Open);
@@ -59,7 +59,7 @@ public static class SaveSystem
         {
             BinaryFormatter formatter = new BinaryFormatter();
             playerData = (PlayerData)formatter.Deserialize(file);
-            GameManager.Instance.SetPlayerData(playerData);
+            PersistantData.ReplacePlayerData(playerData);
         }
         catch (SerializationException e)
         {
