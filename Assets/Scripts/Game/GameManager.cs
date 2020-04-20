@@ -41,6 +41,7 @@ public class GameManager : Singleton<GameManager>
     [SerializeField] private PlayerShipElement[] PlayerShips;
 
     public static int LevelIndexSelected = 0;
+    private PlayerData playerData;
 
     public GameObject levelupAnnouncement;
 
@@ -60,6 +61,7 @@ public class GameManager : Singleton<GameManager>
 
     private void OnApplicationQuit()
     {
+        playerData.OnLevelValueChanged -= OnLevelValueChanged;
         SaveSystem.SaveGame();
     }
 
@@ -74,7 +76,9 @@ public class GameManager : Singleton<GameManager>
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
-        GameEventSystem.PlayerLeveledUp += ShowLevelup;
+        playerData = PersistantData.GetPlayerData();
+
+        playerData.OnLevelValueChanged += OnLevelValueChanged;
 
         DOTween.Init(autoKillMode, useSafeMode, logBehaviour);
 
@@ -94,7 +98,7 @@ public class GameManager : Singleton<GameManager>
         base.OnCleanup();
     }
 
-    public void ShowLevelup()
+    public void OnLevelValueChanged(int Level)
     {
         Instance.levelupAnnouncement.SetActive(true);
     }

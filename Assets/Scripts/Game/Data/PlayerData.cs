@@ -4,7 +4,7 @@ using EasyMobile;
 using UnityEngine;
 
 public delegate void XpValueChanged(int level, float xp, float xpToLevel);
-public delegate void LevelUp(int level);
+public delegate void LevelValueChanged(int level);
 
 public delegate void DistanceChanged(float ammount);
 public delegate void SuperUseValueChanged(float ammount);
@@ -18,13 +18,12 @@ public class PlayerData
 {
     [NonSerialized] public XpValueChanged OnXpValueChanged;
     [NonSerialized] public CoinValueChanged OnCoinValueChanged;
-    [NonSerialized] public XpValueChanged OnLevelValueChanged;
     [NonSerialized] public DistanceChanged distanceChanged;
     [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
     [NonSerialized] public SuperUseValueChanged OnSuperUseValueChanged;
     [NonSerialized] public PowerUpLevelChanged PowerUpLevelValueChanged;
     [NonSerialized] public PowerPackCollected CollectedPowerPack;
-    [NonSerialized] public LevelUp OnLevelUp;
+    [NonSerialized] public LevelValueChanged OnLevelValueChanged;
 
 
     #region Player Statistics
@@ -118,8 +117,7 @@ public class PlayerData
         set
         {
             GetCurrentPlayerShipData().level = value;
-            OnXpValueChanged?.Invoke(GetCurrentPlayerShipData().level, GetCurrentPlayerShipData().xp, GetCurrentPlayerShipData().xpToLevel);
-            GameEventSystem.Call(PlayerEventType.Player_LevelUp);
+            OnLevelValueChanged?.Invoke(Level);
         }
     }
     public float XP
@@ -327,10 +325,8 @@ public class PlayerData
             if (XP >= playerShipData1.xpToLevel)
             {
                 Level++;
-                XP -= playerShipData1.xpToLevel;
+                XP = 0;
                 playerShipData1.xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
-                OnLevelUp?.Invoke(Level);
-                GameEventSystem.Call(PlayerEventType.Player_LevelUp);
             }
         }
         else

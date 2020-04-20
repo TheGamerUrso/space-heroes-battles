@@ -67,16 +67,16 @@ public class ActivateRandomLevel : MonoBehaviour
 
         yield return new WaitForSeconds(.5f);
 
-        text.text = "3";
+        text.text = "Hyperdrive in\n" + "3";
 
         yield return new WaitForSeconds(.5f);
 
-        text.text = "2";
+        text.text = "Hyperdrive in\n" + "2";
 
 
         yield return new WaitForSeconds(.5f);
 
-        text.text = "1";
+        text.text = "Hyperdrive in\n" + "1";
 
         yield return new WaitForSeconds(.5f);
         text.text = "";
@@ -103,17 +103,14 @@ public class ActivateRandomLevel : MonoBehaviour
         }
 
         int randLevel = 0;
-        do
-        {
-            randLevel = Random.Range(0, levels.Length);
-        } while (randLevel != previousLevelLoaded);
-
+        randLevel = Random.Range(0, levels.Length);
         levels[randLevel].SetActive(true);
+
         yield return new WaitForSeconds(1.0f);
 
         WrapTunnelFX.SetActive(false);
         active = false;
-        Debug.Log("Done");
+        //Debug.Log("Done");
     }
 
 }

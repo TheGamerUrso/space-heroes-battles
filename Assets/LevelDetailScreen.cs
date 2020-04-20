@@ -12,12 +12,27 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
     public Image LevelDetailPreview;
     public GameObject ShowStoryButton;
     private Mission currentMission;
+    public LevelObjectivesElement[] levelObjectivesElement;
+    private LevelObjectiveData[] levelObjectiveDatas;
 
-    public void SetDetails(string Title, Sprite sprite)
+    public void SetDetails(Mission mission, Sprite sprite)
     {
+        if (mission == null)
+        {
+            LevelDetailLevelTItle.text = "Survival";
+            return;
+        }
+
+        PlayerData playerData = PersistantData.GetPlayerData();
+        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+        currentMission = mission;
+
         ShowStoryButton.SetActive(true);
+
         LevelDetailPreview.sprite = sprite;
-        LevelDetailLevelTItle.text = Title;
+        LevelDetailLevelTItle.text = currentMission.Title;    
+
+        RefreshLevelObjectiveData();
     }
 
     public void Show(Level level, Mission currentMission)
@@ -32,9 +47,9 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
         {
             GameManager.LevelIndexSelected = currentMission.ID;
             ShowStoryButton.SetActive(true);
-            currentMission = PersistantData.GetMission(currentMission.ID);
             LevelDetailPreview.sprite = level.sprite;
             LevelDetailLevelTItle.text = currentMission.Title;
+            RefreshLevelObjectiveData();
         }
     }
 
@@ -50,4 +65,31 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
     {
         ScreenManager.Instance.Close();
     }
+
+    public void HideLevelObjectives()
+    {
+        for (int i = 0; i < levelObjectivesElement.Length; i++)
+        {
+            levelObjectivesElement[i].gameObject.SetActive(false);
+        }
+    }
+
+    public void RefreshLevelObjectiveData()
+    {
+        PlayerData playerData = PersistantData.GetPlayerData();
+        levelObjectiveDatas = playerData.GetLevelObjectivesByID("Level" + GameManager.LevelIndexSelected);
+        if (levelObjectiveDatas != null)
+        {
+            for (int i = 0; i < levelObjectivesElement.Length; i++)
+            {
+                if (levelObjectivesElement[i].gameObject.activeSelf == false)
+                {
+                    levelObjectivesElement[i].gameObject.SetActive(true);
+                }
+                levelObjectivesElement[i].levelObjectiveData = levelObjectiveDatas[i];
+                levelObjectivesElement[i].RefreshLevelObjectiveEement();
+            }
+        }
+    }
+
 }

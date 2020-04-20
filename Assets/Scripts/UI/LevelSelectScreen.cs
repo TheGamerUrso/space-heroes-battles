@@ -4,7 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LevelSelectScreen : MonoBehaviour {
+public class LevelSelectScreen : MonoBehaviour
+{
 
     public Sprite[] sprites;
 
@@ -24,14 +25,14 @@ public class LevelSelectScreen : MonoBehaviour {
     private DialogueManager dialogueManager;
     private Mission currentMissionSelected;
     private LevelObjectiveData[] levelObjectiveDatas;
-
+    private Dictionary<string, LevelObjectiveData[]> Challanges;
     public GameObject announcementMessage;
 
     public void RefreshLevelElementByID(int CompleteLevelIndex)
     {
         ListOfLevelElements[CompleteLevelIndex].GetComponent<LevelElement>().Refresh();
-
     }
+
     public void RefreshLevelElements()
     {
         for (int i = 0; i < ListOfLevelElements.Count; i++)
@@ -45,39 +46,17 @@ public class LevelSelectScreen : MonoBehaviour {
     private void Start()
     {
         dialogueManager = DialogueManager.Instance;
-        InitizeBriefingScreen();
+        SetLevelSelect();
     }
 
-    public void InitizeBriefingScreen()
-    {
-        MissionBriefingInit();
-
-        RefreshLevelObjectiveData();
-
-        string title = "";
-
-        if (currentMission != null)
-        {
-            //gameObject.name = string.Format("ID {0} - Mission: {1}", mission.ID, mission.Title);
-            title = currentMission.Title;
-        }
-
-        LevelDetailScreen.Instance.SetDetails(title, sprites[0]);
-    }
-
-    public void MissionBriefingInit()
+    public void SetLevelSelect()
     {
         playerData = PersistantData.GetPlayerData();
         missionCollection = PersistantData.GetMissionCollection();
-        Button missionButton;
-        LevelElement levelElement;
-        Level level;
-        Image LevelImage;
+        Challanges = playerData.GetListOfObjectives();
 
-
-        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
         int missionsCompleted = 0;
-       
+
         foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
         {
             if (item.Value[0].completed == true)
@@ -88,11 +67,18 @@ public class LevelSelectScreen : MonoBehaviour {
 
         playerData.LevelUnlocked = missionsCompleted;
 
+        SetLevelSelectButtons();
+
+        LevelDetailScreen.Instance.SetDetails(currentMission, sprites[0]);
+    }
+
+    public void SetLevelSelectButtons()
+    {
         LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
 
-        level = new Level("Survival", null,null, true, false);
+        var level = new Level("Survival", null, null, true, false);
 
-        levelElement = LevelElementGO.GetComponent<LevelElement>();
+        var levelElement = LevelElementGO.GetComponent<LevelElement>();
 
         levelElement.SetLevelElement(level, StartMissionBriefing);
 
@@ -120,6 +106,7 @@ public class LevelSelectScreen : MonoBehaviour {
 
         GameObject emptyLevelElement = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
         emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("", null, null, false, false), null);
+
     }
 
     public void StartMissionBriefing(Level level)
@@ -128,22 +115,19 @@ public class LevelSelectScreen : MonoBehaviour {
         {
             ScreenManager.Instance.Open("LevelDetailScreen");
             GameManager.LevelIndexSelected = -1;
-            RefreshLevelObjectiveData();
-            LevelDetailScreen.Instance.SetDetails("Survival", sprites[0]);
+            LevelDetailScreen.Instance.SetDetails(null, sprites[0]);
         }
         else
         {
-            ScreenManager.Instance.Open("LevelDetailScreen");
+
             GameManager.LevelIndexSelected = level.mission.ID;
-
-            RefreshLevelObjectiveData();
             currentMission = PersistantData.GetMission(level.mission.ID);
-
-            LevelDetailScreen.Instance.SetDetails(currentMission.Title, sprites[currentMission.SpriteID]);
-
             SetMission(currentMission);
 
+            LevelDetailScreen.Instance.SetDetails(currentMission, sprites[currentMission.SpriteID]);
+
             dialogueManager.ShowStory(GameManager.LevelIndexSelected);
+            ScreenManager.Instance.Open("LevelDetailScreen");
         }
     }
 
@@ -151,30 +135,6 @@ public class LevelSelectScreen : MonoBehaviour {
     {
         currentMission = PersistantData.GetMission(missionIndex);
         return currentMission.Description;
-    }
-
-    public void HideLevelObjectives()
-    {
-        for (int i = 0; i < levelObjectivesElement.Length; i++)
-        {
-            levelObjectivesElement[i].gameObject.SetActive(false);
-        }
-    }
-    public void RefreshLevelObjectiveData()
-    {
-        levelObjectiveDatas = playerData.GetLevelObjectivesByID("Level" + GameManager.LevelIndexSelected);
-        if (levelObjectiveDatas != null)
-        {
-            for (int i = 0; i < levelObjectivesElement.Length; i++)
-            {
-                if (levelObjectivesElement[i].gameObject.activeSelf == false)
-                {
-                    levelObjectivesElement[i].gameObject.SetActive(true);
-                }
-                levelObjectivesElement[i].levelObjectiveData = levelObjectiveDatas[i];
-                levelObjectivesElement[i].RefreshLevelObjectiveEement();
-            }
-        }
     }
 
     public void SetMission(Mission mission)

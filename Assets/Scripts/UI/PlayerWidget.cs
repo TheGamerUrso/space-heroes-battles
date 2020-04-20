@@ -79,22 +79,23 @@ public class PlayerWidget : MonoBehaviour
 
         PowerBut.onClick.AddListener(() =>
         {
-                ActivateSpecial();
-            
+            ActivateSpecial();
+
         });
 
         player.OnHealthChanged += UpdatePlayerHealth;
         playerData.PowerUpLevelValueChanged += PowerUpLevelChanged;
         playerData.CollectedPowerPack += PowerPackCollected;
         playerData.OnXpValueChanged += UpdateXP;
-
+    
         UpdatePlayerHealth(player.currentHealth, player.MaxHealth);
-      
-        UpdateXP(playerShipData.level, Mathf.Abs(playerShipData.xp), Mathf.Abs(playerShipData.xpToLevel));
-       
-        
+
+        UpdateXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+
+
         PowerUpLevelChanged(playerData.GetPowerUpLevelPresentage());
     }
+
 
     public void ActivateSpecial()
     {
@@ -152,7 +153,7 @@ public class PlayerWidget : MonoBehaviour
     {
         XPBar.maxValue = xpToLevel;
         XPBar.value = xp;
-        XPStatus.text = string.Format("{0}/{1}", xp, xpToLevel);
+        XPStatus.text = Mathf.Round(xp) + "/" + Mathf.Round(xpToLevel);
     }
 
     public void UpdatePlayerHealth(float CurrentHealth, float MaxHealth)

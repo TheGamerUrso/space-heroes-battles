@@ -42,6 +42,10 @@ public class PlayerShip : Ship, IDamagable
     private bool clicked;
     #endregion Weapons
 
+    private void OnDestroy()
+    {
+        playerData.OnLevelValueChanged -= OnLevelValueChanged;
+    }
 
     public override void OnAwake()
     {
@@ -82,6 +86,12 @@ public class PlayerShip : Ship, IDamagable
 
         playerData.powerUpLevel = 0;
         playerData.powerPackCollected = 0;
+
+        playerData.OnLevelValueChanged += OnLevelValueChanged;
+    }
+    public void OnLevelValueChanged(int Level)
+    {
+        SetStats(Level);
     }
 
     private void Update()
