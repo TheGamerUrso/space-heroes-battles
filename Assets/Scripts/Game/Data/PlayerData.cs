@@ -9,7 +9,10 @@ public delegate void LevelUp(int level);
 public delegate void DistanceChanged(float ammount);
 public delegate void SuperUseValueChanged(float ammount);
 public delegate void CoinValueChanged(int ammount);
+public delegate void PowerUpLevelChanged(float ammount);
+public delegate void PowerPackCollected(int ammount);
 public delegate void ShipSelectValueChanged(int selection);
+
 [Serializable]
 public class PlayerData
 {
@@ -19,7 +22,8 @@ public class PlayerData
     [NonSerialized] public DistanceChanged distanceChanged;
     [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
     [NonSerialized] public SuperUseValueChanged OnSuperUseValueChanged;
-    [NonSerialized] public Action<float> PowerUpLevelChanged;
+    [NonSerialized] public PowerUpLevelChanged PowerUpLevelValueChanged;
+    [NonSerialized] public PowerPackCollected CollectedPowerPack;
     [NonSerialized] public LevelUp OnLevelUp;
 
 
@@ -43,9 +47,10 @@ public class PlayerData
     public int superUsed;
     public int[] UnlockedHeroes;
 
-    public bool TempFireRateUpgrade { get; set; }
     public float powerUpLevel = 0;
-    public int PowerUpCollectAmmount = 0;
+    public int powerPackCollected = 0;
+
+
     #endregion
 
     #region Player Settings
@@ -129,6 +134,23 @@ public class PlayerData
             OnXpValueChanged?.Invoke(GetCurrentPlayerShipData().level, GetCurrentPlayerShipData().xp, GetCurrentPlayerShipData().xpToLevel);
         }
     }
+
+    public int PowerPackCollected
+    {
+        get
+        {
+            return powerPackCollected;
+        }
+        set
+        {
+            powerPackCollected = value;
+            if (powerPackCollected > 5)
+            {
+                powerPackCollected = 5;
+            }
+            CollectedPowerPack?.Invoke(powerPackCollected);
+        }
+    }
     public float PowerUpLevel
     {
         get
@@ -139,7 +161,7 @@ public class PlayerData
         set
         {
             powerUpLevel = value;
-            PowerUpLevelChanged?.Invoke(powerUpLevel);
+            PowerUpLevelValueChanged?.Invoke(powerUpLevel);
         }
     }
 
@@ -159,6 +181,7 @@ public class PlayerData
         HighScore = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Coins = 0;
         TotalKills = 0;
+        powerUpLevel = 0;
         TotalMoneySpend = 0;
         WaveSurvived = 0;
         TotalSuperUsed = 0;
@@ -331,4 +354,9 @@ public class PlayerData
     {
         return PowerUpLevel;
     }
+    public void ResetWeaponPowerUPCollected()
+    {
+        powerPackCollected = 0;
+    }
+
 }

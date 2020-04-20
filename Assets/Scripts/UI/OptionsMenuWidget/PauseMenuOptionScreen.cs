@@ -15,18 +15,21 @@ public class PauseMenuOptionScreen : BaseOptions
     public override void InitializeOptions()
     {
         base.InitializeOptions();
+ 
         string levelName = "Level" + GameManager.LevelIndexSelected;
 
         playerData = PersistantData.GetPlayerData();
         listOfMission = PersistantData.GetMissionCollection();
-        
-        mission = listOfMission.GetMission(GameManager.LevelIndexSelected);
-        MissionTitle.text = mission.Title;
-        levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
-        for (int i = 0; i < LevelObjectivesElements.Length; i++)
+        if (listOfMission != null)
         {
-            LevelObjectivesElements[i].levelObjectiveData = levelObjectiveDatas[i];
-            LevelObjectivesElements[i].RefreshLevelObjectiveEement();
+            mission = listOfMission.GetMission(GameManager.LevelIndexSelected);
+            MissionTitle.text = mission.Title;
+            levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+            for (int i = 0; i < LevelObjectivesElements.Length; i++)
+            {
+                LevelObjectivesElements[i].levelObjectiveData = levelObjectiveDatas[i];
+                LevelObjectivesElements[i].RefreshLevelObjectiveEement();
+            }
         }
     }
 

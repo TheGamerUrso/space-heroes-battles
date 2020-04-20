@@ -94,7 +94,7 @@ public class SpecialAttack : PlayerWeapon
             }
         }
 
-        float powerLevel = playerShip.GetPowerUpLevelPresentage();
+        float powerLevel = playerData.GetPowerUpLevelPresentage();
 
         if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
         {

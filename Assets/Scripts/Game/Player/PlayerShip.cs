@@ -9,7 +9,6 @@ public class PlayerShip : Ship, IDamagable
 {
     public Action PlayerShipHit;
     public Action PlayerShipDeath;
-    public Action<ItemData> PickUpItem;
 
     private PlayerData playerData;
     private PlayerShipData playerShipData;
@@ -21,29 +20,26 @@ public class PlayerShip : Ship, IDamagable
     public ParticleSystem ItemCollectedEffect;
 
     private float invisibilityTimer;
-
+    public bool TempFireRateUpgrade { get; set; }
     /**
      * Weapons
      */
 
     #region Weapons
     [SerializeField] private PlayerWeapon[] Weapons;
-    [SerializeField] private SpecialAttack specialAttack = null;
+    [SerializeField] private SpecialAttack specialAttack;
 
 
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
+    public int getCurrentWeaponType
+    {
+        get { return CurrentWeapnType; }
+    }
 
-    private int currentWeapon;
     private int clicktimes;
     private float clicktimer;
     private bool clicked;
-
-    public int getCurrentWeaponType
-    {
-        get { return currentWeapon; }
-    }
-
     #endregion Weapons
 
 
@@ -83,6 +79,9 @@ public class PlayerShip : Ship, IDamagable
         ShieldEffect.SetActive(playerShipData.HasShield);
 
         SetStats(playerShipData.level);
+
+        playerData.powerUpLevel = 0;
+        playerData.powerPackCollected = 0;
     }
 
     private void Update()
@@ -163,9 +162,9 @@ public class PlayerShip : Ship, IDamagable
         }
 #endif
 
-        if (playerData.PowerUpCollectAmmount >= 5)
+        if (playerData.powerPackCollected >= 5)
         {
-            playerData.PowerUpCollectAmmount = 0;
+            playerData.powerPackCollected = 0;
             UpgradeWeapon();
         }
 
@@ -333,9 +332,9 @@ public class PlayerShip : Ship, IDamagable
     public void TempFireRateBuff(float fireRate = 0.0f, bool temporary = false)
     {
 
-        if (!playerData.TempFireRateUpgrade)
+        if (!TempFireRateUpgrade)
         {
-            playerData.TempFireRateUpgrade = true;
+            TempFireRateUpgrade = true;
             GiveTemporaryFireRateBuff();
         }
 
@@ -353,7 +352,7 @@ public class PlayerShip : Ship, IDamagable
         var fireRateTemp = FireRate;
         var DamageTemp = Damage;
 
-        while (playerData.TempFireRateUpgrade)
+        while (TempFireRateUpgrade)
         {
             yield return new WaitForEndOfFrame();
         }
@@ -375,8 +374,7 @@ public class PlayerShip : Ship, IDamagable
 
         if (CurrentWeapnType < 4)
         {
-            if (playerShipData.CanUsePowerUpItem)
-            {
+            if (shipStats.CanUsePowerUpItem)            {
 
                 AudioManager.PlaySound(null, "Power", 3);
                 CurrentWeapnType++;
@@ -397,7 +395,7 @@ public class PlayerShip : Ship, IDamagable
 
             }
 
-            playerData.TempFireRateUpgrade = false;
+            TempFireRateUpgrade = false;
             SwitchWeapon(CurrentWeapnType);
         }
     }
@@ -416,23 +414,14 @@ public class PlayerShip : Ship, IDamagable
         }
 
     }
-
-    public void ResetWeaponPowerUPCollected()
-    {
-        playerData.PowerUpCollectAmmount = 0;
-    }
-
+    
     public void PowerUpCollected()
     {
-        if (playerData.PowerUpCollectAmmount <= 5 && CurrentWeapnType < 4)
+        if (playerData.powerPackCollected <= 5 && CurrentWeapnType < 4)
         {
-            playerData.PowerUpCollectAmmount += 2;
-            if (playerData.PowerUpCollectAmmount > 5)
-            {
-                playerData.PowerUpCollectAmmount = 5;
-            }
+            playerData.PowerPackCollected += 2;
             //Debug.Log("increase FireRate by " + 0.01f * playerData.PowerUpCollectAmmount);
-            TempFireRateBuff(0.01f * playerData.PowerUpCollectAmmount);
+            TempFireRateBuff(0.01f * playerData.powerPackCollected);
         }
     }
 
@@ -454,12 +443,12 @@ public class PlayerShip : Ship, IDamagable
 
     public GameObject GetCurrentActiveWeapon()
     {
-        return Weapons[currentWeapon].gameObject;
+        return Weapons[CurrentWeapnType].gameObject;
     }
 
     public void SwitchWeapon(int WeaponTypeIndex)
     {
-        currentWeapon = WeaponTypeIndex;
+        CurrentWeapnType = WeaponTypeIndex;
 
         for (int i = 0; i < Weapons.Length; i++)
         {
@@ -494,11 +483,5 @@ public class PlayerShip : Ship, IDamagable
         playerShipData.MagnetDistance += UpgradeStats[4];
         playerShipData.SuperChargeTime += UpgradeStats[5];
         playerShipData.SuperDamage += UpgradeStats[6];
-    }
-
-
-    public float GetPowerUpLevelPresentage()
-    {
-        return playerData.PowerUpLevel;
     }
 }

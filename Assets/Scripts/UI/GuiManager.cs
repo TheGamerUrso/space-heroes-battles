@@ -55,10 +55,6 @@ public class GuiManager : Singleton<GuiManager>
     protected override void OnCleanup()
     {
         base.OnCleanup();
-        if (playerShip != null)
-        {
-            playerShip.PickUpItem -= PickUpItem;
-        }
 
         GameController.OnGameOver -= GameOver;
         GameController.OnWin -= Win;
@@ -84,9 +80,6 @@ public class GuiManager : Singleton<GuiManager>
         {
             playerShip = PlayerManager.GetPlayer();
         }
-
-
-        playerShip.PickUpItem += PickUpItem;
 
         GameSession.OnCoinValueChanged += UpdateCoinWidgetText;
         GameSession.OnScoreValueChanged += UpdateScore;

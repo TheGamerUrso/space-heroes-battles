@@ -56,8 +56,11 @@ public class BaseOptions : MonoBehaviour
     public void UpdateAudioVolume()
     {
         PlayerData playerData = PersistantData.GetPlayerData();
-        MusicVolume.value = playerData.MusicVolume;
-        SFXVolume.value = playerData.SFXVolume;
+        if (playerData != null)
+        {
+            MusicVolume.value = playerData.MusicVolume;
+            SFXVolume.value = playerData.SFXVolume;
+        }
     }
     public void InitializeAudioOptions()
     {

@@ -86,7 +86,7 @@ public class GameController : Singleton<GameController>
 
         float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
         playerData.EarnXP(XPEarned);
-        playerData.powerUpLevel += .1f;
+        playerData.PowerUpLevel += .1f;
 
 
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;

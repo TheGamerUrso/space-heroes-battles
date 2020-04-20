@@ -18,8 +18,6 @@ public class PlayerShipData
         }
     }
 
-    public bool CanUsePowerUpItem;
-
     #region Player Upgrades
     public int[] Upgrades;
 

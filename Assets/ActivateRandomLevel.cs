@@ -24,6 +24,7 @@ public class ActivateRandomLevel : MonoBehaviour
     private bool active;
     private bool firstTime = true;
     public float speed = 0.5f;
+    public int previousLevelLoaded;
 
     private void Start()
     {
@@ -101,7 +102,11 @@ public class ActivateRandomLevel : MonoBehaviour
             levels[i].SetActive(false);
         }
 
-        int randLevel = Random.Range(0, levels.Length);
+        int randLevel = 0;
+        do
+        {
+            randLevel = Random.Range(0, levels.Length);
+        } while (randLevel != previousLevelLoaded);
 
         levels[randLevel].SetActive(true);
         yield return new WaitForSeconds(1.0f);

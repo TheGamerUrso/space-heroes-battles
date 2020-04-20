@@ -47,11 +47,21 @@ public abstract class Ship : MonoBehaviour
         set
         {
             currentHealth = value;
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            OnHealthChanged?.Invoke(currentHealth, MaxHealth);
         }
     }
 
-    public float MaxHealth { get; set; }
+    public float MaxHealth
+    {
+        get
+        {
+            return maxHealth;
+        }
+        set
+        {
+            maxHealth = value;
+        }
+    }
 
     public float HealthPresentage
     {
@@ -121,7 +131,7 @@ public abstract class Ship : MonoBehaviour
         MaxLevel = 20;
         Level = level;
 
-        MaxHealth = Level * shipStats.baseHealth;
+        maxHealth = Level * shipStats.baseHealth;
 
         CurrentHealth = MaxHealth;
 
@@ -130,6 +140,7 @@ public abstract class Ship : MonoBehaviour
         Damage = Level * shipStats.baseDamage;
 
         FireRate = shipStats.baseFireRate;
+
 
      
     }
@@ -143,11 +154,6 @@ public abstract class Ship : MonoBehaviour
         }
 
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
-    }
-
-    public void OnHealthValueChanged(HealthChanged callback)
-    {
-        OnHealthChanged += callback;
     }
 
     public virtual void TakeDamage(float dmg)

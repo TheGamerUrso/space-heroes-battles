@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PowerPack : Items, IPickable
@@ -19,6 +20,7 @@ public class PowerPack : Items, IPickable
             AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
         }
 
+        GuiManager.Instance.PickUpItem(itemData);
         Invoke("DestroyNow", .2f);
     }
 }
