@@ -86,4 +86,9 @@ public class ShipSelectElement : MonoBehaviour
             }
         }
     }
+
+    public void SelectShip(int shipID)
+    {
+        ShipSelect.Instance.SelectShip(shipID);
+    }
 }

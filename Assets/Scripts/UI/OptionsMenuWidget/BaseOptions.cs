@@ -40,11 +40,6 @@ public class BaseOptions : MonoBehaviour
 
     public virtual void OnOptionEnter()
     {
-        if (GameManager.Instance == null)
-        {
-            return;
-        }
-
         InitializeOptions();
         //RefreshAutoFire();
         // RefreshGlobalMute();
@@ -60,7 +55,6 @@ public class BaseOptions : MonoBehaviour
 
     public void UpdateAudioVolume()
     {
-
         PlayerData playerData = PersistantData.GetPlayerData();
         MusicVolume.value = playerData.MusicVolume;
         SFXVolume.value = playerData.SFXVolume;

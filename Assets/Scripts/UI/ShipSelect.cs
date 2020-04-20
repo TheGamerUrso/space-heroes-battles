@@ -7,7 +7,7 @@ public class ShipEventArgs : System.EventArgs
     public ShipSelectData shipSelectData { get; set; }
 }
 
-public class ShipSelect : MonoBehaviour
+public class ShipSelect : Singleton<ShipSelect>
 {
     public Camera shipCameraPreview;
     public GameObject[] Ships;

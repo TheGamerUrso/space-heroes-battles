@@ -15,16 +15,11 @@ public class PauseMenuOptionScreen : BaseOptions
     public override void InitializeOptions()
     {
         base.InitializeOptions();
-
-        if (GameManager.Instance == null)
-        {
-            return;
-        }
-
         string levelName = "Level" + GameManager.LevelIndexSelected;
 
         playerData = PersistantData.GetPlayerData();
         listOfMission = PersistantData.GetMissionCollection();
+        
         mission = listOfMission.GetMission(GameManager.LevelIndexSelected);
         MissionTitle.text = mission.Title;
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
