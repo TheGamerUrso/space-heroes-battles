@@ -40,7 +40,7 @@ public class BaseOptions : MonoBehaviour
 
     public virtual void OnOptionEnter()
     {
-        InitializeOptions();
+        //InitializeOptions();
         //RefreshAutoFire();
         // RefreshGlobalMute();
         UpdateDistance();

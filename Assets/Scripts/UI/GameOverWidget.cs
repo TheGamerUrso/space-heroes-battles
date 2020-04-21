@@ -10,7 +10,7 @@ public class GameOverWidget : MonoBehaviour
 {
     protected PlayerShipElement player;
     protected PlayerData playerData;
-    private string levelName;
+
     public TextMeshProUGUI m_Text;
     public Button m_PlayAgainButton;
     public Button m_QuitButton;
@@ -22,16 +22,24 @@ public class GameOverWidget : MonoBehaviour
 
     public void ShowGameResult()
     {
+        float score = GameSession.score;
+        string scoreText = string.Format("{00:0000000000}", score);
+        m_Text.text = scoreText;
+
         if (GameManager.Instance == null)
         {
             return;
         }
 
-        float score = GameSession.score;
-        string scoreText = string.Format("{00:0000000000}", score);
-        m_Text.text = scoreText;
+        string levelName = "Level" + (GameManager.LevelIndexSelected + 1);
 
-        levelName = "Level" + GameManager.LevelIndexSelected;
+        if (levelName.Equals("Level0"))
+        {
+            return;
+        }
+
+        playerData = PersistantData.GetPlayerData();
+    
 
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 

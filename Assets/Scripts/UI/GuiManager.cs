@@ -96,6 +96,9 @@ public class GuiManager : Singleton<GuiManager>
 
 
         GameManager.Instance.OnPauseGame += ShowPauseMenu;
+
+        UpdateScore(0);
+        UpdateCoinWidgetText(0);
     }
 
     public void EnemyDiedCallback(BaseEnemy baseEnemy)
