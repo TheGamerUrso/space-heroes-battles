@@ -33,7 +33,7 @@ public class SimpleShipControls : MonoBehaviour
     {
         targetPos = transform.position;
 
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
         playerData.distanceChanged = UpdateOffset;
 
@@ -132,7 +132,7 @@ public class SimpleShipControls : MonoBehaviour
         }
 
         movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
-   
+
         if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
         {
             SetTargetPosition();
@@ -153,7 +153,7 @@ public class SimpleShipControls : MonoBehaviour
     {
         var rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
 
-        if (rotVelocity > .1f || rotVelocity < -.1f)
+        if (rotVelocity > .1f || rotVelocity < -.1f && (Input.touchCount > 0 || Input.GetMouseButton(0)))
         {
             Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
             ShipModel.transform.localEulerAngles = new Vector3(

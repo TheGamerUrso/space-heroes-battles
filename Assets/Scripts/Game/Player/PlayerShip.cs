@@ -7,12 +7,11 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerShip : Ship, IDamagable
 {
-    public Action<float> PowerUpLevelChanged;
     public Action PlayerShipHit;
     public Action PlayerShipDeath;
-    public Action<ItemData> PickUpItem;
 
     private PlayerData playerData;
+    private PlayerShipData playerShipData;
 
     [Header("Player Config")]
     private SimpleShipControls shipController;
@@ -20,117 +19,40 @@ public class PlayerShip : Ship, IDamagable
     [Header("Extra Effects")]
     public ParticleSystem ItemCollectedEffect;
 
-    /**
-     * Statistics
-    */
     private float invisibilityTimer;
-    private bool GotHit;
-    private int SuperUsed;
-    [HideInInspector] public bool CanUsePowerUpItem;
-    public static bool TempFireRateUpgrade { get; set; }
-    public bool IsPlayerDamaged
-    {
-        get
-        {
-            return GotHit;
-        }
-    }
-
-    /**
-     *Upgrades
-     */
-    #region Upgrades
-
-    private float GameControllerSpeedValue = 0;
-    private float GameControllerDamageValue = 0;
-    private float GameControllerFireRateValue = 0;
-    private float GameControllerMagnetPowerValue = 0;
-    private float GameControllerActivtateDistanceValue = 0;
-    private float GameControllerSuperTime = 0;
-    private float GameControllerSuperDamage = 0;
-
-    [SerializeField] private float[] Upgrades;
-
-    public bool armorUpgrade;
-    public bool HasArmorUpgrade
-    {
-        get
-        {
-            return armorUpgrade;
-        }
-
-        set
-        {
-            armorUpgrade = value;
-        }
-    }
-    #endregion
-
-    /**
-    * Attributes
-    */
-    #region Attributes
-    [Min(0)]
-    [HideInInspector] public float SuperDamage;
-    [Min(0)]
-    [HideInInspector] public float SuperChargeTime;
-    [Min(0)]
-    [HideInInspector] public float MagnetPower;
-    [Min(0)]
-    [HideInInspector] public float MagnetDistance;
-
-    [Min(0)]
-    private float powerUpLevel = 0;
-
-    public float PowerUpLevel
-    {
-        get
-        {
-            return powerUpLevel;
-        }
-
-        set
-        {
-            powerUpLevel = value;
-            PowerUpLevelChanged?.Invoke(powerUpLevel);
-        }
-    }
-
-    #endregion Attributes
-
-
+    public bool TempFireRateUpgrade { get; set; }
     /**
      * Weapons
      */
 
     #region Weapons
     [SerializeField] private PlayerWeapon[] Weapons;
-    [SerializeField] private SpecialAttack specialAttack = null;
+    [SerializeField] private SpecialAttack specialAttack;
 
 
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
-    [HideInInspector]public int PowerUpCollectAmmount = 0;
+    public int getCurrentWeaponType
+    {
+        get { return CurrentWeapnType; }
+    }
 
-
-    private int currentWeapon;
     private int clicktimes;
     private float clicktimer;
     private bool clicked;
-
-    public int getCurrentWeaponType
-    {
-        get { return currentWeapon; }
-    }
-
     #endregion Weapons
 
+    private void OnDestroy()
+    {
+        playerData.OnLevelValueChanged -= OnLevelValueChanged;
+    }
 
     public override void OnAwake()
     {
         Alive = true;
         shipController = GetComponent<SimpleShipControls>();
         animator = GetComponentInChildren<Animator>();
+        playerData = PersistantData.GetPlayerData();
     }
 
     public override void ShipSetup()
@@ -149,19 +71,27 @@ public class PlayerShip : Ship, IDamagable
 
         SwitchWeapon(0);
 
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-        if (playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] == 0)
+        playerData = PersistantData.GetPlayerData();
+
+        if (playerData == null)
         {
-            HasShield = false;
-        }
-        else
-        {
-            HasShield = true;
+            playerData = new PlayerData();
         }
 
-        ShieldEffect.SetActive(HasShield);
+        playerShipData = playerData.GetCurrentPlayerShipData();
 
+        ShieldEffect.SetActive(playerShipData.HasShield);
+
+        SetStats(playerShipData.level);
+
+        playerData.powerUpLevel = 0;
+        playerData.powerPackCollected = 0;
+
+        playerData.OnLevelValueChanged += OnLevelValueChanged;
+    }
+    public void OnLevelValueChanged(int Level)
+    {
+        SetStats(Level);
     }
 
     private void Update()
@@ -180,7 +110,7 @@ public class PlayerShip : Ship, IDamagable
     {
         float playerPowerUp = 0;
 
-        playerPowerUp = GetPowerUpLevelPresentage();
+        playerPowerUp = playerData.GetPowerUpLevelPresentage();
 
 
 #if UNITY_ANDROID
@@ -242,9 +172,9 @@ public class PlayerShip : Ship, IDamagable
         }
 #endif
 
-        if (PowerUpCollectAmmount >= 5)
+        if (playerData.powerPackCollected >= 5)
         {
-            PowerUpCollectAmmount = 0;
+            playerData.powerPackCollected = 0;
             UpgradeWeapon();
         }
 
@@ -258,12 +188,15 @@ public class PlayerShip : Ship, IDamagable
 #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.T))
         {
-            PlayerShip playerShip = PlayerManager.GetPlayer();
-            if (playerShip != null)
+            PlayerData playerData = PersistantData.GetPlayerData();
+
+            if (playerData != null)
             {
-                playerShip.IncreasePowerUp(0.5f);
-                PowerUpCollected();
+                playerData.IncreasePowerUp(.05f);
             }
+
+            PowerUpCollected();
+
         }
 #endif
     }
@@ -333,13 +266,13 @@ public class PlayerShip : Ship, IDamagable
 
                 PlayerShipHit?.Invoke();
 
-                if (GotHit == false)
+                if (playerData.GotHitInGame == false)
                 {
-                    PlayerData playerData = GameManager.Instance.GetPlayerData();
+                    PlayerData playerData = PersistantData.GetPlayerData();
                     ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
                     if (objectiveData != null)
                         objectiveData.UpdateProgress(0);
-                    GotHit = true;
+                    playerData.GotHitInGame = true;
                 }
 
                 if (HealthPresentage < .2f)
@@ -451,8 +384,7 @@ public class PlayerShip : Ship, IDamagable
 
         if (CurrentWeapnType < 4)
         {
-            if (CanUsePowerUpItem)
-            {
+            if (shipStats.CanUsePowerUpItem)            {
 
                 AudioManager.PlaySound(null, "Power", 3);
                 CurrentWeapnType++;
@@ -464,7 +396,13 @@ public class PlayerShip : Ship, IDamagable
             }
             else
             {
-                IncreasePowerUp(0.1f);
+                PlayerData playerData = PersistantData.GetPlayerData();
+
+                if (playerData != null)
+                {
+                    playerData.IncreasePowerUp(.025f);
+                }
+
             }
 
             TempFireRateUpgrade = false;
@@ -474,7 +412,7 @@ public class PlayerShip : Ship, IDamagable
 
     public void DownGradeWeapon()
     {
-        if (armorUpgrade)
+        if (playerShipData.HasArmorUpgrade)
         {
             return;
         }
@@ -486,23 +424,14 @@ public class PlayerShip : Ship, IDamagable
         }
 
     }
-
-    public void ResetWeaponPowerUPCollected()
-    {
-        PowerUpCollectAmmount = 0;
-    }
-
+    
     public void PowerUpCollected()
     {
-        if (PowerUpCollectAmmount <= 5 && CurrentWeapnType < 4)
+        if (playerData.powerPackCollected <= 5 && CurrentWeapnType < 4)
         {
-            PowerUpCollectAmmount += 2;
-            if (PowerUpCollectAmmount > 5)
-            {
-                PowerUpCollectAmmount = 5;
-            }
-            Debug.Log("increase FireRate by " + 0.01f * PowerUpCollectAmmount);
-            TempFireRateBuff(0.01f * PowerUpCollectAmmount);
+            playerData.PowerPackCollected += 2;
+            //Debug.Log("increase FireRate by " + 0.01f * playerData.PowerUpCollectAmmount);
+            TempFireRateBuff(0.01f * playerData.powerPackCollected);
         }
     }
 
@@ -514,7 +443,6 @@ public class PlayerShip : Ship, IDamagable
 
     public void ActivateSpecial()
     {
-
         specialAttack.ActivateSpecial();
     }
 
@@ -525,12 +453,12 @@ public class PlayerShip : Ship, IDamagable
 
     public GameObject GetCurrentActiveWeapon()
     {
-        return Weapons[currentWeapon].gameObject;
+        return Weapons[CurrentWeapnType].gameObject;
     }
 
     public void SwitchWeapon(int WeaponTypeIndex)
     {
-        currentWeapon = WeaponTypeIndex;
+        CurrentWeapnType = WeaponTypeIndex;
 
         for (int i = 0; i < Weapons.Length; i++)
         {
@@ -544,158 +472,26 @@ public class PlayerShip : Ship, IDamagable
     {
         return specialAttack;
     }
+
     public override void SetStats(int level)
     {
         base.SetStats(level);
 
-        xpToLevel = 100 * Mathf.Pow(Level, 0.1f) *
+        playerShipData.xpToLevel = 100 * Mathf.Pow(Level, 0.1f) *
               Mathf.Pow(Level, 2) + Mathf.Pow(Level - 1, 4);
 
-        SuperDamage = level * shipStats.baseDamage;
+        playerShipData.SuperDamage = level * shipStats.baseDamage;
 
-        SuperChargeTime = shipStats.baseSpecialCountdown;
+        playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown;
 
-        float[] UpgradeStats = GetCalculatedUpgradeStats();
+        float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
 
         Speed += UpgradeStats[0];
         Damage += UpgradeStats[1];
         FireRate -= UpgradeStats[2];
-        MagnetPower += UpgradeStats[3];
-        MagnetDistance += UpgradeStats[4];
-        SuperChargeTime += UpgradeStats[5];
-        SuperDamage += UpgradeStats[6];
-
+        playerShipData.MagnetPower += UpgradeStats[3];
+        playerShipData.MagnetDistance += UpgradeStats[4];
+        playerShipData.SuperChargeTime += UpgradeStats[5];
+        playerShipData.SuperDamage += UpgradeStats[6];
     }
-
-    public float[] GetCalculatedUpgradeStats()
-    {
-        var GameControllerSpeedValue = 0;
-        var GameControllerDamageValue = 0;
-        var GameControllerFireRateValue = 0;
-        var GameControllerMagnetPowerValue = 0;
-        var GameControllerActivtateDistanceValue = 0;
-        var GameControllerSuperTime = 0;
-        var GameControllerSuperDamage = 0;
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-
-        if (GameManager.Instance)
-        {
-            GameControllerSpeedValue = playerShipData.Upgrades[(int)UpgradeType.Speed];
-            GameControllerDamageValue = playerShipData.Upgrades[(int)UpgradeType.Damage];
-            GameControllerFireRateValue = playerShipData.Upgrades[(int)UpgradeType.FireRate];
-            GameControllerMagnetPowerValue = playerShipData.Upgrades[(int)UpgradeType.MagnetStrength];
-            GameControllerActivtateDistanceValue = playerShipData.Upgrades[(int)UpgradeType.MagnetDistance];
-            GameControllerSuperTime = playerShipData.Upgrades[(int)UpgradeType.SuperrechargeTime];
-            GameControllerSuperDamage = playerShipData.Upgrades[(int)UpgradeType.SuperDamage];
-        }
-
-
-        var SpeedMultiplier = .1f * GameControllerSpeedValue;
-        var DamageMultiplier = 1f * GameControllerDamageValue;
-        var FireRateMultiplier = 0.01f * GameControllerFireRateValue;
-        var MagnetPowerMultiplier = 1f * GameControllerMagnetPowerValue;
-        var MagnetDistanceMultiplier = 1f * GameControllerActivtateDistanceValue;
-        var superTime = 0.1f * GameControllerSuperTime;
-        var superDamage = 1f * GameControllerSuperDamage;
-
-        return new float[] {
-            SpeedMultiplier,
-            DamageMultiplier,
-            FireRateMultiplier,
-            MagnetPowerMultiplier,
-            MagnetDistanceMultiplier,superTime,superDamage};
-    }
-
-    public void IncreasePowerUp(float value)
-    {
-        PowerUpLevel += value;
-    }
-
-    public float GetPowerUpLevelPresentage()
-    {
-        return PowerUpLevel;
-    }
-
-
-    #region Upgrade System Methods
-    public float GetSpeedUpgrade() { return Upgrades[0]; }
-    public float GetDamageUpgrade() { return Upgrades[1]; }
-    public float GetFireRateUpgrade() { return Upgrades[2]; }
-    public float GetMagnetDistanceUpgrade() { return Upgrades[3]; }
-    public float GetMagnetPower()
-    {
-        return Upgrades[4];
-    }
-    public void SetUpgrades(float[] Upgrades)
-    {
-        this.Upgrades = Upgrades;
-    }
-    public float[] GetUpgrades()
-    {
-        return Upgrades;
-    }
-    public void SetPlayerData(PlayerData playerData)
-    {
-        this.playerData = playerData;
-        RefreshUpgradeData();
-    }
-
-    public void ApplyUpdatesToShip()
-    {
-        Speed += Upgrades[0];
-        Damage += Upgrades[1];
-        FireRate -= Upgrades[2];
-        MagnetPower += Upgrades[3];
-        MagnetDistance += Upgrades[4];
-        SuperChargeTime += Upgrades[5];
-        SuperDamage += Upgrades[6];
-    }
-
-    public void RefreshUpgradeData()
-    {
-        if (playerData == null)
-        {
-            playerData = new PlayerData();
-            Debug.LogWarning(gameObject.name + " :PlayerData Not Found", gameObject);
-        }
-
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-
-        GameControllerSpeedValue = playerShipData.Upgrades[(int)UpgradeType.Speed];
-        GameControllerDamageValue = playerShipData.Upgrades[(int)UpgradeType.Damage];
-        GameControllerFireRateValue = playerShipData.Upgrades[(int)UpgradeType.FireRate];
-        GameControllerMagnetPowerValue = playerShipData.Upgrades[(int)UpgradeType.MagnetStrength];
-        GameControllerActivtateDistanceValue = playerShipData.Upgrades[(int)UpgradeType.MagnetDistance];
-        GameControllerSuperTime = playerShipData.Upgrades[(int)UpgradeType.SuperrechargeTime];
-        GameControllerSuperDamage = playerShipData.Upgrades[(int)UpgradeType.SuperDamage];
-
-
-        if (playerShipData.Upgrades[(int)UpgradeType.ArmorUpgrade - 1] == 1)
-        {
-            armorUpgrade = true;
-        }
-        else
-        {
-            armorUpgrade = false;
-        }
-
-        var SpeedMultiplier = .1f * GameControllerSpeedValue;
-        var DamageMultiplier = 1f * GameControllerDamageValue;
-        var FireRateMultiplier = 0.01f * GameControllerFireRateValue;
-        var MagnetPowerMultiplier = 1f * GameControllerMagnetPowerValue;
-        var MagnetDistanceMultiplier = 1f * GameControllerActivtateDistanceValue;
-        var superTime = 0.1f * GameControllerSuperTime;
-        var superDamage = 1f * GameControllerSuperDamage;
-
-        Upgrades = new float[] {
-            SpeedMultiplier,
-            DamageMultiplier,
-            FireRateMultiplier,
-            MagnetPowerMultiplier,
-            MagnetDistanceMultiplier,
-            superTime,
-            superDamage };
-    }
-    #endregion
 }

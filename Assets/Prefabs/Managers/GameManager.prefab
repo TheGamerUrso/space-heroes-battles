@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2406176206008801005}
   - component: {fileID: 2406176206008801006}
-  - component: {fileID: 532490036677452084}
+  - component: {fileID: 7750451458050231462}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -62,7 +62,7 @@ MonoBehaviour:
   autoKillMode: 1
   useSafeMode: 1
   logBehaviour: 2
---- !u!114 &532490036677452084
+--- !u!114 &7750451458050231462
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,31 +71,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 2406176206008801007}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ce49a7c10f0cf444cabeb24a49a9d7a6, type: 3}
+  m_Script: {fileID: 11500000, guid: 7d7e59016d37c7c4bb2685ebfb450926, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerData:
-    score: []
-    Score: []
-    HighScore: []
-    Coins: 0
-    TotalKills: 0
-    LevelUnlocked: 0
-    TotalMoneySpend: 0
-    TotalSuperUsed: 0
-    WaveSurvived: 0
-    m_EnemyKilled: 0
-    GotHitInGame: 0
-    PlayedGame: 0
-    currentSelectedShip: 0
-    UnlockedHeroes: 
-    ListOfOnGoingObjectives: []
-    playerShipData: []
-    SFXVolume: 0
-    MusicVolume: 0
-    AutoAttack: 0
-    mute: 0
-    distance: 0
+  ButtonCategory: Custom
+  ButtonName: PauseButton
+  DebugMode: 0
+  Event:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2406176206008801006}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  ListenForAllUIButtons: 0
+  TriggerAction: 0
 --- !u!1001 &756253865859541720
 PrefabInstance:
   m_ObjectHideFlags: 0

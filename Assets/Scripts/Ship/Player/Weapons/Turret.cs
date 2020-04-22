@@ -2,7 +2,9 @@
 
 public class Turret : MonoBehaviour, IDamagable
 {
-    private PlayerShip player;
+    private PlayerShipData playerShipData;
+    private PlayerData playerData;
+
     public PlayerWeapon playerWeapon;
     public bool IsAlive;
     public bool IsDestroyed
@@ -33,11 +35,19 @@ public class Turret : MonoBehaviour, IDamagable
 
     private void OnEnable()
     {
-        if (player == null)
+        if (playerData == null)
         {
-            player = PlayerManager.GetPlayer();
+            playerData = PersistantData.GetPlayerData();
+            playerShipData = playerData.GetCurrentPlayerShipData();
         }
-        playerWeapon.damage = player.SuperDamage;
+
+        playerWeapon.damage = playerShipData.SuperDamage;
+    }
+
+    private void Start()
+    {
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
     }
 
     public void Deactivate()

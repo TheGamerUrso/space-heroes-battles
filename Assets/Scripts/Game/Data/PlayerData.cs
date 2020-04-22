@@ -4,29 +4,64 @@ using EasyMobile;
 using UnityEngine;
 
 public delegate void XpValueChanged(int level, float xp, float xpToLevel);
+public delegate void LevelValueChanged(int level);
+
 public delegate void DistanceChanged(float ammount);
 public delegate void SuperUseValueChanged(float ammount);
 public delegate void CoinValueChanged(int ammount);
+public delegate void PowerUpLevelChanged(float ammount);
+public delegate void PowerPackCollected(int ammount);
 public delegate void ShipSelectValueChanged(int selection);
+
 [Serializable]
 public class PlayerData
 {
     [NonSerialized] public XpValueChanged OnXpValueChanged;
     [NonSerialized] public CoinValueChanged OnCoinValueChanged;
-    [NonSerialized] public XpValueChanged OnLevelValueChanged;
     [NonSerialized] public DistanceChanged distanceChanged;
     [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
     [NonSerialized] public SuperUseValueChanged OnSuperUseValueChanged;
+    [NonSerialized] public PowerUpLevelChanged PowerUpLevelValueChanged;
+    [NonSerialized] public PowerPackCollected CollectedPowerPack;
+    [NonSerialized] public LevelValueChanged OnLevelValueChanged;
 
+
+    #region Player Statistics
     public long SurvivalScore;
     public long SurvivalHighScore;
 
     public float[] score;
     public float[] Score;
     public float[] HighScore;
-    
-    
+
     public int coins;
+    public int TotalKills;
+    public int LevelUnlocked;
+    public int TotalMoneySpend;
+    public int TotalSuperUsed;
+    public int WaveSurvived;
+    public int m_EnemyKilled;
+    public bool GotHitInGame;
+    public bool PlayedGame;
+    public int superUsed;
+    public int[] UnlockedHeroes;
+
+    public float powerUpLevel = 0;
+    public int powerPackCollected = 0;
+
+
+    #endregion
+
+    #region Player Settings
+    public int currentSelectedShip;
+    public float SFXVolume;
+    public float MusicVolume;
+    public bool AutoAttack;
+    public bool mute;
+    public float distance;
+    #endregion
+
+    #region Properties
     public int Coins
     {
         get
@@ -39,18 +74,6 @@ public class PlayerData
             OnCoinValueChanged?.Invoke(coins);
         }
     }
-
-
-    public int TotalKills;
-    public int LevelUnlocked;
-    public int TotalMoneySpend;
-    public int TotalSuperUsed;
-    public int WaveSurvived;
-    public int m_EnemyKilled;
-    public bool GotHitInGame;
-    public bool PlayedGame;
-
-    public int superUsed;
     public int SuperUsed
     {
         get { return superUsed; }
@@ -59,10 +82,6 @@ public class PlayerData
             OnSuperUseValueChanged?.Invoke(superUsed);       
         }
     }
-
-
-    public int currentSelectedShip;
-
     public int CurrrentSelectedShip
     {
         get
@@ -76,21 +95,6 @@ public class PlayerData
             OnShipSelectValueChanged?.Invoke(value);
         }
     }
-
-
-    public int[] UnlockedHeroes;
-
-    public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
-    public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
-
-    public PlayerShipData[] playerShipData = new PlayerShipData[3];
-
-    public float SFXVolume;
-    public float MusicVolume;
-    public bool AutoAttack;
-    public bool mute;
-    public float distance;
-
     public float Distance
     {
         get
@@ -113,11 +117,9 @@ public class PlayerData
         set
         {
             GetCurrentPlayerShipData().level = value;
-            OnXpValueChanged?.Invoke(GetCurrentPlayerShipData().level, GetCurrentPlayerShipData().xp, GetCurrentPlayerShipData().xpToLevel);
-            GameEventSystem.Call(PlayerEventType.Player_LevelUp);
+            OnLevelValueChanged?.Invoke(Level);
         }
     }
-
     public float XP
     {
         get
@@ -131,6 +133,45 @@ public class PlayerData
         }
     }
 
+    public int PowerPackCollected
+    {
+        get
+        {
+            return powerPackCollected;
+        }
+        set
+        {
+            powerPackCollected = value;
+            if (powerPackCollected > 5)
+            {
+                powerPackCollected = 5;
+            }
+            CollectedPowerPack?.Invoke(powerPackCollected);
+        }
+    }
+    public float PowerUpLevel
+    {
+        get
+        {
+            return powerUpLevel;
+        }
+
+        set
+        {
+            powerUpLevel = value;
+            PowerUpLevelValueChanged?.Invoke(powerUpLevel);
+        }
+    }
+
+
+    #endregion
+
+
+    public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
+    public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
+
+    public PlayerShipData[] playerShipData = new PlayerShipData[3];
+
     public PlayerData(int number = 3)
     {
         LevelUnlocked = 0;
@@ -138,6 +179,7 @@ public class PlayerData
         HighScore = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Coins = 0;
         TotalKills = 0;
+        powerUpLevel = 0;
         TotalMoneySpend = 0;
         WaveSurvived = 0;
         TotalSuperUsed = 0;
@@ -273,6 +315,7 @@ public class PlayerData
     {
         return playerShipData[currentSelectedShip];
     }
+
     public void EarnXP(float ammount)
     {
         PlayerShipData playerShipData1 = playerShipData[currentSelectedShip];
@@ -282,7 +325,7 @@ public class PlayerData
             if (XP >= playerShipData1.xpToLevel)
             {
                 Level++;
-                XP -= playerShipData1.xpToLevel;
+                XP = 0;
                 playerShipData1.xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
             }
         }
@@ -298,6 +341,18 @@ public class PlayerData
         PlayerShipData playerShipData1 = playerShipData[currentSelectedShip];
         playerShipData1.Upgrades[upgrade] = value;
         SaveSystem.SaveGame();
+    }
+    public void IncreasePowerUp(float value)
+    {
+        PowerUpLevel += value;
+    }
+    public float GetPowerUpLevelPresentage()
+    {
+        return PowerUpLevel;
+    }
+    public void ResetWeaponPowerUPCollected()
+    {
+        powerPackCollected = 0;
     }
 
 }

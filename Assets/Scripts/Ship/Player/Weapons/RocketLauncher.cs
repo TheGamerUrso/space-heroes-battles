@@ -23,7 +23,7 @@ public class RocketLauncher : SpecialAttack
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    playerShip.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
                 }
 
                 if (playerShip.HealthPresentage <= .5f)
@@ -37,11 +37,11 @@ public class RocketLauncher : SpecialAttack
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerShip.PowerUpLevel = 0;
+                playerData.PowerUpLevel = 0;
             }
         }
 
-        float powerLevel = playerShip.GetPowerUpLevelPresentage();
+        float powerLevel = playerData.GetPowerUpLevelPresentage();
 
         if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
         {

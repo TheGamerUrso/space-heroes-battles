@@ -29,6 +29,10 @@ public class Items : MonoBehaviour
     protected float magnetPower;
     protected float magnetDistance = 25;
 
+
+    PlayerData playerData;
+    PlayerShipData playerShipData;
+
     private void OnEnable()
     {
         animator.SetTrigger(ResetKey);
@@ -42,14 +46,15 @@ public class Items : MonoBehaviour
 
     public void Setup()
     {
-        PlayerShip player = PlayerManager.GetPlayer();
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
 
         if (itemData.m_RewardAmount > 0)
         {
-            if (player.GetMagnetPower() > 0)
+            if (playerShipData.GetMagnetPower() > 0)
             {
-                magnetPower = 10 + player.GetMagnetPower();
-                magnetDistance = 25 + player.GetMagnetDistanceUpgrade();
+                magnetPower = 10 + playerShipData.GetMagnetPower();
+                magnetDistance = 25 + playerShipData.GetMagnetDistanceUpgrade();
             }
         }
 

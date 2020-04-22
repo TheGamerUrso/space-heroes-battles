@@ -85,7 +85,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public virtual void SetEnemyStats(int level)
     {
-        this.level = level;
+        Level = level;
         SetStats(level);
         HasShield = false;
 
@@ -123,7 +123,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public override void OnAwake()
     {
-        SetStats(level);
+        SetStats(Level);
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
@@ -152,7 +152,7 @@ public class BaseEnemy : Ship, IDamagable
         baseEnemyAI = GetComponent<SimpleAI>();
         ShieldEffect.SetActive(HasShield);
 
-        SetStats(level);
+        SetStats(Level);
     }
 
 

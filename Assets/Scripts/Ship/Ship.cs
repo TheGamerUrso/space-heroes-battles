@@ -3,6 +3,10 @@ using UnityEngine;
 
 public abstract class Ship : MonoBehaviour
 {
+    public delegate void HealthChanged(float currentHealth, float maxHealth);
+    public event HealthChanged OnHealthChanged;
+    public ShipStats shipStats;
+
     public int Id;
 
     protected bool Alive;
@@ -13,36 +17,27 @@ public abstract class Ship : MonoBehaviour
         {
             return Alive;
         }
-        set
+        private set
         {
             Alive = value;
         }
     }
+
+
     /**
    * Attributes
    */
-    #region Attributes
-    public delegate void HealthChanged(float currentHealth, float maxHealth);
-    public event HealthChanged OnHealthChanged;
-    public ShipStats shipStats;
-
-    [Range(.2f, 10)]
-
-    [Min(.2f)]
-    [HideInInspector] public float FireRate;
-
-    [Min(0)]
-    [HideInInspector] public float Speed;
-
-    [Min(25)]
-    [HideInInspector] protected float maxHealth;
-
-    [Min(0)]
-    public float currentHealth;
-
     [Min(12.5f)]
     [HideInInspector] public float Damage;
-
+    [Min(.2f)]
+    [Range(.2f, 10)]
+    [HideInInspector] public float FireRate;
+    [Min(0)]
+    [HideInInspector] public float Speed;
+    [Min(0)]
+    public float currentHealth;
+    [Min(25)]
+    [HideInInspector] protected float maxHealth;
     public float CurrentHealth
     {
         get
@@ -52,7 +47,7 @@ public abstract class Ship : MonoBehaviour
         set
         {
             currentHealth = value;
-            OnHealthChanged?.Invoke(currentHealth, maxHealth);
+            OnHealthChanged?.Invoke(currentHealth, MaxHealth);
         }
     }
 
@@ -75,72 +70,8 @@ public abstract class Ship : MonoBehaviour
             return (CurrentHealth / MaxHealth) * 100;
         }
     }
-    #endregion Attributes
-
-    /**
-     * Level System
-     */
-
-    #region Level System
-    public delegate void XpChanged(int level, float xp, float xpToLevel);
-    public event XpChanged OnXpChanged;
-
-    public delegate void LevelUp(int level);
-    public event LevelUp OnLevelUp;
-
-    [HideInInspector] public float xpToLevel;
-
-    [HideInInspector] public float xp;
-    public float XP
-    {
-        get
-        {
-            return xp;
-        }
-
-        set
-        {
-            xp = value;
-            OnXpChanged?.Invoke(level, xp, xpToLevel);
-        }
-    }
-
-    [Min(20)]
-    [HideInInspector] public int maxLevel;
-    public int MaxLevel
-    {
-        get
-        {
-            return maxLevel;
-        }
-        set
-        {
-            maxLevel = value;
-        }
-    }
-
-    [Range(1, 20)]
-    public int level;
-    public int Level
-    {
-        get
-        {
-            return level;
-        }
-        set
-        {
-            level = value;
-        }
-    }
-
-    public float XPPresentage
-    {
-        get
-        {
-            return (float)xp / xpToLevel;
-        }
-    }
-    #endregion Level System
+    public int Level { get; set; }
+    public int MaxLevel { get; set; }
 
     protected Animator animator;
 
@@ -197,10 +128,10 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void SetStats(int level)
     {
+        MaxLevel = 20;
         Level = level;
-        var multiplier = level / 10;
 
-        MaxHealth = Level * shipStats.baseHealth;
+        maxHealth = Level * shipStats.baseHealth;
 
         CurrentHealth = MaxHealth;
 
@@ -210,13 +141,9 @@ public abstract class Ship : MonoBehaviour
 
         FireRate = shipStats.baseFireRate;
 
-        Damage = Level * shipStats.baseDamage;
 
-        MaxLevel = 20;
-
-        xpToLevel = 100;
+     
     }
-
     public virtual void Heal(float ammount)
     {
         CurrentHealth += ammount;
@@ -227,38 +154,6 @@ public abstract class Ship : MonoBehaviour
         }
 
         CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
-    }
-
-    public void AddXP(float ammount)
-    {
-        if (level < MaxLevel)
-        {
-            XP += ammount;
-            if (xp >= xpToLevel)
-            {
-                Level++;
-                XP -= xpToLevel;
-                xpToLevel = (level / 10 + level % 10) * 100 * Mathf.Pow(10, level / 10);
-                OnLevelUp?.Invoke(level);
-                GameEventSystem.Call(PlayerEventType.Player_LevelUp);
-                SetStats(level);
-            }
-        }
-        else
-        {
-            level = MaxLevel;
-            xp = 0;
-        }
-    }
-
-    public void OnXPValueChanged(HealthChanged callback)
-    {
-        OnHealthChanged += callback;
-    }
-
-    public void OnHealthValueChanged(HealthChanged callback)
-    {
-        OnHealthChanged += callback;
     }
 
     public virtual void TakeDamage(float dmg)

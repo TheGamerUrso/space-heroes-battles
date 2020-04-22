@@ -11,7 +11,7 @@
     public static MultiplierChanged OnMultiplierChanged;
 
     public static bool IsGameOver;
-    public static int EnemySpawnInTotal { get; set; }
+    public static int EnemySpawnInTotal;
 
     public static int score;
     public static int Score
@@ -43,14 +43,14 @@
         {
 
             currentEnemyKilled = value;
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            PlayerData playerData = PersistantData.GetPlayerData();
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
             if (objectiveData != null)
                 objectiveData.UpdateProgress(currentEnemyKilled);
         }
     }
-
-
+    public static bool useSloMo { get; set; }
+    public static int CoinDropInTotal { get; set; }
     public static int coinEarnInGame;
     public static int CoinEarnInGame
     {
@@ -79,7 +79,7 @@
         set
         {
             superUsed = value;
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            PlayerData playerData = PersistantData.GetPlayerData();
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
             if (objectiveData != null)
                 objectiveData.UpdateProgress(superUsed);
@@ -98,7 +98,7 @@
         set
         {
             getDamaged = value;
-            PlayerData playerData = GameManager.Instance.GetPlayerData();
+            PlayerData playerData = PersistantData.GetPlayerData();
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
             if (objectiveData != null)
                 objectiveData.UpdateProgress(1);
@@ -134,7 +134,6 @@
     public static void Reset()
     {
         IsGameOver = false;
-        EnemySpawnInTotal = 0;
         score = 0;
         WaveSurvived = 0;
         currentEnemyKilled = 0;

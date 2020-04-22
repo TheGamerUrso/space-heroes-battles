@@ -14,4 +14,7 @@ public class ShipStats : ScriptableObject
     public float baseSpecialCountdown;
 
     public float baseSpeed;
+
+    public bool CanUsePowerUpItem;
+
 }
