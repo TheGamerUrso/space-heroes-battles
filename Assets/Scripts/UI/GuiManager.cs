@@ -269,6 +269,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public void LoadMainMenu()
     {
+        Time.timeScale = 1;
         SceneLoader.Instance.LoadMainenu();
 
         UIView activeMenuGO = null;

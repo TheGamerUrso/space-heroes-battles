@@ -126,7 +126,7 @@ namespace TheGamerUrso
 
             private IEnumerator LoadSceneAsync(string levelName, float delay = 0)
             {
-                for (int i = 0; i < ActiveScenes.Count; i++)
+                    for (int i = 0; i < ActiveScenes.Count; i++)
                 {
                     string item = ActiveScenes[i];
                     UnloadLevel(item);

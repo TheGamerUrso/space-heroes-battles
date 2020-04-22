@@ -34,23 +34,23 @@ public class QuestManager : MonoBehaviour
             switch (objectiveType)
             {
                 case ObjectiveType.Kill:
-                    objectiveData = new ObjectiveData(i, "Defeat", UnityEngine.Random.Range(10, 100), 0, 0, "Kill <color=orange> X / % </color>   enemies");
+                    objectiveData = new ObjectiveData(i, "Defeat", UnityEngine.Random.Range(100, 500), 0, 0, "Kill <color=orange> X / % </color>   enemies");
                     break;
 
                 case ObjectiveType.Use:
-                    objectiveData = new ObjectiveData(i, "Use", UnityEngine.Random.Range(3, 9), 0, 1, "Use super <color=orange> X / % </color>  times");
+                    objectiveData = new ObjectiveData(i, "Use", UnityEngine.Random.Range(10, 25), 0, 1, "Use super <color=orange> X / % </color>  times");
                     break;
 
                 case ObjectiveType.Unharmed:
-                    objectiveData = new ObjectiveData(i, "Unharmed", 1, 0, 2, "Complete a wave without getting hit");
+                    objectiveData = new ObjectiveData(i, "Unharmed", 1, 0, 2, "Complete a level without getting hit");
                     break;
 
                 case ObjectiveType.survive:
-                    objectiveData = new ObjectiveData(i, "Survie", UnityEngine.Random.Range(1, 7), 0, 3, "Survive till <color=orange> X / % </color>  wave");
+                    objectiveData = new ObjectiveData(i, "Survie", UnityEngine.Random.Range(1, 7), 0, 3, "Play <color=orange> X / % </color>  Levels");
                     break;
 
                 case ObjectiveType.spend:
-                    objectiveData = new ObjectiveData(i, "Spend_1", UnityEngine.Random.Range(100, 500), 0, 4, "Spend <color=orange> X / % </color>  coins");
+                    objectiveData = new ObjectiveData(i, "Spend_1", UnityEngine.Random.Range(500, 1000), 0, 4, "Spend <color=orange> X / % </color>  coins");
                     break;
 
                 default:

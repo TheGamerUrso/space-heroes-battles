@@ -213,7 +213,7 @@ public class GameController : Singleton<GameController>
         if (levelObjectiveDatas[0].completed == false)
         {
             levelObjectiveDatas[0].completed = true;
-            playerData.EarnXP(50 * playerData.GetCurrentPlayerShipData().level);
+            playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
         }
 
         float enemyKilled = GameSession.CurrentEnemyKilled;
@@ -221,13 +221,13 @@ public class GameController : Singleton<GameController>
         if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
         {
             levelObjectiveDatas[1].completed = true;
-            playerData.EarnXP(75 * playerData.GetCurrentPlayerShipData().level);
+            playerData.EarnXP(30 * playerData.GetCurrentPlayerShipData().level);
         }
 
         if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && playerData.GotHitInGame == false)
         {
             levelObjectiveDatas[2].completed = true;
-            playerData.EarnXP(100 * playerData.GetCurrentPlayerShipData().level);
+            playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
         }
 
         float coinEarnInGame = GameSession.coinEarnInGame;
@@ -235,7 +235,7 @@ public class GameController : Singleton<GameController>
         if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
         {
             levelObjectiveDatas[3].completed = true;
-            playerData.EarnXP(25 * playerData.GetCurrentPlayerShipData().level);
+            playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
         }
 
 #if UNITY_ANDROID

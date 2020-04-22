@@ -36,13 +36,13 @@ public class ScreenManager : MonoBehaviour
     }
     private void Start()
     {
-        AudioAPI =  AudioManager.Instance;
+        AudioAPI = AudioManager.Instance;
         foreach (UIScreens item in MainMenuScreens)
         {
             if (item.Name.Equals("Upgrades") || item.Name.Equals("Levels"))
             {
                 item.m_UIElement.gameObject.SetActive(false);
-                OnScreenChanged?.Invoke(item.Name, false);          
+                OnScreenChanged?.Invoke(item.Name, false);
             }
         }
     }
@@ -76,25 +76,6 @@ public class ScreenManager : MonoBehaviour
 
     public void OpenMenu()
     {
-        //AudioManager.instance.PlaySound("Click", 1);
-        //foreach (UIScreens item in MainMenuScreens)
-        //{
-        //    if (item.m_UIElement.activeSelf)
-        //    {
-        //        previousScreen = item.Name;
-        //    }
-
-        //    if (OptionsOrHighscoreOpen())
-        //    {
-        //        previousScreen = "Quest";
-        //    }
-
-        //    if (item.Name.Equals("Menu"))
-        //    {
-        //        item.m_UIElement.SetActive(true);
-        //    }
-        //}
-
         StartCoroutine(MenuSwitcher(true));
     }
 
@@ -102,7 +83,7 @@ public class ScreenManager : MonoBehaviour
 
     IEnumerator MenuSwitcher(bool open)
     {
-        AudioManager.PlaySound(null,"Click", 1);
+        //AudioManager.PlaySound(null,"Click", 1);
 
         foreach (UIScreens item in MainMenuScreens)
         {
@@ -116,19 +97,19 @@ public class ScreenManager : MonoBehaviour
                 previousScreen = "Quest";
             }
 
-            if (item.Name.Equals("Menu"))
-            {
-                if (open)
-                {
-                    item.m_UIElement.Show();
-                    OnScreenChanged?.Invoke(item.Name, true);
-                }
-                else
-                {
-                    item.m_UIElement.Hide();
-                    OnScreenChanged?.Invoke(item.Name, false);
-                }
-            }
+            //if (item.Name.Equals("Menu"))
+            //{
+            //    if (open)
+            //    {
+            //        item.m_UIElement.Show();
+            //        OnScreenChanged?.Invoke(item.Name, true);
+            //    }
+            //    else
+            //    {
+            //        item.m_UIElement.Hide();
+            //        OnScreenChanged?.Invoke(item.Name, false);
+            //    }
+            //}
         }
         yield return null;
     }
@@ -176,8 +157,9 @@ public class ScreenManager : MonoBehaviour
 
     public void Close()
     {
-        AudioManager.PlaySound(null,"Back", 1);
-        if (string.IsNullOrEmpty(previousScreen) || previousScreen.Equals("Menu") || !OptionsOrHighscoreOpen())
+        //AudioManager.PlaySound(null, "Back", 1);
+        // if (string.IsNullOrEmpty(previousScreen) || previousScreen.Equals("Menu") || !OptionsOrHighscoreOpen())
+        if (string.IsNullOrEmpty(previousScreen) || !OptionsOrHighscoreOpen())
         {
             CloseMenu();
         }
@@ -211,33 +193,33 @@ public class ScreenManager : MonoBehaviour
 
     IEnumerator SwitchScreen(string Id)
     {
-        AudioManager.PlaySound(null,"Click", 1);
-        if (Id.Equals("Menu"))
+        //AudioManager.PlaySound(null, "Click", 1);
+        // if (Id.Equals("Menu"))
+        //  {
+        //      OpenMenu();
+        //  }
+        //  else
+        //  {
+        foreach (UIScreens item in MainMenuScreens)
         {
-            OpenMenu();
-        }
-        else
-        {
-            foreach (UIScreens item in MainMenuScreens)
+            if (item.Name.Equals(Id))
             {
-                if (item.Name.Equals(Id))
+                item.m_UIElement.Show();
+                OnScreenChanged?.Invoke(item.Name, true);
+            }
+            else
+            {
+                if (item.m_UIElement.IsVisible)
                 {
-                    item.m_UIElement.Show();
-                    OnScreenChanged?.Invoke(item.Name, true);
+                    if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
+                        previousScreen = item.Name;
                 }
-                else
-                {
-                    if (item.m_UIElement.IsVisible)
-                    {
-                        if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
-                            previousScreen = item.Name;
-                    }
 
-                    item.m_UIElement.Hide();
-                    OnScreenChanged?.Invoke(item.Name, false);
-                }
+                item.m_UIElement.Hide();
+                OnScreenChanged?.Invoke(item.Name, false);
             }
         }
+        //  }
         yield return null;
 
     }
