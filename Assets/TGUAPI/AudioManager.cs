@@ -54,7 +54,7 @@ public class AudioManager : Singleton<AudioManager>
     public static void SetSoundVolume(float value)
     {
         soundVolume = value;
-        Instance.SFXMixerGroup.audioMixer.SetFloat("SoundVolume", Mathf.Log10(value) * 20);
+        Instance.SFXMixerGroup.audioMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);
     }
     public static void SetMusicVolume(float value)
     {
