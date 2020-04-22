@@ -1,0 +1,196 @@
+﻿using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class PlayerWidget : MonoBehaviour
+{
+    public PlayerShip player;
+    public PlayerData playerData;
+    public PlayerShipData playerShipData;
+
+    private static string ReadyStringKey = "Ready";
+    private static string ActiveStringKey = "Active";
+
+    [SerializeField] private Color fullHealthColor = Color.green;
+    [SerializeField] private Color zeroHealthColor = Color.red;
+
+    [Space(2)]
+    [SerializeField] private GameObject SuperWidget;
+
+    [SerializeField] private GameObject HealthWidget;
+
+    [Space(2)]
+    [SerializeField] private Slider XPBar = null;
+
+    [Space(2)]
+    [SerializeField] private TextMeshProUGUI XPStatus;
+
+    [SerializeField] private TextMeshProUGUI HealthText = null;
+    [SerializeField] private Button PowerBut;
+    [SerializeField] private Image m_HealthImage = null;
+    [SerializeField] private Image m_PowerUps;
+    [SerializeField] private Image WeaponIndicatorImage;
+    [SerializeField] private Image m_ShieldImage;
+
+    [Space(2)]
+    [Range(1, 4)] private int CurrentWeapnType = 0;
+
+    // private int WeaponUpgradeCollected = 0;
+
+    [Space(2)]
+    [SerializeField] private Animator PowerUIActiveAnimator = null;
+
+    [Space(2)]
+    [SerializeField] private Sprite[] WeaponIndicatorSpritesActivated = null;
+
+    [SerializeField] private Sprite[] WeaponIndicatorSpritesNotActivated;
+
+    private float timer;
+    private float targetHealth = 0;
+    private float maxTargetHealth = 0;
+
+    private void OnDestroy()
+    {
+        if (player != null)
+        {
+            player.OnHealthChanged -= UpdatePlayerHealth;
+            playerData.PowerUpLevelValueChanged -= PowerUpLevelChanged;
+            playerData.OnXpValueChanged -= UpdateXP;
+            playerData.CollectedPowerPack -= PowerPackCollected;
+        }
+    }
+
+    private void Start()
+    {
+        player = PlayerManager.GetPlayer();
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+    }
+
+    public void PowerPackCollected(int collected)
+    {
+        RefreshWeaponIndicatorSprite();
+    }
+
+    public void SetPlayer(PlayerShip player)
+    {
+        this.player = player;
+
+        PowerBut.onClick.AddListener(() =>
+        {
+            ActivateSpecial();
+
+        });
+
+        player.OnHealthChanged += UpdatePlayerHealth;
+        playerData.PowerUpLevelValueChanged += PowerUpLevelChanged;
+        playerData.CollectedPowerPack += PowerPackCollected;
+        playerData.OnXpValueChanged += UpdateXP;
+
+        UpdatePlayerHealth(player.currentHealth, player.MaxHealth);
+
+        UpdateXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+
+
+        PowerUpLevelChanged(playerData.GetPowerUpLevelPresentage());
+    }
+
+
+    public void ActivateSpecial()
+    {
+        PowerBut.interactable = false;
+        PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+    }
+
+
+    public void PowerUpLevelChanged(float playerPowerUp)
+    {
+        if (playerPowerUp >= 1)
+        {
+            if (!PlayerPrefs.HasKey("SuperTut"))
+            {
+                Tutorial.Instance.ShowTutorial(4);
+
+                PlayerPrefs.SetInt("SuperTut", 1);
+            }
+            PowerBut.interactable = true;
+            PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+        }
+        else
+        {
+            PowerBut.interactable = false;
+            PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+        }
+
+        m_PowerUps.fillAmount = playerPowerUp;
+
+        RefreshWeaponIndicatorSprite();
+    }
+
+    private void Update()
+    {
+        if (player == null)
+        {
+            if (PlayerManager.GetPlayer() == null)
+            {
+                return;
+            }
+
+            player = PlayerManager.GetPlayer();
+            if (player != null)
+            {
+                SetPlayer(player);
+            }
+            else
+            {
+                return;
+            }
+        }
+    }
+
+    public void UpdateXP(int lvl, float xp, float xpToLevel)
+    {
+        XPBar.maxValue = xpToLevel;
+        XPBar.value = xp;
+        XPStatus.text = Mathf.Round(xp) + "/" + Mathf.Round(xpToLevel);
+    }
+
+    public void UpdatePlayerHealth(float CurrentHealth, float MaxHealth)
+    {
+        HealthText.text = string.Format("{0}/{1}", Mathf.Round(CurrentHealth), MaxHealth);
+        m_HealthImage.fillAmount = (CurrentHealth / MaxHealth);
+        maxTargetHealth = MaxHealth;
+        targetHealth = CurrentHealth;
+
+        m_HealthImage.color = Color.Lerp(zeroHealthColor, fullHealthColor, targetHealth / maxTargetHealth);
+    }
+
+    public void ShieldEffect(bool value)
+    {
+        m_ShieldImage.gameObject.SetActive(value);
+    }
+
+    public void RefreshWeaponIndicatorSprite()
+    {
+        var sprite = WeaponIndicatorSpritesNotActivated[0];
+        var collecterUpgrade = playerData.powerPackCollected;
+
+        if (m_PowerUps.fillAmount == 1)
+        {
+            sprite = WeaponIndicatorSpritesActivated[playerData.powerPackCollected];
+        }
+        else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
+        {
+            sprite = WeaponIndicatorSpritesNotActivated[playerData.powerPackCollected];
+        }
+        else
+        {
+            sprite = WeaponIndicatorSpritesNotActivated[playerData.powerPackCollected];
+        }
+
+        WeaponIndicatorImage.sprite = sprite;
+    }
+
+
+}

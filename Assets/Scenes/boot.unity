@@ -289,6 +289,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2211439242464701146, guid: 79b2d922f7452e54b93f8bef4382d463,
+        type: 3}
+      propertyPath: m_Name
+      value: LeftGate
+      objectReference: {fileID: 0}
+    - target: {fileID: 2995968732439877393, guid: 79b2d922f7452e54b93f8bef4382d463,
+        type: 3}
+      propertyPath: m_Name
+      value: LeftGatePivot
+      objectReference: {fileID: 0}
+    - target: {fileID: 3458323541838907933, guid: 79b2d922f7452e54b93f8bef4382d463,
+        type: 3}
+      propertyPath: m_Name
+      value: RightGatePivot
+      objectReference: {fileID: 0}
+    - target: {fileID: 5423873088208223004, guid: 79b2d922f7452e54b93f8bef4382d463,
+        type: 3}
+      propertyPath: m_Name
+      value: RightGate
+      objectReference: {fileID: 0}
     - target: {fileID: 8036192080170494492, guid: 79b2d922f7452e54b93f8bef4382d463,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1593,7 +1613,7 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 1724470362}
+          - m_Target: {fileID: 0}
             m_MethodName: Enabled
             m_Mode: 6
             m_Arguments:
@@ -6612,7 +6632,7 @@ MonoBehaviour:
       Event:
         m_PersistentCalls:
           m_Calls:
-          - m_Target: {fileID: 1724470362}
+          - m_Target: {fileID: 0}
             m_MethodName: Enabled
             m_Mode: 6
             m_Arguments:
@@ -11733,8 +11753,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Ok
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: ef48f7a8f54fbb14fb375f8fda0002d4, type: 2}
-  m_sharedMaterial: {fileID: 21334737597279620, guid: ef48f7a8f54fbb14fb375f8fda0002d4,
+  m_fontAsset: {fileID: 11400000, guid: 016922a772a91414eb27366c998052dc, type: 2}
+  m_sharedMaterial: {fileID: 21713576850994388, guid: 016922a772a91414eb27366c998052dc,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -14280,10 +14300,10 @@ GameObject:
   - component: {fileID: 1724470366}
   - component: {fileID: 1724470365}
   - component: {fileID: 1724470364}
-  - component: {fileID: 1724470362}
   - component: {fileID: 1724470368}
   - component: {fileID: 1724470367}
   - component: {fileID: 1724470363}
+  - component: {fileID: 1724470362}
   m_Layer: 5
   m_Name: View - Announcement
   m_TagString: Untagged
@@ -14320,7 +14340,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1724470360}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf49faf3714aa3144967e5c210a455da, type: 3}
+  m_Script: {fileID: 11500000, guid: fcdbb5d640617d24ca1e356545ee0628, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   WidgetText: {fileID: 934853276}
@@ -15201,6 +15221,7 @@ GameObject:
   - component: {fileID: 1844026187}
   - component: {fileID: 1844026186}
   - component: {fileID: 1844026182}
+  - component: {fileID: 1844026188}
   m_Layer: 5
   m_Name: View - Dialog_Error
   m_TagString: Untagged
@@ -15240,8 +15261,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf49faf3714aa3144967e5c210a455da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  WidgetText: {fileID: 1086559019}
-  uiView: {fileID: 1844026182}
 --- !u!114 &1844026182
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16102,6 +16121,20 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!114 &1844026188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844026179}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcdbb5d640617d24ca1e356545ee0628, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  WidgetText: {fileID: 1086559019}
+  uiView: {fileID: 1844026182}
 --- !u!1 &1855718191
 GameObject:
   m_ObjectHideFlags: 0

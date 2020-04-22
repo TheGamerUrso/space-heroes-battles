@@ -159,7 +159,7 @@ public class DropController : Singleton<DropController>
                 GameObject extraDrop = PoolManager.Instance.GetObjectFromPool(ListOfDropItems[0].DropItemsType);
                 extraDrop.transform.position = transform.position;
                 extraDrop.transform.rotation = Quaternion.identity;
-                GameLevel.CoinDropInTotal++;
+                GameSession.CoinDropInTotal++;
             }
 
             //TODO Coins Drop In Total ++

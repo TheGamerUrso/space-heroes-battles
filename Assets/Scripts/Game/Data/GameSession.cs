@@ -49,8 +49,8 @@
                 objectiveData.UpdateProgress(currentEnemyKilled);
         }
     }
-
-
+    public static bool useSloMo { get; set; }
+    public static int CoinDropInTotal { get; set; }
     public static int coinEarnInGame;
     public static int CoinEarnInGame
     {
