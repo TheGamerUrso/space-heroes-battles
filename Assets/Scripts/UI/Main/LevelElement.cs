@@ -26,6 +26,7 @@ public class LevelElement : MonoBehaviour
 {
     private Level level;
     public Sprite[] sprites;
+    private Action<Level> buttonAction;
     [SerializeField] private Button button;
     [SerializeField] private Image buttonImage;
     [SerializeField] private TextMeshProUGUI NameText;
@@ -34,6 +35,8 @@ public class LevelElement : MonoBehaviour
     [SerializeField] private Color LockedColor;
     public void SetLevelElement(Level level, Action<Level> buttonAction)
     {
+        this.buttonAction = buttonAction;
+
         this.level = level;
         if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
         {
@@ -42,7 +45,7 @@ public class LevelElement : MonoBehaviour
             button.onClick.AddListener(() =>
             {
                 Debug.Log("Pressed" + "Level " + level.mission.Level + " Button");
-                buttonAction.Invoke(level);
+      
             });
         }
         else if (level.ID.Contains("Survival"))
@@ -52,7 +55,6 @@ public class LevelElement : MonoBehaviour
             button.onClick.AddListener(() =>
             {
                 Debug.Log("Pressed" + "Survival Mode");
-                buttonAction.Invoke(level);
             });
 
             NameText.color = normalColor;
@@ -64,6 +66,11 @@ public class LevelElement : MonoBehaviour
         }
 
         Refresh();
+    }
+
+    public void SelectLevel()
+    {
+        buttonAction.Invoke(level);
     }
 
     public void SetEmptyLevelElement()

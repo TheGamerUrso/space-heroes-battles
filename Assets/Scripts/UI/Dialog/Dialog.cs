@@ -11,6 +11,11 @@ public class Dialog<T>: MonoBehaviour
     {
         uiView.Toggle(value);
     }
+    public virtual void OK()
+    {
+        Enabled(false);
+        AutoClose();
+    }
 
     public void AutoClose()
     {

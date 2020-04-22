@@ -68,5 +68,10 @@ public class UpgradeManager : Singleton<UpgradeManager>
         Notify();
     }
 
+    public void SaveAndClose()
+    {
+        PersistantData.Save();
+    }
+
 
 }

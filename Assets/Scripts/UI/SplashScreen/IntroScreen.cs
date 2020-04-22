@@ -10,7 +10,7 @@ public class IntroScreen : MonoBehaviour
     public GameObject[] Ships;
     private bool clicked;
     public GameObject pressToContinue;
-
+    public AudioSource sfx;
 
     private void Awake()
     {
@@ -51,6 +51,7 @@ public class IntroScreen : MonoBehaviour
             onIntroClickContinue?.Invoke();
             StartCoroutine(Fade());
             pressToContinue.gameObject.SetActive(false);
+            sfx.Play();
         }
     }
 
