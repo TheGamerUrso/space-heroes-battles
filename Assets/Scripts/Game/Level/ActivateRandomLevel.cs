@@ -30,6 +30,8 @@ public class ActivateRandomLevel : MonoBehaviour
     {
         survivalMode = GameObject.FindObjectOfType<SurvivalMode>();
         survivalMode.OnWaveEnded = ActivateHyperdrive;
+
+        ChooseNewLevel();
     }
 
     public bool ActivateHyperdrive()
@@ -97,6 +99,17 @@ public class ActivateRandomLevel : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
+        ChooseNewLevel();
+
+        yield return new WaitForSeconds(1.0f);
+
+        WrapTunnelFX.SetActive(false);
+        active = false;
+        //Debug.Log("Done");
+    }
+
+    public void ChooseNewLevel()
+    {
         for (int i = 0; i < levels.Length; i++)
         {
             levels[i].SetActive(false);
@@ -105,12 +118,6 @@ public class ActivateRandomLevel : MonoBehaviour
         int randLevel = 0;
         randLevel = Random.Range(0, levels.Length);
         levels[randLevel].SetActive(true);
-
-        yield return new WaitForSeconds(1.0f);
-
-        WrapTunnelFX.SetActive(false);
-        active = false;
-        //Debug.Log("Done");
     }
 
 }
