@@ -22,7 +22,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 {
     public Action<BaseEnemy> EnemyDied;
 
-   protected PlayerShip playerShip;
+    protected PlayerShip playerShip;
 
     public Action SpawnEnded;
     public Action<int, int, int> GameStatsChanged;
@@ -119,7 +119,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         }
     }
 
-    IEnumerator  Spawn()
+    IEnumerator Spawn()
     {
         Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
@@ -189,47 +189,50 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                 }
 
                 yield return waitForCooldown;
-
-
             }
 
-            if (HasBoss)
-                GuiManager.PlayTrasmition(null, true);
-
-            yield return waitForCooldown;
-
-            while (Enemies.Count > 0)
+            if (playerShip.currentHealth > 0)
             {
+                if (HasBoss)
+                    GuiManager.PlayTrasmition(null, true);
+
                 yield return waitForCooldown;
-            }
 
-            if (HasBoss)
-            {
-                if (!BossBattleInitiated)
+                while (Enemies.Count > 0)
                 {
-                    BossBattleInitiated = true;
-                    Debug.Log("Boss Battle");
-
-                    SpawnBoss();
+                    yield return waitForCooldown;
                 }
 
 
-                while (BossBattleInitiated)
+                if (HasBoss)
                 {
-                    yield return waitforOneSec;
+                    if (!BossBattleInitiated)
+                    {
+                        BossBattleInitiated = true;
+                        Debug.Log("Boss Battle");
+
+                        SpawnBoss();
+                    }
+
+
+                    while (BossBattleInitiated)
+                    {
+                        yield return waitforOneSec;
+                    }
+                }
+                else
+                {
+                    GameOver();
+                }
+
+
+                yield return waitForFourSeconds;
+
+                if (!GameSession.IsGameOver)
+                {
+                    SpawnEnded?.Invoke();
                 }
             }
-            else
-            {
-                GameOver();
-            }
-        }
-
-        yield return waitForFourSeconds;
-
-        if (!GameSession.IsGameOver)
-        {
-            SpawnEnded?.Invoke();
         }
     }
 
