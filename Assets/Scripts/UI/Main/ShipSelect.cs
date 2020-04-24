@@ -51,18 +51,6 @@ public class ShipSelect : Singleton<ShipSelect>
 
         currentShip = playerData.currentSelectedShip;
 
-        int num = 0;
-        for (int i = 0; i < playerData.UnlockedHeroes.Length; i++)
-        {
-            if (playerData.UnlockedHeroes[i] == 1)
-            {
-                num++;
-            }
-        }
-
-        if (GooglePlayServicesManager.Instance)
-            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
-
         GameEventSystem.OnShipSelect += SelectShip;
 
         playerData.CurrrentSelectedShip = currentShip;

@@ -28,6 +28,7 @@ public class Tutorial : Singleton<Tutorial>
 
     public void ShowTutorial(int itemToShowIndex)
     {
+        GameManager.Paused = true;
         TutorialView.Show();
         for (int i = 0; i < TutorailItemsToShow.Length; i++)
         {
@@ -52,6 +53,7 @@ public class Tutorial : Singleton<Tutorial>
     public void Close()
     {
         TutorialView.Hide();
+        GameManager.Paused = false;
         Time.timeScale = 1;
         PlayerManager.GetPlayer().tempGodMode();
     }

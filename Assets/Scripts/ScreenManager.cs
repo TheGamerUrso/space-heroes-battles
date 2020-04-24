@@ -50,29 +50,29 @@ public class ScreenManager : MonoBehaviour
     private void Update()
     {
         // Make sure user is on Android platform
-        //  if (Application.platform == RuntimePlatform.Android)
-        //  {
-        // Check if Back was pressed this frame
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (Application.platform == RuntimePlatform.Android)
         {
-            if (String.IsNullOrEmpty(previousScreen))
+            // Check if Back was pressed this frame
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Application.Quit();
-            }
-            else
-            {
-                if (DialogueManager.Instance.StoryWindowIsOpen())
+                if (String.IsNullOrEmpty(previousScreen))
                 {
-                    DialogueManager.Instance.Close();
+                    Application.Quit();
                 }
-                else if (DialogueManager.Instance.StoryWindowIsOpen() == false)
+                else
                 {
-                    ShipSelect.Instance.SelectShip(0);
-                    Close();
+                    if (DialogueManager.Instance.StoryWindowIsOpen())
+                    {
+                        DialogueManager.Instance.Close();
+                    }
+                    else if (DialogueManager.Instance.StoryWindowIsOpen() == false)
+                    {
+                        ShipSelect.Instance.SelectShip(0);
+                        Close();
+                    }
                 }
             }
         }
-        //  }
     }
 
     public void OpenMenu()
