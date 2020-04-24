@@ -30,27 +30,7 @@ public class GuiManager : Singleton<GuiManager>
     private TransmitionWidget transmittionWidget;
     private float timer;
 
-    private void OnApplicationFocus(bool focus)
-    {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            if (!focus && GameSession.IsGameOver == false)
-            {
-                GameManager.Instance.PauseTheGame(focus);
-            }
-        }
-    }
 
-    private void OnApplicationPause(bool Paused)
-    {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            if (GameSession.IsGameOver == false)
-            {
-                GameManager.Instance.PauseTheGame(Paused);
-            }
-        }
-    }
 
     protected override void OnCleanup()
     {
@@ -175,25 +155,23 @@ public class GuiManager : Singleton<GuiManager>
                 PlayerPrefs.SetInt("PowerTut", 1);
             }
         }
-
-        UpdateScore(75);
     }
 
     private void Update()
     {
-        //if (Time.timeScale == 1)
-        //{
-        //    timer -= Time.deltaTime;
-        //    if (timer <= 0)
-        //    {
-        //        pauseButton.SetActive(false);
-        //    }
-        //}
-        //else
-        //{
-        //    timer = 1;
-        //    pauseButton.SetActive(true);
-        //}
+        if (Time.timeScale == 1)
+        {
+            timer -= Time.deltaTime;
+            if (timer <= 0)
+            {
+                pauseButton.SetActive(false);
+            }
+        }
+        else
+        {
+            timer = 1;
+            pauseButton.SetActive(true);
+        }
     }
 
     public void SetCountdownVisibility(bool enable)
@@ -236,10 +214,12 @@ public class GuiManager : Singleton<GuiManager>
     {
         if (value)
         {
+            GameSession.useSloMo = false;
             PauseScreen.Show();
         }
         else if (!value)
         {
+            GameSession.useSloMo = true;
             PauseScreen.Hide();
         }
     }

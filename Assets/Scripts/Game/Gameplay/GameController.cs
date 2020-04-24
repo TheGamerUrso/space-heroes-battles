@@ -17,22 +17,47 @@ public class GameController : Singleton<GameController>
 
     private SpawnEnemies spawn;
 
-    private float slowMo;
-    private float delayTheSlowMoEffectTimer;
+    private float delayTheSlowMoEffectTimer = .3f;
+    private float delay = 2;
 
+    private void OnApplicationFocus(bool focus)
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!focus && GameSession.IsGameOver == false)
+            {
+                GameManager.Instance.PauseTheGame(focus);
+            }
+        }
+    }
+
+    private void OnApplicationPause(bool Paused)
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (GameSession.IsGameOver == false)
+            {
+                GameManager.Instance.PauseTheGame(Paused);
+            }
+        }
+    }
 
     protected override void OnAwake()
     {
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
-            {
-                Debug.Log("boot found skip");
-                return;
-            }
-            Debug.Log("Boot not found Loading");
-            SceneManager.LoadScene("boot", LoadSceneMode.Additive);
-        }
+        /**
+         * Only For Editor
+         */
+
+        //for (int i = 0; i < SceneManager.sceneCount; i++)
+        //{
+        //    if (SceneManager.GetSceneAt(i).name.Equals("boot"))
+        //    {
+        //        Debug.Log("boot found skip");
+        //        return;
+        //    }
+        //    Debug.Log("Boot not found Loading");
+        //    SceneManager.LoadScene("boot", LoadSceneMode.Additive);
+        //}
     }
 
     protected override void OnCleanup()
@@ -307,6 +332,28 @@ public class GameController : Singleton<GameController>
                     break;
                 default:
                     break;
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (delay > 0)
+        {
+            delay -= Time.deltaTime;
+        }
+        else
+        {
+            if (!GameSession.IsGameOver && !GameManager.Paused)
+            {
+                if (GameSession.useSloMo)
+                {
+                    Time.timeScale = delayTheSlowMoEffectTimer;
+                }
+                else if (!GameSession.useSloMo && Time.timeScale < 1)
+                {
+                    Time.timeScale = 1.0f;
+                }
             }
         }
     }

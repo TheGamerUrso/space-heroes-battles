@@ -64,6 +64,7 @@ public class SimpleShipControls : MonoBehaviour
                 {
                     case TouchPhase.Began:
                         currentTouchPos = currentTouch.position;
+                        GameSession.useSloMo = false;
                         break;
                     case TouchPhase.Moved:
                         currentTouchPos = currentTouch.position;
@@ -73,6 +74,7 @@ public class SimpleShipControls : MonoBehaviour
                         break;
                     case TouchPhase.Ended:
                         currentTouchPos = transform.position;
+                        GameSession.useSloMo = true;
                         break;
                 }
             }
@@ -112,8 +114,20 @@ public class SimpleShipControls : MonoBehaviour
 
         if (direction.magnitude > .1f)
         {
+            Vector3 worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
+            Vector3 ScreenToViewPoint = Camera.main.ScreenToViewportPoint(worldToScreen);
+
+
             transform.Translate((direction + offspec) * Speed * movementSensitivity * Time.deltaTime, Space.World);
+
+
+            transform.position = new Vector3(
+                Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
+                -50,
+                    Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
         }
+
+
 
 
     }
@@ -133,10 +147,24 @@ public class SimpleShipControls : MonoBehaviour
 
         movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
 
+
         if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
         {
             SetTargetPosition();
+        }
+
+        if (!GameManager.Paused)
+        {
             Rotate();
+        }
+
+        if (Input.touchCount > 0 || Input.GetMouseButton(0))
+        {
+            GameSession.useSloMo = false;
+        }
+        else
+        {
+            GameSession.useSloMo = true;
         }
     }
     public static bool IsMouseOverUI()
@@ -149,29 +177,34 @@ public class SimpleShipControls : MonoBehaviour
         Move();
     }
 
+    private float rotVelocity;
+    private Vector3 targetEulerAngels;
+
     public void Rotate()
     {
-        var rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
+        bool rotate = (Input.touchCount > 0 || Input.GetMouseButton(0));
 
-        if (rotVelocity > .1f || rotVelocity < -.1f && (Input.touchCount > 0 || Input.GetMouseButton(0)))
+        if (rotate)
         {
-            Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
-            ShipModel.transform.localEulerAngles = new Vector3(
-                targetEulerAngels.x
-              , targetEulerAngels.y,
-                Mathf.LerpAngle(
-                  targetEulerAngels.z,
-             rotVelocity, .1f));
+            rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
+            rotVelocity = Mathf.Clamp(rotVelocity, -35, 35);
         }
         else
         {
-            Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
-            ShipModel.transform.localEulerAngles =
-                new Vector3(
-                    targetEulerAngels.x
-              , targetEulerAngels.y,
-                    Mathf.LerpAngle(targetEulerAngels.z, 0, .1f));
+            rotVelocity = 0;
         }
+
+        targetEulerAngels = ShipModel.transform.localEulerAngles;
+
+        targetEulerAngels = new Vector3(
+              targetEulerAngels.x
+            , targetEulerAngels.y,
+              Mathf.LerpAngle(
+                targetEulerAngels.z,
+           rotVelocity, .1f));
+
+        ShipModel.transform.localEulerAngles = targetEulerAngels;
+
     }
 
     public bool CheckIfTouchIsOverUI(Touch touch)

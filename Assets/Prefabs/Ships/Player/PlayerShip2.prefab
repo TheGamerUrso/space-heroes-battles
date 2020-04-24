@@ -23,14 +23,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 240210810546246154}
-  m_LocalRotation: {x: 0, y: 0.17364816, z: 0, w: 0.9848078}
-  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalRotation: {x: 0, y: 0.08715578, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 0, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 421476382305267707}
   m_Father: {fileID: 8880467886431035756}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 20, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 10, z: 0}
 --- !u!1 &595734794978009775
 GameObject:
   m_ObjectHideFlags: 0
@@ -54,14 +54,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 595734794978009775}
-  m_LocalRotation: {x: 0, y: -0.08715578, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalRotation: {x: 0, y: -0.043619405, z: 0, w: 0.9990483}
+  m_LocalPosition: {x: 0, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2522969578072728504}
   m_Father: {fileID: 8880467886431035756}
   m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: -10, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -5, z: 0}
 --- !u!1 &1576482608011855307
 GameObject:
   m_ObjectHideFlags: 0
@@ -309,34 +309,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faedbe193391217438e99925da59ab78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Id: 0
   shipStats: {fileID: 11400000, guid: a61232b41a212b549a5e00e07be2900b, type: 2}
+  Id: 0
+  Damage: 0
   FireRate: 0.4
   Speed: 0
   currentHealth: 0
-  Damage: 0
-  xpToLevel: 100
-  xp: 0
-  maxLevel: 0
-  level: 1
   ShieldEffect: {fileID: 4631850847236312010}
   ExplostionEffect: 0
   ItemCollectedEffect: {fileID: 3007297793833547213}
-  CanUsePowerUpItem: 0
-  Upgrades:
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  - 0
-  armorUpgrade: 0
-  SuperDamage: 0
-  SuperChargeTime: 0
-  MagnetPower: 0
-  MagnetDistance: 0
   Weapons:
   - {fileID: 1778837082014244703}
   - {fileID: 1778214364329783237}
@@ -344,7 +325,6 @@ MonoBehaviour:
   - {fileID: 1777964648407024379}
   - {fileID: 4981310371587863645}
   specialAttack: {fileID: 1561077663192792596}
-  PowerUpCollectAmmount: 0
 --- !u!1 &1817757145179737843
 GameObject:
   m_ObjectHideFlags: 0
@@ -863,6 +843,45 @@ MonoBehaviour:
   fireRate: 0
   damage: 0
   shipTransform: {fileID: 0}
+  playerData:
+    SurvivalScore: 0
+    SurvivalHighScore: 0
+    score: []
+    Score: []
+    HighScore: []
+    coins: 0
+    TotalKills: 0
+    LevelUnlocked: 0
+    TotalMoneySpend: 0
+    TotalSuperUsed: 0
+    WaveSurvived: 0
+    m_EnemyKilled: 0
+    GotHitInGame: 0
+    PlayedGame: 0
+    superUsed: 0
+    UnlockedHeroes: 
+    powerUpLevel: 0
+    powerPackCollected: 0
+    currentSelectedShip: 0
+    SFXVolume: 0
+    MusicVolume: 0
+    AutoAttack: 0
+    mute: 0
+    distance: 0
+    ListOfOnGoingObjectives: []
+    playerShipData: []
+  playerShipData:
+    MaxLevel: 20
+    level: 1
+    xp: 0
+    xpToLevel: 100
+    Upgrades: 0000000000000000000000000000000000000000000000000000000000000000
+    FireRate: 0
+    Speed: 0
+    SuperDamage: 0
+    SuperChargeTime: 0
+    MagnetPower: 0
+    MagnetDistance: 0
   superUsed: 0
   SpecialActive: 0
   superChargeTimer: 0
@@ -1132,7 +1151,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2003452866922566864}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalPosition: {x: 0, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3786457150049483079}
@@ -1162,14 +1181,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3390830964120808927}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalRotation: {x: 0, y: -0.08715578, z: 0, w: 0.9961947}
+  m_LocalPosition: {x: 0, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5632681586991828993}
   m_Father: {fileID: 8880467886431035756}
   m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -10, z: 0}
 --- !u!1 &4865738032780277631
 GameObject:
   m_ObjectHideFlags: 0
@@ -1229,14 +1248,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5885795044823284375}
-  m_LocalRotation: {x: 0, y: 0.08715578, z: 0, w: 0.9961947}
-  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalRotation: {x: 0, y: 0.043619405, z: 0, w: 0.9990483}
+  m_LocalPosition: {x: 0, y: 0, z: 4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 6800120206299656110}
   m_Father: {fileID: 8880467886431035756}
   m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 10, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 5, z: 0}
 --- !u!1001 &310229859043168272
 PrefabInstance:
   m_ObjectHideFlags: 0

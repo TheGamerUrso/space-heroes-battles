@@ -59,10 +59,10 @@ public class Constants
     //Android
     public static float m_TiltSpeed = 25f;
 
-    public static float m_XMax = 25;
-    public static float m_XMin = -25;
+    public static float m_XMax = 20;
+    public static float m_XMin = -20;
     public static float m_ZMax = 120;
-    public static float m_ZMin = -30;
+    public static float m_ZMin = -5;
 
     //Missions
     public static string KillObjectiveKey = "KillObjective1";
