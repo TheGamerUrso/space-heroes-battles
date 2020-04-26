@@ -186,13 +186,13 @@ public class PlayerShip : Ship, IDamagable
 
 
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             PlayerData playerData = PersistantData.GetPlayerData();
 
             if (playerData != null)
             {
-                playerData.IncreasePowerUp(.05f);
+                playerData.IncreasePowerUp(1);
             }
 
             PowerUpCollected();

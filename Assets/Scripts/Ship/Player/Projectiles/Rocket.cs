@@ -43,7 +43,7 @@ public class Rocket : PlayerProjectile
             shootDir = Vector3.forward;
         }
 
-        Debug.DrawRay(transform.position, shootDir, Color.red);
+        //Debug.DrawRay(transform.position, shootDir, Color.red);
 
         transform.Translate(shootDir * speed * Time.deltaTime, Space.World);
 
