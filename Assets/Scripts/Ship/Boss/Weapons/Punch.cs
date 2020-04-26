@@ -103,7 +103,7 @@ public class Punch : MonoBehaviour, IDamagable
     IEnumerator AttackCoroutine()
     {
         prepareToAttack.SetActive(true);
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(2.0f);
         animator.SetTrigger("Attack");      
         Attacked?.Invoke(true);
         yield return new WaitForSeconds(2.0f);
