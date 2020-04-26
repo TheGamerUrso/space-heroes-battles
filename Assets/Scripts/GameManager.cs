@@ -115,7 +115,14 @@ public class GameManager : Singleton<GameManager>
             SceneLoader.Instance.LoadLevel("Intro");
         }
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            PlayerData playerData = PersistantData.GetPlayerData();
+            playerData.AddCoin(999);
+        }
+    }
     private void InstantiateSystemPrefabs()
     {
         foreach (var systemPrefab in SystemPrefabs)

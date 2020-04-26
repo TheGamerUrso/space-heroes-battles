@@ -301,9 +301,9 @@ public class PlayerData
     public void AddCoin(int Ammount)
     {
         Coins += Ammount;
-        if (Coins > 9999)
+        if (Coins > 9999999)
         {
-            Coins = 9999;
+            Coins = 9999999;
         }
     }
     public PlayerShipData GetCurrentPlayerShipData(int selection)

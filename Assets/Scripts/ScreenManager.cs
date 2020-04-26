@@ -67,7 +67,8 @@ public class ScreenManager : MonoBehaviour
                     }
                     else if (DialogueManager.Instance.StoryWindowIsOpen() == false)
                     {
-                        ShipSelect.Instance.SelectShip(0);
+                        PlayerData playerData = PersistantData.GetPlayerData();
+                        ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
                         Close();
                     }
                 }
@@ -184,8 +185,15 @@ public class ScreenManager : MonoBehaviour
                 }
                 else
                 {
+                    if (item.Name.Equals("ShipSelect"))
+                    {
+                        PlayerData playerData = PersistantData.GetPlayerData();
+                        ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
+                    }
+
                     item.m_UIElement.Hide();
-                    OnScreenChanged?.Invoke(item.Name, false);
+                    OnScreenChanged?.Invoke(item.Name, false);      
+
                 }
             }
         }
@@ -214,6 +222,12 @@ public class ScreenManager : MonoBehaviour
                 {
                     if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
                         previousScreen = item.Name;
+                }
+
+                if (item.Name.Equals("ShipSelect"))
+                {
+                    PlayerData playerData = PersistantData.GetPlayerData();
+                    ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
                 }
 
                 item.m_UIElement.Hide();

@@ -61,6 +61,20 @@ public class ShipSelect : Singleton<ShipSelect>
     public void Unlock()
     {
         shipSelectElement[currentShip].Purchase();
+        SelectShip(currentShip);
+
+        PlayerData playerData = PersistantData.GetPlayerData();
+        int num = 0;
+        for (int i = 0; i < playerData.UnlockedHeroes.Length; i++)
+        {
+            if (playerData.UnlockedHeroes[i] == 1)
+            {
+                num++;
+            }
+        }
+
+        if (GooglePlayServicesManager.Instance)
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
     }
 
     public void SelectShip(int shipID)
@@ -93,19 +107,16 @@ public class ShipSelect : Singleton<ShipSelect>
         }
 
 
-        //   Ships[currentShip].SetActive(true);
-
+        //Ships[currentShip].SetActive(true);
         PlayerData playerData = PersistantData.GetPlayerData();
-        playerData.CurrrentSelectedShip = currentShip;
-
         if (playerData.UnlockedHeroes[currentShip] == 0)
         {
             UISelectButton.SetActive(false);
             UIUnlockButton.SetActive(true);
         }
         else if (playerData.UnlockedHeroes[currentShip] == 1)
-        {
-            playerData.currentSelectedShip = currentShip;
+        {    
+            playerData.CurrrentSelectedShip = currentShip;
         }
     }
 
