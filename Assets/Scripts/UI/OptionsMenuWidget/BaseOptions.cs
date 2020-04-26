@@ -125,6 +125,10 @@ public class BaseOptions : MonoBehaviour
     public void UpdateDistance()
     {
         PlayerData playerData = PersistantData.GetPlayerData();
+        if (playerData == null)
+        {
+            return;
+        }
         for (int i = 0; i < Distances.Length; i++)
         {
             if (Distances[i] == playerData.distance)

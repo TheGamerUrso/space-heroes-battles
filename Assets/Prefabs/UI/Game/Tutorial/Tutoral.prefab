@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 6181933560719282288}
+  - component: {fileID: 1540548220669403219}
   m_Layer: 0
   m_Name: TutorialContent
   m_TagString: Untagged
@@ -16,8 +16,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &6181933560719282288
-Transform:
+--- !u!224 &1540548220669403219
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -27,11 +27,16 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 1155719464833821499}
+  - {fileID: 755820282805376804}
   - {fileID: 1155719465298902357}
-  m_Father: {fileID: 1155719464663044818}
+  m_Father: {fileID: 5683119130056001521}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1155719463453160151
 GameObject:
   m_ObjectHideFlags: 0
@@ -2969,7 +2974,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1155719464663044818}
+  - component: {fileID: 5683119130056001521}
   - component: {fileID: 7571453289936520658}
   m_Layer: 0
   m_Name: Tutoral
@@ -2978,7 +2983,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1155719464663044818
+--- !u!4 &5683119130056001521
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2989,8 +2994,8 @@ Transform:
   m_LocalPosition: {x: -2048, y: -2048, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
-  - {fileID: 8408134043525761280}
-  - {fileID: 6181933560719282288}
+  - {fileID: 8845160693860700522}
+  - {fileID: 1540548220669403219}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3048,7 +3053,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1155719464833821499}
+  - component: {fileID: 755820282805376804}
   m_Layer: 5
   m_Name: Prefabs
   m_TagString: Untagged
@@ -3056,8 +3061,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1155719464833821499
-Transform:
+--- !u!224 &755820282805376804
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -3071,9 +3076,14 @@ Transform:
   - {fileID: 1159974784723638067}
   - {fileID: 1154918036600273986}
   - {fileID: 1160092210787695164}
-  m_Father: {fileID: 6181933560719282288}
+  m_Father: {fileID: 1540548220669403219}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1155719465136702848
 GameObject:
   m_ObjectHideFlags: 0
@@ -3261,7 +3271,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 3361761515126546726}
-  m_Father: {fileID: 6181933560719282288}
+  m_Father: {fileID: 1540548220669403219}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -4506,7 +4516,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8408134043525761280}
+  - component: {fileID: 8845160693860700522}
   - component: {fileID: 6545291321397575071}
   m_Layer: 5
   m_Name: TutorialCamera
@@ -4515,8 +4525,8 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &8408134043525761280
-RectTransform:
+--- !u!4 &8845160693860700522
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -4526,14 +4536,9 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: -3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1155719464663044818}
+  m_Father: {fileID: 5683119130056001521}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!20 &6545291321397575071
 Camera:
   m_ObjectHideFlags: 0
@@ -4655,7 +4660,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1155719464833821499}
+    m_TransformParent: {fileID: 755820282805376804}
     m_Modifications:
     - target: {fileID: -2902371998952344208, guid: 7f0c036ff2852c54aa4078d90eee6a33,
         type: 3}
@@ -4834,7 +4839,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1155719464833821499}
+    m_TransformParent: {fileID: 755820282805376804}
     m_Modifications:
     - target: {fileID: 1077384329036442, guid: 6a421a7816faab441b9d3b5f0421321f, type: 3}
       propertyPath: m_Layer
@@ -5038,7 +5043,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1155719464833821499}
+    m_TransformParent: {fileID: 755820282805376804}
     m_Modifications:
     - target: {fileID: 1115435271311730, guid: 94282afae2bc24d48932837c4f41a5fb, type: 3}
       propertyPath: m_Layer
@@ -5164,7 +5169,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
-    m_TransformParent: {fileID: 1155719464833821499}
+    m_TransformParent: {fileID: 755820282805376804}
     m_Modifications:
     - target: {fileID: 1334060960141496, guid: aaf5cd29a9a159941aa2daa4c08c0a9a, type: 3}
       propertyPath: m_Layer

@@ -129,11 +129,14 @@ public class GameManager : Singleton<GameManager>
     {
         Paused = value;
 
+        OnPauseGame?.Invoke(Paused);
+
         if (Paused)
         {
             Time.timeScale = 0;
             Time.fixedDeltaTime = 0;
             Paused = true;
+
         }
         else
         {
@@ -142,8 +145,6 @@ public class GameManager : Singleton<GameManager>
             Paused = false;
         }
 
-        OnPauseGame?.Invoke(Paused);
+    
     }
-
- 
 }

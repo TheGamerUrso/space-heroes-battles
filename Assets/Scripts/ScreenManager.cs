@@ -67,6 +67,7 @@ public class ScreenManager : MonoBehaviour
                     }
                     else if (DialogueManager.Instance.StoryWindowIsOpen() == false)
                     {
+                        ShipSelect.Instance.SelectShip(0);
                         Close();
                     }
                 }

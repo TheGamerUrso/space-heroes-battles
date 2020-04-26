@@ -66,6 +66,19 @@ public class ShipSelectElement : MonoBehaviour
         LockImage.gameObject.SetActive(Locked);
         CostText.gameObject.SetActive(false);
 
+        PlayerData playerData = PersistantData.GetPlayerData();
+
+        int num = 0;
+        for (int i = 0; i < playerData.UnlockedHeroes.Length; i++)
+        {
+            if (playerData.UnlockedHeroes[i] == 1)
+            {
+                num++;
+            }
+        }
+
+        if (GooglePlayServicesManager.Instance)
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
     }
 
     public void Purchase()
@@ -82,7 +95,7 @@ public class ShipSelectElement : MonoBehaviour
             }
             else
             {
-                Popup.Show(Popup.popupType.message, "Not Enough Coins", true);
+                Popup.Show(Popup.popupType.message, Constants.CannotAffordIt, true);
             }
         }
     }

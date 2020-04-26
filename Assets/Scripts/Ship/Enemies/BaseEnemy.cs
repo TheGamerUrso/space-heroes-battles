@@ -123,7 +123,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public override void OnAwake()
     {
-        SetStats(Level);
+        SetStats(1);
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();

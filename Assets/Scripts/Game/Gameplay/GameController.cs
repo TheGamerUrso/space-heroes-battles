@@ -17,12 +17,37 @@ public class GameController : Singleton<GameController>
 
     private SpawnEnemies spawn;
 
-    private float slowMo;
-    private float delayTheSlowMoEffectTimer;
+    private float delayTheSlowMoEffectTimer = .3f;
+    private float delay = 2;
 
+    private void OnApplicationFocus(bool focus)
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (!focus && GameSession.IsGameOver == false)
+            {
+                GameManager.Instance.PauseTheGame(focus);
+            }
+        }
+    }
+
+    private void OnApplicationPause(bool Paused)
+    {
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (GameSession.IsGameOver == false)
+            {
+                GameManager.Instance.PauseTheGame(Paused);
+            }
+        }
+    }
 
     protected override void OnAwake()
     {
+        /**
+         * Only For Editor
+         */
+
         for (int i = 0; i < SceneManager.sceneCount; i++)
         {
             if (SceneManager.GetSceneAt(i).name.Equals("boot"))
@@ -124,38 +149,32 @@ public class GameController : Singleton<GameController>
         }
     }
 
-    public void SetPlayerData()
-    {
-        playerData.Coins += 0;
-        playerData.TotalKills += 0;
-    }
-
     public void GameOver()
     {
         if (GameSession.IsGameOver == false)
         {
-            Time.timeScale = 1.0f;
-
             GameSession.IsGameOver = true;
-
-            spawn.GameOver();
-
-            playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-
-            SetPlayerData();
-
-            SaveSystem.SaveGame();
-
-            UpdateAchievements();
-
             StartCoroutine(DelayGameOver());
         }
     }
 
     IEnumerator DelayGameOver()
     {
-        yield return new WaitForSeconds(4.0f);
+        Time.timeScale = 1.0f;
+
+        spawn.GameOver();
+
+        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+
+        playerData.Coins += GameSession.CoinEarnInGame;
+        playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+
+        SaveSystem.SaveGame();
+
+        yield return new WaitForSeconds(2.0f);
+
         AudioManager.PlayMusic("GameOver", false);
+
         OnGameOver?.Invoke(this);
 
     }
@@ -164,13 +183,19 @@ public class GameController : Singleton<GameController>
         Time.timeScale = 1.0f;
 
         playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+  
+        playerData.Coins += GameSession.CoinEarnInGame;
+        playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+
         PlayerChallengesCheck();
 
         PlayerQuestCheck();
 
         UpdateAchievements();
 
-        yield return new WaitForSeconds(4.0f);
+        SaveSystem.SaveGame();
+
+        yield return new WaitForSeconds(2.0f);
 
         PlayerShip playerShip = PlayerManager.GetPlayer();
         playerShip.Exit();
@@ -198,9 +223,6 @@ public class GameController : Singleton<GameController>
     {
         int levelIndex = GameManager.LevelIndexSelected;
         playerData.SetScore(levelIndex, GameSession.score);
-        playerData.Coins += GameSession.CoinEarnInGame;
-        playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
-
         int levelSelected = (levelIndex + 1);
         var levelName = "Level" + levelSelected;
         var killed = GameSession.EnemySpawnInTotal * .9f;
@@ -249,15 +271,12 @@ public class GameController : Singleton<GameController>
             }
         }
 
-        if (num == 4)
+        if (GooglePlayServicesManager.Instance)
         {
-
-            if (GooglePlayServicesManager.Instance)
-            {
-                GooglePlayServicesManager.Instance.UnlockAchievement(GameManager.LevelIndexSelected);
-            }
-
+            GooglePlayServicesManager.Instance.UnlockAchievement(levelSelected);
         }
+
+
 #elif UNITY_EDITOR
      Debug.Log("UnlockAchievement"); 
 #endif
@@ -307,6 +326,28 @@ public class GameController : Singleton<GameController>
                     break;
                 default:
                     break;
+            }
+        }
+    }
+
+    private void Update()
+    {
+        if (delay > 0)
+        {
+            delay -= Time.deltaTime;
+        }
+        else
+        {
+            if (!GameSession.IsGameOver && !GameManager.Paused)
+            {
+                if (GameSession.useSloMo)
+                {
+                    Time.timeScale = delayTheSlowMoEffectTimer;
+                }
+                else if (!GameSession.useSloMo && Time.timeScale < 1)
+                {
+                    Time.timeScale = 1.0f;
+                }
             }
         }
     }
