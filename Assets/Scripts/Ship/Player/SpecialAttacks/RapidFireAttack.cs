@@ -99,17 +99,4 @@ public class RapidFireAttack : SpecialAttack
             ActivateSpecial();
         }
     }
-
-    public override void Shoot()
-    {
-        if (SpecialActive)
-        {
-            if (Time.time > newShot)
-            {
-
-
-            }
-        }
-    }
-
 }

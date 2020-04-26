@@ -58,12 +58,6 @@ public class ShipSelect : Singleton<ShipSelect>
         SelectShip(playerData.CurrrentSelectedShip);
     }
 
-    private void Start()
-    {
-        Initialize();
-        Refresh();
-    }
-
     public void Unlock()
     {
         shipSelectElement[currentShip].Purchase();
@@ -71,9 +65,7 @@ public class ShipSelect : Singleton<ShipSelect>
 
     public void SelectShip(int shipID)
     {    
-        currentShip = shipID;
-     
-
+        currentShip = shipID; 
         Refresh();
     }
 
