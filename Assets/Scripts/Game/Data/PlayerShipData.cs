@@ -34,7 +34,7 @@ public class PlayerShipData
     {
         get
         {
-            if (Upgrades[((int)UpgradeType.Shield - 1)] == 0)
+            if (Upgrades[(int)UpgradeType.Shield] == 0)
             {
                 return false;
             }
@@ -49,7 +49,7 @@ public class PlayerShipData
     {
         get
         {
-            if (Upgrades[(int)UpgradeType.ArmorUpgrade - 1] == 1)
+            if (Upgrades[(int)UpgradeType.ArmorUpgrade] == 1)
             {
                 return true;
             }
@@ -67,16 +67,16 @@ public class PlayerShipData
         level = 1;
         xp = 0;
         xpToLevel = 100;
-        Upgrades = new int[Enum.GetValues(typeof(UpgradeType)).Length - 1];
+        Upgrades = new int[Enum.GetValues(typeof(UpgradeType)).Length];
     }
 
-    public float GetSpeedUpgrade() { return Upgrades[0]; }
-    public float GetDamageUpgrade() { return Upgrades[1]; }
-    public float GetFireRateUpgrade() { return Upgrades[2]; }
-    public float GetMagnetDistanceUpgrade() { return Upgrades[3]; }
+    public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeType.Speed]; }
+    public float GetDamageUpgrade() { return Upgrades[(int)UpgradeType.Damage]; }
+    public float GetFireRateUpgrade() { return Upgrades[(int)UpgradeType.FireRate]; }
+    public float GetMagnetDistanceUpgrade() { return Upgrades[(int)UpgradeType.MagnetDistance]; }
     public float GetMagnetPower()
     {
-        return Upgrades[4];
+        return Upgrades[(int)UpgradeType.MagnetStrength];
     }
     public void SetUpgrades(int[] Upgrades)
     {

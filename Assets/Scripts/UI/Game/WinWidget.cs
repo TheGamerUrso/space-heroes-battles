@@ -18,7 +18,7 @@ public class WinWidget : MonoBehaviour
 
     public void ShowGameResult()
     {
-        string levelName = "Level" + (GameManager.LevelIndexSelected + 1);
+        levelName = "Level" + (GameManager.LevelIndexSelected + 1);
 
         playerData = PersistantData.GetPlayerData();
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
@@ -36,8 +36,6 @@ public class WinWidget : MonoBehaviour
         float score = GameSession.score;
         string scoreText = string.Format("{00:0000000000}", score);
         Score.text = scoreText;
-
-
 
         int ChallengeIndex = 0;
 

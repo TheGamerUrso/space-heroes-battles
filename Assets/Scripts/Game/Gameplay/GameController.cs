@@ -164,7 +164,7 @@ public class GameController : Singleton<GameController>
 
         spawn.GameOver();
 
-        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+        playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
 
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
@@ -182,7 +182,7 @@ public class GameController : Singleton<GameController>
     {
         Time.timeScale = 1.0f;
 
-        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+        playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
   
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;

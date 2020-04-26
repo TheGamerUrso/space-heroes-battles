@@ -12,7 +12,7 @@ public class ShopItemElement : UpgradeElement
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        level = playerShipData.Upgrades[(int)(upgradeData.upgradeType) - 1];
+        level = playerShipData.Upgrades[(int)upgradeData.upgradeType];
         cost = upgradeData.Cost;
         NammeText.text = upgradeData.upgradeType.ToString();
         CostText.text = cost.ToString();
@@ -29,7 +29,7 @@ public class ShopItemElement : UpgradeElement
 
     public override bool CheckAvailable()
     {
-        if (playerShipData.Upgrades[(int)(upgradeData.upgradeType) - 1] == 0)
+        if (playerShipData.Upgrades[(int)upgradeData.upgradeType] == 0)
         {
             return true;
         }
@@ -42,8 +42,9 @@ public class ShopItemElement : UpgradeElement
 
     public override void Upgrade()
     {
-        level = 1;
+        playerShipData.Upgrades[(int)upgradeData.upgradeType] = 1;
         CostText.text = Constants.OutOfStock;
+        RefreshUpgradeElement();
     }
 
 
@@ -51,7 +52,8 @@ public class ShopItemElement : UpgradeElement
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        level = playerShipData.Upgrades[((int)(upgradeData.upgradeType) - 1)];
+        int upgradeIndex = (int)upgradeData.upgradeType;
+        level = playerShipData.Upgrades[upgradeIndex];
 
         if (level == 1)
         {
