@@ -67,6 +67,7 @@ public class PauseMenuOptionScreen : BaseOptions
     public void Quit()
     {
         base.ExitAndSave();
+        Time.fixedDeltaTime = 0.02f;
         GuiManager.Instance.LoadMainMenu();
     }
 }

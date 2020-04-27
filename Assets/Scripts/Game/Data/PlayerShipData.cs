@@ -73,19 +73,17 @@ public class PlayerShipData
     public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeType.Speed]; }
     public float GetDamageUpgrade() { return Upgrades[(int)UpgradeType.Damage]; }
     public float GetFireRateUpgrade() { return Upgrades[(int)UpgradeType.FireRate]; }
-    public float GetMagnetDistanceUpgrade() { return Upgrades[(int)UpgradeType.MagnetDistance]; }
-    public float GetMagnetPower()
-    {
-        return Upgrades[(int)UpgradeType.MagnetStrength];
-    }
+
     public void SetUpgrades(int[] Upgrades)
     {
         this.Upgrades = Upgrades;
     }
+    
     public int[] GetUpgrades()
     {
         return Upgrades;
     }
+
     public float[] GetCalculatedUpgradeStats()
     {
         var GameControllerSpeedValue = Upgrades[(int)UpgradeType.Speed];
@@ -99,16 +97,19 @@ public class PlayerShipData
         var SpeedMultiplier = .1f * GameControllerSpeedValue;
         var DamageMultiplier = 1f * GameControllerDamageValue;
         var FireRateMultiplier = 0.01f * GameControllerFireRateValue;
-        var MagnetPowerMultiplier = 1f * GameControllerMagnetPowerValue;
-        var MagnetDistanceMultiplier = 1f * GameControllerActivtateDistanceValue;
-        var superTime = 0.1f * GameControllerSuperTime;
+        var MagnetPowerMultiplier = 10f * GameControllerMagnetPowerValue;
+        var MagnetDistanceMultiplier = 25f * GameControllerActivtateDistanceValue;
+        var superCooldown = 0.1f * GameControllerSuperTime;
         var superDamage = 1f * GameControllerSuperDamage;
 
+        //TODO PUT THE STATS IN THE RIGHT ORDER
         return new float[] {
             SpeedMultiplier,
-            DamageMultiplier,
             FireRateMultiplier,
+            DamageMultiplier,
+            superDamage,
+            superCooldown,
             MagnetPowerMultiplier,
-            MagnetDistanceMultiplier,superTime,superDamage};
+            MagnetDistanceMultiplier};
     }
 }
