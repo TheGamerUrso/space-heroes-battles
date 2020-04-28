@@ -114,7 +114,7 @@ public class LevelSelectScreen : MonoBehaviour
         if (level.ID.Contains("Survival"))
         {
             ScreenManager.Instance.Open("LevelDetailScreen");
-            GameManager.LevelIndexSelected = -1;
+            GameManager.LevelIndexSelected = 0;
             LevelDetailScreen.Instance.SetDetails(null, sprites[0]);
         }
         else

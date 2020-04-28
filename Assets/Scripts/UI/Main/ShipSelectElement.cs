@@ -71,6 +71,7 @@ public class ShipSelectElement : MonoBehaviour
                 Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
                 playerData.Coins -= shipSelectData.Cost;
                 playerData.UnlockedHeroes[ID] = 1;
+                SelectShip(ID);
                 Unlock();
             }
             else

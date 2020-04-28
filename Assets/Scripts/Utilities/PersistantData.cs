@@ -63,6 +63,7 @@ public static class PersistantData
         else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
+            playerData.AddCoin(9999999);
             SaveSystem.SaveGame();
         }
         GenerateLevelObjectiveData();
