@@ -181,7 +181,7 @@ public class GameController : Singleton<GameController>
     IEnumerator DelayWinScreen()
     {
         Time.timeScale = 1.0f;
-
+        playerData.PlayedGame = true;
         playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
   
         playerData.Coins += GameSession.CoinEarnInGame;
@@ -246,7 +246,7 @@ public class GameController : Singleton<GameController>
             playerData.EarnXP(30 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && playerData.GotHitInGame == false)
+        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && !playerData.GotHitInGame)
         {
             levelObjectiveDatas[2].completed = true;
             playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
@@ -286,7 +286,7 @@ public class GameController : Singleton<GameController>
 
     public void PlayerQuestCheck()
     {
-        playerData.PlayedGame = true;
+
 
         for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
         {
