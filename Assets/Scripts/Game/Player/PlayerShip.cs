@@ -499,9 +499,9 @@ public class PlayerShip : Ship, IDamagable
         Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
         playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeType.SuperrechargeTime];
         Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
-        playerShipData.MagnetPower = 10 + UpgradeStats[(int)UpgradeType.MagnetStrength];
+        playerShipData.MagnetPower = 1 * UpgradeStats[(int)UpgradeType.MagnetStrength];
         Debug.Log("MagnetPower: " + playerShipData.MagnetPower);
-        playerShipData.MagnetDistance = 25 + UpgradeStats[(int)UpgradeType.MagnetDistance];
+        playerShipData.MagnetDistance = 2.5f * UpgradeStats[(int)UpgradeType.MagnetDistance];
         Debug.Log("MagnetDistance: " + playerShipData.MagnetDistance);
 
     }

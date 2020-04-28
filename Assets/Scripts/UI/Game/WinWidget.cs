@@ -18,7 +18,7 @@ public class WinWidget : MonoBehaviour
 
     public void ShowGameResult()
     {
-        levelName = "Level" + (GameManager.LevelIndexSelected + 1);
+        levelName = "Level" + GameManager.LevelIndexSelected;
 
         playerData = PersistantData.GetPlayerData();
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);

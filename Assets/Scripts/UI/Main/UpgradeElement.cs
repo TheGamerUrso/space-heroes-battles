@@ -38,6 +38,7 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
     protected PlayerData playerData;
     protected PlayerShipData playerShipData;
     protected UpgradeManager upgradeManager;
+    private bool maxOut;
 
     private void OnEnable()
     {
@@ -48,6 +49,11 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
 
     public virtual bool CheckAvailable()
     {
+        if (upgradeData.CostPerLevel.Length - 1 <= level)
+        {
+            Popup.Show(Popup.popupType.message, Constants.UpgradeMaxedOut);
+            return false;
+        }
 
         if (playerShipData.level >= upgradeData.LevelRequirementPerLevel[level])
         {
@@ -88,6 +94,7 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
             CostText.text = Constants.UpgradeMaxedOut;
             NotAvailableImage.gameObject.SetActive(false);
             NotAvailbleText.gameObject.SetActive(false);
+            maxOut = true;
         }
         else
         {

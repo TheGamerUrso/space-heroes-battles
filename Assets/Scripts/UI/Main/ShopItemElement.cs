@@ -33,17 +33,20 @@ public class ShopItemElement : UpgradeElement
         {
             return true;
         }
-        else
+         else 
         {
-            Popup.Show(Popup.popupType.message, "Max Lvl Reached");
+            Popup.Show(Popup.popupType.message, "Owned Already");
         }
         return false;
     }
 
     public override void Upgrade()
     {
-        playerShipData.Upgrades[(int)upgradeData.upgradeType] = 1;
-        CostText.text = Constants.OutOfStock;
+        if (CheckAvailable())
+        {
+            playerShipData.Upgrades[(int)upgradeData.upgradeType] = 1;
+            CostText.text = Constants.OutOfStock;
+        }
         RefreshUpgradeElement();
     }
 

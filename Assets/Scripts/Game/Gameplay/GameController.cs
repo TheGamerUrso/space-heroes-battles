@@ -111,14 +111,16 @@ public class GameController : Singleton<GameController>
             levelDiffrence = 1;
         }
 
-        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-        playerData.EarnXP(XPEarned);
+        if (!GameSession.SurvivalMode)
+        {
+            float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+            playerData.EarnXP(XPEarned);
+        }
+
         playerData.PowerUpLevel += .025f;
 
-        GameSession.xpEarned = XPEarned;
 
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
-
         GameSession.CurrentEnemyKilled++;
         GameSession.enemyKilled++;
         GameSession.Score = score;
@@ -169,11 +171,8 @@ public class GameController : Singleton<GameController>
 
         GameSession.CoinEarnInGame = 0;
         GameSession.CurrentEnemyKilled = 0;
-        GameSession.xpEarned = 0;
 
         SaveSystem.SaveGame();
-
-    
 
         yield return new WaitForSeconds(2.0f);
 
@@ -187,15 +186,9 @@ public class GameController : Singleton<GameController>
         Time.timeScale = 1.0f;
         playerData.PlayedGame = true;
         playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
-  
+
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
-
-        while (GameSession.xpEarned > 0)
-        {
-            GameSession.xpEarned--;
-            playerData.EarnXP(GameSession.xpEarned);
-        }
 
         PlayerChallengesCheck();
 
@@ -218,7 +211,7 @@ public class GameController : Singleton<GameController>
     public void UnlockNextMission()
     {
         Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-        int missionsCompleted = 0;
+        int missionsCompleted = 1;
         foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
         {
             if (item.Value[0].completed == true)
@@ -233,12 +226,12 @@ public class GameController : Singleton<GameController>
     {
         int levelIndex = GameManager.LevelIndexSelected;
         playerData.SetScore(levelIndex, GameSession.score);
-        int levelSelected = (levelIndex + 1);
+        int levelSelected = levelIndex;
         var levelName = "Level" + levelSelected;
         var killed = GameSession.EnemySpawnInTotal * .9f;
         var collected = GameSession.EnemySpawnInTotal * .9f;
         var missionCollection = PersistantData.GetMissionCollection();
-        var mission = missionCollection.GetMission(levelSelected);
+        var mission = missionCollection.GetMission(levelSelected - 1);
 
         var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 

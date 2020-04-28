@@ -174,7 +174,7 @@ public class PlayerData
 
     public PlayerData(int number = 3)
     {
-        LevelUnlocked = 0;
+        LevelUnlocked = 1;
         Score = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         HighScore = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Coins = 0;
