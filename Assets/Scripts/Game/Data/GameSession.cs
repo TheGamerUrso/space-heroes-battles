@@ -127,8 +127,7 @@
     public static int enemyKilled;
     public static int enemyEscaped;
     public static bool SurvivalMode;
-
-
+    public static float xpEarned;
     public static bool Transmiting;
 
     public static void Reset()

@@ -39,11 +39,11 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
         currentMission = mission;
 
         ShowStoryButton.SetActive(true);
-
+            
         LevelDetailPreview.sprite = sprite;
         LevelDetailLevelTItle.text = currentMission.Title;
 
-        levelObjectiveDatas = Challanges["Level"+(currentMission.ID + 1)];
+        levelObjectiveDatas = Challanges["Level"+(currentMission.ID)];
 
         RefreshLevelObjectiveData();
     }

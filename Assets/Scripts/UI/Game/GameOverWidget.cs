@@ -39,8 +39,6 @@ public class GameOverWidget : MonoBehaviour
         }
 
         playerData = PersistantData.GetPlayerData();
-    
-
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
         StartCoroutine(ShowGameResults());

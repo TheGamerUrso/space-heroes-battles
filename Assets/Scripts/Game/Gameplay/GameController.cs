@@ -113,8 +113,9 @@ public class GameController : Singleton<GameController>
 
         float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
         playerData.EarnXP(XPEarned);
-        playerData.PowerUpLevel += .1f;
+        playerData.PowerUpLevel += .025f;
 
+        GameSession.xpEarned = XPEarned;
 
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
 
@@ -166,10 +167,13 @@ public class GameController : Singleton<GameController>
 
         playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
 
-        playerData.Coins += GameSession.CoinEarnInGame;
-        playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+        GameSession.CoinEarnInGame = 0;
+        GameSession.CurrentEnemyKilled = 0;
+        GameSession.xpEarned = 0;
 
         SaveSystem.SaveGame();
+
+    
 
         yield return new WaitForSeconds(2.0f);
 
@@ -186,6 +190,12 @@ public class GameController : Singleton<GameController>
   
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+
+        while (GameSession.xpEarned > 0)
+        {
+            GameSession.xpEarned--;
+            playerData.EarnXP(GameSession.xpEarned);
+        }
 
         PlayerChallengesCheck();
 
