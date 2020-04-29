@@ -16,13 +16,13 @@ public class PauseMenuOptionScreen : BaseOptions
     {
         base.InitializeOptions();
  
-        string levelName = "Level" + (GameManager.LevelIndexSelected+1);
+        string levelName = "Level" + GameManager.LevelIndexSelected;
 
         playerData = PersistantData.GetPlayerData();
         listOfMission = PersistantData.GetMissionCollection();
         if (listOfMission != null)
         {
-            mission = listOfMission.GetMission(GameManager.LevelIndexSelected);
+            mission = listOfMission.GetMission(GameManager.LevelIndexSelected - 1);
             MissionTitle.text = mission.Title;
             levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
             for (int i = 0; i < LevelObjectivesElements.Length; i++)
@@ -67,6 +67,7 @@ public class PauseMenuOptionScreen : BaseOptions
     public void Quit()
     {
         base.ExitAndSave();
+        Time.fixedDeltaTime = 0.02f;
         GuiManager.Instance.LoadMainMenu();
     }
 }

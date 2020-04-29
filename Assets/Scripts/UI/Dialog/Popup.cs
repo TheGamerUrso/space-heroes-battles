@@ -33,10 +33,6 @@ public class Popup : MonoBehaviour
         {
             popups[popupType].GetComponent<MessageDialog>().Enabled(true);
             popups[popupType].GetComponent<MessageDialog>().SetWidgetText(message);
-            if (autoClose)
-            {
-                popups[popupType].GetComponent<MessageDialog>().AutoClose();
-            }
         }
     }
 

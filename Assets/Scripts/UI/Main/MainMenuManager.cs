@@ -17,6 +17,9 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private PlayerShipData playerShipData;
     private PlayerData playerData;
+
+    public ShipSelect shipSelect;
+
     public void ShowLeaderboards()
     {
         GooglePlayServicesManager.Instance.ShowLeaderboards();
@@ -62,6 +65,8 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
         playerData.OnShipSelectValueChanged += OnShipSelectValueChanged;
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+
+        ShipSelect.Instance.Initialize();
     }
 
     public void LevelValueChanged(int lvl)

@@ -185,12 +185,12 @@ public class ProjectControllerWindow : EditorWindow
                 }
             }           
 
-            BriefingScreen briefingScreen = GameObject.FindObjectOfType<BriefingScreen>();
+            LevelSelectScreen levelSelectScreen = GameObject.FindObjectOfType<LevelSelectScreen>();
    
 
             playerData.LevelUnlocked = mission.ID+1;
 
-            briefingScreen.RefreshLevelElements();
+            levelSelectScreen.RefreshLevelElements();
 
             //GameObject.FindObjectOfType<BriefingScreen>().LevelElements[CompleteLevelIndex].GetComponent<LevelElement>().Refresh();
 

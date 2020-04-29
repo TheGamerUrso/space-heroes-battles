@@ -195,7 +195,7 @@ public class AudioManager : Singleton<AudioManager>
         {
             if (source == null)
             {
-                source = BackgroundMusic;
+                return;
             }
 
             if (usePitch)

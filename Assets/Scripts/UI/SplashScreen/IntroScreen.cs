@@ -19,10 +19,10 @@ public class IntroScreen : MonoBehaviour
         {
             if (SceneManager.GetSceneAt(i).name.Equals("boot"))
             {
-                Debug.Log("boot found skip");
+                //Debug.Log("boot found skip");
                 return;
             }
-            Debug.Log("Boot not found Loading");
+           // Debug.Log("Boot not found Loading");
             SceneManager.LoadScene("boot", LoadSceneMode.Additive);
 
         }

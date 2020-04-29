@@ -31,7 +31,7 @@ public class GameOverWidget : MonoBehaviour
             return;
         }
 
-        string levelName = "Level" + (GameManager.LevelIndexSelected + 1);
+        string levelName = "Level" + GameManager.LevelIndexSelected;
 
         if (levelName.Equals("Level0"))
         {
@@ -39,8 +39,6 @@ public class GameOverWidget : MonoBehaviour
         }
 
         playerData = PersistantData.GetPlayerData();
-    
-
         levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
         StartCoroutine(ShowGameResults());

@@ -80,7 +80,9 @@ public class PlayerShip : Ship, IDamagable
 
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        ShieldEffect.SetActive(playerShipData.HasShield);
+        HasShield = playerShipData.HasShield;
+
+        ShieldEffect.SetActive(HasShield);
 
         SetStats(playerShipData.level);
 
@@ -186,13 +188,13 @@ public class PlayerShip : Ship, IDamagable
 
 
 #if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.Q))
         {
             PlayerData playerData = PersistantData.GetPlayerData();
 
             if (playerData != null)
             {
-                playerData.IncreasePowerUp(.05f);
+                playerData.IncreasePowerUp(1);
             }
 
             PowerUpCollected();
@@ -384,7 +386,8 @@ public class PlayerShip : Ship, IDamagable
 
         if (CurrentWeapnType < 4)
         {
-            if (shipStats.CanUsePowerUpItem)            {
+            if (shipStats.CanUsePowerUpItem)
+            {
 
                 AudioManager.PlaySound(null, "Power", 3);
                 CurrentWeapnType++;
@@ -424,7 +427,7 @@ public class PlayerShip : Ship, IDamagable
         }
 
     }
-    
+
     public void PowerUpCollected()
     {
         if (playerData.powerPackCollected <= 5 && CurrentWeapnType < 4)
@@ -476,22 +479,32 @@ public class PlayerShip : Ship, IDamagable
     public override void SetStats(int level)
     {
         base.SetStats(level);
-
-        playerShipData.xpToLevel = 100 * Mathf.Pow(Level, 0.1f) *
-              Mathf.Pow(Level, 2) + Mathf.Pow(Level - 1, 4);
-
-        playerShipData.SuperDamage = level * shipStats.baseDamage;
-
-        playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown;
+        //Speed 0 
+        //FireRate 1
+        //Damage 2
+        //SuperDamage 3
+        //SuperCooldown 4
+        //MagnetStrength 5 
+        //MagnetDistance 6
+        //Shield
+        //Armor
 
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
 
-        Speed += UpgradeStats[0];
-        Damage += UpgradeStats[1];
-        FireRate -= UpgradeStats[2];
-        playerShipData.MagnetPower += UpgradeStats[3];
-        playerShipData.MagnetDistance += UpgradeStats[4];
-        playerShipData.SuperChargeTime += UpgradeStats[5];
-        playerShipData.SuperDamage += UpgradeStats[6];
+        Speed += UpgradeStats[(int)UpgradeType.Speed];
+        //Debug.Log("Speed:" + Speed);
+        Damage += UpgradeStats[(int)UpgradeType.Damage];
+        //Debug.Log("Damage: " + Damage);
+        FireRate -= UpgradeStats[(int)UpgradeType.FireRate];
+        //Debug.Log("FireRate: " + FireRate);
+        playerShipData.SuperDamage = (level * (shipStats.baseDamage + 1)) + UpgradeStats[(int)UpgradeType.SuperDamage];
+        //Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
+        playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeType.SuperrechargeTime];
+        //Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
+        playerShipData.MagnetPower = UpgradeStats[(int)UpgradeType.MagnetStrength];
+        //Debug.Log("MagnetPower: " + playerShipData.MagnetPower);
+        playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeType.MagnetDistance];
+        //Debug.Log("MagnetDistance: " + playerShipData.MagnetDistance);
+
     }
 }

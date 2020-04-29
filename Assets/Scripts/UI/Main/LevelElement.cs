@@ -44,7 +44,7 @@ public class LevelElement : MonoBehaviour
 
             button.onClick.AddListener(() =>
             {
-                Debug.Log("Pressed" + "Level " + level.mission.Level + " Button");
+                //Debug.Log("Pressed" + "Level " + level.mission.Level + " Button");
       
             });
         }
@@ -54,7 +54,7 @@ public class LevelElement : MonoBehaviour
 
             button.onClick.AddListener(() =>
             {
-                Debug.Log("Pressed" + "Survival Mode");
+               // Debug.Log("Pressed" + "Survival Mode");
             });
 
             NameText.color = normalColor;

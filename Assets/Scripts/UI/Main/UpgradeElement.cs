@@ -38,6 +38,7 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
     protected PlayerData playerData;
     protected PlayerShipData playerShipData;
     protected UpgradeManager upgradeManager;
+    private bool maxOut;
 
     private void OnEnable()
     {
@@ -48,6 +49,11 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
 
     public virtual bool CheckAvailable()
     {
+        if (upgradeData.CostPerLevel.Length - 1 <= level)
+        {
+            Popup.Show(Popup.popupType.message, Constants.UpgradeMaxedOut);
+            return false;
+        }
 
         if (playerShipData.level >= upgradeData.LevelRequirementPerLevel[level])
         {
@@ -60,10 +66,28 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
 
         return false;
     }
+    private void OnDestroy()
+    {
+        playerData.OnLevelValueChanged -= OnLevelChanged;
+        playerData.OnCoinValueChanged -= OnCoinValueChanged;
+    }
 
     private void Start()
     {
         InitUpgradeElement(UpgradeManager.Instance);
+
+        playerData.OnCoinValueChanged += OnCoinValueChanged;
+        playerData.OnLevelValueChanged += OnLevelChanged;
+    }
+
+    public void OnCoinValueChanged(int coins)
+    {
+        RefreshUpgradeElement();
+    }
+
+    public void OnLevelChanged(int level)
+    {
+        RefreshUpgradeElement();
     }
 
     public virtual void InitUpgradeElement(UpgradeManager upgradeManager)
@@ -73,8 +97,8 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
 
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-
-        level = playerShipData.Upgrades[(int)(upgradeData.upgradeType)];
+        int upgradeTypeIndex = (int)(upgradeData.upgradeType);
+        level = playerShipData.Upgrades[upgradeTypeIndex];
         cost = upgradeData.CostPerLevel[level];
 
         NammeText.text = upgradeData.upgradeType.ToString();
@@ -88,6 +112,7 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
             CostText.text = Constants.UpgradeMaxedOut;
             NotAvailableImage.gameObject.SetActive(false);
             NotAvailbleText.gameObject.SetActive(false);
+            maxOut = true;
         }
         else
         {
@@ -104,6 +129,7 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
         }
 
         level++;
+        playerData.SetUpgrade((int)(upgradeData.upgradeType), level);
     }
 
     public virtual void Purshase()

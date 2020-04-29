@@ -141,7 +141,7 @@ namespace TheGamerUrso
                     yield return waitForEndFrame;
 
                 }
-                System.GC.Collect();
+            
 
                 AsyncOperation ao = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
                 ao.completed += OnLoadOperationComplete;
@@ -153,8 +153,9 @@ namespace TheGamerUrso
                 if (ao == null)
                 {
                     Debug.LogError("[SceneController] Unable to load level" + levelName);
-
                 }
+
+                System.GC.Collect();
 
                 while (ao.isDone == false)
                 {

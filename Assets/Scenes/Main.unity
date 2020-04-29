@@ -1131,19 +1131,19 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 136737390529303443}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 2
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_TargetDisplay: 0
 --- !u!114 &1022
 MonoBehaviour:
@@ -11395,6 +11395,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PlayerXPText: {fileID: 614804660}
   PlayerLevelText: {fileID: 614804735}
+  shipSelect: {fileID: 136737390529303444}
 --- !u!114 &614804741
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11796,7 +11797,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 509.5151, y: 0}
+  m_AnchoredPosition: {x: 509.39627, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!224 &614805098
@@ -24973,10 +24974,10 @@ RectTransform:
   m_Father: {fileID: 1720762710695315556}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 501.0151, y: 0}
-  m_SizeDelta: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 500.89627, y: 0}
+  m_SizeDelta: {x: 386.8, y: 60.78}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2122043476190336889
 MonoBehaviour:
@@ -26704,18 +26705,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5838182597772665252}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 136737390529303444}
-        m_MethodName: Unlock
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &2961187961867170500
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30392,6 +30382,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720511242636797882, guid: 5b98857f0d2647c41b4474d07227b4ed,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720511242636797882, guid: 5b98857f0d2647c41b4474d07227b4ed,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5723879253108705073, guid: 5b98857f0d2647c41b4474d07227b4ed,
         type: 3}
@@ -36132,7 +36132,7 @@ PrefabInstance:
     - target: {fileID: 4046137001571571649, guid: 0c622863e84e96241941f05743c00246,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 484.5151
+      value: 484.39627
       objectReference: {fileID: 0}
     - target: {fileID: 4046137001571571649, guid: 0c622863e84e96241941f05743c00246,
         type: 3}
@@ -37666,13 +37666,13 @@ MonoBehaviour:
       AnimationType: 4
       Move:
         AnimationType: 4
-        Enabled: 1
+        Enabled: 0
         From: {x: 0, y: 0, z: 0}
         To: {x: 0, y: 0, z: 0}
-        By: {x: -25, y: 0, z: 0}
+        By: {x: 0, y: 0, z: 0}
         UseCustomFromAndTo: 0
-        Vibrato: 8
-        Elasticity: 0.5
+        Vibrato: 10
+        Elasticity: 1
         NumberOfLoops: -1
         LoopType: 1
         Direction: 0
@@ -37686,16 +37686,16 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.4
+        Duration: 1
       Rotate:
         AnimationType: 4
         Enabled: 0
         From: {x: 0, y: 0, z: 0}
         To: {x: 0, y: 0, z: 0}
-        By: {x: 0, y: 30, z: 0}
+        By: {x: 0, y: 0, z: 0}
         UseCustomFromAndTo: 0
-        Vibrato: 4
-        Elasticity: 0.5
+        Vibrato: 10
+        Elasticity: 1
         NumberOfLoops: -1
         LoopType: 1
         RotateMode: 1
@@ -37708,16 +37708,16 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.2
+        Duration: 1
       Scale:
         AnimationType: 4
-        Enabled: 1
+        Enabled: 0
         From: {x: 0, y: 0, z: 0}
         To: {x: 0, y: 0, z: 0}
-        By: {x: 0, y: 0.1, z: 0}
+        By: {x: 0, y: 0, z: 0}
         UseCustomFromAndTo: 0
-        Vibrato: 8
-        Elasticity: 0.5
+        Vibrato: 10
+        Elasticity: 1
         NumberOfLoops: -1
         LoopType: 1
         EaseType: 0
@@ -37728,13 +37728,13 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        StartDelay: 0.1
-        Duration: 0.3
+        StartDelay: 0
+        Duration: 1
       Fade:
         AnimationType: 4
         Enabled: 0
         From: 0
-        To: 1
+        To: 0
         By: 0.5
         UseCustomFromAndTo: 0
         NumberOfLoops: -1
@@ -44142,7 +44142,18 @@ MonoBehaviour:
         CustomSortingLayer: Default
       Event:
         m_PersistentCalls:
-          m_Calls: []
+          m_Calls:
+          - m_Target: {fileID: 136737390529303444}
+            m_MethodName: Unlock
+            m_Mode: 1
+            m_Arguments:
+              m_ObjectArgument: {fileID: 0}
+              m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+              m_IntArgument: 0
+              m_FloatArgument: 0
+              m_StringArgument: 
+              m_BoolArgument: 0
+            m_CallState: 2
       GameEvents: []
       SoundData:
         SoundSource: 0
@@ -44156,13 +44167,13 @@ MonoBehaviour:
       AnimationType: 4
       Move:
         AnimationType: 4
-        Enabled: 1
+        Enabled: 0
         From: {x: 0, y: 0, z: 0}
         To: {x: 0, y: 0, z: 0}
-        By: {x: -25, y: 0, z: 0}
+        By: {x: 0, y: 0, z: 0}
         UseCustomFromAndTo: 0
-        Vibrato: 8
-        Elasticity: 0.5
+        Vibrato: 10
+        Elasticity: 1
         NumberOfLoops: -1
         LoopType: 1
         Direction: 0
@@ -44176,16 +44187,16 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.4
+        Duration: 1
       Rotate:
         AnimationType: 4
         Enabled: 0
         From: {x: 0, y: 0, z: 0}
         To: {x: 0, y: 0, z: 0}
-        By: {x: 0, y: 30, z: 0}
+        By: {x: 0, y: 0, z: 0}
         UseCustomFromAndTo: 0
-        Vibrato: 4
-        Elasticity: 0.5
+        Vibrato: 10
+        Elasticity: 1
         NumberOfLoops: -1
         LoopType: 1
         RotateMode: 1
@@ -44198,16 +44209,16 @@ MonoBehaviour:
           m_PostInfinity: 2
           m_RotationOrder: 4
         StartDelay: 0
-        Duration: 0.2
+        Duration: 1
       Scale:
         AnimationType: 4
-        Enabled: 1
+        Enabled: 0
         From: {x: 0, y: 0, z: 0}
         To: {x: 0, y: 0, z: 0}
-        By: {x: 0, y: 0.1, z: 0}
+        By: {x: 0, y: 0, z: 0}
         UseCustomFromAndTo: 0
-        Vibrato: 8
-        Elasticity: 0.5
+        Vibrato: 10
+        Elasticity: 1
         NumberOfLoops: -1
         LoopType: 1
         EaseType: 0
@@ -44218,13 +44229,13 @@ MonoBehaviour:
           m_PreInfinity: 2
           m_PostInfinity: 2
           m_RotationOrder: 4
-        StartDelay: 0.1
-        Duration: 0.3
+        StartDelay: 0
+        Duration: 1
       Fade:
         AnimationType: 4
         Enabled: 0
         From: 0
-        To: 1
+        To: 0
         By: 0.5
         UseCustomFromAndTo: 0
         NumberOfLoops: -1
@@ -46495,8 +46506,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3463131292687442506}
   m_HandleRect: {fileID: 3895766557983815307}
   m_Direction: 2
-  m_Value: 1
-  m_Size: 0.47887588
+  m_Value: 0.9999999
+  m_Size: 0.47895077
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -48570,6 +48581,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6604542657013129952, guid: aa34abcccff0e17439f6949d8b3720f1,
+        type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6604542657013129952, guid: aa34abcccff0e17439f6949d8b3720f1,
+        type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 6751069576517173330, guid: aa34abcccff0e17439f6949d8b3720f1,
         type: 3}
@@ -51301,6 +51322,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2759008738509822123, guid: 5ee0dcbee6f1321439cee19a244faeba,
+        type: 3}
+      propertyPath: OnClick.OnTrigger.Event.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Toggle
       objectReference: {fileID: 0}
     - target: {fileID: 2983433673172785855, guid: 5ee0dcbee6f1321439cee19a244faeba,
         type: 3}

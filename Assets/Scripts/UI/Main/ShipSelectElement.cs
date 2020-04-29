@@ -33,12 +33,6 @@ public class ShipSelectElement : MonoBehaviour
     {
         PlayerData playerData = PersistantData.GetPlayerData();
 
-        if (playerData.UnlockedHeroes[0] > 0)
-        {
-            CostText.gameObject.SetActive(false);
-            return;
-        }
-
         int coins = playerData.Coins;
 
         if (coins >= shipSelectData.Cost)
@@ -65,20 +59,6 @@ public class ShipSelectElement : MonoBehaviour
         Locked = false;
         LockImage.gameObject.SetActive(Locked);
         CostText.gameObject.SetActive(false);
-
-        PlayerData playerData = PersistantData.GetPlayerData();
-
-        int num = 0;
-        for (int i = 0; i < playerData.UnlockedHeroes.Length; i++)
-        {
-            if (playerData.UnlockedHeroes[i] == 1)
-            {
-                num++;
-            }
-        }
-
-        if (GooglePlayServicesManager.Instance)
-            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
     }
 
     public void Purchase()
@@ -90,7 +70,8 @@ public class ShipSelectElement : MonoBehaviour
             {
                 Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
                 playerData.Coins -= shipSelectData.Cost;
-                playerData.UnlockedHeroes[playerData.currentSelectedShip] = 1;
+                playerData.UnlockedHeroes[ID] = 1;
+                SelectShip(ID);
                 Unlock();
             }
             else

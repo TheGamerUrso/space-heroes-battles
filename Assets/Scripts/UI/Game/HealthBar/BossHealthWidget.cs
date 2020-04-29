@@ -19,6 +19,13 @@ public class BossHealthWidget : EnemyHealthWidget
         Appear();
     }
 
+    private void LateUpdate()
+    {
+        if (GameSession.IsGameOver)
+        {
+            gameObject.SetActive(false);
+        }
+    }
     void Appear()
     {
         TweenParams tParams = new TweenParams().SetEase(Ease.Linear);

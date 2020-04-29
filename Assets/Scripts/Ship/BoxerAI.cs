@@ -45,7 +45,9 @@ public class BoxerAI : BaseBossEnemyAI
                     if (newList.Count > 0)
                     {
                         cooldown = UnityEngine.Random.Range(4, 8);
-                        newList[rand].Attack((x) => { attacking = x; Debug.Log("Punch" + attacking); });
+                        newList[rand].Attack((x) => { attacking = x;
+                            //Debug.Log("Punch" + attacking); 
+                        });
                     }
                 }
             }

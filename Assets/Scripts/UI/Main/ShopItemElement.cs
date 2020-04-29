@@ -9,11 +9,12 @@ public class ShopItemElement : UpgradeElement
         this.upgradeManager = upgradeManager;
         upgradeManager.SubscribePurchasable(this);
 
-        playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        level = playerShipData.Upgrades[(int)(upgradeData.upgradeType) - 1];
+        int upgradeTypeIndex = (int)(upgradeData.upgradeType);
+        level = playerShipData.Upgrades[upgradeTypeIndex];
         cost = upgradeData.Cost;
+
         NammeText.text = upgradeData.upgradeType.ToString();
         CostText.text = cost.ToString();
         UpgradeIcon.sprite = upgradeData.sprite;
@@ -29,21 +30,33 @@ public class ShopItemElement : UpgradeElement
 
     public override bool CheckAvailable()
     {
-        if (playerShipData.Upgrades[(int)(upgradeData.upgradeType) - 1] == 0)
+        if (playerShipData.Upgrades[(int)upgradeData.upgradeType] == 0)
         {
             return true;
         }
-        else
+         else 
         {
-            Popup.Show(Popup.popupType.message, "Max Lvl Reached");
+            Popup.Show(Popup.popupType.message, "Owned Already");
         }
         return false;
     }
 
-    public override void Upgrade()
+    public override void Purshase()
     {
-        level = 1;
-        CostText.text = Constants.OutOfStock;
+        if (CheckAvailable())
+        {
+            if (playerData.Coins < cost)
+            {
+                Popup.Show(Popup.popupType.message, Constants.CannotAffordIt);
+                return;
+            }
+
+            level = 1;
+            playerData.SetUpgrade((int)(upgradeData.upgradeType), level);
+            playerData.Coins -= cost;
+            CostText.text = Constants.OutOfStock;
+        }
+        OnPurchased?.Invoke(this);
     }
 
 
@@ -51,7 +64,8 @@ public class ShopItemElement : UpgradeElement
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        level = playerShipData.Upgrades[((int)(upgradeData.upgradeType) - 1)];
+        int upgradeIndex = (int)upgradeData.upgradeType;
+        level = playerShipData.Upgrades[upgradeIndex];
 
         if (level == 1)
         {

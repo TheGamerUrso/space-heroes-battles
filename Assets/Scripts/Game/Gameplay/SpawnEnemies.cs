@@ -84,12 +84,12 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         {
             if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
             {
-                Debug.Log("Gameplay Scene active");
+                // Debug.Log("Gameplay Scene active");
                 continue;
             }
-            Debug.Log("Not Gameplay Scene active");
+            //Debug.Log("Not Gameplay Scene active");
             MissionCollection missionCollection = PersistantData.GetMissionCollection();
-            Mission mission = missionCollection.GetMission(GameManager.LevelIndexSelected);
+            Mission mission = missionCollection.GetMission(GameManager.LevelIndexSelected - 1);
             LevelDifficulty = mission.Level;
 
         }
@@ -121,12 +121,15 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     IEnumerator Spawn()
     {
-        Debug.Log("Game Started");
+        // Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
         WaitForSeconds waitForSec = new WaitForSeconds(delay);
         WaitForSeconds waitForCooldown = new WaitForSeconds(cooldown);
         WaitForSeconds waitforOneSec = new WaitForSeconds(1);
         WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
+
+        var startingTotalEnemies = TotalEnemies;
+        bool IncomingDanger = false;
 
         while (!GameEnded)
         {
@@ -137,11 +140,29 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
             while (TotalEnemies > 0 && !GameEnded)
             {
+                float totalEnemiesPresetnage = (float)TotalEnemies / (float)startingTotalEnemies;
+                // Debug.Log(totalEnemiesPresetnage);
+                if (totalEnemiesPresetnage < .1f)
+                {
+                    if (HasBoss && !IncomingDanger)
+                    {
+                        IncomingDanger = true;
+                        GuiManager.PlayTrasmition(null, true);
+                    }
+                }
+
                 int randomNumb = 0;
 
                 availableEnemie = enemyElements.GetRange(0, availableEnemies);
-                tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene)).ToList();
+
+
                 var range = 0;
+                do
+                {
+                    tempList = availableEnemie.Where(
+       x => (x.currentNumberInScene < x.MaxNumberInScene && x.presentage > 0)).ToList();
+                    yield return null;
+                } while (tempList.Count == 0);
 
                 for (int i = 0; i < tempList.Count; i++)
                 {
@@ -172,44 +193,37 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
                 // randomNumb = UnityEngine.Random.Range(0, tempList.Count); 
 
-                int repeat = 1;
+                //int repeat = 1;
 
-                if (randomNumb == 0)
-                {
-                    repeat = UnityEngine.Random.Range(5, 8);
-                }
+                //if (randomNumb == 0)
+                //{
+                //    repeat = UnityEngine.Random.Range(5, 8);
+                //}
 
-                for (int i = 0; i < repeat; i++)
+                //for (int i = 0; i < repeat; i++)
+                //{
+                if (TotalEnemies - 1 >= 0)
                 {
-                    if (TotalEnemies - 1 >= 0)
-                    {
-                        SpawnEnemyElement(enemyElement);
-                    }
-                    yield return waitForSec;
+                    SpawnEnemyElement(enemyElement);
                 }
+                //}
 
                 yield return waitForCooldown;
             }
 
             if (playerShip.currentHealth > 0)
             {
-                if (HasBoss)
-                    GuiManager.PlayTrasmition(null, true);
-
-                yield return waitForCooldown;
-
                 while (Enemies.Count > 0)
                 {
                     yield return waitForCooldown;
                 }
-
 
                 if (HasBoss)
                 {
                     if (!BossBattleInitiated)
                     {
                         BossBattleInitiated = true;
-                        Debug.Log("Boss Battle");
+                        //Debug.Log("Boss Battle");
 
                         SpawnBoss();
                     }
@@ -292,13 +306,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         TotalEnemies--;
 
         EnemyDied?.Invoke(baseEnemy);
-
-        int rand = UnityEngine.Random.Range(4, 8);
-
-        for (int i = 0; i < rand; i++)
-        {
-            DropController.PickRandomDropItem(baseEnemy.transform);
-        }
 
         BossBattleInitiated = false;
         GameEnded = true;

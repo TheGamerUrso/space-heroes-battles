@@ -140,7 +140,7 @@ public class BriefingScreen : MonoBehaviour
 
             RefreshLevelObjectiveData();
             ShowStoryButton.SetActive(true);
-            currentMission = PersistantData.GetMission(level.mission.ID);
+            currentMission = PersistantData.GetMission(level.mission.ID-1);
             LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
             LevelDetailLevelTItle.text = currentMission.Title;
             SetMission(currentMission);
@@ -150,7 +150,7 @@ public class BriefingScreen : MonoBehaviour
 
     public string GetStory(int missionIndex)
     {
-        currentMission = PersistantData.GetMission(missionIndex);
+        currentMission = PersistantData.GetMission(missionIndex-1);
         return currentMission.Description;
     }
 

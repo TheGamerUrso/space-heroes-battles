@@ -43,7 +43,7 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
         LevelDetailPreview.sprite = sprite;
         LevelDetailLevelTItle.text = currentMission.Title;
 
-        levelObjectiveDatas = Challanges["Level"+(currentMission.ID + 1)];
+        levelObjectiveDatas = Challanges["Level" + (currentMission.ID)];
 
         RefreshLevelObjectiveData();
     }
@@ -70,7 +70,7 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
     public void PlayGame()
     {
         var levelIndex = GameManager.LevelIndexSelected;
-        var levelName = string.Format("Level" + (levelIndex + 1));
+        var levelName = string.Format("Level" + levelIndex);
         SceneLoader.Instance.LoadScene(levelName);
     }
 

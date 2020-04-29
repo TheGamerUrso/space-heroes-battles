@@ -16,12 +16,12 @@ public static class PersistantData
     public static void Load()
     {
         SaveSystem.LoadGame();
-       
+
     }
 
     public static void Save()
     {
-       SaveSystem.SaveGame();
+        SaveSystem.SaveGame();
     }
 
     public static void LoadData()
@@ -49,7 +49,7 @@ public static class PersistantData
                 playerData.distance);
 
             Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-            int missionsCompleted = 0;
+            int missionsCompleted = 1;
             foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
             {
                 if (item.Value[0].completed == true)
@@ -63,6 +63,7 @@ public static class PersistantData
         else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
+            playerData.AddCoin(9999999);
             SaveSystem.SaveGame();
         }
         GenerateLevelObjectiveData();
@@ -108,7 +109,7 @@ public static class PersistantData
     {
         if (playerData.ListOfLevelChallenges.Count == 0)
         {
-            for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length - 1; i++)
+            for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length; i++)
             {
                 int size = LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length;
                 LevelObjectiveData[] objectiveListData = new LevelObjectiveData[size];

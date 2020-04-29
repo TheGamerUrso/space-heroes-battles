@@ -8,12 +8,13 @@ public class ShipStats : ScriptableObject
     /**
      * Base Attributes
      */
-    public float baseDamage;
     public float baseHealth;
-    public float baseFireRate;
-    public float baseSpecialCountdown;
 
     public float baseSpeed;
+    public float baseFireRate;
+    public float baseDamage;
+    public float baseSpecialCountdown;
+    public float baseSuperDamage;
 
     public bool CanUsePowerUpItem;
 

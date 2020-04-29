@@ -140,10 +140,8 @@ public abstract class Ship : MonoBehaviour
         Damage = Level * shipStats.baseDamage;
 
         FireRate = shipStats.baseFireRate;
-
-
-     
     }
+
     public virtual void Heal(float ammount)
     {
         CurrentHealth += ammount;

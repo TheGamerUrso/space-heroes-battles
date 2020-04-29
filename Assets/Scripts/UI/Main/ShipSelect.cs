@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using Doozy.Engine.UI;
+using UnityEngine;
 
 [System.Serializable]
 public class ShipEventArgs : System.EventArgs
@@ -54,39 +56,35 @@ public class ShipSelect : Singleton<ShipSelect>
         GameEventSystem.OnShipSelect += SelectShip;
 
         playerData.CurrrentSelectedShip = currentShip;
-
-        SelectShip(playerData.CurrrentSelectedShip);
-    }
-
-    private void Start()
-    {
-        Initialize();
-        Refresh();
+        RefreshShipTexture();
     }
 
     public void Unlock()
     {
         shipSelectElement[currentShip].Purchase();
+
+        PlayerData playerData = PersistantData.GetPlayerData();
+        int num = 0;
+        for (int i = 0; i < playerData.UnlockedHeroes.Length; i++)
+        {
+            if (playerData.UnlockedHeroes[i] == 1)
+            {
+                num++;
+            }
+        }
+
+        if (GooglePlayServicesManager.Instance)
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num);
     }
 
     public void SelectShip(int shipID)
-    {    
+    {
         currentShip = shipID;
-     
-
         Refresh();
     }
 
-    public void Refresh()
+    public void RefreshShipTexture()
     {
-        UISelectButton.SetActive(true);
-        UIUnlockButton.SetActive(false);
-
-       // foreach (GameObject item in Ships)
-       // {
-      //      item.SetActive(false);
-      //  }
-
         if (currentShip == 0)
         {
             shipCameraPreview.cullingMask = Ship1Layermask;
@@ -95,26 +93,49 @@ public class ShipSelect : Singleton<ShipSelect>
         {
             shipCameraPreview.cullingMask = Ship2Layermask;
         }
-        else if(currentShip == 2)
+        else if (currentShip == 2)
         {
             shipCameraPreview.cullingMask = Ship3Layermask;
         }
+    }
 
+    public void Refresh()
+    {
+        StartCoroutine(DelayEnableSelectButton());
 
-        //   Ships[currentShip].SetActive(true);
+        // foreach (GameObject item in Ships)
+        // {
+        //      item.SetActive(false);
+        //  }
 
+        RefreshShipTexture();
+
+        //Ships[currentShip].SetActive(true);
         PlayerData playerData = PersistantData.GetPlayerData();
-        playerData.CurrrentSelectedShip = currentShip;
-
         if (playerData.UnlockedHeroes[currentShip] == 0)
         {
-            UISelectButton.SetActive(false);
-            UIUnlockButton.SetActive(true);
+            StartCoroutine(DelayEnableUnlockButton());
         }
         else if (playerData.UnlockedHeroes[currentShip] == 1)
         {
-            playerData.currentSelectedShip = currentShip;
+            playerData.CurrrentSelectedShip = currentShip;
         }
+    }
+
+    IEnumerator DelayEnableSelectButton()
+    {
+        yield return new WaitForEndOfFrame();
+        UISelectButton.SetActive(true);
+        UIUnlockButton.SetActive(false);
+
+    }
+
+    IEnumerator DelayEnableUnlockButton()
+    {
+        yield return new WaitForEndOfFrame();
+        UISelectButton.SetActive(false);
+        UIUnlockButton.SetActive(true);
+        
     }
 
     public void DoneSelect()

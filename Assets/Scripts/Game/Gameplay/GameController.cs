@@ -52,10 +52,10 @@ public class GameController : Singleton<GameController>
         {
             if (SceneManager.GetSceneAt(i).name.Equals("boot"))
             {
-                Debug.Log("boot found skip");
+              //  Debug.Log("boot found skip");
                 return;
             }
-            Debug.Log("Boot not found Loading");
+           // Debug.Log("Boot not found Loading");
             SceneManager.LoadScene("boot", LoadSceneMode.Additive);
         }
     }
@@ -102,6 +102,7 @@ public class GameController : Singleton<GameController>
 
     private void EnemyDied(BaseEnemy baseEnemy)
     {
+        
         int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
         int EnemyLevel = baseEnemy.Level;
         int levelDiffrence = PlayerLevel / EnemyLevel;
@@ -111,13 +112,16 @@ public class GameController : Singleton<GameController>
             levelDiffrence = 1;
         }
 
-        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-        playerData.EarnXP(XPEarned);
-        playerData.PowerUpLevel += .1f;
+        if (!GameSession.SurvivalMode)
+        {
+            float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+            playerData.EarnXP(XPEarned);
+        }
+
+        playerData.PowerUpLevel += .025f;
 
 
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
-
         GameSession.CurrentEnemyKilled++;
         GameSession.enemyKilled++;
         GameSession.Score = score;
@@ -164,10 +168,10 @@ public class GameController : Singleton<GameController>
 
         spawn.GameOver();
 
-        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
+        playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
 
-        playerData.Coins += GameSession.CoinEarnInGame;
-        playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+        GameSession.CoinEarnInGame = 0;
+        GameSession.CurrentEnemyKilled = 0;
 
         SaveSystem.SaveGame();
 
@@ -181,9 +185,9 @@ public class GameController : Singleton<GameController>
     IEnumerator DelayWinScreen()
     {
         Time.timeScale = 1.0f;
+        playerData.PlayedGame = true;
+        playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
 
-        playerShipData.Upgrades[((int)UpgradeType.Shield - 1)] = 0;
-  
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
 
@@ -208,7 +212,7 @@ public class GameController : Singleton<GameController>
     public void UnlockNextMission()
     {
         Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-        int missionsCompleted = 0;
+        int missionsCompleted = 1;
         foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
         {
             if (item.Value[0].completed == true)
@@ -223,12 +227,12 @@ public class GameController : Singleton<GameController>
     {
         int levelIndex = GameManager.LevelIndexSelected;
         playerData.SetScore(levelIndex, GameSession.score);
-        int levelSelected = (levelIndex + 1);
+        int levelSelected = levelIndex;
         var levelName = "Level" + levelSelected;
         var killed = GameSession.EnemySpawnInTotal * .9f;
         var collected = GameSession.EnemySpawnInTotal * .9f;
         var missionCollection = PersistantData.GetMissionCollection();
-        var mission = missionCollection.GetMission(levelSelected);
+        var mission = missionCollection.GetMission(levelSelected - 1);
 
         var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
@@ -246,7 +250,7 @@ public class GameController : Singleton<GameController>
             playerData.EarnXP(30 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && playerData.GotHitInGame == false)
+        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && !playerData.GotHitInGame)
         {
             levelObjectiveDatas[2].completed = true;
             playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
@@ -286,7 +290,7 @@ public class GameController : Singleton<GameController>
 
     public void PlayerQuestCheck()
     {
-        playerData.PlayedGame = true;
+
 
         for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
         {

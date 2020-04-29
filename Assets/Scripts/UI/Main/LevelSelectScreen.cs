@@ -55,7 +55,7 @@ public class LevelSelectScreen : MonoBehaviour
         missionCollection = PersistantData.GetMissionCollection();
         Challanges = playerData.GetListOfObjectives();
 
-        int missionsCompleted = 0;
+        int missionsCompleted = 1;
 
         foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
         {
@@ -114,14 +114,14 @@ public class LevelSelectScreen : MonoBehaviour
         if (level.ID.Contains("Survival"))
         {
             ScreenManager.Instance.Open("LevelDetailScreen");
-            GameManager.LevelIndexSelected = -1;
+            GameManager.LevelIndexSelected = 0;
             LevelDetailScreen.Instance.SetDetails(null, sprites[0]);
         }
         else
         {
 
             GameManager.LevelIndexSelected = level.mission.ID;
-            currentMission = PersistantData.GetMission(level.mission.ID);
+            currentMission = PersistantData.GetMission(level.mission.ID - 1);
             SetMission(currentMission);
 
             LevelDetailScreen.Instance.SetDetails(currentMission, sprites[currentMission.SpriteID]);
@@ -133,7 +133,7 @@ public class LevelSelectScreen : MonoBehaviour
 
     public string GetStory(int missionIndex)
     {
-        currentMission = PersistantData.GetMission(missionIndex);
+        currentMission = PersistantData.GetMission(missionIndex-1);
         return currentMission.Description;
     }
 

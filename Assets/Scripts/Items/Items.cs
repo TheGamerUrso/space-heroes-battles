@@ -51,10 +51,10 @@ public class Items : MonoBehaviour
 
         if (itemData.m_RewardAmount > 0)
         {
-            if (playerShipData.GetMagnetPower() > 0)
+            if (playerShipData.MagnetPower> 0)
             {
-                magnetPower = 10 + playerShipData.GetMagnetPower();
-                magnetDistance = 25 + playerShipData.GetMagnetDistanceUpgrade();
+                magnetPower = playerShipData.MagnetPower;
+                magnetDistance = playerShipData.MagnetDistance;
             }
         }
 

@@ -19,10 +19,10 @@ public class SurvivalMode : SpawnEnemies
         {
             if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
             {
-                Debug.Log("Gameplay Scene active");
+                //  Debug.Log("Gameplay Scene active");
                 continue;
             }
-            Debug.Log("Not Gameplay Scene active");
+            //Debug.Log("Not Gameplay Scene active");
         }
 
         LevelDifficulty = 1;
@@ -44,18 +44,18 @@ public class SurvivalMode : SpawnEnemies
 
         StartCoroutine(Endless());
     }
-
+    private bool IncomingDanger = false;
     public void NewWave()
     {
         waves++;
 
         HasBoss = false;
 
+        var startingTotalEnemies = TotalEnemies;
+        IncomingDanger = false;
+
         if (waves > 0 && waves % 2 == 0)
         {
-
-
-
             availableEnemies++;
 
             if (availableEnemies > enemyElements.Count)
@@ -77,15 +77,18 @@ public class SurvivalMode : SpawnEnemies
 
     IEnumerator Endless()
     {
-        Debug.Log("Game Started");
+        //Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
         WaitForSeconds waitForSec = new WaitForSeconds(delay);
         WaitForSeconds waitForCooldown = new WaitForSeconds(cooldown);
         WaitForSeconds waitforOneSec = new WaitForSeconds(1);
         WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
 
+        var startingTotalEnemies = TotalEnemies;
+
         while (!GameEnded)
         {
+
             while (GuiManager.Instance.IsTrasnmiting())
             {
                 yield return waitForEndOfFrame;
@@ -93,6 +96,17 @@ public class SurvivalMode : SpawnEnemies
 
             while (TotalEnemies > 0 && !GameEnded)
             {
+                var totalEnemiesPresetnage = startingTotalEnemies / TotalEnemies;
+
+                if (totalEnemiesPresetnage < .5f)
+                {
+                    if (HasBoss && !IncomingDanger)
+                    {
+                        IncomingDanger = true;
+                        GuiManager.PlayTrasmition(null, true);
+                    }
+                }
+
                 int randomNumb = 0;
 
                 availableEnemie = enemyElements.GetRange(0, availableEnemies);
@@ -128,21 +142,20 @@ public class SurvivalMode : SpawnEnemies
 
                 // randomNumb = UnityEngine.Random.Range(0, tempList.Count); 
 
-                int repeat = 1;
+                //int repeat = 1;
 
-                if (randomNumb == 0)
-                {
-                    repeat = UnityEngine.Random.Range(5, 8);
-                }
+                //if (randomNumb == 0)
+                //{
+                //    repeat = UnityEngine.Random.Range(5, 8);
+                //}
 
-                for (int i = 0; i < repeat; i++)
+                //for (int i = 0; i < repeat; i++)
+                //{
+                if (TotalEnemies - 1 >= 0)
                 {
-                    if (TotalEnemies - 1 >= 0)
-                    {
-                        SpawnEnemyElement(enemyElement);
-                    }
-                    yield return waitForSec;
+                    SpawnEnemyElement(enemyElement);
                 }
+                //}
 
                 yield return waitForCooldown;
 
@@ -165,7 +178,7 @@ public class SurvivalMode : SpawnEnemies
                 {
                     BossBattleInitiated = true;
 
-                    Debug.Log("Boss Battle");
+                    // Debug.Log("Boss Battle");
                     SpawnBoss();
                 }
 
@@ -180,7 +193,7 @@ public class SurvivalMode : SpawnEnemies
                 while (active)
                 {
                     active = OnWaveEnded();
-                    Debug.Log(active);
+                    // Debug.Log(active);
                     yield return null;
                 }
 

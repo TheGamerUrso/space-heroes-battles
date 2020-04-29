@@ -124,6 +124,9 @@ public class Punch : MonoBehaviour, IDamagable
                 GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
                 explostion.transform.position = transform.position;
                 fireEffect.SetActive(true);
+
+                PlayerData playerData = PersistantData.GetPlayerData();
+                playerData.PowerUpLevel += .025f;
             }
    
         }

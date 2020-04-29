@@ -34,7 +34,7 @@ public class PlayerShipData
     {
         get
         {
-            if (Upgrades[((int)UpgradeType.Shield - 1)] == 0)
+            if (Upgrades[(int)UpgradeType.Shield] == 0)
             {
                 return false;
             }
@@ -49,7 +49,7 @@ public class PlayerShipData
     {
         get
         {
-            if (Upgrades[(int)UpgradeType.ArmorUpgrade - 1] == 1)
+            if (Upgrades[(int)UpgradeType.ArmorUpgrade] == 1)
             {
                 return true;
             }
@@ -67,25 +67,23 @@ public class PlayerShipData
         level = 1;
         xp = 0;
         xpToLevel = 100;
-        Upgrades = new int[Enum.GetValues(typeof(UpgradeType)).Length - 1];
+        Upgrades = new int[Enum.GetValues(typeof(UpgradeType)).Length];
     }
 
-    public float GetSpeedUpgrade() { return Upgrades[0]; }
-    public float GetDamageUpgrade() { return Upgrades[1]; }
-    public float GetFireRateUpgrade() { return Upgrades[2]; }
-    public float GetMagnetDistanceUpgrade() { return Upgrades[3]; }
-    public float GetMagnetPower()
-    {
-        return Upgrades[4];
-    }
+    public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeType.Speed]; }
+    public float GetDamageUpgrade() { return Upgrades[(int)UpgradeType.Damage]; }
+    public float GetFireRateUpgrade() { return Upgrades[(int)UpgradeType.FireRate]; }
+
     public void SetUpgrades(int[] Upgrades)
     {
         this.Upgrades = Upgrades;
     }
+    
     public int[] GetUpgrades()
     {
         return Upgrades;
     }
+
     public float[] GetCalculatedUpgradeStats()
     {
         var GameControllerSpeedValue = Upgrades[(int)UpgradeType.Speed];
@@ -99,16 +97,19 @@ public class PlayerShipData
         var SpeedMultiplier = .1f * GameControllerSpeedValue;
         var DamageMultiplier = 1f * GameControllerDamageValue;
         var FireRateMultiplier = 0.01f * GameControllerFireRateValue;
-        var MagnetPowerMultiplier = 1f * GameControllerMagnetPowerValue;
-        var MagnetDistanceMultiplier = 1f * GameControllerActivtateDistanceValue;
-        var superTime = 0.1f * GameControllerSuperTime;
+        var MagnetPowerMultiplier = 3 * GameControllerMagnetPowerValue;
+        var MagnetDistanceMultiplier = 2 * GameControllerActivtateDistanceValue;
+        var superCooldown = 0.1f * GameControllerSuperTime;
         var superDamage = 1f * GameControllerSuperDamage;
 
+        //TODO PUT THE STATS IN THE RIGHT ORDER
         return new float[] {
             SpeedMultiplier,
-            DamageMultiplier,
             FireRateMultiplier,
+            DamageMultiplier,
+            superDamage,
+            superCooldown,
             MagnetPowerMultiplier,
-            MagnetDistanceMultiplier,superTime,superDamage};
+            MagnetDistanceMultiplier};
     }
 }

@@ -26,7 +26,7 @@ public class DialogueManager : MonoBehaviour
     public void Open()
     {
    
-        Mission mission = PersistantData.GetMission(currentMission);
+        Mission mission = PersistantData.GetMission(currentMission - 1);
         ConversationWidget.GetComponent<ConversationWidget>().SetStory(mission.Description);
 
         ConversationWidget.Show();

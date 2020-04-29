@@ -35,7 +35,7 @@ public class EnemyHealthWidget : BaseHealthWidget
                     Punch shipAccesory = monoGO.GetComponent<Punch>();
                     if (shipAccesory != null)
                     {
-                        Debug.Log("shipAccesory not found");
+                     //   Debug.Log("shipAccesory not found");
                         shipAccesory.OnHealthChanged += UpdateHealthBar;
                         Target = ship;
                     }

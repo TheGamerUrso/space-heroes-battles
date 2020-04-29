@@ -67,10 +67,10 @@ public class GameManager : Singleton<GameManager>
 
     protected override void OnAwake()
     {
-        Debug.Log("Loading Data"); 
+       // Debug.Log("Loading Data"); 
         PersistantData.LoadData();
 
-        Debug.Log("Set up Players");
+       // Debug.Log("Set up Players");
         PlayerManager pm = new PlayerManager(this, GameManager.Instance);
         pm.LoadPlayerSettings();
 
@@ -107,15 +107,22 @@ public class GameManager : Singleton<GameManager>
     {
         if (SceneManager.sceneCount > 1)
         {
-            Debug.Log("boot found skip");
+           // Debug.Log("boot found skip");
         }
         else if (SceneManager.sceneCount <= 1)
         {
-            Debug.Log("Continue");
+            //Debug.Log("Continue");
             SceneLoader.Instance.LoadLevel("Intro");
         }
     }
-
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            PlayerData playerData = PersistantData.GetPlayerData();
+            playerData.AddCoin(999);
+        }
+    }
     private void InstantiateSystemPrefabs()
     {
         foreach (var systemPrefab in SystemPrefabs)
