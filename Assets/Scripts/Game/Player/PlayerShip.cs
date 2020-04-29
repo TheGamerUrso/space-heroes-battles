@@ -490,19 +490,19 @@ public class PlayerShip : Ship, IDamagable
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
 
         Speed += UpgradeStats[(int)UpgradeType.Speed];
-        Debug.Log("Speed:" + Speed);
+        //Debug.Log("Speed:" + Speed);
         Damage += UpgradeStats[(int)UpgradeType.Damage];
-        Debug.Log("Damage: " + Damage);
+        //Debug.Log("Damage: " + Damage);
         FireRate -= UpgradeStats[(int)UpgradeType.FireRate];
-        Debug.Log("FireRate: " + FireRate);
-        playerShipData.SuperDamage = (level * shipStats.baseDamage / 2) + UpgradeStats[(int)UpgradeType.SuperDamage];
-        Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
+        //Debug.Log("FireRate: " + FireRate);
+        playerShipData.SuperDamage = (level * (shipStats.baseDamage + 1)) + UpgradeStats[(int)UpgradeType.SuperDamage];
+        //Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
         playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeType.SuperrechargeTime];
-        Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
-        playerShipData.MagnetPower = 1 * UpgradeStats[(int)UpgradeType.MagnetStrength];
-        Debug.Log("MagnetPower: " + playerShipData.MagnetPower);
-        playerShipData.MagnetDistance = 2.5f * UpgradeStats[(int)UpgradeType.MagnetDistance];
-        Debug.Log("MagnetDistance: " + playerShipData.MagnetDistance);
+        //Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
+        playerShipData.MagnetPower = .25f * UpgradeStats[(int)UpgradeType.MagnetStrength];
+        //Debug.Log("MagnetPower: " + playerShipData.MagnetPower);
+        playerShipData.MagnetDistance = .5f * UpgradeStats[(int)UpgradeType.MagnetDistance];
+        //Debug.Log("MagnetDistance: " + playerShipData.MagnetDistance);
 
     }
 }

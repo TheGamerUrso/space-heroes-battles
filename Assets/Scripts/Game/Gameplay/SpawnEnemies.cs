@@ -84,10 +84,10 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         {
             if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
             {
-                Debug.Log("Gameplay Scene active");
+               // Debug.Log("Gameplay Scene active");
                 continue;
             }
-            Debug.Log("Not Gameplay Scene active");
+            //Debug.Log("Not Gameplay Scene active");
             MissionCollection missionCollection = PersistantData.GetMissionCollection();
             Mission mission = missionCollection.GetMission(GameManager.LevelIndexSelected - 1);
             LevelDifficulty = mission.Level;
@@ -121,7 +121,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     IEnumerator Spawn()
     {
-        Debug.Log("Game Started");
+       // Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
         WaitForSeconds waitForSec = new WaitForSeconds(delay);
         WaitForSeconds waitForCooldown = new WaitForSeconds(cooldown);
@@ -209,7 +209,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                     if (!BossBattleInitiated)
                     {
                         BossBattleInitiated = true;
-                        Debug.Log("Boss Battle");
+                        //Debug.Log("Boss Battle");
 
                         SpawnBoss();
                     }

@@ -19,10 +19,10 @@ public class SurvivalMode : SpawnEnemies
         {
             if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
             {
-                Debug.Log("Gameplay Scene active");
+              //  Debug.Log("Gameplay Scene active");
                 continue;
             }
-            Debug.Log("Not Gameplay Scene active");
+            //Debug.Log("Not Gameplay Scene active");
         }
 
         LevelDifficulty = 1;
@@ -77,7 +77,7 @@ public class SurvivalMode : SpawnEnemies
 
     IEnumerator Endless()
     {
-        Debug.Log("Game Started");
+        //Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
         WaitForSeconds waitForSec = new WaitForSeconds(delay);
         WaitForSeconds waitForCooldown = new WaitForSeconds(cooldown);
@@ -165,7 +165,7 @@ public class SurvivalMode : SpawnEnemies
                 {
                     BossBattleInitiated = true;
 
-                    Debug.Log("Boss Battle");
+                   // Debug.Log("Boss Battle");
                     SpawnBoss();
                 }
 
@@ -180,7 +180,7 @@ public class SurvivalMode : SpawnEnemies
                 while (active)
                 {
                     active = OnWaveEnded();
-                    Debug.Log(active);
+                   // Debug.Log(active);
                     yield return null;
                 }
 
