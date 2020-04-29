@@ -97,8 +97,8 @@ public class PlayerShipData
         var SpeedMultiplier = .1f * GameControllerSpeedValue;
         var DamageMultiplier = 1f * GameControllerDamageValue;
         var FireRateMultiplier = 0.01f * GameControllerFireRateValue;
-        var MagnetPowerMultiplier = 10f * GameControllerMagnetPowerValue;
-        var MagnetDistanceMultiplier = 25f * GameControllerActivtateDistanceValue;
+        var MagnetPowerMultiplier = 3 * GameControllerMagnetPowerValue;
+        var MagnetDistanceMultiplier = 2 * GameControllerActivtateDistanceValue;
         var superCooldown = 0.1f * GameControllerSuperTime;
         var superDamage = 1f * GameControllerSuperDamage;
 

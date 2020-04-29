@@ -9,11 +9,12 @@ public class ShopItemElement : UpgradeElement
         this.upgradeManager = upgradeManager;
         upgradeManager.SubscribePurchasable(this);
 
-        playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        level = playerShipData.Upgrades[(int)upgradeData.upgradeType];
+        int upgradeTypeIndex = (int)(upgradeData.upgradeType);
+        level = playerShipData.Upgrades[upgradeTypeIndex];
         cost = upgradeData.Cost;
+
         NammeText.text = upgradeData.upgradeType.ToString();
         CostText.text = cost.ToString();
         UpgradeIcon.sprite = upgradeData.sprite;
@@ -40,14 +41,22 @@ public class ShopItemElement : UpgradeElement
         return false;
     }
 
-    public override void Upgrade()
+    public override void Purshase()
     {
         if (CheckAvailable())
         {
-            playerShipData.Upgrades[(int)upgradeData.upgradeType] = 1;
+            if (playerData.Coins < cost)
+            {
+                Popup.Show(Popup.popupType.message, Constants.CannotAffordIt);
+                return;
+            }
+
+            level = 1;
+            playerData.SetUpgrade((int)(upgradeData.upgradeType), level);
+            playerData.Coins -= cost;
             CostText.text = Constants.OutOfStock;
         }
-        RefreshUpgradeElement();
+        OnPurchased?.Invoke(this);
     }
 
 

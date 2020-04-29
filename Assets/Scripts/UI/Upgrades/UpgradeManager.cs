@@ -56,15 +56,6 @@ public class UpgradeManager : Singleton<UpgradeManager>
             objectiveData.UpdateProgress(progress);
         }
 
-        if (upgradeElement.upgradeData.MaxLevel > 0)
-        {
-            playerData.SetUpgrade((int)(upgradeElement.upgradeData.upgradeType), upgradeElement.Level);
-        }
-        else if (upgradeElement.upgradeData.MaxLevel == 0)
-        {
-            playerData.SetUpgrade((int)(upgradeElement.upgradeData.upgradeType - 1), upgradeElement.Level);
-        }
-
         Notify();
     }
 

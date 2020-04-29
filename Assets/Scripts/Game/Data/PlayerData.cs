@@ -318,20 +318,19 @@ public class PlayerData
 
     public void EarnXP(float ammount)
     {
-        PlayerShipData playerShipData1 = playerShipData[currentSelectedShip];
-        if (Level < playerShipData1.MaxLevel)
+        PlayerShipData currentPlayerShipSelected = playerShipData[currentSelectedShip];
+        if (Level < currentPlayerShipSelected.MaxLevel)
         {
             XP += ammount;
-            if (XP >= playerShipData1.xpToLevel)
+            if (XP >= currentPlayerShipSelected.xpToLevel)
             {
                 Level++;
                 XP = 0;
-                playerShipData1.xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
+                currentPlayerShipSelected.xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
             }
         }
         else
         {
-            Level = playerShipData1.MaxLevel;
             XP = 0;
         }
     }

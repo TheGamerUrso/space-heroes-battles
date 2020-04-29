@@ -69,6 +69,8 @@ public class ScreenManager : MonoBehaviour
                     {
                         PlayerData playerData = PersistantData.GetPlayerData();
                         ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
+
+
                         Close();
                     }
                 }
@@ -185,7 +187,7 @@ public class ScreenManager : MonoBehaviour
                 }
                 else
                 {
-                    if (item.Name.Equals("ShipSelect"))
+                    if (item.Name.Equals("ShipSelect") && item.m_UIElement.IsVisible)
                     {
                         PlayerData playerData = PersistantData.GetPlayerData();
                         ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
@@ -224,7 +226,7 @@ public class ScreenManager : MonoBehaviour
                         previousScreen = item.Name;
                 }
 
-                if (item.Name.Equals("ShipSelect"))
+                if (item.Name.Equals("ShipSelect") && item.m_UIElement.IsVisible)
                 {
                     PlayerData playerData = PersistantData.GetPlayerData();
                     ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);

@@ -80,7 +80,9 @@ public class PlayerShip : Ship, IDamagable
 
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        ShieldEffect.SetActive(playerShipData.HasShield);
+        HasShield = playerShipData.HasShield;
+
+        ShieldEffect.SetActive(HasShield);
 
         SetStats(playerShipData.level);
 
@@ -499,9 +501,9 @@ public class PlayerShip : Ship, IDamagable
         //Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
         playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeType.SuperrechargeTime];
         //Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
-        playerShipData.MagnetPower = .25f * UpgradeStats[(int)UpgradeType.MagnetStrength];
+        playerShipData.MagnetPower = UpgradeStats[(int)UpgradeType.MagnetStrength];
         //Debug.Log("MagnetPower: " + playerShipData.MagnetPower);
-        playerShipData.MagnetDistance = .5f * UpgradeStats[(int)UpgradeType.MagnetDistance];
+        playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeType.MagnetDistance];
         //Debug.Log("MagnetDistance: " + playerShipData.MagnetDistance);
 
     }
