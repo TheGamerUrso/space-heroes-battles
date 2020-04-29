@@ -141,7 +141,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             while (TotalEnemies > 0 && !GameEnded)
             {
                 float totalEnemiesPresetnage = (float)TotalEnemies / (float)startingTotalEnemies;
-               // Debug.Log(totalEnemiesPresetnage);
+                // Debug.Log(totalEnemiesPresetnage);
                 if (totalEnemiesPresetnage < .1f)
                 {
                     if (HasBoss && !IncomingDanger)
@@ -154,8 +154,15 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
                 int randomNumb = 0;
 
                 availableEnemie = enemyElements.GetRange(0, availableEnemies);
-                tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene)).ToList();
+
+
                 var range = 0;
+                do
+                {
+                    tempList = availableEnemie.Where(
+       x => (x.currentNumberInScene < x.MaxNumberInScene && x.presentage > 0)).ToList();
+                    yield return null;
+                } while (tempList.Count == 0);
 
                 for (int i = 0; i < tempList.Count; i++)
                 {
