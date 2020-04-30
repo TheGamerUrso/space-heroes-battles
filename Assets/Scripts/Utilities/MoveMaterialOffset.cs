@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MoveMaterialOffset : MonoBehaviour {
+    public enum Move { Y,X,Both}
+    public Move move;
+
     private string offsetKey = "_MainTex";
     [SerializeField] private float scrollSpeed = 0.5F;
     [SerializeField] private float xScrollSpeed = 0;
@@ -24,16 +27,44 @@ public class MoveMaterialOffset : MonoBehaviour {
 
     void Update()
     {
-        if (sinMove == false)
+        switch (move)
         {
-            offset += scrollSpeed * Time.deltaTime;
-            offXset += xScrollSpeed * Time.deltaTime;
+            case Move.Y:
+                if (sinMove == false)
+                {
+                    offXset += xScrollSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    offXset = Mathf.Sin(Time.time * frequently) * magnitute;
+                }
+                break;
+            case Move.X:
+                if (sinMove == false)
+                {
+                    offset += scrollSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    offset = Mathf.Sin(Time.time * frequently) * magnitute;
+                }
+                break;
+            case Move.Both:
+                if (sinMove == false)
+                {
+                    offset += scrollSpeed * Time.deltaTime;
+                    offXset += xScrollSpeed * Time.deltaTime;
+                }
+                else
+                {
+                    offset = Mathf.Sin(Time.time * frequently) * magnitute;
+                    offXset = Mathf.Sin(Time.time * frequently) * magnitute;
+                }
+                break;
+            default:
+                break;
         }
-        else
-        {
-            offset = Mathf.Sin(Time.time * frequently) * magnitute;
-            offXset = Mathf.Sin(Time.time * frequently) * magnitute;
-        }
+  
 
         rend.material.SetTextureOffset(offsetKey, new Vector2(offXset, offset));
     }

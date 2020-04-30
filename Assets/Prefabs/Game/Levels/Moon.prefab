@@ -11,11 +11,9 @@ GameObject:
   - component: {fileID: 6999360163327418754}
   - component: {fileID: 6999360163327418752}
   - component: {fileID: 6999360163327418753}
-  - component: {fileID: 5490069830649463725}
-  - component: {fileID: 2032620705238865856}
-  - component: {fileID: 6730948618286325871}
+  - component: {fileID: 781810967417613316}
   m_Layer: 10
-  m_Name: Plane
+  m_Name: Moon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +27,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6999360163327418755}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -250, z: -600}
+  m_LocalPosition: {x: 0, y: -100, z: 0}
   m_LocalScale: {x: 60, y: 1, z: 60}
   m_Children: []
   m_Father: {fileID: 0}
@@ -81,7 +79,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!114 &5490069830649463725
+--- !u!114 &781810967417613316
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -90,40 +88,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 6999360163327418755}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ea60e9e20c0f4cb46a37d46a6da3037c, type: 3}
+  m_Script: {fileID: 11500000, guid: 4dc41bef7ba88ee429df17ebaa09c51e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rigid: {fileID: 6730948618286325871}
-  boxCollider: {fileID: 2032620705238865856}
-  verticalSize: 0
-  speed: 25
-  MovementDelay: 0.03
---- !u!65 &2032620705238865856
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6999360163327418755}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 10, y: 2.220446e-16, z: 10}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &6730948618286325871
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6999360163327418755}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  move: 1
+  scrollSpeed: -0.1
+  xScrollSpeed: 0
+  offset: 0
+  offXset: 0
+  sinMove: 0
+  frequently: 0
+  magnitute: 0

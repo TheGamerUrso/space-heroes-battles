@@ -270,7 +270,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
     protected void SpawnEnemyElement(EnemyElement enemyElement)
     {
         enemyElement.currentNumberInScene++;
-        Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), -50, Constants.m_ZMax);
+        Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), 0, Constants.m_ZMax);
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
         BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
         FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
