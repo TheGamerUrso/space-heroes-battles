@@ -60,9 +60,9 @@ public class PlayerWeapon : WeaponScript
 
             if (Application.platform == RuntimePlatform.WindowsEditor)
             {
-                holdFire = Input.GetMouseButton(1) || CrossPlatformInputManager.GetButton("Fire2");
+                holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
-                if (!holdFire && Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
+                if (!holdFire && Input.GetMouseButton(0))
                 {
                     Shoot();
                 }
@@ -72,7 +72,8 @@ public class PlayerWeapon : WeaponScript
 
     public override void Shoot()
     {
-        if (holdFire)
+
+        if (holdFire || !GameSession.CanFire)
         {
             return;
         }

@@ -52,10 +52,10 @@ public class GameController : Singleton<GameController>
         {
             if (SceneManager.GetSceneAt(i).name.Equals("boot"))
             {
-              //  Debug.Log("boot found skip");
+                //  Debug.Log("boot found skip");
                 return;
             }
-           // Debug.Log("Boot not found Loading");
+            // Debug.Log("Boot not found Loading");
             SceneManager.LoadScene("boot", LoadSceneMode.Additive);
         }
     }
@@ -102,7 +102,7 @@ public class GameController : Singleton<GameController>
 
     private void EnemyDied(BaseEnemy baseEnemy)
     {
-        
+
         int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
         int EnemyLevel = baseEnemy.Level;
         int levelDiffrence = PlayerLevel / EnemyLevel;
@@ -220,6 +220,22 @@ public class GameController : Singleton<GameController>
                 missionsCompleted++;
             }
         }
+        int levelIndex = GameManager.LevelIndexSelected;
+#if UNITY_ANDROID
+        if (GooglePlayServicesManager.Instance)
+        {
+            GooglePlayServicesManager.Instance.UnlockAchievement(levelIndex);
+        }
+#elif UNITY_EDITOR
+     Debug.Log("UnlockAchievement"); 
+#endif
+        if (missionsCompleted > 9)
+        {
+            if (!playerData.SurvivalUnlocked)
+            {
+                playerData.SurvivalUnlocked = true;
+            }
+        }
         playerData.LevelUnlocked = missionsCompleted;
     }
 
@@ -227,12 +243,11 @@ public class GameController : Singleton<GameController>
     {
         int levelIndex = GameManager.LevelIndexSelected;
         playerData.SetScore(levelIndex, GameSession.score);
-        int levelSelected = levelIndex;
-        var levelName = "Level" + levelSelected;
+        var levelName = "Level" + levelIndex;
         var killed = GameSession.EnemySpawnInTotal * .9f;
         var collected = GameSession.EnemySpawnInTotal * .9f;
         var missionCollection = PersistantData.GetMissionCollection();
-        var mission = missionCollection.GetMission(levelSelected - 1);
+        var mission = missionCollection.GetMission(levelIndex - 1);
 
         var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 
@@ -263,27 +278,6 @@ public class GameController : Singleton<GameController>
             levelObjectiveDatas[3].completed = true;
             playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
         }
-
-#if UNITY_ANDROID
-        int num = 0;
-
-        for (int i = 0; i < levelObjectiveDatas.Length; i++)
-        {
-            if (levelObjectiveDatas[i].completed)
-            {
-                num++;
-            }
-        }
-
-        if (GooglePlayServicesManager.Instance)
-        {
-            GooglePlayServicesManager.Instance.UnlockAchievement(levelSelected);
-        }
-
-
-#elif UNITY_EDITOR
-     Debug.Log("UnlockAchievement"); 
-#endif
 
         UnlockNextMission();
     }

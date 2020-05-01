@@ -114,33 +114,33 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
                     achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
                     break;
                 case 2:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_1_Completed;
                     break;
 
                 case 3:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_2_Completed;
                     break;
 
                 case 4:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_3_Completed;
                     break;
 
                 case 5:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_4_Completed;
                     break;
 
                 case 6:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_5_Completed;
                     break;
                 case 7:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_6_Completed;
                     break;
                 case 8:
 
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_7_Completed;
                     break;
                 case 9:
-                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Prologue_Completed;
+                    achievementToUnlock = EasyMobile.EM_GameServicesConstants.Achievement_Level_8_Completed;
                     break;
                 default:
                     break;
