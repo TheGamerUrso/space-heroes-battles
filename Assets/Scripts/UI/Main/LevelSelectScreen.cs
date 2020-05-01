@@ -76,7 +76,9 @@ public class LevelSelectScreen : MonoBehaviour
     {
         LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
 
-        var level = new Level("Survival", null, null, true, false);
+        bool surivalLocked = playerData.SurvivalUnlocked;
+
+        var level = new Level("Survival", null, null, surivalLocked, surivalLocked);
 
         var levelElement = LevelElementGO.GetComponent<LevelElement>();
 
@@ -133,7 +135,7 @@ public class LevelSelectScreen : MonoBehaviour
 
     public string GetStory(int missionIndex)
     {
-        currentMission = PersistantData.GetMission(missionIndex-1);
+        currentMission = PersistantData.GetMission(missionIndex - 1);
         return currentMission.Description;
     }
 

@@ -67,11 +67,23 @@ public class MainMenuManager : Singleton<MainMenuManager>
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
 
         ShipSelect.Instance.Initialize();
+        if (PlayerPrefs.HasKey("SurvivalMode"))
+        {
+            if (playerData.SurvivalUnlocked)
+            {
+                int announceModUnlocked = PlayerPrefs.GetInt("SurvivalMode");
+                if (announceModUnlocked == 0)
+                {
+                    PlayerPrefs.SetInt("SurvivalMode", 1);
+                    Popup.Show(Popup.popupType.error, "Survival Mode Unlocked", false);
+                }
+            }
+        }
     }
 
     public void LevelValueChanged(int lvl)
     {
-        PlayerLevelText.text = string.Format("{0}",lvl);
+        PlayerLevelText.text = string.Format("{0}", lvl);
 
     }
 

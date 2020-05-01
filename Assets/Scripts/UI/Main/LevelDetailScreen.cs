@@ -14,6 +14,7 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
     private Mission currentMission;
     public LevelObjectivesElement[] levelObjectivesElement;
     private LevelObjectiveData[] levelObjectiveDatas;
+    public GameObject survivalHighscore;
     private PlayerData playerData;
     private Dictionary<string, LevelObjectiveData[]> Challanges;
 
@@ -24,18 +25,20 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
 
         if (Challanges == null)
             Challanges = playerData.GetListOfObjectives();
+
+        survivalHighscore.SetActive(false);
     }
 
     public void SetDetails(Mission mission, Sprite sprite)
     {
-
         if (mission == null)
         {
             LevelDetailLevelTItle.text = "Survival";
+            survivalHighscore.SetActive(true);
             HideLevelObjectives();
             return;
         }
-
+        survivalHighscore.SetActive(false);
         currentMission = mission;
 
         ShowStoryButton.SetActive(true);

@@ -131,9 +131,12 @@
 
     public static bool Transmiting;
 
+    public static bool CanFire = true;
+
     public static void Reset()
     {
         IsGameOver = false;
+        CanFire = true;
         score = 0;
         WaveSurvived = 0;
         currentEnemyKilled = 0;
