@@ -35,11 +35,13 @@ public static class PersistantData
         if (PlayerPrefs.HasKey("FirstRun"))
         {
             firstRunIndex = PlayerPrefs.GetInt("FirstRun");
+        
         }
 
         if (firstRunIndex == 1)
         {
             SaveSystem.LoadGame();
+
 
             GameSettings.Initialize(
                 playerData.SFXVolume,
@@ -63,6 +65,7 @@ public static class PersistantData
         else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
+            PlayerPrefs.SetInt("SurvivalMode", 0);
             playerData.AddCoin(9999999);
             SaveSystem.SaveGame();
         }

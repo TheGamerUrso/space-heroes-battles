@@ -26,6 +26,7 @@ public class PlayerShipData
 
 
     public float SuperDamage;
+    public float LaserDamage;
     public float SuperChargeTime;
     public float MagnetPower;
     public float MagnetDistance;

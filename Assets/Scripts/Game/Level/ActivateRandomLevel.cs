@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class ActivateRandomLevel : MonoBehaviour
 {
-
+    public Camera cameraMain;
     public GameObject WrapTunnelFX;
     public Image Fade;
     public TextMeshProUGUI text;
@@ -26,11 +26,17 @@ public class ActivateRandomLevel : MonoBehaviour
     public float speed = 0.5f;
     public int previousLevelLoaded;
 
+    public LightMapSwitcher lightMapSwitcher;
+
+    public LayerMask defaultLayer;
+    public LayerMask hyperspaceLayer;
+
     private void Start()
     {
+        cameraMain = Camera.main;
         survivalMode = GameObject.FindObjectOfType<SurvivalMode>();
         survivalMode.OnWaveEnded = ActivateHyperdrive;
-
+        defaultLayer = cameraMain.cullingMask;
         ChooseNewLevel();
     }
 
@@ -53,6 +59,12 @@ public class ActivateRandomLevel : MonoBehaviour
 
     private void Update()
     {
+
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            ActivateHyperdrive();
+        }
+
         if (fadeIn)
         {
             c = Fade.color;
@@ -88,7 +100,7 @@ public class ActivateRandomLevel : MonoBehaviour
         {
             yield return null;
         }
-
+        cameraMain.cullingMask = hyperspaceLayer;
         fadeIn = false;
 
         c = Fade.color;
@@ -99,10 +111,16 @@ public class ActivateRandomLevel : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
+        Asteroids[] asteroids = GameObject.FindObjectsOfType<Asteroids>();
+        for (int i = 0; i < asteroids.Length; i++)
+        {
+            asteroids[i].gameObject.SetActive(false);
+        }
+
         ChooseNewLevel();
 
         yield return new WaitForSeconds(1.0f);
-
+        cameraMain.cullingMask = defaultLayer;
         WrapTunnelFX.SetActive(false);
         active = false;
         //Debug.Log("Done");
@@ -118,6 +136,9 @@ public class ActivateRandomLevel : MonoBehaviour
         int randLevel = 0;
         randLevel = Random.Range(0, levels.Length);
         levels[randLevel].SetActive(true);
+
+
+        lightMapSwitcher.SetLevelLightmap(levels[randLevel].name);
     }
 
 }

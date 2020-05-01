@@ -21,7 +21,7 @@ public class SimpleShipControls : MonoBehaviour
     private Touch currentTouch;
     private Vector2 currentTouchPos;
 
-    private float yMove = -50;
+    private float yMove = 0;
 
     public float movementSensitivity = .1f;
     public float sensitivityScale = .1f;
@@ -123,7 +123,7 @@ public class SimpleShipControls : MonoBehaviour
 
             transform.position = new Vector3(
                 Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
-                -50,
+                yMove,
                     Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
         }
 

@@ -127,7 +127,7 @@ public class FollowPathAI : SimpleAI
 
             newPos = Path[currentPointToFollowIndex].position;
 
-            newPos.y = -50;
+            newPos.y = 0;
 
             Path[currentPointToFollowIndex].position = newPos;
 

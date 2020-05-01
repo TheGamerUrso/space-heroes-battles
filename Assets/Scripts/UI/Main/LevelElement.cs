@@ -33,6 +33,8 @@ public class LevelElement : MonoBehaviour
 
     [SerializeField] private Color normalColor;
     [SerializeField] private Color LockedColor;
+
+    public GameObject lockedImage;
     public void SetLevelElement(Level level, Action<Level> buttonAction)
     {
         this.buttonAction = buttonAction;
@@ -56,9 +58,6 @@ public class LevelElement : MonoBehaviour
             {
                // Debug.Log("Pressed" + "Survival Mode");
             });
-
-            NameText.color = normalColor;
-            buttonImage.color = normalColor;
         }
         else if (string.IsNullOrEmpty(level.ID))
         {
@@ -78,18 +77,21 @@ public class LevelElement : MonoBehaviour
         NameText.text = "More Soon";
         level.interactable = false;
         level.Locked = true;
+        lockedImage.SetActive(false);
         button.interactable = level.interactable;
         NameText.color = LockedColor;
         buttonImage.color = LockedColor;
     }
     public void Lock()
     {
+        lockedImage.SetActive(true);
         level.interactable = false;
         button.interactable = level.interactable;
         
     }
     public void Unlock()
     {
+        lockedImage.SetActive(true);
         level.interactable = true;
         button.interactable = level.interactable;
        
@@ -97,37 +99,41 @@ public class LevelElement : MonoBehaviour
 
     public void Refresh()
     {
+        PlayerData playerData = PersistantData.GetPlayerData();
+
         if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
         {
-            PlayerData playerData = PersistantData.GetPlayerData();
-            if (level.mission != null)
-            {
-                if (level.mission.ID <= playerData.LevelUnlocked)
-                {
-                    level.interactable = true;
-                    level.Locked = false;
-                }
-            }
-
             button.interactable = level.interactable;
 
             if (level.Locked)
             {
                 NameText.color = LockedColor;
                 buttonImage.color = LockedColor;
+                lockedImage.SetActive(true);
             }
             else
             {
                 NameText.color = normalColor;
                 buttonImage.color = normalColor;
+                lockedImage.SetActive(false);
             }
         }
         else if (level.ID.Contains("Survival"))
         {
-            level.interactable = true;
-            level.Locked = false;
-            NameText.color = normalColor;
-            buttonImage.color = normalColor;
+            button.interactable = level.interactable;
+
+            if (!level.Locked)
+            {
+                NameText.color = LockedColor;
+                buttonImage.color = LockedColor;
+                lockedImage.SetActive(true);
+            }
+            else
+            {
+                NameText.color = normalColor;
+                buttonImage.color = normalColor;
+                lockedImage.SetActive(false);
+            }
         }
         else if (string.IsNullOrEmpty(level.ID))
         {
@@ -135,6 +141,7 @@ public class LevelElement : MonoBehaviour
             level.Locked = true;
             NameText.color = LockedColor;
             buttonImage.color = LockedColor;
+            lockedImage.SetActive(false);
         }
     }
 

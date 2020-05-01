@@ -13,6 +13,9 @@ public delegate void PowerUpLevelChanged(float ammount);
 public delegate void PowerPackCollected(int ammount);
 public delegate void ShipSelectValueChanged(int selection);
 
+
+public delegate void ModeUnlocked();
+
 [Serializable]
 public class PlayerData
 {
@@ -24,7 +27,7 @@ public class PlayerData
     [NonSerialized] public PowerUpLevelChanged PowerUpLevelValueChanged;
     [NonSerialized] public PowerPackCollected CollectedPowerPack;
     [NonSerialized] public LevelValueChanged OnLevelValueChanged;
-
+    [NonSerialized] public ModeUnlocked OnModeUnlockedChanged;
 
     #region Player Statistics
     public long SurvivalScore;
@@ -37,6 +40,21 @@ public class PlayerData
     public int coins;
     public int TotalKills;
     public int LevelUnlocked;
+    public bool survivalUnlocked;
+
+    public bool SurvivalUnlocked
+    {
+        get
+        {
+            return survivalUnlocked;
+        }
+
+        set
+        {
+            survivalUnlocked = value;
+        }
+    }
+
     public int TotalMoneySpend;
     public int TotalSuperUsed;
     public int WaveSurvived;
@@ -77,9 +95,10 @@ public class PlayerData
     public int SuperUsed
     {
         get { return superUsed; }
-        set { 
+        set
+        {
             superUsed = value;
-            OnSuperUseValueChanged?.Invoke(superUsed);       
+            OnSuperUseValueChanged?.Invoke(superUsed);
         }
     }
     public int CurrrentSelectedShip
@@ -207,9 +226,11 @@ public class PlayerData
             if (score > Score[level])
             {
                 HighScore[level] = score;
-                if (GooglePlayServicesManager.Instance)
-                    GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
-
+                if (level == 0)
+                {
+                    if (GooglePlayServicesManager.Instance)
+                        GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
+                }
             }
             Score[level] = score;
         }
@@ -332,10 +353,12 @@ public class PlayerData
         else
         {
             XP = 0;
+            currentPlayerShipSelected.xpToLevel = 0;
+            GooglePlayServicesManager.Instance.UnlockAchivement(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power);
         }
     }
 
-    public void SetUpgrade(int upgrade,int value)
+    public void SetUpgrade(int upgrade, int value)
     {
         PlayerShipData playerShipData1 = playerShipData[currentSelectedShip];
         playerShipData1.Upgrades[upgrade] = value;
