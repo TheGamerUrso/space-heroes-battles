@@ -7,6 +7,7 @@ using UnityEngine.SocialPlatforms;
 using TheGamerUrso.SceneLoader;
 using UnityEngine.SceneManagement;
 using EasyMobile;
+using UnityEngine.Advertisements;
 
 public class MainMenuManager : Singleton<MainMenuManager>
 {
@@ -56,7 +57,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Start()
     {
-        Advertising.HideBannerAd(BannerAdNetwork.UnityAds, AdPlacement.Default);
+        AdvertismentManager.HideBanner();
         playerData = PersistantData.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;

@@ -2,20 +2,59 @@
 using System.Collections.Generic;
 using EasyMobile;
 using UnityEngine;
+using UnityEngine.Advertisements;
 
-public class AdvertismentManager : MonoBehaviour
+public class AdvertismentManager : Singleton<AdvertismentManager>
 {
+    public static string gameId = "2725712";
+    private string placementId = "banner";
+    public static bool testMode = true;
 
-    void Start()
+    public void Initialize()
     {
-        // Grants the module-level consent for the Advertising module.
-        Advertising.GrantDataPrivacyConsent(AdNetwork.UnityAds);
+        if (!Advertisement.isInitialized)
+        {
+            Advertisement.Initialize(gameId, testMode);
 
-        // Revokes the module-level consent of the Advertising module.
-        Advertising.RevokeDataPrivacyConsent(AdNetwork.UnityAds);
+            // Grants the module-level consent for the Advertising module.
 
-        // Reads the current module-level consent of the Advertising module.
-        ConsentStatus moduleConsent = Advertising.DataPrivacyConsent;
+            if (Advertising.DataPrivacyConsent == ConsentStatus.Unknown)
+            {
+                Advertising.GrantDataPrivacyConsent();
+            }
+        }
+    }
+
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+
+        Initialize();
+    }
+
+
+    public void ShowBanner()
+    {
+        if (!Advertisement.isInitialized)
+        {
+            Advertisement.Initialize(gameId, testMode);
+        }
+        StartCoroutine(ShowBannerWhenReady());
+    }
+
+    public static void HideBanner()
+    {
+        Advertisement.Banner.Hide();
+    }
+
+    IEnumerator ShowBannerWhenReady()
+    {
+        while (!Advertisement.IsReady(placementId))
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+        Advertisement.Banner.SetPosition(BannerPosition.TOP_CENTER);
+        Advertisement.Banner.Show(placementId);
     }
 
 
