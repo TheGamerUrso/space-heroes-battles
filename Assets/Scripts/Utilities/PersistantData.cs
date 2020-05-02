@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EasyMobile;
 using UnityEngine;
 
 public static class PersistantData
@@ -64,6 +65,8 @@ public static class PersistantData
         }
         else if (firstRunIndex == 0)
         {
+            // Grants the module-level consent for the Advertising module.
+            Advertising.GrantDataPrivacyConsent();
             PlayerPrefs.SetInt("FirstRun", 1);
             PlayerPrefs.SetInt("SurvivalMode", 0);
             playerData.AddCoin(9999999);

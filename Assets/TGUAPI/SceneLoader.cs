@@ -1,8 +1,10 @@
 ﻿using Doozy.Engine.UI;
+using EasyMobile;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Advertisements;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -67,6 +69,13 @@ namespace TheGamerUrso
 
             public void LoadMainenu()
             {
+                GameManager.ShowAdCounter--;
+                if (GameManager.ShowAdCounter <= 0)
+                {
+                    GameManager.ShowAdCounter = 5;
+                    ShowAdvertisment();
+                }
+
                 LoadScene("Main");
             }
 
@@ -126,12 +135,12 @@ namespace TheGamerUrso
 
             private IEnumerator LoadSceneAsync(string levelName, float delay = 0)
             {
-                    for (int i = 0; i < ActiveScenes.Count; i++)
+                for (int i = 0; i < ActiveScenes.Count; i++)
                 {
                     string item = ActiveScenes[i];
                     UnloadLevel(item);
                 }
-      
+
                 ActiveScenes.Clear();
 
                 WaitForEndOfFrame waitForEndFrame = new WaitForEndOfFrame();
@@ -141,7 +150,7 @@ namespace TheGamerUrso
                     yield return waitForEndFrame;
 
                 }
-            
+
 
                 AsyncOperation ao = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
                 ao.completed += OnLoadOperationComplete;
@@ -194,6 +203,18 @@ namespace TheGamerUrso
                 {
                     GateControl gate = Gates[i];
                     gate.OpenGate();
+                }
+            }
+
+            void ShowAdvertisment()
+            {
+                // Check if interstitial ad is ready
+                bool isReady = Advertising.IsInterstitialAdReady();
+
+                // Show it if it's ready
+                if (isReady)
+                {
+                    Advertising.ShowInterstitialAd();
                 }
             }
         }

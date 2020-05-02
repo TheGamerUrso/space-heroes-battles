@@ -34,6 +34,8 @@ public class GameManager : Singleton<GameManager>
     public static int score;
     public static int MaxLevelUnlocked = 5;
 
+    public static int ShowAdCounter = 5;
+
 
     [Range(0, 20)]
     public int LevelDifficuilty;
