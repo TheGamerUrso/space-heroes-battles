@@ -7,8 +7,9 @@ using UnityEngine.Advertisements;
 public class AdvertismentManager : Singleton<AdvertismentManager>
 {
     public static string gameId = "2725712";
-    private string placementId = "banner";
-    public static bool testMode = true;
+    private static string bannerId = "banner";
+    private static string rewardVideoId = "rewardedVideo";
+    public static bool testMode = false;
 
     public void Initialize()
     {
@@ -49,14 +50,28 @@ public class AdvertismentManager : Singleton<AdvertismentManager>
 
     IEnumerator ShowBannerWhenReady()
     {
-        while (!Advertisement.IsReady(placementId))
+        while (!Advertisement.IsReady(bannerId))
         {
             yield return new WaitForSeconds(0.5f);
         }
+
         Advertisement.Banner.SetPosition(BannerPosition.TOP_CENTER);
-        Advertisement.Banner.Show(placementId);
+        Advertisement.Banner.Show(bannerId);
     }
+    public static bool AdvertismentReady()
+    {
+        return Advertisement.IsReady(rewardVideoId);
+    }
+    public static void ShowRewardedVideo()
+    {
+        // Check if rewarded ad is ready
+        bool isReady = Advertising.IsRewardedAdReady();
 
-
+        // Show it if it's ready
+        if (isReady)
+        {
+            Advertising.ShowRewardedAd();
+        }
+    }
 
 }

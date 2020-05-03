@@ -54,7 +54,7 @@ MeshRenderer:
   m_DynamicOccludee: 1
   m_MotionVectors: 1
   m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
+  m_ReflectionProbeUsage: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -96,9 +96,6 @@ MonoBehaviour:
   xScrollSpeed: -0.2
   offset: 0
   offXset: 0
-  sinMove: 0
-  frequently: 0
-  magnitute: 0
 --- !u!1 &513686742546879620
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,6 +548,11 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: f6bbe3fca25fd4a4eb94fae99aa7726f, type: 2}
+    - target: {fileID: 2945657902961702231, guid: 2c2d08944276a654d8e1f4f10720733a,
+        type: 3}
+      propertyPath: m_DynamicOccludee
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2c2d08944276a654d8e1f4f10720733a, type: 3}
 --- !u!4 &8398749366825646003 stripped

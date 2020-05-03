@@ -57,7 +57,6 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     private void Start()
     {
-        AdvertismentManager.HideBanner();
         playerData = PersistantData.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;

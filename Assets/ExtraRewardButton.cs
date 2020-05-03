@@ -7,20 +7,6 @@ using EasyMobile;
 public class ExtraRewardButton : MonoBehaviour
 {
     Button myButton;
-    public string myPlacementId = "rewardedVideo";
-
-    // Subscribe to rewarded ad events
-    void OnEnable()
-    {
-        Advertising.RewardedAdCompleted += RewardedAdCompletedHandler;
-        Advertising.RewardedAdSkipped += RewardedAdSkippedHandler;
-    }
-    // Unsubscribe events
-    void OnDisable()
-    {
-        Advertising.RewardedAdCompleted -= RewardedAdCompletedHandler;
-        Advertising.RewardedAdSkipped -= RewardedAdSkippedHandler;
-    }
 
     // Event handler called when a rewarded ad has completed
     void RewardedAdCompletedHandler(RewardedAdNetwork network, AdPlacement location)
@@ -47,20 +33,8 @@ public class ExtraRewardButton : MonoBehaviour
         myButton = GetComponent<Button>();
 
         // Set interactivity to be dependent on the Placement’s status:
-        myButton.interactable = Advertisement.IsReady(myPlacementId);
+        myButton.interactable = AdvertismentManager.AdvertismentReady();
     }
 
-    // Implement a function for showing a rewarded video ad:
-    public void ShowRewardedVideo()
-    {
-        // Check if rewarded ad is ready
-        bool isReady = Advertising.IsRewardedAdReady();
-
-        // Show it if it's ready
-        if (isReady)
-        {
-            Advertising.ShowRewardedAd();
-        }
-    }
 
 }

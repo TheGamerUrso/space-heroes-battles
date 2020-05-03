@@ -6,8 +6,5 @@ using UnityEngine.Advertisements;
 
 public class AdBanner : MonoBehaviour
 {
-    void Start()
-    {
-        AdvertismentManager.Instance.ShowBanner();
-    }
+  
 }
