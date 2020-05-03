@@ -326,7 +326,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
-        //playerData.PowerUpLevel += .1f;
+        if (playerData != null)
+            playerData.PowerUpLevel += .025f;
     }
 
     public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)

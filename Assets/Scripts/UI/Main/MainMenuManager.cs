@@ -95,26 +95,20 @@ public class MainMenuManager : Singleton<MainMenuManager>
         if (playerShipData.level >= playerShipData.MaxLevel)
         {
             PlayerLevelText.text = "" + playerShipData.level;
-            PlayerXPText.text = "Maxed";
+            PlayerXPText.text = "-/-";
         }
         else
         {
             PlayerLevelText.text = "" + playerShipData.level;
 
             PlayerXPText.text = string.Format("{0}/{1}",
-             playerShipData.xp,
+              Mathf.Round(playerShipData.xp),
                 Mathf.Round(playerShipData.xpToLevel));
         }
 
         LevelValueChanged(lvl);
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            playerData.EarnXP(100);
-        }
-    }
+ 
     public void QuitButtonEvent()
     {
         Application.Quit();

@@ -12,7 +12,7 @@ public class CoinItem : Items, IPickable
 
         if (itemData.m_RewardAmount > 0)
         {
-            GameSession.CoinEarnInGame+=10;
+            GameSession.CoinEarnInGame += 1;
         }
 
         if (AudioManager.Instance)
