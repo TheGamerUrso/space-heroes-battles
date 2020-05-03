@@ -6,9 +6,6 @@ using EasyMobile;
 [RequireComponent(typeof(Button))]
 public class ExtraRewardButton : MonoBehaviour
 {
-
-    private string gameId = "2725712";
-
     Button myButton;
     public string myPlacementId = "rewardedVideo";
 
@@ -26,7 +23,7 @@ public class ExtraRewardButton : MonoBehaviour
     }
 
     // Event handler called when a rewarded ad has completed
-    void RewardedAdCompletedHandler(RewardedAdNetwork network, AdLocation location)
+    void RewardedAdCompletedHandler(RewardedAdNetwork network, AdPlacement location)
     {
         // Reward the user for watching the ad to completion.
         PlayerData playerData = PersistantData.GetPlayerData();
@@ -39,7 +36,7 @@ public class ExtraRewardButton : MonoBehaviour
     }
 
     // Event handler called when a rewarded ad has been skipped
-    void RewardedAdSkippedHandler(RewardedAdNetwork network, AdLocation location)
+    void RewardedAdSkippedHandler(RewardedAdNetwork network, AdPlacement location)
     {
         // Do not reward the user for skipping the ad.
         Popup.Show(Popup.popupType.message, "No Reward");

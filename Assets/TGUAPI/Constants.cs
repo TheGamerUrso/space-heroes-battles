@@ -7,11 +7,11 @@ public class Constants
     public static string PlayerUpgradeDataPath = Application.persistentDataPath + "/playerUpgradeData.save";
     public static string LevelProgresssDataPath = Application.persistentDataPath + "/LevelData.save";
 
-    private static string Horizontal = "Horizontal";
-    private static string Vertical = "Vertical";
-    public static string m_FireButtonString = "Fire1";
-    public static string m_FirePlayer2ButtonString = "Xbox360_X";
-    public static string m_FirePlayer2Joystick1ButtonString = "Xbox360_1_X";
+    // private static string Horizontal = "Horizontal";
+    //private static string Vertical = "Vertical";
+    //public static string m_FireButtonString = "Fire1";
+    //public static string m_FirePlayer2ButtonString = "Xbox360_X";
+    //public static string m_FirePlayer2Joystick1ButtonString = "Xbox360_1_X";
 
     public static string PLAYERLEVELSTRINGKEY = "Level";
     public static string PLAYERCURRENTXP = "CurrentXP";
@@ -27,14 +27,14 @@ public class Constants
     public static string VerticalAxisStringKey = "Vertical";
 
     //Xbox Controller
-    public static string m_Xbox360HorizontalAxisString = "Xbox360Horizontal";
+    //public static string m_Xbox360HorizontalAxisString = "Xbox360Horizontal";
 
-    public static string m_Xbox360VerticalAxisString = "Xbox360Vertical";
+    //public static string m_Xbox360VerticalAxisString = "Xbox360Vertical";
 
     //Player 2
-    public static string m_Player2HorizontalAxisString = "Horizontal2";
+    //public static string m_Player2HorizontalAxisString = "Horizontal2";
 
-    public static string m_Player2VerticalAxisString = "Vertical2";
+    // public static string m_Player2VerticalAxisString = "Vertical2";
 
     //PlayerAnimationStringKeys
     public static string PLAYERENTERSTRINGKEY = "Enter";

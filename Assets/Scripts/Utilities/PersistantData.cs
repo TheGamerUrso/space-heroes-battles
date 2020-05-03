@@ -67,7 +67,6 @@ public static class PersistantData
         {
             PlayerPrefs.SetInt("FirstRun", 1);
             PlayerPrefs.SetInt("SurvivalMode", 0);
-            playerData.AddCoin(9999999);
             SaveSystem.SaveGame();
         }
         GenerateLevelObjectiveData();

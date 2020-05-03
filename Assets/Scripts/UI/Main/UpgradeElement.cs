@@ -38,7 +38,6 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
     protected PlayerData playerData;
     protected PlayerShipData playerShipData;
     protected UpgradeManager upgradeManager;
-    private bool maxOut;
 
     private void OnEnable()
     {
@@ -112,7 +111,6 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
             CostText.text = Constants.UpgradeMaxedOut;
             NotAvailableImage.gameObject.SetActive(false);
             NotAvailbleText.gameObject.SetActive(false);
-            maxOut = true;
         }
         else
         {

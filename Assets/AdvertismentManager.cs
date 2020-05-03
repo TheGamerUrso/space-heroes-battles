@@ -15,13 +15,12 @@ public class AdvertismentManager : Singleton<AdvertismentManager>
         if (!Advertisement.isInitialized)
         {
             Advertisement.Initialize(gameId, testMode);
+        }
 
-            // Grants the module-level consent for the Advertising module.
-
-            if (Advertising.DataPrivacyConsent == ConsentStatus.Unknown)
-            {
-                Advertising.GrantDataPrivacyConsent();
-            }
+        // Grants the module-level consent for the Advertising module.
+        if (Advertising.DataPrivacyConsent == ConsentStatus.Unknown)
+        {
+            Advertising.GrantDataPrivacyConsent();
         }
     }
 
@@ -38,8 +37,9 @@ public class AdvertismentManager : Singleton<AdvertismentManager>
         if (!Advertisement.isInitialized)
         {
             Advertisement.Initialize(gameId, testMode);
+
+            StartCoroutine(ShowBannerWhenReady());
         }
-        StartCoroutine(ShowBannerWhenReady());
     }
 
     public static void HideBanner()
