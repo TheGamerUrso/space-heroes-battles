@@ -61,7 +61,7 @@ public class Constants
 
     public static float m_XMax = 20;
     public static float m_XMin = -20;
-    public static float m_ZMax = 170;
+    public static float m_ZMax = 150;
     public static float m_ZMin = -12;
 
     //Missions
