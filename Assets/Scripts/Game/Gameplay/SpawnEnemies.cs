@@ -313,7 +313,8 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
 
     public void BossGotHit(string id, BaseEnemy baseEnemy)
     {
-        playerData.PowerUpLevel += .025f;
+        if (playerData != null)
+            playerData.PowerUpLevel += .025f;
     }
 
     public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
