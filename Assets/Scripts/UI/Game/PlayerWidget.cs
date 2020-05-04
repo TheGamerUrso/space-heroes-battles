@@ -10,7 +10,7 @@ public class PlayerWidget : MonoBehaviour
     public PlayerShipData playerShipData;
 
     private static string ReadyStringKey = "Ready";
-    private static string ActiveStringKey = "Active";
+    //private static string ActiveStringKey = "Active";
 
     [SerializeField] private Color fullHealthColor = Color.green;
     [SerializeField] private Color zeroHealthColor = Color.red;

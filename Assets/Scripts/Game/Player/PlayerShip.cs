@@ -110,6 +110,11 @@ public class PlayerShip : Ship, IDamagable
 
     public void WeaponSystem()
     {
+        if (GetAnimationState("Enter") || GetAnimationState("Exit"))
+        {
+            return;
+        }
+
         float playerPowerUp = 0;
 
         playerPowerUp = playerData.GetPowerUpLevelPresentage();
@@ -134,10 +139,8 @@ public class PlayerShip : Ship, IDamagable
                 {
                     case TouchPhase.Began:
                         clicked = true;
-                        clicktimer = 1;
                         clicktimes++;
                         break;
-
                     case TouchPhase.Moved:
                         break;
 

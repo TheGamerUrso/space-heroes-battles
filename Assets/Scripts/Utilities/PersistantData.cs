@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using EasyMobile;
 using UnityEngine;
 
 public static class PersistantData
@@ -35,7 +36,7 @@ public static class PersistantData
         if (PlayerPrefs.HasKey("FirstRun"))
         {
             firstRunIndex = PlayerPrefs.GetInt("FirstRun");
-        
+
         }
 
         if (firstRunIndex == 1)
@@ -66,7 +67,6 @@ public static class PersistantData
         {
             PlayerPrefs.SetInt("FirstRun", 1);
             PlayerPrefs.SetInt("SurvivalMode", 0);
-            playerData.AddCoin(9999999);
             SaveSystem.SaveGame();
         }
         GenerateLevelObjectiveData();

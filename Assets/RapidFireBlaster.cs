@@ -29,6 +29,12 @@ public class RapidFireBlaster : Blaster
         IsShooting = true;
         for (int i = 0; i < Cannons.Length; i++)
         {
+
+            if (!AutoAttack)
+            {
+                break;
+            }
+
             if (source.isPlaying == false)
             {
                 source.Play();

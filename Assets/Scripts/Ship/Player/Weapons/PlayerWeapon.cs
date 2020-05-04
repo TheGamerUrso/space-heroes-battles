@@ -54,6 +54,8 @@ public class PlayerWeapon : WeaponScript
                     holdFire = false;
                 }
 
+      
+
                 Shoot();
 
             }

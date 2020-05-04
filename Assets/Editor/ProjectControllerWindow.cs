@@ -13,7 +13,6 @@ public class ProjectControllerWindow : EditorWindow
 
     private string titleString = "Project Controls";
     private string scenePath = "Assets/Scenes";
-    private string TestModeStrig = "TestMode";
     private int CompleteLevelIndex;
     private string BaseXpToEarn = "";
     private float xpToEarn;
