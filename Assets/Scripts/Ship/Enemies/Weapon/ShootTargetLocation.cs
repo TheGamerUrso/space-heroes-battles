@@ -1,50 +1,54 @@
 ﻿using System.Collections;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
-public class ShootTargetLocation : WeaponScript
+public class ShootTargetLocation : Blaster
 {
-    protected bool m_Shooting = false;
-    public int m_NumberOfBullets;
-
+    public GameObject Target;
+    public Vector3 playerLastLocation;
     public override void Initialize()
     {
-        if (GameObject.FindGameObjectWithTag("Player"))
+        base.Initialize();
+    }
+    public override void OnStart()
+    {
+        base.OnStart();
+
+        if (Target == null)
         {
-            direction = transform.position - GameObject.FindGameObjectWithTag("Player").transform.position;
+            Target = GameObject.FindGameObjectWithTag("Player");
         }
+    }
+    public override void OnUpdate()
+    {
+        base.OnUpdate();
+
+        Shoot();
     }
 
     public override void Shoot()
     {
-        if (!m_Shooting)
+        if (Time.time > newShot)
         {
-            StartCoroutine(ShotTowardTargetCoroutine());
-            m_Shooting = true;
-        }
-    }
+            newShot = Time.time + FireRate;
 
-    private IEnumerator ShotTowardTargetCoroutine()
-    {
-        int i = 0;
+            PlayWeaponFireSound();
 
-        for (i = 0; i < m_NumberOfBullets; i++)
-        {
-            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
-            InstansiatedProjectile.transform.localPosition = Cannons[0].transform.position;
-            InstansiatedProjectile.transform.rotation = Cannons[0].transform.rotation;
-            InstansiatedProjectile.GetComponent<EnemyProjectile>().GetTargetLastPosition();
-            InstansiatedProjectile.GetComponent<EnemyProjectile>().SetFollowTarget(true);
-            InstansiatedProjectile.GetComponent<EnemyProjectile>().setDamage(weaponData.m_WeaponDamage);
+            for (int i = 0; i < Cannons.Length; i++)
+            {
+                playerLastLocation = Target.transform.position + (new Vector3(Random.insideUnitCircle.x, 0, Random.insideUnitCircle.y) * 2) - transform.position;
+                playerLastLocation.Normalize();
+                InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+                InstansiatedProjectile.transform.position = Cannons[i].position;
+                InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(playerLastLocation);
+                InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = Damage;
 
-            yield return new WaitForSeconds(1.0f);
+                //InstansiatedProjectile.GetComponent<Rigidbody>().AddForce(InstansiatedProjectile.transform.forward * 100, ForceMode.Impulse);
 
-            AudioManager.PlaySound(source, weaponData.ShootSoundEffect);
+                InstansiatedProjectile.GetComponent<Rigidbody>().AddForce(playerLastLocation * 100, ForceMode.Impulse);
 
-            i++;
+            }
         }
 
-        yield return new WaitForSeconds(weaponData.m_FireRate);
-
-        m_Shooting = false;
     }
 }

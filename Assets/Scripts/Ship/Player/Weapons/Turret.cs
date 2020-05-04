@@ -1,42 +1,78 @@
 ﻿using UnityEngine;
 
-public class Turret : MonoBehaviour
+public class Turret : MonoBehaviour, IDamagable
 {
-    public int Health = 1;
-    public float TTL = 10;
+    private PlayerShipData playerShipData;
+    private PlayerData playerData;
 
-    public ShipStats shipStats;
     public PlayerWeapon playerWeapon;
-
-    public void SetShipStats(ShipStats shipStats)
+    public bool IsAlive;
+    public bool IsDestroyed
     {
-        this.shipStats = shipStats;
-        SetDamage();
-    }
-
-    public void SetDamage()
-    {
-        playerWeapon.SetDamage(shipStats.Damage / 2);
-    }
-
-    private void Update()
-    {
-        TTL -= Time.deltaTime;
-        if (TTL < 0 || Health < 0)
+        get
         {
-            Destroy(gameObject);
+            return !IsAlive;
         }
+        set { IsAlive = value; }
+    }
+
+    public float maxHealth;
+    public float MaxHealth
+    {
+        get { return maxHealth; }
+        set
+        {
+            maxHealth = value;
+        }
+    }
+
+    public float currentHealth;
+    public float CurrentHealth
+    {
+        get { return currentHealth; }
+        set { currentHealth = value; }
+    }
+
+    private void OnEnable()
+    {
+        if (playerData == null)
+        {
+            playerData = PersistantData.GetPlayerData();
+            playerShipData = playerData.GetCurrentPlayerShipData();
+        }
+
+        playerWeapon.damage = playerShipData.SuperDamage;
+    }
+
+    private void Start()
+    {
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+    }
+
+    public void Deactivate()
+    {
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Constants.ENEMYTAG))
         {
-            Health--;
+            currentHealth--;
         }
         if (other.tag.Equals(Constants.ENEMYPROJECTILETAG))
         {
-            Health--;
+            currentHealth--;
+        }
+    }
+
+    public void TakeDamage(float dmg)
+    {
+        currentHealth -= dmg;
+        if (currentHealth < 0)
+        {
+            Destroy(gameObject);
         }
     }
 }

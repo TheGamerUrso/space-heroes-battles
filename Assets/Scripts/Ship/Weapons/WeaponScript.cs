@@ -1,94 +1,126 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
+using UnityEngine.Audio;
 
 [Serializable]
 public abstract class WeaponScript : MonoBehaviour
 {
+    #region Weapon Variables
+    protected Ship ship;
+    public WeaponData weaponData;
+    [SerializeField] protected AudioSource source;
+
     [Header("Weapon")]
-    public  Action<WeaponScript>onUpdate;
     [SerializeField]
     protected List<WeaponFireEffect> particleSFX = new List<WeaponFireEffect>();
-    protected Transform[] Cannons;
-    public WeaponData weaponData;
+    [SerializeField] protected Transform[] Cannons;
+   
     protected int Radius;
     protected int Angle;
-    [SerializeField] protected AudioSource source;
-    [SerializeField] protected bool FollowRotation;
-    protected Vector3 direction;
+
+
     protected Coroutine ShootingCoroutine;
     [SerializeField] protected float delayBetweenShots;
     protected GameObject InstansiatedProjectile;
+    [SerializeField] protected bool autoAttack;
+    protected float newShot;
 
-    protected float m_NewShot;
-    protected ShipStatsSystem shipStatsSystem;
-    protected Ship ship;
+    #endregion
 
+    #region WeaponData Getters
+
+    public float fireRate;
+    public float damage;
+    public float FireRate { get { return fireRate; } set { fireRate = value; } }
+
+    public float Damage { get { return damage; } set { damage = value; } }
+
+    public AudioClip SoundSFX { get { return weaponData.ShootSoundEffect; } private set { } }
+
+    public PoolGameObjectType ProjectilePrefab { get { return weaponData.m_Projectile; } private set { } }
+
+
+    public bool AutoAttack
+    {
+        get
+        {
+            return autoAttack;
+        }
+
+        set
+        {
+            autoAttack = value;
+        }
+    }
+    #endregion
+
+
+    private void Start()
+    {
+        OnStart();
+        Initialize();
+    }
+
+    public virtual void Update()
+    {
+        OnUpdate();
+    }
+    public virtual void OnStart()
+    {
+        source = GetComponent<AudioSource>();
+        Cannons = transform.Cast<Transform>().ToArray();
+        ship = GetComponentInParent<Ship>();
+        if (ship != null)
+        {
+            fireRate = ship.FireRate;
+            damage = ship.Damage;
+        }
+    }
+
+    public virtual void OnUpdate() { }
+
+    public virtual void Initialize() { }
+
+    public virtual void Fire() { }
+
+    public abstract void Shoot();
+
+    #region Getters and Setters
 
     public void SetShip(Ship ship)
     {
         this.ship = ship;
     }
 
-    public void SetShipStatsSystem(ShipStatsSystem shipStatsSystem)
+    public float GetDamage()
     {
-        this.shipStatsSystem = shipStatsSystem;
-        InitWeapon();
+        return Damage;
     }
 
-    private void OnValidate()
+    public void SetDamage(float damage)
     {
-        particleSFX = new List<WeaponFireEffect>();
-        foreach (Transform item in transform)
-        {
-            particleSFX.Add(item.GetComponentInChildren<WeaponFireEffect>());
-        }
+        Damage = damage;
     }
-
-    private void Start()
-    {
-        source = GetComponent<AudioSource>();
-        
-        Cannons = transform.Cast<Transform>().ToArray();
-        Initialize();
-    }
-
-    public virtual void Update()
-    {
-        if (onUpdate != null) onUpdate(this);
-
-
-        if (weaponData.CanAttack)
-        {
-            Shoot();
-        }
-    }
-
-    public virtual void InitWeapon()
-    {
-        weaponData.m_FireRate = shipStatsSystem.FireRate;
-        weaponData.m_WeaponDamage = shipStatsSystem.Damage;
-    }
-
-    public virtual void Initialize(){}
-
-    public virtual void Fire() { }
-
-    public abstract void Shoot();
-
-    public virtual void SetDamage(float damage)
-    {
-        weaponData.m_WeaponDamage = damage;
-    }
-
     public float GetFireRate()
     {
-        return weaponData.m_FireRate;
+        return FireRate;
     }
 
     public virtual void SetFireRate(float fireRate)
     {
-        weaponData.m_FireRate = fireRate;
+        this.fireRate = fireRate;
     }
+
+    #endregion
+
+    public void PlayWeaponFireSound(int audioMixGroup = 0, bool usePitch = false)
+    {
+        if (AudioManager.Instance)
+            AudioManager.PlaySound(source, SoundSFX, audioMixGroup, usePitch);
+    }
+
+
 }

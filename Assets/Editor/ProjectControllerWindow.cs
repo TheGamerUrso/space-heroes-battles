@@ -6,19 +6,18 @@ using UnityEngine;
 public class ProjectControllerWindow : EditorWindow
 {
     //private SpawnEnemies spawnEnemies;
-    private Player player;
+    private PlayerShip player;
 
     private string CoinToEarnText;
     private int coinsToEarn;
 
     private string titleString = "Project Controls";
     private string scenePath = "Assets/Scenes";
-    private string TestModeStrig = "TestMode";
     private int CompleteLevelIndex;
     private string BaseXpToEarn = "";
     private float xpToEarn;
 
-    public Player currentPlayer;
+    public PlayerShipElement currentPlayer;
 
     public Vector3 PosInWorld;
     public Vector3 resets;
@@ -66,8 +65,8 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                DataController.Instance.SetPlayerData(new PlayerData());
-                SaveSystem.LoadPlayerData();
+                PersistantData.ReplacePlayerData(new PlayerData());
+                PersistantData.Load();
             }
         }
 
@@ -75,7 +74,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                SaveSystem.SavePlayerData();
+                PersistantData.Save();
             }
         }
         EditorGUILayout.EndVertical();
@@ -90,7 +89,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                PlayerData playerData = DataController.GetPlayerData();
+                PlayerData playerData = PersistantData.GetPlayerData();
                 playerData.EarnXP(xpToEarn);
             }
         }
@@ -104,7 +103,7 @@ public class ProjectControllerWindow : EditorWindow
             {
                 if (player == null)
                 {
-                    player = GameObject.FindObjectOfType<Player>();
+                    player = GameObject.FindObjectOfType<PlayerShip>();
                 }
 
                 player.GetComponent<BoxCollider>().enabled = !player.GetComponent<BoxCollider>().enabled;
@@ -121,7 +120,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                PlayerData playerData = DataController.GetPlayerData();
+                PlayerData playerData = PersistantData.GetPlayerData();
                 playerData.Coins += coinsToEarn;
             }
         }
@@ -131,7 +130,7 @@ public class ProjectControllerWindow : EditorWindow
         {
             if (EditorApplication.isPlaying)
             {
-                GuiManager.Instance.GameOver();
+                GameController.OnWin?.Invoke(GameController.Instance);
             }
         }
         EditorGUILayout.EndHorizontal();
@@ -172,8 +171,8 @@ public class ProjectControllerWindow : EditorWindow
 
         if (GUILayout.Button("Complete First Challenge"))
         {
-            PlayerData playerData = DataController.GetPlayerData();
-            MissionCollection missionCollection = DataController.GetMissionCollection();
+            PlayerData playerData = PersistantData.GetPlayerData();
+            MissionCollection missionCollection = PersistantData.GetMissionCollection();
             Mission mission = missionCollection.GetMission(playerData.LevelUnlocked++);
 
             LevelObjectiveData[] levelObjectiveDatas = playerData.GetLevelObjectives("Level" + mission.ID);
@@ -185,12 +184,12 @@ public class ProjectControllerWindow : EditorWindow
                 }
             }           
 
-            BriefingScreen briefingScreen = GameObject.FindObjectOfType<BriefingScreen>();
+            LevelSelectScreen levelSelectScreen = GameObject.FindObjectOfType<LevelSelectScreen>();
    
 
             playerData.LevelUnlocked = mission.ID+1;
 
-            briefingScreen.RefreshLevelElements();
+            levelSelectScreen.RefreshLevelElements();
 
             //GameObject.FindObjectOfType<BriefingScreen>().LevelElements[CompleteLevelIndex].GetComponent<LevelElement>().Refresh();
 
@@ -218,7 +217,7 @@ public class ProjectControllerWindow : EditorWindow
 
     public void CompleteObjective(int index)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         if ((ObjectiveType)playerData.ListOfOnGoingObjectives[index].objectiveType == ObjectiveType.Unharmed)
         {
             playerData.PlayedGame = true;

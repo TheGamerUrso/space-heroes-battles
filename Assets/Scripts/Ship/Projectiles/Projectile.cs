@@ -1,45 +1,46 @@
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour
 {
-    protected Rigidbody rb;
+    protected Rigidbody rigid;
+    protected Vector3 shootDir;
+    [SerializeField] protected float damage;
+    public float Damage
+    {
+        get { return damage; }
+        set { damage = value; }
+    }
 
-    [SerializeField]
-    protected float Damage;
+    [SerializeField] protected float speed;
+    [SerializeField] protected PoolGameObjectType ExplosionPrefab;
 
-    [SerializeField]
-    protected PoolGameObjectType ExplosionPrefab;
-
-    [SerializeField]
-    protected float speed;
-
+    protected GameObject explosion;
     protected Transform EffectsHolder;
+    protected TrailRenderer trailRenderer;
 
-    [SerializeField] protected bool FollowTarget = false;
+    protected virtual void OnEnable() { } 
+
+    protected virtual void OnAwake() => SetInitialReference();
+
 
     private void Awake()
     {
-        SetInitialReference();
+        OnAwake();
     }
 
-    public virtual void SetInitialReference() { }
+    private void Start() => OnStart();
 
-    public void setDamage(float newDamage)
+    public virtual void SetInitialReference()
     {
-        Damage = newDamage;
+        rigid = GetComponent<Rigidbody>();
+        trailRenderer = GetComponent<TrailRenderer>();
     }
-
-    public float getDamage()
-    {
-        return Damage;
-    }
+    public virtual void Setup(Vector3 shootDir,float dmg = 1) { }
+    public virtual void OnStart() { }
+    private void LateUpdate() => Movement();
 
     public abstract void Movement();
 
-    public void BulletRotation(GameObject target, Vector3 rot)
-    {
-        target.transform.eulerAngles = rot;
-    }
-
-    public virtual void DestoryNow(){}
+    public virtual void DestoryNow() { }
 }

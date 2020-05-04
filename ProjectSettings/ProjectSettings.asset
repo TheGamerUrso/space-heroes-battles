@@ -8,12 +8,12 @@ PlayerSettings:
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 1
   AndroidEnableSustainedPerformanceMode: 0
-  defaultScreenOrientation: 0
+  defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: TheGamerUrso
-  productName: Blaster2
+  productName: B.L.A.S.T.E.R 2
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -29,22 +29,20 @@ PlayerSettings:
   m_SplashScreenBackgroundPortraitAspect: 1
   m_SplashScreenBackgroundLandscapeUvs:
     serializedVersion: 2
-    x: 0.0009765625
-    y: 0.70377606
-    width: 0.1468099
-    height: 0.29524738
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   m_SplashScreenBackgroundPortraitUvs:
     serializedVersion: 2
-    x: 0.0009765625
-    y: 0.70377606
-    width: 0.1468099
-    height: 0.29524738
+    x: 0
+    y: 0
+    width: 1
+    height: 1
   m_SplashScreenLogos:
-  - logo: {fileID: 10404, guid: 0000000000000000e000000000000000, type: 0}
-    duration: 2
   - logo: {fileID: 21300000, guid: a4022199f289ce9489edda4bc8814e40, type: 3}
     duration: 2
-  - logo: {fileID: -8328886014594266772, guid: 1751bffdbe36a584bbfc9c013f79bff3, type: 3}
+  - logo: {fileID: 10404, guid: 0000000000000000e000000000000000, type: 0}
     duration: 2
   m_VirtualRealitySplashScreen: {fileID: 2800000, guid: a4022199f289ce9489edda4bc8814e40,
     type: 3}
@@ -56,14 +54,14 @@ PlayerSettings:
   m_StereoRenderingPath: 0
   m_ActiveColorSpace: 0
   m_MTRendering: 1
-  m_StackTraceTypes: 000000000000000000000000000000000000000001000000
+  m_StackTraceTypes: 010000000100000001000000010000000100000001000000
   iosShowActivityIndicatorOnLoading: -1
   androidShowActivityIndicatorOnLoading: 2
   displayResolutionDialog: 0
   iosUseCustomAppBackgroundBehavior: 0
   iosAllowHTTPDownload: 1
   allowedAutorotateToPortrait: 1
-  allowedAutorotateToPortraitUpsideDown: 0
+  allowedAutorotateToPortraitUpsideDown: 1
   allowedAutorotateToLandscapeRight: 0
   allowedAutorotateToLandscapeLeft: 0
   useOSAutorotation: 1
@@ -73,10 +71,10 @@ PlayerSettings:
   androidStartInFullscreen: 1
   androidRenderOutsideSafeArea: 0
   androidUseSwappy: 0
-  androidBlitType: 1
+  androidBlitType: 2
   defaultIsNativeResolution: 1
   macRetinaSupport: 1
-  runInBackground: 1
+  runInBackground: 0
   captureSingleScreen: 0
   muteOtherAudioSources: 0
   Prepare IOS For Recording: 0
@@ -85,7 +83,7 @@ PlayerSettings:
   hideHomeButton: 0
   submitAnalytics: 1
   usePlayerLog: 1
-  bakeCollisionMeshes: 0
+  bakeCollisionMeshes: 1
   forceSingleInstance: 0
   useFlipModelSwapchain: 1
   resizableWindow: 0
@@ -165,20 +163,19 @@ PlayerSettings:
   protectGraphicsMemory: 0
   enableFrameTimingStats: 0
   useHDRDisplay: 0
-  m_ColorGamuts: 0000000003000000
-  targetPixelDensity: 360
-  resolutionScalingMode: 1
+  m_ColorGamuts: 00000000
+  targetPixelDensity: 30
+  resolutionScalingMode: 0
   androidSupportedAspectRatio: 1
   androidMaxAspectRatio: 2.1
   applicationIdentifier:
     Android: com.thegamerurso.blaster2
-    Standalone: com.thegamerurso.blaster2
   buildNumber:
     Standalone: 1
-  AndroidBundleVersionCode: 5
-  AndroidMinSdkVersion: 18
+  AndroidBundleVersionCode: 26
+  AndroidMinSdkVersion: 21
   AndroidTargetSdkVersion: 28
-  AndroidPreferredInstallLocation: 1
+  AndroidPreferredInstallLocation: 0
   aotOptions: 
   stripEngineCode: 1
   iPhoneStrippingLevel: 0
@@ -266,9 +263,9 @@ PlayerSettings:
   templatePackageId: com.unity.3d@1.0.2
   templateDefaultScene: Assets/Scenes/SampleScene.unity
   AndroidTargetArchitectures: 3
-  AndroidSplashScreenScale: 0
-  androidSplashScreen: {fileID: 0}
-  AndroidKeystoreName: D:/Files/user.keystore
+  AndroidSplashScreenScale: 2
+  androidSplashScreen: {fileID: 2800000, guid: c64b53c76636abc43831ab5461736798, type: 3}
+  AndroidKeystoreName: D:/Development/user.keystore
   AndroidKeyaliasName: thegamerurso
   AndroidBuildApkPerCpuArchitecture: 0
   AndroidTVCompatibility: 0
@@ -289,34 +286,44 @@ PlayerSettings:
   - m_BuildTarget: 
     m_Icons:
     - serializedVersion: 2
-      m_Icon: {fileID: 2800000, guid: 27bd543e0d530254595cd20f0ee9159f, type: 3}
+      m_Icon: {fileID: 2800000, guid: 6187ec9d62a39224c9070cbbb88a8068, type: 3}
       m_Width: 128
       m_Height: 128
       m_Kind: 0
   m_BuildTargetPlatformIcons:
   - m_BuildTarget: Android
     m_Icons:
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: fcf5659cb559c2f4b891828f4b534ae6, type: 3}
+      - {fileID: 2800000, guid: fcf5659cb559c2f4b891828f4b534ae6, type: 3}
       m_Width: 432
       m_Height: 432
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 6359ba2c0332f8f42b12bfa50164e2f6, type: 3}
+      - {fileID: 2800000, guid: 6359ba2c0332f8f42b12bfa50164e2f6, type: 3}
       m_Width: 324
       m_Height: 324
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 89f7e273c42d1714990496f4b2200435, type: 3}
+      - {fileID: 2800000, guid: 89f7e273c42d1714990496f4b2200435, type: 3}
       m_Width: 216
       m_Height: 216
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 43077636f9ad3774291bf89eafbf38fc, type: 3}
+      - {fileID: 2800000, guid: 43077636f9ad3774291bf89eafbf38fc, type: 3}
       m_Width: 162
       m_Height: 162
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: de17b9e01231e9e459de195d4a8f0907, type: 3}
+      - {fileID: 2800000, guid: de17b9e01231e9e459de195d4a8f0907, type: 3}
       m_Width: 108
       m_Height: 108
       m_Kind: 2
@@ -326,70 +333,85 @@ PlayerSettings:
       m_Height: 81
       m_Kind: 2
       m_SubKind: 
-    - m_Textures: []
-      m_Width: 192
-      m_Height: 192
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 144
-      m_Height: 144
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 96
-      m_Height: 96
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 72
-      m_Height: 72
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 48
-      m_Height: 48
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
-      m_Width: 36
-      m_Height: 36
-      m_Kind: 0
-      m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: fbda694b54a19fd49ad22c37429a725d, type: 3}
       m_Width: 192
       m_Height: 192
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 1704bccab34a8c34b9a261f68f5e2773, type: 3}
       m_Width: 144
       m_Height: 144
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 773a7159a4c92ad4b8dccd6d0254a125, type: 3}
       m_Width: 96
       m_Height: 96
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 4a8be1c199306d546a5336a1664a9527, type: 3}
       m_Width: 72
       m_Height: 72
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 2800000, guid: bc5002ddfec1536498c56071cec8a492, type: 3}
       m_Width: 48
       m_Height: 48
       m_Kind: 1
       m_SubKind: 
-    - m_Textures: []
+    - m_Textures:
+      - {fileID: 0}
       m_Width: 36
       m_Height: 36
       m_Kind: 1
       m_SubKind: 
-  m_BuildTargetBatching: []
+    - m_Textures:
+      - {fileID: 2800000, guid: 31b90b76d0ef83647a083d517360a775, type: 3}
+      m_Width: 192
+      m_Height: 192
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures:
+      - {fileID: 2800000, guid: e6629ab7fa3a6e441a51088b94c3562c, type: 3}
+      m_Width: 144
+      m_Height: 144
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures:
+      - {fileID: 2800000, guid: 0cdc34a05ded50e4d9058b99c2dd0f6e, type: 3}
+      m_Width: 96
+      m_Height: 96
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures:
+      - {fileID: 2800000, guid: 988f36b2ff5b7744c80f04ac271998e2, type: 3}
+      m_Width: 72
+      m_Height: 72
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures:
+      - {fileID: 2800000, guid: 76a123922fb5c9a428811333b8f87857, type: 3}
+      m_Width: 48
+      m_Height: 48
+      m_Kind: 0
+      m_SubKind: 
+    - m_Textures:
+      - {fileID: 0}
+      m_Width: 36
+      m_Height: 36
+      m_Kind: 0
+      m_SubKind: 
+  m_BuildTargetBatching:
+  - m_BuildTarget: Android
+    m_StaticBatching: 1
+    m_DynamicBatching: 1
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: AndroidPlayer
-    m_APIs: 0800000015000000
+    m_APIs: 08000000
     m_Automatic: 0
   m_BuildTargetVRSettings: []
   openGLRequireES31: 0
@@ -402,8 +424,6 @@ PlayerSettings:
     iPhone: 1
     tvOS: 1
   m_BuildTargetGroupLightmapEncodingQuality:
-  - m_BuildTarget: Standalone
-    m_EncodingQuality: 1
   - m_BuildTarget: Android
     m_EncodingQuality: 0
   m_BuildTargetGroupLightmapSettings:
@@ -518,6 +538,7 @@ PlayerSettings:
   switchRatingsInt_9: 0
   switchRatingsInt_10: 0
   switchRatingsInt_11: 0
+  switchRatingsInt_12: 0
   switchLocalCommunicationIds_0: 
   switchLocalCommunicationIds_1: 
   switchLocalCommunicationIds_2: 
@@ -533,7 +554,7 @@ PlayerSettings:
   switchDataLossConfirmation: 0
   switchUserAccountLockEnabled: 0
   switchSystemResourceMemory: 16777216
-  switchSupportedNpadStyles: 6
+  switchSupportedNpadStyles: 22
   switchNativeFsCacheSize: 32
   switchIsHoldTypeHorizontal: 0
   switchSupportedNpadCount: 8
@@ -618,10 +639,9 @@ PlayerSettings:
   ps4attribEyeToEyeDistanceSettingVR: 0
   ps4IncludedModules: []
   monoEnv: 
-  splashScreenBackgroundSourceLandscape: {fileID: 134130141305183435, guid: 572ea987afdc4214ab510ff1936a2fa9,
+  splashScreenBackgroundSourceLandscape: {fileID: 21300000, guid: 2b336e7edd726db4984f1f134dd3fbe9,
     type: 3}
-  splashScreenBackgroundSourcePortrait: {fileID: 8701901127822622997, guid: 572ea987afdc4214ab510ff1936a2fa9,
-    type: 3}
+  splashScreenBackgroundSourcePortrait: {fileID: 0}
   blurSplashScreenBackground: 1
   spritePackerPolicy: 
   webGLMemorySize: 32
@@ -639,22 +659,23 @@ PlayerSettings:
   webGLThreadsSupport: 0
   webGLWasmStreaming: 0
   scriptingDefineSymbols:
-    1: CROSS_PLATFORM_INPUT;UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    4: CROSS_PLATFORM_INPUT;MOBILE_INPUT;EASY_MOBILE;EASY_MOBILE_PRO;NO_GPGS
-    7: CROSS_PLATFORM_INPUT;MOBILE_INPUT;UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO;EM_GPGS
-    13: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    14: MOBILE_INPUT;EASY_MOBILE;EASY_MOBILE_PRO
-    19: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    21: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    25: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    26: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    27: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    28: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
-    29: UNITY_POST_PROCESSING_STACK_V2;EASY_MOBILE;EASY_MOBILE_PRO
+    1: CROSS_PLATFORM_INPUT;EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    4: CROSS_PLATFORM_INPUT;MOBILE_INPUT;EASY_MOBILE;EASY_MOBILE_PRO;NO_GPGS;dUI_MANAGER;UNITY_MONETIZATION
+    7: CROSS_PLATFORM_INPUT;MOBILE_INPUT;EASY_MOBILE;EASY_MOBILE_PRO;EM_GPGS;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    13: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    14: MOBILE_INPUT;EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_MONETIZATION
+    19: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    21: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    25: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    26: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    27: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    28: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
+    29: EASY_MOBILE;EASY_MOBILE_PRO;dUI_MANAGER;UNITY_POST_PROCESSING_STACK_V2;UNITY_MONETIZATION
   platformArchitecture: {}
   scriptingBackend:
     Android: 1
-  il2cppCompilerConfiguration: {}
+  il2cppCompilerConfiguration:
+    Android: 0
   managedStrippingLevel:
     Android: 3
   incrementalIl2cppBuild: {}
@@ -746,9 +767,9 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: cc89e819-23b9-4d50-b644-24948c333b44
+  cloudProjectId: f6102ba4-770f-43f0-918e-6117940e4a28
   framebufferDepthMemorylessMode: 0
-  projectName: ProjectBlaster2
+  projectName: B.L.A.S.T.E.R 2
   organizationId: thegamerurso
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0

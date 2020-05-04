@@ -1,65 +1,118 @@
 ﻿using System.Collections.Generic;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerWeapon : WeaponScript
 {
-    private PlayerAnimation playerAnimation;
     public Transform shipTransform;
+    private bool holdFire;
+
+    public int DamageMulitplier { get { return weaponData.multiplier; } }
+
+
+    protected bool usePitch;
 
     public void SetShipTransform(Transform shipTransform)
     {
         this.shipTransform = shipTransform;
     }
 
-    public void SetPlayerAnimation(PlayerAnimation playerAnimation)
+    public override void OnStart()
     {
-        this.playerAnimation = playerAnimation;
+        base.OnStart();
     }
 
-    public override void Update()
+    public override void OnUpdate()
     {
+        base.OnUpdate();
         if (Time.frameCount % 1 == 0)
         {
-            if (playerAnimation.GetAnimationState("Enter") || playerAnimation.GetAnimationState("Exit"))
+            if (ship != null)
             {
-                return;
+                PlayerShip playerShip = ship.GetComponent<PlayerShip>();
+
+
+                if (playerShip != null)
+                {
+                    if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
+                    {
+                        return;
+                    }
+                }
+            }
+        
+
+            if (Input.touchCount > 0)
+            {
+                if (Input.touchCount > 1)
+                {
+                    holdFire = true;
+                }
+                else
+                {
+                    holdFire = false;
+                }
+
+      
+
+                Shoot();
+
             }
 
-            base.Update();
-        }
-    }
-
-    public override void Shoot()
-    {
-        if (Input.GetMouseButton(0) || CrossPlatformInputManager.GetButton("Fire1"))
-        {
-            if (Time.time > m_NewShot)
+            if (Application.platform == RuntimePlatform.WindowsEditor)
             {
-                m_NewShot = Time.time + weaponData.m_FireRate;
-                InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
+                holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
-                AudioManager.PlaySound(source,weaponData.ShootSoundEffect,0,true);
-
-                foreach (var item in particleSFX)
+                if (!holdFire && Input.GetMouseButton(0))
                 {
-                    item.PlayEffect();
+                    Shoot();
                 }
             }
         }
     }
 
+    public override void Shoot()
+    {
+
+        if (holdFire || !GameSession.CanFire)
+        {
+            return;
+        }
+
+        if (Time.time > newShot)
+        {
+            newShot = Time.time + GetFireRate();
+            InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
+
+            PlayWeaponFireSound(0, true);
+
+            foreach (var item in particleSFX)
+            {
+                item.PlayEffect();
+            }
+        }
+
+        if (Input.touchCount > 1)
+        {
+            holdFire = true;
+        }
+        else
+        {
+            holdFire = false;
+        }
+    }
+
     public void InstansiateBulletsByWeaponType(Transform ship, ref PoolGameObjectType m_Projectile, ref float m_WeaponDamage)
     {
-        PlayerProjectile projectile = null;
         List<GameObject> Projectiles = PoolManager.Instance.GetPoolByType(PoolGameObjectType.PlayerProjectile);
 
         for (int i = 0; i < Cannons.Length; i++)
         {
-            projectile = PoolManager.Instance.GetObjectFromPool(m_Projectile).GetComponent<PlayerProjectile>();
-            projectile.transform.position = Cannons[i].transform.position;
-            projectile.transform.rotation = Quaternion.Euler(new Vector3(0, ship.transform.eulerAngles.y, 0) + Cannons[i].eulerAngles);
-            projectile.setDamage(weaponData.m_WeaponDamage + weaponData.multiplier);
+            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+            Vector3 shootDir = Cannons[i].forward;
+            InstansiatedProjectile.transform.position = Cannons[i].position;
+            InstansiatedProjectile.GetComponent<PlayerProjectile>().Setup(shootDir, Damage + DamageMulitplier);
         }
     }
 

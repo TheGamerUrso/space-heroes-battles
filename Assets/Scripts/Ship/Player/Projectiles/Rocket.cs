@@ -1,57 +1,60 @@
 ﻿using TheGamerUrso;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class Rocket : PlayerProjectile
 {
-    public bool HomeMissleType = false;
     public GameObject m_Target;
 
-    private void OnEnable()
+    protected override void OnEnable()
     {
-        if (HomeMissleType)
+        m_Target = Utilities.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity);
+        if (m_Target != null)
         {
-            m_Target = FindClosestEnemy();
+            Debug.Log("Attacking " + m_Target, gameObject);
         }
+        else if (m_Target == null)
+        {
+            shootDir = Vector3.forward;
+        }
+    }
+
+    public override void OnStart()
+    {
+        base.OnStart();
     }
 
     public override void Movement()
     {
-        if (HomeMissleType && m_Target)
-        {
-            Vector3 dest = m_Target.transform.position;
-            Vector3 rockPos = transform.position;
-            Vector3 def = dest - rockPos;
 
-            transform.position = Vector3.MoveTowards(transform.position
-                , m_Target.transform.position,
-                speed * Time.deltaTime);
-
-            lookAt(transform, def);
-        }
-        else
+        if (m_Target != null)
         {
-            base.Movement();
-            transform.eulerAngles = new Vector3(0, 0, 0);
-           // if (m_Target == null)
-             //   m_Target = FindClosestEnemy();
+            shootDir = (m_Target.transform.position - transform.position).normalized;
+
+            if (!m_Target.activeInHierarchy)
+            {
+                m_Target = null;
+            }
         }
 
-        if (m_Target != null && m_Target.activeInHierarchy == false)
+
+        if (m_Target == null)
         {
-            m_Target = null;
-         
+            shootDir = Vector3.forward;
         }
 
-        if(transform.position.z > Constants.m_ZMax)
+        //Debug.DrawRay(transform.position, shootDir, Color.red);
+
+        transform.Translate(shootDir * speed * Time.deltaTime, Space.World);
+
+        transform.rotation = Quaternion.LookRotation(shootDir, transform.up);
+
+
+
+        if (transform.position.z > Constants.m_ZMax)
         {
             gameObject.SetActive(false);
         }
     }
 
-    public void lookAt(Transform transform, Vector3 diff)
-    {
-        diff.Normalize();
-        float rot_y = Mathf.Atan2(diff.x, diff.z) * Mathf.Rad2Deg;
-        transform.eulerAngles = new Vector3(0f, rot_y, 0f);
-    }
 }

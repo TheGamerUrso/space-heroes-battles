@@ -7,7 +7,6 @@ using UnityEngine.UI;
 public class GooglePlayOptions : BaseOptions
 {
     public GameObject profile;
-    public RawImage userIcon;
     public TextMeshProUGUI username;
 
 
@@ -21,7 +20,10 @@ public class GooglePlayOptions : BaseOptions
     public override void OnOptionEnter()
     {
         base.OnOptionEnter();
-        InitializeGooglePlayProfile();
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            InitializeGooglePlayProfile();
+        }
     }
 
     public void InitializeGooglePlayProfile()
@@ -68,9 +70,9 @@ public class GooglePlayOptions : BaseOptions
 
     public IEnumerator SignUp()
     {
-        while (!GooglePlayServicesManager.isInitialized)
+        while (!GooglePlayServicesManager.Instance)
         {
-            if (GooglePlayServicesManager.isInitialized)
+            if (GooglePlayServicesManager.Instance)
             {
                 signInBut.GetComponent<Image>().sprite = buttonSprites[0];
                 GooglePlayServicesManager.Instance.SignOut();
@@ -82,7 +84,8 @@ public class GooglePlayOptions : BaseOptions
             }
             yield return new WaitForSeconds(1);
         }
-        if (GooglePlayServicesManager.isInitialized)
+
+        if (GooglePlayServicesManager.Instance)
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[0];
         }
@@ -92,7 +95,7 @@ public class GooglePlayOptions : BaseOptions
         }
 
     }
-    
+
     public void ShowLeaderboards()
     {
         GooglePlayServicesManager.Instance.ShowLeaderboards();

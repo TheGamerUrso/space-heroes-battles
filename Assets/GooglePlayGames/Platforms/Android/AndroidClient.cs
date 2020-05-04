@@ -15,6 +15,7 @@
 // </copyright>
 
 #if UNITY_ANDROID
+#pragma warning disable 0642 // Possible mistaken empty statement
 
 namespace GooglePlayGames.Android
 {
@@ -67,7 +68,7 @@ namespace GooglePlayGames.Android
 
         ///<summary></summary>
         /// <seealso cref="GooglePlayGames.BasicApi.IPlayGamesClient.Authenticate"/>
-        public void Authenticate(Action<bool, string> callback, bool silent)
+        public void Authenticate(bool silent, Action<SignInStatus> callback)
         {
             lock (AuthStateLock)
             {
@@ -75,7 +76,8 @@ namespace GooglePlayGames.Android
                 // any additional work.
                 if (mAuthState == AuthState.Authenticated)
                 {
-                    InvokeCallbackOnGameThread(callback, true, null);
+                    Debug.Log("Already authenticated.");
+                    InvokeCallbackOnGameThread(callback, SignInStatus.Success);
                     return;
                 }
             }
@@ -161,7 +163,8 @@ namespace GooglePlayGames.Android
                                         }
 
                                         mAuthState = AuthState.Authenticated;
-                                        InvokeCallbackOnGameThread(callback, true, "Authentication succeed");
+                                        InvokeCallbackOnGameThread(callback, SignInStatus.Success);
+                                        GooglePlayGames.OurUtils.Logger.d("Authentication succeeded");
                                         try
                                         {
                                             using (var activationHint =
@@ -219,7 +222,18 @@ namespace GooglePlayGames.Android
                                     else
                                     {
                                         SignOut();
-                                        InvokeCallbackOnGameThread(callback, false, "Authentication failed");
+                                        if (completeTask.Call<bool>("isCanceled"))
+                                        {
+                                            InvokeCallbackOnGameThread(callback, SignInStatus.Canceled);
+                                            return;
+                                        }
+
+                                        using (var exception = completeTask.Call<AndroidJavaObject>("getException"))
+                                        {
+                                            GooglePlayGames.OurUtils.Logger.e(
+                                                "Authentication failed" + exception.Call<string>("toString"));
+                                            InvokeCallbackOnGameThread(callback, SignInStatus.InternalError);
+                                        }
                                     }
                                 }
                             );
@@ -230,18 +244,8 @@ namespace GooglePlayGames.Android
                 {
                     lock (AuthStateLock)
                     {
-                        if (result == 16 /* CommonStatusCodes.CANCELED */)
-                        {
-                            InvokeCallbackOnGameThread(callback, false, "Authentication canceled");
-                        }
-                        else if (result == 8 /* CommonStatusCodes.DEVELOPER_ERROR */)
-                        {
-                            InvokeCallbackOnGameThread(callback, false, "Authentication failed - developer error");
-                        }
-                        else
-                        {
-                            InvokeCallbackOnGameThread(callback, false, "Authentication failed");
-                        }
+                        Debug.Log("Returning an error code.");
+                        InvokeCallbackOnGameThread(callback, SignInHelper.ToSignInStatus(result));
                     }
                 }
             });
@@ -474,6 +478,8 @@ namespace GooglePlayGames.Android
                     uiCallback();
                 }
             }
+
+            SignInHelper.SetPromptUiSignIn(true);
         }
 
         ///<summary></summary>
@@ -1012,6 +1018,37 @@ namespace GooglePlayGames.Android
                 client.Call("submitScore", leaderboardId, score, metadata);
                 InvokeCallbackOnGameThread(callback, true);
             }
+        }
+
+        public void RequestPermissions(string[] scopes, Action<SignInStatus> callback)
+        {
+            callback = AsOnGameThreadCallback(callback);
+            mTokenClient.RequestPermissions(scopes, code =>
+            {
+                UpdateClients();
+                callback(code);
+            });
+        }
+
+        private void UpdateClients()
+        {
+            lock (GameServicesLock)
+            {
+                var account = mTokenClient.GetAccount();
+                mSavedGameClient = new AndroidSavedGameClient(account);
+                mEventsClient = new AndroidEventsClient(account);
+                mVideoClient = new AndroidVideoClient(mVideoClient.IsCaptureSupported(), account);
+                mRealTimeClient = new AndroidRealTimeMultiplayerClient(this, account);
+                mTurnBasedClient = new AndroidTurnBasedMultiplayerClient(this, account);
+                mTurnBasedClient.RegisterMatchDelegate(mConfiguration.MatchDelegate);
+            }
+        }
+
+        /// <summary>Returns whether or not user has given permissions for given scopes.</summary>
+        /// <seealso cref="GooglePlayGames.BasicApi.IPlayGamesClient.HasPermissions"/>
+        public bool HasPermissions(string[] scopes)
+        {
+            return mTokenClient.HasPermissions(scopes);
         }
 
         ///<summary></summary>

@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class BaseEnemyAI : MonoBehaviour
 {
-    [Header("Simple AI Config")]
+    [Header("Enemy AI Config")]
 
-    protected int Direction;
-    protected bool Loop;
-    protected bool directionChanged;
-    protected Vector3 startingPosition;
+    protected BaseEnemy enemy;
+    protected Rigidbody rigid;
     protected Animator animator;
     protected Coroutine EnterCoroutine;
+
+    protected Vector3 startingPosition;
     protected Vector3 dist;
     protected Vector2 MaxScreenBound;
     protected Vector2 MinScreenBound;
@@ -19,56 +19,31 @@ public class BaseEnemyAI : MonoBehaviour
     protected float delay = .5f;
     protected Vector3 movement;
 
-    protected Enemy enemy;
-    protected Rigidbody rigid;
-
     protected float m_XVel;
     protected float m_ZVel;
 
-    protected float XVel
-    {
-        get
-        {
-            return m_XVel;
-        }
-        set
-        {
-            m_XVel = value;
-        }
-    }
+    public float xVel { get { return m_XVel; } set { m_XVel = value; } }
+    public float zVel { get { return m_ZVel; } set { m_ZVel = value; } }
 
-    protected float ZVel
-    {
-        get
-        {
-            return m_ZVel;
-        }
-        set
-        {
-            m_ZVel = value;
-        }
-    }
+    public bool bAppeared, bEntered;
 
-    private void OnEnable()
+    protected int enterNameHash = Animator.StringToHash("Enter");
+    protected int deathNameHash = Animator.StringToHash("Death");
+
+    public void OnEnable()
     {
         Enter();
     }
 
-    public void Start()
+    private void Awake()
     {
         InitIfNeeded();
-        Initialize();
 
-        XVel = enemy.GetShipStatsSystem().GetSpeed() / 2;
-        ZVel = enemy.GetShipStatsSystem().GetSpeed();
-
-        Direction = 0;
     }
 
-    public virtual void Initialize()
-    {
-        startingPosition = transform.position;
-    }
+    public void Start() { Setup(); }
+
+    public virtual void Setup(){}
 
     public virtual void InitIfNeeded()
     {
@@ -79,43 +54,29 @@ public class BaseEnemyAI : MonoBehaviour
 
         if (enemy == null)
         {
-            enemy = GetComponent<Enemy>();
+            enemy = GetComponent<BaseEnemy>();
         }
-    }
 
-    public IEnumerator EnterAnimationCoroutine()
-    {
-        while (transform.GetChild(1).transform.localScale.x < 1)
+        if (animator == null)
         {
-            Vector3 NewSize = transform.GetChild(1).transform.localScale;
-            NewSize.x += Time.deltaTime;
-            NewSize.y += Time.deltaTime;
-            NewSize.z += Time.deltaTime;
-            if (NewSize.x > 1)
-            {
-                NewSize = Vector3.one;
-            }
-            transform.GetChild(1).transform.localScale = NewSize;
-            yield return null;
+            animator = GetComponentInChildren<Animator>();
         }
     }
 
-    public void Update()
+    private void Update()
+    {
+      
+    }
+
+    private void LateUpdate()
     {
         Move();
     }
 
-    public virtual void Move() { }
+    public virtual void Move(){}
 
-    public virtual void Enter()
-    {
-        if (EnterCoroutine != null)
-        {
-            StopCoroutine(EnterAnimationCoroutine());
-        }
+    public virtual void Enter(){}
 
-        StartCoroutine(EnterAnimationCoroutine());
-    }
     public void Leave()
     {
         enemy.Leave();
@@ -128,5 +89,9 @@ public class BaseEnemyAI : MonoBehaviour
         {
             Leave();
         }
+    }
+    public virtual void EnableMovement()
+    {
+
     }
 }

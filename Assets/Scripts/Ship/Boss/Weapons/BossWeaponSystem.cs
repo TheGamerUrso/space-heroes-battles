@@ -13,7 +13,7 @@ public class BossWeaponSystem : WeaponScript
 
         if (m_CurHealth <= (0.6 * m_MaxHealth))
         {
-            weaponData.m_FireRate = 2;
+            SetFireRate(2);
            // if (!SecondAttack)
            // {
                 //SecondAttack = true;
@@ -23,7 +23,7 @@ public class BossWeaponSystem : WeaponScript
         }
         else if (m_CurHealth <= (0.4 * m_MaxHealth))
         {
-            weaponData.m_FireRate = 3f;
+            SetFireRate(3);
             //ThirdAttack();
         }
         else

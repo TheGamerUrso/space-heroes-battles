@@ -1,22 +1,53 @@
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public abstract class Ship : MonoBehaviour
 {
-    [Header("Ship Config")]
-    protected GameManager gameManager;
-    [SerializeField] protected ShipStatsSystem shipStatsSystem;
-    [SerializeField] protected LevelSystem levelSystem;
-    [SerializeField] protected GameObject ShieldEffect;
-    [SerializeField] protected PoolGameObjectType ExplostionEffect;
+    public delegate void HealthChanged(float currentHealth, float maxHealth);
+    public event HealthChanged OnHealthChanged;
+    public ShipStats shipStats;
 
-    [SerializeField] protected Animator animator;
-    protected bool ShieldModuleInstalled;
+    public int Id;
 
-    public int Level
+    protected bool Alive;
+
+    public bool IsAlive
     {
         get
         {
-            return levelSystem.GetLevel();
+            return Alive;
+        }
+        private set
+        {
+            Alive = value;
+        }
+    }
+
+
+    /**
+   * Attributes
+   */
+    [Min(12.5f)]
+    [HideInInspector] public float Damage;
+    [Min(.2f)]
+    [Range(.2f, 10)]
+    [HideInInspector] public float FireRate;
+    [Min(0)]
+    [HideInInspector] public float Speed;
+    [Min(0)]
+    public float currentHealth;
+    [Min(25)]
+    [HideInInspector] protected float maxHealth;
+    public float CurrentHealth
+    {
+        get
+        {
+            return currentHealth;
+        }
+        set
+        {
+            currentHealth = value;
+            OnHealthChanged?.Invoke(currentHealth, MaxHealth);
         }
     }
 
@@ -24,84 +55,106 @@ public abstract class Ship : MonoBehaviour
     {
         get
         {
-            return shipStatsSystem.GetMaxHealth();
-        }
-        set { shipStatsSystem.SetMaxHealth(value); }
-    }
-
-    public float CurrentHealth
-    {
-        get
-        {
-            return shipStatsSystem.CurrentHealth;
+            return maxHealth;
         }
         set
         {
-            shipStatsSystem.CurrentHealth = value;
+            maxHealth = value;
         }
     }
 
+    public float HealthPresentage
+    {
+        get
+        {
+            return (CurrentHealth / MaxHealth) * 100;
+        }
+    }
+    public int Level { get; set; }
+    public int MaxLevel { get; set; }
+
+    protected Animator animator;
+
+    protected bool HasShield;
+
+    [Header("Effects")]
+    [SerializeField] protected GameObject ShieldEffect;
+    [SerializeField] protected PoolGameObjectType ExplostionEffect;
+
+
+    private void OnDestroy()
+    {
+        OnCleanUp();
+    }
+
+    public virtual void OnCleanUp() { }
+
+    private void OnEnable()
+    {
+        Enter();
+    }
+
+    public virtual void Enter() { }
+
     private void Awake()
     {
-        InitReferences();
-
-
+        OnAwake();
     }
 
     private void Start()
     {
-        ShipStartSetUp();
+        ShipSetup();
     }
 
-    public abstract void ShipStartSetUp();
-    public abstract void InitReferences();
+
+    public abstract void ShipSetup();
+    public abstract void OnAwake();
     public abstract void Death();
-
-    //Get Health Presentatge
-    public float GetHealthPresentage()
-    {
-        return CurrentHealth / MaxHealth;
-    }
-
-    public void SetGameManager(GameManager gameManager)
-    {
-        this.gameManager = gameManager;
-    }
 
     public virtual void InstallShieldModule()
     {
-        if (ShieldModuleInstalled)
+        if (HasShield)
         {
             return;
         }
 
-        ShieldModuleInstalled = true;
+        HasShield = true;
     }
 
     public bool HasShieldModule()
     {
-        return ShieldModuleInstalled;
+        return HasShield;
     }
 
-    //Setter   and Getter for LevelSystem
-    public LevelSystem GetLevelSystem()
+    public virtual void SetStats(int level)
     {
-        return levelSystem;
-    }
-    public void SetLevelSystem(LevelSystem levelSystem)
-    {
-        this.levelSystem = levelSystem;
+        MaxLevel = 20;
+        Level = level;
+
+        maxHealth = Level * shipStats.baseHealth;
+
+        CurrentHealth = MaxHealth;
+
+        Speed = shipStats.baseSpeed;
+
+        Damage = Level * shipStats.baseDamage;
+
+        FireRate = shipStats.baseFireRate;
     }
 
-    //Getter and Setter for ShipStatSystem
-    public ShipStatsSystem GetShipStatsSystem()
+    public virtual void Heal(float ammount)
     {
-        return shipStatsSystem;
-    }
-    public void SetShipStatSystem(ShipStatsSystem newshipStatsSystem)
-    {
-        shipStatsSystem = newshipStatsSystem;
+        CurrentHealth += ammount;
+
+        if (CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+
+        CurrentHealth = Mathf.Clamp(CurrentHealth, 0, MaxHealth);
     }
 
-
+    public virtual void TakeDamage(float dmg)
+    {
+    }
 }

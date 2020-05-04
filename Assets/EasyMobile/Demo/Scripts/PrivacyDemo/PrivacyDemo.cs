@@ -204,7 +204,7 @@ namespace EasyMobile.Demo
             // is shown from the demo buttons.
             if (string.IsNullOrEmpty(UnityAnalyticsOptOutURL))
                 FetchUnityAnalyticsOptOutURL(null, null);
-            
+
             // If we think consent is not needed for our app (or the current device
             // is not in EEA region), we can just
             // go ahead and initialize EM runtime as normal.
@@ -229,7 +229,7 @@ namespace EasyMobile.Demo
             // In short we'll just go ahead with initializing the EM runtime.
             if (consent != null)
             {
-                if (RuntimeManager.IsInitialized())
+                if (!RuntimeManager.IsInitialized())
                     RuntimeManager.Init();
 
                 return;
@@ -261,8 +261,8 @@ namespace EasyMobile.Demo
 
         void Update()
         {
-            demoUtils.DisplayBool(isInEeaRegionDisplayer, 
-                mIsInEEARegion, 
+            demoUtils.DisplayBool(isInEeaRegionDisplayer,
+                mIsInEEARegion,
                 "Is In EEA Region: " + mIsInEEARegion.ToString().ToUpper());
         }
 
@@ -287,7 +287,7 @@ namespace EasyMobile.Demo
         public void ShowLocalizedDemoConsentDialog(bool dismissible = true)
         {
             // Show a consent dialog in localized language.
-            ShowDemoConsentDialog(true, dismissible);   
+            ShowDemoConsentDialog(true, dismissible);
         }
 
         public static void ShowDemoConsentDialog(bool localize, bool dismissible)
@@ -333,7 +333,7 @@ namespace EasyMobile.Demo
             /// with translated texts in script before showing
             /// the dialog for localization purpose.
             /// 
-             
+
             // First check if there's any consent saved previously.
             // If there is, we will set the 'isOn' state of our toggles
             // according to the saved consent to reflect the current consent
@@ -376,7 +376,7 @@ namespace EasyMobile.Demo
             // to the toggle description. Otherwise we'll use the "URL unavailable" description.
             // Note that this toggle is ON by default and is not interactable because we can't opt-out
             // Unity Analytics locally, instead the user must visit the fetched URL to opt-out.
-            ConsentDialog.Toggle uaToggle = new ConsentDialog.Toggle(UnityAnalyticsToggleId); 
+            ConsentDialog.Toggle uaToggle = new ConsentDialog.Toggle(UnityAnalyticsToggleId);
             uaToggle.Title = localize ? FrAnalyticsToggleTitle : EnAnalyticsToggleTitle;
             uaToggle.ShouldToggleDescription = false;   // the description won't change when the toggle switches between on & off states.
             uaToggle.IsInteractable = false; // not interactable
@@ -427,7 +427,20 @@ namespace EasyMobile.Demo
                 if (success != null)
                     success(UnityAnalyticsOptOutURL);
             }
-                
+
+#if UNITY_2018_3_OR_NEWER && UNITY_ANALYTICS
+            // Since Unity 2018.3.0, the Unity Data Privacy plugin is embedded in the Analytics library,
+            // so just call the method directly.
+            UnityEngine.Analytics.DataPrivacy.FetchPrivacyUrl(url =>
+                {
+                    OnFetchUnityAnalyticsURLSuccess(url, success);
+                },
+                error =>
+                {
+                    OnFetchUnityAnalyticsURLFailure(error, failure);
+                });
+#else
+
             // Here we need to invokes the methods via reflection because we don't know if
             // you've imported the Unity Data Privacy plugin or not!
             // In your actual app you can simply import the plugin and call it methods as normal.
@@ -466,7 +479,7 @@ namespace EasyMobile.Demo
             initMethod.Invoke(null, null);
 
             // Now fetch the opt-out URL.
-            fetchURLMethod.Invoke(null, 
+            fetchURLMethod.Invoke(null,
                 new object[]
                 {
                     (Action<string>)((url) =>
@@ -478,6 +491,7 @@ namespace EasyMobile.Demo
                         OnFetchUnityAnalyticsURLFailure(error, failure);
                     })
                 });
+#endif
         }
 
         private static void OnFetchUnityAnalyticsURLSuccess(string url, Action<string> callback)
@@ -485,7 +499,7 @@ namespace EasyMobile.Demo
             UnityAnalyticsOptOutURL = url;
             if (callback != null)
                 callback(url);
-            
+
             Debug.Log("Unity Analytics opt-out URL is fetched successfully.");
         }
 
@@ -494,7 +508,7 @@ namespace EasyMobile.Demo
             UnityAnalyticsOptOutURL = string.Empty;
             if (callback != null)
                 callback(error);
-            
+
             Debug.LogWarning("Fetching Unity Analytics opt-out URL failed with error: " + error);
         }
 
@@ -506,7 +520,7 @@ namespace EasyMobile.Demo
         {
             if (dialog == null)
                 return;
-            
+
             dialog.Dismissed += DemoDialog_Dismissed;
             dialog.Completed += DemoDialog_Completed;
             dialog.ToggleStateUpdated += DemoDialog_ToggleStateUpdated;

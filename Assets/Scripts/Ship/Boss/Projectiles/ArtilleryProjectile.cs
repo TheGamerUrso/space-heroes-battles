@@ -1,91 +1,95 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using TheGamerUrso.PoolSystem;
+using UnityEngine;
 
 public class ArtilleryProjectile : EnemyProjectile
 {
-    public GameObject TargetPrefab;
-    public Transform[] artilleryTargets;
-    public GameObject WarningSignalPrefab;
-    private GameObject WarningSignal;
-    private Transform TargetToGo;
-    private int curTarget;
-    public float yVel;
-
+    public PlayerShip playerShip;
+    public float timer = 5;
     public bool fall;
-
-    public float distFromTarget;
-
-    public void Targets(Transform[] targets)
+    public Vector3 TargetPos;
+    public GameObject warningPrefab;
+    private SizeByDistance warning;
+    public float distance;
+    public override void OnStart()
     {
-        artilleryTargets = targets;
+        base.OnStart();
+        timer = 1;
+        fall = false;
+
+        if (warning == null)
+        {
+            GameObject warningGO = Instantiate(warningPrefab);
+            warning = warningGO.GetComponent<SizeByDistance>();      
+        }
+
+        warning.Setup(transform);
+        warning.Hide();
     }
 
-    private void Start()
+    public override void Setup(Vector3 shootDir, float dmg)
     {
-        curTarget = UnityEngine.Random.Range(0, artilleryTargets.Length);
-        foreach (Transform item in artilleryTargets)
+        base.Setup(shootDir, dmg);
+        timer = 1;
+        fall = false;
+        if (warning == null)
         {
-            if (PlayerManager.GetPlayer() == null)
-            {
-                return;
-            }
-            Player Target = PlayerManager.GetPlayer();
-
-            if (Target == null)
-            {
-                Target = GameObject.FindObjectOfType<Player>();
-            }
-
-            if (Target != null)
-            {
-                float dist = (item.transform.position - Target.transform.position).magnitude;
-                if (dist < 5)
-                {
-                    TargetToGo = item;
-                    WarningSignal = Instantiate(WarningSignalPrefab, item.transform, false);
-                }
-            }
+            GameObject warningGO = Instantiate(warningPrefab);
+            warning = warningGO.GetComponent<SizeByDistance>();
+            warning.Setup(transform);
         }
+
+        warning.Hide();
     }
 
     public override void Movement()
     {
-        yVel = 25;
-        if (transform.localPosition.y > 10)
+        timer -= Time.deltaTime;
+
+        if (timer < 0)
         {
             fall = true;
         }
 
-        if (fall == false)
+        if (!fall)
         {
-            Vector3 newPos = (transform.forward * speed) + (transform.up * yVel);
-            transform.Translate(newPos * Time.deltaTime);
-        }
-        else if (fall && TargetToGo != null)
-        {
-            distFromTarget = (transform.position - TargetToGo.transform.position).magnitude - 30;
+            playerShip = PlayerManager.GetPlayer();
 
-            WarningSignal.transform.localScale = Vector3.Lerp(WarningSignal.transform.localScale, new Vector3(distFromTarget, distFromTarget, distFromTarget), .1f * Time.deltaTime);
-
-            WarningSignal.transform.localScale = new Vector3(
-               Mathf.Clamp(WarningSignal.transform.localScale.x, 0, 1),
-               Mathf.Clamp(WarningSignal.transform.localScale.y, 0, 1),
-               Mathf.Clamp(WarningSignal.transform.localScale.z, 0, 1)
-                );
-
-            transform.position = Vector3.MoveTowards(transform.position, TargetToGo.transform.position, 1);
-        }
-        if (TargetToGo != null)
-        {
-            if ((transform.position - TargetToGo.transform.position).magnitude < .1f)
+            if (playerShip != null)
             {
-                GameObject explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-                explosion.transform.position = transform.position + Vector3.up * 2;
-                explosion.transform.rotation = Quaternion.identity;
+                TargetPos = playerShip.transform.position;
+            }
+            else
+            {
+                TargetPos = new Vector3(0, 0, 0);
+            }
+            warning.transform.position = new Vector3(TargetPos.x, -50, TargetPos.z);
 
-                Destroy(WarningSignal);
-                gameObject.SetActive(false);
-                Destroy(gameObject, 1);
+            transform.position += Vector3.up * speed * Time.deltaTime;
+
+            speed = 60;
+        }
+        else if (fall)
+        {
+            speed = 120;
+            if (TargetPos != null)
+            {
+                distance = Vector3.Distance(TargetPos, transform.position);
+
+                warning.Show();
+
+                transform.position += transform.forward * speed * Time.deltaTime;
+
+                transform.LookAt(TargetPos);
+
+                if (distance < 2)
+                {
+                    DestoryNow();
+                }
+     
             }
         }
+
     }
+
 }

@@ -1,24 +1,40 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
 public class SimpleAI : BaseEnemyAI
 {
+    protected int Direction;
+    protected bool directionChanged;
+
+    protected bool Loop;
+
+    public override void Setup()
+    {
+        base.Setup();
+
+        m_XVel = enemy.Speed / 2;
+        m_ZVel = enemy.Speed;
+
+        Direction = 0;
+    }
+
     public override void Move()
     {
         //With transform
-        movement = (-transform.forward * m_ZVel) + (-transform.right * m_XVel);
+        movement = (transform.forward * m_ZVel) + (transform.right * m_XVel);
         movement.x *= Direction;
-        //transform.localPosition += movement * Time.deltaTime;
+        transform.position += movement * Time.deltaTime;
 
 
         //With Translate
-        //  transform.Translate(movement * Time.deltaTime,Space.Self);
+        //transform.Translate(movement * Time.deltaTime,Space.Self);
 
         //With AddForce
         // rigid.AddForce(movement * 200 * Time.deltaTime);
 
         //Move Position
-         rigid.MovePosition(transform.position + (movement * Time.deltaTime));
+        //rigid.MovePosition(transform.position + (movement * Time.deltaTime));
 
         //with Velocity
 

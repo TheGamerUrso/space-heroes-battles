@@ -1,35 +1,68 @@
-﻿using UnityEngine;
+﻿using Boo.Lang;
+using UnityEngine;
 
-public class UpgradeManager : MonoBehaviour
+public class UpgradeManager : Singleton<UpgradeManager>
 {
+    public delegate void Purschase();
+    public Purschase OnPurschase;
+
     public UpgradeElement[] upgradeElements;
+
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
+    private ObjectiveData objectiveData;
+
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+        OnPurschase = null;
+    }
+
+    public void Notify()
+    {
+        OnPurschase?.Invoke();
+    }
+
+    public void SubscribePurchasable(IPurchasable purchasable)
+    {
+        OnPurschase += purchasable.OnPurschase;
+    }
+
+    public void UnsubscribePurchasable(IPurchasable purchasable)
+    {
+        OnPurschase -= purchasable.OnPurschase;
+    }
+
     private void Start()
     {
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+
         for (int i = 0; i < upgradeElements.Length; i++)
         {
-            upgradeElements[i].RefreshUpgradeElement();
-            upgradeElements[i].OnUpgradeBought = Refresh;
+            UpgradeElement upgradeElement = upgradeElements[i];
+            upgradeElement.InitUpgradeElement(this);
+            upgradeElement.OnPurchased += Purchase;
         }
     }
 
-    public void RefreshUpgrades()
+    public void Purchase(UpgradeElement upgradeElement)
     {
-        for (int i = 0; i < upgradeElements.Length; i++)
+        objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.spend);
+
+        if (objectiveData != null)
         {
-            upgradeElements[i].RefreshUpgradeElement();
+            var progress = objectiveData.progress + upgradeElement.Cost;
+            objectiveData.UpdateProgress(progress);
         }
+
+        Notify();
     }
 
-    public void Refresh(UpgradeElement upgradeElement)
+    public void SaveAndClose()
     {
-        PlayerData playerData = DataController.GetPlayerData();
-        playerData.SetUpgrade(upgradeElement);
-        RefreshUpgrades();
+        PersistantData.Save();
     }
 
-    public void Save()
-    {
-        SaveSystem.SavePlayerData();
-    }
 
 }

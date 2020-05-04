@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EM_Settings
   m_EditorClassIdentifier: 
   mAdvertisingSettings:
-    mAutoLoadAdsMode: 2
+    mAutoLoadAdsMode: 1
     mAdCheckingInterval: 10
     mAdLoadingInterval: 20
     mIosDefaultAdNetworks:
@@ -21,9 +21,9 @@ MonoBehaviour:
       interstitialAdNetwork: 0
       rewardedAdNetwork: 0
     mAndroidDefaultAdNetworks:
-      bannerAdNetwork: 0
-      interstitialAdNetwork: 0
-      rewardedAdNetwork: 0
+      bannerAdNetwork: 10
+      interstitialAdNetwork: 10
+      rewardedAdNetwork: 10
     mAdColony:
       mAppId:
         mIosId: 
@@ -184,11 +184,11 @@ MonoBehaviour:
         values: []
     mUnityAds:
       mAppId:
-        mIosId: 
-        mAndroidId: 
+        mIosId: 2725712
+        mAndroidId: 2725712
       mDefaultBannerAdId:
-        mIosId: 
-        mAndroidId: 
+        mIosId: banner
+        mAndroidId: banner
       mDefaultInterstitialAdId:
         mIosId: video
         mAndroidId: video
@@ -204,57 +204,60 @@ MonoBehaviour:
       mCustomRewardedAdIds:
         keys: []
         values: []
-      mEnableTestMode: 0
+      mEnableTestMode: 1
   mGameServiceSettings:
     mAutoInit: 1
     mAutoInitDelay: 2
-    mAndroidMaxLoginRequests: 3
-    mGpgsDebugLogEnabled: 0
+    mAndroidMaxLoginRequests: 0
+    mGpgsDebugLogEnabled: 1
     mGpgsPopupGravity: 0
+    mGpgsShouldRequestServerAuthCode: 0
+    mGpgsForceRefreshServerAuthCode: 0
+    mGpgsOauthScopes: []
     mLeaderboards:
     - _name: Survival Mode
       _iosId: 
       _androidId: CgkI5fnB-5IMEAIQEQ
     mAchievements:
     - _name: Prologue Completed
-      _iosId: Prologue Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQBA
-    - _name: Level1 Completed
-      _iosId: Level1 Completed
+    - _name: Level 1 Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQBQ
-    - _name: Level2 Completed
-      _iosId: Level2 Completed
+    - _name: Level 2 Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQBg
-    - _name: Level3 Completed
-      _iosId: Level3 Completed
+    - _name: Level 3 Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQBw
-    - _name: Level4 Completed
-      _iosId: Level4 Completed
+    - _name: Level 4 Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQCA
-    - _name: Level5 Completed
-      _iosId: Level5 Completed
+    - _name: Level 5 Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQCQ
-    - _name: Level6 Completed
-      _iosId: Level6 Completed
+    - _name: Level 6 Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQCg
-    - _name: Level7 Completed
-      _iosId: Level7 Completed
+    - _name: Level 7 Completed
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQCw
-    - _name: Level8 Completed
-      _iosId: Level8 Completed
-      _androidId: 
-    - _name: Piece of Cake
-      _iosId: Piece of Cake
-      _androidId: CgkI5fnB-5IMEAIQDQ
+    - _name: Level 8 Completed
+      _iosId: 
+      _androidId: CgkI5fnB-5IMEAIQDA
     - _name: Destroyer
-      _iosId: Destroyer
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQDg
-    - _name: Max Power
-      _iosId: Max Power
-      _androidId: CgkI5fnB-5IMEAIQEA
-    - _name: Heroes_Assemble
-      _iosId: Heroes_Assemble
+    - _name: Unlock All Heroes
+      _iosId: 
       _androidId: CgkI5fnB-5IMEAIQDw
+    - _name: Max Power
+      _iosId: 
+      _androidId: CgkI5fnB-5IMEAIQEA
+    - _name: Piece of Cake
+      _iosId: 
+      _androidId: CgkI5fnB-5IMEAIQDQ
     mAndroidXmlResources: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<!--\r\nGoogle
       Play game services IDs.\r\nSave this file as res/values/games-ids.xml in your
       project.\r\n-->\r\n<resources>\r\n  <!-- app_id -->\r\n  <string name=\"app_id\"
@@ -342,17 +345,17 @@ MonoBehaviour:
     mDefaultRatingDialogContent:
       mTitle: Rate $PRODUCT_NAME
       mMessage: How would you rate $PRODUCT_NAME?
-      mLowRatingMessage: That's bad. Would you like to give us some feedback instead?
-      mHighRatingMessage: Awesome! Let's do it!
+      mLowRatingMessage: Sorry to hear that. Let us know how we can improve the game.
+      mHighRatingMessage: 'Thanks! '
       mPostponeButtonText: Not Now
       mRefuseButtonText: Don't Ask Again
       mRateButtonText: Rate Now!
       mCancelButtonText: Cancel
-      mFeedbackButtonText: Send Feedback
-    mMinimumAcceptedStars: 1
-    mSupportEmail: 
+      mFeedbackButtonText: Tell Us What you think!
+    mMinimumAcceptedStars: 2
+    mSupportEmail: thegamerurso@gmail.com
     mIosAppId: 
-    mAnnualCap: 3
+    mAnnualCap: 12
     mDelayAfterInstallation: 10
     mCoolingOffPeriod: 10
     mIgnoreContraintsInDevelopment: 0
@@ -392,10 +395,10 @@ MonoBehaviour:
       mIOSInfoPlistKeys:
       - mKey: NSContactsUsageDescription
         mValue: '[Your usage description]'
-  mIsAdModuleEnable: 0
+  mIsAdModuleEnable: 1
   mIsIAPModuleEnable: 0
   mIsGameServiceModuleEnable: 1
   mIsNotificationModuleEnable: 0
   mIsSharingModuleEnable: 0
-  mActiveModuleIndex: 8
+  mActiveModuleIndex: 0
   mIsSelectingModule: 0

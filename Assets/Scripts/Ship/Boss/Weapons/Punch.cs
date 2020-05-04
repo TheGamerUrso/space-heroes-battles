@@ -1,48 +1,39 @@
 ﻿using System;
 using System.Collections;
+using TheGamerUrso.PoolSystem;
 using UnityEngine;
-
-public class Punch : MonoBehaviour, IDestroyable
+using DG.Tweening;
+public class Punch : MonoBehaviour, IDamagable
 {
-    public event Action<object> OnEnemyHit = delegate { };
-    public Transform[] Waypoints;
-
-    public HealthBarSettings HealthBarSettings;
-
-    private GameObject healthBar;
-
-    public int currentWaypoint;
-    public float cooldown;
-    public int delay;
-
-    public bool isDestroyed = false;
-
-    public float currentHealth;
-    public float maxhealth;
-
-    protected float takeDamageDelay;
-    public GameObject FireEffect;
-
-    public bool IsAlive
+    protected bool Alive;
+    public bool IsDestroyed
     {
         get
         {
-            return isDestroyed;
+            return Alive;
         }
         set
         {
-            isDestroyed = value;
+            Alive = value;
         }
     }
 
-    public float MaxHealth
-    {
-        get
-        {
-            return maxhealth;
-        }
-        set { maxhealth = value; }
-    }
+    /**
+   * Attributes
+   */
+    #region Attributes
+    public delegate void HealthChanged(float currentHealth, float maxHealth);
+    public event HealthChanged OnHealthChanged;
+
+
+    [Min(25)]
+    public float maxHealth;
+
+    [Min(0)]
+    public float currentHealth;
+
+    [Min(12.5f)]
+    public float Damage;
 
     public float CurrentHealth
     {
@@ -53,134 +44,149 @@ public class Punch : MonoBehaviour, IDestroyable
         set
         {
             currentHealth = value;
+            OnHealthChanged?.Invoke(currentHealth, maxHealth);
         }
     }
 
-    private void Start()
+    public float MaxHealth
     {
-
-        if (cooldown >= 0)
+        get
         {
-            cooldown = UnityEngine.Random.Range(2, 4);
+            return maxHealth;
         }
-        else
+        set
         {
-            cooldown = 0;
-        }
-
-        if (FireEffect)
-            FireEffect.SetActive(false);
-
-        if (HealthBarSettings != null)
-        {
-            healthBar = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
-            OnEnemyHit += healthBar.GetComponent<BaseHealthWidget>().OnDamageTaken;
+            maxHealth = value;
         }
     }
 
-    private void Update()
+    public float HealthPresentage
     {
-        if (isDestroyed == false)
+        get
         {
-            float dist = (transform.position - Waypoints[0].position).magnitude;
-
-            if (dist <= 1)
-            {
-                cooldown -= Time.deltaTime;
-                if (cooldown <= 0)
-                {
-                    if (GuiManager.IsTrasnmiting())
-                    {
-                        return;
-                    }
-                    StartCoroutine(PunchCoroutine());
-                }
-            }
-
-            if (takeDamageDelay >= 0)
-            {
-                takeDamageDelay -= Time.deltaTime;
-            }
-            transform.position = Vector3.MoveTowards(transform.position, Waypoints[currentWaypoint].position, 1);
+            return (CurrentHealth / MaxHealth) * 100;
         }
-        else
+    }
+    #endregion Attributes
+
+    public Action<bool> Attacked;
+
+    public BaseBossEnemy baseBossEnemy;
+    public bool isAlive;
+    public GameObject fireEffect;
+
+    public float damage;
+
+    public GameObject prepareToAttack;
+
+    protected Animator animator;
+
+    [Header("Effects")]
+    [SerializeField] protected PoolGameObjectType ExplostionEffect;
+
+    [SerializeField] private HealthBarSettings HealthBarSettings;
+    private EnemyHealthWidget healthBar;
+    public EnemyHealthWidget HealthBar
+    {
+        get
         {
-            transform.position = Vector3.MoveTowards(transform.position, Waypoints[0].position, 1);
+            return healthBar;
         }
     }
 
-    private IEnumerator PunchCoroutine()
+    public void Attack(Action<bool> callback)
     {
-        currentWaypoint = 1;
-        yield return new WaitForSeconds(1.0f);
-        currentWaypoint = 0;
-        cooldown = UnityEngine.Random.Range(2, 4);
+        Attacked = callback;
+        StartCoroutine(AttackCoroutine());
+    }
+
+    IEnumerator AttackCoroutine()
+    {
+        prepareToAttack.SetActive(true);
+        yield return new WaitForSeconds(2.0f);
+        animator.SetTrigger("Attack");      
+        Attacked?.Invoke(true);
+        yield return new WaitForSeconds(2.0f);
+        Attacked?.Invoke(false);
+        prepareToAttack.SetActive(false);
+
     }
 
     public void TakeDamage(float dmg)
     {
-        if (GuiManager.IsTrasnmiting())
+        if (isAlive)
         {
-            return;
-        }
-        currentHealth -= dmg;
-        if (CurrentHealth <= 0)
-        {
-            currentHealth = 0;
-            if (isDestroyed == false)
+            CurrentHealth -= dmg;
+            if (currentHealth <= 0)
             {
+                isAlive = false;
+                currentHealth = 0;
                 GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
                 explostion.transform.position = transform.position;
-                isDestroyed = true;
-                if (FireEffect)
-                    FireEffect.SetActive(true);
+                fireEffect.SetActive(true);
+
+                PlayerData playerData = PersistantData.GetPlayerData();
+                playerData.PowerUpLevel += .025f;
             }
+   
         }
-
-        OnEnemyHit?.Invoke(this);
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        GameObject obj = other.gameObject;
         string gameobjectTag = other.gameObject.tag;
 
-        if (other.tag.Equals(Constants.PLAYTERTAG))
+        if (gameobjectTag.Equals(Constants.PLAYTERTAG))
         {
-            if (takeDamageDelay <= 0)
+            IDamagable destroyable = other.GetComponent<IDamagable>();
+            if (destroyable != null)
             {
-                takeDamageDelay = .2f;
-
-                TakeDamage(12.5f);
-            }
-        }
-
-        PlayerProjectile playerProjectile = other.GetComponent<PlayerProjectile>();
-
-        if (playerProjectile)
-        {
-            if (takeDamageDelay <= 0)
-            {
-                takeDamageDelay = .2f;
-
-                if (playerProjectile)
-                {
-                    TakeDamage(playerProjectile.getDamage());
-                }
+                destroyable.TakeDamage(damage);
             }
         }
     }
 
-    public void Heal(float ammount)
+    private void Awake()
     {
-        currentHealth += ammount;
+        OnAwake();
+    }
 
-        if (currentHealth > maxhealth)
+    private void Start()
+    {
+        ShipSetup();
+    }
+
+    public void ShipSetup()
+    {
+        maxHealth = baseBossEnemy.MaxHealth;
+        currentHealth = maxHealth;
+        baseBossEnemy.AddDamagablePart(this);
+        fireEffect.SetActive(false);
+        isAlive = true;
+        animator = GetComponent<Animator>();
+
+        if (healthBar != null)
         {
-            currentHealth = maxhealth;
+            healthBar.GetComponent<BaseHealthWidget>();
         }
 
-        currentHealth = Mathf.Clamp(currentHealth, 0, maxhealth);
+        if (HealthBarSettings != null)
+        {
+            GameObject initializedHealthWidget = Instantiate(HealthBarSettings.HealthBarPrefab, transform, false);
+            healthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
+            healthBar.Setup(this, true);
+            healthBar.Show();
+            initializedHealthWidget.SetActive(true);
+        }
+    }
+
+    public void OnAwake()
+    {
+      
+    }
+
+    public void Death()
+    {
+
     }
 }

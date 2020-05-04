@@ -10,7 +10,7 @@ public class BaseOptions : MonoBehaviour
     public delegate void OnOptionsChanged();
     public static event OnOptionsChanged OnOptionsRecieved;
 
-    protected float[] Distances = { 3, 4, 5 };
+    protected float[] Distances = { 5, 10, 15 };
     public AudioMixerGroup MusicMixerGroup;
     public AudioMixerGroup SFXMixerGroup;
 
@@ -22,10 +22,11 @@ public class BaseOptions : MonoBehaviour
     protected GameObject Distance_Controls;
 
     protected RectTransform rectTransform;
-    public GameObject DistanceSelectionIndicator;
     public Button ShortButton;
     public Button MidButton;
     public Button LongButton;
+    public GameObject[] select;
+
     public void OnEnable()
     {
         OnOptionEnter();
@@ -39,29 +40,27 @@ public class BaseOptions : MonoBehaviour
 
     public virtual void OnOptionEnter()
     {
-        if (rectTransform == null)
-            rectTransform = DistanceSelectionIndicator.GetComponent<RectTransform>();
-
-        InitializeOptions();
+        //InitializeOptions();
         //RefreshAutoFire();
         // RefreshGlobalMute();
         UpdateDistance();
         //SaveSystem.LoadGameSettings(gameObject);
-        UpdateDistanceOptionSelection();
         UpdateAudioVolume();
     }
 
     public virtual void InitializeOptions()
     {
         InitializeAudioOptions();
-        InitializeDistanceOptions();
     }
 
     public void UpdateAudioVolume()
     {
-        PlayerData playerData = DataController.GetPlayerData();
-        MusicVolume.value = playerData.MusicVolume;
-        SFXVolume.value = playerData.SFXVolume;
+        PlayerData playerData = PersistantData.GetPlayerData();
+        if (playerData != null)
+        {
+            MusicVolume.value = playerData.MusicVolume;
+            SFXVolume.value = playerData.SFXVolume;
+        }
     }
     public void InitializeAudioOptions()
     {
@@ -77,66 +76,25 @@ public class BaseOptions : MonoBehaviour
             SetSFXVolume(value);
         });
     }
-    public void InitializeDistanceOptions()
-    {
-        UpdateDistanceOptionSelection();
 
-        ShortButton.onClick.AddListener(() =>
-        {
-            rectTransform.localPosition = ShortButton.transform.localPosition;
-        });
-
-        MidButton.onClick.AddListener(() =>
-        {
-            rectTransform.localPosition = MidButton.transform.localPosition;
-        });
-
-        LongButton.onClick.AddListener(() =>
-        {
-            rectTransform.localPosition = LongButton.transform.localPosition;
-        });
-    }
-    public void UpdateDistanceOptionSelection()
-    {
-        PlayerData playerData = DataController.GetPlayerData();
-        for (int i = 0; i < Distances.Length; i++)
-        {
-            if (Distances[i] == playerData.distance)
-            {
-                if (i == 0)
-                {
-                    rectTransform.localPosition = ShortButton.transform.localPosition;
-                }
-                else if (i == 1)
-                {
-                    rectTransform.localPosition = MidButton.transform.localPosition;
-                }
-                else if (i == 2)
-                {
-                    rectTransform.localPosition = LongButton.transform.localPosition;
-                }
-            }
-        }
-
-    }
     public void SetMusicVolume(float value)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         playerData.MusicVolume = value;
 
-        AudioManager.instance.SetMusicVolume(value);
+        AudioManager.SetMusicVolume(value);
     }
 
     public void SetSFXVolume(float value)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         playerData.SFXVolume = value;
 
-        AudioManager.instance.SetSoundVolume(value);
+        AudioManager.SetSoundVolume(value);
     }
     public void Mute()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         bool mute = playerData.mute;
         if (mute)
         {
@@ -150,7 +108,7 @@ public class BaseOptions : MonoBehaviour
     }
     public void ToggleAutoFire()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         bool autofire = playerData.AutoAttack;
         if (autofire)
         {
@@ -163,27 +121,30 @@ public class BaseOptions : MonoBehaviour
 
         RefreshAutoFire();
     }
+
     public void UpdateDistance()
     {
-        PlayerData playerData = DataController.GetPlayerData();
-        var distance = playerData.distance;
-        if (distance == Distances[0])
+        PlayerData playerData = PersistantData.GetPlayerData();
+        if (playerData == null)
         {
-            rectTransform.localPosition = ShortButton.transform.localPosition;
+            return;
         }
-        else if (distance == Distances[1])
+        for (int i = 0; i < Distances.Length; i++)
         {
-            rectTransform.localPosition = MidButton.transform.localPosition;
-        }
-        else if (distance == Distances[2])
-        {
-            rectTransform.localPosition = LongButton.transform.localPosition;
+            if (Distances[i] == playerData.distance)
+            {
+                select[i].SetActive(true);
+            }
+            else
+            {
+                select[i].SetActive(false);
+            }
         }
     }
 
     public void RefreshGlobalMute()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         bool mute = playerData.mute;
         if (mute)
         {
@@ -196,7 +157,7 @@ public class BaseOptions : MonoBehaviour
     }
     public void RefreshAutoFire()
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
         bool autofire = playerData.AutoAttack;
         if (autofire)
         {
@@ -209,15 +170,14 @@ public class BaseOptions : MonoBehaviour
     }
     public void SetDistance(int distance)
     {
-        PlayerData playerData = DataController.GetPlayerData();
+        PlayerData playerData = PersistantData.GetPlayerData();
 
-        playerData.distance = Distances[distance - 1];
+        playerData.Distance = Distances[distance - 1];
         UpdateDistance();
     }
 
     public virtual void ExitAndSave()
     {
-        SimpleShipControls.UpdateOffset();
-        SaveSystem.SavePlayerData();
+        SaveSystem.SaveGame();
     }
 }

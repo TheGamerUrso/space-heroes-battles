@@ -1,0 +1,152 @@
+﻿using System;
+using TMPro;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+
+public struct Level
+{
+    public string ID;
+    public Mission mission;
+    public Sprite sprite;
+    public bool interactable;
+    public bool Locked;
+
+    public Level(string ID, Mission mission, Sprite sprite, bool interactable, bool Locked)
+    {
+        this.ID = ID;
+        this.mission = mission;
+        this.sprite = sprite;
+        this.interactable = interactable;
+        this.Locked = Locked;
+    }
+}
+
+public class LevelElement : MonoBehaviour
+{
+    private Level level;
+    public Sprite[] sprites;
+    private Action<Level> buttonAction;
+    [SerializeField] private Button button;
+    [SerializeField] private Image buttonImage;
+    [SerializeField] private TextMeshProUGUI NameText;
+
+    [SerializeField] private Color normalColor;
+    [SerializeField] private Color LockedColor;
+
+    public GameObject lockedImage;
+    public void SetLevelElement(Level level, Action<Level> buttonAction)
+    {
+        this.buttonAction = buttonAction;
+
+        this.level = level;
+        if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
+        {
+            NameText.text = level.mission.Title + "\n" + "Level " + level.mission.Level + " Recomented";
+
+            button.onClick.AddListener(() =>
+            {
+                //Debug.Log("Pressed" + "Level " + level.mission.Level + " Button");
+      
+            });
+        }
+        else if (level.ID.Contains("Survival"))
+        {     
+            NameText.text = "SurvivalMode";
+
+            button.onClick.AddListener(() =>
+            {
+               // Debug.Log("Pressed" + "Survival Mode");
+            });
+        }
+        else if (string.IsNullOrEmpty(level.ID))
+        {
+            SetEmptyLevelElement();
+        }
+
+        Refresh();
+    }
+
+    public void SelectLevel()
+    {
+        buttonAction.Invoke(level);
+    }
+
+    public void SetEmptyLevelElement()
+    {
+        NameText.text = "More Soon";
+        level.interactable = false;
+        level.Locked = true;
+        lockedImage.SetActive(false);
+        button.interactable = level.interactable;
+        NameText.color = LockedColor;
+        buttonImage.color = LockedColor;
+    }
+    public void Lock()
+    {
+        lockedImage.SetActive(true);
+        level.interactable = false;
+        button.interactable = level.interactable;
+        
+    }
+    public void Unlock()
+    {
+        lockedImage.SetActive(true);
+        level.interactable = true;
+        button.interactable = level.interactable;
+       
+    }
+
+    public void Refresh()
+    {
+        PlayerData playerData = PersistantData.GetPlayerData();
+
+        if (level.ID.Contains("Mission") || level.ID.Contains("Prologue"))
+        {
+            button.interactable = level.interactable;
+
+            if (level.Locked)
+            {
+                NameText.color = LockedColor;
+                buttonImage.color = LockedColor;
+                lockedImage.SetActive(true);
+            }
+            else
+            {
+                NameText.color = normalColor;
+                buttonImage.color = normalColor;
+                lockedImage.SetActive(false);
+            }
+        }
+        else if (level.ID.Contains("Survival"))
+        {
+            button.interactable = level.interactable;
+
+            if (!level.Locked)
+            {
+                NameText.color = LockedColor;
+                buttonImage.color = LockedColor;
+                lockedImage.SetActive(true);
+            }
+            else
+            {
+                NameText.color = normalColor;
+                buttonImage.color = normalColor;
+                lockedImage.SetActive(false);
+            }
+        }
+        else if (string.IsNullOrEmpty(level.ID))
+        {
+            level.interactable = false;
+            level.Locked = true;
+            NameText.color = LockedColor;
+            buttonImage.color = LockedColor;
+            lockedImage.SetActive(false);
+        }
+    }
+
+
+
+
+
+}

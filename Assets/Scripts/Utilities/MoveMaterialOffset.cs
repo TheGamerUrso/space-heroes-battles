@@ -2,30 +2,49 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveMaterialOffset : MonoBehaviour {
-    private string offsetKey = "_BaseMap";
-    public float scrollSpeed = 0.5F;
-    public Renderer rend;
-    private float offset;
+public class MoveMaterialOffset : MonoBehaviour
+{
+    public enum Move { Y, X, Both }
+    public Move move;
 
-    public float frequently;
-    public float magnitute;
-    public bool sinMove;
+    private string offsetKey = "_MainTex";
+    [SerializeField] private float scrollSpeed = 0.5F;
+    [SerializeField] private float xScrollSpeed = 0;
+
+    private Renderer rend;
+
+    [SerializeField] private float offset;
+    [SerializeField] private float offXset;
+
+
     void Start()
     {
         rend = GetComponent<Renderer>();
     }
+
     void Update()
     {
-        if (sinMove == false)
+        switch (move)
         {
-            offset += scrollSpeed * Time.deltaTime;
+            case Move.Y:
+
+                offXset += xScrollSpeed * Time.deltaTime;
+
+                break;
+            case Move.X:
+                offset += scrollSpeed * Time.deltaTime;
+
+                break;
+            case Move.Both:
+                offset += scrollSpeed * Time.deltaTime;
+                offXset += xScrollSpeed * Time.deltaTime;
+                break;
+            default:
+                break;
         }
-        else
-        {
-            offset = Mathf.Sin(Time.time * frequently) * magnitute;
-        }
-        rend.material.SetTextureOffset(offsetKey, new Vector2(0, offset));
+
+
+        rend.material.SetTextureOffset(offsetKey, new Vector2(offXset, offset));
     }
 }
 

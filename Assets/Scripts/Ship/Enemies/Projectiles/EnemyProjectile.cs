@@ -1,66 +1,55 @@
 using TheGamerUrso;
+using TheGamerUrso.PoolSystem;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class EnemyProjectile : Projectile
 {
-    public Player           Target;
-    public Vector3          TargetLastPosition;
-    private IDestroyable    target;
-    private GameObject      explosion;
+    public GameObject Target;
+    public Vector3 TargetLastPosition;
 
-    private void FixedUpdate()
+    public bool FollowTarget;
+
+    private void OnDisable()
     {
-        Movement();
+        if (trailRenderer)
+            trailRenderer.Clear();
     }
 
+    public override void Setup(Vector3 shootDir, float dmg)
+    {
+        this.shootDir = shootDir;
+       // transform.eulerAngles = new Vector3(0, Utilities.GetAngleFromVectorFloat3D(shootDir), 0);
+        if (dmg > 0)
+            Damage = dmg;
+    }
     public override void Movement()
     {
-        if (FollowTarget)
-        {
-            // Aim bullet in player's direction.
+        Vector3 newPos = transform.position;
+        newPos += shootDir * speed * Time.deltaTime;
+        transform.position = newPos;
 
-            transform.position -= TargetLastPosition * speed * Time.deltaTime;
-        }
-        else
-        {
-            transform.position -= transform.forward * speed * Time.deltaTime;
-        }
-
+ 
         if (transform.position.z < Constants.m_ZMin)
         {
             gameObject.SetActive(false);
         }
     }
+
     public override void DestoryNow()
     {
-        explosion =PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-        explosion.transform.position = transform.position + Vector3.up * 2;
-        explosion.transform.rotation = Quaternion.identity;
-
+        explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        explosion.transform.SetPositionAndRotation(transform.position + Vector3.up * 2, Quaternion.identity);
         gameObject.SetActive(false);
     }
 
     public void OnTriggerEnter(Collider other)
     {
-        if (other.tag.Equals(Constants.PLAYTERTAG))
+        if (other.CompareTag("Player"))
         {
-            IDestroyable destroyable = other.GetComponent<IDestroyable>();
-            destroyable.TakeDamage(Damage);
+            var destroyable = other.GetComponent<IDamagable>();
+            destroyable.TakeDamage(damage);
             DestoryNow();
         }
-    }
-
-    public void GetTargetLastPosition()
-    {
-        Target = GameObject.FindObjectOfType<Player>();
-        if (Target)
-        {
-            TargetLastPosition = (transform.position - Target.transform.position).normalized;
-        }
-    }
-
-    public void SetFollowTarget(bool value)
-    {
-        FollowTarget = value;
     }
 }

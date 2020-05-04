@@ -3,137 +3,109 @@ using TheGamerUrso;
 using UnityEngine;
 using System.Linq;
 
+using Random = UnityEngine.Random;
+using System.Collections;
+using TheGamerUrso.Utils;
+using System.Collections.Generic;
+
 public class BaseBossEnemy : BaseEnemy
 {
+    public Action OnBossAttack;
+    public Action<int, int> OnBossHit;
+
+    #region Animation Config
+    [Header("Animation Config")]
+    int enterNameHash = Animator.StringToHash("Enter");
+    int flyingNameHash = Animator.StringToHash("Flying");
+    int deathNameHash = Animator.StringToHash("Death");
+    #endregion
+
+    #region Boss Config
     [Header("Boss Config")]
-
-    protected GameObject bossWidget;
+    public BaseBossEnemyAI BossAI;
     protected int hitIndex;
-    [SerializeField] protected int numberOfHits;
-    protected bool CanAttack;
-    protected int currentWeaponActive;
-    [SerializeField] protected IDestroyable[] DestroyableParts;
+    protected int numberOfHits;
+    public GameObject ExplosionsDeathEffect;
 
-    protected BaseBossEnemyAI bossEnemyAI;
+    #endregion
 
-    [SerializeField]
-    protected GameObject[] Weapons;
-    [SerializeField]
-    protected float delayAttak = 3;
+    #region Destroyable Parts Cofig
+    [Header("Destroyable Parts Cofig")]
+    [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
+    #endregion
 
-    public override void InitReferences()
+    public override void Enter()
     {
-        
-        shipStatsSystem.SetStats(levelSystem);
-        ShieldModuleInstalled = false;
+        base.Enter();
+        EnableColliders(false);
+        currentWeaponActive = 1;
+    }
 
-        DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
-        DestroyableParts = transform.GetComponentsInChildren<IDestroyable>().Where((item) => !item.Equals(this)).ToArray();
+    public void AddDamagablePart(IDamagable part)
+    {
+        DestroyableParts.Add(part);
 
-        for (int i = 0; i < DestroyableParts.Length; i++)
+        MonoBehaviour go = part as MonoBehaviour;
+        if (go != this)
         {
-            MonoBehaviour go = DestroyableParts[i] as MonoBehaviour;
-            if (go != this)
-            {
-                DestroyableParts[i].MaxHealth = MaxHealth / 2;
-                DestroyableParts[i].CurrentHealth = DestroyableParts[i].MaxHealth;
-            }
+            part.MaxHealth = MaxHealth / 2;
+            part.CurrentHealth = part.MaxHealth;
         }
+    }
+
+    public override void OnAwake()
+    {
+        base.OnAwake();
+        BossAI = GetComponent<BaseBossEnemyAI>();
+        DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
+
+        SetEnemyStats(1);
 
         currentWeaponActive = 0;
 
-        for (int i = 0; i < Weapons.Length; i++)
-        {
-            Weapons[i].GetComponent<WeaponScript>().SetShipStatsSystem(shipStatsSystem);
-            Weapons[i].SetActive(false);
-        }
+        DisableAllWeapons();
     }
 
     public override void TakeDamage(float damage)
     {
-        if (GuiManager.IsTrasnmiting() || delayAttak > 0)
+        if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0)
         {
             return;
         }
-
-        foreach (IDestroyable item in DestroyableParts)
-        {
-            if (item.IsAlive == false)
-            {
-                return;
-            }
-        }
-
-        BossTakeDamage();
-
-        base.TakeDamage(damage);
-    }
-
-    public virtual void BossTakeDamage()
-    {
-
-
-        PlayerWeaponSystem playerWeaponSystem = GameObject.FindObjectOfType<PlayerWeaponSystem>();
-        playerWeaponSystem.IncreasePowerUp(.05f);
 
         hitIndex++;
+        OnBossHit?.Invoke(hitIndex, numberOfHits);
 
-        if (hitIndex > numberOfHits)
+        base.TakeDamage(damage);
+
+        if (currentHealth < 0)
         {
-            hitIndex = 0;
-            GetComponent<BossAI>().ChangeWaypoint(hitIndex);
+            EnableColliders(false);
+            Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
         }
     }
 
-
-    public override void Update()
+    public virtual void BossHit()
     {
-        base.Update();
-        Tick();
+        PlayerData playerData = PersistantData.GetPlayerData();
+
+        if (playerData != null)
+        {
+            playerData.IncreasePowerUp(.05f);
+        }
+
+
     }
 
-    public virtual void Tick()
+    public override void OnUpdate()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Enter") || GuiManager.IsTrasnmiting())
+        if (CurrentHealth > 0)
         {
-            return;
-        }
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Death"))
-        {
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                Weapons[i].SetActive(false);
-            }
-        }
-        Attack();
-    }
-
-    public virtual void Phases()
-    {
-        for (int i = 0; i < Weapons.Length; i++)
-        {
-            if (Weapons[i].GetComponent<WeaponScript>().gameObject.activeSelf == false)
-            {
-                Weapons[i].GetComponent<WeaponScript>().gameObject.SetActive(true);
-            }
-        }
-
-        if (shipStatsSystem.GetHealthPressentage() <= 50f)
-        {
-            //Debug.Log(shipStatsSystem.GetHealthPressentage());
-            // Debug.Log("Increase Attack Speed");
-
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                float newFireRate = Weapons[i].GetComponent<WeaponScript>().GetFireRate() - .2f;
-
-                Weapons[i].GetComponent<WeaponScript>().SetFireRate(newFireRate);
-            }
+            Attack();
         }
     }
 
-    public virtual void Attack()
+    public override void Attack()
     {
         if (delayAttak > 0)
         {
@@ -141,12 +113,59 @@ public class BaseBossEnemy : BaseEnemy
         }
         else
         {
-            Phases();
+            OnBossAttack?.Invoke();
         }
     }
 
     public override void Death()
     {
+        var info = animator.GetCurrentAnimatorStateInfo(0);
+        animator.SetBool("Death", true);
+
+        StartCoroutine(DeathSequence());
+
+        EnableColliders(false);
+
+        DisableAllWeapons();
+
+        EnemyProjectile[] enemyProjectiles = GameObject.FindObjectsOfType<EnemyProjectile>();
+        if (enemyProjectiles.Length > 0)
+        {
+            foreach (EnemyProjectile item in enemyProjectiles)
+            {
+                item.gameObject.SetActive(false);
+            }
+        }
+        if (healthBar != null)
+        {
+            Destroy(healthBar);
+        }
+        EnemyDied?.Invoke(gameObject.name, this);
+    }
+
+    IEnumerator DeathSequence()
+    {
+        yield return new WaitForSeconds(4.0f);
         base.Death();
     }
+
+    public void SetFireRate(int weaponIndex = 0, bool all = true)
+    {
+        if (all)
+        {
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                float newFireRate = Weapons[i].FireRate - .2f;
+
+                Weapons[i].FireRate = newFireRate;
+            }
+        }
+        else
+        {
+            float newFireRate = Weapons[weaponIndex].FireRate - .2f;
+
+            Weapons[weaponIndex].FireRate = newFireRate;
+        }
+    }
+
 }

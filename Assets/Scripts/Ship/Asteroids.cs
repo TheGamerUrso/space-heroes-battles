@@ -1,8 +1,11 @@
-﻿using TheGamerUrso;
+﻿using System;
+using TheGamerUrso;
 using UnityEngine;
 
-public class Asteroids : MonoBehaviour, IDestroyable
+public class Asteroids : MonoBehaviour, IDamagable
 {
+    public Action<float, float> HealthChanged;
+
     public bool Destroyed;
     public float currentHealth;
     public float maxHealth;
@@ -12,7 +15,7 @@ public class Asteroids : MonoBehaviour, IDestroyable
     public Transform AsteroidTransform;
     public float takeDamageDelay;
 
-    public bool IsAlive
+    public bool IsDestroyed
     {
         get
         {
@@ -32,10 +35,20 @@ public class Asteroids : MonoBehaviour, IDestroyable
         get { return currentHealth; }
         set { currentHealth = value; }
     }
-
+    public Action<float, float> OnHealthChange
+    {
+        get
+        {
+            return HealthChanged;
+        }
+        set
+        {
+            HealthChanged = value;
+        }
+    }
     private void Start()
     {
-        rotSpeed = Random.Range(50, 100);
+        rotSpeed = UnityEngine.Random.Range(50, 100);
         //SetRandomPosition();
         currentHealth = maxHealth;
     }

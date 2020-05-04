@@ -1,12 +1,15 @@
-﻿using TheGamerUrso;
+﻿using DG.Tweening;
+using TheGamerUrso;
+using TheGamerUrso.Utils;
 using UnityEngine;
 
-public class FollowPathAI : BaseEnemyAI
+public class FollowPathAI : SimpleAI
 {
+    #region FollowPath AI Config
     [Header("FollowPath AI Config")]
     public int[] PathIndex;
     public Transform[] Path;
-    [HideInInspector] public int currentPointToFollowIndex;
+    public int currentPointToFollowIndex;
 
     [SerializeField] protected bool PingPong = false;
     [SerializeField] protected bool RotateTowardDir = false;
@@ -24,15 +27,24 @@ public class FollowPathAI : BaseEnemyAI
     private Vector3 dir;
     private Transform[] PathList;
     private GameObject path;
-    private float pathMagnitude;
+    protected float pathMagnitude;
+    #endregion
 
     public void GeneratePath()
     {
-        Debug.Log("Generate new Path");
+        // Debug.Log("Generate new Path");
         curPath = Random.Range(0, PathIndex.Length);
+        if (Waypoints.Instance == null)
+        {
+            return;
+        }
+
         path = Waypoints.Instance.GetPath(PathIndex[curPath]);
+
         Transform[] PathList = TransformExtention.GetChildrenAsList(path.transform);
+
         GeneratePath(PathList);
+
 
         currentPointToFollowIndex = 0;
         Reset = false;
@@ -40,29 +52,30 @@ public class FollowPathAI : BaseEnemyAI
 
         if (SpawnAtFirstPath)
         {
-            transform.localPosition = Path[0].position;
+            transform.position = Path[0].position;        
         }
     }
-
 
     public void GeneratePath(Transform[] newPath)
     {
         Path = newPath;
     }
 
-    public override void Initialize()
+    public override void Setup()
     {
+        base.Setup();
+        startingPosition = transform.position;
+
         if (Path.Length == 0)
         {
             GeneratePath();
         }
-        startingPosition = transform.localPosition;
-
     }
+
     public override void Enter()
     {
-        transform.localPosition = startingPosition;
-        currentPointToFollowIndex = 0;
+        base.Enter();
+        currentPointToFollowIndex = 0;   
     }
 
     public override void Move()
@@ -114,18 +127,25 @@ public class FollowPathAI : BaseEnemyAI
 
             newPos = Path[currentPointToFollowIndex].position;
 
-            newPos.y = -50;
+            newPos.y = 0;
 
             Path[currentPointToFollowIndex].position = newPos;
 
-            rigid.MovePosition(Vector3.MoveTowards(transform.position, newPos, XVel * Time.deltaTime));
+
+            Vector3 direction = (newPos - transform.position);
+            Vector3 normalizedDirection = direction.normalized;
+            float distance = direction.magnitude;
+
+            if (distance > 1)
+            {
+                transform.Translate(normalizedDirection * m_ZVel * Time.deltaTime,Space.World);
+            }
 
             if (RotateTowardDir)
             {
                 step = RotationSpeed * Time.deltaTime;
-                dir = (transform.position - newPos).normalized;
-                targetRotation = Vector3.Lerp(targetRotation, dir, step);
-                rigid.MoveRotation(Quaternion.LookRotation(targetRotation, Vector3.up));
+                targetRotation = Vector3.Lerp(targetRotation, normalizedDirection, step);
+                transform.rotation = Quaternion.LookRotation(targetRotation, Vector3.up);
             }
         }
     }

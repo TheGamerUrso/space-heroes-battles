@@ -1,46 +1,57 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-
-public class BoxerAI : BossAI
+using DG.Tweening;
+public class BoxerAI : BaseBossEnemyAI
 {
-    public float cooldown;
-
-    public override void Initialize()
+    public Punch[] punches;
+    public bool attacking;
+    public GameObject ShipPivot;
+    public Ease ease;
+    public float speed;
+    public override void Enter()
     {
-        base.Initialize();
+        base.Enter();
+    }
+
+    public override void Setup()
+    {
+        base.Setup();
+        cooldown = UnityEngine.Random.Range(4, 8);
+
+        Sequence seq = DOTween.Sequence();
+        seq.Append(ShipPivot.transform.DOMoveX(-1, speed).SetEase(ease));
+        seq.Append(ShipPivot.transform.DOMoveX(1, speed).SetEase(ease));
+        seq.Append(ShipPivot.transform.DOMoveX(0, speed).SetEase(ease));
+        seq.SetLoops(-1).Play();
     }
 
     public override void Move()
     {
-        base.Move();
-
-        if (cooldown > 0)
+        if (baseBoss.CurrentHealth > 0)
         {
-            cooldown -= Time.deltaTime;
-        }
-
-    }
-    public override void ChangeWaypoint(int hitIndex)
-    {
-        if (cooldown <= 0)
-        {
-            if (!m_IsMovingVertical)
+            if (!attacking && cooldown > 0)
             {
-                m_IsMovingVertical = true;
-                StartCoroutine(PushForward(hitIndex));
+                cooldown -= Time.deltaTime;
+            }
+
+            if (cooldown <= 0)
+            {
+                if (punches.Length > 0)
+                {
+                    List<Punch> newList = punches.Where(x => x.currentHealth > 0).ToList();
+                    int rand = UnityEngine.Random.Range(0, newList.Count);              
+                    if (newList.Count > 0)
+                    {
+                        cooldown = UnityEngine.Random.Range(4, 8);
+                        newList[rand].Attack((x) => { attacking = x;
+                            //Debug.Log("Punch" + attacking); 
+                        });
+                    }
+                }
             }
         }
     }
 
-
-    private IEnumerator PushForward(int hitIndex)
-    {    
-        currentPointToFollowIndex = 1;
-        yield return new WaitForSeconds(1);
-        currentPointToFollowIndex = 0;
-        m_IsMovingVertical = false;
-        hitIndex = 0;
-        cooldown = UnityEngine.Random.Range(4, 6); 
-    }
 }

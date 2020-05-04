@@ -2,64 +2,48 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseBossEnemyAI : FollowPathAI
+public class BaseBossEnemyAI : BaseEnemyAI
 {
+    #region Boss AI Config
     [Header("Boss AI Config")]
-    [SerializeField] protected GameObject WaypointPrefab;
-    [SerializeField] protected bool m_IsMovingVertical = false;
+    protected BaseBossEnemy baseBoss;
+    #endregion
 
-    protected Transform[] m_Waypoints = new Transform[3];
-    [HideInInspector] public bool appear;
-    [HideInInspector] public bool entered;
+    #region Waypoint Config
+    [Header("Waypoint Config")]
+    public float cooldown;
+
     protected GameObject waypointsGameObject;
 
-    public override void Initialize()
+    protected bool AutoChangeWaypoint;
+
+    protected float moveNextPositionTimer = 2;
+    #endregion
+
+
+    public override void InitIfNeeded()
     {
-        List<Transform> newList = new List<Transform>();
-
-        waypointsGameObject = Instantiate(WaypointPrefab, Vector3.zero, Quaternion.identity);
-        waypointsGameObject.transform.SetParent(transform.parent);
-
-        for (int i = 0; i < waypointsGameObject.transform.childCount; i++)
-        {
-            newList.Add(waypointsGameObject.transform.GetChild(i));
-        }
-
-        GeneratePath(newList.ToArray());
-
+        base.InitIfNeeded();
+        baseBoss = GetComponent<BaseBossEnemy>();
     }
 
-    public void ChangeWaypointByIndex(int currentPointToFollowIndex)
+    public override void Enter()
     {
-        this.currentPointToFollowIndex = currentPointToFollowIndex;
+        baseBoss.EnableColliders(false);
+    }
+
+    public override void Setup()
+    {
+        m_XVel = GetComponent<BaseEnemy>().Speed;
+    }
+
+    public virtual void ChangeWaypointByIndex(int currentPointToFollowIndex)
+    {
     }
 
     public virtual void ChangeWaypoint(int hitIndex)
     {
-        if (!m_IsMovingVertical)
-        {
-            m_IsMovingVertical = true;
-            StartCoroutine(MoveVerticalWithDelay(hitIndex));
-        }
     }
 
-    private IEnumerator MoveVerticalWithDelay(int hitIndex)
-    {
-        if (currentPointToFollowIndex == 1)
-        {
-            currentPointToFollowIndex = 2;
-        }
-        else if (currentPointToFollowIndex == 2)
-        {
-            currentPointToFollowIndex = 1;
-        }
-        else
-        {
-            currentPointToFollowIndex = Random.Range(1, Path.Length);
-        }
-
-        yield return new WaitForSeconds(1);
-        m_IsMovingVertical = false;
-        hitIndex = 0;
-    }
+    
 }

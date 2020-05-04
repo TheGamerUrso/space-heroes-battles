@@ -13,7 +13,7 @@ OcclusionCullingSettings:
 --- !u!104 &2
 RenderSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 8
   m_Fog: 0
   m_FogColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
   m_FogMode: 3
@@ -25,6 +25,7 @@ RenderSettings:
   m_AmbientGroundColor: {r: 0.047, g: 0.043, b: 0.035, a: 1}
   m_AmbientIntensity: 1
   m_AmbientMode: 3
+  m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
   m_SkyboxMaterial: {fileID: 0}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
@@ -41,7 +42,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 7
+  serializedVersion: 11
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -53,7 +54,7 @@ LightmapSettings:
     m_EnableBakedLightmaps: 0
     m_EnableRealtimeLightmaps: 0
   m_LightmapEditorSettings:
-    serializedVersion: 4
+    serializedVersion: 9
     m_Resolution: 2
     m_BakeResolution: 40
     m_TextureWidth: 1024
@@ -66,13 +67,30 @@ LightmapSettings:
     m_LightmapParameters: {fileID: 0}
     m_LightmapsBakeMode: 1
     m_TextureCompression: 1
-    m_DirectLightInLightProbes: 1
     m_FinalGather: 0
     m_FinalGatherFiltering: 1
     m_FinalGatherRayCount: 1024
     m_ReflectionCompression: 2
+    m_MixedBakeMode: 1
+    m_BakeBackend: 0
+    m_PVRSampling: 1
+    m_PVRDirectSampleCount: 32
+    m_PVRSampleCount: 500
+    m_PVRBounces: 2
+    m_PVRFilterTypeDirect: 0
+    m_PVRFilterTypeIndirect: 0
+    m_PVRFilterTypeAO: 0
+    m_PVRFilteringMode: 0
+    m_PVRCulling: 1
+    m_PVRFilteringGaussRadiusDirect: 1
+    m_PVRFilteringGaussRadiusIndirect: 5
+    m_PVRFilteringGaussRadiusAO: 2
+    m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+    m_PVRFilteringAtrousPositionSigmaIndirect: 2
+    m_PVRFilteringAtrousPositionSigmaAO: 1
+    m_ShowResolutionOverlay: 1
   m_LightingDataAsset: {fileID: 0}
-  m_RuntimeCPUUsage: 25
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -89,7 +107,11 @@ NavMeshSettings:
     minRegionArea: 2
     manualCellSize: 0
     cellSize: 0.16666667
+    manualTileSize: 0
+    tileSize: 256
     accuratePlacement: 0
+    debug:
+      m_Flags: 0
   m_NavMeshData: {fileID: 0}
 --- !u!1 &13017306
 GameObject:
@@ -213,130 +235,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 16617452}
---- !u!1 &154740284
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 177754, guid: 297e1561490784b9994f29cb42adcb47, type: 2}
-  m_PrefabInternal: {fileID: 954979843}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 154740287}
-  - component: {fileID: 154740286}
-  - component: {fileID: 154740285}
-  m_Layer: 0
-  m_Name: SoundManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!82 &154740285
-AudioSource:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 8293380, guid: 297e1561490784b9994f29cb42adcb47,
-    type: 2}
-  m_PrefabInternal: {fileID: 954979843}
-  m_GameObject: {fileID: 154740284}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - serializedVersion: 2
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 2
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
---- !u!114 &154740286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11414404, guid: 297e1561490784b9994f29cb42adcb47,
-    type: 2}
-  m_PrefabInternal: {fileID: 954979843}
-  m_GameObject: {fileID: 154740284}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3aaf8d9225aed436fac411517bdcdfce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  button: {fileID: 8300000, guid: 3915655759dd44b19b510f0b088deac7, type: 3}
---- !u!4 &154740287
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 498006, guid: 297e1561490784b9994f29cb42adcb47, type: 2}
-  m_PrefabInternal: {fileID: 954979843}
-  m_GameObject: {fileID: 154740284}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &173092494
 GameObject:
   m_ObjectHideFlags: 0
@@ -394,6 +292,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &173092497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -506,6 +405,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &190799892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,6 +556,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &205173254
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -751,6 +652,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: 0
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!114 &208611568
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -901,6 +803,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1 &264997102
 GameObject:
   m_ObjectHideFlags: 0
@@ -957,6 +860,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &264997105
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1110,6 +1014,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &304403068
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1420,6 +1325,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &478418061
 GameObject:
   m_ObjectHideFlags: 0
@@ -1620,6 +1526,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &529634630
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1854,7 +1761,7 @@ MonoBehaviour:
     m_Alignment: 3
     m_AlignByGeometry: 0
     m_RichText: 0
-    m_HorizontalOverflow: 0
+    m_HorizontalOverflow: 1
     m_VerticalOverflow: 0
     m_LineSpacing: 1
   m_Text: 
@@ -2015,6 +1922,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &636385817
 GameObject:
   m_ObjectHideFlags: 0
@@ -2071,6 +1979,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &636385820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2223,6 +2132,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &646460824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2374,6 +2284,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &664489819
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2527,6 +2438,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &675787476
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2643,7 +2555,6 @@ GameObject:
   m_Component:
   - component: {fileID: 704843946}
   - component: {fileID: 704843945}
-  - component: {fileID: 704843944}
   - component: {fileID: 704843943}
   - component: {fileID: 704843942}
   m_Layer: 0
@@ -2661,13 +2572,6 @@ AudioListener:
   m_GameObject: {fileID: 704843941}
   m_Enabled: 1
 --- !u!124 &704843943
-Behaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 704843941}
-  m_Enabled: 1
---- !u!92 &704843944
 Behaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -2704,10 +2608,12 @@ Camera:
   m_TargetDisplay: 0
   m_TargetEye: 3
   m_HDR: 0
+  m_AllowMSAA: 1
+  m_AllowDynamicResolution: 0
+  m_ForceIntoRT: 0
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
-  m_StereoMirrorMode: 0
 --- !u!4 &704843946
 Transform:
   m_ObjectHideFlags: 0
@@ -2776,6 +2682,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &736798895
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2864,6 +2771,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &776420155
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2951,6 +2859,7 @@ MonoBehaviour:
   m_PreferredHeight: 50
   m_FlexibleWidth: 1
   m_FlexibleHeight: -1
+  m_LayoutPriority: 1
 --- !u!1001 &940530844
 Prefab:
   m_ObjectHideFlags: 0
@@ -2992,22 +2901,13 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 21071f90a50be4657a996d42f1eb96eb, type: 2}
-  m_RootGameObject: {fileID: 1677335835}
   m_IsPrefabParent: 0
---- !u!114 &940530845
+--- !u!114 &940530845 stripped
 MonoBehaviour:
-  m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 11482890, guid: 21071f90a50be4657a996d42f1eb96eb,
     type: 2}
   m_PrefabInternal: {fileID: 940530844}
-  m_GameObject: {fileID: 1677335835}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 13a4df66f09444441916a8981a303377, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  checkedSprite: {fileID: 21300000, guid: 264c906642fb1407aa182e15c399a64a, type: 3}
-  uncheckedSprite: {fileID: 21300000, guid: 6352641b378eb4da9ad43b0152fee969, type: 3}
 --- !u!1 &947395380
 GameObject:
   m_ObjectHideFlags: 0
@@ -3123,7 +3023,6 @@ Prefab:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 297e1561490784b9994f29cb42adcb47, type: 2}
-  m_RootGameObject: {fileID: 154740284}
   m_IsPrefabParent: 0
 --- !u!1 &1021467848
 GameObject:
@@ -3179,6 +3078,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1021467851
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3420,6 +3320,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1088406225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3515,6 +3416,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1286856336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3759,6 +3661,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1343585168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3922,6 +3825,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1363977720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4223,6 +4127,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1450886830
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4485,6 +4390,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1515030563
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4594,6 +4500,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1528449273
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4666,7 +4573,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.000030517578}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1558340352
@@ -4759,6 +4666,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1568934062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5144,6 +5052,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &1637242463
 GameObject:
   m_ObjectHideFlags: 0
@@ -5280,7 +5189,7 @@ Canvas:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1642262535}
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
@@ -5289,6 +5198,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
@@ -5313,35 +5223,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
---- !u!1 &1677335835
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 181082, guid: 21071f90a50be4657a996d42f1eb96eb, type: 2}
-  m_PrefabInternal: {fileID: 940530844}
-  serializedVersion: 5
-  m_Component:
-  - component: {fileID: 1677335836}
-  - component: {fileID: 940530845}
-  m_Layer: 0
-  m_Name: DemoUtils
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1677335836
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 430562, guid: 21071f90a50be4657a996d42f1eb96eb, type: 2}
-  m_PrefabInternal: {fileID: 940530844}
-  m_GameObject: {fileID: 1677335835}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 71.96389, y: 323.56952, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1715925916
 GameObject:
   m_ObjectHideFlags: 0
@@ -5398,6 +5279,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1715925919
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5548,6 +5430,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1738936195
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5913,6 +5796,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1809210070
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6065,6 +5949,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1821920257
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6254,6 +6139,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!1 &1868834816
 GameObject:
   m_ObjectHideFlags: 0
@@ -6366,6 +6252,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!1 &1892696285
 GameObject:
   m_ObjectHideFlags: 0
@@ -6492,6 +6379,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1918013607
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6644,6 +6532,7 @@ MonoBehaviour:
   m_PreferredHeight: 80
   m_FlexibleWidth: -1
   m_FlexibleHeight: 0
+  m_LayoutPriority: 1
 --- !u!114 &1972041650
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6795,6 +6684,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &1991279288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6922,6 +6812,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!1 &2042915594
 GameObject:
   m_ObjectHideFlags: 0
@@ -7078,6 +6969,7 @@ MonoBehaviour:
   m_PreferredHeight: -1
   m_FlexibleWidth: -1
   m_FlexibleHeight: 1
+  m_LayoutPriority: 1
 --- !u!114 &2096983793
 MonoBehaviour:
   m_ObjectHideFlags: 0
