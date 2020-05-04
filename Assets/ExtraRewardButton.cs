@@ -7,7 +7,18 @@ using EasyMobile;
 public class ExtraRewardButton : MonoBehaviour
 {
     Button myButton;
+    private void OnDestroy()
+    {
+        Advertising.RewardedAdCompleted -= RewardedAdCompletedHandler;
 
+        Advertising.RewardedAdSkipped -= RewardedAdSkippedHandler;
+    }
+    private void OnEnable()
+    {
+        Advertising.RewardedAdCompleted += RewardedAdCompletedHandler;
+
+        Advertising.RewardedAdSkipped += RewardedAdSkippedHandler;
+    }
     // Event handler called when a rewarded ad has completed
     void RewardedAdCompletedHandler(RewardedAdNetwork network, AdPlacement location)
     {
@@ -36,5 +47,9 @@ public class ExtraRewardButton : MonoBehaviour
         myButton.interactable = AdvertismentManager.AdvertismentReady();
     }
 
+    public void ShowAdvertisement()
+    {
+        AdvertismentManager.ShowRewardedVideo();
+    }
 
 }

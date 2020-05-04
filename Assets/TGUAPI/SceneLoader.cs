@@ -73,7 +73,7 @@ namespace TheGamerUrso
                 if (GameManager.ShowAdCounter <= 0)
                 {
                     GameManager.ShowAdCounter = 5;
-                    ShowAdvertisment();
+                    AdvertismentManager.ShowAdvertisment();
                 }
 
                 LoadScene("Main");
@@ -203,18 +203,6 @@ namespace TheGamerUrso
                 {
                     GateControl gate = Gates[i];
                     gate.OpenGate();
-                }
-            }
-
-            void ShowAdvertisment()
-            {
-                // Check if interstitial ad is ready
-                bool isReady = Advertising.IsInterstitialAdReady();
-
-                // Show it if it's ready
-                if (isReady)
-                {
-                    Advertising.ShowInterstitialAd();
                 }
             }
         }

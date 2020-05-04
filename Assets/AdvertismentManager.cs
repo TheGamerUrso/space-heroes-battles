@@ -73,5 +73,16 @@ public class AdvertismentManager : Singleton<AdvertismentManager>
             Advertising.ShowRewardedAd();
         }
     }
+    public static void ShowAdvertisment()
+    {
+        // Check if interstitial ad is ready
+        bool isReady = Advertising.IsInterstitialAdReady();
+
+        // Show it if it's ready
+        if (isReady)
+        {
+            Advertising.ShowInterstitialAd();
+        }
+    }
 
 }
