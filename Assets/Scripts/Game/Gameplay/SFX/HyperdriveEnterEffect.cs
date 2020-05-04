@@ -32,7 +32,7 @@ public class HyperdriveEnterEffect : MonoBehaviour
     {
         baseEnemy.EnableColliders(false);
         GetComponent<BaseEnemy>().DisableAllWeapons();
-        shipPivot.transform.localPosition = new Vector3(0, 0, -256);
+        shipPivot.transform.localPosition = new Vector3(0, 0, -120);
         shipPivot.transform.DOLocalMoveZ(0, speed).SetEase(easeMode).OnComplete(() =>
         {
             baseEnemyAI.EnableMovement();

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: EM_Settings
   m_EditorClassIdentifier: 
   mAdvertisingSettings:
-    mAutoLoadAdsMode: 2
+    mAutoLoadAdsMode: 1
     mAdCheckingInterval: 10
     mAdLoadingInterval: 20
     mIosDefaultAdNetworks:
@@ -21,9 +21,9 @@ MonoBehaviour:
       interstitialAdNetwork: 0
       rewardedAdNetwork: 0
     mAndroidDefaultAdNetworks:
-      bannerAdNetwork: 0
-      interstitialAdNetwork: 0
-      rewardedAdNetwork: 0
+      bannerAdNetwork: 10
+      interstitialAdNetwork: 10
+      rewardedAdNetwork: 10
     mAdColony:
       mAppId:
         mIosId: 
@@ -184,11 +184,11 @@ MonoBehaviour:
         values: []
     mUnityAds:
       mAppId:
-        mIosId: 
-        mAndroidId: 
+        mIosId: 2725712
+        mAndroidId: 2725712
       mDefaultBannerAdId:
-        mIosId: 
-        mAndroidId: 
+        mIosId: banner
+        mAndroidId: banner
       mDefaultInterstitialAdId:
         mIosId: video
         mAndroidId: video
@@ -204,7 +204,7 @@ MonoBehaviour:
       mCustomRewardedAdIds:
         keys: []
         values: []
-      mEnableTestMode: 0
+      mEnableTestMode: 1
   mGameServiceSettings:
     mAutoInit: 1
     mAutoInitDelay: 2
@@ -329,7 +329,14 @@ MonoBehaviour:
       mContent: 
       mTitle: Privacy Consent
       mToggles: []
-      mActionButtons: []
+      mActionButtons:
+      - id: 
+        title: 
+        interactable: 0
+        titleColor: {r: 0, g: 0, b: 0, a: 0}
+        backgroundColor: {r: 0, g: 0, b: 0, a: 0}
+        uninteractableTitleColor: {r: 0, g: 0, b: 0, a: 0}
+        uninteractableBackgroundColor: {r: 0, g: 0, b: 0, a: 0}
     mConsentDialogComposerSettings:
       mToggleSelectedIndex: 0
       mButtonSelectedIndex: 0
@@ -338,15 +345,15 @@ MonoBehaviour:
     mDefaultRatingDialogContent:
       mTitle: Rate $PRODUCT_NAME
       mMessage: How would you rate $PRODUCT_NAME?
-      mLowRatingMessage: That's bad. Would you like to give us some feedback instead?
-      mHighRatingMessage: Awesome! Let's do it!
+      mLowRatingMessage: Sorry to hear that. Let us know how we can improve the game.
+      mHighRatingMessage: 'Thanks! '
       mPostponeButtonText: Not Now
       mRefuseButtonText: Don't Ask Again
       mRateButtonText: Rate Now!
       mCancelButtonText: Cancel
-      mFeedbackButtonText: Send Feedback
-    mMinimumAcceptedStars: 4
-    mSupportEmail: 
+      mFeedbackButtonText: Tell Us What you think!
+    mMinimumAcceptedStars: 2
+    mSupportEmail: thegamerurso@gmail.com
     mIosAppId: 
     mAnnualCap: 12
     mDelayAfterInstallation: 10
@@ -388,10 +395,10 @@ MonoBehaviour:
       mIOSInfoPlistKeys:
       - mKey: NSContactsUsageDescription
         mValue: '[Your usage description]'
-  mIsAdModuleEnable: 0
+  mIsAdModuleEnable: 1
   mIsIAPModuleEnable: 0
   mIsGameServiceModuleEnable: 1
   mIsNotificationModuleEnable: 0
   mIsSharingModuleEnable: 0
-  mActiveModuleIndex: 1
+  mActiveModuleIndex: 0
   mIsSelectingModule: 0

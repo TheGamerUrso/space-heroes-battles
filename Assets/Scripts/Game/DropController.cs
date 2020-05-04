@@ -14,9 +14,9 @@ public class DropProbabilities
 
 public class DropController : Singleton<DropController>
 {
-    private float timerSincePowerUpDroped;
+    //private float timerSincePowerUpDroped;
 
-    private float frequentToDroPowerUp = .1f;
+   // private float frequentToDroPowerUp = .1f;
 
     public List<DropProbabilities> ListOfDropItems = new List<DropProbabilities>();
 

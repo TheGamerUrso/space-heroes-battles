@@ -26,7 +26,7 @@ public class GuiManager : Singleton<GuiManager>
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
 
-    private bool ResultShowed = false;
+   // private bool ResultShowed = false;
     private TransmitionWidget transmittionWidget;
     private float timer;
 

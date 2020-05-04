@@ -44,20 +44,20 @@ public class GameController : Singleton<GameController>
 
     protected override void OnAwake()
     {
-        /**
-         * Only For Editor
-         */
+        ///**
+        // * Only For Editor
+        // */
 
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            if (SceneManager.GetSceneAt(i).name.Equals("boot"))
-            {
-                //  Debug.Log("boot found skip");
-                return;
-            }
-            // Debug.Log("Boot not found Loading");
-            SceneManager.LoadScene("boot", LoadSceneMode.Additive);
-        }
+        //for (int i = 0; i < SceneManager.sceneCount; i++)
+        //{
+        //    if (SceneManager.GetSceneAt(i).name.Equals("boot"))
+        //    {
+        //        //  Debug.Log("boot found skip");
+        //        return;
+        //    }
+        //    // Debug.Log("Boot not found Loading");
+        //    SceneManager.LoadScene("boot", LoadSceneMode.Additive);
+        //}
     }
 
     protected override void OnCleanup()

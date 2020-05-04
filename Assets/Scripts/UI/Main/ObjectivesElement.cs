@@ -28,6 +28,10 @@ public class ObjectivesElement : MonoBehaviour
     private float sleepTimer;
     [SerializeField] private GameObject CompletedGameObject = null;
 
+    public TextMeshProUGUI rewardText;
+    public TextMeshProUGUI CoinReward;
+    private PlayerData playerData;
+    private int currentPlayerLevel;
     public void InitializeObjective(ObjectiveData objectiveData)
     {
         completed = objectiveData.completed;
@@ -58,36 +62,33 @@ public class ObjectivesElement : MonoBehaviour
 
     public void Complete()
     {
-
         if (!objectiveData.claimed && objectiveData.completed)
         {
-            PlayerData playerData = PersistantData.GetPlayerData();
-
             switch ((ObjectiveType)objectiveData.objectiveType)
             {
                 case ObjectiveType.Kill:
                     playerData.AddCoin(40);
-                    playerData.EarnXP(10);
+                    playerData.EarnXP(25 * currentPlayerLevel);
                     break;
                 case ObjectiveType.Use:
                     playerData.AddCoin(40);
-                    playerData.EarnXP(10);
+                    playerData.EarnXP(15 * currentPlayerLevel);
                     playerData.SetTotalSuperUsed(0);
                     break;
                 case ObjectiveType.Unharmed:
                     playerData.AddCoin(40);
-                    playerData.EarnXP(10);
+                    playerData.EarnXP(50 * currentPlayerLevel);
                     playerData.SetHitInGame(false);
                     break;
                 case ObjectiveType.survive:
                     playerData.AddCoin(40);
-                    playerData.EarnXP(10);
+                    playerData.EarnXP(50 * currentPlayerLevel);
                     playerData.SetWaveSurvived(0);
                     break;
                 case ObjectiveType.spend:
                     int moneySpend = objectiveData.progress;
                     playerData.AddCoin(moneySpend / 3);
-                    playerData.EarnXP(10);
+                    playerData.EarnXP(10 * currentPlayerLevel);
                     playerData.SetMoneySpend(0);
                     break;
 
@@ -99,9 +100,41 @@ public class ObjectivesElement : MonoBehaviour
             objectiveData.claimed = true;
             Button.interactable = false;
             RefreshQuests();
-        }  
+        }
     }
+    public void SetRewardInfo()
+    {
+        playerData = PersistantData.GetPlayerData();
+        currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
 
+        switch ((ObjectiveType)objectiveData.objectiveType)
+        {
+            case ObjectiveType.Kill:
+                rewardText.text = 25 * currentPlayerLevel + "xp";
+                CoinReward.text = "100 xp";
+                break;
+            case ObjectiveType.Use:
+                rewardText.text = 15 * currentPlayerLevel + "xp";
+                CoinReward.text = "40 xp";
+                break;
+            case ObjectiveType.Unharmed:
+                rewardText.text = 50 * currentPlayerLevel + "xp";
+                CoinReward.text = "40 xp";
+                break;
+            case ObjectiveType.survive:
+                rewardText.text = 50 * currentPlayerLevel + "xp";
+                CoinReward.text = "40 xp";
+                break;
+            case ObjectiveType.spend:
+
+                rewardText.text = 10 * currentPlayerLevel + "xp";
+                CoinReward.text = "" + objectiveData.progress / 3;
+                break;
+
+            default:
+                break;
+        }
+    }
     public void RefreshQuests()
     {
         CompletedGameObject.SetActive(objectiveData.claimed);
@@ -122,6 +155,8 @@ public class ObjectivesElement : MonoBehaviour
                 Button.interactable = true;
             }
 
-        }    
+        }
+
+        SetRewardInfo();
     }
 }
