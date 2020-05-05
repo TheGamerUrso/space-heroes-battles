@@ -6,7 +6,6 @@ public class LaserSuper : SpecialAttack
 {
     protected PlayerWeapon[] playerWeapons;
     protected int weaponCurrentType;
-    public PlayerShip playerShip;
     public Laser laiser;
     private bool laserOn;
     public float laserSize;
@@ -17,7 +16,10 @@ public class LaserSuper : SpecialAttack
         if (SpecialActive == false)
         {
             AudioManager.PlaySound(null, "Super", 3);
-            PlayerData playerData = PersistantData.GetPlayerData();
+            if (playerData == null)
+            {
+                playerData = PersistantData.GetPlayerData();
+            }
             playerData.superUsed++;
             laserSize = 0;
             laiser.ActiveLaser();
