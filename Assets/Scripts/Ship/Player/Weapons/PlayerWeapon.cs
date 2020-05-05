@@ -110,6 +110,8 @@ public class PlayerWeapon : WeaponScript
         for (int i = 0; i < Cannons.Length; i++)
         {
             InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+            InstansiatedProjectile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0))  ;
+
             Vector3 shootDir = Cannons[i].forward;
             InstansiatedProjectile.transform.position = Cannons[i].position;
             InstansiatedProjectile.GetComponent<PlayerProjectile>().Setup(shootDir, Damage + DamageMulitplier);

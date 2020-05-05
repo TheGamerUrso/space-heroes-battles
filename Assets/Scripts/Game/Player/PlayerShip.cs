@@ -182,28 +182,6 @@ public class PlayerShip : Ship, IDamagable
             playerData.powerPackCollected = 0;
             UpgradeWeapon();
         }
-
-
-        if (CrossPlatformInputManager.GetButtonDown("Fire2") && playerPowerUp >= 1)
-        {
-            ActivateSpecial();
-        }
-
-
-#if UNITY_EDITOR
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            PlayerData playerData = PersistantData.GetPlayerData();
-
-            if (playerData != null)
-            {
-                playerData.IncreasePowerUp(1);
-            }
-
-            PowerUpCollected();
-
-        }
-#endif
     }
 
 

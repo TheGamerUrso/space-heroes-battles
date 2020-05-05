@@ -45,7 +45,8 @@ AudioSource:
   m_GameObject: {fileID: 6267956891929232553}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 243660511901816736, guid: 9425bb409cfc98f4a8e71adb82785c85,
+    type: 2}
   m_audioClip: {fileID: 8300000, guid: f71d8f4a5de7537419c0b9d61468f295, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
@@ -265,7 +266,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -373,7 +374,6 @@ GameObject:
   - component: {fileID: 6267956892922432919}
   - component: {fileID: 6267956892922432918}
   - component: {fileID: 6267956892922432921}
-  - component: {fileID: 6267956892922432920}
   - component: {fileID: 6267956892922432923}
   - component: {fileID: 6267956892922432922}
   m_Layer: 5
@@ -392,7 +392,7 @@ RectTransform:
   m_GameObject: {fileID: 6267956892922432925}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 6267956892303461257}
   - {fileID: 6267956891929232550}
@@ -448,23 +448,6 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &6267956892922432920
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6267956892922432925}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_IgnoreReversedGraphics: 1
-  m_BlockingObjects: 0
-  m_BlockingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!95 &6267956892922432923
 Animator:
   serializedVersion: 3
@@ -493,8 +476,8 @@ CanvasGroup:
   m_GameObject: {fileID: 6267956892922432925}
   m_Enabled: 1
   m_Alpha: 1
-  m_Interactable: 1
-  m_BlocksRaycasts: 1
+  m_Interactable: 0
+  m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
 --- !u!1 &7737191288790626268
 GameObject:

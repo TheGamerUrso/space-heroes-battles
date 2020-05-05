@@ -7,6 +7,7 @@ public class SpecialAttack : PlayerWeapon
 {
     public PlayerData playerData;
     public PlayerShipData playerShipData;
+    public PlayerShip playerShip;
 
     public int superUsed;
     public int SuperUsed
@@ -24,18 +25,13 @@ public class SpecialAttack : PlayerWeapon
         get { return superChargeTimer; }
     }
 
-    public void IncreaseSuperUsed()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        playerData.SuperUsed++;
-    }
-
     public override void OnStart()
     {
         base.OnStart();
-        GameSession.SuperUsed = 0;
+      
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
+        playerShip = ship.GetComponent<PlayerShip>();
         superChargeTimer = playerShipData.SuperChargeTime;
         damage = playerShipData.SuperDamage;
     }
@@ -46,8 +42,12 @@ public class SpecialAttack : PlayerWeapon
         {
             AudioManager.PlaySound(null, "Super", 3);
 
-            PlayerData playerData = PersistantData.GetPlayerData();
-            playerData.superUsed++;
+            if (playerData == null)
+            {
+                playerData = PersistantData.GetPlayerData();
+            }
+
+            GameSession.SuperUsed++;
 
             SpecialActive = true;
         }
@@ -60,12 +60,13 @@ public class SpecialAttack : PlayerWeapon
 
     public override void OnUpdate()
     {
-        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
-        if (SpecialActive)
+        if (playerShip == null)
         {
-         
-            ActivateSpecial();
+            playerShip = ship.GetComponent<PlayerShip>();
+        }
 
+        if (SpecialActive)
+        {     
             if (m_CountDownTimer == null)
                 m_CountDownTimer = new CountDownTimer(SuperChargeTime);
 
@@ -92,13 +93,6 @@ public class SpecialAttack : PlayerWeapon
                 m_CountDownTimer = null;
                 playerData.PowerUpLevel = 0;
             }
-        }
-
-        float powerLevel = playerData.GetPowerUpLevelPresentage();
-
-        if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
-        {
-            ActivateSpecial();
         }
     }
 

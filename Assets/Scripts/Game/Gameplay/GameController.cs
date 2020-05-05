@@ -291,20 +291,12 @@ public class GameController : Singleton<GameController>
             ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
             switch ((ObjectiveType)objective.objectiveType)
             {
-                case ObjectiveType.Kill:
-                    if (objective.completed == false)
-                    {
-                        var progressSoFar = objective.progress + 0;
-                        objective.UpdateProgress(progressSoFar);
-                    }
-
-                    break;
-                case ObjectiveType.Use:
-                    if (objective.completed == false)
-                    {
-                        objective.UpdateProgress(playerData.superUsed);
-                    }
-                    break;
+                //case ObjectiveType.Use:
+                //    if (objective.completed == false)
+                //    {
+                //        objective.UpdateProgress(playerData.superUsed);
+                //    }
+                //    break;
                 case ObjectiveType.Unharmed:
                     if (objective.completed == false)
                     {
@@ -319,10 +311,6 @@ public class GameController : Singleton<GameController>
                     var surviveProgress = objective.progress;
                     surviveProgress++;
                     objective.UpdateProgress(surviveProgress);
-                    break;
-                case ObjectiveType.spend:
-                    break;
-                default:
                     break;
             }
         }

@@ -42,13 +42,6 @@ public class Tutorial : Singleton<Tutorial>
 
         Time.timeScale = 0;
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            ShowTutorial(0);
-        }
-    }
 
     public void Close()
     {

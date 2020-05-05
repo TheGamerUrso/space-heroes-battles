@@ -44,9 +44,14 @@
 
             currentEnemyKilled = value;
             PlayerData playerData = PersistantData.GetPlayerData();
+
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
+
             if (objectiveData != null)
-                objectiveData.UpdateProgress(currentEnemyKilled);
+            {
+                var newProgress = objectiveData.progress + currentEnemyKilled;
+                objectiveData.UpdateProgress(newProgress);
+            }
         }
     }
     public static bool useSloMo { get; set; }
@@ -82,7 +87,10 @@
             PlayerData playerData = PersistantData.GetPlayerData();
             ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
             if (objectiveData != null)
+            {
+                var newProgress = objectiveData.progress + superUsed;
                 objectiveData.UpdateProgress(superUsed);
+            }
         }
     }
 
