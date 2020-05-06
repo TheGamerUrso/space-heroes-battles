@@ -16,6 +16,9 @@ public class WinWidget : MonoBehaviour
     public LevelObjectivesElement[] levelObjectives;
     private LevelObjectiveData[] levelObjectiveDatas;
 
+
+    public GameObject VideoRewardAd;
+
     public void ShowGameResult()
     {
         levelName = "Level" + GameManager.LevelIndexSelected;
@@ -86,6 +89,8 @@ public class WinWidget : MonoBehaviour
         levelObjectives[ChallengeIndex].RefreshLevelObjectiveEement();
 
         levelObjectives[ChallengeIndex].CheckComplete();
+
+        VideoRewardAd.SetActive(true);
     }
 
     public void ReplayButton()
