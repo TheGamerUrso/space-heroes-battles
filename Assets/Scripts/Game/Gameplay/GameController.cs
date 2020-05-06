@@ -83,19 +83,18 @@ public class GameController : Singleton<GameController>
 
     IEnumerator StartGameDelay()
     {
-        yield return new WaitForSeconds(2.0f);
-        if (PlayerManager.GetPlayer() == null)
-        {
-            playerData = PersistantData.GetPlayerData();
-            int shipSelected = playerData.currentSelectedShip;
-            player = PlayerManager.CreatePlayer(shipSelected);
-        }
-
-        playerShip = player.GetComponent<PlayerShip>();
-        playerShip.PlayerShipDeath += PlayerShipCallback;
-
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
+
+        yield return new WaitForSeconds(1.0f);
+
+        if (PlayerManager.GetPlayer() == null)
+        {       
+            int shipSelected = playerData.currentSelectedShip;
+            player = PlayerManager.CreatePlayer(shipSelected);
+            playerShip = player.GetComponent<PlayerShip>();
+            playerShip.PlayerShipDeath += PlayerShipCallback;
+        }
 
         spawn = GameObject.FindObjectOfType<SpawnEnemies>();
         spawn.SpawnEnded += Win;
