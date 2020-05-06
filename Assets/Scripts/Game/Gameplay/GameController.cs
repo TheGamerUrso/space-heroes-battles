@@ -18,7 +18,7 @@ public class GameController : Singleton<GameController>
     private SpawnEnemies spawn;
 
     private float delayTheSlowMoEffectTimer = .3f;
-    private float delay = 2;
+    private float delay = 4;
 
     private void OnApplicationFocus(bool focus)
     {
@@ -69,7 +69,6 @@ public class GameController : Singleton<GameController>
         spawn.EnemyDied -= EnemyDied;
     }
 
-
     void Start()
     {
         Application.targetFrameRate = 60;
@@ -77,7 +76,14 @@ public class GameController : Singleton<GameController>
         if (AudioManager.Instance)
             AudioManager.PlayRandomMusic(true);
 
+        GameSession.Reset();
 
+        StartCoroutine(StartGameDelay());
+    }
+
+    IEnumerator StartGameDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
         if (PlayerManager.GetPlayer() == null)
         {
             playerData = PersistantData.GetPlayerData();
@@ -95,9 +101,7 @@ public class GameController : Singleton<GameController>
         spawn.SpawnEnded += Win;
         spawn.EnemyDied += EnemyDied;
 
-        spawn.InitReference(playerData, playerShip);
-
-        GameSession.Reset();
+        spawn.InitReference(playerData, playerShip);    
     }
 
     private void EnemyDied(BaseEnemy baseEnemy)

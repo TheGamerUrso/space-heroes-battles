@@ -93,11 +93,6 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             LevelDifficulty = mission.Level;
 
         }
-
-
-        string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
-        GuiManager.PlayTrasmition(transmitions);
-
         TotalEnemies = numberOfEnemiesEachWave * waves;
 
         GameSession.EnemySpawnInTotal = TotalEnemies;
@@ -107,8 +102,9 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
             ListOfEnemyElements.Add(enemyElements[i].Name, enemyElements[i]);
         }
 
-        StartCoroutine(Spawn());
+        StartCoroutine(StartGameDelay());
     }
+
 
     public void LateUpdate()
     {
@@ -119,8 +115,24 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         }
     }
 
+    IEnumerator StartGameDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
+        StartGame();
+    }
+
+    public void StartGame()
+    {
+        string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
+        GuiManager.PlayTrasmition(transmitions);
+
+        StartCoroutine(Spawn());
+    }
+
     IEnumerator Spawn()
     {
+        yield return new WaitForSeconds(4.0f);
+
         // Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
         WaitForSeconds waitForSec = new WaitForSeconds(delay);
