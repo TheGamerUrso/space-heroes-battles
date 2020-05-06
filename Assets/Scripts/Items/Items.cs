@@ -33,6 +33,8 @@ public class Items : MonoBehaviour
     PlayerData playerData;
     PlayerShipData playerShipData;
 
+    [SerializeField] protected AudioSource audioSource;
+
     private void OnEnable()
     {
         animator.SetTrigger(ResetKey);

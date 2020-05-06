@@ -40,6 +40,11 @@ public class PlayerShip : Ship, IDamagable
     private int clicktimes;
     private float clicktimer;
     private bool clicked;
+
+
+    public AudioSource audioSource;
+    public AudioClip powerSFX;
+    public AudioClip alarmSFX;
     #endregion Weapons
 
     private void OnDestroy()
@@ -228,6 +233,8 @@ public class PlayerShip : Ship, IDamagable
             return;
         }
 
+        audioSource.PlayOneShot(shipStats.hitSFX);
+
         if (dmg >= MaxHealth)
         {
             dmg = MaxHealth - 1;
@@ -260,8 +267,7 @@ public class PlayerShip : Ship, IDamagable
 
                 if (HealthPresentage < .2f)
                 {
-                    if (AudioManager.Instance)
-                        AudioManager.PlaySound(null, "Alarm", 2);
+                    audioSource.PlayOneShot(alarmSFX);
                 }
 
                 if (CurrentHealth < 1)
@@ -369,8 +375,8 @@ public class PlayerShip : Ship, IDamagable
         {
             if (shipStats.CanUsePowerUpItem)
             {
+                audioSource.PlayOneShot(powerSFX);
 
-                AudioManager.PlaySound(null, "Power", 3);
                 CurrentWeapnType++;
 
                 if (CurrentWeapnType > 4)

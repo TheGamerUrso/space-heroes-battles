@@ -18,6 +18,7 @@ public class AudioManager : Singleton<AudioManager>
     [HideInInspector] public List<AudioTrack> SoundClips = new List<AudioTrack>();
     [HideInInspector] public List<AudioTrack> MusicClips = new List<AudioTrack>();
 
+    public AudioSource source;
     public AudioSource BackgroundMusic;
 
     private static float musicVolume = 0.75f;
@@ -36,6 +37,9 @@ public class AudioManager : Singleton<AudioManager>
 
     [HideInInspector] public bool crossfade = false;
     [HideInInspector] public float targetVolume;
+
+
+    private List<GameObject> SoundSFX;
 
     public bool MusicIsDone()
     {
@@ -127,15 +131,10 @@ public class AudioManager : Singleton<AudioManager>
             AudioManager.Instance.PlayMusicById(IdTrack, loop);
     }
 
-    public static void PlaySound(AudioSource source, string IdTrack, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+    public static void PlaySound(AudioClip clip, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
         if (Instance)
-            AudioManager.Instance.PlaySoundByClip(source, IdTrack, mixGroupIndex, usePitch, minRange, maxRange);
-    }
-    public static void PlaySound(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
-    {
-        if (Instance)
-            AudioManager.Instance.PlaySoundByClip(source, clip, mixGroupIndex, usePitch, minRange, maxRange);
+            AudioManager.Instance.PlaySoundByClip(clip, usePitch, minRange, maxRange);
     }
 
     public void PlayMusicById(string IdTrack, bool loop = true)
@@ -171,19 +170,14 @@ public class AudioManager : Singleton<AudioManager>
             }
         }
     }
-    public void PlaySoundByClip(AudioSource source, AudioClip clip, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
-    {
-        if (source == null)
-        {
-            source = BackgroundMusic;
-        }
 
+    public void PlaySoundByClip(AudioClip clip,bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+    {
         if (usePitch)
         {
             float prevPitch = source.pitch;
             source.pitch = UnityEngine.Random.Range(minRange, maxRange);
         }
-
         source.PlayOneShot(clip);
 
     }
@@ -202,6 +196,10 @@ public class AudioManager : Singleton<AudioManager>
             {
                 float prevPitch = source.pitch;
                 source.pitch = UnityEngine.Random.Range(minRange, maxRange);
+            }
+            else
+            {
+                source.pitch = 1;
             }
 
             source.PlayOneShot(audioClip);

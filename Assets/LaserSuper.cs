@@ -15,7 +15,7 @@ public class LaserSuper : SpecialAttack
     {
         if (SpecialActive == false)
         {
-            AudioManager.PlaySound(null, "Super", 3);
+            source.PlayOneShot(superSFX);
             if (playerData == null)
             {
                 playerData = PersistantData.GetPlayerData();

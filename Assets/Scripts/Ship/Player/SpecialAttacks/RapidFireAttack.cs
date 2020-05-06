@@ -14,7 +14,7 @@ public class RapidFireAttack : SpecialAttack
     {
         if (SpecialActive == false)
         {
-            AudioManager.PlaySound(null, "Super", 3);
+            source.PlayOneShot(superSFX);
 
             PlayerData playerData = PersistantData.GetPlayerData();
             playerData.superUsed++;

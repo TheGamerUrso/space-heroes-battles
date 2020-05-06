@@ -10,9 +10,17 @@ public class TransmitionWidget : MonoBehaviour
     public Animator BossStageWarning;
     public string[] transmitions;
 
+   public AudioClip TransmitionSFX;
+    public AudioSource audioSource;
+
+
+
     public void RecieveTransmition(string[] transmitions,bool boss = false)
     {
+        audioSource.PlayOneShot(TransmitionSFX);
+
         TransmitionText.text = "Transmition Incoming";
+
         this.transmitions = transmitions;
         if (IncomingTransmition == false)
         {

@@ -280,7 +280,6 @@ public class GuiManager : Singleton<GuiManager>
 
     public static void PlayTrasmition(string[] transmitions, bool boss = false)
     {
-        AudioManager.PlaySound(null, "transmition", 3);
         Instance.ShowTrasmition(transmitions, boss);
     }
 

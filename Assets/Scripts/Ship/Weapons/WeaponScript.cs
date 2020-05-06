@@ -116,10 +116,14 @@ public abstract class WeaponScript : MonoBehaviour
 
     #endregion
 
-    public void PlayWeaponFireSound(int audioMixGroup = 0, bool usePitch = false)
+    public void PlayWeaponFireSound(bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
-        if (AudioManager.Instance)
-            AudioManager.PlaySound(source, SoundSFX, audioMixGroup, usePitch);
+        if (usePitch)
+        {
+            float prevPitch = source.pitch;
+            source.pitch = UnityEngine.Random.Range(minRange, maxRange);
+        }
+        source.PlayOneShot(SoundSFX);
     }
 
 

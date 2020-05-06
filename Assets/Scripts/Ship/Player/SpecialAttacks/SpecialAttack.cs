@@ -8,6 +8,7 @@ public class SpecialAttack : PlayerWeapon
     public PlayerData playerData;
     public PlayerShipData playerShipData;
     public PlayerShip playerShip;
+    public AudioClip superSFX;
 
     public int superUsed;
     public int SuperUsed
@@ -40,7 +41,7 @@ public class SpecialAttack : PlayerWeapon
     {
         if (SpecialActive == false)
         {
-            AudioManager.PlaySound(null, "Super", 3);
+            source.PlayOneShot(superSFX);
 
             if (playerData == null)
             {

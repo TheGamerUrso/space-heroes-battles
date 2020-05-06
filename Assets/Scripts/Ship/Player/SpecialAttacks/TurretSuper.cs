@@ -17,7 +17,7 @@ public class TurretSuper : SpecialAttack
     {
         if (SpecialActive == false)
         {
-            AudioManager.PlaySound(null, "Super", 3);
+            source.PlayOneShot(superSFX);
 
             playerData.superUsed++;
 

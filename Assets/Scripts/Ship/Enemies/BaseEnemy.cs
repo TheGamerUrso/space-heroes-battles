@@ -188,6 +188,9 @@ public class BaseEnemy : Ship, IDamagable
             return;
         }
 
+
+        AudioManager.PlaySound(shipStats.hitSFX);
+
         if (takeDamageDelay <= 0)
         {
             takeDamageDelay = .1f;

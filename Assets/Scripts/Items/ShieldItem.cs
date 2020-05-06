@@ -14,10 +14,7 @@ public class ShieldItem : Items, IPickable
         player.InstallShieldModule();
 
 
-        if (AudioManager.Instance)
-        {
-            AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
-        }
+       AudioManager.PlaySound(itemData.CollectedSoundSFX);
 
         Invoke("DestroyNow", .2f);
     }

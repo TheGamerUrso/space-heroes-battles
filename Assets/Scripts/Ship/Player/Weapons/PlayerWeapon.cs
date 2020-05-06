@@ -85,7 +85,7 @@ public class PlayerWeapon : WeaponScript
             newShot = Time.time + GetFireRate();
             InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
 
-            PlayWeaponFireSound(0, true);
+            PlayWeaponFireSound(true);
 
             foreach (var item in particleSFX)
             {

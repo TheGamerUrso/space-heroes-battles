@@ -18,4 +18,7 @@ public class ShipStats : ScriptableObject
 
     public bool CanUsePowerUpItem;
 
+
+    public AudioClip hitSFX;
+
 }

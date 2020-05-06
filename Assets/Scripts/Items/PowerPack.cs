@@ -15,11 +15,7 @@ public class PowerPack : Items, IPickable
         player.PowerUpCollected();
 
 
-        if (AudioManager.Instance)
-        {
-            AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
-        }
-
+        AudioManager.PlaySound(itemData.CollectedSoundSFX);
         GuiManager.Instance.PickUpItem(itemData);
         Invoke("DestroyNow", .2f);
     }

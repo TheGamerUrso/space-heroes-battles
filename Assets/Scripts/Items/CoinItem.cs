@@ -15,10 +15,9 @@ public class CoinItem : Items, IPickable
             GameSession.CoinEarnInGame += 1;
         }
 
-        if (AudioManager.Instance)
-        {
-            AudioManager.PlaySound(null, itemData.CollectedSoundSFX, 2);
-        }
+
+        audioSource.PlayOneShot(itemData.CollectedSoundSFX);
+        
 
         Invoke("DestroyNow", .2f);
     }
