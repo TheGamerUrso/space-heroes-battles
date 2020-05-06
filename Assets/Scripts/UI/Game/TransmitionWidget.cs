@@ -17,8 +17,6 @@ public class TransmitionWidget : MonoBehaviour
 
     public void RecieveTransmition(string[] transmitions,bool boss = false)
     {
-        audioSource.PlayOneShot(TransmitionSFX);
-
         TransmitionText.text = "Transmition Incoming";
 
         this.transmitions = transmitions;
@@ -29,6 +27,7 @@ public class TransmitionWidget : MonoBehaviour
                 StartCoroutine(WarningBossIncomingEvent());
             }
             else {
+                audioSource.PlayOneShot(TransmitionSFX);
                 StartCoroutine(TranmisionEvent());
             }
         }

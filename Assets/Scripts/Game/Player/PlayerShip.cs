@@ -484,19 +484,7 @@ public class PlayerShip : Ship, IDamagable
         //Debug.Log("Damage: " + Damage);
         FireRate -= UpgradeStats[(int)UpgradeType.FireRate];
         //Debug.Log("FireRate: " + FireRate);
-
-        if (Id == 1)
-        {
-            playerShipData.SuperDamage = (level * shipStats.baseSuperDamage);
-            if (UpgradeStats[(int)UpgradeType.SuperDamage] > 0)
-            {
-                playerShipData.SuperDamage = shipStats.baseSuperDamage * UpgradeStats[(int)UpgradeType.SuperDamage];
-            }
-        }
-        else
-        {
-            playerShipData.SuperDamage = (level * shipStats.baseSuperDamage) + UpgradeStats[(int)UpgradeType.SuperDamage];
-        }
+        playerShipData.SuperDamage = (level * shipStats.baseSuperDamage) + UpgradeStats[(int)UpgradeType.SuperDamage];
         //Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
         playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeType.SuperrechargeTime];
         //Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
