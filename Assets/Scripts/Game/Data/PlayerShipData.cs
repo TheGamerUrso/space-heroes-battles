@@ -95,7 +95,7 @@ public class PlayerShipData
         var GameControllerSuperTime = Upgrades[(int)UpgradeType.SuperrechargeTime];
         var GameControllerSuperDamage = Upgrades[(int)UpgradeType.SuperDamage];
 
-        var SpeedMultiplier = .1f * GameControllerSpeedValue;
+        var SpeedMultiplier = 0.25f * GameControllerSpeedValue;
         var DamageMultiplier = 1f * GameControllerDamageValue;
         var FireRateMultiplier = 0.01f * GameControllerFireRateValue;
         var MagnetPowerMultiplier = 3 * GameControllerMagnetPowerValue;

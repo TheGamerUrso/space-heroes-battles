@@ -479,6 +479,7 @@ public class PlayerShip : Ship, IDamagable
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
 
         Speed += UpgradeStats[(int)UpgradeType.Speed];
+        playerShipData.Speed = Speed;
         //Debug.Log("Speed:" + Speed);
         Damage += UpgradeStats[(int)UpgradeType.Damage];
         //Debug.Log("Damage: " + Damage);

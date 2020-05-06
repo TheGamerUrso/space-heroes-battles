@@ -99,13 +99,15 @@ public abstract class Ship : MonoBehaviour
     private void Awake()
     {
         OnAwake();
+
+
+        ShipSetup();
     }
 
     private void Start()
     {
-        ShipSetup();
+      
     }
-
 
     public abstract void ShipSetup();
     public abstract void OnAwake();

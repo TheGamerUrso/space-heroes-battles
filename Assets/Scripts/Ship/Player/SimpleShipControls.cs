@@ -28,6 +28,9 @@ public class SimpleShipControls : MonoBehaviour
 
     private Vector3 direction;
 
+    public PlayerShip playerShip;
+
+
 
     public void Start()
     {
@@ -40,6 +43,10 @@ public class SimpleShipControls : MonoBehaviour
         offspec = new Vector3(0, 0, playerData.Distance);
 
         plane = new Plane(Vector3.up, transform.position);
+       
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
+        Speed = playerShipData.Speed;
 
     }
 
