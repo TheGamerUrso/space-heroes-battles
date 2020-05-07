@@ -230,7 +230,9 @@ public class PlayerData
                 {
                     if (GooglePlayServicesManager.Instance)
                         GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
+                    GameSession.Highscore = true;
                 }
+
             }
             Score[level] = score;
         }

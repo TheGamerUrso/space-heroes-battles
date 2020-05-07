@@ -141,6 +141,8 @@
 
     public static bool CanFire = true;
 
+    public static bool Highscore = false;
+
     public static void Reset()
     {
         IsGameOver = false;

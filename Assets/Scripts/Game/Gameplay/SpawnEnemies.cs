@@ -121,7 +121,7 @@ public class SpawnEnemies : Singleton<SpawnEnemies>
         StartGame();
     }
 
-    public void StartGame()
+    public virtual void StartGame()
     {
         string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
         GuiManager.PlayTrasmition(transmitions);

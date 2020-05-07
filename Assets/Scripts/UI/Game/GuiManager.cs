@@ -249,6 +249,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public void LoadMainMenu()
     {
+        GameSession.SurvivalMode = false;
         Time.timeScale = 1;
         SceneLoader.Instance.LoadMainenu();
 

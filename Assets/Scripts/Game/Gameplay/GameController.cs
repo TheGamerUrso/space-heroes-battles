@@ -178,6 +178,12 @@ public class GameController : Singleton<GameController>
 
         SaveSystem.SaveGame();
 
+        if (GameSession.SurvivalMode)
+        {
+            int levelIndex = GameManager.LevelIndexSelected;
+            playerData.SetScore(levelIndex, GameSession.score);
+        }
+
         yield return new WaitForSeconds(2.0f);
 
         AudioManager.PlayMusic("GameOver", false);

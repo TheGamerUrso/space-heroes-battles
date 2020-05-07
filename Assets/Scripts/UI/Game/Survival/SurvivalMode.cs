@@ -10,9 +10,12 @@ public class SurvivalMode : SpawnEnemies
     public WaveEnded OnWaveEnded;
 
     public GameObject[] BossFights;
+    private bool IncomingDanger = false;
 
     public override void OnStart()
     {
+        GameSession.SurvivalMode = true;
+
         playerShip = PlayerManager.GetPlayer();
 
         for (int i = 0; i < SceneManager.sceneCount; i++)
@@ -27,8 +30,7 @@ public class SurvivalMode : SpawnEnemies
 
         LevelDifficulty = 1;
 
-        string[] transmitions = { "Wave:\n" + waves, "Survive", "Good Luck" };
-        GuiManager.PlayTrasmition(transmitions);
+
 
         TotalEnemies = numberOfEnemiesEachWave * 2;
 
@@ -42,9 +44,9 @@ public class SurvivalMode : SpawnEnemies
 
         BossPrefab = BossFights[Random.Range(0, BossFights.Length)];
 
-        StartCoroutine(Endless());
+        StartCoroutine(StartGameDelay());
     }
-    private bool IncomingDanger = false;
+
     public void NewWave()
     {
         waves++;
@@ -74,6 +76,21 @@ public class SurvivalMode : SpawnEnemies
 
         TotalEnemies = numberOfEnemiesEachWave * 2;
     }
+
+    public override void StartGame()
+    {
+        string[] transmitions = { "Wave:\n" + waves};
+        GuiManager.PlayTrasmition(transmitions);
+
+        StartCoroutine(Endless());
+    }
+
+    IEnumerator StartGameDelay()
+    {
+        yield return new WaitForSeconds(2.0f);
+        StartGame();
+    }
+
 
     IEnumerator Endless()
     {

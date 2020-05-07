@@ -49,30 +49,31 @@ public class GameResults : MonoBehaviour
             return;
         }
 
-        PlayerShip player = PlayerManager.GetPlayer();
         PlayerData playerData = PersistantData.GetPlayerData();
 
         string scoreText = string.Format("{00:0000000000}", GameSession.score);
         m_Text.text = scoreText;
 
-        levelName = "Level" + GameManager.LevelIndexSelected;
         highscore.SetActive(false);
-        playerData.SurvivalScore = GameSession.score;
-        if (playerData.SurvivalScore > playerData.SurvivalHighScore)
+
+        var score = playerData.GetScore(GameManager.LevelIndexSelected);
+        var hscore = playerData.GetHighScore(GameManager.LevelIndexSelected);
+
+        if (GameSession.Highscore)
         {
             highscore.SetActive(true);
-            playerData.SurvivalHighScore = playerData.SurvivalScore;
         }
 
-        // Unlock an achievement
-        // EM_GameServicesConstants.Sample_Achievement is the generated name constant
-        // of an achievement named "Sample Achievement"
-#if UNITY_ANDROID
-        if (GooglePlayServicesManager.Instance)
-            GooglePlayServicesManager.Instance.ReportLeaderboards(playerData.SurvivalHighScore, EM_GameServicesConstants.Leaderboard_Survival_Mode);
-#elif UNITY_EDITOR
-     Debug.Log("UnlockAchievement"); 
-#endif
+        GameSession.Highscore = false;
+
+        GameSession.SurvivalMode = false;
+
+    }
+
+    IEnumerator GameResultsDelay()
+    {
+        yield return new WaitForSeconds(1.0f);
+
     }
 
 }
