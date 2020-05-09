@@ -69,10 +69,10 @@ public class GameManager : Singleton<GameManager>
 
     protected override void OnAwake()
     {
-       // Debug.Log("Loading Data"); 
+        // Debug.Log("Loading Data"); 
         PersistantData.LoadData();
 
-       // Debug.Log("Set up Players");
+        // Debug.Log("Set up Players");
         PlayerManager pm = new PlayerManager(this, GameManager.Instance);
         pm.LoadPlayerSettings();
 
@@ -103,13 +103,19 @@ public class GameManager : Singleton<GameManager>
     public void OnLevelValueChanged(int Level)
     {
         Instance.levelupAnnouncement.SetActive(true);
+
+
+        PlayerShipData playerShipData = playerData.playerShipData[0];
+        if (GooglePlayServicesManager.Instance)
+            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power, playerShipData.level / 20);
+
     }
 
     private void Start()
     {
         if (SceneManager.sceneCount > 1)
         {
-           // Debug.Log("boot found skip");
+            // Debug.Log("boot found skip");
         }
         else if (SceneManager.sceneCount <= 1)
         {
@@ -154,6 +160,6 @@ public class GameManager : Singleton<GameManager>
             Paused = false;
         }
 
-    
+
     }
 }

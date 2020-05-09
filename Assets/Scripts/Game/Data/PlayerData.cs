@@ -136,7 +136,7 @@ public class PlayerData
         set
         {
             GetCurrentPlayerShipData().level = value;
-            OnLevelValueChanged?.Invoke(Level);
+            OnLevelValueChanged?.Invoke(Level);       
         }
     }
     public float XP
