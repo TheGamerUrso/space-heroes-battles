@@ -63,7 +63,7 @@ public class ArtilleryProjectile : EnemyProjectile
             {
                 TargetPos = new Vector3(0, 0, 0);
             }
-            warning.transform.position = new Vector3(TargetPos.x, -50, TargetPos.z);
+            warning.transform.position = new Vector3(TargetPos.x, 0, TargetPos.z);
 
             transform.position += Vector3.up * speed * Time.deltaTime;
 

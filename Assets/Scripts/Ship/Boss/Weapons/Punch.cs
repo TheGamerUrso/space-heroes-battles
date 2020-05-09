@@ -164,7 +164,7 @@ public class Punch : MonoBehaviour, IDamagable
         fireEffect.SetActive(false);
         isAlive = true;
         animator = GetComponent<Animator>();
-
+        damage = baseBossEnemy.Damage;
         if (healthBar != null)
         {
             healthBar.GetComponent<BaseHealthWidget>();
