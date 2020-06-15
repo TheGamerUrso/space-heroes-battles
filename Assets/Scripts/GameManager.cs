@@ -104,6 +104,8 @@ public class GameManager : Singleton<GameManager>
 
         PlayerManager pm = new PlayerManager(this,this);
 
+        AdvertismentManager.Instance.Initialize();
+
         pm.LoadPlayerSettings();
 
 

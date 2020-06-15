@@ -4,8 +4,30 @@ using EasyMobile;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-public class AdvertismentManager : Singleton<AdvertismentManager>
+public sealed class AdvertismentManager
 {
+    private static readonly AdvertismentManager instance = new AdvertismentManager();
+
+    // Explicit static constructor to tell C# compiler
+    // not to mark type as beforefieldinit
+    static AdvertismentManager()
+    {
+    }
+
+    private AdvertismentManager()
+    {
+
+    }
+
+    public static AdvertismentManager Instance
+    {
+        get
+        {
+            return instance;
+        }
+    }
+
+
     public static string gameId = "2725712";
     private static string bannerId = "banner";
     private static string rewardVideoId = "rewardedVideo";
@@ -25,21 +47,12 @@ public class AdvertismentManager : Singleton<AdvertismentManager>
         }
     }
 
-    protected override void OnAwake()
-    {
-        base.OnAwake();
-
-        Initialize();
-    }
-
 
     public void ShowBanner()
     {
         if (!Advertisement.isInitialized)
         {
             Advertisement.Initialize(gameId, testMode);
-
-            StartCoroutine(ShowBannerWhenReady());
         }
     }
 
@@ -48,20 +61,11 @@ public class AdvertismentManager : Singleton<AdvertismentManager>
         Advertisement.Banner.Hide();
     }
 
-    IEnumerator ShowBannerWhenReady()
-    {
-        while (!Advertisement.IsReady(bannerId))
-        {
-            yield return new WaitForSeconds(0.5f);
-        }
-
-        Advertisement.Banner.SetPosition(BannerPosition.TOP_CENTER);
-        Advertisement.Banner.Show(bannerId);
-    }
     public static bool AdvertismentReady()
     {
         return Advertisement.IsReady(rewardVideoId);
     }
+
     public static void ShowRewardedVideo()
     {
         // Check if rewarded ad is ready
