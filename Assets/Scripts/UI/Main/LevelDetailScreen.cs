@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TheGamerUrso.SceneLoader;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -74,7 +73,7 @@ public class LevelDetailScreen : Singleton<LevelDetailScreen>
     {
         var levelIndex = GameManager.LevelIndexSelected;
         var levelName = string.Format("Level" + levelIndex);
-        SceneLoader.Instance.LoadScene(levelName);
+        GameManager.Instance.LoadScene(levelName);
     }
 
     public void Close()

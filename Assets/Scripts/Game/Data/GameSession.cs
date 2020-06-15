@@ -1,4 +1,4 @@
-﻿public static class GameSession
+﻿public struct GameSession
 {
     public delegate void CoinValueChanged(int coin);
     public static CoinValueChanged OnCoinValueChanged;
@@ -14,6 +14,24 @@
     public static int EnemySpawnInTotal;
 
     public static int score;
+    private static int currentEnemyKilled;
+    public static int coinEarnInGame;
+    private static int superUsed;
+    public static bool getDamaged;
+    public static int multiplier = 1;
+    public static int enemyKilled;
+    public static int enemyEscaped;
+    public static bool SurvivalMode;
+    public static bool Transmiting;
+    public static bool CanFire = true;
+    public static bool Highscore = false;
+
+    public static int counsEarnInGame;
+    public static int coinDropInTotal;
+    public static int MaxLevelUnlocked = 5;
+    public static int ShowAdCounter = 5;
+
+    #region Properties 
     public static int Score
     {
         get
@@ -27,11 +45,7 @@
             OnScoreValueChanged?.Invoke(score);
         }
     }
-
     public static int WaveSurvived { get; set; }
-
-    private static int currentEnemyKilled;
-
     public static int CurrentEnemyKilled
     {
         get
@@ -41,22 +55,11 @@
 
         set
         {
-
             currentEnemyKilled = value;
-            PlayerData playerData = PersistantData.GetPlayerData();
-
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
-
-            if (objectiveData != null)
-            {
-                var newProgress = objectiveData.progress + currentEnemyKilled;
-                objectiveData.UpdateProgress(newProgress);
-            }
         }
     }
     public static bool useSloMo { get; set; }
     public static int CoinDropInTotal { get; set; }
-    public static int coinEarnInGame;
     public static int CoinEarnInGame
     {
         get
@@ -72,7 +75,6 @@
 
     }
 
-    private static int superUsed;
     public static int SuperUsed
     {
 
@@ -84,17 +86,8 @@
         set
         {
             superUsed = value;
-            PlayerData playerData = PersistantData.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
-            if (objectiveData != null)
-            {
-                var newProgress = objectiveData.progress + superUsed;
-                objectiveData.UpdateProgress(superUsed);
-            }
         }
     }
-
-    private static bool getDamaged;
 
     public static bool GotDamaged
     {
@@ -106,14 +99,9 @@
         set
         {
             getDamaged = value;
-            PlayerData playerData = PersistantData.GetPlayerData();
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-            if (objectiveData != null)
-                objectiveData.UpdateProgress(1);
         }
     }
 
-    public static int multiplier = 1;
     public static int Multiplier
     {
         get
@@ -132,16 +120,7 @@
 
     }
 
-    public static int enemyKilled;
-    public static int enemyEscaped;
-    public static bool SurvivalMode;
-
-
-    public static bool Transmiting;
-
-    public static bool CanFire = true;
-
-    public static bool Highscore = false;
+    #endregion
 
     public static void Reset()
     {
@@ -157,4 +136,39 @@
         enemyKilled = 0;
         enemyEscaped = 0;
     }
+
+    public static void SetGotDamaged(int value)
+    {
+        PlayerData playerData = PersistantData.GetPlayerData();
+        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+        if (objectiveData != null)
+            objectiveData.UpdateProgress(1);
+    }
+
+    public static void SetSuperUsed(int value)
+    {
+        SuperUsed = value;
+        PlayerData playerData = PersistantData.GetPlayerData();
+        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
+        if (objectiveData != null)
+        {
+            var newProgress = objectiveData.progress + superUsed;
+            objectiveData.UpdateProgress(superUsed);
+        }
+    }
+    public static void SetCurrentEnemyKills(int Kills)
+    {
+        CurrentEnemyKilled = Kills;
+
+        PlayerData playerData = PersistantData.GetPlayerData();
+
+        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
+
+        if (objectiveData != null)
+        {
+            var newProgress = objectiveData.progress + currentEnemyKilled;
+            objectiveData.UpdateProgress(newProgress);
+        }
+    }
+
 }

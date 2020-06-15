@@ -125,7 +125,10 @@ public class GameController : Singleton<GameController>
 
 
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
-        GameSession.CurrentEnemyKilled++;
+        int kills = GameSession.CurrentEnemyKilled + 1;
+        GameSession.SetCurrentEnemyKills(kills);
+
+
         GameSession.enemyKilled++;
         GameSession.Score = score;
         GameSession.Multiplier++;
@@ -293,8 +296,6 @@ public class GameController : Singleton<GameController>
 
     public void PlayerQuestCheck()
     {
-
-
         for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
         {
             ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
@@ -333,7 +334,7 @@ public class GameController : Singleton<GameController>
         }
         else
         {
-            if (!GameSession.IsGameOver && !GameManager.Paused)
+            if (!GameSession.IsGameOver && !Game.Paused)
             {
                 if (GameSession.useSloMo)
                 {

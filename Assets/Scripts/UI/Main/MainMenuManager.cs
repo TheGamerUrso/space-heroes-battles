@@ -4,7 +4,6 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms;
-using TheGamerUrso.SceneLoader;
 using UnityEngine.SceneManagement;
 using EasyMobile;
 using UnityEngine.Advertisements;
@@ -117,7 +116,7 @@ public class MainMenuManager : Singleton<MainMenuManager>
     {
         levelIndex = GameManager.LevelIndexSelected;
         levelName = string.Format("Level" + (levelIndex + 1));
-        SceneLoader.Instance.LoadScene(levelName);
+        GameManager.Instance.LoadScene(levelName);
     }
 
 

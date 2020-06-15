@@ -48,7 +48,8 @@ public class SpecialAttack : PlayerWeapon
                 playerData = PersistantData.GetPlayerData();
             }
 
-            GameSession.SuperUsed++;
+            int superUsed = GameSession.SuperUsed + 1;
+            GameSession.SetSuperUsed(superUsed);
 
             SpecialActive = true;
         }

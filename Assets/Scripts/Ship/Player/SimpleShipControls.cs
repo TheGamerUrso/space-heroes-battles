@@ -47,7 +47,6 @@ public class SimpleShipControls : MonoBehaviour
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
         Speed = playerShipData.Speed;
-
     }
 
     public void UpdateOffset(float ammount)
@@ -99,26 +98,12 @@ public class SimpleShipControls : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawLine(transform.position, targetPos + offspec);
+       // Gizmos.DrawLine(transform.position, targetPos + offspec);
     }
 
 
     private void Move()
     {
-        //Vector3 initPos = Vector3.zero;
-
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    initPos = transform.position;
-        //}
-
-        //Cursor.lockState = CursorLockMode.Locked;
-
-        //float xVel = Input.GetAxisRaw("Mouse X") * Speed * movementSensitivity * Time.deltaTime;
-        //float zVel = Input.GetAxisRaw("Mouse Y") * Speed * movementSensitivity * Time.deltaTime;
-
-        //transform.Translate(new Vector3(xVel, 0, zVel)  , Space.World);
-
         if (direction.magnitude > .1f)
         {
             Vector3 worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
@@ -133,10 +118,6 @@ public class SimpleShipControls : MonoBehaviour
                 yMove,
                     Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
         }
-
-
-
-
     }
 
     private void Update()
@@ -160,7 +141,7 @@ public class SimpleShipControls : MonoBehaviour
             SetTargetPosition();
         }
 
-        if (!GameManager.Paused)
+        if (!Game.Paused)
         {
             Rotate();
         }

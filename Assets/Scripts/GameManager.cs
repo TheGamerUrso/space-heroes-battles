@@ -4,8 +4,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using TheGamerUrso.SceneLoader;
 using System.Collections;
+using Doozy.Engine.UI;
+using UnityEngine.UI;
 
 [Serializable]
 public class PlayerShipElement
@@ -17,25 +18,14 @@ public class PlayerShipElement
 
 public class GameManager : Singleton<GameManager>
 {
-    public delegate void OnLoadData();
-    public event OnLoadData OnLoadDataCompleted;
+    public Action OnLoadDataCompleted;
+    public Action<bool> OnPauseGame;
 
-    public delegate void PauseGame(bool value);
-    public PauseGame OnPauseGame;
-
-
-    public static bool Paused;
-    private bool firstRun;
+    public Action<string,bool> OnSceneLoadStart;
+    public Action<string,bool> OnSceneLoadFinished;
+    public Action<float> OnSceneLoadProgress;
 
     private static float DefaultTimeDeltaScale;
-
-    public static int counsEarnInGame;
-    public static int coinDropInTotal;
-    public static int score;
-    public static int MaxLevelUnlocked = 5;
-
-    public static int ShowAdCounter = 5;
-
 
     [Range(0, 20)]
     public int LevelDifficuilty;
@@ -45,16 +35,44 @@ public class GameManager : Singleton<GameManager>
     public static int LevelIndexSelected = 0;
     private PlayerData playerData;
 
-    public GameObject levelupAnnouncement;
+    [SerializeField] private GameObject levelupAnnouncement;
+    [SerializeField]private GameObject[] SystemPrefabs;
 
-    public bool debug;
-
-    public GameObject[] SystemPrefabs;
     private List<GameObject> _instancedSystemPrefabs;
 
-    public bool autoKillMode;
-    public bool useSafeMode;
-    public LogBehaviour logBehaviour;
+    private bool autoKillMode;
+    private bool useSafeMode;
+    private LogBehaviour logBehaviour;
+
+
+    #region SceneManagment
+    public bool IsLoading { get; private set; }
+    protected List<string> ActiveScenes;
+
+    private string _currentLevelName;
+    List<AsyncOperation> _loadOperation;
+    private bool unloading;
+
+    private static AsyncOperation loadLvl;
+
+    public bool ManualFadeIn = false;
+
+    private Animator animator;
+    public Image progressBar;
+
+    public CanvasGroup BlockRaycast;
+    public GameObject ProgressBarPanel;
+    public GameObject Content;
+
+    public string currentLevelLoaded;
+
+    public UIView LoadingScreen;
+
+    public GateControl[] Gates;
+
+    #endregion
+
+
 
     public PlayerShipElement[] ListOfPlayerShips()
     {
@@ -63,47 +81,51 @@ public class GameManager : Singleton<GameManager>
 
     private void OnApplicationQuit()
     {
-        playerData.OnLevelValueChanged -= OnLevelValueChanged;
+        UnSubscribeToEvents();
         SaveSystem.SaveGame();
     }
 
     protected override void OnAwake()
     {
-        // Debug.Log("Loading Data"); 
-        PersistantData.LoadData();
+        DontDestroyOnLoad(gameObject);
 
-        // Debug.Log("Set up Players");
-        PlayerManager pm = new PlayerManager(this, GameManager.Instance);
-        pm.LoadPlayerSettings();
+        animator = GetComponentInChildren<Animator>();
+
+        _instancedSystemPrefabs = new List<GameObject>();
+        _loadOperation = new List<AsyncOperation>();
+        ActiveScenes = new List<string>();
+        InstantiateSystemPrefabs();
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
 
-        playerData = PersistantData.GetPlayerData();
-
-        playerData.OnLevelValueChanged += OnLevelValueChanged;
-
         DOTween.Init(autoKillMode, useSafeMode, logBehaviour);
 
-        DontDestroyOnLoad(gameObject);
+        PersistantData.LoadData();
 
-        _instancedSystemPrefabs = new List<GameObject>();
+        PlayerManager pm = new PlayerManager(this,this);
 
-        InstantiateSystemPrefabs();
+        pm.LoadPlayerSettings();
 
+
+        SubscribeToEvents();
 
         OnLoadDataCompleted?.Invoke();
-
     }
 
-    protected override void OnCleanup()
+    public void UnSubscribeToEvents()
     {
-        base.OnCleanup();
+        playerData.OnLevelValueChanged -= OnLevelValueChanged;
+    }
+
+    public void SubscribeToEvents()
+    {
+        playerData = PersistantData.GetPlayerData();
+        playerData.OnLevelValueChanged += OnLevelValueChanged;
     }
 
     public void OnLevelValueChanged(int Level)
     {
         Instance.levelupAnnouncement.SetActive(true);
-
 
         PlayerShipData playerShipData = playerData.playerShipData[0];
         if (GooglePlayServicesManager.Instance)
@@ -115,13 +137,14 @@ public class GameManager : Singleton<GameManager>
     {
         if (SceneManager.sceneCount > 1)
         {
-            // Debug.Log("boot found skip");
+
         }
         else if (SceneManager.sceneCount <= 1)
         {
-            //Debug.Log("Continue");
-            SceneLoader.Instance.LoadLevel("Intro");
+            LoadLevel("Intro");
         }
+
+        Hide();
     }
     private void Update()
     {
@@ -140,24 +163,172 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
+    public void ResetLevel()
+    {
+        StartCoroutine(ShowLoadingScreen(SceneManager.GetActiveScene().name));
+    }
+
+    public void LoadScene(string level)
+    {
+        StartCoroutine(ShowLoadingScreen(level));
+    }
+
+    public void LoadMainenu()
+    {
+        GameSession.ShowAdCounter--;
+        if (GameSession.ShowAdCounter <= 0)
+        {
+            GameSession.ShowAdCounter = 5;
+            AdvertismentManager.ShowAdvertisment();
+        }
+        LoadScene("Main");
+    }
+
+    void OnLoadOperationComplete(AsyncOperation ao)
+    {
+        if (_loadOperation.Contains(ao))
+        {
+            _loadOperation.Remove(ao);
+            //dispatch message
+            //transition between scenes
+            IsLoading = false;
+            //OnSceneLoadFinished?.Invoke();
+            UpdateProgress(1f);
+
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName(currentLevelLoaded));
+
+            OnSceneLoadFinished?.Invoke(currentLevelLoaded, ManualFadeIn);
+        }
+
+        //Debug.Log("Load Complete.");
+    }
+
+    void OnUnloadOperationComplete(AsyncOperation ao)
+    {
+        // Debug.Log("Unload Complete.");
+        unloading = false;
+
+    }
+    public void UnloadLevel(string levelName)
+    {
+        unloading = true;
+
+        AsyncOperation ao = SceneManager.UnloadSceneAsync(levelName);
+        if (ao == null)
+        {
+            Debug.LogError("[SceneController] Unable to unload level" + levelName);
+            return;
+        }
+        ao.completed += OnUnloadOperationComplete;
+    }
+    protected void UpdateProgress(float progress)
+    {
+        OnSceneLoadProgress?.Invoke(progress);
+    }
+
+    private IEnumerator LoadSceneAsync(string levelName, float delay = 0)
+    {
+        for (int i = 0; i < ActiveScenes.Count; i++)
+        {
+            string item = ActiveScenes[i];
+            UnloadLevel(item);
+        }
+
+        ActiveScenes.Clear();
+
+        WaitForEndOfFrame waitForEndFrame = new WaitForEndOfFrame();
+
+        while (unloading)
+        {
+            yield return waitForEndFrame;
+
+        }
+
+
+        AsyncOperation ao = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+        ao.completed += OnLoadOperationComplete;
+        _loadOperation.Add(ao);
+        _currentLevelName = levelName;
+        ActiveScenes.Add(levelName);
+        currentLevelLoaded = levelName;
+
+        if (ao == null)
+        {
+            Debug.LogError("[SceneController] Unable to load level" + levelName);
+        }
+
+        System.GC.Collect();
+
+        while (ao.isDone == false)
+        {
+            UpdateProgress(ao.progress);
+            yield return null;
+        }
+
+        Hide();
+    }
+    private IEnumerator ShowLoadingScreen(string level)
+    {
+        Show();
+
+        WaitForSeconds waitForSec = new WaitForSeconds(2.0f);
+        yield return waitForSec;
+        StartCoroutine(LoadSceneAsync(level));
+    }
+
+    private void Show()
+    {
+        Content.SetActive(true);
+        BlockRaycast.blocksRaycasts = true;
+        for (int i = 0; i < Gates.Length; i++)
+        {
+            GateControl gate = Gates[i];
+            gate.CloseGate();
+        }
+    }
+
+    private void Hide()
+    {
+        Content.SetActive(false);
+        BlockRaycast.blocksRaycasts = false;
+        for (int i = 0; i < Gates.Length; i++)
+        {
+            GateControl gate = Gates[i];
+            gate.OpenGate();
+        }
+    }
+    public void LoadLevel(string levelName, float delay = 0)
+    {
+        if (IsLoading)
+        {
+            return;
+        }
+        IsLoading = true;
+        OnSceneLoadStart?.Invoke(currentLevelLoaded, ManualFadeIn);
+        UpdateProgress(0f);
+
+        StartCoroutine(LoadSceneAsync(levelName, delay));
+    }
+
+
     public void PauseTheGame(bool value)
     {
-        Paused = value;
+        Game.Paused = value;
 
-        OnPauseGame?.Invoke(Paused);
+        OnPauseGame?.Invoke(Game.Paused);
 
-        if (Paused)
+        if (Game.Paused)
         {
             Time.timeScale = 0;
             Time.fixedDeltaTime = 0;
-            Paused = true;
+            Game.Paused = true;
 
         }
         else
         {
             Time.timeScale = 1;
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
-            Paused = false;
+            Game.Paused = false;
         }
 
 

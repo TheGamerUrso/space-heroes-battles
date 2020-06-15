@@ -6,7 +6,6 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using EasyMobile;
 using TheGamerUrso.PoolSystem;
-using TheGamerUrso.SceneLoader;
 using Doozy.Engine.UI;
 
 public class GuiManager : Singleton<GuiManager>
@@ -195,7 +194,7 @@ public class GuiManager : Singleton<GuiManager>
 
     public void ReplayButton()
     {
-        SceneLoader.Instance.ResetLevel();
+        GameManager.Instance.ResetLevel();
     }
 
     public void ResumeButton()
@@ -251,7 +250,7 @@ public class GuiManager : Singleton<GuiManager>
     {
         GameSession.SurvivalMode = false;
         Time.timeScale = 1;
-        SceneLoader.Instance.LoadMainenu();
+        GameManager.Instance.LoadMainenu();
 
         UIView activeMenuGO = null;
 

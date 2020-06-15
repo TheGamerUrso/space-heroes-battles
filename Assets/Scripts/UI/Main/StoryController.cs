@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using TMPro;
 using UnityEngine;
-using TheGamerUrso.SceneLoader;
 public class StoryController : MonoBehaviour
 {
     public GameObject StoryCanvas;
@@ -43,7 +42,7 @@ public class StoryController : MonoBehaviour
 
                 if (charArray[i].Equals('%'))
                 {
-                    SceneLoader.Instance.LoadScene("Level" + "" + charArray[i]);
+                    GameManager.Instance.LoadScene("Level" + "" + charArray[i]);
                 }
 
                 textToShow += "" + charArray[i];

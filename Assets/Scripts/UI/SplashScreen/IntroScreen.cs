@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using TheGamerUrso.SceneLoader;
+
 public class IntroScreen : MonoBehaviour
 {
     public delegate void OnIntroClickContinue();
@@ -59,7 +59,7 @@ public class IntroScreen : MonoBehaviour
     {
 
         yield return new WaitForSeconds(1.0f);
-        if (SceneLoader.Instance)
-            SceneLoader.Instance.LoadScene("Main");
+        if (GameManager.Instance)
+            GameManager.Instance.LoadScene("Main");
     }
 }

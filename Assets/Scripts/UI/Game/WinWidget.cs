@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-using TheGamerUrso.SceneLoader;
 
 public class WinWidget : MonoBehaviour
 {
@@ -95,7 +94,7 @@ public class WinWidget : MonoBehaviour
 
     public void ReplayButton()
     {
-        SceneLoader.Instance.ResetLevel();
+        GameManager.Instance.ResetLevel();
     }
     public void LoadMainMenu()
     {

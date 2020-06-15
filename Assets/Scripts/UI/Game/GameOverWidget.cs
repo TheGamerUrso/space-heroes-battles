@@ -1,6 +1,5 @@
 using EasyMobile;
 using System.Collections;
-using TheGamerUrso.SceneLoader;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -99,7 +98,7 @@ public class GameOverWidget : MonoBehaviour
 
     public void ReplayButton()
     {
-        SceneLoader.Instance.ResetLevel();
+        GameManager.Instance.ResetLevel();
     }
     public void LoadMainMenu()
     {
