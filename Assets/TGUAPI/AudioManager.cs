@@ -12,7 +12,7 @@ public class AudioTrack
     public AudioClip audioClip;
 }
 
-public class AudioManager : Singleton<AudioManager>
+public class AudioManager : MonoSingleton<AudioManager>
 {
     // public static AudioManager instance;
     [HideInInspector] public List<AudioTrack> SoundClips = new List<AudioTrack>();

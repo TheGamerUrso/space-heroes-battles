@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
-public class GameController : Singleton<GameController>
+public class GameController : MonoSingleton<GameController>
 {
     public static Action<GameController> OnGameOver;
     public static Action<GameController> OnWin;
@@ -89,7 +89,7 @@ public class GameController : Singleton<GameController>
         yield return new WaitForSeconds(1.0f);
 
         if (PlayerManager.GetPlayer() == null)
-        {       
+        {
             int shipSelected = playerData.currentSelectedShip;
             player = PlayerManager.CreatePlayer(shipSelected);
             playerShip = player.GetComponent<PlayerShip>();
@@ -100,7 +100,7 @@ public class GameController : Singleton<GameController>
         spawn.SpawnEnded += Win;
         spawn.EnemyDied += EnemyDied;
 
-        spawn.InitReference(playerData, playerShip);    
+        spawn.InitReference(playerData, playerShip);
     }
 
     private void EnemyDied(BaseEnemy baseEnemy)
@@ -152,10 +152,10 @@ public class GameController : Singleton<GameController>
 
     public void UpdateAchievements()
     {
-        if (GooglePlayServicesManager.Instance)
+        if (GooglePlayServicesManager.GetInitialized())
         {
-            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
-            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
+            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
         }
     }
 
@@ -234,9 +234,9 @@ public class GameController : Singleton<GameController>
         }
         int levelIndex = GameManager.LevelIndexSelected;
 #if UNITY_ANDROID
-        if (GooglePlayServicesManager.Instance)
+        if (GooglePlayServicesManager.GetInitialized())
         {
-            GooglePlayServicesManager.Instance.UnlockAchievement(levelIndex);
+            GooglePlayServicesManager.UnlockAchievement(levelIndex);
         }
 #elif UNITY_EDITOR
      Debug.Log("UnlockAchievement"); 

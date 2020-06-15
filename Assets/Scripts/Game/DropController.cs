@@ -12,7 +12,7 @@ public class DropProbabilities
     public PoolGameObjectType DropItemsType;
 }
 
-public class DropController : Singleton<DropController>
+public class DropController : MonoSingleton<DropController>
 {
     //private float timerSincePowerUpDroped;
 

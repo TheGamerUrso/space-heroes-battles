@@ -9,7 +9,7 @@ public class TutorialItem
     public GameObject prefabItem;
 }
 
-public class Tutorial : Singleton<Tutorial>
+public class Tutorial : MonoSingleton<Tutorial>
 {
     public UIView TutorialView;
 

@@ -83,8 +83,8 @@ public class ShipSelectElement : MonoBehaviour
                     }
                 }
                 Debug.Log(num / 3);
-                if (GooglePlayServicesManager.Instance)
-                    GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num / 3);
+                if (GooglePlayServicesManager.GetInitialized())
+                    GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num / 3);
 
             }
             else

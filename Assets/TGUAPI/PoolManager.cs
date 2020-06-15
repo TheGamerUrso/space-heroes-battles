@@ -58,7 +58,7 @@ namespace TheGamerUrso
             BossProjectile1
         }
 
-        public class PoolManager : Singleton<PoolManager>
+        public class PoolManager : MonoSingleton<PoolManager>
         {
             public List<PoolElement> PoolElements;
             public Dictionary<PoolGameObjectType, PoolElement> ListOfPoolElements = new Dictionary<PoolGameObjectType, PoolElement>();

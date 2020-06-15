@@ -8,7 +8,7 @@ using EasyMobile;
 using TheGamerUrso.PoolSystem;
 using Doozy.Engine.UI;
 
-public class GuiManager : Singleton<GuiManager>
+public class GuiManager : MonoSingleton<GuiManager>
 {
     PlayerShip playerShip;
 

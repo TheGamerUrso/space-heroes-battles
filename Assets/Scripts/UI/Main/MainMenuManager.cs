@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 using EasyMobile;
 using UnityEngine.Advertisements;
 
-public class MainMenuManager : Singleton<MainMenuManager>
+public class MainMenuManager : MonoSingleton<MainMenuManager>
 {
     public TextMeshProUGUI PlayerXPText;
     public TextMeshProUGUI PlayerLevelText;
@@ -23,12 +23,12 @@ public class MainMenuManager : Singleton<MainMenuManager>
 
     public void ShowLeaderboards()
     {
-        GooglePlayServicesManager.Instance.ShowLeaderboards();
+        GooglePlayServicesManager.ShowLeaderboards();
     }
 
     public void ShowAchievement()
     {
-        GooglePlayServicesManager.Instance.ShowAchievementa();
+        GooglePlayServicesManager.ShowAchievementa();
     }
     protected override void OnAwake()
     {

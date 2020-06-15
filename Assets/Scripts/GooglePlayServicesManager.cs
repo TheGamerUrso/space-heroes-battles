@@ -17,16 +17,13 @@ public class User
 
 
 }
-public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
+public class GooglePlayServicesManager:Singleton<GooglePlayServicesManager>
 {
-    protected override void OnAwake()
+    public static void Initialize()
     {
         if (!RuntimeManager.IsInitialized())
             RuntimeManager.Init();
-    }
 
-    private void Start()
-    {
         //Managed init respects the Max Login Requests value
         if (!GameServices.IsInitialized())
         {
@@ -34,12 +31,12 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
         }
     }
 
-    public bool GetInitialized()
+    public static bool GetInitialized()
     {
         return GameServices.IsInitialized();
     }
 
-    public User GetUserInfo()
+    public static User GetUserInfo()
     {
 #if UNITY_ANDROID
         return new User(GameServices.LocalUser.image, GameServices.LocalUser.userName);
@@ -50,7 +47,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 
 
 
-    public void ReportLeaderboards(long score, string leaderboard)
+    public static void ReportLeaderboards(long score, string leaderboard)
     {
         if (GameServices.IsInitialized())
         {
@@ -64,7 +61,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
     }
 
 
-    public void ReportAchivementProgress(string achievement, float ammount)
+    public static void ReportAchivementProgress(string achievement, float ammount)
     {
         if (GameServices.IsInitialized())
         {
@@ -82,7 +79,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
     }
 
 
-    public void UnlockAchivement(string achievement)
+    public static void UnlockAchivement(string achievement)
     {
         if (GameServices.IsInitialized())
         {
@@ -99,7 +96,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
         }
     }
 
-    public void UnlockAchievement(int achievement)
+    public static void UnlockAchievement(int achievement)
     {
         if (GameServices.IsInitialized())
         {
@@ -158,7 +155,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
         }
     }
 
-    public void ShowAchievementa()
+    public static void ShowAchievementa()
     {
 #if UNITY_ANDROID
         // Check for initialization before showing achievements UI
@@ -175,7 +172,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 #endif
     }
 
-    public void AddScore(long score)
+    public static void AddScore(long score)
     {
 #if UNITY_ANDROID
         GameServices.ReportScore(score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
@@ -184,7 +181,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 #endif
     }
 
-    public void ShowLeaderboards()
+    public static void ShowLeaderboards()
     {
 
 #if UNITY_ANDROID
@@ -213,7 +210,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 
 
 
-    public void SignIn()
+    public static void SignIn()
     {
 #if UNITY_ANDROID
         GameServices.ManagedInit();
@@ -222,7 +219,7 @@ public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 #endif
     }
 
-    public void SignOut()
+    public static void SignOut()
     {
 #if UNITY_ANDROID
         GameServices.SignOut();

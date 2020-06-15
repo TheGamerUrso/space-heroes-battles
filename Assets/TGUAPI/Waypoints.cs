@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Waypoints : Singleton<Waypoints>
+public class Waypoints : MonoSingleton<Waypoints>
 {
     public GameObject[] ListOfPaths;
 

@@ -18,7 +18,7 @@ public class EnemyElement
 }
 
 
-public class SpawnEnemies : Singleton<SpawnEnemies>
+public class SpawnEnemies : MonoSingleton<SpawnEnemies>
 {
     public Action<BaseEnemy> EnemyDied;
 

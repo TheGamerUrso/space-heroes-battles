@@ -28,7 +28,7 @@ public class GooglePlayOptions : BaseOptions
 
     public void InitializeGooglePlayProfile()
     {
-        User user = GooglePlayServicesManager.Instance.GetUserInfo();
+        User user = GooglePlayServicesManager.GetUserInfo();
 
         if (EasyMobile.GameServices.IsInitialized() || user != null)
         {
@@ -52,12 +52,12 @@ public class GooglePlayOptions : BaseOptions
         if (EasyMobile.GameServices.IsInitialized())
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[1];
-            GooglePlayServicesManager.Instance.SignOut();
+            GooglePlayServicesManager.SignOut();
         }
         else
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[0];
-            GooglePlayServicesManager.Instance.SignIn();
+            GooglePlayServicesManager.SignIn();
         }
 
         if (signupCoroutine != null)
@@ -70,22 +70,22 @@ public class GooglePlayOptions : BaseOptions
 
     public IEnumerator SignUp()
     {
-        while (!GooglePlayServicesManager.Instance)
+        while (!GooglePlayServicesManager.GetInitialized())
         {
-            if (GooglePlayServicesManager.Instance)
+            if (GooglePlayServicesManager.GetInitialized())
             {
                 signInBut.GetComponent<Image>().sprite = buttonSprites[0];
-                GooglePlayServicesManager.Instance.SignOut();
+                GooglePlayServicesManager.SignOut();
             }
             else
             {
                 signInBut.GetComponent<Image>().sprite = buttonSprites[1];
-                GooglePlayServicesManager.Instance.SignIn();
+                GooglePlayServicesManager.SignIn();
             }
             yield return new WaitForSeconds(1);
         }
 
-        if (GooglePlayServicesManager.Instance)
+        if (GooglePlayServicesManager.GetInitialized())
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[0];
         }
@@ -98,11 +98,11 @@ public class GooglePlayOptions : BaseOptions
 
     public void ShowLeaderboards()
     {
-        GooglePlayServicesManager.Instance.ShowLeaderboards();
+        GooglePlayServicesManager.ShowLeaderboards();
     }
 
     public void ShowAchievement()
     {
-        GooglePlayServicesManager.Instance.ShowAchievementa();
+        GooglePlayServicesManager.ShowAchievementa();
     }
 }

@@ -7,6 +7,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using Doozy.Engine.UI;
 using UnityEngine.UI;
+using EasyMobile;
 
 [Serializable]
 public class PlayerShipElement
@@ -16,7 +17,7 @@ public class PlayerShipElement
 }
 
 
-public class GameManager : Singleton<GameManager>
+public class GameManager : MonoSingleton<GameManager>
 {
     public Action OnLoadDataCompleted;
     public Action<bool> OnPauseGame;
@@ -104,10 +105,13 @@ public class GameManager : Singleton<GameManager>
 
         PlayerManager pm = new PlayerManager(this,this);
 
-        AdvertismentManager.Instance.Initialize();
+        new AdvertismentManager();
+        AdvertismentManager.Initialize();
+
+        new GooglePlayServicesManager();
+        GooglePlayServicesManager.Initialize();
 
         pm.LoadPlayerSettings();
-
 
         SubscribeToEvents();
 
@@ -130,8 +134,8 @@ public class GameManager : Singleton<GameManager>
         Instance.levelupAnnouncement.SetActive(true);
 
         PlayerShipData playerShipData = playerData.playerShipData[0];
-        if (GooglePlayServicesManager.Instance)
-            GooglePlayServicesManager.Instance.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power, playerShipData.level / 20);
+        if (GooglePlayServicesManager.GetInitialized())
+            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power, playerShipData.level / 20);
 
     }
 

@@ -136,7 +136,7 @@ public class PlayerData
         set
         {
             GetCurrentPlayerShipData().level = value;
-            OnLevelValueChanged?.Invoke(Level);       
+            OnLevelValueChanged?.Invoke(Level);
         }
     }
     public float XP
@@ -228,8 +228,7 @@ public class PlayerData
                 HighScore[level] = score;
                 if (level == 0)
                 {
-                    if (GooglePlayServicesManager.Instance)
-                        GooglePlayServicesManager.Instance.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
+                    GooglePlayServicesManager.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
                     GameSession.Highscore = true;
                 }
 
@@ -356,7 +355,7 @@ public class PlayerData
         {
             XP = 0;
             currentPlayerShipSelected.xpToLevel = 0;
-            GooglePlayServicesManager.Instance.UnlockAchivement(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power);
+            GooglePlayServicesManager.UnlockAchivement(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power);
         }
     }
 

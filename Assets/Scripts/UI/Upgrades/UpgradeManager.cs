@@ -1,7 +1,7 @@
 ﻿using Boo.Lang;
 using UnityEngine;
 
-public class UpgradeManager : Singleton<UpgradeManager>
+public class UpgradeManager : MonoSingleton<UpgradeManager>
 {
     public delegate void Purschase();
     public Purschase OnPurschase;

@@ -4,36 +4,15 @@ using EasyMobile;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-public sealed class AdvertismentManager
+public class AdvertismentManager: Singleton<AdvertismentManager>
 {
-    private static readonly AdvertismentManager instance = new AdvertismentManager();
-
-    // Explicit static constructor to tell C# compiler
-    // not to mark type as beforefieldinit
-    static AdvertismentManager()
-    {
-    }
-
-    private AdvertismentManager()
-    {
-
-    }
-
-    public static AdvertismentManager Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
-
 
     public static string gameId = "2725712";
     private static string bannerId = "banner";
     private static string rewardVideoId = "rewardedVideo";
     public static bool testMode = false;
 
-    public void Initialize()
+    public static void Initialize()
     {
         if (!Advertisement.isInitialized)
         {
@@ -48,7 +27,7 @@ public sealed class AdvertismentManager
     }
 
 
-    public void ShowBanner()
+    public static void ShowBanner()
     {
         if (!Advertisement.isInitialized)
         {
