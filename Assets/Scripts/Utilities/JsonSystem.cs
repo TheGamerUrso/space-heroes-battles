@@ -51,7 +51,7 @@ public static class JsonSystem
         {
             Debug.LogError("Can't read File" + e.Message);
         }
-        return null;
+        return new LevelObjectiveCollection();
     }
 
     public static void SaveLevelObjectiveData(LevelObjective LevelObjective)

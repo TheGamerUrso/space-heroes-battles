@@ -150,19 +150,22 @@ public class GameManager : MonoSingleton<GameManager>
 
         Hide();
     }
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            PlayerData playerData = PersistantData.GetPlayerData();
-            playerData.AddCoin(999);
-        }
-    }
+
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.C))
+    //    {
+    //        PlayerData playerData = PersistantData.GetPlayerData();
+    //        playerData.AddCoin(999);
+    //    }
+    //}
+
     private void InstantiateSystemPrefabs()
     {
         foreach (var systemPrefab in SystemPrefabs)
         {
             var prefabInstance = Instantiate(systemPrefab);
+            prefabInstance.name = systemPrefab.name;
             _instancedSystemPrefabs.Add(prefabInstance);
         }
     }
@@ -193,10 +196,9 @@ public class GameManager : MonoSingleton<GameManager>
         if (_loadOperation.Contains(ao))
         {
             _loadOperation.Remove(ao);
-            //dispatch message
-            //transition between scenes
+
             IsLoading = false;
-            //OnSceneLoadFinished?.Invoke();
+
             UpdateProgress(1f);
 
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(currentLevelLoaded));
@@ -204,15 +206,13 @@ public class GameManager : MonoSingleton<GameManager>
             OnSceneLoadFinished?.Invoke(currentLevelLoaded, ManualFadeIn);
         }
 
-        //Debug.Log("Load Complete.");
     }
 
     void OnUnloadOperationComplete(AsyncOperation ao)
     {
-        // Debug.Log("Unload Complete.");
         unloading = false;
-
     }
+
     public void UnloadLevel(string levelName)
     {
         unloading = true;

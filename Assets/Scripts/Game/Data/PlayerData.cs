@@ -168,6 +168,7 @@ public class PlayerData
             CollectedPowerPack?.Invoke(powerPackCollected);
         }
     }
+
     public float PowerUpLevel
     {
         get
@@ -288,15 +289,6 @@ public class PlayerData
     public LevelObjectiveData[] GetLevelObjectives(string levelID)
     {
         return GetLevelObjectivesByID(levelID);
-    }
-
-    public void SetGameSettings()
-    {
-        SFXVolume = GameSettings.SFXVolume;
-        MusicVolume = GameSettings.MusicVolume;
-        AutoAttack = GameSettings.AutoAttack;
-        mute = GameSettings.mute;
-        distance = GameSettings.distance;
     }
 
     public void SetMoneySpend(int ammount)

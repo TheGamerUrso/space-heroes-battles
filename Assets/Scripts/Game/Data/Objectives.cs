@@ -4,7 +4,7 @@ using System.IO;
 using UnityEngine;
 
 [Serializable]
-public class Objectives
+public struct Objectives
 {
     public int ID;
     public string Description;

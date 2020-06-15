@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 [Serializable]
-public class Levels
+public struct Levels
 {
     public string ID;
     public Objectives[] Objectives;

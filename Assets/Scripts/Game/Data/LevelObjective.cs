@@ -5,7 +5,7 @@ using UnityEngine;
 
 
 [System.Serializable]
-public class LevelObjective
+public struct LevelObjective
 {
     public Levels[] Levels;
 }

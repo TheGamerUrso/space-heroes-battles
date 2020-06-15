@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class LevelObjectiveCollection
+public struct LevelObjectiveCollection
 {
     public LevelObjective LevelObjective;
 
