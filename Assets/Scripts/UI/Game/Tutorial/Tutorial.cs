@@ -1,8 +1,5 @@
 ﻿using Doozy.Engine.UI;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Experimental.PlayerLoop;
 
 [System.Serializable]
 public class TutorialItem
