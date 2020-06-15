@@ -62,7 +62,7 @@ public class LaizerColision : MonoBehaviour
 
     private void OnTriggerStay(Collider other)
     {
-        if (other.GetComponent<IDamagable>() != null && other.GetComponent<PlayerShipElement>() != null)
+        if (other.GetComponent<IDamagable>() != null && other.GetComponent<PlayerShipElement>().prefab != null)
             other.GetComponent<IDamagable>().TakeDamage(1f);
     }
 }

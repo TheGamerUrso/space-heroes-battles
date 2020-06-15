@@ -30,7 +30,7 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 
     public void SetDetails(Mission mission, Sprite sprite)
     {
-        if (mission == null)
+        if (string.IsNullOrEmpty(mission.Title))
         {
             LevelDetailLevelTItle.text = "Survival";
             survivalHighscore.SetActive(true);

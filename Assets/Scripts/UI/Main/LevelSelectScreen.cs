@@ -78,7 +78,7 @@ public class LevelSelectScreen : MonoBehaviour
 
         bool surivalLocked = playerData.SurvivalUnlocked;
 
-        var level = new Level("Survival", null, null, surivalLocked, surivalLocked);
+        var level = new Level("Survival", new Mission(), null, surivalLocked, surivalLocked);
 
         var levelElement = LevelElementGO.GetComponent<LevelElement>();
 
@@ -107,7 +107,7 @@ public class LevelSelectScreen : MonoBehaviour
         }
 
         GameObject emptyLevelElement = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
-        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("", null, null, false, false), null);
+        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("", new Mission(), null, false, false), null);
 
     }
 
@@ -117,7 +117,7 @@ public class LevelSelectScreen : MonoBehaviour
         {
             ScreenManager.Instance.Open("LevelDetailScreen");
             GameManager.LevelIndexSelected = 0;
-            LevelDetailScreen.Instance.SetDetails(null, sprites[0]);
+            LevelDetailScreen.Instance.SetDetails(new Mission(), sprites[0]);
         }
         else
         {

@@ -27,7 +27,7 @@ public class MissionElement : MonoBehaviour {
     {
         string title = "";
         story = "";
-        if (mission  != null)
+        if (string.IsNullOrEmpty(mission.Title))
         {
             gameObject.name = string.Format("ID {0} - Mission: {1}", mission.ID, mission.Title);
             title = mission.Title;

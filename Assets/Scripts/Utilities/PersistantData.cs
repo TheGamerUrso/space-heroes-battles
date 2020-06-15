@@ -43,8 +43,7 @@ public static class PersistantData
         {
             SaveSystem.LoadGame();
 
-
-            GameSettings.Initialize(
+           new GameSettings(
                 playerData.SFXVolume,
                 playerData.MusicVolume,
                 playerData.AutoAttack,
@@ -69,6 +68,7 @@ public static class PersistantData
             PlayerPrefs.SetInt("SurvivalMode", 0);
             SaveSystem.SaveGame();
         }
+
         GenerateLevelObjectiveData();
     }
 

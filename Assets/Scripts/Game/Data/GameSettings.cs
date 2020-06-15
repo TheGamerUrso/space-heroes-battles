@@ -1,5 +1,5 @@
 ﻿[System.Serializable]
-public class GameSettings
+public struct GameSettings
 {
     public static float SFXVolume;
     public static float MusicVolume;
@@ -7,7 +7,16 @@ public class GameSettings
     public static bool mute;
     public static float distance;
 
-    public static void Initialize()
+    public GameSettings(float SFXVolume, float MusicVolume, bool AutoAttack, bool mute, float distance)
+    {
+        GameSettings.SFXVolume = SFXVolume;
+        GameSettings.MusicVolume = MusicVolume;
+        GameSettings.AutoAttack = AutoAttack;
+        GameSettings.mute = mute;
+        GameSettings.distance = distance;
+    }
+
+    public static void ResetToDefault()
     {
         SFXVolume = .7f;
         MusicVolume = .7f;
@@ -16,13 +25,6 @@ public class GameSettings
         distance = 5;
     }
 
-    public static void Initialize(float sFXVolume, float musicVolume, bool autoAttack, bool mute, float distance)
-    {
-        GameSettings.SFXVolume = sFXVolume;
-        GameSettings.MusicVolume = musicVolume;
-        GameSettings.AutoAttack = autoAttack;
-        GameSettings.mute = mute;
-        GameSettings.distance = distance;
-    }
+
 
 }

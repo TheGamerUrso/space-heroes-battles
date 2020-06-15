@@ -10,7 +10,7 @@ using UnityEngine.UI;
 using EasyMobile;
 
 [Serializable]
-public class PlayerShipElement
+public struct PlayerShipElement
 {
     public string name;
     public PlayerShip prefab;
@@ -66,8 +66,6 @@ public class GameManager : MonoSingleton<GameManager>
     public GameObject Content;
 
     public string currentLevelLoaded;
-
-    public UIView LoadingScreen;
 
     public GateControl[] Gates;
 
