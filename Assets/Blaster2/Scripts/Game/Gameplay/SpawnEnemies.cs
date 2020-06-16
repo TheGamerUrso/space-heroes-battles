@@ -7,7 +7,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [Serializable]
-public class EnemyElement
+public struct EnemyElement
 {
     public string Name;
     public PoolGameObjectType gameObjectType;
@@ -20,10 +20,18 @@ public class EnemyElement
 
 public class SpawnEnemies : MonoSingleton<SpawnEnemies>
 {
-    public Action<BaseEnemy> EnemyDied;
 
     protected PlayerShip playerShip;
+    protected EnemyElement enemyElement;
+    protected bool GameEnded;
+    protected bool BossBattleInitiated;
+    protected GameObject currentBoss;
+    protected PlayerData playerData;
+    [SerializeField] protected int numberOfEnemiesEachWave;
+    [Range(1, 16)]
+    [SerializeField] protected int waves;
 
+    public Action<BaseEnemy> EnemyDied;
     public Action SpawnEnded;
     public Action<int, int, int> GameStatsChanged;
     public Action<string, BaseEnemy> BossDied;
@@ -31,33 +39,14 @@ public class SpawnEnemies : MonoSingleton<SpawnEnemies>
     public List<EnemyElement> enemyElements;
     public Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
     public bool HasBoss;
-
-    [SerializeField] protected int numberOfEnemiesEachWave;
-    [Range(1, 16)]
-    [SerializeField] protected int waves;
-
     [Range(0, 6)]
     public int availableEnemies;
-
     public int LevelDifficulty = 1;
-
     public int TotalEnemies;
-
     public float delay = 0;
-
-
     public GameObject BossPrefab;
-
-    protected bool GameEnded;
-    protected bool BossBattleInitiated;
-    protected GameObject currentBoss;
-    protected PlayerData playerData;
-
     public List<GameObject> Enemies = new List<GameObject>();
-
     public float cooldown;
-    protected EnemyElement enemyElement = null;
-
     public List<EnemyElement> availableEnemie;
     public List<EnemyElement> tempList;
     public bool pause;
@@ -80,19 +69,13 @@ public class SpawnEnemies : MonoSingleton<SpawnEnemies>
     {
         playerShip = PlayerManager.GetPlayer();
 
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
-            {
-                // Debug.Log("Gameplay Scene active");
-                continue;
-            }
-            //Debug.Log("Not Gameplay Scene active");
-            MissionCollection missionCollection = PersistantData.GetMissionCollection();
-            Mission mission = missionCollection.GetMission(GameManager.LevelIndexSelected - 1);
-            LevelDifficulty = mission.Level;
+        MissionCollection missionCollection = PersistantData.GetMissionCollection();
 
-        }
+        Scene scene = SceneManager.GetActiveScene();
+        string index = scene.name[scene.name.Length - 1].ToString();
+        Mission mission = missionCollection.GetMission(int.Parse(index));
+        LevelDifficulty = mission.Level;
+
         TotalEnemies = numberOfEnemiesEachWave * waves;
 
         GameSession.EnemySpawnInTotal = TotalEnemies;

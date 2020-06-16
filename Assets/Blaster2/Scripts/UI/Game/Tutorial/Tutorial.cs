@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [System.Serializable]
-public class TutorialItem
+public struct TutorialItem
 {
     public string Name;
     public string Description;

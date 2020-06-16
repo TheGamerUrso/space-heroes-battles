@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PauseMenuOptionScreen : BaseOptions
 {
@@ -22,7 +23,9 @@ public class PauseMenuOptionScreen : BaseOptions
         listOfMission = PersistantData.GetMissionCollection();
         if (listOfMission != null)
         {
-            mission = listOfMission.GetMission(GameManager.LevelIndexSelected - 1);
+            Scene scene = SceneManager.GetActiveScene();
+            string index = scene.name[scene.name.Length - 1].ToString();
+            mission = listOfMission.GetMission(int.Parse(index));
             MissionTitle.text = mission.Title;
             levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
             for (int i = 0; i < LevelObjectivesElements.Length; i++)
