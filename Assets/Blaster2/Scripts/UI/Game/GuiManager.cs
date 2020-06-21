@@ -67,10 +67,10 @@ public class GuiManager : MonoSingleton<GuiManager>
         GameController.OnGameOver += GameOver;
         GameController.OnWin += Win;
 
-        SpawnEnemies spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
-        if (spawnEnemies != null)
+        BaseGameMode baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
+        if (baseGameMode != null)
         {
-            spawnEnemies.EnemyDied += EnemyDiedCallback;
+            baseGameMode.EnemyDied += EnemyDiedCallback;
         }
 
 

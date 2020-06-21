@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class SurvivalMode : SpawnEnemies
+public class SurvivalMode : BaseGameMode
 {
     public delegate bool WaveEnded();
     public WaveEnded OnWaveEnded;
@@ -14,19 +14,7 @@ public class SurvivalMode : SpawnEnemies
 
     public override void OnStart()
     {
-        GameSession.SurvivalMode = true;
-
         playerShip = PlayerManager.GetPlayer();
-
-        for (int i = 0; i < SceneManager.sceneCount; i++)
-        {
-            if (SceneManager.GetActiveScene().name.Equals("Gameplay"))
-            {
-                //  Debug.Log("Gameplay Scene active");
-                continue;
-            }
-            //Debug.Log("Not Gameplay Scene active");
-        }
 
         LevelDifficulty = 1;
 
@@ -45,6 +33,8 @@ public class SurvivalMode : SpawnEnemies
         BossPrefab = BossFights[Random.Range(0, BossFights.Length)];
 
         StartCoroutine(StartGameDelay());
+
+        GameSession.SurvivalMode = true;
     }
 
     public void NewWave()
@@ -82,17 +72,10 @@ public class SurvivalMode : SpawnEnemies
         string[] transmitions = { "Wave:\n" + waves};
         GuiManager.PlayTrasmition(transmitions);
 
-        StartCoroutine(Endless());
+        StartCoroutine(Spawn());
     }
 
-    IEnumerator StartGameDelay()
-    {
-        yield return new WaitForSeconds(2.0f);
-        StartGame();
-    }
-
-
-    IEnumerator Endless()
+    public override IEnumerator Spawn()
     {
         //Debug.Log("Game Started");
         WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
@@ -157,22 +140,11 @@ public class SurvivalMode : SpawnEnemies
                     yield return waitForEndOfFrame;
                 }
 
-                // randomNumb = UnityEngine.Random.Range(0, tempList.Count); 
-
-                //int repeat = 1;
-
-                //if (randomNumb == 0)
-                //{
-                //    repeat = UnityEngine.Random.Range(5, 8);
-                //}
-
-                //for (int i = 0; i < repeat; i++)
-                //{
                 if (TotalEnemies - 1 >= 0)
                 {
-                    SpawnEnemyElement(enemyElement);
+                    GameObject enemGO = SpawnEnemies.SpawnEnemyElement(enemyElement);
+                    Enemies.Add(enemGO);
                 }
-                //}
 
                 yield return waitForCooldown;
 
@@ -195,8 +167,9 @@ public class SurvivalMode : SpawnEnemies
                 {
                     BossBattleInitiated = true;
 
-                    // Debug.Log("Boss Battle");
-                    SpawnBoss();
+                    currentBoss = SpawnEnemies.SpawnBoss(BossPrefab, LevelDifficulty);
+
+                    Enemies.Add(currentBoss);
                 }
 
 

@@ -15,7 +15,7 @@ public class GameController : MonoSingleton<GameController>
     PlayerData playerData;
     PlayerShipData playerShipData;
 
-    private SpawnEnemies spawn;
+    private BaseGameMode baseGameMode;
 
     private float delayTheSlowMoEffectTimer = .3f;
     private float delay = 4;
@@ -65,8 +65,8 @@ public class GameController : MonoSingleton<GameController>
         base.OnCleanup();
 
         playerShip.PlayerShipDeath -= PlayerShipCallback;
-        spawn.SpawnEnded -= Win;
-        spawn.EnemyDied -= EnemyDied;
+        baseGameMode.SpawnEnded -= Win;
+        baseGameMode.EnemyDied -= EnemyDied;
     }
 
     void Start()
@@ -96,11 +96,11 @@ public class GameController : MonoSingleton<GameController>
             playerShip.PlayerShipDeath += PlayerShipCallback;
         }
 
-        spawn = GameObject.FindObjectOfType<SpawnEnemies>();
-        spawn.SpawnEnded += Win;
-        spawn.EnemyDied += EnemyDied;
+        baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
+        baseGameMode.SpawnEnded += Win;
+        baseGameMode.EnemyDied += EnemyDied;
 
-        spawn.InitReference(playerData, playerShip);
+        baseGameMode.InitReference(playerData, playerShip);
     }
 
     private void EnemyDied(BaseEnemy baseEnemy)
@@ -172,7 +172,7 @@ public class GameController : MonoSingleton<GameController>
     {
         Time.timeScale = 1.0f;
 
-        spawn.GameOver();
+        baseGameMode.GameOver();
 
         playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
 
@@ -259,7 +259,10 @@ public class GameController : MonoSingleton<GameController>
         var killed = GameSession.EnemySpawnInTotal * .9f;
         var collected = GameSession.EnemySpawnInTotal * .9f;
         var missionCollection = PersistantData.GetMissionCollection();
-        var mission = missionCollection.GetMission(levelIndex - 1);
+
+        Scene scene = SceneManager.GetActiveScene();
+        string index = scene.name[scene.name.Length - 1].ToString();
+        Mission mission = missionCollection.GetMission(int.Parse(index));
 
         var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
 

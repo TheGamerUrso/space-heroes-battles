@@ -49,7 +49,7 @@ public class BaseEnemy : Ship, IDamagable
     [SerializeField] protected bool AutoEnableWeapon;
 
 
-    private SpawnEnemies spawnEnemies;
+    private BaseGameMode baseGameMode;
 
     public void EnableWeaponById(int id, bool solo = false)
     {
@@ -97,27 +97,27 @@ public class BaseEnemy : Ship, IDamagable
 
     private void OnDisable()
     {
-        if (spawnEnemies == null)
+        if (baseGameMode == null)
         {
-            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+            baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
         }
 
-        if (spawnEnemies != null)
+        if (baseGameMode != null)
         {
-            spawnEnemies.UnregisterEnemy(this);
+            baseGameMode.UnregisterEnemy(this);
         }
     }
 
     private void OnDestroy()
     {
-        if (spawnEnemies == null)
+        if (baseGameMode == null)
         {
-            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+            baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
         }
 
-        if (spawnEnemies != null)
+        if (baseGameMode != null)
         {
-            spawnEnemies.UnregisterEnemy(this);
+            baseGameMode.UnregisterEnemy(this);
         }
     }
 
@@ -128,9 +128,9 @@ public class BaseEnemy : Ship, IDamagable
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
 
-        if (spawnEnemies == null)
+        if (baseGameMode == null)
         {
-            spawnEnemies = GameObject.FindObjectOfType<SpawnEnemies>();
+            baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
         }
 
     }
@@ -169,9 +169,9 @@ public class BaseEnemy : Ship, IDamagable
             EnableAllWeapon();
         }
 
-        if (spawnEnemies != null)
+        if (baseGameMode != null)
         {
-            spawnEnemies.RegisterEnemy(this);
+            baseGameMode.RegisterEnemy(this);
         }
 
     }
