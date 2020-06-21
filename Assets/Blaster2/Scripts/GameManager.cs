@@ -13,7 +13,7 @@ using EasyMobile;
 public struct PlayerShipElement
 {
     public string name;
-    public PlayerShip prefab;
+    public GameObject prefab;
 }
 
 

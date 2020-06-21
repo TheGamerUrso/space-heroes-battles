@@ -20,6 +20,8 @@ public class GameController : MonoSingleton<GameController>
     private float delayTheSlowMoEffectTimer = .3f;
     private float delay = 4;
 
+    [SerializeField]private GameObject EnemyWaypoints;
+
     private void OnApplicationFocus(bool focus)
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -79,6 +81,8 @@ public class GameController : MonoSingleton<GameController>
         GameSession.Reset();
 
         StartCoroutine(StartGameDelay());
+
+        Instantiate(EnemyWaypoints,transform,false);
     }
 
     IEnumerator StartGameDelay()
@@ -92,7 +96,7 @@ public class GameController : MonoSingleton<GameController>
         {
             int shipSelected = playerData.currentSelectedShip;
             player = PlayerManager.CreatePlayer(shipSelected);
-            playerShip = player.GetComponent<PlayerShip>();
+            playerShip = player.GetComponentInChildren<PlayerShip>();
             playerShip.PlayerShipDeath += PlayerShipCallback;
         }
 
