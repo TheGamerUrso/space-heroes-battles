@@ -8,6 +8,7 @@ using System.Collections;
 using Doozy.Engine.UI;
 using UnityEngine.UI;
 using EasyMobile;
+using System.Linq;
 
 [Serializable]
 public struct PlayerShipElement
@@ -19,32 +20,24 @@ public struct PlayerShipElement
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    public Action OnLoadDataCompleted;
-    public Action<bool> OnPauseGame;
-
-    public Action<string,bool> OnSceneLoadStart;
-    public Action<string,bool> OnSceneLoadFinished;
-    public Action<float> OnSceneLoadProgress;
-
-    private static float DefaultTimeDeltaScale;
-
     [Range(0, 20)]
     public int LevelDifficuilty;
+    public static int LevelIndexSelected = 0;
 
     [SerializeField] private PlayerShipElement[] PlayerShips;
-
-    public static int LevelIndexSelected = 0;
-    private PlayerData playerData;
-
     [SerializeField] private GameObject levelupAnnouncement;
-    [SerializeField]private GameObject[] SystemPrefabs;
-
+    [SerializeField] private GameObject[] SystemPrefabs;
+    private static float DefaultTimeDeltaScale;
+    private EGameState currentGameState = EGameState.PRELOAD;
     private List<GameObject> _instancedSystemPrefabs;
-
     private bool autoKillMode;
     private bool useSafeMode;
     private LogBehaviour logBehaviour;
-
+    private WaitForEndOfFrame waitForEndFrame = new WaitForEndOfFrame();
+    private WaitForSeconds shortWait = new WaitForSeconds(2.0f);
+    private AsyncOperation ao;
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
 
     #region SceneManagment
     public bool IsLoading { get; private set; }
@@ -72,6 +65,21 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion
 
 
+
+    #region Properties 
+    public static EGameState CurrentGameState
+    {
+        get
+        {
+            return CurrentGameState;
+        }
+
+        private set
+        {
+            CurrentGameState = value;
+        }
+    }
+    #endregion
 
     public PlayerShipElement[] ListOfPlayerShips()
     {
@@ -101,7 +109,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         PersistantData.LoadData();
 
-        PlayerManager pm = new PlayerManager(this,this);
+        PlayerManager pm = new PlayerManager(this, this);
 
         new AdvertismentManager();
         AdvertismentManager.Initialize();
@@ -111,9 +119,19 @@ public class GameManager : MonoSingleton<GameManager>
 
         pm.LoadPlayerSettings();
 
-        SubscribeToEvents();
+        SubscribeToEvents();      
+    }
 
-        OnLoadDataCompleted?.Invoke();
+    public void ChangeGameState(EGameState nextGameState)
+    {
+        var previosuGameState = CurrentGameState;
+
+        CurrentGameState = nextGameState;
+
+        if (nextGameState == EGameState.GAME)
+        {
+            Events.OnLoadDataCompleted?.Invoke();
+        }
     }
 
     public void UnSubscribeToEvents()
@@ -132,6 +150,7 @@ public class GameManager : MonoSingleton<GameManager>
         Instance.levelupAnnouncement.SetActive(true);
 
         PlayerShipData playerShipData = playerData.playerShipData[0];
+
         if (GooglePlayServicesManager.GetInitialized())
             GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power, playerShipData.level / 20);
 
@@ -139,26 +158,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
-        //if (SceneManager.sceneCount > 1)
-        //{
-
-        //}
-        //else if (SceneManager.sceneCount <= 1)
-        //{
-        //    LoadLevel("Intro");
-        //}
-
         Hide();
     }
-
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.C))
-    //    {
-    //        PlayerData playerData = PersistantData.GetPlayerData();
-    //        playerData.AddCoin(999);
-    //    }
-    //}
 
     private void InstantiateSystemPrefabs()
     {
@@ -188,6 +189,7 @@ public class GameManager : MonoSingleton<GameManager>
             GameSession.ShowAdCounter = 5;
             AdvertismentManager.ShowAdvertisment();
         }
+
         LoadScene("Main");
     }
 
@@ -203,7 +205,7 @@ public class GameManager : MonoSingleton<GameManager>
 
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(currentLevelLoaded));
 
-            OnSceneLoadFinished?.Invoke(currentLevelLoaded, ManualFadeIn);
+            Events.OnSceneLoadFinished?.Invoke(currentLevelLoaded, ManualFadeIn);
         }
 
     }
@@ -217,7 +219,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         unloading = true;
 
-        AsyncOperation ao = SceneManager.UnloadSceneAsync(levelName);
+        ao = SceneManager.UnloadSceneAsync(levelName);
         if (ao == null)
         {
             Debug.LogError("[SceneController] Unable to unload level" + levelName);
@@ -227,7 +229,7 @@ public class GameManager : MonoSingleton<GameManager>
     }
     protected void UpdateProgress(float progress)
     {
-        OnSceneLoadProgress?.Invoke(progress);
+        Events.OnSceneLoadProgress?.Invoke(progress);
     }
 
     private IEnumerator LoadSceneAsync(string levelName, float delay = 0)
@@ -240,16 +242,13 @@ public class GameManager : MonoSingleton<GameManager>
 
         ActiveScenes.Clear();
 
-        WaitForEndOfFrame waitForEndFrame = new WaitForEndOfFrame();
-
         while (unloading)
         {
             yield return waitForEndFrame;
 
         }
 
-
-        AsyncOperation ao = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+        ao = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
         ao.completed += OnLoadOperationComplete;
         _loadOperation.Add(ao);
         _currentLevelName = levelName;
@@ -274,9 +273,7 @@ public class GameManager : MonoSingleton<GameManager>
     private IEnumerator ShowLoadingScreen(string level)
     {
         Show();
-
-        WaitForSeconds waitForSec = new WaitForSeconds(2.0f);
-        yield return waitForSec;
+        yield return shortWait;
         StartCoroutine(LoadSceneAsync(level));
     }
 
@@ -308,7 +305,7 @@ public class GameManager : MonoSingleton<GameManager>
             return;
         }
         IsLoading = true;
-        OnSceneLoadStart?.Invoke(currentLevelLoaded, ManualFadeIn);
+        Events.OnSceneLoadStart?.Invoke(currentLevelLoaded, ManualFadeIn);
         UpdateProgress(0f);
 
         StartCoroutine(LoadSceneAsync(levelName, delay));
@@ -319,7 +316,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         Game.Paused = value;
 
-        OnPauseGame?.Invoke(Game.Paused);
+        Events.OnPauseGame?.Invoke(Game.Paused);
 
         if (Game.Paused)
         {

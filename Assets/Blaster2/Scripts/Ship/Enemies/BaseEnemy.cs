@@ -4,32 +4,32 @@ using UnityEngine;
 
 public class BaseEnemy : Ship, IDamagable
 {
-    public Action<string, BaseEnemy> EnemyDied;
-    public Action<string, BaseEnemy> EnemyGotHit;
-    public Action<string, BaseEnemy> EnemyEscaped;
 
     [Header("Enemy Config")]
-    public BaseEnemyAI baseEnemyAI;
+    [SerializeField]protected bool AutoEnableWeapon;
+    [SerializeField]protected BaseEnemyAI baseEnemyAI;
+    [SerializeField]protected WeaponScript[] Weapons;
+    [SerializeField]protected float delayAttak = 3;
     protected BoxCollider boxCollider;
-
     protected bool CanAttack;
-    [SerializeField]
-    protected WeaponScript[] Weapons;
-    [SerializeField]
-    protected float delayAttak = 3;
-    public float DeathDelay;
     protected int currentWeaponActive;
+    protected float takeDamageDelay;
+    protected bool EnableShield;
+    protected WeaponScript weaponScript;
+    protected EnemyHealthWidget healthBar;
 
-    public float DelayAttack
-    {
-        get { return delayAttak; }
-    }
-
-    [HideInInspector] public EnemyElement enemyElement;
 
     [SerializeField] private HealthBarSettings HealthBarSettings;
+    private BaseGameMode baseGameMode;
 
-    protected EnemyHealthWidget healthBar;
+
+
+    [HideInInspector] public EnemyElement enemyElement;
+    public int m_ValueOfEnemy;
+    public float DeathDelay;
+
+    #region Properties
+
     public EnemyHealthWidget HealthBar
     {
         get
@@ -38,19 +38,12 @@ public class BaseEnemy : Ship, IDamagable
         }
     }
 
+    public float DelayAttack
+    {
+        get { return delayAttak; }
+    }
 
-
-    public int m_ValueOfEnemy;
-
-    protected float takeDamageDelay;
-    protected bool EnableShield;
-
-    protected WeaponScript weaponScript;
-    [SerializeField] protected bool AutoEnableWeapon;
-
-
-    private BaseGameMode baseGameMode;
-
+    #endregion
     public void EnableWeaponById(int id, bool solo = false)
     {
         if (solo)
@@ -178,7 +171,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public void Leave()
     {
-        EnemyEscaped?.Invoke(gameObject.name, this);
+        Events.EnemyEscaped?.Invoke(gameObject.name, this);
     }
 
     public override void TakeDamage(float dmg)
@@ -217,7 +210,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public virtual void Hit()
     {
-        EnemyGotHit?.Invoke(gameObject.name, this);
+       Events.EnemyGotHit?.Invoke(gameObject.name, this);
     }
 
     public virtual void Update()
@@ -238,7 +231,7 @@ public class BaseEnemy : Ship, IDamagable
             Alive = false;
             GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
             explostion.transform.position = transform.position;
-            EnemyDied?.Invoke(gameObject.name, this);
+            Events.EnemyDied?.Invoke(gameObject.name, this);
             healthBar.Hide();
             gameObject.SetActive(false);
         }

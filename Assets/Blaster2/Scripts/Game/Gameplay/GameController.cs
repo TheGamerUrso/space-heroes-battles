@@ -7,20 +7,16 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoSingleton<GameController>
 {
-    public static Action<GameController> OnGameOver;
-    public static Action<GameController> OnWin;
-
-    GameObject player;
-    PlayerShip playerShip;
-    PlayerData playerData;
-    PlayerShipData playerShipData;
-
+    [SerializeField] private GameObject EnemyWaypoints;
+    private GameObject player;
+    private PlayerShip playerShip;
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
     private BaseGameMode baseGameMode;
-
     private float delayTheSlowMoEffectTimer = .3f;
     private float delay = 4;
 
-    [SerializeField]private GameObject EnemyWaypoints;
+
 
     private void OnApplicationFocus(bool focus)
     {
@@ -44,31 +40,18 @@ public class GameController : MonoSingleton<GameController>
         }
     }
 
-    protected override void OnAwake()
-    {
-        ///**
-        // * Only For Editor
-        // */
-
-        //for (int i = 0; i < SceneManager.sceneCount; i++)
-        //{
-        //    if (SceneManager.GetSceneAt(i).name.Equals("boot"))
-        //    {
-        //        //  Debug.Log("boot found skip");
-        //        return;
-        //    }
-        //    // Debug.Log("Boot not found Loading");
-        //    SceneManager.LoadScene("boot", LoadSceneMode.Additive);
-        //}
-    }
-
     protected override void OnCleanup()
     {
         base.OnCleanup();
 
-        playerShip.PlayerShipDeath -= PlayerShipCallback;
-        baseGameMode.SpawnEnded -= Win;
-        baseGameMode.EnemyDied -= EnemyDied;
+        Events.PlayerShipDeath -= PlayerShipCallback;
+        Events.SpawnEnded -= Win;
+        Events.EnemyDied -= EnemyDied;
+    }
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+        baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
     }
 
     void Start()
@@ -82,13 +65,14 @@ public class GameController : MonoSingleton<GameController>
 
         StartCoroutine(StartGameDelay());
 
-        Instantiate(EnemyWaypoints,transform,false);
+        Instantiate(EnemyWaypoints, transform, false);
     }
 
     IEnumerator StartGameDelay()
     {
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
+
 
         yield return new WaitForSeconds(1.0f);
 
@@ -97,17 +81,16 @@ public class GameController : MonoSingleton<GameController>
             int shipSelected = playerData.currentSelectedShip;
             player = PlayerManager.CreatePlayer(shipSelected);
             playerShip = player.GetComponentInChildren<PlayerShip>();
-            playerShip.PlayerShipDeath += PlayerShipCallback;
         }
 
-        baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
-        baseGameMode.SpawnEnded += Win;
-        baseGameMode.EnemyDied += EnemyDied;
+        Events.PlayerShipDeath += PlayerShipCallback;
+        Events.SpawnEnded += Win;
+        Events.EnemyDied += EnemyDied;
 
         baseGameMode.InitReference(playerData, playerShip);
     }
 
-    private void EnemyDied(BaseEnemy baseEnemy)
+    private void EnemyDied(string name, BaseEnemy baseEnemy)
     {
 
         int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
@@ -130,9 +113,8 @@ public class GameController : MonoSingleton<GameController>
 
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
         int kills = GameSession.CurrentEnemyKilled + 1;
+
         GameSession.SetCurrentEnemyKills(kills);
-
-
         GameSession.enemyKilled++;
         GameSession.Score = score;
         GameSession.Multiplier++;
@@ -195,7 +177,7 @@ public class GameController : MonoSingleton<GameController>
 
         AudioManager.PlayMusic("GameOver", false);
 
-        OnGameOver?.Invoke(this);
+        Events.OnGameOver?.Invoke(this);
 
     }
     IEnumerator DelayWinScreen()
@@ -217,11 +199,9 @@ public class GameController : MonoSingleton<GameController>
 
         yield return new WaitForSeconds(2.0f);
 
-        PlayerShip playerShip = PlayerManager.GetPlayer();
-        playerShip.Exit();
+        playerShip?.Exit();
 
-
-        OnWin?.Invoke(this);
+        Events.OnWin?.Invoke(this);
     }
 
 

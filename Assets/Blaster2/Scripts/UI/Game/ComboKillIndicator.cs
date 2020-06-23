@@ -12,28 +12,15 @@ public class ComboKillIndicator : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (playerShip == null)
-            playerShip = PlayerManager.GetPlayer();
-
-        if (playerShip != null)
-            playerShip.PlayerShipHit -= ZeroMiltiplier;
-
-
-        GameSession.OnMultiplierChanged -= OnMultiplierChanged;
+        Events.PlayerShipHit -= ZeroMiltiplier;
+        Events.OnMultiplierChanged -= OnMultiplierChanged;
     }
 
     private void Start()
     {
         HideWindow();
-
-        if (playerShip == null)
-            playerShip = PlayerManager.GetPlayer();
-
-        if (playerShip != null)
-            playerShip.PlayerShipHit += ZeroMiltiplier;
-
-
-        GameSession.OnMultiplierChanged += OnMultiplierChanged;
+        Events.PlayerShipHit += ZeroMiltiplier;
+        Events.OnMultiplierChanged += OnMultiplierChanged;
     }
 
     public void ShowWindow()
@@ -63,7 +50,7 @@ public class ComboKillIndicator : MonoBehaviour
             RefreshText(multiplier);
         }
 
-        
+
 
     }
 

@@ -7,18 +7,9 @@ using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerShip : Ship, IDamagable
 {
-    public Action PlayerShipHit;
-    public Action PlayerShipDeath;
-
+    [SerializeField] private ParticleSystem ItemCollectedEffect;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
-
-    [Header("Player Config")]
-    private SimpleShipControls shipController;
-
-    [Header("Extra Effects")]
-    public ParticleSystem ItemCollectedEffect;
-
     private float invisibilityTimer;
     public bool TempFireRateUpgrade { get; set; }
     /**
@@ -55,7 +46,6 @@ public class PlayerShip : Ship, IDamagable
     public override void OnAwake()
     {
         Alive = true;
-        shipController = GetComponent<SimpleShipControls>();
         animator = GetComponentInChildren<Animator>();
         playerData = PersistantData.GetPlayerData();
     }
@@ -72,7 +62,7 @@ public class PlayerShip : Ship, IDamagable
 
         specialAttack.SetShipTransform(transform);
 
-        PlayerShipHit += DownGradeWeapon;
+        Events.PlayerShipHit += DownGradeWeapon;
 
         SwitchWeapon(0);
 
@@ -212,7 +202,7 @@ public class PlayerShip : Ship, IDamagable
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(ExplostionEffect);
         explostion.transform.position = transform.position;
 
-        PlayerShipDeath?.Invoke();
+        Events.PlayerShipDeath?.Invoke();
         gameObject.SetActive(false);
     }
 
@@ -254,7 +244,7 @@ public class PlayerShip : Ship, IDamagable
 
                 GameSession.Multiplier = 1;
 
-                PlayerShipHit?.Invoke();
+                Events.PlayerShipHit?.Invoke();
 
                 if (playerData.GotHitInGame == false)
                 {
@@ -386,8 +376,6 @@ public class PlayerShip : Ship, IDamagable
             }
             else
             {
-                PlayerData playerData = PersistantData.GetPlayerData();
-
                 if (playerData != null)
                 {
                     playerData.IncreasePowerUp(.025f);
@@ -420,7 +408,6 @@ public class PlayerShip : Ship, IDamagable
         if (playerData.powerPackCollected <= 5 && CurrentWeapnType < 4)
         {
             playerData.PowerPackCollected += 2;
-            //Debug.Log("increase FireRate by " + 0.01f * playerData.PowerUpCollectAmmount);
             TempFireRateBuff(0.01f * playerData.powerPackCollected);
         }
     }

@@ -6,11 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class SurvivalMode : BaseGameMode
 {
-    public delegate bool WaveEnded();
-    public WaveEnded OnWaveEnded;
-
     public GameObject[] BossFights;
     private bool IncomingDanger = false;
+
+    WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
+    WaitForSeconds waitForCooldown = new WaitForSeconds(2);
+    WaitForSeconds shortWait = new WaitForSeconds(1);
 
     public override void OnStart()
     {
@@ -78,11 +79,7 @@ public class SurvivalMode : BaseGameMode
     public override IEnumerator Spawn()
     {
         //Debug.Log("Game Started");
-        WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
-        WaitForSeconds waitForSec = new WaitForSeconds(delay);
-        WaitForSeconds waitForCooldown = new WaitForSeconds(cooldown);
-        WaitForSeconds waitforOneSec = new WaitForSeconds(1);
-        WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
+
 
         var startingTotalEnemies = TotalEnemies;
 
@@ -145,7 +142,7 @@ public class SurvivalMode : BaseGameMode
                     GameObject enemGO = SpawnEnemies.SpawnEnemyElement(enemyElement);
                     Enemies.Add(enemGO);
                 }
-
+                waitForCooldown = new WaitForSeconds(cooldown);
                 yield return waitForCooldown;
 
 
@@ -175,14 +172,14 @@ public class SurvivalMode : BaseGameMode
 
                 while (BossBattleInitiated)
                 {
-                    yield return waitforOneSec;
+                    yield return shortWait;
                 }
 
                 bool active = true;
 
                 while (active)
                 {
-                    active = OnWaveEnded();
+                    active = Events.OnWaveEnded();
                     // Debug.Log(active);
                     yield return null;
                 }
@@ -204,7 +201,7 @@ public class SurvivalMode : BaseGameMode
 
         TotalEnemies--;
 
-        EnemyDied?.Invoke(baseEnemy);
+        Events.EnemyDied?.Invoke(baseEnemy.gameObject.name,baseEnemy);
 
         int rand = UnityEngine.Random.Range(4, 8);
 

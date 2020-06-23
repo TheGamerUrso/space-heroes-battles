@@ -1,15 +1,6 @@
 ﻿public struct GameSession
 {
-    public delegate void CoinValueChanged(int coin);
-    public static CoinValueChanged OnCoinValueChanged;
-
-    public delegate void ScoreValueChanged(int score);
-    public static ScoreValueChanged OnScoreValueChanged;
-
-
-    public delegate void MultiplierChanged(int multiplier);
-    public static MultiplierChanged OnMultiplierChanged;
-
+  
     public static bool IsGameOver;
     public static int EnemySpawnInTotal;
 
@@ -42,7 +33,7 @@
         set
         {
             score += value;
-            OnScoreValueChanged?.Invoke(score);
+            Events.OnScoreValueChanged?.Invoke(score);
         }
     }
     public static int WaveSurvived { get; set; }
@@ -70,7 +61,7 @@
         set
         {
             coinEarnInGame = value;
-            OnCoinValueChanged?.Invoke(coinEarnInGame);
+            Events.OnCoinValueChanged?.Invoke(coinEarnInGame);
         }
 
     }
@@ -115,7 +106,7 @@
             {
                 multiplier = value;
             }
-            OnMultiplierChanged?.Invoke(multiplier);
+            Events.OnMultiplierChanged?.Invoke(multiplier);
         }
 
     }

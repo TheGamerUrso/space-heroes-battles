@@ -25,7 +25,7 @@ public class GuiManager : MonoSingleton<GuiManager>
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
 
-   // private bool ResultShowed = false;
+    // private bool ResultShowed = false;
     private TransmitionWidget transmittionWidget;
     private float timer;
 
@@ -35,13 +35,12 @@ public class GuiManager : MonoSingleton<GuiManager>
     {
         base.OnCleanup();
 
-        GameController.OnGameOver -= GameOver;
-        GameController.OnWin -= Win;
+        Events.OnGameOver -= GameOver;
+        Events.OnWin -= Win;
 
-
-        GameManager.Instance.OnPauseGame -= ShowPauseMenu;
-        GameSession.OnCoinValueChanged -= UpdateCoinWidgetText;
-        GameSession.OnScoreValueChanged -= UpdateScore;
+        Events.OnPauseGame -= ShowPauseMenu;
+        Events.OnCoinValueChanged -= UpdateCoinWidgetText;
+        Events.OnScoreValueChanged -= UpdateScore;
     }
 
     protected override void OnAwake()
@@ -60,27 +59,18 @@ public class GuiManager : MonoSingleton<GuiManager>
             playerShip = PlayerManager.GetPlayer();
         }
 
-        GameSession.OnCoinValueChanged += UpdateCoinWidgetText;
-        GameSession.OnScoreValueChanged += UpdateScore;
-
-
-        GameController.OnGameOver += GameOver;
-        GameController.OnWin += Win;
-
-        BaseGameMode baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
-        if (baseGameMode != null)
-        {
-            baseGameMode.EnemyDied += EnemyDiedCallback;
-        }
-
-
-        GameManager.Instance.OnPauseGame += ShowPauseMenu;
+        Events.OnCoinValueChanged += UpdateCoinWidgetText;
+        Events.OnScoreValueChanged += UpdateScore;
+        Events.OnGameOver += GameOver;
+        Events.OnWin += Win;
+        Events.EnemyDied += EnemyDiedCallback;
+        Events.OnPauseGame += ShowPauseMenu;
 
         UpdateScore(0);
         UpdateCoinWidgetText(0);
     }
 
-    public void EnemyDiedCallback(BaseEnemy baseEnemy)
+    public void EnemyDiedCallback(string name, BaseEnemy baseEnemy)
     {
         int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
         GuiManager.CreateFloatingText(score.ToString(), baseEnemy.transform.position);

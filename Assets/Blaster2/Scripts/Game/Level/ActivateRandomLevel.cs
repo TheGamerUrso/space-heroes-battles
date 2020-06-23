@@ -6,36 +6,38 @@ using UnityEngine.UI;
 
 public class ActivateRandomLevel : MonoBehaviour
 {
-    public Camera cameraMain;
-    public GameObject WrapTunnelFX;
-    public Image Fade;
-    public TextMeshProUGUI text;
+    [SerializeField] private Camera cameraMain;
+    [SerializeField] private GameObject WrapTunnelFX;
+    [SerializeField] private Image Fade;
+    [SerializeField] private TextMeshProUGUI text;
 
-    public float cooldown;
+    [SerializeField] private float cooldown;
 
-    public GameObject[] levels;
+    [SerializeField] private GameObject[] levels;
 
-    public bool fadeIn;
-    public bool fadeOut;
+    private bool fadeIn;
+    private bool fadeOut;
 
     private Color c;
 
     SurvivalMode survivalMode;
     private bool active;
     private bool firstTime = true;
-    public float speed = 0.5f;
-    public int previousLevelLoaded;
+    [SerializeField] private float speed = 0.5f;
+    [SerializeField] private int previousLevelLoaded;
 
-    public LightMapSwitcher lightMapSwitcher;
+    [SerializeField] private LightMapSwitcher lightMapSwitcher;
+    [SerializeField] private LayerMask defaultLayer;
+    [SerializeField] private LayerMask hyperspaceLayer;
 
-    public LayerMask defaultLayer;
-    public LayerMask hyperspaceLayer;
+    private Asteroids[] asteroids;
+
 
     private void Start()
     {
         cameraMain = Camera.main;
         survivalMode = GameObject.FindObjectOfType<SurvivalMode>();
-        survivalMode.OnWaveEnded = ActivateHyperdrive;
+        Events.OnWaveEnded = ActivateHyperdrive;
         defaultLayer = cameraMain.cullingMask;
         ChooseNewLevel();
     }
@@ -59,11 +61,11 @@ public class ActivateRandomLevel : MonoBehaviour
 
     private void Update()
     {
-
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            ActivateHyperdrive();
-        }
+        //Debug Only
+        //if (Input.GetKeyDown(KeyCode.H))
+        //{
+        //    ActivateHyperdrive();
+        //}
 
         if (fadeIn)
         {
@@ -123,7 +125,6 @@ public class ActivateRandomLevel : MonoBehaviour
         cameraMain.cullingMask = defaultLayer;
         WrapTunnelFX.SetActive(false);
         active = false;
-        //Debug.Log("Done");
     }
 
     public void ChooseNewLevel()

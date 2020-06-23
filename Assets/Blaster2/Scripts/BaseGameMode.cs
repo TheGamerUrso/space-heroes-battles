@@ -28,10 +28,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public int TotalEnemies;
 
-    public Action<BaseEnemy> EnemyDied;
-    public Action SpawnEnded;
-    public Action<int, int, int> GameStatsChanged;
-    public Action<string, BaseEnemy> BossDied;
+   
 
     [SerializeField] protected List<EnemyElement> enemyElements;
     [SerializeField] protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
@@ -119,18 +116,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Enemies.Remove(baseEnemy.gameObject);
     }
 
-    public virtual void BossDiedCallback(string id, BaseEnemy baseEnemy)
-    {
-        Enemies.Remove(baseEnemy.gameObject);
-
-        TotalEnemies--;
-
-        EnemyDied?.Invoke(baseEnemy);
-
-        BossBattleInitiated = false;
-        GameEnded = true;
-    }
-
     public void BossGotHit(string id, BaseEnemy baseEnemy)
     {
         if (playerData != null)
@@ -150,6 +135,22 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
             playerData.PowerUpLevel += .025f;
     }
 
+    public virtual void BossDiedCallback(string id, BaseEnemy baseEnemy)
+    {
+        baseEnemy.enemyElement.currentNumberInScene--;
+
+        DropController.PickRandomDropItem(baseEnemy.transform);
+
+        Enemies.Remove(baseEnemy.gameObject);
+
+        TotalEnemies--;
+
+        BossBattleInitiated = false;
+
+        GameEnded = true;
+
+    }
+
     public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
     {
         baseEnemy.enemyElement.currentNumberInScene--;
@@ -157,23 +158,21 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Enemies.Remove(baseEnemy.gameObject);
 
         DropController.PickRandomDropItem(baseEnemy.transform);
-
-        EnemyDied?.Invoke(baseEnemy);
     }
 
     public void UnregisterEnemy(BaseEnemy baseEnemy)
     {
         if (baseEnemy.GetComponent<BaseBossEnemy>() != null)
         {
-            baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
-            baseEnemy.EnemyDied -= BossDiedCallback;
-            baseEnemy.EnemyGotHit -= BossGotHit;
+            Events.EnemyEscaped -= EnemyEscapedCallback;
+            Events.EnemyDied -= BossDiedCallback;
+            Events.EnemyGotHit -= BossGotHit;
         }
         else
         {
-            baseEnemy.EnemyEscaped -= EnemyEscapedCallback;
-            baseEnemy.EnemyDied -= EnemyDiedCallback;
-            baseEnemy.EnemyGotHit -= EnemyGotHitCallback;
+            Events.EnemyEscaped -= EnemyEscapedCallback;
+            Events.EnemyDied -= EnemyDiedCallback;
+            Events.EnemyGotHit -= EnemyGotHitCallback;
         }
     }
 
@@ -181,15 +180,15 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     {
         if (baseEnemy.GetComponent<BaseBossEnemy>() != null)
         {
-            baseEnemy.EnemyEscaped += EnemyEscapedCallback;
-            baseEnemy.EnemyDied += BossDiedCallback;
-            baseEnemy.EnemyGotHit += BossGotHit;
+            Events.EnemyEscaped += EnemyEscapedCallback;
+            Events.EnemyDied += BossDiedCallback;
+            Events.EnemyGotHit += BossGotHit;
         }
         else
         {
-            baseEnemy.EnemyEscaped += EnemyEscapedCallback;
-            baseEnemy.EnemyDied += EnemyDiedCallback;
-            baseEnemy.EnemyGotHit += EnemyGotHitCallback;
+            Events.EnemyEscaped += EnemyEscapedCallback;
+            Events.EnemyDied += EnemyDiedCallback;
+            Events.EnemyGotHit += EnemyGotHitCallback;
         }
     }
 }

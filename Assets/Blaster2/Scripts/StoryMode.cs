@@ -156,7 +156,7 @@ public class StoryMode : BaseGameMode
 
                 if (!GameSession.IsGameOver)
                 {
-                    SpawnEnded?.Invoke();
+                    Events.SpawnEnded?.Invoke();
                 }
             }
         }
