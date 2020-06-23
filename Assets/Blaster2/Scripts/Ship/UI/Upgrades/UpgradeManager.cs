@@ -42,7 +42,7 @@ public class UpgradeManager : MonoSingleton<UpgradeManager>
         {
             UpgradeElement upgradeElement = upgradeElements[i];
             upgradeElement.InitUpgradeElement(this);
-            upgradeElement.OnPurchased += Purchase;
+            Events.OnPurchased += Purchase;
         }
     }
 
@@ -52,7 +52,7 @@ public class UpgradeManager : MonoSingleton<UpgradeManager>
 
         if (objectiveData != null)
         {
-            var progress = objectiveData.progress + upgradeElement.Cost;
+            var progress = objectiveData.progress + upgradeElement.upgrade.Cost;
             objectiveData.UpdateProgress(progress);
         }
 

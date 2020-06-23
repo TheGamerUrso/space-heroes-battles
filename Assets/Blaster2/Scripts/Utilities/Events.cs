@@ -55,15 +55,15 @@ public class Events
     /**
      * PlayerData Events
      */
-    public delegate void XpValueChanged(int level, float xp, float xpToLevel);
-    public delegate void LevelValueChanged(int level);
-    public delegate void DistanceChanged(float ammount);
-    public delegate void SuperUseValueChanged(float ammount);
-    public delegate void CoinValueChanged(int ammount);
-    public delegate void PowerUpLevelChanged(float ammount);
-    public delegate void PowerPackCollected(int ammount);
-    public delegate void ShipSelectValueChanged(int selection);
-    public delegate void ModeUnlocked();
+    public static Action<int, float, float> OnXpValueChanged;
+    public static Action<int> OnLevelValueChanged;
+    public static Action<float> OnDistanceValueChanged;
+    public static Action<float> OnSuperUseValueChanged;
+    public static Action<int> CoinValueChanged;
+    public static Action<float> PowerUpLevelValueChanged;
+    public static Action<int> OnPowerPackCollected;
+    public static Action<int> OnShipSelectValueChanged;
+    public static Action OnModeUnlockedChanged;
 
 
     /**
@@ -84,5 +84,11 @@ public class Events
             this.objectiveData = objectiveData;
         }
     }
+
+
+    /**
+     * Upgrade Events 
+     */
+    public static Action<UpgradeElement> OnPurchased;
 }
 

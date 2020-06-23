@@ -43,8 +43,8 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     {
         base.OnCleanup();
 
-        playerData.OnShipSelectValueChanged -= OnShipSelectValueChanged;
-        playerData.OnXpValueChanged -= XpLevelChanged;
+        Events.OnShipSelectValueChanged -= OnShipSelectValueChanged;
+        Events.OnXpValueChanged -= XpLevelChanged;
     }
 
     public void OnShipSelectValueChanged(int selection)
@@ -62,9 +62,9 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         GameSession.SurvivalMode = false;
 
         playerShipData = playerData.GetCurrentPlayerShipData();
-        playerData.OnXpValueChanged += XpLevelChanged;
+        Events.OnXpValueChanged += XpLevelChanged;
 
-        playerData.OnShipSelectValueChanged += OnShipSelectValueChanged;
+        Events.OnShipSelectValueChanged += OnShipSelectValueChanged;
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
 
         ShipSelect.Instance.Initialize();

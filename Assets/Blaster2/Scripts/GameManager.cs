@@ -137,13 +137,13 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void UnSubscribeToEvents()
     {
-        playerData.OnLevelValueChanged -= OnLevelValueChanged;
+        Events.OnLevelValueChanged -= OnLevelValueChanged;
     }
 
     public void SubscribeToEvents()
     {
         playerData = PersistantData.GetPlayerData();
-        playerData.OnLevelValueChanged += OnLevelValueChanged;
+        Events.OnLevelValueChanged += OnLevelValueChanged;
     }
 
     public void OnLevelValueChanged(int Level)

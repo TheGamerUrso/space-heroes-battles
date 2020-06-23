@@ -40,7 +40,7 @@ public class PlayerShip : Ship, IDamagable
 
     private void OnDestroy()
     {
-        playerData.OnLevelValueChanged -= OnLevelValueChanged;
+        Events.OnLevelValueChanged -= OnLevelValueChanged;
     }
 
     public override void OnAwake()
@@ -84,7 +84,7 @@ public class PlayerShip : Ship, IDamagable
         playerData.powerUpLevel = 0;
         playerData.powerPackCollected = 0;
 
-        playerData.OnLevelValueChanged += OnLevelValueChanged;
+        Events.OnLevelValueChanged += OnLevelValueChanged;
     }
     public void OnLevelValueChanged(int Level)
     {

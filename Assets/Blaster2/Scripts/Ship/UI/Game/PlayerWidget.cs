@@ -55,9 +55,9 @@ public class PlayerWidget : MonoBehaviour
         if (player != null)
         {
             player.OnHealthChanged -= UpdatePlayerHealth;
-            playerData.PowerUpLevelValueChanged -= PowerUpLevelChanged;
-            playerData.OnXpValueChanged -= UpdateXP;
-            playerData.CollectedPowerPack -= PowerPackCollected;
+            Events.PowerUpLevelValueChanged -= PowerUpLevelChanged;
+            Events.OnXpValueChanged -= UpdateXP;
+            Events.OnPowerPackCollected -= PowerPackCollected;
         }
     }
 
@@ -84,9 +84,9 @@ public class PlayerWidget : MonoBehaviour
         });
 
         player.OnHealthChanged += UpdatePlayerHealth;
-        playerData.PowerUpLevelValueChanged += PowerUpLevelChanged;
-        playerData.CollectedPowerPack += PowerPackCollected;
-        playerData.OnXpValueChanged += UpdateXP;
+        Events.PowerUpLevelValueChanged += PowerUpLevelChanged;
+        Events.OnPowerPackCollected += PowerPackCollected;
+        Events.OnXpValueChanged += UpdateXP;
 
         UpdatePlayerHealth(player.currentHealth, player.MaxHealth);
 

@@ -4,12 +4,9 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
-public class UpgradeElement : MonoBehaviour, IPurchasable
+public class UpgradeElement : MonoBehaviour,IPurchasable
 {
-    public delegate void Purchased(UpgradeElement upgradeElement);
-    public Purchased OnPurchased;
 
-    public UpgradeData upgradeData;
 
     [SerializeField] protected TextMeshProUGUI CostText;
     [SerializeField] protected TextMeshProUGUI NammeText;
@@ -19,21 +16,7 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
     [SerializeField] protected Image UpgradeIcon;
     [SerializeField] protected Image NotAvailableImage;
 
-    protected int level;
-
-    protected int requirement;
-    protected int cost;
-
-    public int Level
-    {
-        get { return level; }
-    }
-
-    public int Cost
-    {
-        get { return cost; }
-    }
-
+    public Upgrade upgrade;
 
     protected PlayerData playerData;
     protected PlayerShipData playerShipData;
@@ -48,35 +31,36 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
 
     public virtual bool CheckAvailable()
     {
-        if (upgradeData.CostPerLevel.Length - 1 <= level)
+        if (upgrade.ReachedMaxLevel)
         {
             Popup.Show(Popup.popupType.message, Constants.UpgradeMaxedOut);
             return false;
         }
 
-        if (playerShipData.level >= upgradeData.LevelRequirementPerLevel[level])
+        if (upgrade.CheckRequirement(playerShipData.level))
         {
             return true;
         }
         else
         {
-            Popup.Show(Popup.popupType.message, "Lv " + upgradeData.LevelRequirementPerLevel[level].ToString() + " Required");
+            Popup.Show(Popup.popupType.message, upgrade.GetLevelRequirment());
         }
 
         return false;
     }
+
     private void OnDestroy()
     {
-        playerData.OnLevelValueChanged -= OnLevelChanged;
-        playerData.OnCoinValueChanged -= OnCoinValueChanged;
+        Events.OnLevelValueChanged -= OnLevelChanged;
+        Events.OnCoinValueChanged -= OnCoinValueChanged;
     }
 
     private void Start()
     {
         InitUpgradeElement(UpgradeManager.Instance);
 
-        playerData.OnCoinValueChanged += OnCoinValueChanged;
-        playerData.OnLevelValueChanged += OnLevelChanged;
+        Events.OnCoinValueChanged += OnCoinValueChanged;
+        Events.OnLevelValueChanged += OnLevelChanged;
     }
 
     public void OnCoinValueChanged(int coins)
@@ -95,17 +79,15 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
         upgradeManager.SubscribePurchasable(this);
 
         playerShipData = playerData.GetCurrentPlayerShipData();
+        
+        upgrade.Initialise(playerShipData);
 
-        int upgradeTypeIndex = (int)(upgradeData.upgradeType);
-        level = playerShipData.Upgrades[upgradeTypeIndex];
-        cost = upgradeData.CostPerLevel[level];
-
-        NammeText.text = upgradeData.upgradeType.ToString();
+        NammeText.text = upgrade.GetUpgradeName();
 
 
-        UpgradeIcon.sprite = upgradeData.sprite;
+        UpgradeIcon.sprite = upgrade.UpgradeIcon;
 
-        if (level >= upgradeData.MaxLevel)
+        if (upgrade.ReachedMaxLevel)
         {
             CostText.color = Color.white;
             CostText.text = Constants.UpgradeMaxedOut;
@@ -114,37 +96,31 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
         }
         else
         {
-            CostText.text = cost.ToString();
+            CostText.text = upgrade.GetCost();
         }
-    }
-
-    public virtual void Upgrade()
-    {
-        if (upgradeData.CostPerLevel.Length - 1 <= level)
-        {
-            CostText.text = Constants.UpgradeMaxedOut;
-            return;
-        }
-
-        level++;
-        playerData.SetUpgrade((int)(upgradeData.upgradeType), level);
     }
 
     public virtual void Purshase()
     {
         if (CheckAvailable())
         {
-            if (playerData.Coins < cost)
+            if (!upgrade.IsAffordable(playerData.coins))
             {
                 Popup.Show(Popup.popupType.message, Constants.CannotAffordIt);
                 return;
             }
 
-            playerData.Coins -= cost;
+            playerData.Coins -= upgrade.Cost;
 
-            Upgrade();
+            if (upgrade.ReachedMaxLevel)
+            {
+                CostText.text = Constants.UpgradeMaxedOut;
+                return;
+            }
 
-            OnPurchased?.Invoke(this);
+            upgrade.PurchaseUpgrade();
+
+            playerData.SetUpgrade(upgrade.GetUpgradeType, upgrade.Level);
         }
     }
 
@@ -152,10 +128,9 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        level = playerShipData.Upgrades[(int)(upgradeData.upgradeType)];
+        upgrade.Initialise(playerShipData);
 
-
-        if (level >= upgradeData.MaxLevel)
+        if (upgrade.ReachedMaxLevel)
         {
             CostText.text = Constants.UpgradeMaxedOut;
             CostText.color = Color.white;
@@ -165,9 +140,8 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
             return;
         }
 
-        cost = upgradeData.CostPerLevel[level];
-        progressBar.fillAmount = (float)level / 10;
-        CostText.text = cost.ToString();
+        progressBar.fillAmount = upgrade.ProgressPresentage;
+        CostText.text = upgrade.GetCost();
 
 
         if (CheckAvailable())
@@ -179,13 +153,15 @@ public class UpgradeElement : MonoBehaviour, IPurchasable
         {
             NotAvailableImage.gameObject.SetActive(true);
             NotAvailbleText.gameObject.SetActive(true);
-            NotAvailbleText.text = Constants.UnlockedAtLvl + upgradeData.LevelRequirementPerLevel[level];
+            NotAvailbleText.text = upgrade.GetLevelRequirment();
         }
 
-        CostText.color = Color.white;
-        if (cost > playerData.Coins)
+
+        CostText.color = Color.red;
+
+        if (upgrade.IsAffordable(playerData.coins))
         {
-            CostText.color = Color.red;
+            CostText.color = Color.white;
         }
     }
 

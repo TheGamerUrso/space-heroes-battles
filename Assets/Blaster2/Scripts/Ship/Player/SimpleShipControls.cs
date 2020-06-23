@@ -38,7 +38,7 @@ public class SimpleShipControls : MonoBehaviour
 
         PlayerData playerData = PersistantData.GetPlayerData();
 
-        playerData.distanceChanged = UpdateOffset;
+        Events.OnDistanceValueChanged = UpdateOffset;
 
         offspec = new Vector3(0, 0, playerData.Distance);
 

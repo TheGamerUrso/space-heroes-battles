@@ -11,15 +11,11 @@ public class ShopItemElement : UpgradeElement
 
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        int upgradeTypeIndex = (int)(upgradeData.upgradeType);
-        level = playerShipData.Upgrades[upgradeTypeIndex];
-        cost = upgradeData.Cost;
+        upgrade.Initialise(playerShipData);
 
-        NammeText.text = upgradeData.upgradeType.ToString();
-        CostText.text = cost.ToString();
-        UpgradeIcon.sprite = upgradeData.sprite;
+        NammeText.text = upgrade.GetUpgradeName();
 
-        if (level == 1)
+        if (upgrade.ReachedMaxLevel)
         {
             CostText.color = Color.white;
             CostText.text = Constants.OutOfStock;
@@ -30,11 +26,11 @@ public class ShopItemElement : UpgradeElement
 
     public override bool CheckAvailable()
     {
-        if (playerShipData.Upgrades[(int)upgradeData.upgradeType] == 0)
+        if (playerShipData.Upgrades[upgrade.GetUpgradeType] == 0)
         {
             return true;
         }
-         else 
+        else
         {
             Popup.Show(Popup.popupType.message, "Owned Already");
         }
@@ -45,29 +41,34 @@ public class ShopItemElement : UpgradeElement
     {
         if (CheckAvailable())
         {
-            if (playerData.Coins < cost)
+            if (upgrade.IsAffordable(playerData.coins))
             {
                 Popup.Show(Popup.popupType.message, Constants.CannotAffordIt);
                 return;
             }
 
-            level = 1;
-            playerData.SetUpgrade((int)(upgradeData.upgradeType), level);
-            playerData.Coins -= cost;
-            CostText.text = Constants.OutOfStock;
+            playerData.Coins -= upgrade.Cost;
+
+            if (upgrade.ReachedMaxLevel)
+            {
+                CostText.text = Constants.UpgradeMaxedOut;
+                return;
+            }
+
+            upgrade.PurchaseUpgrade();
+
+            playerData.SetUpgrade(upgrade.GetUpgradeType, upgrade.Level);
         }
-        OnPurchased?.Invoke(this);
+        Events.OnPurchased?.Invoke(this);
     }
 
 
     public override void RefreshUpgradeElement()
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
+        upgrade.Initialise(playerShipData);
 
-        int upgradeIndex = (int)upgradeData.upgradeType;
-        level = playerShipData.Upgrades[upgradeIndex];
-
-        if (level == 1)
+        if (upgrade.ReachedMaxLevel)
         {
             CostText.color = Color.white;
             CostText.text = Constants.OutOfStock;
@@ -77,10 +78,8 @@ public class ShopItemElement : UpgradeElement
             return;
         }
 
-    
-        cost = upgradeData.Cost;
-        progressBar.fillAmount = (float)level;
-        CostText.text = cost.ToString();
+        progressBar.fillAmount = upgrade.ProgressPresentage;
+        CostText.text = upgrade.GetCost();
 
         if (CheckAvailable())
         {
@@ -93,16 +92,11 @@ public class ShopItemElement : UpgradeElement
             NotAvailbleText.gameObject.SetActive(true);
         }
 
-        CostText.color = Color.white;
+        CostText.color = Color.red;
 
-        if (cost > playerData.Coins)
+        if (upgrade.IsAffordable(playerData.coins))
         {
-            CostText.color = Color.red;
-        }
-
-        if (level == 1)
-        {
-        
+            CostText.color = Color.white;
         }
     }
 }

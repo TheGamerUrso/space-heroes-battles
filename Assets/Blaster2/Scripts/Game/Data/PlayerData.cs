@@ -7,16 +7,6 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    [NonSerialized] public Events.XpValueChanged OnXpValueChanged;
-    [NonSerialized] public Events.CoinValueChanged OnCoinValueChanged;
-    [NonSerialized] public Events.DistanceChanged distanceChanged;
-    [NonSerialized] public Events.ShipSelectValueChanged OnShipSelectValueChanged;
-    [NonSerialized] public Events.SuperUseValueChanged OnSuperUseValueChanged;
-    [NonSerialized] public Events.PowerUpLevelChanged PowerUpLevelValueChanged;
-    [NonSerialized] public Events.PowerPackCollected CollectedPowerPack;
-    [NonSerialized] public Events.LevelValueChanged OnLevelValueChanged;
-    [NonSerialized] public Events.ModeUnlocked OnModeUnlockedChanged;
-
     #region Player Statistics
     public long SurvivalScore;
     public long SurvivalHighScore;
@@ -64,7 +54,7 @@ public class PlayerData
         set
         {
             coins = value;
-            OnCoinValueChanged?.Invoke(coins);
+            Events.OnCoinValueChanged?.Invoke(coins);
         }
     }
 
@@ -74,7 +64,7 @@ public class PlayerData
         set
         {
             superUsed = value;
-            OnSuperUseValueChanged?.Invoke(superUsed);
+            Events.OnSuperUseValueChanged?.Invoke(superUsed);
         }
     }
 
@@ -88,7 +78,7 @@ public class PlayerData
         set
         {
             currentSelectedShip = value;
-            OnShipSelectValueChanged?.Invoke(value);
+            Events.OnShipSelectValueChanged?.Invoke(value);
         }
     }
 
@@ -102,7 +92,7 @@ public class PlayerData
         set
         {
             distance = value;
-            distanceChanged?.Invoke(distance);
+            Events.OnDistanceValueChanged?.Invoke(distance);
         }
     }
     public int Level
@@ -114,7 +104,7 @@ public class PlayerData
         set
         {
             GetCurrentPlayerShipData().level = value;
-            OnLevelValueChanged?.Invoke(Level);
+            Events.OnLevelValueChanged?.Invoke(Level);
         }
     }
     public float XP
@@ -126,7 +116,7 @@ public class PlayerData
         set
         {
             GetCurrentPlayerShipData().xp = value;
-            OnXpValueChanged?.Invoke(GetCurrentPlayerShipData().level, GetCurrentPlayerShipData().xp, GetCurrentPlayerShipData().xpToLevel);
+            Events.OnXpValueChanged?.Invoke(GetCurrentPlayerShipData().level, GetCurrentPlayerShipData().xp, GetCurrentPlayerShipData().xpToLevel);
         }
     }
 
@@ -143,7 +133,7 @@ public class PlayerData
             {
                 powerPackCollected = 5;
             }
-            CollectedPowerPack?.Invoke(powerPackCollected);
+            Events.OnPowerPackCollected?.Invoke(powerPackCollected);
         }
     }
 
@@ -157,7 +147,7 @@ public class PlayerData
         set
         {
             powerUpLevel = value;
-            PowerUpLevelValueChanged?.Invoke(powerUpLevel);
+            Events.PowerUpLevelValueChanged?.Invoke(powerUpLevel);
         }
     }
 

@@ -8,13 +8,13 @@ public class CoinWidget : MonoBehaviour
 
     private void OnDestroy()
     {
-        playerData.OnCoinValueChanged -= UpdateCoins;
+        Events.OnCoinValueChanged -= UpdateCoins;
     }
 
     private void Start()
     {
         playerData = PersistantData.GetPlayerData();
-        playerData.OnCoinValueChanged += UpdateCoins;
+        Events.OnCoinValueChanged += UpdateCoins;
         UpdateCoins(playerData.Coins);
     }
 
