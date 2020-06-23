@@ -30,7 +30,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
         private set => _instance = value;
     }
 
-    protected void Awake()
+    protected virtual void Awake()
     {
         if (Instance && Instance != this)
         {
@@ -41,7 +41,6 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
         }
 
         Instance = (T)this;
-        OnAwake();
     }
 
     private void OnDestroy()
@@ -59,12 +58,6 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
         }
     }
 
-    /// <summary>
-    /// Called during Awake. Overwrite for custom behavior during the Awake event.
-    /// </summary>
-    protected virtual void OnAwake()
-    {
-    }
 
     /// <summary>
     /// Called during OnDestroy. Overwrite for custom behavior during the OnDestroy event.

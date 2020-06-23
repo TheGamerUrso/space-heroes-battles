@@ -43,9 +43,9 @@ public class GuiManager : MonoSingleton<GuiManager>
         Events.OnScoreValueChanged -= UpdateScore;
     }
 
-    protected override void OnAwake()
+    protected override void Awake()
     {
-        base.OnAwake();
+        base.Awake();
 
         transmittionWidget = FindObjectOfType<TransmitionWidget>();
     }

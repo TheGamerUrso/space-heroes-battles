@@ -48,5 +48,41 @@ public class Events
      */
     public static Action<GameController> OnGameOver;
     public static Action<GameController> OnWin;
+
+
+
+
+    /**
+     * PlayerData Events
+     */
+    public delegate void XpValueChanged(int level, float xp, float xpToLevel);
+    public delegate void LevelValueChanged(int level);
+    public delegate void DistanceChanged(float ammount);
+    public delegate void SuperUseValueChanged(float ammount);
+    public delegate void CoinValueChanged(int ammount);
+    public delegate void PowerUpLevelChanged(float ammount);
+    public delegate void PowerPackCollected(int ammount);
+    public delegate void ShipSelectValueChanged(int selection);
+    public delegate void ModeUnlocked();
+
+
+    /**
+     * Screen Manager
+     */
+    public static Action<string, bool> OnScreenChanged;
+
+    public static EventHandler<ObjectiveEventArgs> OnObjectiveChange;
+    public static Action<ObjectivesElement> OnClickEvent = delegate { };
+
+
+    public class ObjectiveEventArgs : EventArgs
+    {
+        public ObjectiveData objectiveData { get; set; }
+
+        public ObjectiveEventArgs(ObjectiveData objectiveData)
+        {
+            this.objectiveData = objectiveData;
+        }
+    }
 }
 

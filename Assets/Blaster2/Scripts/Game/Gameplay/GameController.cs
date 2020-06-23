@@ -48,9 +48,9 @@ public class GameController : MonoSingleton<GameController>
         Events.SpawnEnded -= Win;
         Events.EnemyDied -= EnemyDied;
     }
-    protected override void OnAwake()
+    protected override void Awake()
     {
-        base.OnAwake();
+        base.Awake();
         baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
     }
 

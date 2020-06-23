@@ -92,8 +92,9 @@ public class GameManager : MonoSingleton<GameManager>
         SaveSystem.SaveGame();
     }
 
-    protected override void OnAwake()
+    protected override void Awake()
     {
+        base.Awake();
         DontDestroyOnLoad(gameObject);
 
         animator = GetComponentInChildren<Animator>();

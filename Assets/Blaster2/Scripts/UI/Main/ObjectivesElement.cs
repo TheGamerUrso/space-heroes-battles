@@ -3,47 +3,37 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class ObjectiveEventArgs : EventArgs
-{
-    public ObjectiveData objectiveData { get; set; }
 
-    public ObjectiveEventArgs(ObjectiveData objectiveData)
-    {
-        this.objectiveData = objectiveData;
-    }
-}
 
 public class ObjectivesElement : MonoBehaviour
 {
-    public event EventHandler<ObjectiveEventArgs> OnObjectiveChange;
 
-    public static event Action<ObjectivesElement> OnClickEvent = delegate { };
-
-    public bool completed;
     [HideInInspector] public ObjectiveData objectiveData;
+
+    [SerializeField] private TextMeshProUGUI rewardText;
+    [SerializeField] private TextMeshProUGUI CoinReward;
     [SerializeField] private TextMeshProUGUI ObjectiveDescriptionText = null;
-    public Button Button;
-    public Image ButtonImage;
+    [SerializeField] private Button Button;
+    [SerializeField] private Image ButtonImage;
     [SerializeField] private AudioClip ClickSoundEffect;
-    private float sleepTimer;
     [SerializeField] private GameObject CompletedGameObject = null;
 
-    public TextMeshProUGUI rewardText;
-    public TextMeshProUGUI CoinReward;
+
+    private bool completed;
+    private float sleepTimer;
     private PlayerData playerData;
     private int currentPlayerLevel;
+
     public void InitializeObjective(ObjectiveData objectiveData)
     {
+        Button.interactable = false;
         completed = objectiveData.completed;
-        //Button.interactable = true;
         this.objectiveData = objectiveData;
 
         Button.onClick.AddListener(() =>
         {
-            if (OnObjectiveChange != null) OnObjectiveChange(this, new ObjectiveEventArgs(objectiveData));
+             Events.OnObjectiveChange(this, new Events.ObjectiveEventArgs(objectiveData));
         });
-
-        Button.interactable = false;
 
         RefreshQuests();
     }

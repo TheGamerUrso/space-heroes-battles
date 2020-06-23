@@ -10,16 +10,15 @@ using UnityEngine.Advertisements;
 
 public class MainMenuManager : MonoSingleton<MainMenuManager>
 {
-    public TextMeshProUGUI PlayerXPText;
-    public TextMeshProUGUI PlayerLevelText;
+    [SerializeField] private TextMeshProUGUI PlayerXPText;
+    [SerializeField] private TextMeshProUGUI PlayerLevelText;
+    [SerializeField] private ShipSelect shipSelect;
 
     private int levelIndex;
     private string levelName;
 
     private PlayerShipData playerShipData;
     private PlayerData playerData;
-
-    public ShipSelect shipSelect;
 
     public void ShowLeaderboards()
     {
@@ -30,9 +29,10 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     {
         GooglePlayServicesManager.ShowAchievementa();
     }
-    protected override void OnAwake()
+
+    protected override void Awake()
     {
-        base.OnAwake();
+        base.Awake();
 
         GameManager.Instance.PauseTheGame(false);
         AudioManager.PlayMusic("Menu");
@@ -106,7 +106,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
         LevelValueChanged(lvl);
     }
- 
+
     public void QuitButtonEvent()
     {
         Application.Quit();

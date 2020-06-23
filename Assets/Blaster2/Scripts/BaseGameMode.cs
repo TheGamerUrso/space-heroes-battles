@@ -46,11 +46,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         this.playerShip = playerShip;
     }
 
-    protected override void OnAwake()
-    {
-        base.OnAwake();
-    }
-
     public void Start()
     {
         OnStart();

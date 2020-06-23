@@ -6,11 +6,13 @@ using UnityEngine;
 public class QuestManager : MonoBehaviour
 {
 
-    public Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
-    public GameObject[] ObjectiveLocations;
+    [SerializeField] private Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
+    [SerializeField] private GameObject[] ObjectiveLocations;
     private List<ObjectiveType> ListOfAvailableObjectiveTypes;
     private float ResetTimer = 2f;
     private bool allObjectivesCompleted = false;
+    private int objectiveIndex = 0;
+
 
     private void Start()
     {
@@ -23,12 +25,15 @@ public class QuestManager : MonoBehaviour
         ListOfAvailableObjectiveTypes = Enum.GetValues(typeof(ObjectiveType)).Cast<ObjectiveType>().ToList();
         PlayerData playerData = PersistantData.GetPlayerData();
 
+        ObjectiveData objectiveData = null;
+        ObjectiveType objectiveType;
+
         for (int i = 0; i < 3; i++)
         {
             int randoNumber = UnityEngine.Random.Range(0, ListOfAvailableObjectiveTypes.Count);
 
-            ObjectiveData objectiveData = null;
-            ObjectiveType objectiveType = ListOfAvailableObjectiveTypes[randoNumber];
+            objectiveData = null;
+            objectiveType = ListOfAvailableObjectiveTypes[randoNumber];
 
 
             switch (objectiveType)
@@ -62,16 +67,17 @@ public class QuestManager : MonoBehaviour
             ListOfObjectives.Add(objectiveData.Id, objectiveData);
         }
 
-        int objectiveIndex = 0;
 
+        GameObject objectiveGO;
+        ObjectivesElement objectivesElement;
         foreach (ObjectiveData item in ListOfObjectives.Values)
         {
-            GameObject objectiveGO = ObjectiveLocations[objectiveIndex];
+            objectiveGO = ObjectiveLocations[objectiveIndex];
             objectiveGO.gameObject.SetActive(true);
 
-            ObjectivesElement objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
+            objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
             objectivesElement.InitializeObjective(item);
-            objectivesElement.OnObjectiveChange += CheckObjective;
+            Events.OnObjectiveChange += CheckObjective;
             objectivesElement.ResetStatus();
 
             if (objectiveGO.GetComponent<ObjectivesElement>().objectiveData != null)
@@ -84,11 +90,11 @@ public class QuestManager : MonoBehaviour
         RefreshObjectives();
     }
 
-    public void CheckObjective(object sender, ObjectiveEventArgs e)
+    public void CheckObjective(object sender, Events.ObjectiveEventArgs e)
     {
         PlayerData playerData = PersistantData.GetPlayerData();
-
         ObjectiveData objectiveData = e.objectiveData;
+
         ListOfObjectives.Remove(objectiveData.Id);
 
         int numberOfCompletdQuest = 0;
@@ -110,9 +116,6 @@ public class QuestManager : MonoBehaviour
 
     private void Update()
     {
-        //InitializeObjectives();
-
-
         if (ResetTimer > 0 && allObjectivesCompleted)
         {
             ResetTimer -= Time.deltaTime;
@@ -132,9 +135,10 @@ public class QuestManager : MonoBehaviour
 
     public void LoadingNewObjectives()
     {
+        GameObject objectiveGO;
         for (int i = 0; i < ObjectiveLocations.Length; i++)
         {
-            GameObject objectiveGO = ObjectiveLocations[i];
+            objectiveGO = ObjectiveLocations[i];
             objectiveGO.GetComponent<ObjectivesElement>().LoadingIndicator();
         }
     }
@@ -153,9 +157,10 @@ public class QuestManager : MonoBehaviour
 
     public void RefreshObjectives()
     {
+        GameObject objectiveGO;
         for (int i = 0; i < ObjectiveLocations.Length; i++)
         {
-            GameObject objectiveGO = ObjectiveLocations[i];
+            objectiveGO = ObjectiveLocations[i];
             objectiveGO.GetComponent<ObjectivesElement>().RefreshQuests();
         }
     }
@@ -166,13 +171,14 @@ public class QuestManager : MonoBehaviour
         if (playerData.ListOfOnGoingObjectives.Count > 0)
         {
             var objectiveIndex = 0;
+            GameObject objectiveGO;
+            ObjectivesElement objectivesElement;
             foreach (ObjectiveData item in playerData.ListOfOnGoingObjectives.ToList())
             {
-                // GameObject objectiveGO = Instantiate(ObjectElementPrefab, ObjectiveLocations[objectiveIndex].transform.position, Quaternion.identity);
-                GameObject objectiveGO = ObjectiveLocations[objectiveIndex];
-                ObjectivesElement objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
+                objectiveGO = ObjectiveLocations[objectiveIndex];
+                objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
                 objectivesElement.InitializeObjective(item);
-                objectivesElement.OnObjectiveChange += CheckObjective;
+                Events.OnObjectiveChange += CheckObjective;
 
                 objectiveIndex++;
             }

@@ -3,31 +3,19 @@ using System.Collections.Generic;
 using EasyMobile;
 using UnityEngine;
 
-public delegate void XpValueChanged(int level, float xp, float xpToLevel);
-public delegate void LevelValueChanged(int level);
-
-public delegate void DistanceChanged(float ammount);
-public delegate void SuperUseValueChanged(float ammount);
-public delegate void CoinValueChanged(int ammount);
-public delegate void PowerUpLevelChanged(float ammount);
-public delegate void PowerPackCollected(int ammount);
-public delegate void ShipSelectValueChanged(int selection);
-
-
-public delegate void ModeUnlocked();
 
 [Serializable]
 public class PlayerData
 {
-    [NonSerialized] public XpValueChanged OnXpValueChanged;
-    [NonSerialized] public CoinValueChanged OnCoinValueChanged;
-    [NonSerialized] public DistanceChanged distanceChanged;
-    [NonSerialized] public ShipSelectValueChanged OnShipSelectValueChanged;
-    [NonSerialized] public SuperUseValueChanged OnSuperUseValueChanged;
-    [NonSerialized] public PowerUpLevelChanged PowerUpLevelValueChanged;
-    [NonSerialized] public PowerPackCollected CollectedPowerPack;
-    [NonSerialized] public LevelValueChanged OnLevelValueChanged;
-    [NonSerialized] public ModeUnlocked OnModeUnlockedChanged;
+    [NonSerialized] public Events.XpValueChanged OnXpValueChanged;
+    [NonSerialized] public Events.CoinValueChanged OnCoinValueChanged;
+    [NonSerialized] public Events.DistanceChanged distanceChanged;
+    [NonSerialized] public Events.ShipSelectValueChanged OnShipSelectValueChanged;
+    [NonSerialized] public Events.SuperUseValueChanged OnSuperUseValueChanged;
+    [NonSerialized] public Events.PowerUpLevelChanged PowerUpLevelValueChanged;
+    [NonSerialized] public Events.PowerPackCollected CollectedPowerPack;
+    [NonSerialized] public Events.LevelValueChanged OnLevelValueChanged;
+    [NonSerialized] public Events.ModeUnlocked OnModeUnlockedChanged;
 
     #region Player Statistics
     public long SurvivalScore;
@@ -41,19 +29,6 @@ public class PlayerData
     public int TotalKills;
     public int LevelUnlocked;
     public bool survivalUnlocked;
-
-    public bool SurvivalUnlocked
-    {
-        get
-        {
-            return survivalUnlocked;
-        }
-
-        set
-        {
-            survivalUnlocked = value;
-        }
-    }
 
     public int TotalMoneySpend;
     public int TotalSuperUsed;
@@ -92,6 +67,7 @@ public class PlayerData
             OnCoinValueChanged?.Invoke(coins);
         }
     }
+
     public int SuperUsed
     {
         get { return superUsed; }
@@ -101,6 +77,7 @@ public class PlayerData
             OnSuperUseValueChanged?.Invoke(superUsed);
         }
     }
+
     public int CurrrentSelectedShip
     {
         get
@@ -114,6 +91,7 @@ public class PlayerData
             OnShipSelectValueChanged?.Invoke(value);
         }
     }
+
     public float Distance
     {
         get
@@ -180,6 +158,19 @@ public class PlayerData
         {
             powerUpLevel = value;
             PowerUpLevelValueChanged?.Invoke(powerUpLevel);
+        }
+    }
+
+    public bool SurvivalUnlocked
+    {
+        get
+        {
+            return survivalUnlocked;
+        }
+
+        set
+        {
+            survivalUnlocked = value;
         }
     }
 
