@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Malee.List;
 using UnityEditor;
-using UnityEditorInternal;
 using UnityEngine;
+
 namespace TheGamerUrso
 {
     namespace PoolSystem
@@ -11,59 +10,50 @@ namespace TheGamerUrso
         [CanEditMultipleObjects]
         public class PoolSystemEditor : Editor
         {
-            private ReorderableList list;
+            private PoolManager poolManager;
+            private SerializedProperty list;
+            private ReorderableList relist;
+
             private void OnEnable()
             {
-                list = new ReorderableList(serializedObject,
-                        serializedObject.FindProperty("PoolElements"),
-                        true, true, true, true);
+                poolManager = target as PoolManager;
+                list = serializedObject.FindProperty("PoolElements");
+                relist = new ReorderableList(list);
+                relist.onAddCallback += delegate { OnAdd(); };
+                relist.onRemoveCallback += delegate { OnRemove(relist.Selected); };
+                relist.onReorderCallback += delegate { OnReorder(); };
+            }
 
+            public void OnAdd()
+            {
+                PoolElement poolElement = new PoolElement()
+                {
+                   
+                };
 
+                poolManager.PoolElements.Add(poolElement);
+                poolManager.Recheck();
+            }
+
+            public void OnRemove(int[] ids)
+            {
+                for (int i = 0; i < ids.Length; i++)
+                {
+                    poolManager.PoolElements.RemoveAt(ids[i]);
+                }
+              
+            }
+
+            public void OnReorder()
+            {
+                poolManager.Recheck();
             }
 
             public override void OnInspectorGUI()
             {
-                PoolManager poolingSystem = (PoolManager)target;
-
-                list.drawHeaderCallback = (Rect rect) =>
-                {
-                    EditorGUI.LabelField(rect, "Pooling System");
-                };
-
-                list.drawElementCallback =
-            (Rect rect, int index, bool isActive, bool isFocused) =>
-            {
-
-                var element = list.serializedProperty.GetArrayElementAtIndex(index);
-
-                rect.y += 2;
-
-
-                EditorGUI.PropertyField(
-                    new Rect(rect.x, rect.y, 128, EditorGUIUtility.singleLineHeight),
-                    element.FindPropertyRelative("name"), GUIContent.none);
-
-
-
-                EditorGUI.PropertyField(
-                    new Rect(rect.x + 128, rect.y, 128, EditorGUIUtility.singleLineHeight),
-                    element.FindPropertyRelative("poolGameObjectType"), GUIContent.none);
-
-
-
-                EditorGUI.PropertyField(
-                  new Rect(rect.x + 128 + 128, rect.y, 200, EditorGUIUtility.singleLineHeight),
-                  element.FindPropertyRelative("PoolElementPrefab"), GUIContent.none);
-
-
-                EditorGUI.PropertyField(
-                  new Rect(rect.x + 128+ 128+ 200, rect.y, 128, EditorGUIUtility.singleLineHeight),
-                  element.FindPropertyRelative("poolIndex"), GUIContent.none);
-
-            };
-
+                PoolManager poolingSystem = (PoolManager)target;     
                 serializedObject.Update();
-                list.DoLayoutList();
+                relist.DoLayoutList();
                 serializedObject.ApplyModifiedProperties();
             }
         }

@@ -10,26 +10,21 @@ using Doozy.Engine.UI;
 
 public class GuiManager : MonoSingleton<GuiManager>
 {
-    PlayerShip playerShip;
-
     [Header("Menu")]
-    [SerializeField] private UIView GameOverScreen;
-    [SerializeField] private UIView WinScreen = null;
-    [SerializeField] private UIView PauseScreen;
+    [SerializeField] private GameObject[] UIPrefabs;
+
+    private UIView GameOverScreen;
+    private UIView WinScreen = null;
+    private UIView PauseScreen;
+
     [SerializeField] private GameObject pauseButton;
 
-    [Header("PlayerHUD")]
-    [SerializeField] private GameObject PlayerHUD;
-    [SerializeField] private GameObject SpecialIsReadyFeedback;
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private TextMeshProUGUI CoinWidgetText;
     [SerializeField] private TextMeshProUGUI CountdownWidgetText;
 
-    // private bool ResultShowed = false;
     private TransmitionWidget transmittionWidget;
     private float timer;
-
-
 
     protected override void OnCleanup()
     {
@@ -46,7 +41,6 @@ public class GuiManager : MonoSingleton<GuiManager>
     protected override void Awake()
     {
         base.Awake();
-
         transmittionWidget = FindObjectOfType<TransmitionWidget>();
     }
 
@@ -54,10 +48,17 @@ public class GuiManager : MonoSingleton<GuiManager>
     {
         timer = 1;
 
-        if (playerShip == null)
-        {
-            playerShip = PlayerManager.GetPlayer();
-        }
+        var panelGameOver = Instantiate(UIPrefabs[0], transform, false);
+        var panelWin = Instantiate(UIPrefabs[1], transform, false);
+        var panelPause = Instantiate(UIPrefabs[2], transform, false);
+
+        panelGameOver.name = UIPrefabs[0].name;
+        panelWin.name = UIPrefabs[1].name;
+        panelPause.name = UIPrefabs[2].name;
+
+        GameOverScreen = panelGameOver.GetComponent<UIView>();
+        WinScreen = panelWin.GetComponent<UIView>();
+        PauseScreen = panelPause.GetComponent<UIView>();
 
         Events.OnCoinValueChanged += UpdateCoinWidgetText;
         Events.OnScoreValueChanged += UpdateScore;
@@ -303,8 +304,6 @@ public class GuiManager : MonoSingleton<GuiManager>
     private IEnumerator GameOverCoroutine()
     {
 
-        PlayerHUD.gameObject.SetActive(false);
-
         yield return new WaitForSeconds(2.0f);
 
         GameOverScreen.Show();
@@ -315,8 +314,6 @@ public class GuiManager : MonoSingleton<GuiManager>
     public IEnumerator WinCoroutine()
     {
         AudioManager.PlayMusic("Victory", false);
-
-        PlayerHUD.gameObject.SetActive(false);
 
         yield return new WaitForSeconds(2.0f);
 

@@ -16,7 +16,7 @@ public class PlayerManager
     private static PlayerShipElement[] listOfPlayerShips;
 
 
-    public PlayerManager(GameManager gm,GameManager dc)
+    public PlayerManager(GameManager gm, GameManager dc)
     {
         if (instance == null)
         {
@@ -42,9 +42,15 @@ public class PlayerManager
             id = 0;
         }
 
-        currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
+        currentPlayer = GameObject.Find("Player1Prefab");
 
-        currentPlayer.SetActive(true);
+        if (currentPlayer == null)
+        {
+
+            currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
+
+            currentPlayer.SetActive(true);
+        }
 
         return currentPlayer;
     }
@@ -65,6 +71,6 @@ public class PlayerManager
         {
             return null;
         }
-        return currentPlayer.GetComponent<PlayerShip>();
+        return currentPlayer.GetComponentInChildren<PlayerShip>();
     }
 }

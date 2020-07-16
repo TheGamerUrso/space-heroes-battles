@@ -100,10 +100,11 @@ public abstract class Ship : MonoBehaviour
     {
         OnAwake();
 
-
+    }
+    private void Start()
+    {
         ShipSetup();
     }
-
     public abstract void ShipSetup();
     public abstract void OnAwake();
     public abstract void Death();

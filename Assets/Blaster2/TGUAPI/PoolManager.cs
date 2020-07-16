@@ -12,6 +12,7 @@ namespace TheGamerUrso
         public class PoolElement
         {
             public string name = "Test";
+            public int ID;
             public PoolGameObjectType poolGameObjectType;
             public List<GameObject> PoolElementGameObjects;
             public GameObject PoolElementPrefab;
@@ -66,29 +67,23 @@ namespace TheGamerUrso
             private GameObject tempGameObjectPrefab;
             private GameObject holder
                 ;
-            private void OnValidate()
-            {
-                //List<PoolGameObjectType> poolGameObjectTypes = Enum.GetValues(typeof(PoolGameObjectType)).Cast<PoolGameObjectType>().ToList();
-                //foreach (var item in poolGameObjectTypes)
-                //{
-                //    foreach (var pElement in PoolElements.ToList())
-                //    {
-                //        if (pElement.poolGameObjectType != item)
-                //        {
-                //            PoolElement poolElement = new PoolElement();
-                //            poolElement.poolGameObjectType = item;
-                //            poolElement.name = item.ToString();
-                //            PoolElements.Add(poolElement);
-                //        }
-                //    }
-                //}
-            }    
-
             private void Start()
             {
                 if (PoolElements.Count > 0)
                 {
                     StartCoroutine(CreatePool());
+                }
+            }
+            
+            public void Recheck()
+            {
+                foreach (PoolElement item in PoolElements)
+                {
+                    if (ListOfPoolElements.ContainsKey(item.poolGameObjectType)) {
+                        return;
+                    }
+                    ListOfPoolElements.Add(item.poolGameObjectType, item);
+                    CreatePoolByType(item.poolGameObjectType);
                 }
             }
 

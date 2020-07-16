@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerHUD : MonoBehaviour
+public class PlayerHUD : MonoSingleton<PlayerHUD>
 {
-    public void PauseButton()
-    {
-        GuiManager.Instance.PauseButton();
-    }
+
+  
 }

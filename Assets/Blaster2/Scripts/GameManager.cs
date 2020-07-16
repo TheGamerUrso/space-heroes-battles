@@ -17,7 +17,6 @@ public struct PlayerShipElement
     public GameObject prefab;
 }
 
-
 public class GameManager : MonoSingleton<GameManager>
 {
     [Range(0, 20)]
@@ -88,8 +87,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void OnApplicationQuit()
     {
-        UnSubscribeToEvents();
+
         SaveSystem.SaveGame();
+    }
+
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+        Events.OnLevelValueChanged -= OnLevelValueChanged;
     }
 
     protected override void Awake()
@@ -119,8 +124,6 @@ public class GameManager : MonoSingleton<GameManager>
         GooglePlayServicesManager.Initialize();
 
         pm.LoadPlayerSettings();
-
-        SubscribeToEvents();      
     }
 
     public void ChangeGameState(EGameState nextGameState)
@@ -133,17 +136,6 @@ public class GameManager : MonoSingleton<GameManager>
         {
             Events.OnLoadDataCompleted?.Invoke();
         }
-    }
-
-    public void UnSubscribeToEvents()
-    {
-        Events.OnLevelValueChanged -= OnLevelValueChanged;
-    }
-
-    public void SubscribeToEvents()
-    {
-        playerData = PersistantData.GetPlayerData();
-        Events.OnLevelValueChanged += OnLevelValueChanged;
     }
 
     public void OnLevelValueChanged(int Level)
@@ -160,6 +152,9 @@ public class GameManager : MonoSingleton<GameManager>
     private void Start()
     {
         Hide();
+
+        playerData = PersistantData.GetPlayerData();
+        Events.OnLevelValueChanged += OnLevelValueChanged;
     }
 
     private void InstantiateSystemPrefabs()

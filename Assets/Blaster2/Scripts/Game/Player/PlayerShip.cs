@@ -44,14 +44,16 @@ public class PlayerShip : Ship, IDamagable
     }
 
     public override void OnAwake()
-    {
-        Alive = true;
+    {     
         animator = GetComponentInChildren<Animator>();
-        playerData = PersistantData.GetPlayerData();
     }
 
     public override void ShipSetup()
     {
+        Alive = true;
+
+        playerData = PersistantData.GetPlayerData();
+
         for (int i = 0; i < Weapons.Length; i++)
         {
             if (Weapons[i].gameObject.activeSelf)
@@ -255,7 +257,7 @@ public class PlayerShip : Ship, IDamagable
                     playerData.GotHitInGame = true;
                 }
 
-                if (HealthPresentage < .2f)
+                if (HealthPresentage < .5f)
                 {
                     audioSource.PlayOneShot(alarmSFX);
                 }

@@ -1,37 +1,23 @@
 ﻿using System;
-using TMPro;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerWidget : MonoBehaviour
+public class PlayerPowerCircleWidget : MonoBehaviour
 {
-    public PlayerShip player;
-    public PlayerData playerData;
-    public PlayerShipData playerShipData;
-
-    private static string ReadyStringKey = "Ready";
-    //private static string ActiveStringKey = "Active";
-
-    [SerializeField] private Color fullHealthColor = Color.green;
-    [SerializeField] private Color zeroHealthColor = Color.red;
+   [SerializeField] private PlayerShip player;
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
 
     [Space(2)]
     [SerializeField] private GameObject SuperWidget;
 
-    [SerializeField] private GameObject HealthWidget;
+    private static string ReadyStringKey = "Ready";
 
-    [Space(2)]
-    [SerializeField] private Slider XPBar = null;
-
-    [Space(2)]
-    [SerializeField] private TextMeshProUGUI XPStatus;
-
-    [SerializeField] private TextMeshProUGUI HealthText = null;
     [SerializeField] private Button PowerBut;
-    [SerializeField] private Image m_HealthImage = null;
     [SerializeField] private Image m_PowerUps;
     [SerializeField] private Image WeaponIndicatorImage;
-    [SerializeField] private Image m_ShieldImage;
 
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
@@ -46,36 +32,19 @@ public class PlayerWidget : MonoBehaviour
 
     [SerializeField] private Sprite[] WeaponIndicatorSpritesNotActivated;
 
-    private float timer;
-    private float targetHealth = 0;
-    private float maxTargetHealth = 0;
 
     private void OnDestroy()
     {
         if (player != null)
         {
-            player.OnHealthChanged -= UpdatePlayerHealth;
             Events.PowerUpLevelValueChanged -= PowerUpLevelChanged;
-            Events.OnXpValueChanged -= UpdateXP;
             Events.OnPowerPackCollected -= PowerPackCollected;
         }
     }
-
     private void Start()
     {
-        player = PlayerManager.GetPlayer();
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-    }
-
-    public void PowerPackCollected(int collected)
-    {
-        RefreshWeaponIndicatorSprite();
-    }
-
-    public void SetPlayer(PlayerShip player)
-    {
-        this.player = player;
 
         PowerBut.onClick.AddListener(() =>
         {
@@ -83,26 +52,17 @@ public class PlayerWidget : MonoBehaviour
 
         });
 
-        player.OnHealthChanged += UpdatePlayerHealth;
         Events.PowerUpLevelValueChanged += PowerUpLevelChanged;
         Events.OnPowerPackCollected += PowerPackCollected;
-        Events.OnXpValueChanged += UpdateXP;
-
-        UpdatePlayerHealth(player.currentHealth, player.MaxHealth);
-
-        UpdateXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
-
 
         PowerUpLevelChanged(playerData.GetPowerUpLevelPresentage());
     }
-
 
     public void ActivateSpecial()
     {
         PowerBut.interactable = false;
         PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
     }
-
 
     public void PowerUpLevelChanged(float playerPowerUp)
     {
@@ -127,48 +87,9 @@ public class PlayerWidget : MonoBehaviour
 
         RefreshWeaponIndicatorSprite();
     }
-
-    private void Update()
+    public void PowerPackCollected(int collected)
     {
-        if (player == null)
-        {
-            if (PlayerManager.GetPlayer() == null)
-            {
-                return;
-            }
-
-            player = PlayerManager.GetPlayer();
-            if (player != null)
-            {
-                SetPlayer(player);
-            }
-            else
-            {
-                return;
-            }
-        }
-    }
-
-    public void UpdateXP(int lvl, float xp, float xpToLevel)
-    {
-        XPBar.maxValue = xpToLevel;
-        XPBar.value = xp;
-        XPStatus.text = Mathf.Round(xp) + "/" + Mathf.Round(xpToLevel);
-    }
-
-    public void UpdatePlayerHealth(float CurrentHealth, float MaxHealth)
-    {
-        HealthText.text = string.Format("{0}/{1}", Mathf.Round(CurrentHealth), MaxHealth);
-        m_HealthImage.fillAmount = (CurrentHealth / MaxHealth);
-        maxTargetHealth = MaxHealth;
-        targetHealth = CurrentHealth;
-
-        m_HealthImage.color = Color.Lerp(zeroHealthColor, fullHealthColor, targetHealth / maxTargetHealth);
-    }
-
-    public void ShieldEffect(bool value)
-    {
-        m_ShieldImage.gameObject.SetActive(value);
+        RefreshWeaponIndicatorSprite();
     }
 
     public void RefreshWeaponIndicatorSprite()
@@ -191,6 +112,5 @@ public class PlayerWidget : MonoBehaviour
 
         WeaponIndicatorImage.sprite = sprite;
     }
-
 
 }

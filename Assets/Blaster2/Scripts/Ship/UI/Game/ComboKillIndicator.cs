@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class ComboKillIndicator : MonoBehaviour
 {
-    private PlayerShip playerShip;
     public GameObject Window;
     public TextMeshProUGUI MultiplierText;
 
@@ -49,9 +48,6 @@ public class ComboKillIndicator : MonoBehaviour
             ShowWindow();
             RefreshText(multiplier);
         }
-
-
-
     }
 
     public void Update()

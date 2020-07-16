@@ -37,7 +37,10 @@ public class HyperdriveEnterEffect : MonoBehaviour
         {
             baseEnemyAI.EnableMovement();
             baseEnemy.EnableWeaponById(0);
-            baseEnemy.HealthBar.Show();
+            if (baseEnemy.HealthBar != null)
+            {
+                baseEnemy.HealthBar.Show();
+            }
             baseEnemy.EnableColliders(true);
         });
     }

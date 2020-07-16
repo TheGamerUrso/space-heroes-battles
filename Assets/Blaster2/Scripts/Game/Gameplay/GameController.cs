@@ -16,7 +16,13 @@ public class GameController : MonoSingleton<GameController>
     private float delayTheSlowMoEffectTimer = .3f;
     private float delay = 4;
 
+    public GameObject AsteroidBackgroundSpawner;
+    public GameObject PanelBackgroundSpawner;
+    public GameObject DynamicObjectsPrefab;
 
+    public GameObject Tutorial;
+
+    public GameObject GUI;
 
     private void OnApplicationFocus(bool focus)
     {
@@ -66,13 +72,33 @@ public class GameController : MonoSingleton<GameController>
         StartCoroutine(StartGameDelay());
 
         Instantiate(EnemyWaypoints, transform, false);
+
+        if (DynamicObjectsPrefab != null)
+        {
+            var dynamic = Instantiate(DynamicObjectsPrefab, transform, false);
+        }
+
+        if (AsteroidBackgroundSpawner != null)
+        {
+            var asteroids = Instantiate(AsteroidBackgroundSpawner, transform, false);
+        }
+
+        if (PanelBackgroundSpawner != null)
+        {
+            var planets = Instantiate(PanelBackgroundSpawner, transform, false);
+        }
+
+        if (Tutorial != null)
+        {
+            var tutorial = Instantiate(Tutorial, transform, false);
+        }
+
     }
 
     IEnumerator StartGameDelay()
     {
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-
 
         yield return new WaitForSeconds(1.0f);
 

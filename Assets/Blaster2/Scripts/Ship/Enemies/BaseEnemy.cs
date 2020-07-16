@@ -115,8 +115,7 @@ public class BaseEnemy : Ship, IDamagable
     }
 
     public override void OnAwake()
-    {
-        SetStats(1);
+    {     
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
@@ -125,11 +124,14 @@ public class BaseEnemy : Ship, IDamagable
         {
             baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
         }
-
     }
+
+
 
     public override void ShipSetup()
     {
+        SetStats(1);
+
         if (healthBar != null)
         {
             healthBar.GetComponent<BaseHealthWidget>();
