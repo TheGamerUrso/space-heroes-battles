@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class FirstBossAI : BaseBossEnemyAI

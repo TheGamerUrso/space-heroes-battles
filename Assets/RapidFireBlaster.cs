@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class RapidFireBlaster : Blaster

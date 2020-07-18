@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections;
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
-using DG.Tweening;
 public class Punch : MonoBehaviour, IDamagable
 {
     protected bool Alive;

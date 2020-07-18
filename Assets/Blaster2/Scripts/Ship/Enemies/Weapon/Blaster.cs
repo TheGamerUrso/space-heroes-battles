@@ -1,5 +1,4 @@
 ﻿using System;
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class Blaster : WeaponScript

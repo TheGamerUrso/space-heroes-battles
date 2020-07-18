@@ -1,4 +1,3 @@
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public abstract class Projectile : MonoBehaviour

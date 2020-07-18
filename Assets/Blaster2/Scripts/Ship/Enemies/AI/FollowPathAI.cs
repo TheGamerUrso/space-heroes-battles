@@ -1,6 +1,4 @@
 ﻿using DG.Tweening;
-using TheGamerUrso;
-using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class FollowPathAI : SimpleAI

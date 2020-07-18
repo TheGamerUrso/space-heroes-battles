@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using TheGamerUrso.PoolSystem;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class ArtilleryWeapon : WeaponScript
 {

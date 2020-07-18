@@ -1,11 +1,6 @@
 ﻿using System;
-using TheGamerUrso;
 using UnityEngine;
-using System.Linq;
-
-using Random = UnityEngine.Random;
 using System.Collections;
-using TheGamerUrso.Utils;
 using System.Collections.Generic;
 
 public class BaseBossEnemy : BaseEnemy

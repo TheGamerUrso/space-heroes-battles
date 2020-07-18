@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using System.Linq;
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class GrenadeProjectile : EnemyProjectile

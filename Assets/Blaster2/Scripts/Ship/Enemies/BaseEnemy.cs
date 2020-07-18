@@ -1,6 +1,4 @@
-﻿using System;
-using TheGamerUrso.PoolSystem;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class BaseEnemy : Ship, IDamagable
 {

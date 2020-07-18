@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using TheGamerUrso.PoolSystem;
+﻿using System.Collections;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerShip : Ship, IDamagable
 {

@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
-using UnityStandardAssets.CrossPlatformInput;
 
 public class PlayerWeapon : WeaponScript
 {

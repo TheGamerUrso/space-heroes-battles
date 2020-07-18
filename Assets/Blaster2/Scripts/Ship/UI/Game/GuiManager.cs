@@ -1,11 +1,6 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
-using EasyMobile;
-using TheGamerUrso.PoolSystem;
 using Doozy.Engine.UI;
 
 public class GuiManager : MonoSingleton<GuiManager>

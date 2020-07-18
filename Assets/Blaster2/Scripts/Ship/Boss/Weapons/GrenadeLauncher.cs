@@ -1,5 +1,4 @@
-﻿using TheGamerUrso.PoolSystem;
-using UnityEngine;
+﻿using UnityEngine;
 using Random = UnityEngine.Random;
 
 public class GrenadeLauncher : Blaster

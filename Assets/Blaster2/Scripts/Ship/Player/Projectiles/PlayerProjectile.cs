@@ -1,6 +1,3 @@
-using TheGamerUrso;
-using TheGamerUrso.PoolSystem;
-using TheGamerUrso.Utils;
 using UnityEngine;
 
 public class PlayerProjectile : Projectile

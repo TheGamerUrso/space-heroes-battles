@@ -1,6 +1,4 @@
 ﻿using System.Collections;
-using TheGamerUrso;
-using TheGamerUrso.PoolSystem;
 using UnityEngine;
 
 public class PlanetGenerator : MonoBehaviour
