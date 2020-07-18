@@ -4,70 +4,26 @@ using UnityEngine;
 [Serializable]
 public class SpecialAttack : PlayerWeapon
 {
-    public PlayerData playerData;
-    public PlayerShipData playerShipData;
-    public PlayerShip playerShip;
-    public AudioClip superSFX;
+    public bool SpecialActive { get; protected set; } = false;
+    public float SuperChargeTime { get; protected set; }
 
-    public int superUsed;
-    public int SuperUsed
-    {
-        get { return superUsed; }
-        set { superUsed = value; }
-    }
-
-    public bool SpecialActive = false;
     protected CountDownTimer m_CountDownTimer;
 
-    public float superChargeTimer;
-    public float SuperChargeTime
+    public override void Start()
     {
-        get { return superChargeTimer; }
-    }
-
-    public override void OnStart()
-    {
-        base.OnStart();
-      
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerShip = ship.GetComponent<PlayerShip>();
-        superChargeTimer = playerShipData.SuperChargeTime;
-        damage = playerShipData.SuperDamage;
+
+        weaponData.SuperChargeTime = playerShipData.SuperChargeTime;
+        weaponData.Damage = playerShipData.SuperDamage;
+        weaponData.FireRate = playerShipData.FireRate;
     }
 
-    public virtual void ActivateSpecial()
+    public override void Update()
     {
-        if (SpecialActive == false)
-        {
-            source.PlayOneShot(superSFX);
-
-            if (playerData == null)
-            {
-                playerData = PersistantData.GetPlayerData();
-            }
-
-            int superUsed = GameSession.SuperUsed + 1;
-            GameSession.SetSuperUsed(superUsed);
-
-            SpecialActive = true;
-        }
-    }
-
-    public virtual void DeactivateSpecial()
-    {
-        SpecialActive = false;
-    }
-
-    public override void OnUpdate()
-    {
-        if (playerShip == null)
-        {
-            playerShip = ship.GetComponent<PlayerShip>();
-        }
-
         if (SpecialActive)
-        {     
+        {
             if (m_CountDownTimer == null)
                 m_CountDownTimer = new CountDownTimer(SuperChargeTime);
 
@@ -95,13 +51,31 @@ public class SpecialAttack : PlayerWeapon
                 playerData.PowerUpLevel = 0;
             }
         }
+
+        float powerLevel = playerData.GetPowerUpLevelPresentage();
+
+        if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
+        {
+            ActivateSpecial();
+        }
     }
 
-    public override void Shoot()
+    public virtual void ActivateSpecial()
     {
+        if (SpecialActive == false)
+        {
+            source.PlayOneShot(weaponData.ShootSFX);
 
+            int superUsed = GameSession.SuperUsed + 1;
+            GameSession.SetSuperUsed(superUsed);
+
+            SpecialActive = true;
+        }
     }
-
+    public virtual void DeactivateSpecial()
+    {
+        SpecialActive = false;
+    }
     public float GetPowerUpCountdown()
     {
         if (m_CountDownTimer != null)

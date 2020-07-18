@@ -13,19 +13,20 @@ public class LaserSuper : SpecialAttack
 
     public override void ActivateSpecial()
     {
-        if (SpecialActive == false)
+        if (!SpecialActive)
         {
-            source.PlayOneShot(superSFX);
-            if (playerData == null)
-            {
-                playerData = PersistantData.GetPlayerData();
-            }
-            playerData.superUsed++;
+            SpecialActive = true;
+            source.PlayOneShot(weaponData.ShootSFX);
+
+            int superUsed = GameSession.SuperUsed + 1;
+            GameSession.SetSuperUsed(superUsed);
+            playerShip.CanFire = false;
+
             laserSize = 0;
             laiser.ActiveLaser();
             lineRenderer.widthMultiplier = laserSize;
-            SpecialActive = true;
-            GameSession.CanFire = false;
+
+     
         }
     }
     public override void DeactivateSpecial()
@@ -35,14 +36,14 @@ public class LaserSuper : SpecialAttack
             laserSize = 0;
             laiser.DeactiveLaser();
             lineRenderer.widthMultiplier = laserSize;
-            GameSession.CanFire = true;
+            playerShip.CanFire = true;
+
             base.DeactivateSpecial();
         }
     }
 
-    public override void OnUpdate()
+    public override void Update()
     {
-        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
         if (SpecialActive)
         {
             ActivateSpecial();

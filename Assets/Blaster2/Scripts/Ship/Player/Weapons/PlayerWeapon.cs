@@ -3,27 +3,29 @@ using UnityEngine;
 
 public class PlayerWeapon : WeaponScript
 {
-    public Transform shipTransform;
-    private bool holdFire;
-
-    public int DamageMulitplier { get { return weaponData.multiplier; } }
-
-
+    protected GameObject foundPlayer;
+    protected PlayerData playerData;
+    protected PlayerShipData playerShipData;
+    protected PlayerShip playerShip;
+    protected bool holdFire;
     protected bool usePitch;
 
-    public void SetShipTransform(Transform shipTransform)
+    public override void Awake()
     {
-        this.shipTransform = shipTransform;
+        foundPlayer = GameObject.FindGameObjectWithTag("Player");
+        ship = foundPlayer.GetComponent<Ship>();
     }
 
-    public override void OnStart()
+    public override void Start()
     {
-        base.OnStart();
+        base.Start();
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        playerShip = ship.GetComponent<PlayerShip>();
     }
 
-    public override void OnUpdate()
+    public override void Update()
     {
-        base.OnUpdate();
         if (Time.frameCount % 1 == 0)
         {
             if (ship != null)
@@ -39,7 +41,7 @@ public class PlayerWeapon : WeaponScript
                     }
                 }
             }
-        
+
 
             if (Input.touchCount > 0)
             {
@@ -52,36 +54,34 @@ public class PlayerWeapon : WeaponScript
                     holdFire = false;
                 }
 
-      
+
 
                 Shoot();
 
             }
 
-            if (Application.platform == RuntimePlatform.WindowsEditor)
-            {
-                holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
-                if (!holdFire && Input.GetMouseButton(0))
-                {
-                    Shoot();
-                }
+            holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
+
+            if (!holdFire && Input.GetMouseButton(0))
+            {
+                Shoot();
             }
         }
     }
 
+
     public override void Shoot()
     {
-
-        if (holdFire || !GameSession.CanFire)
+        if (holdFire || !playerShip.CanFire)
         {
             return;
         }
 
         if (Time.time > newShot)
         {
-            newShot = Time.time + GetFireRate();
-            InstansiateBulletsByWeaponType(shipTransform.transform, ref weaponData.m_Projectile, ref weaponData.m_WeaponDamage);
+            newShot = Time.time + weaponData.FireRate;
+            InstansiateBulletsByWeaponType(foundPlayer.transform, ref weaponData.m_Projectile);
 
             PlayWeaponFireSound(true);
 
@@ -101,18 +101,16 @@ public class PlayerWeapon : WeaponScript
         }
     }
 
-    public void InstansiateBulletsByWeaponType(Transform ship, ref PoolGameObjectType m_Projectile, ref float m_WeaponDamage)
+    public void InstansiateBulletsByWeaponType(Transform ship, ref PoolGameObjectType m_Projectile)
     {
-        List<GameObject> Projectiles = PoolManager.Instance.GetPoolByType(PoolGameObjectType.PlayerProjectile);
-
         for (int i = 0; i < Cannons.Length; i++)
         {
             InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-            InstansiatedProjectile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0))  ;
+            InstansiatedProjectile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
 
             Vector3 shootDir = Cannons[i].forward;
             InstansiatedProjectile.transform.position = Cannons[i].position;
-            InstansiatedProjectile.GetComponent<PlayerProjectile>().Setup(shootDir, Damage + DamageMulitplier);
+            InstansiatedProjectile.GetComponent<PlayerProjectile>().Setup(shootDir, weaponData.Damage);
         }
     }
 

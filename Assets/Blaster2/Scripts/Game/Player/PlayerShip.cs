@@ -1,7 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
-public class PlayerShip : Ship
+public class PlayerShip : Ship, IDamagable
 {
     public Player_SO playerStats;
     private PlayerData playerData;
@@ -12,9 +13,9 @@ public class PlayerShip : Ship
 
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem ItemCollectedEffect;
+    private WeaponScript weapon;
 
-
-
+    public bool CanFire;
     #region Weapons
     private bool TempFireRateUpgrade;
     private float invisibilityTimer;
@@ -22,7 +23,10 @@ public class PlayerShip : Ship
     private float clicktimer;
     private bool clicked;
 
+    public event Action<float, float> OnHealthChanged;
     public int CurrentWeapnType { get; private set; } = 0;
+    public float MaxHealth { get; set; }
+    public float CurrentHealth { get; set; }
 
     #endregion Weapons
 
@@ -38,19 +42,7 @@ public class PlayerShip : Ship
 
     public override void Start()
     {
-        IsAlive = true;
-
         playerData = PersistantData.GetPlayerData();
-
-        for (int i = 0; i < Weapons.Length; i++)
-        {
-            if (Weapons[i].gameObject.activeSelf)
-            {
-                Weapons[i].SetShipTransform(transform);
-            }
-        }
-
-        specialAttack.SetShipTransform(transform);
 
         Events.PlayerShipHit += DownGradeWeapon;
 
@@ -170,11 +162,11 @@ public class PlayerShip : Ship
 
     public void UpdateWeaponStats(float fireRate, float damage = 0)
     {
-        WeaponScript weapon = GetCurrentActiveWeapon().GetComponent<WeaponScript>();
+        weapon = GetCurrentActiveWeapon().GetComponent<WeaponScript>();
 
-        weapon.SetFireRate(fireRate);
+        weapon.weaponData.FireRate = fireRate;
         if (damage > 0)
-            weapon.SetDamage(damage);
+            weapon.weaponData.Damage = damage;
 
     }
 
@@ -184,7 +176,7 @@ public class PlayerShip : Ship
         ShieldEffect.SetActive(HasShield);
     }
 
-    public override void Death()
+    public void Death()
     {
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(playerStats.ExplostionEffect);
         explostion.transform.position = transform.position;
@@ -193,14 +185,14 @@ public class PlayerShip : Ship
         gameObject.SetActive(false);
     }
 
-    public override void Heal(float ammount)
+    public void Heal(float ammount)
     {
-        base.Heal(ammount);
+
     }
 
-    public override void TakeDamage(float dmg)
+    public void TakeDamage(float dmg)
     {
-        if (IsAlive == false)
+        if (IsAlive())
         {
             return;
         }
@@ -250,7 +242,7 @@ public class PlayerShip : Ship
         }
     }
 
-    public override void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         IPickable items = other.GetComponent<IPickable>();
         if (items != null)
@@ -306,7 +298,7 @@ public class PlayerShip : Ship
         }
 
 
-        UpdateWeaponStats(FireRate - fireRate);
+        UpdateWeaponStats(playerShipData.FireRate - fireRate);
     }
 
     public void GiveTemporaryFireRateBuff()
@@ -316,16 +308,16 @@ public class PlayerShip : Ship
 
     public IEnumerator TemporaryFireRateUpgrade()
     {
-        var fireRateTemp = FireRate;
-        var DamageTemp = Damage;
+        var fireRateTemp = playerShipData.FireRate;
+        var DamageTemp = playerShipData.Damage;
 
         while (TempFireRateUpgrade)
         {
             yield return new WaitForEndOfFrame();
         }
 
-        FireRate = fireRateTemp;
-        UpdateWeaponStats(FireRate, DamageTemp);
+        playerShipData.FireRate = fireRateTemp;
+        UpdateWeaponStats(playerShipData.FireRate, DamageTemp);
     }
 
     #endregion
@@ -378,7 +370,6 @@ public class PlayerShip : Ship
             CurrentWeapnType--;
             SwitchWeapon(CurrentWeapnType);
         }
-
     }
 
     public void PowerUpCollected()
@@ -430,34 +421,24 @@ public class PlayerShip : Ship
 
     public override void SetStats(int level)
     {
-        base.SetStats(level);
-        //Speed 0 
-        //FireRate 1
-        //Damage 2
-        //SuperDamage 3
-        //SuperCooldown 4
-        //MagnetStrength 5 
-        //MagnetDistance 6
-        //Shield
-        //Armor
-
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
-
-        Speed += UpgradeStats[(int)UpgradeTypeEnum.Speed];
-        playerShipData.Speed = Speed;
-        //Debug.Log("Speed:" + Speed);
-        Damage += UpgradeStats[(int)UpgradeTypeEnum.Damage];
-        //Debug.Log("Damage: " + Damage);
-        FireRate -= UpgradeStats[(int)UpgradeTypeEnum.FireRate];
-        //Debug.Log("FireRate: " + FireRate);
+        playerShipData.Speed = playerStats.baseSpeed + UpgradeStats[(int)UpgradeTypeEnum.Speed];
+        playerShipData.Damage = playerStats.baseDamage + UpgradeStats[(int)UpgradeTypeEnum.Damage];
+        playerShipData.FireRate = playerStats.baseFireRate - UpgradeStats[(int)UpgradeTypeEnum.FireRate];
         playerShipData.SuperDamage = (level * playerStats.baseSuperDamage) + UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
-        //Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
         playerShipData.SuperChargeTime = playerStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
-        //Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
         playerShipData.MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
-        //Debug.Log("MagnetPower: " + playerShipData.MagnetPower);
         playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
-        //Debug.Log("MagnetDistance: " + playerShipData.MagnetDistance);
+    }
 
+    public float GetHealthPresentage()
+    {
+        return (CurrentHealth / MaxHealth) * 100;
+    }
+
+
+    public bool IsAlive()
+    {
+        return CurrentHealth <= 0;
     }
 }

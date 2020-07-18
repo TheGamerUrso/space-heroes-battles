@@ -13,7 +13,7 @@ public class HealthItem:Items,IPickable
 
         if (itemData.m_HealValue > 0)
         {
-            player.Heal(player.Level * itemData.m_HealValue);
+            player.Heal(itemData.m_HealValue);
         }
 
         AudioManager.PlaySound(itemData.CollectedSoundSFX);

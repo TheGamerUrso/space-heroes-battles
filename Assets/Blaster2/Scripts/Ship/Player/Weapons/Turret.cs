@@ -1,50 +1,25 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class Turret : MonoBehaviour, IDamagable
+public class Turret : Ship, IDamagable
 {
     private PlayerShipData playerShipData;
     private PlayerData playerData;
 
     public PlayerWeapon playerWeapon;
-    public bool IsAlive;
-    public bool IsDestroyed
+    public bool IsAlive { get; set; }
+   public float MaxHealth { get; set; }
+
+    public float CurrentHealth { get; set; }
+
+    public event Action<float, float> OnHealthChanged;
+
+    public override void OnEnable()
     {
-        get
-        {
-            return !IsAlive;
-        }
-        set { IsAlive = value; }
+        playerWeapon.weaponData.Damage = playerShipData.SuperDamage;
     }
 
-    public float maxHealth;
-    public float MaxHealth
-    {
-        get { return maxHealth; }
-        set
-        {
-            maxHealth = value;
-        }
-    }
-
-    public float currentHealth;
-    public float CurrentHealth
-    {
-        get { return currentHealth; }
-        set { currentHealth = value; }
-    }
-
-    private void OnEnable()
-    {
-        if (playerData == null)
-        {
-            playerData = PersistantData.GetPlayerData();
-            playerShipData = playerData.GetCurrentPlayerShipData();
-        }
-
-        playerWeapon.damage = playerShipData.SuperDamage;
-    }
-
-    private void Start()
+    public override void Start()
     {
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
@@ -59,20 +34,30 @@ public class Turret : MonoBehaviour, IDamagable
     {
         if (other.tag.Equals(Constants.ENEMYTAG))
         {
-            currentHealth--;
+            TakeDamage(1);
         }
         if (other.tag.Equals(Constants.ENEMYPROJECTILETAG))
         {
-            currentHealth--;
+            TakeDamage(1);
         }
     }
 
     public void TakeDamage(float dmg)
     {
-        currentHealth -= dmg;
-        if (currentHealth < 0)
+        CurrentHealth -= dmg;
+        if (CurrentHealth < 0)
         {
-            Destroy(gameObject);
+            Death();
         }
+    }
+
+    public void Heal(float ammount)
+    {
+     
+    }
+
+    public void Death()
+    {
+        Destroy(gameObject);
     }
 }

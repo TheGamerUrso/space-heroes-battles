@@ -8,6 +8,8 @@ public class BaseBossBattle : MonoBehaviour
     [SerializeField] protected BaseBossEnemyAI bossAI;
     [SerializeField] protected float HealthPresentage;
     [SerializeField] protected int phase;
+    public float DelayAttack;
+
     private void OnDestroy()
     {
         CleanUp();

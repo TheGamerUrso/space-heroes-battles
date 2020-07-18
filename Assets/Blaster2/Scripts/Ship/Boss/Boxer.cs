@@ -21,12 +21,4 @@ public class Boxer : BaseBossEnemy
             base.TakeDamage(damage);
         }
     }
-
-
-    public override void BossHit()
-    {
-
-
-        base.BossHit();
-    }
 }

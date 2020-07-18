@@ -2,11 +2,9 @@
 
 public class PlaceTurrets : MonoBehaviour
 {
-    private PlayerShip player;
-    public Transform[] TurrentPlaces;
-    public GameObject TurretPrefab;
-    public int numberOfTurret;
-    public GameObject[] Turrents = new GameObject[2];
+    [SerializeField] private Transform[] TurrentPlaces;
+    [SerializeField] private GameObject TurretPrefab;
+    private GameObject[] Turrents = new GameObject[2];
 
     public void DeactiveTurret()
     {
@@ -16,14 +14,11 @@ public class PlaceTurrets : MonoBehaviour
             Turret.Deactivate();
         }
     }
-    public void CreateTurret()
+    public void DeployTurret()
     {
-        Turrents = new GameObject[2];
-        player = PlayerManager.GetPlayer();
         for (int i = 0; i < TurrentPlaces.Length; i++)
         {
-            GameObject Turret = CreateNew(TurrentPlaces[i]);
-            Turret.GetComponentInChildren<PlayerWeapon>().SetShipTransform(Turret.transform);
+            GameObject Turret = CreateTurret();
             Turret.transform.SetParent(TurrentPlaces[i]);
             Turret.transform.position = TurrentPlaces[i].position;
             Turret.transform.rotation = TurrentPlaces[i].rotation;
@@ -31,9 +26,8 @@ public class PlaceTurrets : MonoBehaviour
         }
     }
 
-    public GameObject CreateNew(Transform parent)
+    public GameObject CreateTurret()
     {
-        player = PlayerManager.GetPlayer();
         GameObject tur = Instantiate(TurretPrefab, transform.position, Quaternion.identity);
         return tur;
     }

@@ -23,15 +23,8 @@ public class BaseHealthWidget : MonoBehaviour
     public virtual void Setup(IDamagable ship, bool follow = true) { }
     public virtual void Setup(IDamagable ship)
     {
-        MonoBehaviour monoGO = ship as MonoBehaviour;
-        if (monoGO != null)
-        {
-            Ship shipGo = monoGO.GetComponent<Ship>();
-            shipGo.OnHealthChanged += UpdateHealthBar;
-            Target = ship;
-        }
-
-
+        ship.OnHealthChanged += UpdateHealthBar;
+        Target = ship;
     }
 
     private void Start()

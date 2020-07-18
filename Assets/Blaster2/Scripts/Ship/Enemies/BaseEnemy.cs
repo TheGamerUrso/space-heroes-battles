@@ -1,8 +1,20 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class BaseEnemy : Ship
+public class BaseEnemy : Ship, IDamagable
 {
+    public event Action<float, float> OnHealthChanged;
+
+    public int Id;
     public Enemy_SO EnemyData;
+    public bool IsAlive { get; set; }
+
+    public int Level { get; set; }
+    public float Damage { get; set; }
+    public float FireRate { get; set; }
+    public float Speed { get; set; }
+    public float CurrentHealth { get; set; }
+    public float MaxHealth { get; set; }
 
     [SerializeField] protected bool AutoEnableWeapon;
     [SerializeField] protected BaseEnemyAI baseEnemyAI;
@@ -12,21 +24,25 @@ public class BaseEnemy : Ship
     protected bool CanAttack;
     protected int currentWeaponActive;
     protected float takeDamageDelay;
-    protected bool EnableShield;
-    protected WeaponScript weaponScript;
+
     public EnemyHealthWidget HealthBar { get; set; }
 
     private BaseGameMode baseGameMode;
 
     [HideInInspector] public EnemyElement enemyElement;
 
-    public float DeathDelay;
-
-    public float DelayAttack
+    public override void OnDisable()
     {
-        get { return delayAttak; }
-    }
+        if (baseGameMode == null)
+        {
+            baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
+        }
 
+        if (baseGameMode != null)
+        {
+            baseGameMode.UnregisterEnemy(this);
+        }
+    }
 
     public override void OnEnable()
     {
@@ -44,62 +60,6 @@ public class BaseEnemy : Ship
             baseGameMode.RegisterEnemy(this);
         }
 
-    }
-    public void EnableWeaponById(int id, bool solo = false)
-    {
-        if (solo)
-        {
-            DisableAllWeapons();
-        }
-
-        Weapons[id].AutoAttack = true;
-    }
-
-    public void EnableAllWeapon()
-    {
-        if (Weapons.Length > 0)
-        {
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                Weapons[i].AutoAttack = true;
-            }
-        }
-    }
-
-    public void DisableAllWeapons()
-    {
-        if (Weapons.Length > 0)
-        {
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                Weapons[i].AutoAttack = false;
-            }
-        }
-    }
-
-    public virtual void SetEnemyStats(int level)
-    {
-        Level = level;
-        SetStats(level);
-        HasShield = false;
-
-        if (weaponScript)
-        {
-            weaponScript.SetShip(this);
-        }
-    }
-
-    public override void OnDisable()
-    {
-        if (baseGameMode == null)
-        {
-            baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
-        }
-
-        if (baseGameMode != null)
-        {
-            baseGameMode.UnregisterEnemy(this);
-        }
     }
 
     public override void Awake()
@@ -136,14 +96,20 @@ public class BaseEnemy : Ship
         SetStats(Level);
     }
 
-    public virtual void Attack() { }
+    public override void Update()
+    {
+        if (takeDamageDelay >= 0)
+        {
+            takeDamageDelay -= Time.deltaTime;
+        }
+    }
 
     public void Leave()
     {
         Events.EnemyEscaped?.Invoke(gameObject.name, this);
     }
 
-    public override void TakeDamage(float dmg)
+    public virtual void TakeDamage(float dmg)
     {
         if (IsAlive == false)
         {
@@ -176,20 +142,12 @@ public class BaseEnemy : Ship
         Hit();
     }
 
-    public override void Hit()
+    public virtual void Hit()
     {
         Events.EnemyGotHit?.Invoke(gameObject.name, this);
     }
 
-    public override void Update()
-    {
-        if (takeDamageDelay >= 0)
-        {
-            takeDamageDelay -= Time.deltaTime;
-        }
-    }
-
-    public override void Death()
+    public virtual void Death()
     {
         if (IsAlive)
         {
@@ -209,13 +167,13 @@ public class BaseEnemy : Ship
         boxCollider.enabled = enabled;
     }
 
-    public override void OnTriggerEnter(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             IDamagable destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(destroyable.MaxHealth / 2);
-            TakeDamage(CurrentHealth);
+            TakeDamage(destroyable.CurrentHealth);
         }
     }
 
@@ -235,11 +193,54 @@ public class BaseEnemy : Ship
 
         HasShield = false;
 
-        if (weaponScript)
+    }
+
+    public void SetCurrentHealth(float value)
+    {
+        CurrentHealth = value;
+        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
+    }
+
+    public float GetHealthPresentage()
+    {
+        return (CurrentHealth / MaxHealth) * 100;
+    }
+
+    public virtual void Heal(float ammount)
+    {
+      
+    }
+
+    public void EnableWeaponById(int id, bool solo = false)
+    {
+        if (solo)
         {
-            weaponScript.SetShip(this);
+            DisableAllWeapons();
         }
 
+        Weapons[id].AutoAttack = true;
+    }
+
+    public void EnableAllWeapon()
+    {
+        if (Weapons.Length > 0)
+        {
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                Weapons[i].AutoAttack = true;
+            }
+        }
+    }
+
+    public void DisableAllWeapons()
+    {
+        if (Weapons.Length > 0)
+        {
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                Weapons[i].AutoAttack = false;
+            }
+        }
     }
 
 }

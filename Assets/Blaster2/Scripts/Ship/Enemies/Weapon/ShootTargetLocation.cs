@@ -1,35 +1,26 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class ShootTargetLocation : Blaster
+public class ShootTargetLocation : WeaponScript
 {
-    public GameObject Target;
-    public Vector3 playerLastLocation;
-    public override void Initialize()
+    [SerializeField] private GameObject Target;
+    private Vector3 playerLastLocation;
+
+    public override void Start()
     {
-        base.Initialize();
-    }
-    public override void OnStart()
-    {
-        base.OnStart();
+        base.Start();
 
         if (Target == null)
         {
             Target = GameObject.FindGameObjectWithTag("Player");
         }
     }
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-
-        Shoot();
-    }
 
     public override void Shoot()
     {
         if (Time.time > newShot)
         {
-            newShot = Time.time + FireRate;
+            newShot = Time.time + weaponData.FireRate;
 
             PlayWeaponFireSound();
 
@@ -40,12 +31,8 @@ public class ShootTargetLocation : Blaster
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(playerLastLocation);
-                InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = Damage;
-
-                //InstansiatedProjectile.GetComponent<Rigidbody>().AddForce(InstansiatedProjectile.transform.forward * 100, ForceMode.Impulse);
-
+                InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = weaponData.Damage;
                 InstansiatedProjectile.GetComponent<Rigidbody>().AddForce(playerLastLocation * 100, ForceMode.Impulse);
-
             }
         }
 

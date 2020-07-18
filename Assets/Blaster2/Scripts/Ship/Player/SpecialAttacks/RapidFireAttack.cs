@@ -14,7 +14,7 @@ public class RapidFireAttack : SpecialAttack
     {
         if (SpecialActive == false)
         {
-            source.PlayOneShot(superSFX);
+            source.PlayOneShot(weaponData.ShootSFX);
 
             PlayerData playerData = PersistantData.GetPlayerData();
             playerData.superUsed++;
@@ -24,14 +24,14 @@ public class RapidFireAttack : SpecialAttack
                 playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
             }
 
-            playerFireRate = playerWeapons[0].FireRate;
+            playerFireRate = playerWeapons[0].weaponData.FireRate;
             weaponCurrentType = ship.GetComponent<PlayerShip>().CurrentWeapnType;
 
             ship.GetComponent<PlayerShip>().SwitchWeapon(4);
 
             foreach (PlayerWeapon item in playerWeapons)
             {
-                item.FireRate = 0.2f;
+                item.weaponData.FireRate = .2f;
             }
 
             SpecialActive = true;
@@ -48,55 +48,12 @@ public class RapidFireAttack : SpecialAttack
 
             foreach (PlayerWeapon item in playerWeapons)
             {
-                item.SetFireRate(playerFireRate);
+                item.weaponData.FireRate = playerFireRate;
             }
 
             ship.GetComponent<PlayerShip>().SwitchWeapon(weaponCurrentType);
 
             base.DeactivateSpecial();
-        }
-    }
-
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-        PlayerShip playerShip = ship.GetComponent<PlayerShip>();
-        if (SpecialActive)
-        {
-            ActivateSpecial();
-            if (m_CountDownTimer == null)
-            {
-                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
-            }
-
-            if (m_CountDownTimer.m_CountdownTimer >= 0)
-            {
-                m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
-                if (m_CountDownTimer.countToZero())
-                {
-                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
-                }
-
-                if (playerShip.GetHealthPresentage() <= .5f)
-                {
-                    playerShip.Heal(.1f);
-                }
-
-                Shoot();
-            }
-            else
-            {
-                DeactivateSpecial();
-                m_CountDownTimer = null;
-                playerData.PowerUpLevel = 0;
-            }
-        }
-
-        float powerLevel = playerData.GetPowerUpLevelPresentage();
-
-        if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
-        {
-            ActivateSpecial();
         }
     }
 }

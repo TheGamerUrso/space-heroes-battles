@@ -70,7 +70,7 @@ public class Laser : MonoBehaviour
                             hitSomething = true;
                             hitEffect.transform.position = hit.point;
                             zHit = hit.point.z;       
-                            damagable.TakeDamage(laserSuper.damage);
+                            damagable.TakeDamage(laserSuper.weaponData.Damage);
                         }
                         hitSomething = false; 
                     }

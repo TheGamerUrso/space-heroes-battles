@@ -14,6 +14,8 @@ public class Asteroids : MonoBehaviour, IDamagable
     public Transform AsteroidTransform;
     public float takeDamageDelay;
 
+    public event Action<float, float> OnHealthChanged;
+
     public bool IsDestroyed
     {
         get
@@ -48,7 +50,6 @@ public class Asteroids : MonoBehaviour, IDamagable
     private void Start()
     {
         rotSpeed = UnityEngine.Random.Range(50, 100);
-        //SetRandomPosition();
         currentHealth = maxHealth;
     }
 
@@ -78,14 +79,6 @@ public class Asteroids : MonoBehaviour, IDamagable
         {
             return;
         }
-
-        // currentHealth -= dmg;
-
-        if (CurrentHealth < 1)
-        {
-            //Explode
-            gameObject.SetActive(false);
-        }
     }
 
     public void SetRandomPosition()
@@ -105,5 +98,15 @@ public class Asteroids : MonoBehaviour, IDamagable
         }
 
         transform.rotation = Quaternion.Euler(0, dist, 0);
+    }
+
+    public void Heal(float ammount)
+    {
+   
+    }
+
+    public void Death()
+    {
+        
     }
 }

@@ -9,7 +9,7 @@ public class GrenadeProjectile : EnemyProjectile
 
     public GameObject Ball;
     private bool exploded;
-    [SerializeField] private WeaponData weaponData = null;
+    [SerializeField] private Weapon_SO weaponData = null;
     private GameObject InstansiatedProjectile;
 
     private Vector3[] pos;
@@ -77,7 +77,7 @@ public class GrenadeProjectile : EnemyProjectile
 
         InstansiatedProjectile.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(pos[i]));
 
-        InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = weaponData.m_WeaponDamage;
+        InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = weaponData.Damage;
 
     }
 }

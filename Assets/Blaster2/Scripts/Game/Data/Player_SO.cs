@@ -2,7 +2,7 @@
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "New Player", menuName = "New Player")]
+[CreateAssetMenu(fileName = "New Player", menuName = "New Player",order = 0)]
 public class Player_SO : ScriptableObject
 {
     public int MaxLevel;

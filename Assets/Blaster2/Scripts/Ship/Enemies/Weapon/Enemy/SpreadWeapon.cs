@@ -23,18 +23,18 @@ public class SpreadWeapon : WeaponScript
 
     private IEnumerator SpreadWeaponCoroutine()
     {
-        int posToShoot = Radius;
+        int posToShoot = weaponData.Radius;
         for (int i = 0; i < m_NumberOfBullets; i++)
         {
             GameObject newBullet = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             newBullet.transform.position = transform.position;
             newBullet.transform.rotation = Quaternion.Euler(new Vector3(0, posToShoot, 0));
-            newBullet.GetComponent<Projectile>().Damage = Damage;
-            posToShoot += Angle;
-            yield return new WaitForSeconds(delayBetweenShots);
+            newBullet.GetComponent<Projectile>().Damage = weaponData.Damage;
+            posToShoot += weaponData.Angle;
+            yield return new WaitForSeconds(weaponData.delayBetweenShots);
             PlayWeaponFireSound();
         }
-        yield return new WaitForSeconds(GetFireRate());
+        yield return new WaitForSeconds(weaponData.FireRate);
         m_Shooting = false;
     }
 

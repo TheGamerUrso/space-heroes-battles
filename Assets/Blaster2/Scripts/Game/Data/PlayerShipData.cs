@@ -19,6 +19,7 @@ public class PlayerShipData
     #region Player Upgrades
     public int[] Upgrades;
 
+    public float Damage;
     public float FireRate;
     public float Speed;
     public float SuperDamage;

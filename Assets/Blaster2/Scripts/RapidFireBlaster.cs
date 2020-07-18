@@ -3,7 +3,8 @@ using UnityEngine;
 
 public class RapidFireBlaster : Blaster
 {
-    public bool IsShooting;
+    private bool IsShooting;
+
     public override void Shoot()
     {
         if (!IsShooting)
@@ -39,15 +40,15 @@ public class RapidFireBlaster : Blaster
             }
 
             InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-            Vector3 dir = Cannons[i].position + Cannons[i].forward;
-            Vector3 shootDir = (dir - Cannons[i].position).normalized;
+            dir = Cannons[i].position + Cannons[i].forward;
+            shootDir = (dir - Cannons[i].position).normalized;
             InstansiatedProjectile.transform.position = Cannons[i].position;
             InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
-            InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, Damage);
-            yield return new WaitForSeconds(delayBetweenShots);
+            InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, weaponData.Damage);
+            yield return new WaitForSeconds(weaponData.delayBetweenShots);
         }
         AboutToShoot?.Invoke(false);
-        newShot = Time.time + FireRate;
+        newShot = Time.time + weaponData.FireRate;
         IsShooting = false;
     }
 }

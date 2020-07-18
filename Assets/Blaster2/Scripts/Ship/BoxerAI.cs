@@ -40,13 +40,12 @@ public class BoxerAI : BaseBossEnemyAI
             {
                 if (punches.Length > 0)
                 {
-                    List<Punch> newList = punches.Where(x => x.currentHealth > 0).ToList();
+                    List<Punch> newList = punches.Where(x => x.CurrentHealth > 0).ToList();
                     int rand = UnityEngine.Random.Range(0, newList.Count);              
                     if (newList.Count > 0)
                     {
                         cooldown = UnityEngine.Random.Range(4, 8);
                         newList[rand].Attack((x) => { attacking = x;
-                            //Debug.Log("Punch" + attacking); 
                         });
                     }
                 }

@@ -8,26 +8,13 @@ public class BaseBossEnemy : BaseEnemy
     public Action OnBossAttack;
     public Action<int, int> OnBossHit;
 
-    #region Animation Config
-    [Header("Animation Config")]
-    int enterNameHash = Animator.StringToHash("Enter");
-    int flyingNameHash = Animator.StringToHash("Flying");
-    int deathNameHash = Animator.StringToHash("Death");
-    #endregion
-
-    #region Boss Config
-    [Header("Boss Config")]
-    public BaseBossEnemyAI BossAI;
+ 
     protected int hitIndex;
     protected int numberOfHits;
-    public GameObject ExplosionsDeathEffect;
+    [SerializeField] protected GameObject ExplosionsDeathEffect;
 
-    #endregion
-
-    #region Destroyable Parts Cofig
-    [Header("Destroyable Parts Cofig")]
     [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
-    #endregion
+
 
     public override void OnEnable()
     {
@@ -36,25 +23,9 @@ public class BaseBossEnemy : BaseEnemy
         currentWeaponActive = 1;
     }
 
-    public void AddDamagablePart(IDamagable part)
+    public override void Start()
     {
-        DestroyableParts.Add(part);
-
-        MonoBehaviour go = part as MonoBehaviour;
-        if (go != this)
-        {
-            part.MaxHealth = MaxHealth / 2;
-            part.CurrentHealth = part.MaxHealth;
-        }
-    }
-
-    public override void Awake()
-    {
-        base.Awake();
-        BossAI = GetComponent<BaseBossEnemyAI>();
-        DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
-
-        SetEnemyStats(1);
+        base.Start();
 
         currentWeaponActive = 0;
 
@@ -80,7 +51,7 @@ public class BaseBossEnemy : BaseEnemy
         }
     }
 
-    public virtual void BossHit()
+    public override void Hit()
     {
         PlayerData playerData = PersistantData.GetPlayerData();
 
@@ -100,7 +71,7 @@ public class BaseBossEnemy : BaseEnemy
         }
     }
 
-    public override void Attack()
+    public void Attack()
     {
         if (delayAttak > 0)
         {
@@ -150,16 +121,28 @@ public class BaseBossEnemy : BaseEnemy
         {
             for (int i = 0; i < Weapons.Length; i++)
             {
-                float newFireRate = Weapons[i].FireRate - .2f;
+                float newFireRate = Weapons[i].weaponData.FireRate - .2f;
 
-                Weapons[i].FireRate = newFireRate;
+                Weapons[i].weaponData.FireRate = newFireRate;
             }
         }
         else
         {
-            float newFireRate = Weapons[weaponIndex].FireRate - .2f;
+            float newFireRate = Weapons[weaponIndex].weaponData.FireRate - .2f;
 
-            Weapons[weaponIndex].FireRate = newFireRate;
+            Weapons[weaponIndex].weaponData.FireRate = newFireRate;
+        }
+    }
+
+    public void AddDamagablePart(IDamagable part)
+    {
+        DestroyableParts.Add(part);
+
+        MonoBehaviour go = part as MonoBehaviour;
+        if (go != this)
+        {
+            part.MaxHealth = MaxHealth / 2;
+            part.CurrentHealth = part.MaxHealth;
         }
     }
 

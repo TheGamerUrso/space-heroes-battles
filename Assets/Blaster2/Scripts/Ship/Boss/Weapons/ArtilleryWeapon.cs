@@ -1,16 +1,14 @@
 ﻿using UnityEngine;
 
-public class ArtilleryWeapon : WeaponScript
+public class ArtilleryWeapon : Blaster
 {
-    public float cooldown;
+    private float cooldown;
     private int numberOfAttacks;
-    public bool attack;
+    private bool attack;
 
-    public override void OnUpdate()
+    public override void Update()
     {
-        base.OnUpdate();
-        
-        Shoot();
+        base.Update();
 
         if (!attack)
         {
@@ -35,18 +33,18 @@ public class ArtilleryWeapon : WeaponScript
     {
         if (Time.time > newShot && AutoAttack && attack)
         {
-            newShot = Time.time + FireRate;
+            newShot = Time.time + weaponData.FireRate;
 
             PlayWeaponFireSound();
 
             for (int i = 0; i < Cannons.Length; i++)
             {
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-                Vector3 dir = Cannons[i].position + Cannons[i].up;
-                Vector3 shootDir = (dir - Cannons[i].position).normalized;
+                dir = Cannons[i].position + Cannons[i].up;
+                shootDir = (dir - Cannons[i].position).normalized;
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
-                InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, Damage);
+                InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, weaponData.Damage);
             }
 
             numberOfAttacks++;

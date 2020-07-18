@@ -14,7 +14,6 @@
     public static int enemyEscaped;
     public static bool SurvivalMode;
     public static bool Transmiting;
-    public static bool CanFire = true;
     public static bool Highscore = false;
 
     public static int counsEarnInGame;
@@ -116,7 +115,6 @@
     public static void Reset()
     {
         IsGameOver = false;
-        CanFire = true;
         score = 0;
         WaveSurvived = 0;
         currentEnemyKilled = 0;
