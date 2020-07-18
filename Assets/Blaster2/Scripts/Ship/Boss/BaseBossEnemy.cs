@@ -29,9 +29,9 @@ public class BaseBossEnemy : BaseEnemy
     [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
     #endregion
 
-    public override void Enter()
+    public override void OnEnable()
     {
-        base.Enter();
+        base.OnEnable();
         EnableColliders(false);
         currentWeaponActive = 1;
     }
@@ -48,9 +48,9 @@ public class BaseBossEnemy : BaseEnemy
         }
     }
 
-    public override void OnAwake()
+    public override void Awake()
     {
-        base.OnAwake();
+        base.Awake();
         BossAI = GetComponent<BaseBossEnemyAI>();
         DeathDelay = AnimUtil.GetSpecificAnimatorClipLength(animator, "Death");
 
@@ -73,7 +73,7 @@ public class BaseBossEnemy : BaseEnemy
 
         base.TakeDamage(damage);
 
-        if (currentHealth < 0)
+        if (CurrentHealth < 0)
         {
             EnableColliders(false);
             Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
@@ -92,7 +92,7 @@ public class BaseBossEnemy : BaseEnemy
 
     }
 
-    public override void OnUpdate()
+    public override void Update()
     {
         if (CurrentHealth > 0)
         {
@@ -131,9 +131,9 @@ public class BaseBossEnemy : BaseEnemy
                 item.gameObject.SetActive(false);
             }
         }
-        if (healthBar != null)
+        if (HealthBar != null)
         {
-            Destroy(healthBar);
+            Destroy(HealthBar);
         }
         Events.EnemyDied?.Invoke(gameObject.name, this);
     }

@@ -30,7 +30,7 @@ public class PlayerHealthWidget : MonoBehaviour
     {
         player.OnHealthChanged += UpdatePlayerHealth;
 
-        UpdatePlayerHealth(player.currentHealth, player.MaxHealth);
+        UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
     }
 
     public void UpdatePlayerHealth(float CurrentHealth, float MaxHealth)

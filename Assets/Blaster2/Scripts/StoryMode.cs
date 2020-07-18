@@ -6,6 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class StoryMode : BaseGameMode
 {
+    WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
+    WaitForSeconds waitForSec = new WaitForSeconds(1);
+    WaitForSeconds waitForCooldown = new WaitForSeconds(1);
+    WaitForSeconds waitforOneSec = new WaitForSeconds(1);
+    WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
+
     public override void Start()
     {
         playerShip = PlayerManager.GetPlayer();
@@ -40,7 +46,7 @@ public class StoryMode : BaseGameMode
 
     public override IEnumerator Spawn()
     {
-        while(GameController.Instance.currentGameState == GameController.GameState.Start)
+        while(GameController.Instance.currentGameState == GameController.GameState.START)
         {
             yield return null;
         }
@@ -48,18 +54,15 @@ public class StoryMode : BaseGameMode
         yield return new WaitForSeconds(1.0f);
 
         // Debug.Log("Game Started");
-        WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
-        WaitForSeconds waitForSec = new WaitForSeconds(delay);
-        WaitForSeconds waitForCooldown = new WaitForSeconds(cooldown);
-        WaitForSeconds waitforOneSec = new WaitForSeconds(1);
-        WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
+        waitForSec = new WaitForSeconds(delay);
+        waitForCooldown = new WaitForSeconds(cooldown);
 
         var startingTotalEnemies = TotalEnemies;
         bool IncomingDanger = false;
 
-        while (GameController.Instance.currentGameState == GameController.GameState.Game)
+        while (GameController.Instance.currentGameState == GameController.GameState.GAME)
         {
-            while (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState != GameController.GameState.Game)
+            while (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState != GameController.GameState.GAME)
             {
                 yield return waitForEndOfFrame;
             }
@@ -67,7 +70,6 @@ public class StoryMode : BaseGameMode
             while (TotalEnemies > 0 && !GameEnded)
             {
                 float totalEnemiesPresetnage = (float)TotalEnemies / (float)startingTotalEnemies;
-                // Debug.Log(totalEnemiesPresetnage);
                 if (totalEnemiesPresetnage < .1f)
                 {
                     if (HasBoss && !IncomingDanger)
@@ -127,7 +129,7 @@ public class StoryMode : BaseGameMode
                 yield return waitForCooldown;
             }
 
-            if (playerShip.currentHealth > 0)
+            if (playerShip.CurrentHealth > 0)
             {
                 while (Enemies.Count > 0)
                 {
@@ -161,7 +163,7 @@ public class StoryMode : BaseGameMode
 
                 if (!GameSession.IsGameOver)
                 {
-                    Events.SpawnEnded?.Invoke();
+                    Events.GameEnded?.Invoke();
                 }
             }
         }

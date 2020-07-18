@@ -18,14 +18,11 @@ public class XPBarWidget : MonoBehaviour
         var xp = playerShipData.xp;
         var xpToLevel = playerShipData.xpToLevel;
         currentSelectShip = playerData.currentSelectedShip;
-
-
-
     }
 
     public void UpdateXPBarWidget(int lvl,float xp ,float xpToLevel)
     {
-        if (playerShipData.level >= playerShipData.MaxLevel)
+        if (playerShipData.level >= playerData.MaxLevel)
         {
             PlayerLevelText.text = "" + playerShipData.level;
             PlayerXPText.text = "Maxed";

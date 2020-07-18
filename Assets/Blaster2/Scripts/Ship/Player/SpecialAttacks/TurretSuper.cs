@@ -58,7 +58,7 @@ public class TurretSuper : SpecialAttack
                     playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / turretDuration;
                 }
 
-                if (playerShip.HealthPresentage <= .5f)
+                if (playerShip.GetHealthPresentage() <= .5f)
                 {
                     playerShip.Heal(.1f);
                 }

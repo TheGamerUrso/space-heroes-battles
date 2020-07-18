@@ -2,12 +2,11 @@
 using UnityEngine;
 
 [System.Serializable]
-[CreateAssetMenu(fileName = "ShipStat", menuName = "New ShipStat")]
-public class ShipStats : ScriptableObject
+[CreateAssetMenu(fileName = "New Player", menuName = "New Player")]
+public class Player_SO : ScriptableObject
 {
-    /**
-     * Base Attributes
-     */
+    public int MaxLevel;
+
     public float baseHealth;
 
     public float baseSpeed;
@@ -18,7 +17,10 @@ public class ShipStats : ScriptableObject
 
     public bool CanUsePowerUpItem;
 
+    public PoolGameObjectType ExplostionEffect;
 
+    public AudioClip powerSFX;
+    public AudioClip alarmSFX;
     public AudioClip hitSFX;
 
 }

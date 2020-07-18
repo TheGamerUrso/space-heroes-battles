@@ -1,52 +1,44 @@
 ﻿using System.Collections;
 using UnityEngine;
 
-public class PlayerShip : Ship, IDamagable
+public class PlayerShip : Ship
 {
-    [SerializeField] private ParticleSystem ItemCollectedEffect;
+    public Player_SO playerStats;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
-    private float invisibilityTimer;
-    public bool TempFireRateUpgrade { get; set; }
-    /**
-     * Weapons
-     */
 
-    #region Weapons
     [SerializeField] private PlayerWeapon[] Weapons;
     [SerializeField] private SpecialAttack specialAttack;
 
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private ParticleSystem ItemCollectedEffect;
 
-    [Space(2)]
-    [Range(1, 4)] private int CurrentWeapnType = 0;
-    public int getCurrentWeaponType
-    {
-        get { return CurrentWeapnType; }
-    }
 
+
+    #region Weapons
+    private bool TempFireRateUpgrade;
+    private float invisibilityTimer;
     private int clicktimes;
     private float clicktimer;
     private bool clicked;
 
+    public int CurrentWeapnType { get; private set; } = 0;
 
-    public AudioSource audioSource;
-    public AudioClip powerSFX;
-    public AudioClip alarmSFX;
     #endregion Weapons
 
-    private void OnDestroy()
+    public override void OnDestroy()
     {
         Events.OnLevelValueChanged -= OnLevelValueChanged;
     }
 
-    public override void OnAwake()
-    {     
+    public override void Awake()
+    {
         animator = GetComponentInChildren<Animator>();
     }
 
-    public override void ShipSetup()
+    public override void Start()
     {
-        Alive = true;
+        IsAlive = true;
 
         playerData = PersistantData.GetPlayerData();
 
@@ -64,13 +56,6 @@ public class PlayerShip : Ship, IDamagable
 
         SwitchWeapon(0);
 
-        playerData = PersistantData.GetPlayerData();
-
-        if (playerData == null)
-        {
-            playerData = new PlayerData();
-        }
-
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         HasShield = playerShipData.HasShield;
@@ -84,20 +69,24 @@ public class PlayerShip : Ship, IDamagable
 
         Events.OnLevelValueChanged += OnLevelValueChanged;
     }
+
     public void OnLevelValueChanged(int Level)
     {
         SetStats(Level);
     }
 
-    private void Update()
+    public override void Update()
     {
-        if (Time.frameCount % 1 == 0)
+        if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
-            if (invisibilityTimer >= 0)
+            if (Time.frameCount % 1 == 0)
             {
-                invisibilityTimer -= Time.deltaTime;
+                if (invisibilityTimer >= 0)
+                {
+                    invisibilityTimer -= Time.deltaTime;
+                }
+                WeaponSystem();
             }
-            WeaponSystem();
         }
     }
 
@@ -197,21 +186,16 @@ public class PlayerShip : Ship, IDamagable
 
     public override void Death()
     {
-        GameObject explostion = PoolManager.Instance.GetObjectFromPool(ExplostionEffect);
+        GameObject explostion = PoolManager.Instance.GetObjectFromPool(playerStats.ExplostionEffect);
         explostion.transform.position = transform.position;
 
-        Events.PlayerShipDeath?.Invoke();
+        Events.PlayerLost?.Invoke();
         gameObject.SetActive(false);
     }
 
     public override void Heal(float ammount)
     {
         base.Heal(ammount);
-
-        if (HealthPresentage > .2f)
-        {
-            //AudioManager.Instance.StopSoundEffect();
-        }
     }
 
     public override void TakeDamage(float dmg)
@@ -221,7 +205,7 @@ public class PlayerShip : Ship, IDamagable
             return;
         }
 
-        audioSource.PlayOneShot(shipStats.hitSFX);
+        audioSource.PlayOneShot(playerStats.hitSFX);
 
         if (dmg >= MaxHealth)
         {
@@ -253,9 +237,9 @@ public class PlayerShip : Ship, IDamagable
                     playerData.GotHitInGame = true;
                 }
 
-                if (HealthPresentage < .5f)
+                if (GetHealthPresentage() < .5f)
                 {
-                    audioSource.PlayOneShot(alarmSFX);
+                    audioSource.PlayOneShot(playerStats.alarmSFX);
                 }
 
                 if (CurrentHealth < 1)
@@ -266,11 +250,9 @@ public class PlayerShip : Ship, IDamagable
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
-        string gameobjectTag = other.gameObject.tag;
         IPickable items = other.GetComponent<IPickable>();
-
         if (items != null)
         {
             items.Action(this);
@@ -278,8 +260,6 @@ public class PlayerShip : Ship, IDamagable
                 ItemCollectedEffect.Play();
         }
     }
-
-
 
     public void tempGodMode()
     {
@@ -296,7 +276,7 @@ public class PlayerShip : Ship, IDamagable
         return animator.GetCurrentAnimatorStateInfo(0).IsName(id);
     }
 
-    public override void Enter()
+    public override void OnEnable()
     {
         if (animator == null)
         {
@@ -361,9 +341,9 @@ public class PlayerShip : Ship, IDamagable
 
         if (CurrentWeapnType < 4)
         {
-            if (shipStats.CanUsePowerUpItem)
+            if (playerStats.CanUsePowerUpItem)
             {
-                audioSource.PlayOneShot(powerSFX);
+                audioSource.PlayOneShot(playerStats.powerSFX);
 
                 CurrentWeapnType++;
 
@@ -470,9 +450,9 @@ public class PlayerShip : Ship, IDamagable
         //Debug.Log("Damage: " + Damage);
         FireRate -= UpgradeStats[(int)UpgradeTypeEnum.FireRate];
         //Debug.Log("FireRate: " + FireRate);
-        playerShipData.SuperDamage = (level * shipStats.baseSuperDamage) + UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
+        playerShipData.SuperDamage = (level * playerStats.baseSuperDamage) + UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
         //Debug.Log("SuperDamage: " + playerShipData.SuperDamage);
-        playerShipData.SuperChargeTime = shipStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
+        playerShipData.SuperChargeTime = playerStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
         //Debug.Log("SuperChargeTime: " + playerShipData.SuperChargeTime);
         playerShipData.MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
         //Debug.Log("MagnetPower: " + playerShipData.MagnetPower);

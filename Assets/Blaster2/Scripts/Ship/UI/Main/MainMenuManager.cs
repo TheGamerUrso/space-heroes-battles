@@ -82,10 +82,10 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         PlayerLevelText.text = string.Format("{0}", lvl);
 
     }
-
+    
     public void XpLevelChanged(int lvl, float xp, float xpToLevel)
     {
-        if (playerShipData.level >= playerShipData.MaxLevel)
+        if (playerShipData.level >= playerData.MaxLevel)
         {
             PlayerLevelText.text = "" + playerShipData.level;
             PlayerXPText.text = "-/-";

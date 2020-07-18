@@ -167,7 +167,7 @@ public class PlayerData
 
     #endregion
 
-
+    public int MaxLevel { get; set; }
     public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
     public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
 
@@ -314,7 +314,7 @@ public class PlayerData
     public void EarnXP(float ammount)
     {
         PlayerShipData currentPlayerShipSelected = playerShipData[currentSelectedShip];
-        if (Level < currentPlayerShipSelected.MaxLevel)
+        if (Level < 20)
         {
             XP += ammount;
             if (XP >= currentPlayerShipSelected.xpToLevel)

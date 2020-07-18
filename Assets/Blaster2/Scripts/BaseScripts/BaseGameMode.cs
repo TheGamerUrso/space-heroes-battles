@@ -27,8 +27,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public int TotalEnemies;
 
-   
-
     [SerializeField] protected List<EnemyElement> enemyElements;
     [SerializeField] protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
 

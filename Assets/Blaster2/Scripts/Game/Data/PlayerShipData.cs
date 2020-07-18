@@ -5,8 +5,6 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerShipData
 {
-    public int MaxLevel = 20;
-
     public int level;
     public float xp;
     public float xpToLevel;
@@ -23,8 +21,6 @@ public class PlayerShipData
 
     public float FireRate;
     public float Speed;
-
-
     public float SuperDamage;
     public float LaserDamage;
     public float SuperChargeTime;
@@ -64,7 +60,6 @@ public class PlayerShipData
 
     public PlayerShipData()
     {
-        MaxLevel = 20;
         level = 1;
         xp = 0;
         xpToLevel = 100;

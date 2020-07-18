@@ -13,18 +13,17 @@ public class DropProbabilities
 
 public class DropController : MonoSingleton<DropController>
 {
-    //private float timerSincePowerUpDroped;
+    [SerializeField] private List<DropProbabilities> ListOfDropItems = new List<DropProbabilities>();
 
-   // private float frequentToDroPowerUp = .1f;
+    [SerializeField] private bool DropShield;
+    [SerializeField] private bool DropHealth;
 
-    public List<DropProbabilities> ListOfDropItems = new List<DropProbabilities>();
+    [SerializeField] private float shieldDropCooldown = 4;
+    [SerializeField] private float healthDropCooldown = 3;
+    [SerializeField] private float powerDropCooldown = 1;
 
-    public bool DropShield;
-    public bool DropHealth;
-
-    public float shieldDropCooldown = 4;
-    public float healthDropCooldown = 3;
-    public float powerDropCooldown = 1;
+    private PoolGameObjectType itemTypeToSpawn;
+    private PlayerShip playerShip;
 
     private void Update()
     {
@@ -59,14 +58,14 @@ public class DropController : MonoSingleton<DropController>
                 return;
             }
 
-            PlayerShip p = PlayerManager.GetPlayer();
+            playerShip = PlayerManager.GetPlayer();
 
 
-            bool hasShield = p.HasShieldModule();
-            bool fullHealth = p.HealthPresentage == 100;
+            bool hasShield = playerShip.HasShieldModule();
+            bool fullHealth = playerShip.GetHealthPresentage() == 100;
             bool dropExtra = false;
 
-            PoolGameObjectType itemTypeToSpawn = ListOfDropItems[0].DropItemsType;
+            itemTypeToSpawn = ListOfDropItems[0].DropItemsType;
 
             do
             {

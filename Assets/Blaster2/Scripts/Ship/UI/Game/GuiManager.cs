@@ -68,7 +68,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void EnemyDiedCallback(string name, BaseEnemy baseEnemy)
     {
-        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
+        int score = GameSession.Multiplier * baseEnemy.EnemyData.EnemyValue;
         GuiManager.CreateFloatingText(score.ToString(), baseEnemy.transform.position);
     }
 
@@ -144,7 +144,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     private void Update()
     {
-        if (GameController.CurrentGameState == GameController.GameState.Game)
+        if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
             if (Time.timeScale == 1)
             {

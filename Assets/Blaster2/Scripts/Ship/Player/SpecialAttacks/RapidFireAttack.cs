@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class RapidFireAttack : SpecialAttack
 {
-
     protected PlayerWeapon[] playerWeapons;
     protected float previousRapidFireValue = 0;
     protected int weaponCurrentType;
     protected float playerFireRate;
     private bool RapidFireModeOn;
+
     public override void ActivateSpecial()
     {
         if (SpecialActive == false)
@@ -25,7 +25,7 @@ public class RapidFireAttack : SpecialAttack
             }
 
             playerFireRate = playerWeapons[0].FireRate;
-            weaponCurrentType = ship.GetComponent<PlayerShip>().getCurrentWeaponType;
+            weaponCurrentType = ship.GetComponent<PlayerShip>().CurrentWeapnType;
 
             ship.GetComponent<PlayerShip>().SwitchWeapon(4);
 
@@ -77,7 +77,7 @@ public class RapidFireAttack : SpecialAttack
                     playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
                 }
 
-                if (playerShip.HealthPresentage <= .5f)
+                if (playerShip.GetHealthPresentage() <= .5f)
                 {
                     playerShip.Heal(.1f);
                 }

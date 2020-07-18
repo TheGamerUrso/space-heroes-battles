@@ -25,7 +25,7 @@ public class SpawnEnemies
         GameObject currentBoss = GameObject.Instantiate(BossPrefab);
         BaseEnemy enemy = currentBoss.GetComponent<BaseEnemy>();
 
-        enemy.SetEnemyStats(LevelDifficulty);
+        enemy.SetStats(LevelDifficulty);
 
         BaseGameMode.Instance.TotalEnemies++;
         return currentBoss; 
@@ -52,7 +52,7 @@ public class SpawnEnemies
 
         enemy.enemyElement = enemyElement;
 
-        enemy.SetEnemyStats(LevelDifficulty);
+        enemy.SetStats(LevelDifficulty);
 
         BaseGameMode.Instance.TotalEnemies--;
 

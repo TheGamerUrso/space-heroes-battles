@@ -5,28 +5,35 @@ using UnityEngine;
 
 public class HyperdriveEnterEffect : MonoBehaviour
 {
-    public GameObject shipPivot;
-    public Ease easeMode;
-    public float speed;
+    [SerializeField] protected GameObject shipPivot;
+    [SerializeField] private Ease easeMode;
+    [SerializeField] protected float speed;
     protected BaseEnemyAI baseEnemyAI;
     protected BaseEnemy baseEnemy;
 
-
-    private void Awake()
-    {
-        OnAwake();
-    }
-
-    private void OnEnable()
-    {
-        OnActivated();
-    }
-
-    public virtual void OnAwake()
+    public virtual void Awake()
     {
         baseEnemyAI = GetComponent<BaseEnemyAI>();
         baseEnemy = GetComponent<BaseEnemy>();
     }
+
+    public virtual void OnEnable()
+    {
+        baseEnemy.EnableColliders(false);
+        baseEnemy.DisableAllWeapons();
+        shipPivot.transform.localPosition = new Vector3(0, 0, -120);
+        shipPivot.transform.DOLocalMoveZ(0, speed).SetEase(easeMode).OnComplete(() =>
+        {
+            baseEnemyAI.EnableMovement();
+            baseEnemy.EnableWeaponById(0);
+            if (baseEnemy.HealthBar != null)
+            {
+                baseEnemy.HealthBar.Show();
+            }
+            baseEnemy.EnableColliders(true);
+        });
+    }
+
 
     public virtual void OnActivated()
     {

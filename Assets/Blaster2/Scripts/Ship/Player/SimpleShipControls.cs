@@ -4,49 +4,37 @@ using UnityEngine.EventSystems;
 
 public class SimpleShipControls : MonoBehaviour
 {
-    private bool blockMovement;
+    private PlayerShipData playerShipData;
+    private PlayerData playerData;
 
-    public float tilt;
-    public float Speed;
-
-    public Vector2 touchPosOffset;
-    private Vector3 targetPos;
-
+    [SerializeField] private float tilt;
+    [SerializeField] private float Speed;
     [SerializeField] private GameObject ShipModel;
-
+    private Vector3 targetPos;
     private Plane plane;
     private Ray ray;
-    public Vector3 offspec;
-
+    private Vector3 offspec;
     private Touch currentTouch;
     private Vector2 currentTouchPos;
-
     private float yMove = 0;
-
-    public float movementSensitivity = .1f;
-    public float sensitivityScale = .1f;
-
+    private float movementSensitivity = .1f;
     private Vector3 direction;
-
-    public PlayerShip playerShip;
-
-
+    private float rotVelocity;
+    private Vector3 targetEulerAngels;
 
     public void Start()
     {
         targetPos = transform.position;
 
-        PlayerData playerData = PersistantData.GetPlayerData();
-
-        Events.OnDistanceValueChanged = UpdateOffset;
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
 
         offspec = new Vector3(0, 0, playerData.Distance);
-
         plane = new Plane(Vector3.up, transform.position);
-       
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
         Speed = playerShipData.Speed;
+
+        Events.OnDistanceValueChanged = UpdateOffset;
     }
 
     public void UpdateOffset(float ammount)
@@ -95,13 +83,6 @@ public class SimpleShipControls : MonoBehaviour
             targetPos = new Vector3(ray.GetPoint(point).x, yMove, ray.GetPoint(point).z);
     }
 
-
-    private void OnDrawGizmos()
-    {
-       // Gizmos.DrawLine(transform.position, targetPos + offspec);
-    }
-
-
     private void Move()
     {
         if (direction.magnitude > .1f)
@@ -122,39 +103,43 @@ public class SimpleShipControls : MonoBehaviour
 
     private void Update()
     {
-        direction = targetPos - transform.position;
-
-        if (direction.magnitude >= .1f)
+        if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
-            movementSensitivity += Time.deltaTime;
-        }
-        else if (direction.magnitude < .1f)
-        {
-            movementSensitivity -= Time.deltaTime;
-        }
+            direction = targetPos - transform.position;
 
-        movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
+            if (direction.magnitude >= .1f)
+            {
+                movementSensitivity += Time.deltaTime;
+            }
+            else if (direction.magnitude < .1f)
+            {
+                movementSensitivity -= Time.deltaTime;
+            }
+
+            movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
 
 
-        if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
-        {
-            SetTargetPosition();
-        }
+            if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
+            {
+                SetTargetPosition();
+            }
 
-        if (!Game.Paused)
-        {
-            Rotate();
-        }
+            if (!Game.Paused)
+            {
+                Rotate();
+            }
 
-        if (Input.touchCount > 0 || Input.GetMouseButton(0))
-        {
-            GameSession.useSloMo = false;
-        }
-        else
-        {
-            GameSession.useSloMo = true;
+            if (Input.touchCount > 0 || Input.GetMouseButton(0))
+            {
+                GameSession.useSloMo = false;
+            }
+            else
+            {
+                GameSession.useSloMo = true;
+            }
         }
     }
+
     public static bool IsMouseOverUI()
     {
         return EventSystem.current.IsPointerOverGameObject();
@@ -162,11 +147,11 @@ public class SimpleShipControls : MonoBehaviour
 
     private void LateUpdate()
     {
-        Move();
+        if (GameController.CurrentGameState == GameController.GameState.GAME)
+        {
+            Move();
+        }
     }
-
-    private float rotVelocity;
-    private Vector3 targetEulerAngels;
 
     public void Rotate()
     {
@@ -194,235 +179,4 @@ public class SimpleShipControls : MonoBehaviour
         ShipModel.transform.localEulerAngles = targetEulerAngels;
 
     }
-
-    public bool CheckIfTouchIsOverUI(Touch touch)
-    {
-        int id = touch.fingerId;
-        if (EventSystem.current.IsPointerOverGameObject(id))
-        {
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     *  Version 1
-    
-
-    public Rigidbody rigid;
-    public float rotSpeed;
-
-    private PlayerShip playerShip;
-
-
-    private bool isMoving;
-    private float speed;
-
-    public float Speed
-    {
-        get
-        {
-            return speed;
-        }
-        set
-        {
-            speed = value;
-        }
-    }
-
-    private float yMove = -50;
-    private static float offspec = 10;
-    public Vector2 touchPosOffset;
-    private Vector3 targetPos;
-
-    [SerializeField] private GameObject ShipModel;
-
-    private Plane plane;
-    private Ray ray;
-
-
-    private const String HorizontalMouse = "HorizontalMouse";
-    private const int MOUSE = 0;
-    private Touch currentTouch;
-    private TouchPhase currentTouchPhase;
-    private Vector2 previousTouchPos;
-
-    private bool blockMovement;
-
-    public void Start()
-    {
-        targetPos = transform.position;
-
-        PlayerData playerData = GameManager.Instance.GetPlayerData();
-        playerData.distanceChanged = UpdateOffset;
-        offspec = playerData.distance;
-
-        plane = new Plane(Vector3.up, transform.position);
-        rigid = GetComponent<Rigidbody>();
-
-        playerShip = GetComponent<PlayerShip>();
-        Cursor.lockState = CursorLockMode.Confined;
-        Cursor.visible = false;
-    }
-
-    public static void UpdateOffset(float ammount)
-    {
-        offspec = ammount;
-    }
-
-    public void SetTargetPosition()
-    {
-        float point;
-        plane = new Plane(Vector3.up, transform.position);
-        ray = Camera.main.ScreenPointToRay(GetTouchPosition());
-        point = 0f;
-        if (plane.Raycast(ray, out point))
-            targetPos = new Vector3(ray.GetPoint(point).x, yMove, ray.GetPoint(point).z) + new Vector3(0, 0, offspec);
-    }
-
-    public void GetPlayerInput()
-    {
-        if (GetClickDown())
-        {
-            SetTargetPosition();
-            isMoving = true;
-
-            Rotate();
-   
-        }
-        else
-        {
-            Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
-            ShipModel.transform.localEulerAngles = new Vector3(targetEulerAngels.x
-              , targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, 0, .1f));
-            
-        }
-
-
-
-    }
-
-    public bool IsEnterOrExitAnimationState()
-    {
-        return playerShip.GetAnimationState("Enter") == false && playerShip.GetAnimationState("Exit") == false;
-    }
-
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawLine(transform.position, targetPos + new Vector3(0, 0, offspec));
-    }
-
-    private void Move()
-    {
-        if (GameSession.IsGameOver)
-        {
-            return;
-        }
-
-        if (isMoving)
-        {
-            if (IsEnterOrExitAnimationState())
-            {
-                Vector3 direction = targetPos + new Vector3(0, 0, offspec) - transform.position;
-
-                if (direction.magnitude > 1) {
-
-                    Debug.DrawRay(this.transform.position, direction, Color.red);
-                    transform.Translate(direction.normalized * speed * Time.deltaTime,Space.World);
-                }
-
-            }
-        }
-    }
-
-    private void Update()
-    {
-        GetPlayerInput();
- 
-
-    }
-
-    private void LateUpdate()
-    {
-        Move();
-    }
-
-    public void Rotate()
-    {
-        Vector3 targetEulerAngels = ShipModel.transform.localEulerAngles;
-        ShipModel.transform.localEulerAngles = new Vector3(targetEulerAngels.x
-          , targetEulerAngels.y, Mathf.LerpAngle(targetEulerAngels.z, -Input.GetAxis("Mouse X") * 15, .2f));
-
-    }
-
-    public Vector3 GetMousePos()
-    {
-        return Input.mousePosition;
-    }
-    public bool CheckIfTouchIsOverUI(Touch touch)
-    {
-        int id = touch.fingerId;
-        if (EventSystem.current.IsPointerOverGameObject(id))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public Vector2 GetTouchPosition()
-    {
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            if (Input.touchCount > 0)
-            {
-                currentTouch = Input.GetTouch(0);
-                currentTouchPhase = currentTouch.phase;
-                blockMovement = CheckIfTouchIsOverUI(currentTouch);
-
-                if (!blockMovement)
-                {
-                    switch (currentTouchPhase)
-                    {
-                        case TouchPhase.Began:
-                            previousTouchPos = currentTouch.position;
-                            return currentTouch.position;
-                        case TouchPhase.Moved:
-                            previousTouchPos = currentTouch.position;
-                            return currentTouch.position;
-                        case TouchPhase.Stationary:
-                            previousTouchPos = currentTouch.position;
-                            return currentTouch.position;
-                        case TouchPhase.Ended:
-                            return previousTouchPos;
-                        case TouchPhase.Canceled:
-                            return previousTouchPos;
-                        default:
-                            return previousTouchPos;
-                    }
-                }
-            }
-        }
-        else
-        {
-            previousTouchPos = Input.mousePosition;
-        }
-        return previousTouchPos;
-    }
-
-    public bool GetClickDown()
-    {
-        if (Input.touchCount > 0 || Input.GetMouseButton(0))
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-    public float GetMouseVelocity()
-    {
-        return Input.GetAxis(HorizontalMouse);
-    }
-    */
 }

@@ -15,7 +15,7 @@ public class Events
 
 
     public static Action PlayerShipHit;
-    public static Action PlayerShipDeath;
+    public static Action PlayerLost;
 
 
     public static Func<bool> OnWaveEnded;
@@ -24,7 +24,7 @@ public class Events
     /**
      * BaseGame Mode Events
      */
-    public static Action SpawnEnded;
+    public static Action GameEnded;
     public static Action<int, int, int> GameStatsChanged;
     public static Action<string, BaseEnemy> BossDied;
 

@@ -75,14 +75,14 @@ public class SurvivalMode : BaseGameMode
 
     public override IEnumerator Spawn()
     {
-        while (GameController.Instance.currentGameState == GameController.GameState.Start)
+        while (GameController.Instance.currentGameState == GameController.GameState.START)
         {
             yield return null;
         }
 
         var startingTotalEnemies = TotalEnemies;
 
-        while (GameController.Instance.currentGameState == GameController.GameState.Game)
+        while (GameController.Instance.currentGameState == GameController.GameState.GAME)
         {
             while (GuiManager.Instance.IsTrasnmiting())
             {

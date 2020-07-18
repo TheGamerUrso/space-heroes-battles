@@ -9,10 +9,10 @@ public class GameController : MonoSingleton<GameController>
 {
     public enum GameState
     {
-        Start,Game,GameOver,Results
+        START,GAME,GAMEOVER,WIN,RESULTS
     }
 
-    public GameState currentGameState = GameState.Start;
+    public GameState currentGameState = GameState.START;
     public static GameState CurrentGameState
     {
         get
@@ -64,8 +64,8 @@ public class GameController : MonoSingleton<GameController>
     {
         base.OnCleanup();
 
-        Events.PlayerShipDeath -= PlayerShipCallback;
-        Events.SpawnEnded -= Win;
+        Events.PlayerLost -= PlayerLostCallback;
+        Events.GameEnded -= Win;
         Events.EnemyDied -= EnemyDied;
     }
     protected override void Awake()
@@ -104,11 +104,11 @@ public class GameController : MonoSingleton<GameController>
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        Events.PlayerShipDeath += PlayerShipCallback;
-        Events.SpawnEnded += Win;
+        Events.PlayerLost += PlayerLostCallback;
+        Events.GameEnded += Win;
         Events.EnemyDied += EnemyDied;
 
-        SetGameState(GameState.Start);
+        SetGameState(GameState.START);
 
         StartCoroutine(StartGameDelay());
     }
@@ -116,37 +116,56 @@ public class GameController : MonoSingleton<GameController>
     IEnumerator StartGameDelay()
     {
         yield return new WaitForSeconds(1.0f);
-        SetGameState(GameState.Game);
+        SetGameState(GameState.GAME);
     }
 
     public void SetGameState(GameState gameState)
     {
         switch (gameState)
         {
-            case GameState.Start:
-                if (AudioManager.Instance)
-                    AudioManager.PlayRandomMusic(true);
-
-                GameSession.Reset();
-
-                if (PlayerManager.GetPlayer() == null)
+            case GameState.START:
+                GameStart();
+                break;
+            case GameState.GAME:
+                break;
+            case GameState.GAMEOVER:
+                if (GameSession.IsGameOver == false)
                 {
-                    int shipSelected = playerData.currentSelectedShip;
-                    player = PlayerManager.CreatePlayer(shipSelected);
-                    playerShip = player.GetComponentInChildren<PlayerShip>();
+                    GameSession.IsGameOver = true;
+                    StartCoroutine(DelayGameOver());
                 }
-                baseGameMode.InitReference(playerData, playerShip);
                 break;
-            case GameState.Game:
+            case GameState.WIN:
+                if (!GameSession.IsGameOver)
+                {
+                    GameSession.IsGameOver = true;
+
+                    StartCoroutine(DelayWinScreen());
+                }
                 break;
-            case GameState.GameOver:
-                break;
-            case GameState.Results:
+            case GameState.RESULTS:
+                Events.OnGameOver?.Invoke(this);
                 break;
             default:
                 break;
         }
         currentGameState = gameState;
+    }
+
+    public void GameStart()
+    {
+        if (AudioManager.Instance)
+            AudioManager.PlayRandomMusic(true);
+
+        GameSession.Reset();
+
+        if (PlayerManager.GetPlayer() == null)
+        {
+            int shipSelected = playerData.currentSelectedShip;
+            player = PlayerManager.CreatePlayer(shipSelected);
+            playerShip = player.GetComponentInChildren<PlayerShip>();
+        }
+        baseGameMode.InitReference(playerData, playerShip);
     }
 
     public GameState GetGameState()
@@ -175,7 +194,7 @@ public class GameController : MonoSingleton<GameController>
         playerData.PowerUpLevel += .025f;
 
 
-        int score = GameSession.Multiplier * baseEnemy.m_ValueOfEnemy;
+        int score = GameSession.Multiplier * baseEnemy.EnemyData.EnemyValue;
         int kills = GameSession.CurrentEnemyKilled + 1;
 
         GameSession.SetCurrentEnemyKills(kills);
@@ -184,19 +203,14 @@ public class GameController : MonoSingleton<GameController>
         GameSession.Multiplier++;
     }
 
-    private void PlayerShipCallback()
+    private void PlayerLostCallback()
     {
         GameOver();
     }
 
     public void Win()
     {
-        if (!GameSession.IsGameOver)
-        {
-            GameSession.IsGameOver = true;
-
-            StartCoroutine(DelayWinScreen());
-        }
+        SetGameState(GameState.WIN);
     }
 
 
@@ -211,11 +225,7 @@ public class GameController : MonoSingleton<GameController>
 
     public void GameOver()
     {
-        if (GameSession.IsGameOver == false)
-        {
-            GameSession.IsGameOver = true;
-            StartCoroutine(DelayGameOver());
-        }
+        SetGameState(GameState.GAMEOVER);
     }
 
     IEnumerator DelayGameOver()
@@ -241,8 +251,8 @@ public class GameController : MonoSingleton<GameController>
 
         AudioManager.PlayMusic("GameOver", false);
 
-        Events.OnGameOver?.Invoke(this);
-
+  
+        SetGameState(GameState.RESULTS);
     }
     IEnumerator DelayWinScreen()
     {
@@ -379,21 +389,24 @@ public class GameController : MonoSingleton<GameController>
 
     private void Update()
     {
-        if (delay > 0)
+        if (currentGameState == GameState.GAME)
         {
-            delay -= Time.deltaTime;
-        }
-        else
-        {
-            if (!GameSession.IsGameOver && !Game.Paused)
+            if (delay > 0)
             {
-                if (GameSession.useSloMo)
+                delay -= Time.deltaTime;
+            }
+            else
+            {
+                if (!GameSession.IsGameOver && !Game.Paused)
                 {
-                    Time.timeScale = delayTheSlowMoEffectTimer;
-                }
-                else if (!GameSession.useSloMo && Time.timeScale < 1)
-                {
-                    Time.timeScale = 1.0f;
+                    if (GameSession.useSloMo)
+                    {
+                        Time.timeScale = delayTheSlowMoEffectTimer;
+                    }
+                    else if (!GameSession.useSloMo && Time.timeScale < 1)
+                    {
+                        Time.timeScale = 1.0f;
+                    }
                 }
             }
         }
