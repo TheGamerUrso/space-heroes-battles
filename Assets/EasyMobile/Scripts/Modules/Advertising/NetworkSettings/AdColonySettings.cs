@@ -7,7 +7,7 @@ using EasyMobile.Internal;
 namespace EasyMobile
 {
     [Serializable]
-    public class AdColonySettings
+    public class AdColonySettings : AdNetworkSettings
     {
         /// <summary>
         /// Gets or sets the AdColony app identifier.

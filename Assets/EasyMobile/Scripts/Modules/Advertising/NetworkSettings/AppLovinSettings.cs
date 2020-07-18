@@ -7,13 +7,13 @@ using EasyMobile.Internal;
 namespace EasyMobile
 {
     [Serializable]
-    public class AppLovinSettings
+    public class AppLovinSettings : AdNetworkSettings
     {
         /// <summary>
         /// Gets or sets the AppLovin SDKKey.
         /// </summary>
         public string SDKKey
-        { 
+        {
             get { return mSDKKey; }
             set { mSDKKey = value; }
         }
@@ -22,7 +22,7 @@ namespace EasyMobile
         /// Gets or sets the default banner identifier.
         /// </summary>
         public AdId DefaultBannerAdId
-        { 
+        {
             get { return mDefaultBannerAdId; }
             set { mDefaultBannerAdId = value; }
         }
@@ -31,7 +31,7 @@ namespace EasyMobile
         /// Gets or sets the default interstitial ad identifier.
         /// </summary>
         public AdId DefaultInterstitialAdId
-        { 
+        {
             get { return mDefaultInterstitialAdId; }
             set { mDefaultInterstitialAdId = value; }
         }
@@ -40,18 +40,9 @@ namespace EasyMobile
         /// Gets or sets the default rewarded ad identifier.
         /// </summary>
         public AdId DefaultRewardedAdId
-        { 
-            get { return mDefaultRewardedAdId; } 
-            set { mDefaultRewardedAdId = value; }
-        }
-
-        /// <summary>
-        /// Enables or disables test mode.
-        /// </summary>
-        public bool EnableTestMode
         {
-            get { return mEnableTestMode; }
-            set { mEnableTestMode = value; }
+            get { return mDefaultRewardedAdId; }
+            set { mDefaultRewardedAdId = value; }
         }
 
         /// <summary>
@@ -93,10 +84,6 @@ namespace EasyMobile
             set { mCustomRewardedAdIds = value as Dictionary_AdPlacement_AdId; }
         }
 
-       
-        [SerializeField]
-        private bool mEnableTestMode;
-
         [SerializeField]
         private bool mAgeRestrictMode;
 
@@ -115,6 +102,6 @@ namespace EasyMobile
         [SerializeField]
         private Dictionary_AdPlacement_AdId mCustomRewardedAdIds;
 
-      
+
     }
 }

@@ -186,7 +186,7 @@ public class GameController : MonoSingleton<GameController>
 
         baseGameMode.GameOver();
 
-        playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
+        playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
         GameSession.CoinEarnInGame = 0;
         GameSession.CurrentEnemyKilled = 0;
@@ -210,7 +210,7 @@ public class GameController : MonoSingleton<GameController>
     {
         Time.timeScale = 1.0f;
         playerData.PlayedGame = true;
-        playerShipData.Upgrades[(int)UpgradeType.Shield] = 0;
+        playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
         playerData.Coins += GameSession.CoinEarnInGame;
         playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;

@@ -7,7 +7,7 @@ using EasyMobile.Internal;
 namespace EasyMobile
 {
     [Serializable]
-    public class MoPubSettings
+    public class MoPubSettings : AdNetworkSettings
     {
         /// <summary>
         /// Gets or sets the default banner identifier.

@@ -1,10 +1,10 @@
 ﻿
 public class PlayerUpgrade  {
 
-    public UpgradeType m_UpgradeType;
+    public UpgradeTypeEnum m_UpgradeType;
     public int m_UpgradeLevel;
 
-    public PlayerUpgrade(UpgradeType upgradeType,int upgradeLevel)
+    public PlayerUpgrade(UpgradeTypeEnum upgradeType,int upgradeLevel)
     {
         m_UpgradeType = upgradeType;
         m_UpgradeLevel = upgradeLevel;

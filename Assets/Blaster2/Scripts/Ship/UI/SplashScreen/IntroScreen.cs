@@ -44,6 +44,6 @@ public class IntroScreen : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
         if (GameManager.Instance)
-            GameManager.Instance.LoadScene("Main");
+            GameManager.Instance.LoadMainenu();
     }
 }

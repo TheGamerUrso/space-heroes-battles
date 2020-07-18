@@ -22,6 +22,10 @@ public class ShipSelect : MonoSingleton<ShipSelect>
     public LayerMask Ship1Layermask;
     public LayerMask Ship2Layermask;
     public LayerMask Ship3Layermask;
+    private void Start()
+    {
+        Initialize();
+    }
 
     public void Initialize()
     {

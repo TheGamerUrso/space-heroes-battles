@@ -4,7 +4,7 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName = "Create New Upgrade")]
 public class UpgradeData : ScriptableObject {
-    public UpgradeType upgradeType;
+    public UpgradeTypeEnum upgradeType;
     public Sprite sprite;
     public int Cost;
     public int MaxLevel;

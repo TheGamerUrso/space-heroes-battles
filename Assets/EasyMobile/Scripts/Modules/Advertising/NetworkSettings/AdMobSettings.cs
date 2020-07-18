@@ -7,13 +7,14 @@ using EasyMobile.Internal;
 namespace EasyMobile
 {
     [Serializable]
-    public class AdMobSettings
+    public class AdMobSettings : AdNetworkSettings
     {
+        [Obsolete("AppId has been deprecated since Easy Mobile Pro version 2.6.0 because the GoogleMobileAds SDK no longer allows access to this value in runtime.")]
         /// <summary>
         /// Gets or sets the AdMob app identifier.
         /// </summary>
         public AdId AppId
-        { 
+        {
             get { return mAppId; }
             set { mAppId = value; }
         }
@@ -22,7 +23,7 @@ namespace EasyMobile
         /// Gets or sets the default banner identifier.
         /// </summary>
         public AdId DefaultBannerAdId
-        { 
+        {
             get { return mDefaultBannerAdId; }
             set { mDefaultBannerAdId = value; }
         }
@@ -31,7 +32,7 @@ namespace EasyMobile
         /// Gets or sets the default interstitial ad identifier.
         /// </summary>
         public AdId DefaultInterstitialAdId
-        { 
+        {
             get { return mDefaultInterstitialAdId; }
             set { mDefaultInterstitialAdId = value; }
         }
@@ -40,8 +41,8 @@ namespace EasyMobile
         /// Gets or sets the default rewarded ad identifier.
         /// </summary>
         public AdId DefaultRewardedAdId
-        { 
-            get { return mDefaultRewardedAdId; } 
+        {
+            get { return mDefaultRewardedAdId; }
             set { mDefaultRewardedAdId = value; }
         }
 

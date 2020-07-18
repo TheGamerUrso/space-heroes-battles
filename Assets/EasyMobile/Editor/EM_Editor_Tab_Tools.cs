@@ -21,7 +21,7 @@ namespace EasyMobile.Editor
                 () => DrawTool(InstallPlayMakerActions, "Install PlayMaker Actions", EM_GUIStyleManager.ToolImportPlaymakerActionsIcon),
                 #endif
 
-                () => DrawTool(ReimportNativePackage, "Reimport Play Services Resolver", EM_GUIStyleManager.ToolReimportGPSRIcon),
+                () => DrawTool(ReimportNativePackage, "Import External Dependency Manager", EM_GUIStyleManager.ToolReimportGPSRIcon),
                 () => DrawTool(ExportEMSettings, "Export Settings", EM_GUIStyleManager.ToolExportEMSettingsIcon),
                 () => DrawTool(OpenDocumentation, "User Guide", EM_GUIStyleManager.ToolUserGuideIcon),
                 () => DrawTool(OpenScriptingReference, "Scripting Reference", EM_GUIStyleManager.ToolScriptingRefIcon),

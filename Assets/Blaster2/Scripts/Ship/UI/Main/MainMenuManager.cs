@@ -30,15 +30,6 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         GooglePlayServicesManager.ShowAchievementa();
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
-
-        GameManager.Instance.PauseTheGame(false);
-        AudioManager.PlayMusic("Menu");
-        Application.targetFrameRate = 30;
-    }
-
     protected override void OnCleanup()
     {
         base.OnCleanup();
@@ -56,6 +47,10 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
     private void Start()
     {
+        GameManager.Instance.PauseTheGame(false);
+        AudioManager.PlayMusic("Menu");
+        Application.targetFrameRate = 30;
+
         playerData = PersistantData.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
@@ -67,7 +62,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         Events.OnShipSelectValueChanged += OnShipSelectValueChanged;
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
 
-        ShipSelect.Instance.Initialize();
+
         if (PlayerPrefs.HasKey("SurvivalMode"))
         {
             if (playerData.SurvivalUnlocked)
@@ -115,8 +110,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     public void PlayGame()
     {
         levelIndex = GameManager.LevelIndexSelected;
-        levelName = string.Format("Level" + (levelIndex + 1));
-        GameManager.Instance.LoadScene(levelName);
+        GameManager.Instance.LoadScene((LevelEnum)(levelIndex + 1));
     }
 
 

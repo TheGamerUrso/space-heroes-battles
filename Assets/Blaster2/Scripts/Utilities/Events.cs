@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Events
 {
-    public static Action<EGameState, EGameState> OnGameStateChanged;
+    public static Action<GameStateEnum, GameStateEnum> OnGameStateChanged;
     public static Action OnLoadDataCompleted;
     public static Action<bool> OnPauseGame;
     public static Action<string, bool> OnSceneLoadStart;

@@ -20,6 +20,7 @@ namespace EasyMobile.Editor
         const string AndroidGPGSImportInstruction = "Google Play Games plugin is required. Please download and import it to use this module on Android.";
         const string AndroidGPGSAvailMsg = "Google Play Games plugin is imported and ready to use.";
         const string AndroidGPGPSSetupInstruction = "Paste in the Android XML Resources from the Play Console and hit the Setup button.";
+        const string AndroidGPGSMultiplayerDeprecatedMsg = "The Play Games Services multiplayer APIs have been deprecated since Mar 31, 2020 :(";
         const string GameServiceConstantGenerationIntro = "Generate the static class " + EM_Constants.RootNameSpace + "." + EM_Constants.GameServicesConstantsClassName + " that contains the constants of leaderboard and achievement names." +
                                                           " Remember to regenerate if you make changes to these names.";
 
@@ -163,7 +164,15 @@ namespace EasyMobile.Editor
             EditorGUILayout.Space();
             DrawUppercaseSection("MULTIPLAYER_CONFIG_FOLDOUT_KEY", "MULTIPLAYER", () =>
                 {
+#if UNITY_ANDROID
+                    EditorGUILayout.HelpBox(AndroidGPGSMultiplayerDeprecatedMsg, MessageType.Warning);
+                    EditorGUI.BeginDisabledGroup(true);
+                    GameServiceProperties.enableMultiplayer.property.boolValue = false;
                     EditorGUILayout.PropertyField(GameServiceProperties.enableMultiplayer.property, GameServiceProperties.enableMultiplayer.content);
+                    EditorGUI.EndDisabledGroup();
+#else
+                    EditorGUILayout.PropertyField(GameServiceProperties.enableMultiplayer.property, GameServiceProperties.enableMultiplayer.content);
+#endif
                 });
 #endif
 

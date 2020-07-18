@@ -6,7 +6,7 @@ using EasyMobile.Internal;
 namespace EasyMobile
 {
     [Serializable]
-    public class TapjoySettings
+    public class TapjoySettings : AdNetworkSettings
     {
         /// <summary>
         /// Enables or disables auto-reconnect coroutine.
@@ -66,7 +66,8 @@ namespace EasyMobile
 
         [SerializeField]
         private bool mAutoReconnect = true;
-        [SerializeField][Range(5, 100)]
+        [SerializeField]
+        [Range(5, 100)]
         private float mAutoReconnectInterval = 10f;
 
         [SerializeField]

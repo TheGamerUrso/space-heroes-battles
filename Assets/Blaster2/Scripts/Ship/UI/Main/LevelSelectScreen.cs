@@ -22,7 +22,7 @@ public class LevelSelectScreen : MonoBehaviour
     public LevelObjectivesElement[] levelObjectivesElement;
     private MissionCollection missionCollection;
     private GameObject LevelElementGO;
-    private DialogueManager dialogueManager;
+    private StoryController dialogueManager;
     private Mission currentMissionSelected;
     private LevelObjectiveData[] levelObjectiveDatas;
     private Dictionary<string, LevelObjectiveData[]> Challanges;
@@ -45,7 +45,7 @@ public class LevelSelectScreen : MonoBehaviour
 
     private void Start()
     {
-        dialogueManager = DialogueManager.Instance;
+        dialogueManager = StoryController.Instance;
         SetLevelSelect();
     }
 

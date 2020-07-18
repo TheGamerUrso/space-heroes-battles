@@ -72,8 +72,7 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
     public void PlayGame()
     {
         var levelIndex = GameManager.LevelIndexSelected;
-        var levelName = string.Format("Level" + levelIndex);
-        GameManager.Instance.LoadScene(levelName);
+        GameManager.Instance.LoadScene((LevelEnum)levelIndex);
     }
 
     public void Close()

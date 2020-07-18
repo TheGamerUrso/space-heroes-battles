@@ -126,7 +126,7 @@ namespace EasyMobile
         /// </summary>
         public event EventHandler<AdErrorEventArgs> OnRewardedAdFailedToLoad;
 
-          /// <summary>
+        /// <summary>
         /// Called when a rewarded video ad request failed to show.
         /// </summary>
         public event EventHandler<AdErrorEventArgs> OnRewardedAdFailedToShow;
@@ -284,25 +284,29 @@ namespace EasyMobile
             var consent = GetApplicableDataPrivacyConsent();
             ApplyDataPrivacyConsent(consent);
 
-            MobileAds.Initialize(mAdSettings.AppId.Id);
-
-            mCustomBannerAds = new Dictionary<AdPlacement, KeyValuePair<BannerAdSize, BannerView>>();
-            mCustomInterstitialAds = new Dictionary<AdPlacement, InterstitialAd>();
-            mCustomRewardedAd = new Dictionary<AdPlacement, RewardedAd>();
-            if (mAdSettings.EnableTestMode)
+            // Init.
+            MobileAds.Initialize(initStatus =>
             {
+                RuntimeHelper.RunOnMainThread(() =>
+                {
+                    mCustomBannerAds = new Dictionary<AdPlacement, KeyValuePair<BannerAdSize, BannerView>>();
+                    mCustomInterstitialAds = new Dictionary<AdPlacement, InterstitialAd>();
+                    mCustomRewardedAd = new Dictionary<AdPlacement, RewardedAd>();
+                    if (mAdSettings.EnableTestMode)
+                    {
 #if UNITY_ANDROID
-                testDeviceID = SystemInfo.deviceUniqueIdentifier.ToUpper();
+                        testDeviceID = SystemInfo.deviceUniqueIdentifier.ToUpper();
 #elif UNITY_IOS
-                testDeviceID = UnityEngine.iOS.Device.advertisingIdentifier;
-                testDeviceID = CreateMD5(testDeviceID);
-                testDeviceID = testDeviceID.ToLower();
+                        testDeviceID = UnityEngine.iOS.Device.advertisingIdentifier;
+                        testDeviceID = CreateMD5(testDeviceID);
+                        testDeviceID = testDeviceID.ToLower();
 #endif
-            }
+                    }
 
-            mIsInitialized = true;
-
-            Debug.Log("AdMob client has been initialized.");
+                    mIsInitialized = true;
+                    Debug.Log("AdMob client has been initialized.");
+                });
+            });
 #endif
         }
 
@@ -497,16 +501,16 @@ namespace EasyMobile
             }
 
             if (placement == AdPlacement.Default) // Default rewarded ad...
-            {       
+            {
                 if (mDefaultRewardedAd == null)
                     mDefaultRewardedAd = CreateNewRewardedAd(id, placement);
                 mDefaultRewardedAd.LoadAd(CreateAdMobAdRequest());
             }
             else // Custom rewarded ad...
-            {         
-                   /// Create a new custom reward ad and load it.
+            {
+                /// Create a new custom reward ad and load it.
                 if (!mCustomRewardedAd.ContainsKey(placement) || mCustomRewardedAd[placement] == null)
-                    mCustomRewardedAd[placement] = CreateNewRewardedAd(id,placement);
+                    mCustomRewardedAd[placement] = CreateNewRewardedAd(id, placement);
                 mCustomRewardedAd[placement].LoadAd(CreateAdMobAdRequest());
             }
 #endif
@@ -517,15 +521,15 @@ namespace EasyMobile
 #if EM_ADMOB
             if (placement == AdPlacement.Default) // Default rewarded ad...
             {
-                return 
+                return
                 mDefaultRewardedAd != null &&
                 mDefaultRewardedAd.IsLoaded();
             }
             else // Custom rewarded ad...
             {
-                return 
+                return
                 mCustomRewardedAd.ContainsKey(placement) &&
-                mCustomRewardedAd[placement] != null&&
+                mCustomRewardedAd[placement] != null &&
                 mCustomRewardedAd[placement].IsLoaded();
             }
 #else
@@ -764,7 +768,7 @@ namespace EasyMobile
             {
                 OnRewardedAdSkipped(placement);
             };
-    
+
         }
 
         /// <summary>
@@ -935,7 +939,7 @@ namespace EasyMobile
         {
             // Make sure this method always be called after the OnAdRewarded event.
             RuntimeHelper.RunOnMainThread(() =>
-                RuntimeHelper.RunCoroutine(RewardedBasedVideoClosedDelayCoroutine(sender, args,placement)));
+                RuntimeHelper.RunCoroutine(RewardedBasedVideoClosedDelayCoroutine(sender, args, placement)));
         }
 
         private IEnumerator RewardedBasedVideoClosedDelayCoroutine(object sender, EventArgs args, AdPlacement placement)
@@ -956,7 +960,7 @@ namespace EasyMobile
             mIsRewardedAdCompleted = false;
 
             //Destroy the RewardedAd to create a new one.
-            DestroyRewardedAds(placement);   
+            DestroyRewardedAds(placement);
 
             if (OnRewardedAdClosed != null)
                 OnRewardedAdClosed.Invoke(sender, args);

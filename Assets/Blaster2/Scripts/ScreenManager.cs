@@ -10,19 +10,11 @@ public class UIScreens
     public UIView m_UIElement;
 }
 
-public class ScreenManager : MonoBehaviour
+public class ScreenManager : MonoSingleton<ScreenManager>
 {
-    public static ScreenManager Instance;
-
     [SerializeField] private UIScreens[] MainMenuScreens;
 
-    private AudioManager AudioAPI;    
     private string previousScreen;
-
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     public GameObject GetUIScreen(string name)
     {
@@ -38,7 +30,6 @@ public class ScreenManager : MonoBehaviour
 
     private void Start()
     {
-        AudioAPI = AudioManager.Instance;
         foreach (UIScreens item in MainMenuScreens)
         {
             if (item.Name.Equals("Upgrades") || item.Name.Equals("Levels"))
@@ -63,11 +54,11 @@ public class ScreenManager : MonoBehaviour
                 }
                 else
                 {
-                    if (DialogueManager.Instance.StoryWindowIsOpen())
+                    if (StoryController.Instance.StoryWindowIsOpen())
                     {
-                        DialogueManager.Instance.Close();
+                        StoryController.Instance.Close();
                     }
-                    else if (DialogueManager.Instance.StoryWindowIsOpen() == false)
+                    else if (StoryController.Instance.StoryWindowIsOpen() == false)
                     {
                         PlayerData playerData = PersistantData.GetPlayerData();
                         ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);

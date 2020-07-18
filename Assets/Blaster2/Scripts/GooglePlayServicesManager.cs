@@ -17,7 +17,7 @@ public class User
 
 
 }
-public class GooglePlayServicesManager:Singleton<GooglePlayServicesManager>
+public class GooglePlayServicesManager : Singleton<GooglePlayServicesManager>
 {
     public static void Initialize()
     {
@@ -39,7 +39,12 @@ public class GooglePlayServicesManager:Singleton<GooglePlayServicesManager>
     public static User GetUserInfo()
     {
 #if UNITY_ANDROID
+        if (GameServices.LocalUser == null)
+        {
+            return null;
+        }
         return new User(GameServices.LocalUser.image, GameServices.LocalUser.userName);
+
 #else
         return new User(null, "Over9000");
 #endif

@@ -21,10 +21,11 @@ MonoBehaviour:
       interstitialAdNetwork: 0
       rewardedAdNetwork: 0
     mAndroidDefaultAdNetworks:
-      bannerAdNetwork: 10
+      bannerAdNetwork: 0
       interstitialAdNetwork: 10
       rewardedAdNetwork: 10
     mAdColony:
+      mEnable: 0
       mAppId:
         mIosId: 
         mAndroidId: 
@@ -44,6 +45,7 @@ MonoBehaviour:
         keys: []
         values: []
     mAdMob:
+      mEnable: 0
       mTargetingSettings:
         mTagForChildDirectedTreatment: 0
         mExtraOptions:
@@ -72,7 +74,7 @@ MonoBehaviour:
         keys: []
         values: []
     mAppLovin:
-      mEnableTestMode: 0
+      mEnable: 0
       mAgeRestrictMode: 0
       mSDKKey: 
       mDefaultBannerAdId:
@@ -94,6 +96,7 @@ MonoBehaviour:
         keys: []
         values: []
     mFBAudience:
+      mEnable: 0
       mBannerAdSize: 0
       mEnableTestMode: 0
       mTestDevices: []
@@ -116,14 +119,21 @@ MonoBehaviour:
         keys: []
         values: []
     mChartboost:
+      mEnable: 0
       mCustomInterstitialPlacements: []
       mCustomRewardedPlacements: []
-    mHeyzap:
+    mFairBid:
+      mEnable: 0
       mPublisherId: 
       mShowTestSuite: 0
+      mDefaultBannerId: 
+      mDefaultInterstitialAdId: 
+      mDefaultRewardedAdId: 
+      mCustomBannerPlacements: []
       mCustomInterstitialPlacements: []
       mCustomRewardedPlacements: []
     mIronSource:
+      mEnable: 0
       mAppId:
         mIosId: 
         mAndroidId: 
@@ -140,6 +150,7 @@ MonoBehaviour:
           keys: []
           values: []
     mMoPub:
+      mEnable: 0
       mReportAppOpen: 0
       mITuneAppID: 
       mEnableLocationPassing: 0
@@ -168,6 +179,7 @@ MonoBehaviour:
         keys: []
         values: []
     mTapjoy:
+      mEnable: 0
       mAutoReconnect: 1
       mAutoReconnectInterval: 10
       mDefaultInterstitialAdId:
@@ -183,6 +195,7 @@ MonoBehaviour:
         keys: []
         values: []
     mUnityAds:
+      mEnable: 1
       mAppId:
         mIosId: 2725712
         mAndroidId: 2725712
@@ -261,29 +274,29 @@ MonoBehaviour:
     mAndroidXmlResources: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<!--\r\nGoogle
       Play game services IDs.\r\nSave this file as res/values/games-ids.xml in your
       project.\r\n-->\r\n<resources>\r\n  <!-- app_id -->\r\n  <string name=\"app_id\"
-      translatable=\"false\">417407728869</string>\r\n  <!-- package_name -->\r\n
-      <string name=\"package_name\" translatable=\"false\">com.thegamerurso.blaster2</string>\r\n
-      <!-- achievement Prologue Completed -->\r\n  <string name=\"achievement_prologue_completed\"
+      translatable=\"false\">417407728869</string>\r\n  <!-- package_name -->\r\n<string
+      name=\"package_name\" translatable=\"false\">com.thegamerurso.blaster2</string>\r\n<!--
+      achievement Prologue Completed -->\r\n  <string name=\"achievement_prologue_completed\"
       translatable=\"false\">CgkI5fnB-5IMEAIQBA</string>\r\n  <!-- achievement Level
-      1 Completed -->\r\n  <string name=\"achievement_level_1_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQBQ</string>\r\n
-      <!-- achievement Level 2 Completed -->\r\n  <string name=\"achievement_level_2_completed\"
+      1 Completed -->\r\n  <string name=\"achievement_level_1_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQBQ</string>\r\n<!--
+      achievement Level 2 Completed -->\r\n  <string name=\"achievement_level_2_completed\"
       translatable=\"false\">CgkI5fnB-5IMEAIQBg</string>\r\n  <!-- achievement Level
-      3 Completed -->\r\n  <string name=\"achievement_level_3_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQBw</string>\r\n
-      <!-- achievement Level 4 Completed -->\r\n  <string name=\"achievement_level_4_completed\"
+      3 Completed -->\r\n  <string name=\"achievement_level_3_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQBw</string>\r\n<!--
+      achievement Level 4 Completed -->\r\n  <string name=\"achievement_level_4_completed\"
       translatable=\"false\">CgkI5fnB-5IMEAIQCA</string>\r\n  <!-- achievement Level
-      5 Completed -->\r\n  <string name=\"achievement_level_5_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQCQ</string>\r\n
-      <!-- achievement Level 6 Completed -->\r\n  <string name=\"achievement_level_6_completed\"
+      5 Completed -->\r\n  <string name=\"achievement_level_5_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQCQ</string>\r\n<!--
+      achievement Level 6 Completed -->\r\n  <string name=\"achievement_level_6_completed\"
       translatable=\"false\">CgkI5fnB-5IMEAIQCg</string>\r\n  <!-- achievement Level
-      7 Completed -->\r\n  <string name=\"achievement_level_7_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQCw</string>\r\n
-      <!-- achievement Level 8 Completed -->\r\n  <string name=\"achievement_level_8_completed\"
+      7 Completed -->\r\n  <string name=\"achievement_level_7_completed\" translatable=\"false\">CgkI5fnB-5IMEAIQCw</string>\r\n<!--
+      achievement Level 8 Completed -->\r\n  <string name=\"achievement_level_8_completed\"
       translatable=\"false\">CgkI5fnB-5IMEAIQDA</string>\r\n  <!-- achievement Piece
-      of Cake -->\r\n  <string name=\"achievement_piece_of_cake\" translatable=\"false\">CgkI5fnB-5IMEAIQDQ</string>\r\n
-      <!-- achievement Destroyer -->\r\n  <string name=\"achievement_destroyer\"
-      translatable=\"false\">CgkI5fnB-5IMEAIQDg</string>\r\n  <!-- achievement Heroes
-      Assemble -->\r\n  <string name=\"achievement_heroes_assemble\" translatable=\"false\">CgkI5fnB-5IMEAIQDw</string>\r\n
-      <!-- achievement Max Power! -->\r\n  <string name=\"achievement_max_power\"
-      translatable=\"false\">CgkI5fnB-5IMEAIQEA</string>\r\n  <!-- leaderboard Survival
-      Mode -->\r\n  <string name=\"leaderboard_survival_mode\" translatable=\"false\">CgkI5fnB-5IMEAIQEQ</string>\r\n</resources>\r\n"
+      of Cake -->\r\n  <string name=\"achievement_piece_of_cake\" translatable=\"false\">CgkI5fnB-5IMEAIQDQ</string>\r\n<!--
+      achievement Destroyer -->\r\n  <string name=\"achievement_destroyer\" translatable=\"false\">CgkI5fnB-5IMEAIQDg</string>\r\n 
+      <!-- achievement Heroes Assemble -->\r\n  <string name=\"achievement_heroes_assemble\"
+      translatable=\"false\">CgkI5fnB-5IMEAIQDw</string>\r\n<!-- achievement Max
+      Power! -->\r\n  <string name=\"achievement_max_power\" translatable=\"false\">CgkI5fnB-5IMEAIQEA</string>\r\n 
+      <!-- leaderboard Survival Mode -->\r\n  <string name=\"leaderboard_survival_mode\"
+      translatable=\"false\">CgkI5fnB-5IMEAIQEQ</string>\r\n</resources>\r\n"
     mEnableMultiplayer: 0
     mEnableSavedGames: 0
     mAutoConflictResolutionStrategy: 0
@@ -465,5 +478,5 @@ MonoBehaviour:
   mIsGameServiceModuleEnable: 1
   mIsNotificationModuleEnable: 0
   mIsSharingModuleEnable: 0
-  mActiveModuleIndex: 0
-  mIsSelectingModule: 0
+  mActiveModuleIndex: 1
+  mIsSelectingModule: 1

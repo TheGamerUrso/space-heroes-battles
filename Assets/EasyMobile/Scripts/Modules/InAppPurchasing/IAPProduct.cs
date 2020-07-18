@@ -40,13 +40,21 @@ namespace EasyMobile
         /// Product price.
         /// </summary>
         /// <value>The price.</value>
-        public string Price { get { return _price; } }
+        public string Price
+        {
+            get { return _price; }
+            set { _price = value; }
+        }
 
         /// <summary>
         /// Product description.
         /// </summary>
         /// <value>The description.</value>
-        public string Description { get { return _description; } }
+        public string Description
+        {
+            get { return _description; }
+            set { _description = value; }
+        }
 
         /// <summary>
         /// Store-specific product Ids, these Ids if given will override the unified Id for the corresponding stores.
@@ -83,6 +91,47 @@ namespace EasyMobile
         {
             public IAPStore store;
             public string id;
+
+            internal StoreSpecificId() { }
+
+            public StoreSpecificId(IAPStore store, string id)
+            {
+                this.store = store;
+                this.id = id;
+            }
+        }
+
+        internal IAPProduct() { }
+
+        /// <summary>
+        /// Creates a new IAP product definition.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="price"></param>
+        /// <param name="description"></param>
+        public IAPProduct(string id, string name, IAPProductType type, string price, string description = null)
+        {
+            _id = id;
+            _name = name;
+            _type = type;
+            _price = price;
+            _description = description;
+        }
+
+        /// <summary>
+        /// Creates a new IAP product definition.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="storeSpecificIds"></param>
+        /// <param name="name"></param>
+        /// <param name="type"></param>
+        /// <param name="price"></param>
+        /// <param name="description"></param>
+        public IAPProduct(string id, StoreSpecificId[] storeSpecificIds, string name, IAPProductType type, string price, string description = null) : this(id, name, type, price, description)
+        {
+            _storeSpecificIds = storeSpecificIds;
         }
     }
 }

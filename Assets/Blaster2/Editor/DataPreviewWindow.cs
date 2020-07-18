@@ -62,7 +62,7 @@ public class DataPreviewWindow : EditorWindow
             GUILayout.BeginHorizontal();
             if (playerShipData.Upgrades.Length > 0)
             {
-                string[] values = Enum.GetNames(typeof(UpgradeType));
+                string[] values = Enum.GetNames(typeof(UpgradeTypeEnum));
 
                 for (int i = 0; i < playerShipData.Upgrades.Length; i++)
                 {

@@ -4,7 +4,7 @@ using UnityEngine;
 namespace EasyMobile
 {
     [Serializable]
-    public class ChartboostSettings
+    public class ChartboostSettings : AdNetworkSettings
     {
         /// <summary>
         /// Gets or sets Chartboost's custom interstitial placements (used in <see cref="AutoLoadAdsMode.LoadAllDefinedPlacements"/>).

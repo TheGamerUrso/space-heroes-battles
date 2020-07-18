@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EasyMobile
 {
     [Serializable]
-    public class AudienceNetworkSettings
+    public class AudienceNetworkSettings : AdNetworkSettings
     {
         /// <summary>
         /// Gets or sets default banner ad size.

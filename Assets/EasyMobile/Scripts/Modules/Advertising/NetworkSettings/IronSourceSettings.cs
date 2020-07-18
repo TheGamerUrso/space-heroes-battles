@@ -6,7 +6,7 @@ using EasyMobile.Internal;
 namespace EasyMobile
 {
     [Serializable]
-    public class IronSourceSettings
+    public class IronSourceSettings : AdNetworkSettings
     {
         /// <summary>
         /// Gets or sets the IronSource app identifier.
@@ -54,7 +54,7 @@ namespace EasyMobile
             public string segmentName = null;
             public StringStringSerializableDictionary customParams;
 
-            #if EM_IRONSOURCE
+#if EM_IRONSOURCE
             public IronSourceSegment ToIronSourceSegment()
             {
                 IronSourceSegment segment = new IronSourceSegment
@@ -78,7 +78,7 @@ namespace EasyMobile
 
                 return segment;
             }
-            #endif
+#endif
         }
 
         public enum IronSourceBannerType

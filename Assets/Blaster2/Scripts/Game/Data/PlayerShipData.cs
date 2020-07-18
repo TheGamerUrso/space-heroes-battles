@@ -35,7 +35,7 @@ public class PlayerShipData
     {
         get
         {
-            if (Upgrades[(int)UpgradeType.Shield] == 0)
+            if (Upgrades[(int)UpgradeTypeEnum.Shield] == 0)
             {
                 return false;
             }
@@ -50,7 +50,7 @@ public class PlayerShipData
     {
         get
         {
-            if (Upgrades[(int)UpgradeType.ArmorUpgrade] == 1)
+            if (Upgrades[(int)UpgradeTypeEnum.ArmorUpgrade] == 1)
             {
                 return true;
             }
@@ -68,12 +68,12 @@ public class PlayerShipData
         level = 1;
         xp = 0;
         xpToLevel = 100;
-        Upgrades = new int[Enum.GetValues(typeof(UpgradeType)).Length];
+        Upgrades = new int[Enum.GetValues(typeof(UpgradeTypeEnum)).Length];
     }
 
-    public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeType.Speed]; }
-    public float GetDamageUpgrade() { return Upgrades[(int)UpgradeType.Damage]; }
-    public float GetFireRateUpgrade() { return Upgrades[(int)UpgradeType.FireRate]; }
+    public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Speed]; }
+    public float GetDamageUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Damage]; }
+    public float GetFireRateUpgrade() { return Upgrades[(int)UpgradeTypeEnum.FireRate]; }
 
     public void SetUpgrades(int[] Upgrades)
     {
@@ -87,13 +87,13 @@ public class PlayerShipData
 
     public float[] GetCalculatedUpgradeStats()
     {
-        var GameControllerSpeedValue = Upgrades[(int)UpgradeType.Speed];
-        var GameControllerDamageValue = Upgrades[(int)UpgradeType.Damage];
-        var GameControllerFireRateValue = Upgrades[(int)UpgradeType.FireRate];
-        var GameControllerMagnetPowerValue = Upgrades[(int)UpgradeType.MagnetStrength];
-        var GameControllerActivtateDistanceValue = Upgrades[(int)UpgradeType.MagnetDistance];
-        var GameControllerSuperTime = Upgrades[(int)UpgradeType.SuperrechargeTime];
-        var GameControllerSuperDamage = Upgrades[(int)UpgradeType.SuperDamage];
+        var GameControllerSpeedValue = Upgrades[(int)UpgradeTypeEnum.Speed];
+        var GameControllerDamageValue = Upgrades[(int)UpgradeTypeEnum.Damage];
+        var GameControllerFireRateValue = Upgrades[(int)UpgradeTypeEnum.FireRate];
+        var GameControllerMagnetPowerValue = Upgrades[(int)UpgradeTypeEnum.MagnetStrength];
+        var GameControllerActivtateDistanceValue = Upgrades[(int)UpgradeTypeEnum.MagnetDistance];
+        var GameControllerSuperTime = Upgrades[(int)UpgradeTypeEnum.SuperrechargeTime];
+        var GameControllerSuperDamage = Upgrades[(int)UpgradeTypeEnum.SuperDamage];
 
         var SpeedMultiplier = 0.25f * GameControllerSpeedValue;
         var DamageMultiplier = 1f * GameControllerDamageValue;

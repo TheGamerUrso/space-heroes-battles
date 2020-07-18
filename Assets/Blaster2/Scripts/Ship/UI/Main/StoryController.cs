@@ -1,78 +1,58 @@
-﻿using System.Collections;
-using TMPro;
+﻿using Doozy.Engine.UI;
+using System;
 using UnityEngine;
-public class StoryController : MonoBehaviour
+
+public class StoryController : MonoSingleton<StoryController>
 {
-    public GameObject StoryCanvas;
-    public TextMeshProUGUI textMeshProUGUI;
+    public GameObject ConversationWidget;
+    private int currentMission;
 
-    [Multiline]
-    public string[] storystrings;
-
-    public int currentStoryToPlay;
-    public bool KeyPressed;
-
-    private void Start()
+    public void Open()
     {
-        StartCoroutine(StoryCoroutine());
+   
+        Mission mission = PersistantData.GetMission(currentMission - 1);
+        ConversationWidget.GetComponent<StoryView>().SetStory(mission.Description);
+
+        ConversationWidget.SetActive(true);
+    }
+
+    public void Close()
+    {
+        ConversationWidget.SetActive(false);
+    }
+
+    public bool StoryWindowIsOpen()
+    {
+        if (ConversationWidget.gameObject.activeSelf)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void Update()
     {
-        if (Input.anyKeyDown)
+        // Make sure user is on Android platform
+        if (Application.platform == RuntimePlatform.Android)
         {
-            KeyPressed = true;
+            // Check if Back was pressed this frame
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                Close();
+            }
         }
     }
 
-    private IEnumerator StoryCoroutine()
+    public void ShowStory(int missionIndex)
     {
-        while (currentStoryToPlay < storystrings.Length)
+        currentMission = missionIndex;
+        if (!PlayerPrefsUtils.LoadBool("Level" + currentMission))
         {
-            string textToShow = "";
-            char[] charArray = storystrings[currentStoryToPlay].ToCharArray();
-
-            for (int i = 0; i < charArray.Length; i++)
-            {
-                if (charArray[i].Equals('@'))
-                {
-                    int numb = int.Parse("" + charArray[i + 1]);
-                    DiscussionManager.Instance.StartDiscussion(numb);
-                }
-
-                if (charArray[i].Equals('%'))
-                {
-                    GameManager.Instance.LoadScene("Level" + "" + charArray[i]);
-                }
-
-                textToShow += "" + charArray[i];
-            }
-
-            while (DiscussionManager.Instance.IsPlayingDiscussion())
-            {
-                StoryCanvas.SetActive(false);
-                yield return new WaitForSeconds(1);
-            }
-
-            textMeshProUGUI.text = textToShow;
-
-            StoryCanvas.SetActive(true);
-
-            while (KeyPressed == false)
-            {
-                yield return null;
-            }
-
-            currentStoryToPlay++;
-
-            yield return new WaitForSeconds(1);
-
-            if (currentStoryToPlay >= storystrings.Length)
-            {
-                currentStoryToPlay = storystrings.Length;
-            }
-
-            KeyPressed = false;
+            Open();
+            PlayerPrefsUtils.SaveBool("Level" + currentMission, 1);
         }
     }
 }
