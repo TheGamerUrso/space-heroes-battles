@@ -7,6 +7,20 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoSingleton<GameController>
 {
+    public enum GameState
+    {
+        Start,Game,GameOver,Results
+    }
+
+    public GameState currentGameState = GameState.Start;
+    public static GameState CurrentGameState
+    {
+        get
+        {
+            return Instance.currentGameState;
+        }
+    }
+
     [SerializeField] private GameObject EnemyWaypoints;
     private GameObject player;
     private PlayerShip playerShip;
@@ -57,19 +71,8 @@ public class GameController : MonoSingleton<GameController>
     protected override void Awake()
     {
         base.Awake();
+
         baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
-    }
-
-    void Start()
-    {
-        Application.targetFrameRate = 60;
-
-        if (AudioManager.Instance)
-            AudioManager.PlayRandomMusic(true);
-
-        GameSession.Reset();
-
-        StartCoroutine(StartGameDelay());
 
         Instantiate(EnemyWaypoints, transform, false);
 
@@ -92,28 +95,63 @@ public class GameController : MonoSingleton<GameController>
         {
             var tutorial = Instantiate(Tutorial, transform, false);
         }
-
     }
 
-    IEnumerator StartGameDelay()
+    void Start()
     {
+        Application.targetFrameRate = 60; 
+
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-
-        yield return new WaitForSeconds(1.0f);
-
-        if (PlayerManager.GetPlayer() == null)
-        {
-            int shipSelected = playerData.currentSelectedShip;
-            player = PlayerManager.CreatePlayer(shipSelected);
-            playerShip = player.GetComponentInChildren<PlayerShip>();
-        }
 
         Events.PlayerShipDeath += PlayerShipCallback;
         Events.SpawnEnded += Win;
         Events.EnemyDied += EnemyDied;
 
-        baseGameMode.InitReference(playerData, playerShip);
+        SetGameState(GameState.Start);
+
+        StartCoroutine(StartGameDelay());
+    }
+
+    IEnumerator StartGameDelay()
+    {
+        yield return new WaitForSeconds(1.0f);
+        SetGameState(GameState.Game);
+    }
+
+    public void SetGameState(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.Start:
+                if (AudioManager.Instance)
+                    AudioManager.PlayRandomMusic(true);
+
+                GameSession.Reset();
+
+                if (PlayerManager.GetPlayer() == null)
+                {
+                    int shipSelected = playerData.currentSelectedShip;
+                    player = PlayerManager.CreatePlayer(shipSelected);
+                    playerShip = player.GetComponentInChildren<PlayerShip>();
+                }
+                baseGameMode.InitReference(playerData, playerShip);
+                break;
+            case GameState.Game:
+                break;
+            case GameState.GameOver:
+                break;
+            case GameState.Results:
+                break;
+            default:
+                break;
+        }
+        currentGameState = gameState;
+    }
+
+    public GameState GetGameState()
+    {
+        return currentGameState;
     }
 
     private void EnemyDied(string name, BaseEnemy baseEnemy)

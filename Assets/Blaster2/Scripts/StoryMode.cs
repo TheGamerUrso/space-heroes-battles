@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class StoryMode : BaseGameMode
 {
-    public override void OnStart()
+    public override void Start()
     {
         playerShip = PlayerManager.GetPlayer();
 
@@ -40,6 +40,11 @@ public class StoryMode : BaseGameMode
 
     public override IEnumerator Spawn()
     {
+        while(GameController.Instance.currentGameState == GameController.GameState.Start)
+        {
+            yield return null;
+        }
+
         yield return new WaitForSeconds(1.0f);
 
         // Debug.Log("Game Started");
@@ -52,9 +57,9 @@ public class StoryMode : BaseGameMode
         var startingTotalEnemies = TotalEnemies;
         bool IncomingDanger = false;
 
-        while (!GameEnded)
+        while (GameController.Instance.currentGameState == GameController.GameState.Game)
         {
-            while (GuiManager.Instance.IsTrasnmiting() || GameEnded)
+            while (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState != GameController.GameState.Game)
             {
                 yield return waitForEndOfFrame;
             }

@@ -45,32 +45,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         this.playerShip = playerShip;
     }
 
-    public void Start()
-    {
-        OnStart();
-    }
-
-    public virtual void OnStart()
-    {
-        MissionCollection missionCollection = PersistantData.GetMissionCollection();
-
-        Scene scene = SceneManager.GetActiveScene();
-        string index = scene.name[scene.name.Length - 1].ToString();
-        Mission mission = missionCollection.GetMission(int.Parse(index));
-        LevelDifficulty = mission.Level;
-
-        TotalEnemies = numberOfEnemiesEachWave * waves;
-
-        GameSession.EnemySpawnInTotal = TotalEnemies;
-
-        for (int i = 0; i < availableEnemies; i++)
-        {
-            ListOfEnemyElements.Add(enemyElements[i].Name, enemyElements[i]);
-        }
-
-        StartCoroutine(StartGameDelay());
-    }
-
+    public virtual void Start() { }
 
     public void LateUpdate()
     {

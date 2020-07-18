@@ -144,18 +144,21 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     private void Update()
     {
-        if (Time.timeScale == 1)
+        if (GameController.CurrentGameState == GameController.GameState.Game)
         {
-            timer -= Time.deltaTime;
-            if (timer <= 0)
+            if (Time.timeScale == 1)
             {
-                pauseButton.SetActive(false);
+                timer -= Time.deltaTime;
+                if (timer <= 0)
+                {
+                    pauseButton.SetActive(false);
+                }
             }
-        }
-        else
-        {
-            timer = 1;
-            pauseButton.SetActive(true);
+            else
+            {
+                timer = 1;
+                pauseButton.SetActive(true);
+            }
         }
     }
 

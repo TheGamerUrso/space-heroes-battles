@@ -12,14 +12,10 @@ public class SurvivalMode : BaseGameMode
     WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
     WaitForSeconds waitForCooldown = new WaitForSeconds(2);
     WaitForSeconds shortWait = new WaitForSeconds(1);
-
-    public override void OnStart()
+    public override void Start()
     {
         playerShip = PlayerManager.GetPlayer();
-
         LevelDifficulty = 1;
-
-
 
         TotalEnemies = numberOfEnemiesEachWave * 2;
 
@@ -37,6 +33,7 @@ public class SurvivalMode : BaseGameMode
 
         GameSession.SurvivalMode = true;
     }
+
 
     public void NewWave()
     {
@@ -78,14 +75,15 @@ public class SurvivalMode : BaseGameMode
 
     public override IEnumerator Spawn()
     {
-        //Debug.Log("Game Started");
-
+        while (GameController.Instance.currentGameState == GameController.GameState.Start)
+        {
+            yield return null;
+        }
 
         var startingTotalEnemies = TotalEnemies;
 
-        while (!GameEnded)
+        while (GameController.Instance.currentGameState == GameController.GameState.Game)
         {
-
             while (GuiManager.Instance.IsTrasnmiting())
             {
                 yield return waitForEndOfFrame;
