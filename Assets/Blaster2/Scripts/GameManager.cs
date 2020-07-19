@@ -19,45 +19,45 @@ public struct PlayerShipElement
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    [Range(0, 20)]
-    public int LevelDifficuilty;
-    public static int LevelIndexSelected = 0;
-
-    [SerializeField] private PlayerShipElement[] PlayerShips;
-    [SerializeField] private GameObject levelupAnnouncement;
-    [SerializeField] private GameObject[] SystemPrefabs;
-    private static float DefaultTimeDeltaScale;
     private GameStateEnum currentGameState = GameStateEnum.PRELOAD;
+    private static float DefaultTimeDeltaScale;
+    WaitForSeconds shortWait = new WaitForSeconds(2.0f);
+
+    public static int LevelIndexSelected = 0;
+    public string currentLevelLoaded;
+
+    private PlayerData playerData;
+    [SerializeField] private GameObject LevelUpPrefab;
+    [SerializeField] private PlayerShipElement[] PlayerShips;
+
+    [SerializeField] private GameObject[] SystemPrefabs;
+
     private List<GameObject> _instancedSystemPrefabs;
+
+
+    #region SceneManagment
+    private AsyncOperation ao;
+    private List<AsyncOperation> _loadOperation;
+    private bool unloading;
+    #endregion
+
+    #region Loading Screen
+    [Header("LoadingScreen")]
+    [SerializeField] private Image progressBar;
+
+    [SerializeField] private CanvasGroup BlockRaycast;
+    [SerializeField] private GameObject ProgressBarPanel;
+    [SerializeField] private GameObject Content;
+    [SerializeField] private GateControl[] Gates;
+    #endregion
+
+    #region Tweening
     private bool autoKillMode;
     private bool useSafeMode;
     private LogBehaviour logBehaviour;
-    private WaitForEndOfFrame waitForEndFrame = new WaitForEndOfFrame();
-    private WaitForSeconds shortWait = new WaitForSeconds(2.0f);
-    private AsyncOperation ao;
-    private PlayerData playerData;
-    private PlayerShipData playerShipData;
+    #endregion Tweening
 
-    #region SceneManagment
-    public bool IsLoading { get; private set; }
-
-    List<AsyncOperation> _loadOperation;
-    private bool unloading;
-
-    public bool ManualFadeIn = false;
-
-    private Animator animator;
-    public Image progressBar;
-
-    public CanvasGroup BlockRaycast;
-    public GameObject ProgressBarPanel;
-    public GameObject Content;
-
-    public string currentLevelLoaded;
-
-    public GateControl[] Gates;
-
-    #endregion
+ 
 
 
 
@@ -98,8 +98,6 @@ public class GameManager : MonoSingleton<GameManager>
         base.Awake();
         DontDestroyOnLoad(gameObject);
 
-        animator = GetComponentInChildren<Animator>();
-
         _instancedSystemPrefabs = new List<GameObject>();
         _loadOperation = new List<AsyncOperation>();
 
@@ -136,7 +134,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnLevelValueChanged(int Level)
     {
-        Instance.levelupAnnouncement.SetActive(true);
+        var lvlUp = Instantiate(LevelUpPrefab, transform, false);
 
         PlayerShipData playerShipData = playerData.playerShipData[0];
 
@@ -191,13 +189,11 @@ public class GameManager : MonoSingleton<GameManager>
         {
             _loadOperation.Remove(ao);
 
-            IsLoading = false;
-
             UpdateProgress(1f);
 
             SceneManager.SetActiveScene(SceneManager.GetSceneByName(currentLevelLoaded));
 
-            Events.OnSceneLoadFinished?.Invoke(currentLevelLoaded, ManualFadeIn);
+            Events.OnSceneLoadFinished?.Invoke(currentLevelLoaded);
         }
 
     }
@@ -313,5 +309,11 @@ public class GameManager : MonoSingleton<GameManager>
         }
 
 
+    }
+
+    public void SetSurvivalScore(int ammount)
+    {
+        int levelIndex = GameManager.LevelIndexSelected;
+        playerData.SetScore(levelIndex, Game.Score);
     }
 }

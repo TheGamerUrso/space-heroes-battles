@@ -40,11 +40,11 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
     public void OnShipSelectValueChanged(int selection)
     {
-        playerData.currentSelectedShip = selection;
+        playerData.CurrrentSelectedShip = selection;
         playerShipData = playerData.GetCurrentPlayerShipData();
         XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
     }
-
+  
     private void Start()
     {
         GameManager.Instance.PauseTheGame(false);
@@ -75,6 +75,8 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
                 }
             }
         }
+
+        shipSelect.SetShipTexture(playerData.CurrrentSelectedShip);
     }
 
     public void LevelValueChanged(int lvl)

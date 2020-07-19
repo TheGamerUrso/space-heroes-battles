@@ -7,165 +7,42 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    #region Player Statistics
+    [Header("Surval Mode")]
     public long SurvivalScore;
     public long SurvivalHighScore;
 
-    public float[] score;
+    [Header("Story Mode")]
     public float[] Score;
     public float[] HighScore;
 
-    public int coins;
-    public int TotalKills;
-    public int LevelUnlocked;
-    public bool survivalUnlocked;
 
-    public int TotalMoneySpend;
-    public int TotalSuperUsed;
-    public int WaveSurvived;
-    public int m_EnemyKilled;
-    public bool GotHitInGame;
-    public bool PlayedGame;
-    public int superUsed;
+    [Header("Progression")]
+    public int LevelUnlocked;
+    public bool SurvivalUnlocked;
     public int[] UnlockedHeroes;
 
-    public float powerUpLevel = 0;
-    public int powerPackCollected = 0;
+    [Header("Statistics")]
+    public int Coins;
+    public int Kills;
+    public int CoinSpend;
+    public int SuperUsed;
+    public int WaveSurvived;
+
+    public bool GotHitInGame;
+    public bool PlayedGame;
 
 
-    #endregion
+    [Header("Stats")]
+    public float PowerUpLevel = 0;
+    public int PowerPackCollected = 0;
+    public int CurrrentSelectedShip;
 
-    #region Player Settings
-    public int currentSelectedShip;
+    [Header("Settings")]
     public float SFXVolume;
     public float MusicVolume;
     public bool AutoAttack;
     public bool mute;
-    public float distance;
-    #endregion
-
-    #region Properties
-    public int Coins
-    {
-        get
-        {
-            return coins;
-        }
-        set
-        {
-            coins = value;
-            Events.OnCoinValueChanged?.Invoke(coins);
-        }
-    }
-
-    public int SuperUsed
-    {
-        get { return superUsed; }
-        set
-        {
-            superUsed = value;
-            Events.OnSuperUseValueChanged?.Invoke(superUsed);
-        }
-    }
-
-    public int CurrrentSelectedShip
-    {
-        get
-        {
-            return currentSelectedShip;
-        }
-
-        set
-        {
-            currentSelectedShip = value;
-            Events.OnShipSelectValueChanged?.Invoke(value);
-        }
-    }
-
-    public float Distance
-    {
-        get
-        {
-            return distance;
-        }
-
-        set
-        {
-            distance = value;
-            Events.OnDistanceValueChanged?.Invoke(distance);
-        }
-    }
-    public int Level
-    {
-        get
-        {
-            return GetCurrentPlayerShipData().level;
-        }
-        set
-        {
-            GetCurrentPlayerShipData().level = value;
-            Events.OnLevelValueChanged?.Invoke(Level);
-        }
-    }
-    public float XP
-    {
-        get
-        {
-            return GetCurrentPlayerShipData().xp;
-        }
-        set
-        {
-            GetCurrentPlayerShipData().xp = value;
-            Events.OnXpValueChanged?.Invoke(GetCurrentPlayerShipData().level, GetCurrentPlayerShipData().xp, GetCurrentPlayerShipData().xpToLevel);
-        }
-    }
-
-    public int PowerPackCollected
-    {
-        get
-        {
-            return powerPackCollected;
-        }
-        set
-        {
-            powerPackCollected = value;
-            if (powerPackCollected > 5)
-            {
-                powerPackCollected = 5;
-            }
-            Events.OnPowerPackCollected?.Invoke(powerPackCollected);
-        }
-    }
-
-    public float PowerUpLevel
-    {
-        get
-        {
-            return powerUpLevel;
-        }
-
-        set
-        {
-            powerUpLevel = value;
-            Events.PowerUpLevelValueChanged?.Invoke(powerUpLevel);
-        }
-    }
-
-    public bool SurvivalUnlocked
-    {
-        get
-        {
-            return survivalUnlocked;
-        }
-
-        set
-        {
-            survivalUnlocked = value;
-        }
-    }
-
-
-    #endregion
+    public float Distance;
 
     public int MaxLevel { get; set; }
     public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
@@ -179,12 +56,11 @@ public class PlayerData
         Score = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         HighScore = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
         Coins = 0;
-        TotalKills = 0;
-        powerUpLevel = 0;
-        TotalMoneySpend = 0;
+        Kills = 0;
+        PowerUpLevel = 0;
+        CoinSpend = 0;
         WaveSurvived = 0;
-        TotalSuperUsed = 0;
-        m_EnemyKilled = 0;
+        SuperUsed = 0;
         GotHitInGame = false;
         PlayedGame = false;
         UnlockedHeroes = new int[4];
@@ -193,11 +69,83 @@ public class PlayerData
         MusicVolume = .7f;
         AutoAttack = true;
         mute = false;
-        distance = 5;
+        Distance = 5;
         playerShipData = new PlayerShipData[3];
         for (int i = 0; i < playerShipData.Length; i++)
         {
             playerShipData[i] = new PlayerShipData();
+        }
+    }
+
+    public void NewGame()
+    {
+        PowerUpLevel = 0;
+        PowerPackCollected = 0;
+    }
+
+    public void RemoveCoin(int ammount)
+    {
+        Coins -= ammount;
+        Events.OnCoinValueChanged?.Invoke(Coins);
+    }
+
+    public void IncreaseSuperUse()
+    {
+        SuperUsed++;
+        Events.OnSuperUseValueChanged?.Invoke(SuperUsed);
+    }
+
+    public void SetCurrentSelectShip(int select)
+    {
+        CurrrentSelectedShip = select;
+        Events.OnShipSelectValueChanged?.Invoke(CurrrentSelectedShip);
+    }
+
+    public void SetDistance(int option)
+    {
+        Distance = option;
+        Events.OnDistanceValueChanged?.Invoke(Distance);
+    }
+
+    public void SetXP(float ammount)
+    {
+        PlayerShipData playerShipData = GetCurrentPlayerShipData();
+        playerShipData.xp = ammount;
+        Events.OnXpValueChanged?.Invoke(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+    }
+
+    public void SetPowerPackCollected(int ammount)
+    {
+        PowerPackCollected += ammount;
+        if (PowerPackCollected > 5)
+        {
+            PowerPackCollected = 5;
+        }
+        Events.OnPowerPackCollected?.Invoke(PowerPackCollected);
+    }
+
+    public void SetPowerUpAmmount(float ammount)
+    {
+        PowerUpLevel += ammount;
+        Events.PowerUpLevelValueChanged?.Invoke(PowerUpLevel);
+    }
+
+    public void SetSurvivalUnlockedLock(bool value)
+    {
+        if (SurvivalUnlocked)
+        {
+            return;
+        }
+        SurvivalUnlocked = value;
+    }
+
+
+    public void SetSurvivalScore(int score)
+    {
+        SurvivalScore = score;
+        if (SurvivalScore > SurvivalHighScore)
+        {
+            SurvivalHighScore = SurvivalScore;
         }
     }
 
@@ -274,7 +222,7 @@ public class PlayerData
 
     public void SetMoneySpend(int ammount)
     {
-        TotalMoneySpend = ammount;
+        CoinSpend = ammount;
     }
 
     public void SetWaveSurvived(int value)
@@ -290,7 +238,7 @@ public class PlayerData
 
     public void SetTotalSuperUsed(int ammount)
     {
-        TotalSuperUsed = 0;
+        SuperUsed = 0;
     }
 
     public void AddCoin(int Ammount)
@@ -301,54 +249,64 @@ public class PlayerData
             Coins = 9999999;
         }
     }
-    public PlayerShipData GetCurrentPlayerShipData(int selection)
-    {
-        return playerShipData[selection];
-    }
 
     public PlayerShipData GetCurrentPlayerShipData()
     {
-        return playerShipData[currentSelectedShip];
+        return playerShipData[CurrrentSelectedShip];
     }
 
     public void EarnXP(float ammount)
     {
-        PlayerShipData currentPlayerShipSelected = playerShipData[currentSelectedShip];
+        PlayerShipData currentPlayerShipSelected = playerShipData[CurrrentSelectedShip];
+
+        var Level = currentPlayerShipSelected.level;
+        var XP = currentPlayerShipSelected.xp;
+        var xpToLevel = currentPlayerShipSelected.xpToLevel;
+
         if (Level < 20)
         {
-            XP += ammount;
-            if (XP >= currentPlayerShipSelected.xpToLevel)
+            if (XP >= xpToLevel)
             {
                 Level++;
                 XP = 0;
-                currentPlayerShipSelected.xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
+                xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
+
+                Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
             }
         }
         else
         {
             XP = 0;
-            currentPlayerShipSelected.xpToLevel = 0;
+            xpToLevel = 0;
             GooglePlayServicesManager.UnlockAchivement(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power);
         }
+
+        currentPlayerShipSelected.level = Level;
+        currentPlayerShipSelected.xp = XP;
+        currentPlayerShipSelected.xpToLevel = xpToLevel;
     }
 
     public void SetUpgrade(int upgrade, int value)
     {
-        PlayerShipData playerShipData1 = playerShipData[currentSelectedShip];
-        playerShipData1.Upgrades[upgrade] = value;
+        PlayerShipData currentPlayerShipSelected = playerShipData[CurrrentSelectedShip];
+        currentPlayerShipSelected.Upgrades[upgrade] = value;
         SaveSystem.SaveGame();
     }
     public void IncreasePowerUp(float value)
     {
         PowerUpLevel += value;
+        if (PowerUpLevel > 1)
+        {
+            PowerUpLevel = 1;
+        }
     }
     public float GetPowerUpLevelPresentage()
     {
-        return PowerUpLevel;
+        return PowerUpLevel / 1;
     }
     public void ResetWeaponPowerUPCollected()
     {
-        powerPackCollected = 0;
+        PowerPackCollected = 0;
     }
 
 }

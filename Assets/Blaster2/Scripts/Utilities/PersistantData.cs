@@ -1,17 +1,19 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using EasyMobile;
 using UnityEngine;
 
-public static class PersistantData
+[Serializable]
+public class PersistantData : MonoSingleton<PersistantData>
 {
-    private static PlayerData playerData;
-    private static GameSettings gameSettings;
-    private static MissionCollection missionCollection;
-    private static LevelObjectiveCollection LevelObjectiveCollection;
+    public PlayerData playerData;
+    public GameSettings gameSettings;
+    public MissionCollection missionCollection;
+    public LevelObjectiveCollection LevelObjectiveCollection;
 
     public static void ReplacePlayerData(PlayerData playerData)
     {
-        PersistantData.playerData = playerData;
+        Instance.playerData = playerData;
     }
 
     public static void Load()
@@ -27,9 +29,9 @@ public static class PersistantData
 
     public static void LoadData()
     {
-        missionCollection = JsonSystem.LoadMissions();
-        LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        playerData = new PlayerData(3);
+        Instance.missionCollection = JsonSystem.LoadMissions();
+        Instance.LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
+        Instance.playerData = new PlayerData(3);
 
         int firstRunIndex = 0;
 
@@ -43,14 +45,14 @@ public static class PersistantData
         {
             SaveSystem.LoadGame();
 
-           new GameSettings(
-                playerData.SFXVolume,
-                playerData.MusicVolume,
-                playerData.AutoAttack,
-                playerData.mute,
-                playerData.distance);
+            new GameSettings(
+                  Instance.playerData.SFXVolume,
+                  Instance.playerData.MusicVolume,
+                  Instance.playerData.AutoAttack,
+                  Instance.playerData.mute,
+                  Instance.playerData.Distance);
 
-            Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+            Dictionary<string, LevelObjectiveData[]> Challanges = Instance.playerData.GetListOfObjectives();
             int missionsCompleted = 1;
             foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
             {
@@ -60,7 +62,7 @@ public static class PersistantData
                 }
             }
 
-            playerData.LevelUnlocked = missionsCompleted;
+            Instance.playerData.LevelUnlocked = missionsCompleted;
         }
         else if (firstRunIndex == 0)
         {
@@ -74,7 +76,7 @@ public static class PersistantData
 
     public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
     {
-        return playerData.ListOfLevelChallenges;
+        return Instance.playerData.ListOfLevelChallenges;
     }
     public static LevelObjectiveData[] GetLevelChallegeById(string levelId)
     {
@@ -84,7 +86,7 @@ public static class PersistantData
     public static LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
     {
         LevelObjectiveData[] objectives;
-        if (playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
+        if (Instance.playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
         {
             return objectives;
         }
@@ -94,15 +96,15 @@ public static class PersistantData
 
     public static PlayerData GetPlayerData()
     {
-        return playerData;
+        return Instance.playerData;
     }
     public static Mission GetMission(int index)
     {
-        return missionCollection.GetMission(index);
+        return Instance.missionCollection.GetMission(index);
     }
     public static MissionCollection GetMissionCollection()
     {
-        return missionCollection;
+        return Instance.missionCollection;
     }
     public static int GetNumberOfData()
     {
@@ -110,19 +112,19 @@ public static class PersistantData
     }
     public static void GenerateLevelObjectiveData()
     {
-        if (playerData.ListOfLevelChallenges.Count == 0)
+        if (Instance.playerData.ListOfLevelChallenges.Count == 0)
         {
-            for (int i = 0; i < LevelObjectiveCollection.LevelObjective.Levels.Length; i++)
+            for (int i = 0; i < Instance.LevelObjectiveCollection.LevelObjective.Levels.Length; i++)
             {
-                int size = LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length;
+                int size = Instance.LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length;
                 LevelObjectiveData[] objectiveListData = new LevelObjectiveData[size];
-                for (int x = 0; x < LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length; x++)
+                for (int x = 0; x < Instance.LevelObjectiveCollection.LevelObjective.Levels[i].Objectives.Length; x++)
                 {
                     objectiveListData[x] = new LevelObjectiveData(
-                        LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].ID, LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].Description);
+                         Instance.LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].ID, Instance.LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].Description);
                 }
 
-                playerData.AddToListLevelChallenges(LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
+                Instance.playerData.AddToListLevelChallenges(Instance.LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
             }
         }
     }

@@ -99,6 +99,7 @@ GameObject:
   - component: {fileID: 2406176206008801005}
   - component: {fileID: 2406176206008801006}
   - component: {fileID: 7750451458050231462}
+  - component: {fileID: 1368961782361354534}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -135,6 +136,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LevelDifficuilty: 0
+  LevelUpPrefab: {fileID: 6012263806655745108, guid: 440f8c903dbb18e4bb08a219ae3dcd76,
+    type: 3}
   PlayerShips:
   - name: Player1
     prefab: {fileID: 931127140579759866, guid: 321ea5ea54e6ae04aa3daa1fa65fbce0, type: 3}
@@ -142,13 +145,11 @@ MonoBehaviour:
     prefab: {fileID: 3238502889484069330, guid: c949bc318d021f244a2cf5aa4fe09b5a,
       type: 3}
   - name: Player3
-    prefab: {fileID: 0}
-  levelupAnnouncement: {fileID: 9006864246963517243, guid: 36b19cf9567d82b4c94c3514a24272c1,
-    type: 3}
+    prefab: {fileID: 9006864246963517243, guid: 36b19cf9567d82b4c94c3514a24272c1,
+      type: 3}
   SystemPrefabs:
   - {fileID: 2111760551763934021, guid: 6843bdb91810c4b40869bd2d60451fce, type: 3}
   - {fileID: 5919914256748472182, guid: 16ed0c7cccc972d4390bcf9ef4d302fe, type: 3}
-  ManualFadeIn: 0
   progressBar: {fileID: 5819576853789052548}
   BlockRaycast: {fileID: 6990634311660618170}
   ProgressBarPanel: {fileID: 5819576853880517265}
@@ -188,6 +189,46 @@ MonoBehaviour:
         m_CallState: 2
   ListenForAllUIButtons: 0
   TriggerAction: 0
+--- !u!114 &1368961782361354534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2406176206008801007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1010ee6cb05a48844ac72ca18bbe4569, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerData:
+    SurvivalScore: 0
+    SurvivalHighScore: 0
+    Score: []
+    HighScore: []
+    LevelUnlocked: 0
+    SurvivalUnlocked: 0
+    UnlockedHeroes: 
+    Coins: 0
+    Kills: 0
+    CoinSpend: 0
+    SuperUsed: 0
+    WaveSurvived: 0
+    GotHitInGame: 0
+    PlayedGame: 0
+    PowerUpLevel: 0
+    PowerPackCollected: 0
+    CurrrentSelectedShip: 0
+    SFXVolume: 0
+    MusicVolume: 0
+    AutoAttack: 0
+    mute: 0
+    Distance: 0
+    ListOfOnGoingObjectives: []
+    playerShipData: []
+  missionCollection:
+    Missions: []
+    MissionName: 
 --- !u!1001 &4559050534840280342
 PrefabInstance:
   m_ObjectHideFlags: 0

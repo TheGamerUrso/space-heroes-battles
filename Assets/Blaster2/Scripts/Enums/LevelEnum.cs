@@ -1,6 +1,6 @@
 ﻿public enum LevelEnum 
 {
-   SplashScreen = 0,
+    SplashScreen = 0,
     boot = 1,
     Intro = 2,
     Main = 3,

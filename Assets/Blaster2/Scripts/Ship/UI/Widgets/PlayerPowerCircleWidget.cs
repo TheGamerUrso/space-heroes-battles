@@ -95,19 +95,19 @@ public class PlayerPowerCircleWidget : MonoBehaviour
     public void RefreshWeaponIndicatorSprite()
     {
         var sprite = WeaponIndicatorSpritesNotActivated[0];
-        var collecterUpgrade = playerData.powerPackCollected;
+        var collecterUpgrade = playerData.PowerPackCollected;
 
         if (m_PowerUps.fillAmount == 1)
         {
-            sprite = WeaponIndicatorSpritesActivated[playerData.powerPackCollected];
+            sprite = WeaponIndicatorSpritesActivated[playerData.PowerPackCollected];
         }
         else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
         {
-            sprite = WeaponIndicatorSpritesNotActivated[playerData.powerPackCollected];
+            sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
         }
         else
         {
-            sprite = WeaponIndicatorSpritesNotActivated[playerData.powerPackCollected];
+            sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
         }
 
         WeaponIndicatorImage.sprite = sprite;

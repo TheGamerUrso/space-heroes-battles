@@ -84,8 +84,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public void BossGotHit(string id, BaseEnemy baseEnemy)
     {
-        if (playerData != null)
-            playerData.PowerUpLevel += .025f;
+        playerData.SetPowerUpAmmount(0.025f);
     }
 
     public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
@@ -97,8 +96,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
-        if (playerData != null)
-            playerData.PowerUpLevel += .025f;
+        playerData.SetPowerUpAmmount(0.025f);
     }
 
     public virtual void BossDiedCallback(string id, BaseEnemy baseEnemy)

@@ -57,8 +57,8 @@ public class PlayerShip : Ship, IDamagable
 
         SetStats(playerShipData.level);
 
-        playerData.powerUpLevel = 0;
-        playerData.powerPackCollected = 0;
+
+        playerData.NewGame();
 
         Events.OnLevelValueChanged += OnLevelValueChanged;
     }
@@ -152,9 +152,9 @@ public class PlayerShip : Ship, IDamagable
         }
 #endif
 
-        if (playerData.powerPackCollected >= 5)
+        if (playerData.PowerPackCollected >= 5)
         {
-            playerData.powerPackCollected = 0;
+            playerData.PowerPackCollected = 0;
             UpgradeWeapon();
         }
     }
@@ -403,10 +403,10 @@ public class PlayerShip : Ship, IDamagable
 
     public void PowerUpCollected()
     {
-        if (playerData.powerPackCollected <= 5 && CurrentWeapnType < 4)
+        if (playerData.PowerPackCollected <= 5 && CurrentWeapnType < 4)
         {
-            playerData.PowerPackCollected += 2;
-            TempFireRateBuff(0.01f * playerData.powerPackCollected);
+            playerData.SetPowerPackCollected(2);
+            TempFireRateBuff(0.01f * playerData.PowerPackCollected);
         }
 
         GuiManager.CreateFloatingText("Power Up", transform.localPosition);

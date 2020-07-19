@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TurretSuper : SpecialAttack
 {
-    public float turretDuration;
-    public PlaceTurrets Turrets;
+    [SerializeField] private float turretDuration;
+    [SerializeField] private PlaceTurrets Turrets;
 
     public override void Start()
     {
@@ -19,7 +19,7 @@ public class TurretSuper : SpecialAttack
         {
             source.PlayOneShot(weaponData.ShootSFX);
 
-            playerData.superUsed++;
+            playerData.IncreaseSuperUse(); ;
 
             turretDuration = weaponData.SuperChargeTime;
             Turrets.DeployTurret();

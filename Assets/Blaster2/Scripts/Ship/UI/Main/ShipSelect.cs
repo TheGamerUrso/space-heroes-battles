@@ -11,17 +11,22 @@ public class ShipEventArgs : System.EventArgs
 
 public class ShipSelect : MonoSingleton<ShipSelect>
 {
-    public Camera shipCameraPreview;
-    public GameObject[] Ships;
-    private int currentShip;
-    public ShipSelectElement[] shipSelectElement;
 
-    public GameObject UIUnlockButton;
-    public GameObject UISelectButton;
+    [SerializeField] private Camera shipCameraPreview;
+    [SerializeField] private GameObject[] Ships;
 
-    public LayerMask Ship1Layermask;
-    public LayerMask Ship2Layermask;
-    public LayerMask Ship3Layermask;
+    [SerializeField] private ShipSelectElement[] shipSelectElement;
+
+    [SerializeField] private GameObject UIUnlockButton;
+    [SerializeField] private GameObject UISelectButton;
+
+    [SerializeField] private LayerMask Ship1Layermask;
+    [SerializeField] private LayerMask Ship2Layermask;
+    [SerializeField] private LayerMask Ship3Layermask;
+
+    private PlayerData playerData;
+    private int currentShipSelected;
+
     private void Start()
     {
         Initialize();
@@ -29,12 +34,7 @@ public class ShipSelect : MonoSingleton<ShipSelect>
 
     public void Initialize()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-
-        //foreach (GameObject item in Ships)
-        //{
-        //    item.SetActive(false);
-        //}
+        playerData = PersistantData.GetPlayerData();
 
         if (playerData.UnlockedHeroes.Length == 0)
         {
@@ -55,36 +55,51 @@ public class ShipSelect : MonoSingleton<ShipSelect>
             }
         }
 
-        currentShip = playerData.currentSelectedShip;
+        currentShipSelected = playerData.CurrrentSelectedShip;
 
-        GameEventSystem.OnShipSelect += SelectShip;
+        Events.OnShipSelect += SelectShip;
 
-        playerData.CurrrentSelectedShip = currentShip;
         RefreshShipTexture();
     }
 
     public void Unlock()
     {
-        shipSelectElement[currentShip].Purchase();
+        shipSelectElement[currentShipSelected].Purchase();
     }
 
     public void SelectShip(int shipID)
     {
-        currentShip = shipID;
+        currentShipSelected = shipID;
+        playerData.CurrrentSelectedShip = currentShipSelected;
         Refresh();
     }
 
-    public void RefreshShipTexture()
+    public void SetShipTexture(int shipSelected)
     {
-        if (currentShip == 0)
+        if (shipSelected == 0)
         {
             shipCameraPreview.cullingMask = Ship1Layermask;
         }
-        else if (currentShip == 1)
+        else if (shipSelected == 1)
         {
             shipCameraPreview.cullingMask = Ship2Layermask;
         }
-        else if (currentShip == 2)
+        else if (shipSelected == 2)
+        {
+            shipCameraPreview.cullingMask = Ship3Layermask;
+        }
+    }
+    public void RefreshShipTexture()
+    {
+        if (currentShipSelected == 0)
+        {
+            shipCameraPreview.cullingMask = Ship1Layermask;
+        }
+        else if (currentShipSelected == 1)
+        {
+            shipCameraPreview.cullingMask = Ship2Layermask;
+        }
+        else if (currentShipSelected == 2)
         {
             shipCameraPreview.cullingMask = Ship3Layermask;
         }
@@ -94,22 +109,15 @@ public class ShipSelect : MonoSingleton<ShipSelect>
     {
         StartCoroutine(DelayEnableSelectButton());
 
-        // foreach (GameObject item in Ships)
-        // {
-        //      item.SetActive(false);
-        //  }
-
         RefreshShipTexture();
 
-        //Ships[currentShip].SetActive(true);
-        PlayerData playerData = PersistantData.GetPlayerData();
-        if (playerData.UnlockedHeroes[currentShip] == 0)
+        if (playerData.UnlockedHeroes[currentShipSelected] == 0)
         {
             StartCoroutine(DelayEnableUnlockButton());
         }
-        else if (playerData.UnlockedHeroes[currentShip] == 1)
+        else if (playerData.UnlockedHeroes[currentShipSelected] == 1)
         {
-            playerData.CurrrentSelectedShip = currentShip;
+            playerData.CurrrentSelectedShip = currentShipSelected;
         }
     }
 
@@ -126,7 +134,7 @@ public class ShipSelect : MonoSingleton<ShipSelect>
         yield return new WaitForEndOfFrame();
         UISelectButton.SetActive(false);
         UIUnlockButton.SetActive(true);
-        
+
     }
 
     public void DoneSelect()

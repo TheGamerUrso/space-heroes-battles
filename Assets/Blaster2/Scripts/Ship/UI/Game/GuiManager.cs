@@ -118,13 +118,13 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void ResumeButton()
     {
-        GameEventSystem.Call(GameEventType.ToggleSlowMo, true);
+        Events.ToggleSlowMo?.Invoke(true);
         GameManager.Instance.PauseTheGame(false);
     }
 
     public void PauseButton()
     {
-        GameEventSystem.Call(GameEventType.ToggleSlowMo, false);
+        Events.ToggleSlowMo?.Invoke(false);
         GameManager.Instance.PauseTheGame(true);
     }
 

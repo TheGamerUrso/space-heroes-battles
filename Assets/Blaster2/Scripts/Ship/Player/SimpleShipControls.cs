@@ -21,6 +21,7 @@ public class SimpleShipControls : MonoBehaviour
     private Vector3 direction;
     private float rotVelocity;
     private Vector3 targetEulerAngels;
+    private float point;
 
     public void Start()
     {
@@ -35,11 +36,6 @@ public class SimpleShipControls : MonoBehaviour
         Speed = playerShipData.Speed;
 
         Events.OnDistanceValueChanged = UpdateOffset;
-    }
-
-    public void UpdateOffset(float ammount)
-    {
-        offspec = new Vector3(0, 0, ammount);
     }
 
     public void SetTargetPosition()
@@ -73,8 +69,6 @@ public class SimpleShipControls : MonoBehaviour
 
         }
 
-
-        float point;
         plane = new Plane(Vector3.up, transform.position);
         point = 0f;
         if (plane.Raycast(ray, out point))
@@ -85,12 +79,7 @@ public class SimpleShipControls : MonoBehaviour
     {
         if (direction.magnitude > .1f)
         {
-            Vector3 worldToScreen = Camera.main.WorldToScreenPoint(transform.position);
-            Vector3 ScreenToViewPoint = Camera.main.ScreenToViewportPoint(worldToScreen);
-
-
             transform.Translate((direction + offspec) * Speed * movementSensitivity * Time.deltaTime, Space.World);
-
 
             transform.position = new Vector3(
                 Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
@@ -138,11 +127,6 @@ public class SimpleShipControls : MonoBehaviour
         }
     }
 
-    public static bool IsMouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
-    }
-
     private void LateUpdate()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
@@ -152,10 +136,8 @@ public class SimpleShipControls : MonoBehaviour
     }
 
     public void Rotate()
-    {
-        bool rotate = (Input.touchCount > 0 || Input.GetMouseButton(0));
-
-        if (rotate)
+    {   
+        if (ShouldRoate())
         {
             rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
             rotVelocity = Mathf.Clamp(rotVelocity, -35, 35);
@@ -175,6 +157,19 @@ public class SimpleShipControls : MonoBehaviour
            rotVelocity, .1f));
 
         ShipModel.transform.localEulerAngles = targetEulerAngels;
+    }
+    public static bool IsMouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }
 
+    public void UpdateOffset(float ammount)
+    {
+        offspec = new Vector3(0, 0, ammount);
+    }
+
+    public bool ShouldRoate()
+    {
+        return (Input.touchCount > 0 || Input.GetMouseButton(0));
     }
 }

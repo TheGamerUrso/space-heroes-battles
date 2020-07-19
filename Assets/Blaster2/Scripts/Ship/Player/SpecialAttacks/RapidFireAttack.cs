@@ -10,28 +10,32 @@ public class RapidFireAttack : SpecialAttack
     protected float playerFireRate;
     private bool RapidFireModeOn;
 
+    public override void Start()
+    {
+        base.Start();
+        if (playerWeapons == null)
+        {
+            playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
+        }
+    }
+
     public override void ActivateSpecial()
     {
         if (SpecialActive == false)
         {
             source.PlayOneShot(weaponData.ShootSFX);
 
-            PlayerData playerData = PersistantData.GetPlayerData();
-            playerData.superUsed++;
-
-            if (playerWeapons == null)
-            {
-                playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
-            }
+            playerData.IncreaseSuperUse();        
 
             playerFireRate = playerWeapons[0].weaponData.FireRate;
-            weaponCurrentType = ship.GetComponent<PlayerShip>().CurrentWeapnType;
 
-            ship.GetComponent<PlayerShip>().SwitchWeapon(4);
+            weaponCurrentType = playerShip.CurrentWeapnType;
 
-            foreach (PlayerWeapon item in playerWeapons)
+            playerShip.SwitchWeapon(4);
+
+            for (int i = 0; i < playerWeapons.Length; i++)
             {
-                item.weaponData.FireRate = .2f;
+                playerWeapons[i].weaponData.FireRate = .2f;
             }
 
             SpecialActive = true;
@@ -41,17 +45,12 @@ public class RapidFireAttack : SpecialAttack
     {
         if (SpecialActive)
         {
-            if (playerWeapons == null)
+            for (int i = 0; i < playerWeapons.Length; i++)
             {
-                playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
+                playerWeapons[i].weaponData.FireRate = playerFireRate;
             }
 
-            foreach (PlayerWeapon item in playerWeapons)
-            {
-                item.weaponData.FireRate = playerFireRate;
-            }
-
-            ship.GetComponent<PlayerShip>().SwitchWeapon(weaponCurrentType);
+            playerShip.SwitchWeapon(weaponCurrentType);
 
             base.DeactivateSpecial();
         }

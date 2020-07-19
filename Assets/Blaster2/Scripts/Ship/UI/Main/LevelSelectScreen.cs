@@ -93,7 +93,7 @@ public class LevelSelectScreen : MonoBehaviour
 
             level = new Level(missionItem.Title, missionItem, sprites[missionItem.SpriteID], false, true);
 
-            if (missionItem.ID <= playerData.LevelUnlocked)
+            if (missionItem.ID <= (playerData.LevelUnlocked + 4))
             {
                 level.interactable = true;
                 level.Locked = false;

@@ -41,7 +41,7 @@ public class ShopItemElement : UpgradeElement
     {
         if (CheckAvailable())
         {
-            if (upgrade.IsAffordable(playerData.coins))
+            if (upgrade.IsAffordable(playerData.Coins))
             {
                 Popup.Show(Popup.popupType.message, Constants.CannotAffordIt);
                 return;
@@ -94,7 +94,7 @@ public class ShopItemElement : UpgradeElement
 
         CostText.color = Color.red;
 
-        if (upgrade.IsAffordable(playerData.coins))
+        if (upgrade.IsAffordable(playerData.Coins))
         {
             CostText.color = Color.white;
         }

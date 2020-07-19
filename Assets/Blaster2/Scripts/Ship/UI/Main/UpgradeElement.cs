@@ -104,13 +104,13 @@ public class UpgradeElement : MonoBehaviour,IPurchasable
     {
         if (CheckAvailable())
         {
-            if (!upgrade.IsAffordable(playerData.coins))
+            if (!upgrade.IsAffordable(playerData.Coins))
             {
                 Popup.Show(Popup.popupType.message, Constants.CannotAffordIt);
                 return;
             }
 
-            playerData.Coins -= upgrade.Cost;
+            playerData.RemoveCoin(upgrade.Cost);
 
             if (upgrade.ReachedMaxLevel)
             {
@@ -159,7 +159,7 @@ public class UpgradeElement : MonoBehaviour,IPurchasable
 
         CostText.color = Color.red;
 
-        if (upgrade.IsAffordable(playerData.coins))
+        if (upgrade.IsAffordable(playerData.Coins))
         {
             CostText.color = Color.white;
         }

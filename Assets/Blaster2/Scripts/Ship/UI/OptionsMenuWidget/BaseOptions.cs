@@ -131,7 +131,7 @@ public class BaseOptions : MonoBehaviour
         }
         for (int i = 0; i < Distances.Length; i++)
         {
-            if (Distances[i] == playerData.distance)
+            if (Distances[i] == playerData.Distance)
             {
                 select[i].SetActive(true);
             }

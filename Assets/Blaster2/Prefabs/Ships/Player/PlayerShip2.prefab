@@ -161,6 +161,7 @@ LineRenderer:
   m_MotionVectors: 0
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -370,11 +371,6 @@ MonoBehaviour:
   particleSFX:
   - {fileID: 1777858642283233623}
   Cannons: []
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  shipTransform: {fileID: 0}
 --- !u!82 &1446008627041610474
 AudioSource:
   m_ObjectHideFlags: 0
@@ -552,12 +548,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tilt: 5
   Speed: 3.5
-  touchPosOffset: {x: 0, y: 0}
   ShipModel: {fileID: 1576482608011855307}
-  offspec: {x: 0, y: 0, z: 0}
-  movementSensitivity: 0.1
-  sensitivityScale: 0.1
-  playerShip: {fileID: 0}
 --- !u!114 &1775069487956373775
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -570,15 +561,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faedbe193391217438e99925da59ab78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStats: {fileID: 11400000, guid: a61232b41a212b549a5e00e07be2900b, type: 2}
-  Id: 1
-  Damage: 0
-  FireRate: 0.4
-  Speed: 0
-  currentHealth: 0
   ShieldEffect: {fileID: 4631850847236312010}
-  ExplostionEffect: 0
-  ItemCollectedEffect: {fileID: 3007297793833547213}
+  playerStats: {fileID: 11400000, guid: a61232b41a212b549a5e00e07be2900b, type: 2}
   Weapons:
   - {fileID: 1778837082014244703}
   - {fileID: 1778214364329783237}
@@ -587,8 +571,9 @@ MonoBehaviour:
   - {fileID: 4981310371587863645}
   specialAttack: {fileID: 7267024176160259915}
   audioSource: {fileID: 3582621352116536187}
-  powerSFX: {fileID: 8300000, guid: e0be1f1158a8cc14da5fbedc6ba18bbe, type: 3}
-  alarmSFX: {fileID: 8300000, guid: d0888bf451bd66b48951e9488b462d44, type: 3}
+  ItemCollectedEffect: {fileID: 3007297793833547213}
+  CanFire: 0
+  CurrentWeapnType: 0
 --- !u!82 &3582621352116536187
 AudioSource:
   m_ObjectHideFlags: 0
@@ -777,17 +762,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: b3ae6482368beb74086a78b5019a9c62, type: 2}
+  weaponData: {fileID: 0}
   source: {fileID: 2919922463915818374}
   particleSFX:
   - {fileID: 1777889519371357971}
   - {fileID: 1778321619489008955}
   Cannons: []
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  shipTransform: {fileID: 0}
 --- !u!82 &7838406060019427490
 AudioSource:
   m_ObjectHideFlags: 0
@@ -933,7 +913,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: 5aa20e7b4d44ae44187164e3f3b0cf26, type: 2}
+  weaponData: {fileID: 0}
   source: {fileID: 2919922463915818374}
   particleSFX:
   - {fileID: 1777983677766052931}
@@ -941,11 +921,6 @@ MonoBehaviour:
   - {fileID: 1777888041520369699}
   - {fileID: 1778798597716052121}
   Cannons: []
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  shipTransform: {fileID: 0}
 --- !u!82 &542744294718103652
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1135,18 +1110,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: 033fa0690ead54b41bc924201b9d08ff, type: 2}
+  weaponData: {fileID: 0}
   source: {fileID: 2919922463915818374}
   particleSFX:
   - {fileID: 1778732526311883533}
   - {fileID: 1777839817297441637}
   - {fileID: 1775017262718104121}
   Cannons: []
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  shipTransform: {fileID: 0}
 --- !u!82 &3619781546430021876
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1644,7 +1614,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: 1c2a57a269b0ebf4a963edced3d53642, type: 2}
+  weaponData: {fileID: 0}
   source: {fileID: 2919922463915818374}
   particleSFX:
   - {fileID: 825528463874709659}
@@ -1653,11 +1623,6 @@ MonoBehaviour:
   - {fileID: 7036327103618633330}
   - {fileID: 4188785248618909223}
   Cannons: []
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  shipTransform: {fileID: 0}
 --- !u!82 &2919922463915818374
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1932,57 +1897,6 @@ MonoBehaviour:
   source: {fileID: 7727118723688549116}
   particleSFX: []
   Cannons: []
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  shipTransform: {fileID: 4322100186594475714}
-  playerData:
-    SurvivalScore: 0
-    SurvivalHighScore: 0
-    score: []
-    Score: []
-    HighScore: []
-    coins: 0
-    TotalKills: 0
-    LevelUnlocked: 0
-    survivalUnlocked: 0
-    TotalMoneySpend: 0
-    TotalSuperUsed: 0
-    WaveSurvived: 0
-    m_EnemyKilled: 0
-    GotHitInGame: 0
-    PlayedGame: 0
-    superUsed: 0
-    UnlockedHeroes: 
-    powerUpLevel: 0
-    powerPackCollected: 0
-    currentSelectedShip: 0
-    SFXVolume: 0
-    MusicVolume: 0
-    AutoAttack: 0
-    mute: 0
-    distance: 0
-    ListOfOnGoingObjectives: []
-    playerShipData: []
-  playerShipData:
-    MaxLevel: 20
-    level: 1
-    xp: 0
-    xpToLevel: 100
-    Upgrades: 000000000000000000000000000000000000000000000000000000000000000000000000
-    FireRate: 0
-    Speed: 0
-    SuperDamage: 0
-    LaserDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
-  playerShip: {fileID: 0}
-  superSFX: {fileID: 0}
-  superUsed: 0
-  SpecialActive: 0
-  superChargeTimer: 1
   laiser: {fileID: 1401421968978515520}
   laserSize: 0
   lineRenderer: {fileID: 8092574080764060596}

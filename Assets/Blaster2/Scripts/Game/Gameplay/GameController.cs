@@ -109,14 +109,13 @@ public class GameController : MonoSingleton<GameController>
 
     IEnumerator StartGameDelay()
     {
-        if (AudioManager.Instance)
-            AudioManager.PlayRandomMusic(true);
+        AudioManager.PlayRandomMusic(true);
 
         Game.Reset();
 
         if (PlayerManager.GetPlayer() == null)
         {
-            int shipSelected = playerData.currentSelectedShip;
+            int shipSelected = playerData.CurrrentSelectedShip;
             player = PlayerManager.CreatePlayer(shipSelected);
             playerShip = player.GetComponentInChildren<PlayerShip>();
         }
@@ -197,12 +196,12 @@ public class GameController : MonoSingleton<GameController>
 
 
 
-        playerData.m_EnemyKilled = kills;
+        playerData.Kills = kills;
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
 
         if (objectiveData != null)
         {
-            var newProgress = objectiveData.progress + playerData.m_EnemyKilled;
+            var newProgress = objectiveData.progress + playerData.Kills;
             objectiveData.UpdateProgress(newProgress);
         }
     }
@@ -222,8 +221,8 @@ public class GameController : MonoSingleton<GameController>
     {
         if (GooglePlayServicesManager.GetInitialized())
         {
-            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.TotalKills);
-            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.TotalKills);
+            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.Kills);
+            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.Kills);
         }
     }
 
@@ -244,8 +243,7 @@ public class GameController : MonoSingleton<GameController>
 
         if (Game.IsSurvivalMode)
         {
-            int levelIndex = GameManager.LevelIndexSelected;
-            playerData.SetScore(levelIndex, Game.Score);
+            GameManager.Instance.SetSurvivalScore(Game.Score);
         }
 
         yield return new WaitForSeconds(2.0f);
@@ -262,7 +260,7 @@ public class GameController : MonoSingleton<GameController>
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
         playerData.Coins += Game.CoinPicked;
-        playerData.m_EnemyKilled += Game.EnemyKilled;
+        playerData.Kills += Game.EnemyKilled;
 
         PlayerChallengesCheck();
 
@@ -302,10 +300,7 @@ public class GameController : MonoSingleton<GameController>
 #endif
         if (missionsCompleted > 9)
         {
-            if (!playerData.SurvivalUnlocked)
-            {
-                playerData.SurvivalUnlocked = true;
-            }
+            playerData.SetSurvivalUnlockedLock(true);
         }
         playerData.LevelUnlocked = missionsCompleted;
     }
@@ -410,6 +405,10 @@ public class GameController : MonoSingleton<GameController>
                     }
                 }
             }
+        }
+        else
+        {
+            Time.timeScale = 1.0f;
         }
     }
 }

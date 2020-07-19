@@ -22,7 +22,7 @@ public class IntroScreen : MonoBehaviour
             Ships[i].SetActive(false);
         }
 
-        Ships[playerData.currentSelectedShip].SetActive(true);
+        Ships[playerData.CurrrentSelectedShip].SetActive(true);
 
         AudioManager.PlayMusic("Intro");
     }
