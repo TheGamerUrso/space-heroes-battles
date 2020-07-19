@@ -25,7 +25,6 @@
     public static int EnemyKilled;
     public static int EnemyEscaped;
     public static int EnemySpawnInTotal;
-
     public static void Reset()
     {
         IsGameOver = false;

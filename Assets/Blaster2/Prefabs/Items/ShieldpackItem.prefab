@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4654244067488850}
   - component: {fileID: 65498783806062924}
   - component: {fileID: -2902371998952344208}
-  - component: {fileID: 4662976577521066788}
+  - component: {fileID: 2033089007855753401}
   m_Layer: 19
   m_Name: ShieldpackItem
   m_TagString: Collectable
@@ -144,7 +144,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4662976577521066788
+--- !u!114 &2033089007855753401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -153,10 +153,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1807487819155766}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4d1b86ae6997054f9410f76f92f499b, type: 3}
+  m_Script: {fileID: 11500000, guid: cc31c7db6671ad740ab590d576f90cf7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: ShieldPack
+  id: Shield
   itemData: {fileID: 11400000, guid: 637f460e796cf464994390f69e64e815, type: 2}
   playerLayer:
     serializedVersion: 2
@@ -164,7 +164,7 @@ MonoBehaviour:
   animator: {fileID: 7209718429834026999}
   boxCollider: {fileID: 65498783806062924}
   m_RandomXVelValues: {x: -25, y: 25}
-  m_RandomZVelValues: {x: -25, y: -35}
+  m_RandomZVelValues: {x: -25, y: -30}
   audioSource: {fileID: -2902371998952344208}
 --- !u!114 &2716373698415984414
 MonoBehaviour:
@@ -338,6 +338,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -5082,6 +5083,7 @@ ParticleSystemRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 0
   m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:

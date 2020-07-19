@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using Malee.List;
+using System.Collections.Generic;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class ProjectControllerWindow : EditorWindow
 {
@@ -12,7 +14,7 @@ public class ProjectControllerWindow : EditorWindow
     private int coinsToEarn;
 
     private string titleString = "Project Controls";
-    private string scenePath = "Assets/Scenes";
+    private string scenePath = "Assets/Blaster2/_Scenes";
     private int CompleteLevelIndex;
     private string BaseXpToEarn = "";
     private float xpToEarn;
@@ -23,6 +25,8 @@ public class ProjectControllerWindow : EditorWindow
     public Vector3 resets;
     public float m_DistanceZ;
 
+    public Game gameStruct;
+
     [MenuItem("ProjectBlaster2/ProjectController")]
     public static void ShowWindow()
     {
@@ -30,36 +34,173 @@ public class ProjectControllerWindow : EditorWindow
     }
 
     private void OnGUI()
-    {
-        //WindowCode
-
+    {  
         GUILayout.Label(titleString, EditorStyles.boldLabel);
 
         GUILayout.Label("Scene Manager");
 
+        EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Boot"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.boot.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.boot);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/"+LevelEnum.boot.ToString()+".unity");
+            }
+        }
         if (GUILayout.Button("Main"))
         {
-            EditorSceneManager.OpenScene(scenePath + "/Main.unity");
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Main.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Main);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/" + LevelEnum.Main.ToString() + ".unity");
+            }
         }
-
+        EditorGUILayout.EndHorizontal();
+        EditorGUILayout.BeginHorizontal();
+        if (GUILayout.Button("Level1"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level1.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level1);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level1.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level2"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level2.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level2);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level2.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level3"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level3.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level3);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level3.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level4"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level4.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level4);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level4.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level5"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level5.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level5);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level5.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level6"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level6.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level6);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level6.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level7"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level7.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level7);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level7.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level8"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level8.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level8);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level8.ToString() + ".unity");
+            }
+        }
+        if (GUILayout.Button("Level9"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level9.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level9);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level9.ToString() + ".unity");
+            }
+        }
+        EditorGUILayout.EndHorizontal();
         GUILayout.Label("In Game");
 
         EditorGUILayout.BeginHorizontal();
-
-        //if (GUILayout.Button("Load Boss"))
-        //{
-        //    if (EditorApplication.isPlaying)
-        //    {
-        //        if (spawnEnemies == null)
-        //        {
-        //            GameObject go = GameObject.Find("Spawning");
-        //            spawnEnemies = go.GetComponent<SpawnEnemies>();
-        //        }
-
-        //        spawnEnemies.MaxWave = 2;
-        //    }
-        //}
-        EditorGUILayout.BeginVertical();
 
         if (GUILayout.Button("Load"))
         {
@@ -77,130 +218,14 @@ public class ProjectControllerWindow : EditorWindow
                 PersistantData.Save();
             }
         }
-        EditorGUILayout.EndVertical();
-
-        EditorGUILayout.BeginVertical();
-
-        BaseXpToEarn = EditorGUILayout.TextField(BaseXpToEarn);
-        if (string.IsNullOrEmpty(BaseXpToEarn) == false)
-            xpToEarn = float.Parse(BaseXpToEarn);
-
-        if (GUILayout.Button("Earn XP"))
-        {
-            if (EditorApplication.isPlaying)
-            {
-                PlayerData playerData = PersistantData.GetPlayerData();
-                playerData.EarnXP(xpToEarn);
-            }
-        }
-        EditorGUILayout.EndVertical();
-
-
-
-        if (GUILayout.Button("Toggle Invisibility"))
-        {
-            if (EditorApplication.isPlaying)
-            {
-                if (player == null)
-                {
-                    player = GameObject.FindObjectOfType<PlayerShip>();
-                }
-
-                player.GetComponent<BoxCollider>().enabled = !player.GetComponent<BoxCollider>().enabled;
-            }
-        }
-
-        EditorGUILayout.BeginVertical();
-
-        CoinToEarnText = EditorGUILayout.TextField("");
-        if (string.IsNullOrEmpty(CoinToEarnText) == false)
-            coinsToEarn = int.Parse(CoinToEarnText);
-
-        if (GUILayout.Button("Earn Coins"))
-        {
-            if (EditorApplication.isPlaying)
-            {
-                PlayerData playerData = PersistantData.GetPlayerData();
-                playerData.Coins += coinsToEarn;
-            }
-        }
-        EditorGUILayout.EndVertical();
-
-        if (GUILayout.Button("CompleteGame"))
-        {
-            if (EditorApplication.isPlaying)
-            {
-                Events.OnWin?.Invoke(GameController.Instance);
-            }
-        }
         EditorGUILayout.EndHorizontal();
 
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Objective Debug Menu");
-        if (GUILayout.Button("Complete First Objective"))
-        {
-            if (EditorApplication.isPlaying)
-            {
-                CompleteObjective(0);
-            }
-        }
-
-        if (GUILayout.Button("Complete First Objective"))
-        {
-            if (EditorApplication.isPlaying)
-            {
-                CompleteObjective(1);
-            }
-        }
-
-        if (GUILayout.Button("Complete First Objective"))
-        {
-            if (EditorApplication.isPlaying)
-            {
-                CompleteObjective(2);
-            }
-        }
-        EditorGUILayout.EndHorizontal();
-
-
-        EditorGUILayout.BeginHorizontal();
-        GUILayout.Label("Level Quests Debug Menu");
-
-        CompleteLevelIndex = EditorGUILayout.IntField(CompleteLevelIndex);
-
-        if (GUILayout.Button("Complete First Challenge"))
-        {
-            PlayerData playerData = PersistantData.GetPlayerData();
-            MissionCollection missionCollection = PersistantData.GetMissionCollection();
-            Mission mission = missionCollection.GetMission(playerData.LevelUnlocked++);
-
-            LevelObjectiveData[] levelObjectiveDatas = playerData.GetLevelObjectives("Level" + mission.ID);
-            if (EditorApplication.isPlaying)
-            {
-                for (int i = 0; i < levelObjectiveDatas.Length; i++)
-                {
-                    levelObjectiveDatas[i].completed = true;
-                }
-            }           
-
-            LevelSelectScreen levelSelectScreen = GameObject.FindObjectOfType<LevelSelectScreen>();
-   
-
-            playerData.LevelUnlocked = mission.ID+1;
-
-            levelSelectScreen.RefreshLevelElements();
-
-            //GameObject.FindObjectOfType<BriefingScreen>().LevelElements[CompleteLevelIndex].GetComponent<LevelElement>().Refresh();
-
-        }
-
-        EditorGUILayout.EndHorizontal();
         EditorGUILayout.Space();
+
         EditorGUILayout.BeginHorizontal();
+
         GUILayout.Label("Game Data");
         
-    
         if (GUILayout.Button("Delete"))
         {
             PlayerPrefs.DeleteAll();
@@ -208,9 +233,6 @@ public class ProjectControllerWindow : EditorWindow
 
         }
 
-
-
-        EditorGUILayout.Space();
         EditorGUILayout.EndHorizontal();
 
     }

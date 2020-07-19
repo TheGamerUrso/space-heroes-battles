@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class WinWidget : MonoBehaviour
+public class WinScreen : MonoBehaviour
 {
     private PlayerData playerData;
 

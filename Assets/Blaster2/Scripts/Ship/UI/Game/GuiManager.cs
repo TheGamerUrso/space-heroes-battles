@@ -72,76 +72,6 @@ public class GuiManager : MonoSingleton<GuiManager>
         GuiManager.CreateFloatingText(score.ToString(), baseEnemy.transform.position);
     }
 
-    public void PickUpItem(ItemData itemData)
-    {
-        if (itemData.m_HealValue > 0)
-        {
-            CreateFloatingText("Heal up", transform.localPosition);
-
-            if (!PlayerPrefs.HasKey("HealTut"))
-            {
-                if (Tutorial.Instance)
-                {
-                    Tutorial.Instance.ShowTutorial(1);
-                }
-                PlayerPrefs.SetInt("HealTut", 1);
-            }
-        }
-
-        if (itemData.m_RewardAmount > 0)
-        {
-            CreateFloatingText("$", transform.localPosition);
-
-            if (!PlayerPrefs.HasKey("CoinTut"))
-            {
-                if (Tutorial.Instance)
-                {
-                    Tutorial.Instance.ShowTutorial(0);
-                }
-
-                itemData.ShowTutorial = true;
-
-                PlayerPrefs.SetInt("CoinTut", 1);
-            }
-        }
-
-        if (itemData.Shield)
-        {
-            CreateFloatingText("Shield Up", transform.localPosition);
-
-            if (!PlayerPrefs.HasKey("ShieldTut"))
-            {
-
-                if (Tutorial.Instance)
-                {
-                    Tutorial.Instance.ShowTutorial(3);
-                }
-
-                itemData.ShowTutorial = true;
-
-                PlayerPrefs.SetInt("ShieldTut", 1);
-            }
-        }
-
-        if (itemData.PowerPack)
-        {
-            CreateFloatingText("Power Up", transform.localPosition);
-
-
-            if (!PlayerPrefs.HasKey("PowerTut"))
-            {
-                if (Tutorial.Instance)
-                {
-                    Tutorial.Instance.ShowTutorial(2);
-                }
-
-                itemData.ShowTutorial = true;
-
-                PlayerPrefs.SetInt("PowerTut", 1);
-            }
-        }
-    }
-
     private void Update()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
@@ -305,8 +235,6 @@ public class GuiManager : MonoSingleton<GuiManager>
         yield return new WaitForSeconds(2.0f);
 
         GameOverScreen.Show();
-        if (GameOverScreen.GetComponent<GameOverWidget>() != null)
-            GameOverScreen.GetComponent<GameOverWidget>().ShowGameResult();
     }
 
     public IEnumerator WinCoroutine()
@@ -317,6 +245,6 @@ public class GuiManager : MonoSingleton<GuiManager>
 
         WinScreen.Show();
         WinScreen.GetComponent
-            <WinWidget>().ShowGameResult();
+            <WinScreen>().ShowGameResult();
     }
 }

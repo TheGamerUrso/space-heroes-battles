@@ -175,6 +175,17 @@ public class PlayerShip : Ship, IDamagable
     {
         base.InstallShieldModule();
         ShieldEffect.SetActive(HasShield);
+
+        GuiManager.CreateFloatingText("Shield Up", transform.localPosition);
+
+        if (!PlayerPrefs.HasKey("ShieldTut"))
+        {
+            if (Tutorial.Instance)
+            {
+                Tutorial.Instance.ShowTutorial(3);
+            }
+            PlayerPrefs.SetInt("ShieldTut", 1);
+        }
     }
 
     public void Death()
@@ -189,7 +200,23 @@ public class PlayerShip : Ship, IDamagable
 
     public void Heal(float ammount)
     {
+        CurrentHealth += ammount;
 
+        if(CurrentHealth > MaxHealth)
+        {
+            CurrentHealth = MaxHealth;
+        }
+
+        GuiManager.CreateFloatingText("Heal up", transform.localPosition);
+
+        if (!PlayerPrefs.HasKey("HealTut"))
+        {
+            if (Tutorial.Instance)
+            {
+                Tutorial.Instance.ShowTutorial(1);
+            }
+            PlayerPrefs.SetInt("HealTut", 1);
+        }
     }
 
     public void TakeDamage(float dmg)
@@ -249,7 +276,7 @@ public class PlayerShip : Ship, IDamagable
         IPickable items = other.GetComponent<IPickable>();
         if (items != null)
         {
-            items.Action(this);
+            items.PickUp();
             if (items.ID.Equals("PowerUP"))
                 ItemCollectedEffect.Play();
         }
@@ -381,6 +408,17 @@ public class PlayerShip : Ship, IDamagable
             playerData.PowerPackCollected += 2;
             TempFireRateBuff(0.01f * playerData.powerPackCollected);
         }
+
+        GuiManager.CreateFloatingText("Power Up", transform.localPosition);
+
+        if (!PlayerPrefs.HasKey("PowerTut"))
+        {
+            if (Tutorial.Instance)
+            {
+                Tutorial.Instance.ShowTutorial(2);
+            }
+            PlayerPrefs.SetInt("PowerTut", 1);
+        }
     }
 
     public void ResetWeaponUpgrade()
@@ -451,5 +489,21 @@ public class PlayerShip : Ship, IDamagable
     public bool IsAlive()
     {
         return CurrentHealth <= 0;
+    }
+
+    public void SetWallet(int coin)
+    {
+        Game.CoinPicked += coin;
+        GuiManager.CreateFloatingText("$", transform.localPosition);
+
+        if (!PlayerPrefs.HasKey("CoinTut"))
+        {
+            if (Tutorial.Instance)
+            {
+                Tutorial.Instance.ShowTutorial(0);
+            }
+
+            PlayerPrefs.SetInt("CoinTut", 1);
+        }
     }
 }

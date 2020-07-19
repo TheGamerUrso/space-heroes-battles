@@ -18,6 +18,12 @@ public class Tutorial : MonoSingleton<Tutorial>
 
     public TutorialItem[] TutorailItemsToShow;
 
+    protected override void Awake()
+    {
+        base.Awake();
+    }
+
+
     private void Start()
     {
         TutorialView.Hide();

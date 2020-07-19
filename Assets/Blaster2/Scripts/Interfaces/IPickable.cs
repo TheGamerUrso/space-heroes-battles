@@ -5,5 +5,5 @@ using UnityEngine;
 public interface IPickable
 {
     string ID { get;}
-    void Action(PlayerShip playerShip);
+    void PickUp();
 }

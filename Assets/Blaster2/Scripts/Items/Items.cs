@@ -1,16 +1,16 @@
 using UnityEngine;
 
-public class Items : MonoBehaviour
+public enum ItemEnum
 {
-    public string id;
-    public string ID
-    {
-        get { return id; }
-    }
+    COIN, SHIELD, POWERUP, HEALTH, EMPTY
+}
 
-    protected int frameInterval = 1;
-    [SerializeField] protected ItemData itemData;
-    public LayerMask playerLayer;
+public class Items : MonoBehaviour, IPickable
+{
+    private PlayerShip player;
+
+    [SerializeField] private Item_SO itemData;
+    [SerializeField] private LayerMask playerLayer;
 
     protected static string CollectKey = "Collect";
     protected static string ResetKey = "Reset";
@@ -29,31 +29,35 @@ public class Items : MonoBehaviour
     protected float magnetPower;
     protected float magnetDistance = 25;
 
+    private bool picked;
+    private float TTL = .2f;
 
     PlayerData playerData;
     PlayerShipData playerShipData;
 
     [SerializeField] protected AudioSource audioSource;
+    private Collider[] colliders;
+    public string ID
+    {
+        get { return itemData.ID; }
+    }
 
     private void OnEnable()
     {
         animator.SetTrigger(ResetKey);
         boxCollider.enabled = true;
+        picked = false;
     }
 
     private void Start()
     {
-        Setup();
-    }
-
-    public void Setup()
-    {
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
+        player = PlayerManager.GetPlayer();
 
-        if (itemData.m_RewardAmount > 0)
+        if (itemData.itemType == ItemEnum.COIN)
         {
-            if (playerShipData.MagnetPower> 0)
+            if (playerShipData.MagnetPower > 0)
             {
                 magnetPower = playerShipData.MagnetPower;
                 magnetDistance = playerShipData.MagnetDistance;
@@ -66,9 +70,54 @@ public class Items : MonoBehaviour
         m_ZVel = -Random.Range(m_RandomZVelValues.x, m_RandomZVelValues.y);
     }
 
+
+    public void PickUp()
+    {
+        if (boxCollider)
+        {
+            boxCollider.enabled = false;
+        }
+
+        animator.SetTrigger(CollectKey);
+
+        switch (itemData.itemType)
+        {
+            case ItemEnum.COIN:
+                player.SetWallet(itemData.ammount);
+                break;
+            case ItemEnum.SHIELD:
+                player.InstallShieldModule();
+                break;
+            case ItemEnum.POWERUP:
+                player.PowerUpCollected();
+                break;
+            case ItemEnum.HEALTH:
+                player.Heal(itemData.ammount);
+                break;
+            case ItemEnum.EMPTY:
+                break;
+            default:
+                break;
+        }
+
+        AudioManager.PlaySound(itemData.CollectedSoundSFX);
+
+        picked = true;
+    }
+
     public void Update()
     {
         Movement();
+
+        if (picked)
+        {
+            TTL -= Time.deltaTime;
+            if (TTL <= 0)
+            {
+                gameObject.SetActive(false);
+            }
+        }
+
 
         if (transform.position.z < Constants.m_ZMin)
         {
@@ -76,20 +125,8 @@ public class Items : MonoBehaviour
         }
     }
 
-
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(transform.position, magnetDistance);
-    }
-
-    public void DestroyNow()
-    {
-        gameObject.SetActive(false);
-    }
-
     public void Movement()
     {
-
         Collider[] colliders = Physics.OverlapSphere(transform.position, magnetDistance, playerLayer);
         if (colliders.Length > 0 && magnetPower > 0)
         {

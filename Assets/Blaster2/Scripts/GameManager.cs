@@ -40,13 +40,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     #region SceneManagment
     public bool IsLoading { get; private set; }
-    protected List<string> ActiveScenes;
 
-    private string _currentLevelName;
     List<AsyncOperation> _loadOperation;
     private bool unloading;
-
-    private static AsyncOperation loadLvl;
 
     public bool ManualFadeIn = false;
 
@@ -106,7 +102,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         _instancedSystemPrefabs = new List<GameObject>();
         _loadOperation = new List<AsyncOperation>();
-        ActiveScenes = new List<string>();
+
         InstantiateSystemPrefabs();
 
         DefaultTimeDeltaScale = Time.fixedDeltaTime;
@@ -161,7 +157,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         foreach (var systemPrefab in SystemPrefabs)
         {
-            var prefabInstance = Instantiate(systemPrefab);
+            var prefabInstance = Instantiate(systemPrefab,transform,false);
             prefabInstance.name = systemPrefab.name;
             _instancedSystemPrefabs.Add(prefabInstance);
         }
@@ -218,7 +214,7 @@ public class GameManager : MonoSingleton<GameManager>
         ao = SceneManager.UnloadSceneAsync(levelName);
         if (ao == null)
         {
-            Debug.LogError("[SceneController] Unable to unload level" + levelName);
+            Debug.LogError("[SceneController] Unable to unload level:" + levelName);
             return;
         }
         ao.completed += OnUnloadOperationComplete;
@@ -228,41 +224,42 @@ public class GameManager : MonoSingleton<GameManager>
         Events.OnSceneLoadProgress?.Invoke(progress);
     }
 
-    private IEnumerator LoadSceneAsync(LevelEnum levelName, float delay = 0)
+    private IEnumerator LoadSceneAsync(LevelEnum levelName)
     {
-        for (int i = 0; i < ActiveScenes.Count; i++)
-        {
-            string item = ActiveScenes[i];
-            UnloadLevel(item);
-        }
+        string activeScene = SceneManager.GetActiveScene().name;
 
-        ActiveScenes.Clear();
-
-        while (unloading)
+        if (activeScene.Equals(levelName.ToString()))
         {
-            yield return waitForEndFrame;
+            SceneManager.LoadSceneAsync((int)levelName, LoadSceneMode.Single);
 
         }
-
-        ao = SceneManager.LoadSceneAsync((int)levelName, LoadSceneMode.Additive);
-        ao.completed += OnLoadOperationComplete;
-        _loadOperation.Add(ao);
-        _currentLevelName = levelName.ToString();
-        ActiveScenes.Add(levelName.ToString());
-        currentLevelLoaded = levelName.ToString();
-
-        if (ao == null)
+        else
         {
-            Debug.LogError("[SceneController] Unable to load level" + levelName);
-        }
+            ao = SceneManager.LoadSceneAsync((int)levelName, LoadSceneMode.Additive);
 
+            ao.completed += OnLoadOperationComplete;
+            _loadOperation.Add(ao);
+            currentLevelLoaded = levelName.ToString();
+
+            if (ao == null)
+            {
+                Debug.LogError("[SceneController] Unable to load level" + levelName);
+            }
+
+            while (ao.isDone == false)
+            {
+                UpdateProgress(ao.progress);
+                yield return null;
+            }
+
+            UnloadLevel(activeScene);
+
+            if (unloading)
+            {
+                yield return new WaitUntil(() => !unloading);
+            }
+        }
         System.GC.Collect();
-
-        while (ao.isDone == false)
-        {
-            UpdateProgress(ao.progress);
-            yield return null;
-        }
 
         Hide();
     }
