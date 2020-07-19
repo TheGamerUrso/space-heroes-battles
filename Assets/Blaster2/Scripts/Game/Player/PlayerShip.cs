@@ -24,10 +24,11 @@ public class PlayerShip : Ship, IDamagable
     private bool clicked;
 
     public event Action<float, float> OnHealthChanged;
-    public int CurrentWeapnType { get; private set; } = 0;
-    public float MaxHealth { get; set; }
-    public float CurrentHealth { get; set; }
 
+    public float MaxHealth { get; private set; }
+    public float CurrentHealth { get; private set; }
+
+    public int CurrentWeapnType;
     #endregion Weapons
 
     public override void OnDestroy()
@@ -178,6 +179,7 @@ public class PlayerShip : Ship, IDamagable
 
     public void Death()
     {
+        Game.UseSlowMo = false;
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(playerStats.ExplostionEffect);
         explostion.transform.position = transform.position;
 
@@ -214,9 +216,9 @@ public class PlayerShip : Ship, IDamagable
             if (invisibilityTimer <= 0)
             {
                 invisibilityTimer = .25f;
-                CurrentHealth = CurrentHealth - dmg;
-
-                GameSession.Multiplier = 1;
+                var health = CurrentHealth - dmg;
+                SetHealth(health);
+                Game.Multiplier = 1;
 
                 Events.PlayerShipHit?.Invoke();
 
@@ -421,6 +423,9 @@ public class PlayerShip : Ship, IDamagable
 
     public override void SetStats(int level)
     {
+        MaxHealth = playerShipData.level * playerStats.baseHealth;
+        SetHealth(MaxHealth);
+
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
         playerShipData.Speed = playerStats.baseSpeed + UpgradeStats[(int)UpgradeTypeEnum.Speed];
         playerShipData.Damage = playerStats.baseDamage + UpgradeStats[(int)UpgradeTypeEnum.Damage];
@@ -429,6 +434,12 @@ public class PlayerShip : Ship, IDamagable
         playerShipData.SuperChargeTime = playerStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
         playerShipData.MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
         playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
+    }
+
+    public void SetHealth(float health)
+    {
+        CurrentHealth = health;
+        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
     public float GetHealthPresentage()

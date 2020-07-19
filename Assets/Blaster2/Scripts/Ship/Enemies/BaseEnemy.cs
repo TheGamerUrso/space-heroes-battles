@@ -152,7 +152,7 @@ public class BaseEnemy : Ship, IDamagable
         if (IsAlive)
         {
             IsAlive = false;
-            GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
+            var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
             Events.EnemyDied?.Invoke(gameObject.name, this);
             HealthBar.Hide();
@@ -171,7 +171,7 @@ public class BaseEnemy : Ship, IDamagable
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
-            IDamagable destroyable = other.GetComponent<IDamagable>();
+            var destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(destroyable.MaxHealth / 2);
             TakeDamage(destroyable.CurrentHealth);
         }
@@ -241,6 +241,12 @@ public class BaseEnemy : Ship, IDamagable
                 Weapons[i].AutoAttack = false;
             }
         }
+    }
+
+    public void SetHealth(float health)
+    {
+        CurrentHealth = health;
+        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
 }

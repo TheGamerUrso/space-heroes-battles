@@ -68,7 +68,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void EnemyDiedCallback(string name, BaseEnemy baseEnemy)
     {
-        int score = GameSession.Multiplier * baseEnemy.EnemyData.EnemyValue;
+        int score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
         GuiManager.CreateFloatingText(score.ToString(), baseEnemy.transform.position);
     }
 
@@ -202,12 +202,12 @@ public class GuiManager : MonoSingleton<GuiManager>
     {
         if (value)
         {
-            GameSession.useSloMo = false;
+            Game.SlowMo = false;
             PauseScreen.Show();
         }
         else if (!value)
         {
-            GameSession.useSloMo = true;
+            Game.SlowMo = true;
             PauseScreen.Hide();
         }
     }
@@ -237,7 +237,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void LoadMainMenu()
     {
-        GameSession.SurvivalMode = false;
+        Game.IsSurvivalMode = false;
         Time.timeScale = 1;
         GameManager.Instance.LoadMainenu();
 

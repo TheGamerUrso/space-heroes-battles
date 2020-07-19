@@ -24,7 +24,7 @@ public class ExtraRewardButton : MonoBehaviour
     {
         // Reward the user for watching the ad to completion.
         PlayerData playerData = PersistantData.GetPlayerData();
-        int coin = GameSession.coinEarnInGame;
+        int coin = Game.CoinPicked;
         coin *= 2;
         playerData.AddCoin(coin);
         Popup.Show(Popup.popupType.message, "Rewardeed \n" + coin);

@@ -51,7 +51,7 @@ public class GameResults : MonoBehaviour
 
         PlayerData playerData = PersistantData.GetPlayerData();
 
-        string scoreText = string.Format("{00:0000000000}", GameSession.score);
+        string scoreText = string.Format("{00:0000000000}", Game.Score);
         m_Text.text = scoreText;
 
         highscore.SetActive(false);
@@ -59,20 +59,14 @@ public class GameResults : MonoBehaviour
         var score = playerData.GetScore(GameManager.LevelIndexSelected);
         var hscore = playerData.GetHighScore(GameManager.LevelIndexSelected);
 
-        if (GameSession.Highscore)
+        if (Game.IsHightScore)
         {
             highscore.SetActive(true);
         }
 
-        GameSession.Highscore = false;
+        Game.IsHightScore = false;
 
-        GameSession.SurvivalMode = false;
-
-    }
-
-    IEnumerator GameResultsDelay()
-    {
-        yield return new WaitForSeconds(1.0f);
+        Game.IsSurvivalMode = false;
 
     }
 

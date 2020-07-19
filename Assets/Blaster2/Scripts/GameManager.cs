@@ -179,10 +179,10 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void LoadMainenu()
     {
-        GameSession.ShowAdCounter--;
-        if (GameSession.ShowAdCounter <= 0)
+        Game.ShowAdCounter--;
+        if (Game.ShowAdCounter <= 0)
         {
-            GameSession.ShowAdCounter = 5;
+            Game.ShowAdCounter = 5;
             AdvertismentManager.ShowAdvertisment();
         }
 
@@ -297,22 +297,22 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void PauseTheGame(bool value)
     {
-        Game.Paused = value;
+        Game.IsPaused = value;
 
-        Events.OnPauseGame?.Invoke(Game.Paused);
+        Events.OnPauseGame?.Invoke(Game.IsPaused);
 
-        if (Game.Paused)
+        if (Game.IsPaused)
         {
             Time.timeScale = 0;
             Time.fixedDeltaTime = 0;
-            Game.Paused = true;
+            Game.IsPaused = true;
 
         }
         else
         {
             Time.timeScale = 1;
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
-            Game.Paused = false;
+            Game.IsPaused = false;
         }
 
 

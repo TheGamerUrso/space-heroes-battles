@@ -35,7 +35,7 @@ public class WinWidget : MonoBehaviour
 
     private IEnumerator ShowGameResults()
     {
-        float score = GameSession.score;
+        float score = Game.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         Score.text = scoreText;
 

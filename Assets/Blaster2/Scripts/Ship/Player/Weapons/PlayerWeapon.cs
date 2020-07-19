@@ -26,47 +26,45 @@ public class PlayerWeapon : WeaponScript
 
     public override void Update()
     {
-        if (Time.frameCount % 1 == 0)
+
+        if (ship != null)
         {
-            if (ship != null)
+            PlayerShip playerShip = ship.GetComponent<PlayerShip>();
+
+
+            if (playerShip != null)
             {
-                PlayerShip playerShip = ship.GetComponent<PlayerShip>();
-
-
-                if (playerShip != null)
+                if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
                 {
-                    if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
-                    {
-                        return;
-                    }
+                    return;
                 }
+            }
+        }
+
+
+        if (Input.touchCount > 0)
+        {
+            if (Input.touchCount > 1)
+            {
+                holdFire = true;
+            }
+            else
+            {
+                holdFire = false;
             }
 
 
-            if (Input.touchCount > 0)
-            {
-                if (Input.touchCount > 1)
-                {
-                    holdFire = true;
-                }
-                else
-                {
-                    holdFire = false;
-                }
+
+            Shoot();
+
+        }
 
 
+        holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
-                Shoot();
-
-            }
-
-
-            holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
-
-            if (!holdFire && Input.GetMouseButton(0))
-            {
-                Shoot();
-            }
+        if (!holdFire && Input.GetMouseButton(0))
+        {
+            Shoot();
         }
     }
 

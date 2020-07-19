@@ -5,7 +5,6 @@ using UnityEngine;
 public class SpecialAttack : PlayerWeapon
 {
     public bool SpecialActive { get; protected set; } = false;
-    public float SuperChargeTime { get; protected set; }
 
     protected CountDownTimer m_CountDownTimer;
 
@@ -25,7 +24,7 @@ public class SpecialAttack : PlayerWeapon
         if (SpecialActive)
         {
             if (m_CountDownTimer == null)
-                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
+                m_CountDownTimer = new CountDownTimer(weaponData.SuperChargeTime);
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
             {
@@ -33,7 +32,7 @@ public class SpecialAttack : PlayerWeapon
                 if (m_CountDownTimer.countToZero())
                 {
 
-                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / weaponData.SuperChargeTime;
 
                 }
 
@@ -66,8 +65,8 @@ public class SpecialAttack : PlayerWeapon
         {
             source.PlayOneShot(weaponData.ShootSFX);
 
-            int superUsed = GameSession.SuperUsed + 1;
-            GameSession.SetSuperUsed(superUsed);
+            int superUsed = Game.SuperUsed + 1;
+            Game.SetSuperUsed(superUsed);
 
             SpecialActive = true;
         }

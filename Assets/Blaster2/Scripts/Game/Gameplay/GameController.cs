@@ -9,7 +9,7 @@ public class GameController : MonoSingleton<GameController>
 {
     public enum GameState
     {
-        START,GAME,GAMEOVER,WIN,RESULTS
+        START, GAME, GAMEOVER, WIN, RESULTS
     }
 
     public GameState currentGameState = GameState.START;
@@ -32,7 +32,6 @@ public class GameController : MonoSingleton<GameController>
 
     public GameObject AsteroidBackgroundSpawner;
     public GameObject PanelBackgroundSpawner;
-    public GameObject DynamicObjectsPrefab;
 
     public GameObject Tutorial;
 
@@ -42,10 +41,10 @@ public class GameController : MonoSingleton<GameController>
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (!focus && GameSession.IsGameOver == false)
-            {
-                GameManager.Instance.PauseTheGame(focus);
-            }
+            //if (!focus && !Game.IsGameOver)
+            //{
+            //    GameManager.Instance.PauseTheGame(true);
+            //}
         }
     }
 
@@ -53,10 +52,10 @@ public class GameController : MonoSingleton<GameController>
     {
         if (Application.platform == RuntimePlatform.Android)
         {
-            if (GameSession.IsGameOver == false)
-            {
-                GameManager.Instance.PauseTheGame(Paused);
-            }
+            //if (Game.IsGameOver == false)
+            //{
+            //    GameManager.Instance.PauseTheGame(true);
+            //}
         }
     }
 
@@ -73,33 +72,28 @@ public class GameController : MonoSingleton<GameController>
         base.Awake();
 
         baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
-
-        Instantiate(EnemyWaypoints, transform, false);
-
-        if (DynamicObjectsPrefab != null)
-        {
-            var dynamic = Instantiate(DynamicObjectsPrefab, transform, false);
-        }
+        if (EnemyWaypoints != null)
+            Instantiate(EnemyWaypoints, transform, false);
 
         if (AsteroidBackgroundSpawner != null)
         {
-            var asteroids = Instantiate(AsteroidBackgroundSpawner, transform, false);
+            Instantiate(AsteroidBackgroundSpawner, transform, false);
         }
 
         if (PanelBackgroundSpawner != null)
         {
-            var planets = Instantiate(PanelBackgroundSpawner, transform, false);
+            Instantiate(PanelBackgroundSpawner, transform, false);
         }
 
         if (Tutorial != null)
         {
-            var tutorial = Instantiate(Tutorial, transform, false);
+            Instantiate(Tutorial, transform, false);
         }
     }
 
     void Start()
     {
-        Application.targetFrameRate = 60; 
+        Application.targetFrameRate = 60;
 
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
@@ -108,14 +102,29 @@ public class GameController : MonoSingleton<GameController>
         Events.GameEnded += Win;
         Events.EnemyDied += EnemyDied;
 
-        SetGameState(GameState.START);
+        Game.UseSlowMo = false;
 
-        StartCoroutine(StartGameDelay());
+        SetGameState(GameState.START);
     }
 
     IEnumerator StartGameDelay()
     {
-        yield return new WaitForSeconds(1.0f);
+        if (AudioManager.Instance)
+            AudioManager.PlayRandomMusic(true);
+
+        Game.Reset();
+
+        if (PlayerManager.GetPlayer() == null)
+        {
+            int shipSelected = playerData.currentSelectedShip;
+            player = PlayerManager.CreatePlayer(shipSelected);
+            playerShip = player.GetComponentInChildren<PlayerShip>();
+        }
+
+        baseGameMode.InitReference(playerData, playerShip);
+
+        yield return new WaitForSeconds(2.0f);
+
         SetGameState(GameState.GAME);
     }
 
@@ -124,21 +133,22 @@ public class GameController : MonoSingleton<GameController>
         switch (gameState)
         {
             case GameState.START:
-                GameStart();
+                StartCoroutine(StartGameDelay());
                 break;
             case GameState.GAME:
+
                 break;
             case GameState.GAMEOVER:
-                if (GameSession.IsGameOver == false)
+                if (Game.IsGameOver == false)
                 {
-                    GameSession.IsGameOver = true;
+                    Game.IsGameOver = true;
                     StartCoroutine(DelayGameOver());
                 }
                 break;
             case GameState.WIN:
-                if (!GameSession.IsGameOver)
+                if (!Game.IsGameOver)
                 {
-                    GameSession.IsGameOver = true;
+                    Game.IsGameOver = true;
 
                     StartCoroutine(DelayWinScreen());
                 }
@@ -152,22 +162,6 @@ public class GameController : MonoSingleton<GameController>
         currentGameState = gameState;
     }
 
-    public void GameStart()
-    {
-        if (AudioManager.Instance)
-            AudioManager.PlayRandomMusic(true);
-
-        GameSession.Reset();
-
-        if (PlayerManager.GetPlayer() == null)
-        {
-            int shipSelected = playerData.currentSelectedShip;
-            player = PlayerManager.CreatePlayer(shipSelected);
-            playerShip = player.GetComponentInChildren<PlayerShip>();
-        }
-        baseGameMode.InitReference(playerData, playerShip);
-    }
-
     public GameState GetGameState()
     {
         return currentGameState;
@@ -175,7 +169,6 @@ public class GameController : MonoSingleton<GameController>
 
     private void EnemyDied(string name, BaseEnemy baseEnemy)
     {
-
         int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
         int EnemyLevel = baseEnemy.Level;
         int levelDiffrence = PlayerLevel / EnemyLevel;
@@ -185,7 +178,7 @@ public class GameController : MonoSingleton<GameController>
             levelDiffrence = 1;
         }
 
-        if (!GameSession.SurvivalMode)
+        if (!Game.IsSurvivalMode)
         {
             float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
             playerData.EarnXP(XPEarned);
@@ -193,14 +186,25 @@ public class GameController : MonoSingleton<GameController>
 
         playerData.PowerUpLevel += .025f;
 
+        int score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
+        int kills = Game.EnemyKilled + 1;
 
-        int score = GameSession.Multiplier * baseEnemy.EnemyData.EnemyValue;
-        int kills = GameSession.CurrentEnemyKilled + 1;
 
-        GameSession.SetCurrentEnemyKills(kills);
-        GameSession.enemyKilled++;
-        GameSession.Score = score;
-        GameSession.Multiplier++;
+        Game.SetCurrentEnemyKills(kills);
+        Game.EnemyKilled++;
+        Game.Score = score;
+        Game.Multiplier++;
+
+
+
+        playerData.m_EnemyKilled = kills;
+        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
+
+        if (objectiveData != null)
+        {
+            var newProgress = objectiveData.progress + playerData.m_EnemyKilled;
+            objectiveData.UpdateProgress(newProgress);
+        }
     }
 
     private void PlayerLostCallback()
@@ -236,22 +240,19 @@ public class GameController : MonoSingleton<GameController>
 
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
-        GameSession.CoinEarnInGame = 0;
-        GameSession.CurrentEnemyKilled = 0;
-
         SaveSystem.SaveGame();
 
-        if (GameSession.SurvivalMode)
+        if (Game.IsSurvivalMode)
         {
             int levelIndex = GameManager.LevelIndexSelected;
-            playerData.SetScore(levelIndex, GameSession.score);
+            playerData.SetScore(levelIndex, Game.Score);
         }
 
         yield return new WaitForSeconds(2.0f);
 
         AudioManager.PlayMusic("GameOver", false);
 
-  
+
         SetGameState(GameState.RESULTS);
     }
     IEnumerator DelayWinScreen()
@@ -260,8 +261,8 @@ public class GameController : MonoSingleton<GameController>
         playerData.PlayedGame = true;
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
-        playerData.Coins += GameSession.CoinEarnInGame;
-        playerData.m_EnemyKilled += GameSession.CurrentEnemyKilled;
+        playerData.Coins += Game.CoinPicked;
+        playerData.m_EnemyKilled += Game.EnemyKilled;
 
         PlayerChallengesCheck();
 
@@ -312,10 +313,10 @@ public class GameController : MonoSingleton<GameController>
     public void PlayerChallengesCheck()
     {
         int levelIndex = GameManager.LevelIndexSelected;
-        playerData.SetScore(levelIndex, GameSession.score);
+        playerData.SetScore(levelIndex, Game.Score);
         var levelName = "Level" + levelIndex;
-        var killed = GameSession.EnemySpawnInTotal * .9f;
-        var collected = GameSession.EnemySpawnInTotal * .9f;
+        var killed = Game.EnemySpawnInTotal * .9f;
+        var collected = Game.EnemySpawnInTotal * .9f;
         var missionCollection = PersistantData.GetMissionCollection();
 
         Scene scene = SceneManager.GetActiveScene();
@@ -330,7 +331,7 @@ public class GameController : MonoSingleton<GameController>
             playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        float enemyKilled = GameSession.CurrentEnemyKilled;
+        float enemyKilled = Game.EnemyKilled;
 
         if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
         {
@@ -344,7 +345,7 @@ public class GameController : MonoSingleton<GameController>
             playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        float coinEarnInGame = GameSession.coinEarnInGame;
+        float coinEarnInGame = Game.CoinPicked;
 
         if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
         {
@@ -397,13 +398,13 @@ public class GameController : MonoSingleton<GameController>
             }
             else
             {
-                if (!GameSession.IsGameOver && !Game.Paused)
+                if (!Game.IsGameOver && !Game.IsPaused && Game.UseSlowMo)
                 {
-                    if (GameSession.useSloMo)
+                    if (Game.SlowMo)
                     {
                         Time.timeScale = delayTheSlowMoEffectTimer;
                     }
-                    else if (!GameSession.useSloMo && Time.timeScale < 1)
+                    else if (!Game.SlowMo && Time.timeScale < 1)
                     {
                         Time.timeScale = 1.0f;
                     }

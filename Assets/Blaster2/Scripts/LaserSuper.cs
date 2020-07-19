@@ -18,8 +18,8 @@ public class LaserSuper : SpecialAttack
             SpecialActive = true;
             source.PlayOneShot(weaponData.ShootSFX);
 
-            int superUsed = GameSession.SuperUsed + 1;
-            GameSession.SetSuperUsed(superUsed);
+            int superUsed = Game.SuperUsed + 1;
+            Game.SetSuperUsed(superUsed);
             playerShip.CanFire = false;
 
             laserSize = 0;
@@ -49,7 +49,7 @@ public class LaserSuper : SpecialAttack
             ActivateSpecial();
             if (m_CountDownTimer == null)
             {
-                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
+                m_CountDownTimer = new CountDownTimer(weaponData.SuperChargeTime);
             }
 
             laserSize = Mathf.Lerp(laserSize, 4, 1);
@@ -70,7 +70,7 @@ public class LaserSuper : SpecialAttack
 
                     if (m_CountDownTimer.countToZero())
                     {
-                        playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                        playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / weaponData.SuperChargeTime;
                     }
 
                     Shoot();

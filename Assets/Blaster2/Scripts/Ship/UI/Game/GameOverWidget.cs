@@ -21,7 +21,7 @@ public class GameOverWidget : MonoBehaviour
 
     public void ShowGameResult()
     {
-        float score = GameSession.score;
+        float score = Game.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
 

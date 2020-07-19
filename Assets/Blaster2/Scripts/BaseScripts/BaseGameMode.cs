@@ -9,7 +9,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 {
     protected PlayerShip playerShip;
     protected EnemyElement enemyElement;
-    protected bool GameEnded;
     protected bool BossBattleInitiated;
     protected GameObject currentBoss;
     protected PlayerData playerData;
@@ -75,7 +74,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public void GameOver()
     {
-        GameEnded = true;
+        Game.IsGameOver = true;
     }
 
     public void BossEscapedCallback(string id, BaseEnemy baseEnemy)
@@ -93,7 +92,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     {
         baseEnemy.enemyElement.currentNumberInScene--;
         Enemies.Remove(baseEnemy.gameObject);
-        GameSession.enemyEscaped++;
+        Game.EnemyEscaped++;
     }
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
@@ -114,7 +113,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
         BossBattleInitiated = false;
 
-        GameEnded = true;
+        Game.IsGameOver = true;
 
     }
 

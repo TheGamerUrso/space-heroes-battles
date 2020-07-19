@@ -25,7 +25,7 @@ public class Tutorial : MonoSingleton<Tutorial>
 
     public void ShowTutorial(int itemToShowIndex)
     {
-        Game.Paused = true;
+        Game.IsPaused = true;
         TutorialView.Show();
         for (int i = 0; i < TutorailItemsToShow.Length; i++)
         {
@@ -43,7 +43,7 @@ public class Tutorial : MonoSingleton<Tutorial>
     public void Close()
     {
         TutorialView.Hide();
-        Game.Paused = false;
+        Game.IsPaused = false;
         Time.timeScale = 1;
         PlayerManager.GetPlayer().tempGodMode();
     }

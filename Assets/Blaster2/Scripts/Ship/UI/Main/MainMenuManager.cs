@@ -54,7 +54,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         playerData = PersistantData.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
-        GameSession.SurvivalMode = false;
+        Game.IsSurvivalMode = false;
 
         playerShipData = playerData.GetCurrentPlayerShipData();
         Events.OnXpValueChanged += XpLevelChanged;

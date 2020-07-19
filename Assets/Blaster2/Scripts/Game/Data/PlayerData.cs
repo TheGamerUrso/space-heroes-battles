@@ -211,7 +211,7 @@ public class PlayerData
                 if (level == 0)
                 {
                     GooglePlayServicesManager.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
-                    GameSession.Highscore = true;
+                    Game.IsHightScore = true;
                 }
 
             }

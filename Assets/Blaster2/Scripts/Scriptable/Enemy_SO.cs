@@ -17,5 +17,5 @@ public class Enemy_SO : ScriptableObject
 
     public AudioClip hitSFX;
 
-    [SerializeField] protected PoolGameObjectType ExplostionEffect;
+    public PoolGameObjectType ExplostionEffect;
 }

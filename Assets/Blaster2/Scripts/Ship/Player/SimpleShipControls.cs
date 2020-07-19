@@ -58,7 +58,6 @@ public class SimpleShipControls : MonoBehaviour
                 {
                     case TouchPhase.Began:
                         currentTouchPos = currentTouch.position;
-                        GameSession.useSloMo = false;
                         break;
                     case TouchPhase.Moved:
                         currentTouchPos = currentTouch.position;
@@ -68,7 +67,6 @@ public class SimpleShipControls : MonoBehaviour
                         break;
                     case TouchPhase.Ended:
                         currentTouchPos = transform.position;
-                        GameSession.useSloMo = true;
                         break;
                 }
             }
@@ -124,18 +122,18 @@ public class SimpleShipControls : MonoBehaviour
                 SetTargetPosition();
             }
 
-            if (!Game.Paused)
+            if (!Game.IsPaused)
             {
                 Rotate();
             }
 
             if (Input.touchCount > 0 || Input.GetMouseButton(0))
             {
-                GameSession.useSloMo = false;
+                Game.SlowMo = false;
             }
             else
             {
-                GameSession.useSloMo = true;
+                Game.SlowMo = true;
             }
         }
     }

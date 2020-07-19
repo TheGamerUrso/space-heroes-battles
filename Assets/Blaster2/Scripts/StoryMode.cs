@@ -25,7 +25,7 @@ public class StoryMode : BaseGameMode
 
         TotalEnemies = numberOfEnemiesEachWave * waves;
 
-        GameSession.EnemySpawnInTotal = TotalEnemies;
+        Game.EnemySpawnInTotal = TotalEnemies;
 
         for (int i = 0; i < availableEnemies; i++)
         {
@@ -46,28 +46,36 @@ public class StoryMode : BaseGameMode
 
     public override IEnumerator Spawn()
     {
-        while(GameController.Instance.currentGameState == GameController.GameState.START)
-        {
-            yield return null;
-        }
+        GameObject enemGO;
 
-        yield return new WaitForSeconds(1.0f);
-
-        // Debug.Log("Game Started");
         waitForSec = new WaitForSeconds(delay);
         waitForCooldown = new WaitForSeconds(cooldown);
 
         var startingTotalEnemies = TotalEnemies;
         bool IncomingDanger = false;
+        int randomNumb = 0;
+        var range = 0;
+        var rand = Random.Range(0, range);
+        var top = 0;
 
-        while (GameController.Instance.currentGameState == GameController.GameState.GAME)
+        if ((GameController.Instance.currentGameState == GameController.GameState.START))
         {
-            while (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState != GameController.GameState.GAME)
-            {
-                yield return waitForEndOfFrame;
-            }
+            yield return new WaitUntil(() => (GameController.Instance.currentGameState == GameController.GameState.GAME));
+        }
 
-            while (TotalEnemies > 0 && !GameEnded)
+        yield return new WaitForSeconds(1.0f);
+
+
+        while (!Game.IsGameOver)
+        {
+            if (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState == GameController.GameState.GAME)
+            {
+                yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
+            }
+            
+            Game.UseSlowMo = true;
+
+            while (TotalEnemies > 0 && !Game.IsGameOver)
             {
                 float totalEnemiesPresetnage = (float)TotalEnemies / (float)startingTotalEnemies;
                 if (totalEnemiesPresetnage < .1f)
@@ -77,18 +85,13 @@ public class StoryMode : BaseGameMode
                         IncomingDanger = true;
                         GuiManager.PlayTrasmition(null, true);
                     }
-                }
-
-                int randomNumb = 0;
+                }                
 
                 availableEnemie = enemyElements.GetRange(0, availableEnemies);
-
-
-                var range = 0;
+             
                 do
                 {
-                    tempList = availableEnemie.Where(
-       x => (x.currentNumberInScene < x.MaxNumberInScene && x.presentage > 0)).ToList();
+                    tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene && x.presentage > 0)).ToList();
                     yield return null;
                 } while (tempList.Count == 0);
 
@@ -98,10 +101,7 @@ public class StoryMode : BaseGameMode
                     {
                         range += tempList[i].presentage;
                     }
-                }
-
-                var rand = UnityEngine.Random.Range(0, range);
-                var top = 0;
+                }         
 
                 for (int i = 0; i < tempList.Count; i++)
                 {
@@ -114,15 +114,14 @@ public class StoryMode : BaseGameMode
                     }
                 }
 
-                while (pause)
+                if (pause)
                 {
-                    yield return waitForEndOfFrame;
+                    yield return new WaitUntil(() => !pause);
                 }
-
 
                 if (TotalEnemies - 1 >= 0)
                 {
-                    GameObject enemGO = SpawnEnemies.SpawnEnemyElement(enemyElement);
+                    enemGO = SpawnEnemies.SpawnEnemyElement(enemyElement);
                     Enemies.Add(enemGO);
                 }
 
@@ -131,13 +130,14 @@ public class StoryMode : BaseGameMode
 
             if (playerShip.CurrentHealth > 0)
             {
-                while (Enemies.Count > 0)
+                if (Enemies.Count > 0)
                 {
-                    yield return waitForCooldown;
+                    yield return new WaitUntil(() => Enemies.Count <= 0);
                 }
 
                 if (HasBoss)
                 {
+                    Debug.Log("Boss Battle");
                     if (!BossBattleInitiated)
                     {
                         BossBattleInitiated = true;
@@ -147,25 +147,23 @@ public class StoryMode : BaseGameMode
                         Enemies.Add(currentBoss);
                     }
 
-
-                    while (BossBattleInitiated)
+                    if (BossBattleInitiated)
                     {
-                        yield return waitforOneSec;
+                        yield return new WaitUntil(() => !BossBattleInitiated);
                     }
-                }
-                else
-                {
-                    GameOver();
+  
                 }
 
 
                 yield return waitForFourSeconds;
 
-                if (!GameSession.IsGameOver)
+                if (!Game.IsGameOver)
                 {
                     Events.GameEnded?.Invoke();
+                    Game.UseSlowMo = false;
                 }
             }
+
         }
     }
 }

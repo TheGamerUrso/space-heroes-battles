@@ -21,7 +21,7 @@ public class BossHealthWidget : EnemyHealthWidget
 
     private void LateUpdate()
     {
-        if (GameSession.IsGameOver)
+        if (Game.IsGameOver)
         {
             gameObject.SetActive(false);
         }

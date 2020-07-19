@@ -100,7 +100,7 @@ namespace GooglePlayGames.Editor
             }
 
             AssetDatabase.Refresh();
-            Debug.Log("GPGSUpgrader done");
+           // Debug.Log("GPGSUpgrader done");
         }
 
         /// <summary>

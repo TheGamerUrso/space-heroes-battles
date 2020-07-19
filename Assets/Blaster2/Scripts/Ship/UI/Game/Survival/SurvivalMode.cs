@@ -31,7 +31,7 @@ public class SurvivalMode : BaseGameMode
 
         StartCoroutine(StartGameDelay());
 
-        GameSession.SurvivalMode = true;
+        Game.IsSurvivalMode = true;
     }
 
 
@@ -89,7 +89,7 @@ public class SurvivalMode : BaseGameMode
                 yield return waitForEndOfFrame;
             }
 
-            while (TotalEnemies > 0 && !GameEnded)
+            while (TotalEnemies > 0 && !Game.IsGameOver)
             {
                 var totalEnemiesPresetnage = startingTotalEnemies / TotalEnemies;
 

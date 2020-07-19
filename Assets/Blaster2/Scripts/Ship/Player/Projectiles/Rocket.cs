@@ -9,7 +9,7 @@ public class Rocket : PlayerProjectile
         m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity);
         if (m_Target != null)
         {
-            Debug.Log("Attacking " + m_Target, gameObject);
+   
         }
         else if (m_Target == null)
         {

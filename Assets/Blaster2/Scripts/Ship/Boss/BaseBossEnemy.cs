@@ -141,8 +141,10 @@ public class BaseBossEnemy : BaseEnemy
         MonoBehaviour go = part as MonoBehaviour;
         if (go != this)
         {
-            part.MaxHealth = MaxHealth / 2;
-            part.CurrentHealth = part.MaxHealth;
+            BaseEnemy baseEnemy = go.GetComponent<BaseEnemy>();
+            baseEnemy.MaxHealth = part.MaxHealth / 2;
+            float health = part.MaxHealth;
+            baseEnemy.SetHealth(health);
         }
     }
 

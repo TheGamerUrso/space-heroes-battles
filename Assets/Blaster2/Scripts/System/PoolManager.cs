@@ -130,48 +130,7 @@ public class PoolManager : MonoSingleton<PoolManager>
             holder.transform.parent = this.transform;
         }
 
-        if (poolGameObjectType == PoolGameObjectType.BulletExplosion || poolGameObjectType == PoolGameObjectType.ShipExplosion)
-        {
-            HelperUtils.SetGameObjectParent(GO.transform, "Effects");
-        }
-
-        if (poolGameObjectType == PoolGameObjectType.Planet)
-        {
-            HelperUtils.SetGameObjectParent(GO.transform, "Props");
-        }
-
-        if (poolGameObjectType == PoolGameObjectType.FloatingText)
-        {
-            HelperUtils.SetGameObjectParent(GO.transform, "UI");
-        }
-
-        if (GO.GetComponent<Items>())
-        {
-            HelperUtils.SetGameObjectParent(GO.transform, "Items");
-        }
-
-        if (GO.GetComponent<Ship>())
-        {
-            HelperUtils.SetGameObjectParent(GO.transform, "Ships");
-        }
-
-        if (GO.GetComponent<Projectile>())
-        {
-            HelperUtils.SetGameObjectParent(GO.transform, "Projectiles");
-        }
-
-        if (GO.GetComponent<Asteroids>())
-        {
-            HelperUtils.SetGameObjectParent(GO.transform, "Asteroids");
-        }
-
-        if (holder == null)
-        {
-            holder = new GameObject(tempGameObjectPrefab.name);
-            holder.transform.position = Vector3.zero;
-            holder.transform.rotation = Quaternion.identity;
-            holder.transform.parent = this.transform;
-        }
+        HelperUtils.SetGameObjectParent(GO.transform, "DynamicObjects");
 
         GO.SetActive(false);
     }
