@@ -19,6 +19,8 @@ public struct PlayerShipElement
 
 public class GameManager : MonoSingleton<GameManager>
 {
+    public enum AchievementType { LEVEL, KILL, UNLOCKHERO }
+
     private GameStateEnum currentGameState = GameStateEnum.PRELOAD;
     private static float DefaultTimeDeltaScale;
     WaitForSeconds shortWait = new WaitForSeconds(2.0f);
@@ -26,6 +28,8 @@ public class GameManager : MonoSingleton<GameManager>
 
 
     private PlayerData playerData;
+    private PlayerShipData playerShipData;
+
     [SerializeField] private GameObject LevelUpPrefab;
     [SerializeField] private PlayerShipElement[] PlayerShips;
 
@@ -96,7 +100,10 @@ public class GameManager : MonoSingleton<GameManager>
     {
         currentMission = mission;
         LevelIndexSelected = mission.ID;
-        StoryController.Instance.ShowStory(GameManager.LevelIndexSelected);
+        if (LevelIndexSelected > 0)
+        {
+            StoryController.Instance.ShowStory(GameManager.LevelIndexSelected);
+        }
     }
 
     public LevelObjectiveData[] GetChallenges()
@@ -190,7 +197,9 @@ public class GameManager : MonoSingleton<GameManager>
                 missionsCompleted++;
             }
         }
+
         playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
 
         missionCollection = PersistantData.GetMissionCollection();
 
@@ -367,8 +376,145 @@ public class GameManager : MonoSingleton<GameManager>
         playerData.SetScore(levelIndex, Game.Score);
     }
 
+    public void PlayerChallengesCheck()
+    {
+        int levelIndex = LevelIndexSelected;
+        var levelName = "Level" + levelIndex;
+        var killed = Game.EnemySpawnInTotal * .9f;
+        var collected = Game.EnemySpawnInTotal * .9f;
+
+        var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+
+        if (levelObjectiveDatas[0].completed == false)
+        {
+            levelObjectiveDatas[0].completed = true;
+            playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
+        }
+
+        float enemyKilled = Game.EnemyKilled;
+
+        if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
+        {
+            levelObjectiveDatas[1].completed = true;
+            playerData.EarnXP(30 * playerData.GetCurrentPlayerShipData().level);
+        }
+
+        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && !playerData.GotHitInGame)
+        {
+            levelObjectiveDatas[2].completed = true;
+            playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
+        }
+
+        float coinEarnInGame = Game.CoinPicked;
+
+        if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
+        {
+            levelObjectiveDatas[3].completed = true;
+            playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
+        }
+    }
+
+    public void UnlockNextMission()
+    {
+        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
+        int missionsCompleted = 1;
+        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+        {
+            if (item.Value[0].completed == true)
+            {
+                missionsCompleted++;
+            }
+        }
+
+        int levelIndex = GameManager.LevelIndexSelected;
+        PostAchievementProgress(AchievementType.LEVEL, levelIndex);
+
+        if (missionsCompleted > 9)
+        {
+            playerData.SetSurvivalUnlockedLock(true);
+        }
+
+        playerData.LevelUnlocked = missionsCompleted;
+    }
+
+    public void PlayerQuestCheck()
+    {
+        if (playerData == null)
+            playerData = PersistantData.GetPlayerData();
+
+        for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
+        {
+            ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
+            switch ((ObjectiveType)objective.objectiveType)
+            {
+                //case ObjectiveType.Use:
+                //    if (objective.completed == false)
+                //    {
+                //        objective.UpdateProgress(playerData.superUsed);
+                //    }
+                //    break;
+                case ObjectiveType.Unharmed:
+                    if (objective.completed == false)
+                    {
+                        if (playerData.GotHitInGame == false)
+                        {
+                            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
+                            objectiveData.UpdateProgress(1);
+                        }
+                    }
+                    break;
+                case ObjectiveType.survive:
+                    var surviveProgress = objective.progress;
+                    surviveProgress++;
+                    objective.UpdateProgress(surviveProgress);
+                    break;
+            }
+        }
+    }
+
+    public void UpdatePlayerStatistics()
+    {
+        int levelIndex = GameManager.LevelIndexSelected;
+        var levelName = "Level" + levelIndex;
+        var killed = Game.EnemySpawnInTotal * .9f;
+        var collected = Game.EnemySpawnInTotal * .9f;
+
+        playerData.SetScore(levelIndex, Game.Score);
+        playerData.PlayedGame = true;
+        playerData.Coins += Game.CoinPicked;
+        playerData.Kills += Game.EnemyKilled;
+
+        playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
 
+        SaveSystem.SaveGame();
+    }
+
+    public void PostAchievementProgress(AchievementType achievement, int progress)
+    {
+#if UNITY_ANDROID
+        if (GooglePlayServicesManager.GetInitialized())
+        {
+            switch (achievement)
+            {
+                case AchievementType.LEVEL:
+                    GooglePlayServicesManager.UnlockAchievement(progress);
+
+                    break;
+                case AchievementType.KILL:
+                    GooglePlayServicesManager.ReportAchivementProgress(EM_GameServicesConstants.Achievement_Piece_of_Cake, progress);
+                    GooglePlayServicesManager.ReportAchivementProgress(EM_GameServicesConstants.Achievement_Destroyer, progress);
+                    break;
+                case AchievementType.UNLOCKHERO:
+                    break;
+                default:
+                    break;
+            }
+        }
+#elif UNITY_EDITOR
+     Debug.Log("Unlocked" + achievement.ToString()); 
+#endif
+    }
 }
 
 

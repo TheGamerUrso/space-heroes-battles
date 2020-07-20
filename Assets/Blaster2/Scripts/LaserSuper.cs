@@ -20,7 +20,7 @@ public class LaserSuper : SpecialAttack
 
             int superUsed = Game.SuperUsed + 1;
             Game.SetSuperUsed(superUsed);
-            playerShip.CanFire = false;
+            playerShip.DisableFire();
 
             laserSize = 0;
             laiser.ActiveLaser();
@@ -36,7 +36,7 @@ public class LaserSuper : SpecialAttack
             laserSize = 0;
             laiser.DeactiveLaser();
             lineRenderer.widthMultiplier = laserSize;
-            playerShip.CanFire = true;
+            playerShip.EnableFire();
 
             base.DeactivateSpecial();
         }

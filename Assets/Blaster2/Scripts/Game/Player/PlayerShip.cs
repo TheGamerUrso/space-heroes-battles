@@ -15,7 +15,7 @@ public class PlayerShip : Ship, IDamagable
     private WeaponScript weapon;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
-    private bool CanFire = true;
+
 
     #region Weapons
     private bool TempFireRateUpgrade;
@@ -24,6 +24,7 @@ public class PlayerShip : Ship, IDamagable
     private float clicktimer;
     private bool clicked;
 
+    public bool CanFire { get; private set; }
     public float MaxHealth { get; private set; }
     public float CurrentHealth { get; private set; }
     public int CurrentWeapnType { get; set; }
@@ -201,7 +202,7 @@ public class PlayerShip : Ship, IDamagable
     {
         CurrentHealth += ammount;
 
-        if(CurrentHealth > MaxHealth)
+        if (CurrentHealth > MaxHealth)
         {
             CurrentHealth = MaxHealth;
         }
@@ -504,5 +505,15 @@ public class PlayerShip : Ship, IDamagable
 
             PlayerPrefs.SetInt("CoinTut", 1);
         }
+    }
+
+
+    public void EnableFire()
+    {
+        CanFire = true;
+    }
+    public void DisableFire()
+    {
+        CanFire = false;
     }
 }

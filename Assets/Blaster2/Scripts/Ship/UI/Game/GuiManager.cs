@@ -2,6 +2,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine;
 using Doozy.Engine.UI;
+using static GameController;
 
 public class GuiManager : MonoSingleton<GuiManager>
 {
@@ -42,10 +43,9 @@ public class GuiManager : MonoSingleton<GuiManager>
     private void Start()
     {
         timer = 1;
-
-        var panelGameOver = Instantiate(UIPrefabs[0], transform, false);
-        var panelWin = Instantiate(UIPrefabs[1], transform, false);
-        var panelPause = Instantiate(UIPrefabs[2], transform, false);
+        var panelPause = Instantiate(UIPrefabs[1], transform, false);
+        var panelGameOver = Instantiate(UIPrefabs[2], transform, false);
+        var panelWin = Instantiate(UIPrefabs[3], transform, false);    
 
         panelGameOver.name = UIPrefabs[0].name;
         panelWin.name = UIPrefabs[1].name;
@@ -231,6 +231,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     private IEnumerator GameOverCoroutine()
     {
+        AudioManager.PlayMusic("GameOver", false);
 
         yield return new WaitForSeconds(2.0f);
 

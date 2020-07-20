@@ -64,8 +64,8 @@ public class LevelElement : MonoBehaviour
     {
         if (level.ID.Contains("Survival"))
         {
+            GameManager.Instance.SetMission(level.mission);
             ScreenManager.Instance.Open("LevelDetailScreen");
-            GameManager.LevelIndexSelected = 0;
         }
         else
         {

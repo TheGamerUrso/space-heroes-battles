@@ -24,7 +24,7 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
     {
         var currentMission = GameManager.Instance.GetCurrentMission();
 
-        if (string.IsNullOrEmpty(currentMission.Title))
+        if (currentMission.ID == 4)
         {
             LevelDetailLevelTItle.text = "Survival";
             survivalHighscore.SetActive(true);

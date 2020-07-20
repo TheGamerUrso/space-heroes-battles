@@ -9,7 +9,7 @@ public class GameController : MonoSingleton<GameController>
 {
     public enum GameState
     {
-        START, GAME, GAMEOVER, WIN, RESULTS
+        START, GAME, GAMEOVER, WIN
     }
 
     public GameState currentGameState = GameState.START;
@@ -39,23 +39,36 @@ public class GameController : MonoSingleton<GameController>
 
     private void OnApplicationFocus(bool focus)
     {
+#if UNITY_EDITOR
+
+        return;
+#endif
         if (Application.platform == RuntimePlatform.Android)
         {
-            //if (!focus && !Game.IsGameOver)
-            //{
-            //    GameManager.Instance.PauseTheGame(true);
-            //}
+            if (!focus)
+            {
+                if (Game.IsGameOver == false)
+                {
+                    GameManager.Instance.PauseTheGame(true);
+                }
+            }
         }
     }
 
     private void OnApplicationPause(bool Paused)
     {
+#if UNITY_EDITOR
+        return;
+#endif
         if (Application.platform == RuntimePlatform.Android)
         {
-            //if (Game.IsGameOver == false)
-            //{
-            //    GameManager.Instance.PauseTheGame(true);
-            //}
+            if (Paused)
+            {
+                if (Game.IsGameOver == false)
+                {
+                    GameManager.Instance.PauseTheGame(true);
+                }
+            }
         }
     }
 
@@ -72,6 +85,7 @@ public class GameController : MonoSingleton<GameController>
         base.Awake();
 
         baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
+
         if (EnemyWaypoints != null)
             Instantiate(EnemyWaypoints, transform, false);
 
@@ -152,18 +166,8 @@ public class GameController : MonoSingleton<GameController>
                     StartCoroutine(DelayWinScreen());
                 }
                 break;
-            case GameState.RESULTS:
-                Events.OnGameOver?.Invoke(this);
-                break;
-            default:
-                break;
         }
         currentGameState = gameState;
-    }
-
-    public GameState GetGameState()
-    {
-        return currentGameState;
     }
 
     private void EnemyDied(string name, BaseEnemy baseEnemy)
@@ -216,16 +220,6 @@ public class GameController : MonoSingleton<GameController>
         SetGameState(GameState.WIN);
     }
 
-
-    public void UpdateAchievements()
-    {
-        if (GooglePlayServicesManager.GetInitialized())
-        {
-            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Piece_of_Cake, playerData.Kills);
-            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Destroyer, playerData.Kills);
-        }
-    }
-
     public void GameOver()
     {
         SetGameState(GameState.GAMEOVER);
@@ -235,155 +229,51 @@ public class GameController : MonoSingleton<GameController>
     {
         Time.timeScale = 1.0f;
 
-        baseGameMode.GameOver();
-
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-
-        SaveSystem.SaveGame();
 
         if (Game.IsSurvivalMode)
         {
             GameManager.Instance.SetSurvivalScore(Game.Score);
         }
 
+        SaveSystem.SaveGame();
+
         yield return new WaitForSeconds(2.0f);
 
-        AudioManager.PlayMusic("GameOver", false);
+        Events.OnGameOver?.Invoke(this);
 
-
-        SetGameState(GameState.RESULTS);
+        SaveSystem.SaveGame();
     }
+
     IEnumerator DelayWinScreen()
     {
         Time.timeScale = 1.0f;
-        playerData.PlayedGame = true;
+
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
-        playerData.Coins += Game.CoinPicked;
-        playerData.Kills += Game.EnemyKilled;
+        GameManager.Instance.UpdatePlayerStatistics();
+        GameManager.Instance.UnlockNextMission();
+        GameManager.Instance.PlayerQuestCheck();
 
-        PlayerChallengesCheck();
-
-        PlayerQuestCheck();
-
-        UpdateAchievements();
-
+        GameManager.Instance.PostAchievementProgress(GameManager.AchievementType.KILL, playerData.Kills);
+       
         SaveSystem.SaveGame();
 
         yield return new WaitForSeconds(2.0f);
 
         playerShip?.Exit();
 
+        yield return new WaitForSeconds(2.0f);
         Events.OnWin?.Invoke(this);
-    }
-
-
-    public void UnlockNextMission()
-    {
-        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-        int missionsCompleted = 1;
-        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-        {
-            if (item.Value[0].completed == true)
-            {
-                missionsCompleted++;
-            }
-        }
-        int levelIndex = GameManager.LevelIndexSelected;
-#if UNITY_ANDROID
-        if (GooglePlayServicesManager.GetInitialized())
-        {
-            GooglePlayServicesManager.UnlockAchievement(levelIndex);
-        }
-#elif UNITY_EDITOR
-     Debug.Log("UnlockAchievement"); 
-#endif
-        if (missionsCompleted > 9)
-        {
-            playerData.SetSurvivalUnlockedLock(true);
-        }
-        playerData.LevelUnlocked = missionsCompleted;
-    }
-
-    public void PlayerChallengesCheck()
-    {
-        int levelIndex = GameManager.LevelIndexSelected;
-        playerData.SetScore(levelIndex, Game.Score);
-        var levelName = "Level" + levelIndex;
-        var killed = Game.EnemySpawnInTotal * .9f;
-        var collected = Game.EnemySpawnInTotal * .9f;
-        var missionCollection = PersistantData.GetMissionCollection();
-
-        Scene scene = SceneManager.GetActiveScene();
-        string index = scene.name[scene.name.Length - 1].ToString();
-        Mission mission = missionCollection.GetMission(int.Parse(index));
-
-        var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
-
-        if (levelObjectiveDatas[0].completed == false)
-        {
-            levelObjectiveDatas[0].completed = true;
-            playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        float enemyKilled = Game.EnemyKilled;
-
-        if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
-        {
-            levelObjectiveDatas[1].completed = true;
-            playerData.EarnXP(30 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && !playerData.GotHitInGame)
-        {
-            levelObjectiveDatas[2].completed = true;
-            playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        float coinEarnInGame = Game.CoinPicked;
-
-        if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
-        {
-            levelObjectiveDatas[3].completed = true;
-            playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        UnlockNextMission();
-    }
-
-    public void PlayerQuestCheck()
-    {
-        for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
-        {
-            ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
-            switch ((ObjectiveType)objective.objectiveType)
-            {
-                //case ObjectiveType.Use:
-                //    if (objective.completed == false)
-                //    {
-                //        objective.UpdateProgress(playerData.superUsed);
-                //    }
-                //    break;
-                case ObjectiveType.Unharmed:
-                    if (objective.completed == false)
-                    {
-                        if (playerData.GotHitInGame == false)
-                        {
-                            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                            objectiveData.UpdateProgress(1);
-                        }
-                    }
-                    break;
-                case ObjectiveType.survive:
-                    var surviveProgress = objective.progress;
-                    surviveProgress++;
-                    objective.UpdateProgress(surviveProgress);
-                    break;
-            }
-        }
+ 
     }
 
     private void Update()
+    {
+        SlowMo();
+    }
+
+    public void SlowMo()
     {
         if (currentGameState == GameState.GAME)
         {

@@ -72,11 +72,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         yield return null;
     }
 
-    public void GameOver()
-    {
-        Game.IsGameOver = true;
-    }
-
     public void BossEscapedCallback(string id, BaseEnemy baseEnemy)
     {
         Enemies.Remove(baseEnemy.gameObject);

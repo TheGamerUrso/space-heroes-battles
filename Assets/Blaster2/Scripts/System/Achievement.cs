@@ -11,11 +11,12 @@ public class Achievement
     public string Description;
     public Sprite Icon;
     public bool completed;
+    public int progress;
     public int requirement;
 
-    public bool Check(int value)
+    public bool Check()
     {
-        if (requirement >= value)
+        if (requirement >= progress)
         {
             return true;
         }
