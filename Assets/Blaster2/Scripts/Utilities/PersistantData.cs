@@ -10,6 +10,12 @@ public class PersistantData : MonoSingleton<PersistantData>
     public GameSettings gameSettings;
     public MissionCollection missionCollection;
     public LevelObjectiveCollection LevelObjectiveCollection;
+    public List<Level> Levels = new List<Level>();
+
+    public static List<Level> GetLevels()
+    {
+        return Instance.Levels;
+    }
 
     public static void ReplacePlayerData(PlayerData playerData)
     {
@@ -72,6 +78,8 @@ public class PersistantData : MonoSingleton<PersistantData>
         }
 
         GenerateLevelObjectiveData();
+
+        InitializeLevels();
     }
 
     public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
@@ -126,6 +134,55 @@ public class PersistantData : MonoSingleton<PersistantData>
 
                 Instance.playerData.AddToListLevelChallenges(Instance.LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
             }
+        }
+    }
+
+    public static void RefreshLevels()
+    {
+        bool surivalLocked = Instance.playerData.SurvivalUnlocked;
+
+        Level survival = Instance.Levels[0];
+        survival.interactable = surivalLocked;
+        survival.Locked = !surivalLocked;
+
+        for (int i = 1; i < (Instance.Levels.Count-1); i++)
+        {
+            Mission missionItem = Instance.missionCollection.Missions[i];
+            Level level = Instance.Levels[i];
+            if (missionItem.ID <= (Instance.playerData.LevelUnlocked + 5))
+            {
+                level.interactable = true;
+                level.Locked = false;
+            }
+            else
+            {
+                level.interactable = false;
+                level.Locked = true;
+            }
+        }
+    }
+
+    private static void InitializeLevels()
+    {
+        PlayerData playerData = Instance.playerData;
+        var missionCollection = PersistantData.GetMissionCollection();
+
+        bool surivalLocked = Instance.playerData.SurvivalUnlocked;
+        var level = new Level("Survival", new Mission(), 0, surivalLocked, surivalLocked);
+        Instance.Levels.Add(level);
+        for (int i = 0; i < missionCollection.Missions.Length; i++)
+        {
+            Mission missionItem = missionCollection.Missions[i];
+
+            level = new Level(missionItem.Title, missionItem,missionItem.SpriteID, false, true);
+
+            if (missionItem.ID <= (playerData.LevelUnlocked + 4))
+            {
+                level.interactable = true;
+                level.Locked = false;
+            }
+
+            Instance.Levels.Add(level);
         }
     }
 }

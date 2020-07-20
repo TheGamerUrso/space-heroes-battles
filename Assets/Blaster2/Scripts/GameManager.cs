@@ -23,8 +23,7 @@ public class GameManager : MonoSingleton<GameManager>
     private static float DefaultTimeDeltaScale;
     WaitForSeconds shortWait = new WaitForSeconds(2.0f);
 
-    public static int LevelIndexSelected = 0;
-    public string currentLevelLoaded;
+
 
     private PlayerData playerData;
     [SerializeField] private GameObject LevelUpPrefab;
@@ -33,7 +32,6 @@ public class GameManager : MonoSingleton<GameManager>
     [SerializeField] private GameObject[] SystemPrefabs;
 
     private List<GameObject> _instancedSystemPrefabs;
-
 
     #region SceneManagment
     private AsyncOperation ao;
@@ -57,10 +55,6 @@ public class GameManager : MonoSingleton<GameManager>
     private LogBehaviour logBehaviour;
     #endregion Tweening
 
- 
-
-
-
     #region Properties 
     public static GameStateEnum CurrentGameState
     {
@@ -75,6 +69,40 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
     #endregion
+
+    public static int LevelIndexSelected = 0;
+    public string currentLevelLoaded;
+    private Mission currentMission;
+    private Dictionary<string, LevelObjectiveData[]> Challanges;
+    public Sprite[] sprites;
+    private MissionCollection missionCollection;
+
+    public string GetStory(int missionIndex)
+    {
+        currentMission = PersistantData.GetMission(missionIndex - 1);
+        return currentMission.Description;
+    }
+    public MissionCollection GetMissions()
+    {
+        return missionCollection;
+    }
+
+    public Mission GetCurrentMission()
+    {
+        return currentMission;
+    }
+
+    public void SetMission(Mission mission)
+    {
+        currentMission = mission;
+        LevelIndexSelected = mission.ID;
+        StoryController.Instance.ShowStory(GameManager.LevelIndexSelected);
+    }
+
+    public LevelObjectiveData[] GetChallenges()
+    {
+        return Challanges["Level" + (currentMission.ID)];
+    }
 
     public PlayerShipElement[] ListOfPlayerShips()
     {
@@ -149,13 +177,35 @@ public class GameManager : MonoSingleton<GameManager>
 
         playerData = PersistantData.GetPlayerData();
         Events.OnLevelValueChanged += OnLevelValueChanged;
+
+        if (Challanges == null)
+            Challanges = playerData.GetListOfObjectives();
+
+        int missionsCompleted = 1;
+
+        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
+        {
+            if (item.Value[0].completed == true)
+            {
+                missionsCompleted++;
+            }
+        }
+        playerData = PersistantData.GetPlayerData();
+
+        missionCollection = PersistantData.GetMissionCollection();
+
+        playerData.LevelUnlocked = missionsCompleted;
+
+        Challanges = playerData.GetListOfObjectives();
+
+
     }
 
     private void InstantiateSystemPrefabs()
     {
         foreach (var systemPrefab in SystemPrefabs)
         {
-            var prefabInstance = Instantiate(systemPrefab,transform,false);
+            var prefabInstance = Instantiate(systemPrefab, transform, false);
             prefabInstance.name = systemPrefab.name;
             _instancedSystemPrefabs.Add(prefabInstance);
         }
@@ -316,4 +366,9 @@ public class GameManager : MonoSingleton<GameManager>
         int levelIndex = GameManager.LevelIndexSelected;
         playerData.SetScore(levelIndex, Game.Score);
     }
+
+
+
 }
+
+

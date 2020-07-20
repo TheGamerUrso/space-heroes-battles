@@ -4,18 +4,19 @@ using UnityEngine;
 
 public class PlayerShip : Ship, IDamagable
 {
-    public Player_SO playerStats;
-    private PlayerData playerData;
-    private PlayerShipData playerShipData;
+    public event Action<float, float> OnHealthChanged;
 
+    [SerializeField] private Player_SO playerStats;
     [SerializeField] private PlayerWeapon[] Weapons;
     [SerializeField] private SpecialAttack specialAttack;
-
     [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem ItemCollectedEffect;
-    private WeaponScript weapon;
 
-    public bool CanFire;
+    private WeaponScript weapon;
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
+    private bool CanFire = true;
+
     #region Weapons
     private bool TempFireRateUpgrade;
     private float invisibilityTimer;
@@ -23,12 +24,10 @@ public class PlayerShip : Ship, IDamagable
     private float clicktimer;
     private bool clicked;
 
-    public event Action<float, float> OnHealthChanged;
-
     public float MaxHealth { get; private set; }
     public float CurrentHealth { get; private set; }
+    public int CurrentWeapnType { get; set; }
 
-    public int CurrentWeapnType;
     #endregion Weapons
 
     public override void OnDestroy()

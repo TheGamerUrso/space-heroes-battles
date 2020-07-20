@@ -48,7 +48,7 @@ public class WinScreen : MonoBehaviour
 
         for (int i = 0; i < levelObjectives.Length; i++)
         {
-            levelObjectives[i].levelObjectiveData = levelObjectiveDatas[i];
+            levelObjectives[i].SetLevelObjective(levelObjectiveDatas[i]);
         }
 
         yield return new WaitForSeconds(1.0f);

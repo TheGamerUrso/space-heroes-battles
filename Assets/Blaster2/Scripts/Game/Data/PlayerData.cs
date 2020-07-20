@@ -17,6 +17,7 @@ public class PlayerData
 
 
     [Header("Progression")]
+    [Range(1,9)]
     public int LevelUnlocked;
     public bool SurvivalUnlocked;
     public int[] UnlockedHeroes;
@@ -33,8 +34,11 @@ public class PlayerData
 
 
     [Header("Stats")]
+    [Range(0,1)]
     public float PowerUpLevel = 0;
+    [Range(0, 4)]
     public int PowerPackCollected = 0;
+    [Range(0, 2)]
     public int CurrrentSelectedShip;
 
     [Header("Settings")]
@@ -43,8 +47,8 @@ public class PlayerData
     public bool AutoAttack;
     public bool mute;
     public float Distance;
-
-    public int MaxLevel { get; set; }
+    [Range(0, 20)]
+    public int MaxLevel;
     public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
     public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
 

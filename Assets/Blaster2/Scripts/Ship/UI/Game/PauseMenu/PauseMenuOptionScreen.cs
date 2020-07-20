@@ -16,7 +16,7 @@ public class PauseMenuOptionScreen : BaseOptions
     public override void InitializeOptions()
     {
         base.InitializeOptions();
- 
+
         string levelName = "Level" + GameManager.LevelIndexSelected;
 
         playerData = PersistantData.GetPlayerData();
@@ -30,8 +30,7 @@ public class PauseMenuOptionScreen : BaseOptions
             levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
             for (int i = 0; i < LevelObjectivesElements.Length; i++)
             {
-                LevelObjectivesElements[i].levelObjectiveData = levelObjectiveDatas[i];
-                LevelObjectivesElements[i].RefreshLevelObjectiveEement();
+                LevelObjectivesElements[i].SetLevelObjective(levelObjectiveDatas[i]);
             }
         }
     }
@@ -45,7 +44,7 @@ public class PauseMenuOptionScreen : BaseOptions
 
     public void RefreshLevelObjectiveElements()
     {
-        if (levelObjectiveDatas==null)
+        if (levelObjectiveDatas == null)
         {
             return;
         }

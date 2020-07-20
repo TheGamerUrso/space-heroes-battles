@@ -6,142 +6,46 @@ using UnityEngine.UI;
 
 public class LevelSelectScreen : MonoBehaviour
 {
+    [SerializeField] private GameObject LevelElementContainer;
+    [SerializeField] private GameObject LevelElementPrefab;
+    [SerializeField] private LevelObjectivesElement[] levelObjectivesElement;
 
-    public Sprite[] sprites;
-
-    private PlayerData playerData;
-    public GameObject LevelsParentTransform;
-    public GameObject LevelElementPrefab;
-
-    public List<GameObject> ListOfLevelElements;
-
-    public float delay;
-
-    [SerializeField] private Mission currentMission;
-
-    public LevelObjectivesElement[] levelObjectivesElement;
-    private MissionCollection missionCollection;
-    private GameObject LevelElementGO;
-    private StoryController dialogueManager;
-    private Mission currentMissionSelected;
-    private LevelObjectiveData[] levelObjectiveDatas;
-    private Dictionary<string, LevelObjectiveData[]> Challanges;
-    public GameObject announcementMessage;
-
-    public void RefreshLevelElementByID(int CompleteLevelIndex)
+    private void OnEnable()
     {
-        ListOfLevelElements[CompleteLevelIndex].GetComponent<LevelElement>().Refresh();
-    }
-
-    public void RefreshLevelElements()
-    {
-        for (int i = 0; i < ListOfLevelElements.Count; i++)
-        {
-            GameObject levelElement = ListOfLevelElements[i];
-
-            levelElement.GetComponent<LevelElement>().Refresh();
-        }
+        PersistantData.RefreshLevels();
     }
 
     private void Start()
     {
-        dialogueManager = StoryController.Instance;
-        SetLevelSelect();
+        InstansiateButtons();
     }
 
-    public void SetLevelSelect()
+    public void InstansiateButtons()
     {
-        playerData = PersistantData.GetPlayerData();
-        missionCollection = PersistantData.GetMissionCollection();
-        Challanges = playerData.GetListOfObjectives();
+        List<Level> levels = PersistantData.GetLevels();
+        var missionCollection = GameManager.Instance.GetMissions();
 
-        int missionsCompleted = 1;
-
-        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-        {
-            if (item.Value[0].completed == true)
-            {
-                missionsCompleted++;
-            }
-        }
-
-        playerData.LevelUnlocked = missionsCompleted;
-
-        SetLevelSelectButtons();
-
-        LevelDetailScreen.Instance.Setup();
-    }
-
-    public void SetLevelSelectButtons()
-    {
-        LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
-
-        bool surivalLocked = playerData.SurvivalUnlocked;
-
-        var level = new Level("Survival", new Mission(), null, surivalLocked, surivalLocked);
+        var LevelElementGO = Instantiate(LevelElementPrefab, LevelElementContainer.transform, false);
 
         var levelElement = LevelElementGO.GetComponent<LevelElement>();
 
-        levelElement.SetLevelElement(level, StartMissionBriefing);
+        levelElement.SetLevelElement(levels[0]);
 
-        ListOfLevelElements.Add(LevelElementGO);
-
-        for (int i = 0; i < missionCollection.Missions.Length; i++)
+        for (int i = 1; i < (levels.Count-1); i++)
         {
+            var Level = levels[i];
             Mission missionItem = missionCollection.Missions[i];
-            LevelElementGO = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
-
-            level = new Level(missionItem.Title, missionItem, sprites[missionItem.SpriteID], false, true);
-
-            if (missionItem.ID <= (playerData.LevelUnlocked + 4))
-            {
-                level.interactable = true;
-                level.Locked = false;
-            }
+            LevelElementGO = Instantiate(LevelElementPrefab, LevelElementContainer.transform, false);
 
             levelElement = LevelElementGO.GetComponent<LevelElement>();
 
-            levelElement.SetLevelElement(level, StartMissionBriefing);
-
-            ListOfLevelElements.Add(LevelElementGO);
+            levelElement.SetLevelElement(Level);
         }
 
-        GameObject emptyLevelElement = Instantiate(LevelElementPrefab, LevelsParentTransform.transform, false);
-        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(new Level("", new Mission(), null, false, false), null);
+        GameObject emptyLevelElement = Instantiate(LevelElementPrefab, LevelElementContainer.transform, false);
+        emptyLevelElement.GetComponent<LevelElement>().SetLevelElement(null);
 
-    }
-
-    public void StartMissionBriefing(Level level)
-    {
-        if (level.ID.Contains("Survival"))
-        {
-            ScreenManager.Instance.Open("LevelDetailScreen");
-            GameManager.LevelIndexSelected = 0;
-            LevelDetailScreen.Instance.SetDetails(new Mission(), sprites[0]);
-        }
-        else
-        {
-
-            GameManager.LevelIndexSelected = level.mission.ID;
-            currentMission = PersistantData.GetMission(level.mission.ID - 1);
-            SetMission(currentMission);
-
-            LevelDetailScreen.Instance.SetDetails(currentMission, sprites[currentMission.SpriteID]);
-
-            dialogueManager.ShowStory(GameManager.LevelIndexSelected);
-            ScreenManager.Instance.Open("LevelDetailScreen");
-        }
-    }
-
-    public string GetStory(int missionIndex)
-    {
-        currentMission = PersistantData.GetMission(missionIndex - 1);
-        return currentMission.Description;
-    }
-
-    public void SetMission(Mission mission)
-    {
-        this.currentMission = mission;
+        LevelDetailScreen.Instance.Setup();
     }
 
 

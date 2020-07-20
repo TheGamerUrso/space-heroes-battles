@@ -6,46 +6,40 @@ using UnityEngine.UI;
 
 public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 {
-    public TextMeshProUGUI LevelDetailLevelTItle;
+    [SerializeField] private Sprite[] sprites;
+    [SerializeField] private TextMeshProUGUI LevelDetailLevelTItle;
+    [SerializeField] private Image LevelDetailPreview;
+    [SerializeField] private GameObject ShowStoryButton;
+    [SerializeField] private LevelObjectivesElement[] levelObjectivesElement;
+    [SerializeField] private GameObject survivalHighscore;
 
-    public Image LevelDetailPreview;
-    public GameObject ShowStoryButton;
-    private Mission currentMission;
-    public LevelObjectivesElement[] levelObjectivesElement;
     private LevelObjectiveData[] levelObjectiveDatas;
-    public GameObject survivalHighscore;
-    private PlayerData playerData;
-    private Dictionary<string, LevelObjectiveData[]> Challanges;
 
     public void Setup()
     {
-        if (playerData == null)
-            playerData = PersistantData.GetPlayerData();
-
-        if (Challanges == null)
-            Challanges = playerData.GetListOfObjectives();
-
         survivalHighscore.SetActive(false);
     }
 
-    public void SetDetails(Mission mission, Sprite sprite)
+    public void ShowDetailScreen()
     {
-        if (string.IsNullOrEmpty(mission.Title))
+        var currentMission = GameManager.Instance.GetCurrentMission();
+
+        if (string.IsNullOrEmpty(currentMission.Title))
         {
             LevelDetailLevelTItle.text = "Survival";
             survivalHighscore.SetActive(true);
             HideLevelObjectives();
             return;
         }
-        survivalHighscore.SetActive(false);
-        currentMission = mission;
+
+        survivalHighscore.SetActive(false);    
 
         ShowStoryButton.SetActive(true);
 
-        LevelDetailPreview.sprite = sprite;
+        LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
         LevelDetailLevelTItle.text = currentMission.Title;
 
-        levelObjectiveDatas = Challanges["Level" + (currentMission.ID)];
+        levelObjectiveDatas = GameManager.Instance.GetChallenges();
 
         RefreshLevelObjectiveData();
     }
@@ -62,22 +56,16 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
         {
             GameManager.LevelIndexSelected = currentMission.ID;
             ShowStoryButton.SetActive(true);
-            LevelDetailPreview.sprite = level.sprite;
+            LevelDetailPreview.sprite = sprites[level.spriteId];
             LevelDetailLevelTItle.text = currentMission.Title;
             RefreshLevelObjectiveData();
         }
     }
 
-
     public void PlayGame()
     {
         var levelIndex = GameManager.LevelIndexSelected;
         GameManager.Instance.LoadScene((LevelEnum)levelIndex);
-    }
-
-    public void Close()
-    {
-        ScreenManager.Instance.Close();
     }
 
     public void HideLevelObjectives()
@@ -90,8 +78,6 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 
     public void RefreshLevelObjectiveData()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-
         if (levelObjectiveDatas != null)
         {
             for (int i = 0; i < levelObjectivesElement.Length; i++)
@@ -100,10 +86,14 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
                 {
                     levelObjectivesElement[i].gameObject.SetActive(true);
                 }
-                levelObjectivesElement[i].levelObjectiveData = levelObjectiveDatas[i];
-                levelObjectivesElement[i].RefreshLevelObjectiveEement();
+                levelObjectivesElement[i].SetLevelObjective(levelObjectiveDatas[i]);
             }
         }
     }
 
+
+    public void Close()
+    {
+        ScreenManager.Instance.Close();
+    }
 }

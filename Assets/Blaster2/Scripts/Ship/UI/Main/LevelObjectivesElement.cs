@@ -4,11 +4,18 @@ using UnityEngine.UI;
 
 public class LevelObjectivesElement : MonoBehaviour
 {
-    public int ID;
-    public TextMeshProUGUI DescriptionText;
-    public LevelObjectiveData levelObjectiveData;
-    public Image completedSprite;
-    public Image failSpriet;
+    [SerializeField] private int ID;
+    [SerializeField] private TextMeshProUGUI DescriptionText;
+    [SerializeField] private LevelObjectiveData levelObjectiveData;
+    [SerializeField] private Image completedSprite;
+    [SerializeField] private Image failSpriet;
+
+    public void SetLevelObjective(LevelObjectiveData levelObjectiveData)
+    {
+        this.levelObjectiveData = levelObjectiveData;
+        RefreshLevelObjectiveEement();
+    }
+
 
     public void MarkAsCompleted()
     {
@@ -36,8 +43,8 @@ public class LevelObjectivesElement : MonoBehaviour
         completedSprite.gameObject.SetActive(false);
         failSpriet.gameObject.SetActive(false);
 
-        ID                      = GameManager.LevelIndexSelected;
-        DescriptionText.text    = levelObjectiveData.description;
+        ID = GameManager.LevelIndexSelected;
+        DescriptionText.text = levelObjectiveData.description;
 
         if (levelObjectiveData.completed)
         {

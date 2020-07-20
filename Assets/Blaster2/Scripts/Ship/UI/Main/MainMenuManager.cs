@@ -20,6 +20,9 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     private PlayerShipData playerShipData;
     private PlayerData playerData;
 
+    [SerializeField] private Mission currentMission;
+
+
     public void ShowLeaderboards()
     {
         GooglePlayServicesManager.ShowLeaderboards();
@@ -114,6 +117,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         levelIndex = GameManager.LevelIndexSelected;
         GameManager.Instance.LoadScene((LevelEnum)(levelIndex + 1));
     }
+   
 
 
 
