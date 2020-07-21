@@ -10,8 +10,6 @@ public class OptionScreen : GooglePlayOptions
     {
         base.ExitAndSave();
         ScreenManager.Instance.Close();
-
-        Popup.Show(Popup.popupType.error, "Settings Saved", false);
     }
 
 }

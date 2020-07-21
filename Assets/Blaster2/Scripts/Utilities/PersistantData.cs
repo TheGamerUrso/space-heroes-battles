@@ -149,7 +149,7 @@ public class PersistantData : MonoSingleton<PersistantData>
         {
             Mission missionItem = Instance.missionCollection.Missions[i];
             Level level = Instance.Levels[i];
-            if (missionItem.ID <= (Instance.playerData.LevelUnlocked + 5))
+            if (missionItem.ID <= (Instance.playerData.LevelUnlocked + 4))
             {
                 level.interactable = true;
                 level.Locked = false;
@@ -168,7 +168,7 @@ public class PersistantData : MonoSingleton<PersistantData>
         var missionCollection = PersistantData.GetMissionCollection();
 
         bool surivalLocked = Instance.playerData.SurvivalUnlocked;
-        var level = new Level("Survival", new Mission() { ID = 4, Title = "Survival Mode", Description = "Survive as Much as you can", Level = 0 }, 4, surivalLocked, surivalLocked);
+        var level = new Level("Survival", new Mission() { ID = 3, Title = "Survival Mode", Description = "Survive as Much as you can", Level = 0 }, 4, surivalLocked, surivalLocked);
         Instance.Levels.Add(level);
         for (int i = 0; i < missionCollection.Missions.Length; i++)
         {
@@ -176,13 +176,9 @@ public class PersistantData : MonoSingleton<PersistantData>
 
             level = new Level(missionItem.Title, missionItem, missionItem.SpriteID, false, true);
 
-            if (missionItem.ID <= (playerData.LevelUnlocked + 4))
-            {
-                level.interactable = true;
-                level.Locked = false;
-            }
-
             Instance.Levels.Add(level);
         }
+
+        RefreshLevels();
     }
 }

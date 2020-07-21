@@ -10,7 +10,6 @@ using UnityEngine.Advertisements;
 
 public class MainMenuManager : MonoSingleton<MainMenuManager>
 {
-    [SerializeField] private TextMeshProUGUI PlayerXPText;
     [SerializeField] private TextMeshProUGUI PlayerLevelText;
     [SerializeField] private ShipSelect shipSelect;
 
@@ -32,22 +31,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     {
         GooglePlayServicesManager.ShowAchievementa();
     }
-
-    protected override void OnCleanup()
-    {
-        base.OnCleanup();
-
-        Events.OnShipSelectValueChanged -= OnShipSelectValueChanged;
-        Events.OnXpValueChanged -= XpLevelChanged;
-    }
-
-    public void OnShipSelectValueChanged(int selection)
-    {
-        playerData.CurrrentSelectedShip = selection;
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
-    }
-  
+    
     private void Start()
     {
         GameManager.Instance.PauseTheGame(false);
@@ -58,13 +42,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
         Game.IsSurvivalMode = false;
-
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        Events.OnXpValueChanged += XpLevelChanged;
-
-        Events.OnShipSelectValueChanged += OnShipSelectValueChanged;
-        XpLevelChanged(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
-
+       
 
         if (PlayerPrefs.HasKey("SurvivalMode"))
         {
@@ -82,30 +60,6 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         shipSelect.SetShipTexture(playerData.CurrrentSelectedShip);
     }
 
-    public void LevelValueChanged(int lvl)
-    {
-        PlayerLevelText.text = string.Format("{0}", lvl);
-
-    }
-    
-    public void XpLevelChanged(int lvl, float xp, float xpToLevel)
-    {
-        if (playerShipData.level >= playerData.MaxLevel)
-        {
-            PlayerLevelText.text = "" + playerShipData.level;
-            PlayerXPText.text = "-/-";
-        }
-        else
-        {
-            PlayerLevelText.text = "" + playerShipData.level;
-
-            PlayerXPText.text = string.Format("{0}/{1}",
-              Mathf.Round(playerShipData.xp),
-                Mathf.Round(playerShipData.xpToLevel));
-        }
-
-        LevelValueChanged(lvl);
-    }
 
     public void QuitButtonEvent()
     {

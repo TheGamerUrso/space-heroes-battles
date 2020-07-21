@@ -3,8 +3,8 @@ using UnityEngine;
 
 public class CoinWidget : MonoBehaviour
 {
-    public TextMeshProUGUI CoinText;
     private PlayerData playerData;
+    [SerializeField] private TextMeshProUGUI PlayerCoinText;
 
     private void OnDestroy()
     {
@@ -20,6 +20,6 @@ public class CoinWidget : MonoBehaviour
 
     public void UpdateCoins(int coins)
     {
-        CoinText.text = "" + coins;
+        PlayerCoinText.text = "" + coins;
     }
 }
