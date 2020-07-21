@@ -106,6 +106,6 @@ public class Events
     /**
      * Upgrade Events 
      */
-    public static Action<UpgradeElement> OnPurchased;
+    public static Action OnPurchased;
 }
 

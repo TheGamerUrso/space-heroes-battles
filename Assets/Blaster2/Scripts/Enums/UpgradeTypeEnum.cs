@@ -1,12 +1,11 @@
 ﻿public enum UpgradeTypeEnum  {
-
-    Speed = 0,
+    Shield = 0,
     FireRate = 1,
     Damage = 2,
-    SuperDamage = 3,
-    SuperrechargeTime = 4,
-    MagnetStrength = 5,
-    MagnetDistance = 6,
-    Shield = 7,
+    MagnetStrength = 3,
+    Speed = 4,
+    MagnetDistance = 5,
+    SuperrechargeTime = 6,
+    SuperDamage = 7,
     ArmorUpgrade = 8
 }

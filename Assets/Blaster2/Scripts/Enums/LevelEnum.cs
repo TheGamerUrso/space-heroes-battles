@@ -1,17 +1,16 @@
 ﻿public enum LevelEnum 
 {
-    SplashScreen = 0,
-    boot = 1,
-    Intro = 2,
-    Main = 3,
-    Level0 = 4,
-    Level1 = 5,
-    Level2= 6, 
-    Level3 = 7,
-    Level4 = 8,
-    Level5 = 9,
-    Level6 = 10,
-    Level7 = 11,
-    Level8 = 12,
-    Level9 = 13
+    boot = 0,
+    Intro = 1,
+    Main = 2,
+    Level0 = 3,
+    Level1 = 4,
+    Level2= 5, 
+    Level3 = 6,
+    Level4 = 7,
+    Level5 = 8,
+    Level6 = 9,
+    Level7 = 10,
+    Level8 = 11,
+    Level9 = 12
 }

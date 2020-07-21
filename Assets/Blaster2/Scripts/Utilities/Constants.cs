@@ -86,7 +86,7 @@ public class Constants
 
     public static string OutOfStock = "Installed";
 
-    public static string UnlockedAtLvl = "Unlocked at Lv";
+    public static string UnlockedAtLvl = "Unlocked at Lv ";
 
     public static string CannotAffordIt = "Insufficient funds";
 

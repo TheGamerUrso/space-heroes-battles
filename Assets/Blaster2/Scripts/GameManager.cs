@@ -45,6 +45,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     #region Loading Screen
     [Header("LoadingScreen")]
+    [SerializeField] private GameObject LoadingScreen;
     [SerializeField] private Image progressBar;
 
     [SerializeField] private CanvasGroup BlockRaycast;
@@ -207,7 +208,10 @@ public class GameManager : MonoSingleton<GameManager>
 
         Challanges = playerData.GetListOfObjectives();
 
-
+        if (SceneManager.GetActiveScene().buildIndex == (int)LevelEnum.boot)
+        {
+            LoadScene(LevelEnum.Intro);
+        }
     }
 
     private void InstantiateSystemPrefabs()
@@ -327,8 +331,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Show()
     {
+        LoadingScreen.SetActive(true);
         Content.SetActive(true);
-        BlockRaycast.blocksRaycasts = true;
+        //BlockRaycast.blocksRaycasts = true;
         for (int i = 0; i < Gates.Length; i++)
         {
             GateControl gate = Gates[i];
@@ -338,8 +343,9 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Hide()
     {
+        LoadingScreen.SetActive(false);
         Content.SetActive(false);
-        BlockRaycast.blocksRaycasts = false;
+        //BlockRaycast.blocksRaycasts = false;
         for (int i = 0; i < Gates.Length; i++)
         {
             GateControl gate = Gates[i];

@@ -1,68 +1,23 @@
-﻿using Boo.Lang;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class UpgradeManager : MonoSingleton<UpgradeManager>
 {
-    public delegate void Purschase();
-    public Purschase OnPurschase;
+    public List<UpgradeData> ListOfUpgrade = new List<UpgradeData>();
+    public List<Upgrade> UpgradeDatabase = new List<Upgrade>();
 
-    public UpgradeElement[] upgradeElements;
-
-    private PlayerData playerData;
-    private PlayerShipData playerShipData;
-    private ObjectiveData objectiveData;
-
-    protected override void OnCleanup()
+    public void Start()
     {
-        base.OnCleanup();
-        OnPurschase = null;
-    }
-
-    public void Notify()
-    {
-        OnPurschase?.Invoke();
-    }
-
-    public void SubscribePurchasable(IPurchasable purchasable)
-    {
-        OnPurschase += purchasable.OnPurschase;
-    }
-
-    public void UnsubscribePurchasable(IPurchasable purchasable)
-    {
-        OnPurschase -= purchasable.OnPurschase;
-    }
-
-    private void Start()
-    {
-        playerData = PersistantData.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-
-        for (int i = 0; i < upgradeElements.Length; i++)
+        for (int i = 0; i < ListOfUpgrade.Count; i++)
         {
-            UpgradeElement upgradeElement = upgradeElements[i];
-            upgradeElement.InitUpgradeElement(this);
-            Events.OnPurchased += Purchase;
+            Upgrade upgrade = new Upgrade(ListOfUpgrade[i]);
+            UpgradeDatabase.Add(upgrade);
         }
     }
 
-    public void Purchase(UpgradeElement upgradeElement)
+    public List<Upgrade> GetUpgradeDatabase()
     {
-        objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.spend);
-
-        if (objectiveData != null)
-        {
-            var progress = objectiveData.progress + upgradeElement.upgrade.Cost;
-            objectiveData.UpdateProgress(progress);
-        }
-
-        Notify();
+        return UpgradeDatabase;
     }
-
-    public void SaveAndClose()
-    {
-        PersistantData.Save();
-    }
-
 
 }

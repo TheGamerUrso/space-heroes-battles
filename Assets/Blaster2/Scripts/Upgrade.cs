@@ -4,129 +4,82 @@ using UnityEngine;
 [Serializable]
 public class Upgrade
 {
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
+
     public UpgradeData upgradeData;
 
-    protected int level;
-    protected int requirement;
-    protected int cost;
-
-    #region Properties
-    public int GetUpgradeType
-    {
-        get
-        {
-            return (int)upgradeData.upgradeType;
-        }
-    }
-
-    public Sprite UpgradeIcon
-    {
-        get
-        {
-            return upgradeData.sprite;
-        }
-    }
-
-    public int Level
-    {
-        get { return level; }
-    }
-
-    public int Cost
-    {
-        get { return cost; }
-    }
+    public int Level;
+    public int Cost;
 
     public float ProgressPresentage
     {
         get
         {
-            return (float)level / 10;
+            return (float)Level / (float)upgradeData.MaxLevel;
         }
     }
 
-    public bool ReachedMaxLevel
+    ~Upgrade()
     {
-        get
-        {
-            if (upgradeData.CostPerLevel.Length == 0)
-            {
-                if (level == 1)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            else
-            {
-                if (level >= upgradeData.MaxLevel || upgradeData.CostPerLevel.Length - 1 <= level)
-                {
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-        }
+        Events.OnShipSelectValueChanged -= (x) => { SetPlayerShipData(); }; 
     }
-    #endregion
 
-    public void Initialise(PlayerShipData playerShipData)
+    public Upgrade(UpgradeData upgradeData)
     {
-        int upgradeTypeIndex = (int)(upgradeData.upgradeType);
-        level = playerShipData.Upgrades[upgradeTypeIndex];
+        this.upgradeData = upgradeData;
+
+        Level = 0;
+
+        Events.OnShipSelectValueChanged += (x) => { SetPlayerShipData(); };
+
+        playerData = PersistantData.GetPlayerData();
+        SetPlayerShipData();
+
+
         if (upgradeData.CostPerLevel.Length > 0)
         {
-            cost = upgradeData.CostPerLevel[level];
+            Cost = upgradeData.CostPerLevel[Level];
         }
         else
         {
-            cost = upgradeData.Cost;
+            Cost = upgradeData.Cost;
         }
     }
 
-    public bool CheckRequirement(int playerLevel)
+    public int GetLevelRequirment()
     {
-        if (playerLevel >= upgradeData.LevelRequirementPerLevel[level])
+        if (upgradeData.LevelRequirementPerLevel.Length > 0)
         {
-            return true;
+            return upgradeData.LevelRequirementPerLevel[Level];
         }
         else
         {
-            return false;
+            return 1;
         }
     }
 
-
-    public void PurchaseUpgrade()
+    public void Buy()
     {
-        level++;
+        Level++;
+
+        playerShipData.Upgrades[(int)upgradeData.upgradeType] = Level;
     }
 
-
-    public bool IsAffordable(int PlayerCoins)
+    public void SetPlayerShipData()
     {
-        if (PlayerCoins >= cost)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        Level = playerShipData.Upgrades[(int)upgradeData.upgradeType];
     }
+
     public string GetCost()
     {
-        return $"{cost.ToString()}";
+        return $"{Cost.ToString()}";
     }
 
-    public string GetLevelRequirment()
+    public string GetLevelRequirmentToString()
     {
-        return $"{Constants.UnlockedAtLvl} {upgradeData.LevelRequirementPerLevel[level].ToString()} Required";
+        return $"{Constants.UnlockedAtLvl} {upgradeData.LevelRequirementPerLevel[Level].ToString()} Required";
     }
 
     public string GetUpgradeName()

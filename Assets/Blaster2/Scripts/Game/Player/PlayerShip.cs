@@ -29,6 +29,9 @@ public class PlayerShip : Ship, IDamagable
     public float CurrentHealth { get; private set; }
     public int CurrentWeapnType { get; set; }
 
+
+    private bool HasArmorUprade;
+
     #endregion Weapons
 
     public override void OnDestroy()
@@ -45,7 +48,10 @@ public class PlayerShip : Ship, IDamagable
     {
         playerData = PersistantData.GetPlayerData();
 
-        Events.PlayerShipHit += DownGradeWeapon;
+        if (!HasArmorUprade)
+        {
+            Events.PlayerShipHit += DownGradeWeapon;
+        }
 
         SwitchWeapon(0);
 
@@ -472,6 +478,7 @@ public class PlayerShip : Ship, IDamagable
         playerShipData.SuperChargeTime = playerStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
         playerShipData.MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
         playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
+        HasArmorUprade = UpgradeStats[(int)UpgradeTypeEnum.ArmorUpgrade] == 1 ? true : false;
     }
 
     public void SetHealth(float health)

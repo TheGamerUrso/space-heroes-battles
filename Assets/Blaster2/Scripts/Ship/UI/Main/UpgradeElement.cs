@@ -3,170 +3,97 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using Doozy.Engine.UI;
 
-public class UpgradeElement : MonoBehaviour,IPurchasable
+public class UpgradeElement : MonoBehaviour
 {
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
+
+    [SerializeField] private UIButton buyButton;
+    [SerializeField] private Image progressbar;
+    [SerializeField] private TextMeshProUGUI Name;
+    [SerializeField] private TextMeshProUGUI Price;
+    [SerializeField] private TextMeshProUGUI MessageText;
+    [SerializeField] private Image Icon;
+
+    [SerializeField] private GameObject NotAvailable;
 
 
-    [SerializeField] protected TextMeshProUGUI CostText;
-    [SerializeField] protected TextMeshProUGUI NammeText;
-    [SerializeField] protected TextMeshProUGUI NotAvailbleText;
+    private Upgrade upgrade;
+    private UpgradeScreen upgradeScreen;
 
-    [SerializeField] protected Image progressBar;
-    [SerializeField] protected Image UpgradeIcon;
-    [SerializeField] protected Image NotAvailableImage;
-
-    public Upgrade upgrade;
-
-    protected PlayerData playerData;
-    protected PlayerShipData playerShipData;
-    protected UpgradeManager upgradeManager;
-
-    private void OnEnable()
+    public void SetUpgradeElement(Upgrade upgrade, UpgradeScreen upgradeScreen)
     {
+        this.upgrade = upgrade;
+        Name.text = upgrade.GetUpgradeName();
+        Price.text = upgrade.GetCost();
+        Icon.sprite = upgrade.upgradeData.sprite;
+        this.upgradeScreen = upgradeScreen;
         playerData = PersistantData.GetPlayerData();
+
+
+
+        Refresh();
+    }
+
+    public void Refresh()
+    {
         playerShipData = playerData.GetCurrentPlayerShipData();
-        RefreshUpgradeElement();
-    }
+        progressbar.fillAmount = upgrade.ProgressPresentage;
 
-    public virtual bool CheckAvailable()
-    {
-        if (upgrade.ReachedMaxLevel)
+        if (upgrade.ProgressPresentage == 1)
         {
-            Popup.Show(Popup.popupType.message, Constants.UpgradeMaxedOut);
-            return false;
-        }
-
-        if (upgrade.CheckRequirement(playerShipData.level))
-        {
-            return true;
-        }
-        else
-        {
-            Popup.Show(Popup.popupType.message, upgrade.GetLevelRequirment());
-        }
-
-        return false;
-    }
-
-    private void OnDestroy()
-    {
-        Events.OnLevelValueChanged -= OnLevelChanged;
-        Events.OnCoinValueChanged -= OnCoinValueChanged;
-    }
-
-    private void Start()
-    {
-        InitUpgradeElement(UpgradeManager.Instance);
-
-        Events.OnCoinValueChanged += OnCoinValueChanged;
-        Events.OnLevelValueChanged += OnLevelChanged;
-    }
-
-    public void OnCoinValueChanged(int coins)
-    {
-        RefreshUpgradeElement();
-    }
-
-    public void OnLevelChanged(int level)
-    {
-        RefreshUpgradeElement();
-    }
-
-    public virtual void InitUpgradeElement(UpgradeManager upgradeManager)
-    {
-        this.upgradeManager = upgradeManager;
-        upgradeManager.SubscribePurchasable(this);
-
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        
-        upgrade.Initialise(playerShipData);
-
-        NammeText.text = upgrade.GetUpgradeName();
-
-
-        UpgradeIcon.sprite = upgrade.UpgradeIcon;
-
-        if (upgrade.ReachedMaxLevel)
-        {
-            CostText.color = Color.white;
-            CostText.text = Constants.UpgradeMaxedOut;
-            NotAvailableImage.gameObject.SetActive(false);
-            NotAvailbleText.gameObject.SetActive(false);
-        }
-        else
-        {
-            CostText.text = upgrade.GetCost();
-        }
-    }
-
-    public virtual void Purshase()
-    {
-        if (CheckAvailable())
-        {
-            if (!upgrade.IsAffordable(playerData.Coins))
+            buyButton.DisableButton();
+            if (upgrade.upgradeData.MaxLevel > 1)
             {
-                Popup.Show(Popup.popupType.message, Constants.CannotAffordIt);
-                return;
+                Warn(Constants.UpgradeMaxedOut);
             }
-
-            playerData.RemoveCoin(upgrade.Cost);
-
-            if (upgrade.ReachedMaxLevel)
+            else if (upgrade.upgradeData.MaxLevel == 1)
             {
-                CostText.text = Constants.UpgradeMaxedOut;
-                return;
+                Warn(Constants.OutOfStock);
             }
-
-            upgrade.PurchaseUpgrade();
-
-            playerData.SetUpgrade(upgrade.GetUpgradeType, upgrade.Level);
-        }
-    }
-
-    public virtual void RefreshUpgradeElement()
-    {
-        playerShipData = playerData.GetCurrentPlayerShipData();
-
-        upgrade.Initialise(playerShipData);
-
-        if (upgrade.ReachedMaxLevel)
-        {
-            CostText.text = Constants.UpgradeMaxedOut;
-            CostText.color = Color.white;
-            NotAvailableImage.gameObject.SetActive(false);
-            NotAvailbleText.gameObject.SetActive(false);
-            progressBar.fillAmount = 1;
             return;
         }
 
-        progressBar.fillAmount = upgrade.ProgressPresentage;
-        CostText.text = upgrade.GetCost();
+        NotAvailable.SetActive(false);
 
-
-        if (CheckAvailable())
+        if (playerData.Coins < upgrade.Cost)
         {
-            NotAvailableImage.gameObject.SetActive(false);
-            NotAvailbleText.gameObject.SetActive(false);
-        }
-        else if (!CheckAvailable())
-        {
-            NotAvailableImage.gameObject.SetActive(true);
-            NotAvailbleText.gameObject.SetActive(true);
-            NotAvailbleText.text = upgrade.GetLevelRequirment();
+            NotAvailable.SetActive(true);
+            Warn(Constants.CannotAffordIt);
+            buyButton.DisableButton();
         }
 
+        MessageText.gameObject.SetActive(false);
 
-        CostText.color = Color.red;
-
-        if (upgrade.IsAffordable(playerData.Coins))
+        if (playerShipData.level < upgrade.GetLevelRequirment())
         {
-            CostText.color = Color.white;
+            NotAvailable.SetActive(true);
+            Warn(Constants.UnlockedAtLvl + upgrade.GetLevelRequirment());
+            buyButton.DisableButton();
         }
     }
 
-    public void OnPurschase()
+
+    public void BuyButton()
     {
-        RefreshUpgradeElement();
+        if (upgrade.ProgressPresentage == 1)
+        {
+            return;
+        }
+
+        if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgrade.GetLevelRequirment())
+        {
+            upgrade.Buy();
+        }
+
+        upgradeScreen.RefreshUpgrades();
+    }
+
+    public void Warn(string message)
+    {
+        MessageText.text = message;
+        MessageText.gameObject.SetActive(true);
     }
 }

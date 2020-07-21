@@ -75,7 +75,7 @@ public class PlayerShipData
     {
         this.Upgrades = Upgrades;
     }
-    
+
     public int[] GetUpgrades()
     {
         return Upgrades;
@@ -83,30 +83,34 @@ public class PlayerShipData
 
     public float[] GetCalculatedUpgradeStats()
     {
-        var GameControllerSpeedValue = Upgrades[(int)UpgradeTypeEnum.Speed];
-        var GameControllerDamageValue = Upgrades[(int)UpgradeTypeEnum.Damage];
-        var GameControllerFireRateValue = Upgrades[(int)UpgradeTypeEnum.FireRate];
-        var GameControllerMagnetPowerValue = Upgrades[(int)UpgradeTypeEnum.MagnetStrength];
-        var GameControllerActivtateDistanceValue = Upgrades[(int)UpgradeTypeEnum.MagnetDistance];
-        var GameControllerSuperTime = Upgrades[(int)UpgradeTypeEnum.SuperrechargeTime];
-        var GameControllerSuperDamage = Upgrades[(int)UpgradeTypeEnum.SuperDamage];
+        var SpeedUpgrade = Upgrades[(int)UpgradeTypeEnum.Speed];
+        var DamageUpgrade = Upgrades[(int)UpgradeTypeEnum.Damage];
+        var FireRateUpgrade = Upgrades[(int)UpgradeTypeEnum.FireRate];
+        var MagnetPowerUpgrade = Upgrades[(int)UpgradeTypeEnum.MagnetStrength];
+        var MagnetDistanceUpgrade = Upgrades[(int)UpgradeTypeEnum.MagnetDistance];
+        var SuperCooldownUpgrade = Upgrades[(int)UpgradeTypeEnum.SuperrechargeTime];
+        var SuperDamageUpgrade = Upgrades[(int)UpgradeTypeEnum.SuperDamage];
+        var HasArmorUpgrade = Upgrades[(int)UpgradeTypeEnum.ArmorUpgrade];
 
-        var SpeedMultiplier = 0.25f * GameControllerSpeedValue;
-        var DamageMultiplier = 1f * GameControllerDamageValue;
-        var FireRateMultiplier = 0.01f * GameControllerFireRateValue;
-        var MagnetPowerMultiplier = 3 * GameControllerMagnetPowerValue;
-        var MagnetDistanceMultiplier = 2 * GameControllerActivtateDistanceValue;
-        var superCooldown = 0.1f * GameControllerSuperTime;
-        var superDamage = 1f * GameControllerSuperDamage;
-
+        var SpeedMultiplier = 0.25f * SpeedUpgrade;
+        var DamageMultiplier = 1f * DamageUpgrade;
+        var FireRateMultiplier = 0.01f * FireRateUpgrade;
+        var MagnetPowerMultiplier = 3 * MagnetPowerUpgrade;
+        var MagnetDistanceMultiplier = 2 * MagnetDistanceUpgrade;
+        var superCooldown = 0.1f * SuperCooldownUpgrade;
+        var superDamage = 1f * SuperDamageUpgrade;
+        var armorUpgrade = SuperDamageUpgrade;
         //TODO PUT THE STATS IN THE RIGHT ORDER
         return new float[] {
             SpeedMultiplier,
             FireRateMultiplier,
             DamageMultiplier,
-            superDamage,
+            MagnetDistanceMultiplier,
+            SpeedMultiplier,
+            MagnetDistanceMultiplier,
             superCooldown,
-            MagnetPowerMultiplier,
-            MagnetDistanceMultiplier};
+            superDamage,
+            armorUpgrade
+            };
     }
 }

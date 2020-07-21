@@ -7,25 +7,8 @@ using UnityEngine.SceneManagement;
 
 public class ProjectControllerWindow : EditorWindow
 {
-    //private SpawnEnemies spawnEnemies;
-    private PlayerShip player;
-
-    private string CoinToEarnText;
-    private int coinsToEarn;
-
     private string titleString = "Project Controls";
     private string scenePath = "Assets/Blaster2/_Scenes";
-    private int CompleteLevelIndex;
-    private string BaseXpToEarn = "";
-    private float xpToEarn;
-
-    public PlayerShipElement currentPlayer;
-
-    public Vector3 PosInWorld;
-    public Vector3 resets;
-    public float m_DistanceZ;
-
-    public Game gameStruct;
 
     [MenuItem("ProjectBlaster2/ProjectController")]
     public static void ShowWindow()
@@ -71,6 +54,22 @@ public class ProjectControllerWindow : EditorWindow
         }
         EditorGUILayout.EndHorizontal();
         EditorGUILayout.BeginHorizontal();
+
+        if (GUILayout.Button("Level0"))
+        {
+            if (EditorApplication.isPlaying)
+            {
+                if (!GameManager.Instance.currentLevelLoaded.Equals(LevelEnum.Level1.ToString()))
+                {
+                    GameManager.Instance.LoadScene(LevelEnum.Level1);
+                }
+            }
+            else
+            {
+                EditorSceneManager.OpenScene(scenePath + "/Levels/" + LevelEnum.Level0.ToString() + ".unity");
+            }
+        }
+
         if (GUILayout.Button("Level1"))
         {
             if (EditorApplication.isPlaying)
