@@ -82,6 +82,8 @@ public class GameManager : MonoSingleton<GameManager>
     public Sprite[] sprites;
     private MissionCollection missionCollection;
 
+    public float sceneLoadProgress;
+
     public string GetStory(int missionIndex)
     {
         currentMission = PersistantData.GetMission(missionIndex - 1);
@@ -210,7 +212,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         if (SceneManager.GetActiveScene().buildIndex == (int)LevelEnum.boot)
         {
-            LoadScene(LevelEnum.Intro);
+            LoadScene(LevelEnum.Intro,false);
         }
     }
 
@@ -229,9 +231,9 @@ public class GameManager : MonoSingleton<GameManager>
         StartCoroutine(ShowLoadingScreen((LevelEnum)SceneManager.GetActiveScene().buildIndex));
     }
 
-    public void LoadScene(LevelEnum level)
+    public void LoadScene(LevelEnum level,bool showLoadingScreen = true)
     {
-        StartCoroutine(ShowLoadingScreen(level));
+        StartCoroutine(ShowLoadingScreen(level, showLoadingScreen));
     }
 
     public void LoadMainenu()
@@ -281,6 +283,7 @@ public class GameManager : MonoSingleton<GameManager>
     protected void UpdateProgress(float progress)
     {
         Events.OnSceneLoadProgress?.Invoke(progress);
+        GameManager.Instance.sceneLoadProgress = progress;
     }
 
     private IEnumerator LoadSceneAsync(LevelEnum levelName)
@@ -318,13 +321,17 @@ public class GameManager : MonoSingleton<GameManager>
                 yield return new WaitUntil(() => !unloading);
             }
         }
+
         System.GC.Collect();
 
         Hide();
     }
-    private IEnumerator ShowLoadingScreen(LevelEnum level)
+    private IEnumerator ShowLoadingScreen(LevelEnum level,bool showLoadingScreen = true)
     {
-        Show();
+        if (showLoadingScreen)
+        {
+            Show();
+        }
         yield return shortWait;
         StartCoroutine(LoadSceneAsync(level));
     }
@@ -372,8 +379,6 @@ public class GameManager : MonoSingleton<GameManager>
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
             Game.IsPaused = false;
         }
-
-
     }
 
     public void SetSurvivalScore(int ammount)
