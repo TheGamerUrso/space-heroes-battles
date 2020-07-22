@@ -55,8 +55,14 @@ public class ObjectiveData
             {
                 completed = true;
                 progress = 0;
-                if (ObjectiveCompleteNotification.Instance != null)
-                    ObjectiveCompleteNotification.Instance.AddToQue(this);
+
+                Notification notification = new Notification();
+                notification.Description = Description;
+
+                NotificationSystem.Instance.Add(notification);
+
+                //if (ObjectiveCompleteNotification.Instance != null)
+                //    ObjectiveCompleteNotification.Instance.AddToQue(this);
             }
         }
 

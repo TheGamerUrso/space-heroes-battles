@@ -81,6 +81,11 @@ public class PlayerShipData
         return Upgrades;
     }
 
+    public void SetUpgradeByType(UpgradeTypeEnum upgradeType, int Level)
+    {
+        Upgrades[(int)upgradeType] = Level;
+    }
+
     public float[] GetCalculatedUpgradeStats()
     {
         var SpeedUpgrade = Upgrades[(int)UpgradeTypeEnum.Speed];

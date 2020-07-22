@@ -22,7 +22,7 @@ public class Upgrade
 
     ~Upgrade()
     {
-        Events.OnShipSelectValueChanged -= (x) => { SetPlayerShipData(); }; 
+        Events.OnShipSelectValueChanged -= (x) => { SetPlayerShipData(); };
     }
 
     public Upgrade(UpgradeData upgradeData)
@@ -63,7 +63,9 @@ public class Upgrade
     {
         Level++;
 
-        playerShipData.Upgrades[(int)upgradeData.upgradeType] = Level;
+        playerShipData.SetUpgradeByType(upgradeData.upgradeType, Level);
+
+        playerData.RemoveCoin(Cost);
     }
 
     public void SetPlayerShipData()

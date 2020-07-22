@@ -52,7 +52,11 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
                 if (announceModUnlocked == 0)
                 {
                     PlayerPrefs.SetInt("SurvivalMode", 1);
-                    Popup.Show(Popup.popupType.error, "Survival Mode Unlocked", false);
+
+                    Notification notification = new Notification();
+                    notification.Description = "Survival Mode Unlocked";
+
+                    NotificationSystem.Instance.Add(notification);
                 }
             }
         }

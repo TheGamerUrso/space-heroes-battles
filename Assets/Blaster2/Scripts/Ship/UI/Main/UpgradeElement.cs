@@ -23,6 +23,11 @@ public class UpgradeElement : MonoBehaviour
     private Upgrade upgrade;
     private UpgradeScreen upgradeScreen;
 
+    private Color TextdefaultColor;
+    private void OnEnable()
+    {
+        Refresh();
+    }
     public void SetUpgradeElement(Upgrade upgrade, UpgradeScreen upgradeScreen)
     {
         this.upgrade = upgrade;
@@ -32,15 +37,24 @@ public class UpgradeElement : MonoBehaviour
         this.upgradeScreen = upgradeScreen;
         playerData = PersistantData.GetPlayerData();
 
-
+        TextdefaultColor = Price.color;
 
         Refresh();
     }
 
     public void Refresh()
     {
+        if(playerData == null)
+        {
+            return;
+        }
+
         playerShipData = playerData.GetCurrentPlayerShipData();
         progressbar.fillAmount = upgrade.ProgressPresentage;
+
+        MessageText.gameObject.SetActive(false);
+        NotAvailable.SetActive(false);
+        Price.color = TextdefaultColor;
 
         if (upgrade.ProgressPresentage == 1)
         {
@@ -56,16 +70,12 @@ public class UpgradeElement : MonoBehaviour
             return;
         }
 
-        NotAvailable.SetActive(false);
 
         if (playerData.Coins < upgrade.Cost)
         {
-            NotAvailable.SetActive(true);
-            Warn(Constants.CannotAffordIt);
+            Price.color = Color.red;
             buyButton.DisableButton();
         }
-
-        MessageText.gameObject.SetActive(false);
 
         if (playerShipData.level < upgrade.GetLevelRequirment())
         {
