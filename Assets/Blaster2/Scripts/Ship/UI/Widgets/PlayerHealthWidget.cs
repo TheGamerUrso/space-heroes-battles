@@ -18,6 +18,9 @@ public class PlayerHealthWidget : MonoBehaviour
     private float targetHealth = 0;
     private float maxTargetHealth = 0;
 
+    [SerializeField] private Image SecondaryHealth;
+    [SerializeField] private float speed = 1;
+
     private void OnDestroy()
     {
         if (player != null)
@@ -33,6 +36,10 @@ public class PlayerHealthWidget : MonoBehaviour
         UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
     }
 
+    private void Update()
+    {
+        SecondaryHealth.fillAmount = Mathf.Lerp(SecondaryHealth.fillAmount, m_HealthImage.fillAmount,speed);
+    }
     public void UpdatePlayerHealth(float CurrentHealth, float MaxHealth)
     {
   

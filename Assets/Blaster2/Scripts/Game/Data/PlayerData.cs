@@ -111,13 +111,6 @@ public class PlayerData
         Events.OnDistanceValueChanged?.Invoke(Distance);
     }
 
-    public void SetXP(float ammount)
-    {
-        PlayerShipData playerShipData = GetCurrentPlayerShipData();
-        playerShipData.xp = ammount;
-        Events.OnXpValueChanged?.Invoke(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
-    }
-
     public void SetPowerPackCollected(int ammount)
     {
         PowerPackCollected += ammount;
@@ -261,7 +254,7 @@ public class PlayerData
 
     public void EarnXP(float ammount)
     {
-        PlayerShipData currentPlayerShipSelected = playerShipData[CurrrentSelectedShip];
+        PlayerShipData currentPlayerShipSelected = GetCurrentPlayerShipData();
 
         var Level = currentPlayerShipSelected.level;
         var XP = currentPlayerShipSelected.xp;
@@ -269,6 +262,8 @@ public class PlayerData
 
         if (Level < 20)
         {
+            XP += ammount;
+
             if (XP >= xpToLevel)
             {
                 Level++;
@@ -276,7 +271,7 @@ public class PlayerData
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
 
                 Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
-            }
+            }    
         }
         else
         {
@@ -288,6 +283,8 @@ public class PlayerData
         currentPlayerShipSelected.level = Level;
         currentPlayerShipSelected.xp = XP;
         currentPlayerShipSelected.xpToLevel = xpToLevel;
+
+        Events.OnXpValueChanged?.Invoke(currentPlayerShipSelected.level, currentPlayerShipSelected.xp, xpToLevel);
     }
 
     public void SetUpgrade(int upgrade, int value)

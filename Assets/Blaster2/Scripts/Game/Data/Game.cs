@@ -37,6 +37,10 @@
         EnemyKilled = 0;
         EnemyEscaped = 0;
     }
+    public static int GetScore()
+    {
+        return Score;
+    }
 
     public static void SetScore(int value)
     {
@@ -75,7 +79,7 @@
     }
 
 
-    public void SetMultiplier(int value)
+    public static void SetMultiplier(int value)
     {
         if (value < 4)
         {
@@ -84,5 +88,5 @@
         Events.OnMultiplierChanged?.Invoke(Multiplier);
     }
 
-
+ 
 }

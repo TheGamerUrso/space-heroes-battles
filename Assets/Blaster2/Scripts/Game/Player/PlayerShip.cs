@@ -67,6 +67,8 @@ public class PlayerShip : Ship, IDamagable
         playerData.NewGame();
 
         Events.OnLevelValueChanged += OnLevelValueChanged;
+
+
     }
 
     public void OnLevelValueChanged(int Level)
@@ -489,7 +491,7 @@ public class PlayerShip : Ship, IDamagable
 
     public float GetHealthPresentage()
     {
-        return (CurrentHealth / MaxHealth) * 100;
+        return (CurrentHealth / MaxHealth);
     }
 
 

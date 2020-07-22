@@ -127,6 +127,8 @@ public class GameController : MonoSingleton<GameController>
 
         Game.Reset();
 
+        yield return new WaitForSeconds(1.0f);
+
         if (PlayerManager.GetPlayer() == null)
         {
             int shipSelected = playerData.CurrrentSelectedShip;
@@ -135,9 +137,9 @@ public class GameController : MonoSingleton<GameController>
         }
 
         baseGameMode.InitReference(playerData, playerShip);
-
+        playerShip.DisableFire();
         yield return new WaitForSeconds(2.0f);
-
+        playerShip.EnableFire();
         SetGameState(GameState.GAME);
     }
 
@@ -187,16 +189,19 @@ public class GameController : MonoSingleton<GameController>
             playerData.EarnXP(XPEarned);
         }
 
-        playerData.PowerUpLevel += .025f;
+        playerData.SetPowerUpAmmount(.025f);
 
         int score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
         int kills = Game.EnemyKilled + 1;
 
+        int multiplier = Game.Multiplier;
+        multiplier++;
 
         Game.SetCurrentEnemyKills(kills);
-        Game.EnemyKilled++;
-        Game.Score = score;
-        Game.Multiplier++;
+
+        Game.SetScore(score);
+
+        Game.SetMultiplier(multiplier);
 
 
 

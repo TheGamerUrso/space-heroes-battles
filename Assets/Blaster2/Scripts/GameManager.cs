@@ -320,11 +320,17 @@ public class GameManager : MonoSingleton<GameManager>
             {
                 yield return new WaitUntil(() => !unloading);
             }
+
+
+            System.GC.Collect();
+
+            Hide();
+
+            yield return new WaitForSeconds(2.0f);
+            LoadingScreen.SetActive(false);
         }
 
-        System.GC.Collect();
-
-        Hide();
+     
     }
     private IEnumerator ShowLoadingScreen(LevelEnum level,bool showLoadingScreen = true)
     {
@@ -350,7 +356,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Hide()
     {
-        LoadingScreen.SetActive(false);
         Content.SetActive(false);
         //BlockRaycast.blocksRaycasts = false;
         for (int i = 0; i < Gates.Length; i++)
