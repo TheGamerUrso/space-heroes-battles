@@ -111,7 +111,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     public LevelObjectiveData[] GetChallenges()
     {
-        return Challanges["Level" + (currentMission.ID)];
+        
+        return Challanges[((LevelEnum)currentMission.ID).ToString()];
     }
 
     public PlayerShipElement[] ListOfPlayerShips()
@@ -438,6 +439,10 @@ public class GameManager : MonoSingleton<GameManager>
         {
             if (item.Value[0].completed == true)
             {
+                Notification notification = new Notification();
+                notification.Description = "New Mission Available";
+                notification.Name = "Mission Unlocked";
+                NotificationSystem.Instance.Add(notification);
                 missionsCompleted++;
             }
         }
@@ -531,6 +536,7 @@ public class GameManager : MonoSingleton<GameManager>
      Debug.Log("Unlocked" + achievement.ToString()); 
 #endif
     }
+
 }
 
 

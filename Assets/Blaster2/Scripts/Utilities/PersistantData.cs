@@ -108,7 +108,8 @@ public class PersistantData : MonoSingleton<PersistantData>
     }
     public static Mission GetMission(int index)
     {
-        return Instance.missionCollection.GetMission(index);
+        int levelMission = index - (int)LevelEnum.Level1;
+        return Instance.missionCollection.GetMission(levelMission);
     }
     public static MissionCollection GetMissionCollection()
     {
@@ -145,11 +146,13 @@ public class PersistantData : MonoSingleton<PersistantData>
         survival.interactable = surivalLocked;
         survival.Locked = !surivalLocked;
 
-        for (int i = 1; i < (Instance.Levels.Count - 1); i++)
+        for (int i = 1; i <= (Instance.Levels.Count - 1); i++)
         {
-            Mission missionItem = Instance.missionCollection.Missions[i];
+            var Level = Instance.Levels[i];
+
             Level level = Instance.Levels[i];
-            if (missionItem.ID <= (Instance.playerData.LevelUnlocked + 4))
+            Debug.Log(Level.mission.ID + " : " + (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level1));
+            if (Level.mission.ID <= (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level1))
             {
                 level.interactable = true;
                 level.Locked = false;

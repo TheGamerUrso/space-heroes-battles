@@ -9,30 +9,39 @@ public class PauseMenuOptionScreen : BaseOptions
     public TextMeshProUGUI MissionTitle;
     public LevelObjectivesElement[] LevelObjectivesElements;
     private PlayerData playerData;
-    private MissionCollection listOfMission;
+    private Level currentLevel;
     private Mission mission;
     private LevelObjectiveData[] levelObjectiveDatas;
 
     public override void InitializeOptions()
     {
         base.InitializeOptions();
+        Scene scene = SceneManager.GetActiveScene();
 
-        string levelName = "Level" + GameManager.LevelIndexSelected;
+        string levelName = ((LevelEnum)scene.buildIndex).ToString();
 
         playerData = PersistantData.GetPlayerData();
-        listOfMission = PersistantData.GetMissionCollection();
-        if (listOfMission != null)
+
+        int levelMission = scene.buildIndex - (int)LevelEnum.Level0;
+        currentLevel = PersistantData.GetLevels()[levelMission];
+
+        mission = currentLevel.mission;
+
+        MissionTitle.text = mission.Title;
+
+        levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+
+        for (int i = 0; i < LevelObjectivesElements.Length; i++)
         {
-            Scene scene = SceneManager.GetActiveScene();
-            string index = scene.name[scene.name.Length - 1].ToString();
-            mission = listOfMission.GetMission(int.Parse(index));
-            MissionTitle.text = mission.Title;
-            levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
-            for (int i = 0; i < LevelObjectivesElements.Length; i++)
-            {
-                LevelObjectivesElements[i].SetLevelObjective(levelObjectiveDatas[i]);
-            }
+            LevelObjectivesElements[i].gameObject.SetActive(false);
         }
+
+        for (int i = 0; i < levelObjectiveDatas.Length; i++)
+        {
+            LevelObjectivesElements[i].SetLevelObjective(levelObjectiveDatas[i]);
+            LevelObjectivesElements[i].gameObject.SetActive(true);
+        }
+
     }
 
     public override void OnOptionEnter()

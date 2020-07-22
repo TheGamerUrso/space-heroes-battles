@@ -255,7 +255,7 @@ public class GameController : MonoSingleton<GameController>
         Time.timeScale = 1.0f;
 
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-
+        GameManager.Instance.PlayerChallengesCheck();
         GameManager.Instance.UpdatePlayerStatistics();
         GameManager.Instance.UnlockNextMission();
         GameManager.Instance.PlayerQuestCheck();

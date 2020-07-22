@@ -19,8 +19,8 @@ public class StoryMode : BaseGameMode
         MissionCollection missionCollection = PersistantData.GetMissionCollection();
 
         Scene scene = SceneManager.GetActiveScene();
-        string index = scene.name[scene.name.Length - 1].ToString();
-        Mission mission = missionCollection.GetMission(int.Parse(index));
+        int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
+        Mission mission = missionCollection.GetMission(levelMission);
         LevelDifficulty = mission.Level;
 
         TotalEnemies = numberOfEnemiesEachWave * waves;

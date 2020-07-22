@@ -10,22 +10,38 @@ public class LevelObjectivesElement : MonoBehaviour
     [SerializeField] private Image completedSprite;
     [SerializeField] private Image failSpriet;
 
+    bool complete = false;
+    [SerializeField] private Image ProgressFill;
+    AnimationCurve animationCurve; 
+
     public void SetLevelObjective(LevelObjectiveData levelObjectiveData)
     {
         this.levelObjectiveData = levelObjectiveData;
         RefreshLevelObjectiveEement();
     }
 
+    private void Update()
+    {
+        if (complete)
+        {
+            ProgressFill.fillAmount = Mathf.Lerp(ProgressFill.fillAmount, animationCurve.Evaluate(Time.time), 1);
+            if (ProgressFill.fillAmount == 1)
+            {
+                completedSprite.gameObject.SetActive(true);
+            }
+        }
+    }
 
     public void MarkAsCompleted()
     {
-        completedSprite.gameObject.SetActive(true);
+        complete = true;
+      
     }
     public void MarkAsFailed()
     {
-
         failSpriet.gameObject.SetActive(true);
     }
+
     public void CheckComplete()
     {
         if (levelObjectiveData.completed)

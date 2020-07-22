@@ -17,7 +17,7 @@ public class PlayerData
 
 
     [Header("Progression")]
-    [Range(1,9)]
+    [Range(1,10)]
     public int LevelUnlocked;
     public bool SurvivalUnlocked;
     public int[] UnlockedHeroes;

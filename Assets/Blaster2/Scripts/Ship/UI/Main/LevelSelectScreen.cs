@@ -31,10 +31,10 @@ public class LevelSelectScreen : MonoBehaviour
 
         levelElement.SetLevelElement(levels[0]);
 
-        for (int i = 1; i < (levels.Count-1); i++)
+        for (int i = 1; i <= (levels.Count-1); i++)
         {
             var Level = levels[i];
-            Mission missionItem = missionCollection.Missions[i];
+  
             LevelElementGO = Instantiate(LevelElementPrefab, LevelElementContainer.transform, false);
 
             levelElement = LevelElementGO.GetComponent<LevelElement>();
