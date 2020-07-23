@@ -47,9 +47,9 @@ public class GuiManager : MonoSingleton<GuiManager>
         var panelGameOver = Instantiate(UIPrefabs[2], transform, false);
         var panelWin = Instantiate(UIPrefabs[3], transform, false);    
 
-        panelGameOver.name = UIPrefabs[0].name;
-        panelWin.name = UIPrefabs[1].name;
-        panelPause.name = UIPrefabs[2].name;
+        panelGameOver.name = UIPrefabs[2].name;
+        panelWin.name = UIPrefabs[3].name;
+        panelPause.name = UIPrefabs[1].name;
 
         GameOverScreen = panelGameOver.GetComponent<UIView>();
         WinScreen = panelWin.GetComponent<UIView>();

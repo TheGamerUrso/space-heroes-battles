@@ -11,14 +11,17 @@ public class Level
     public int spriteId;
     public bool interactable;
     public bool Locked;
+    public LevelObjectiveData[] objectiveListData;
 
-    public Level(string ID, Mission mission, int spriteId, bool interactable, bool Locked)
+    public Level(string ID, Mission mission, LevelObjectiveData[] objectiveListData, int spriteId, bool interactable, bool Locked)
     {
         this.ID = ID;
         this.mission = mission;
+        this.objectiveListData = objectiveListData;
         this.spriteId = spriteId;
         this.interactable = interactable;
         this.Locked = Locked;
+
     }
 }
 
@@ -64,12 +67,12 @@ public class LevelElement : MonoBehaviour
     {
         if (level.ID.Contains("Survival"))
         {
-            GameManager.Instance.SetMission(level.mission);
+            GameManager.Instance.SetMission(level);
             ScreenManager.Instance.Open("LevelDetailScreen");
         }
         else
         {
-            GameManager.Instance.SetMission(level.mission);
+            GameManager.Instance.SetMission(level);
             ScreenManager.Instance.Open("LevelDetailScreen");
         }
         LevelDetailScreen.Instance.ShowDetailScreen();
@@ -77,7 +80,7 @@ public class LevelElement : MonoBehaviour
 
     public void UpdateLevels()
     {
-        if(level == null)
+        if (level == null)
         {
             return;
         }

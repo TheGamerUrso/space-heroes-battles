@@ -11,7 +11,7 @@ public class PersistantData : MonoSingleton<PersistantData>
     public MissionCollection missionCollection;
     public LevelObjectiveCollection LevelObjectiveCollection;
     public List<Level> Levels = new List<Level>();
-
+    public Dictionary<string, LevelObjectiveData[]> LevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
     public static List<Level> GetLevels()
     {
         return Instance.Levels;
@@ -39,6 +39,8 @@ public class PersistantData : MonoSingleton<PersistantData>
         Instance.LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
         Instance.playerData = new PlayerData(3);
 
+        GenerateLevelObjectiveData();
+
         int firstRunIndex = 0;
 
         if (PlayerPrefs.HasKey("FirstRun"))
@@ -58,70 +60,41 @@ public class PersistantData : MonoSingleton<PersistantData>
                   Instance.playerData.mute,
                   Instance.playerData.Distance);
 
-            Dictionary<string, LevelObjectiveData[]> Challanges = Instance.playerData.GetListOfObjectives();
-            int missionsCompleted = 1;
-            foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-            {
-                if (item.Value[0].completed == true)
-                {
-                    missionsCompleted++;
-                }
-            }
+            LoadLevelProgress();
 
-            Instance.playerData.LevelUnlocked = missionsCompleted;
         }
         else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
             PlayerPrefs.SetInt("SurvivalMode", 0);
+
+            SaveLevelProgress();
+
             SaveSystem.SaveGame();
         }
 
-        GenerateLevelObjectiveData();
-
         InitializeLevels();
-    }
-
-    public static Dictionary<string, LevelObjectiveData[]> GetListOfLevelChallanges()
-    {
-        return Instance.playerData.ListOfLevelChallenges;
-    }
-    public static LevelObjectiveData[] GetLevelChallegeById(string levelId)
-    {
-        return GetLevelObjectivesByID(levelId);
-    }
-
-    public static LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
-    {
-        LevelObjectiveData[] objectives;
-        if (Instance.playerData.ListOfLevelChallenges.TryGetValue(levelId, out objectives))
-        {
-            return objectives;
-        }
-
-        return null;
     }
 
     public static PlayerData GetPlayerData()
     {
         return Instance.playerData;
     }
-    public static Mission GetMission(int index)
+
+    public static Level GetMission(int index)
     {
         int levelMission = index - (int)LevelEnum.Level1;
-        return Instance.missionCollection.GetMission(levelMission);
+        return Instance.Levels[levelMission];
     }
+
     public static MissionCollection GetMissionCollection()
     {
         return Instance.missionCollection;
     }
-    public static int GetNumberOfData()
-    {
-        return GetListOfLevelChallanges().Count;
-    }
+
     public static void GenerateLevelObjectiveData()
     {
-        if (Instance.playerData.ListOfLevelChallenges.Count == 0)
+        if (Instance.LevelChallenges.Count == 0)
         {
             for (int i = 0; i < Instance.LevelObjectiveCollection.LevelObjective.Levels.Length; i++)
             {
@@ -133,7 +106,7 @@ public class PersistantData : MonoSingleton<PersistantData>
                          Instance.LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].ID, Instance.LevelObjectiveCollection.LevelObjective.Levels[i].Objectives[x].Description);
                 }
 
-                Instance.playerData.AddToListLevelChallenges(Instance.LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
+                AddToListLevelChallenges(Instance.LevelObjectiveCollection.LevelObjective.Levels[i].ID, objectiveListData);
             }
         }
     }
@@ -167,21 +140,50 @@ public class PersistantData : MonoSingleton<PersistantData>
 
     private static void InitializeLevels()
     {
-        PlayerData playerData = Instance.playerData;
-        var missionCollection = PersistantData.GetMissionCollection();
-
+        var missionCollection = GetMissionCollection();
         bool surivalLocked = Instance.playerData.SurvivalUnlocked;
-        var level = new Level("Survival", new Mission() { ID = 3, Title = "Survival Mode", Description = "Survive as Much as you can", Level = 0 }, 4, surivalLocked, surivalLocked);
+        LevelObjectiveData[] missionChallanges = GetLevelObjectives(LevelEnum.Level0.ToString().ToString());
+        var level = new Level("Survival", new Mission() { ID = 3, Title = "Survival Mode", Description = "Survive as Much as you can", Level = 0 }, missionChallanges, 4, surivalLocked, surivalLocked);
         Instance.Levels.Add(level);
         for (int i = 0; i < missionCollection.Missions.Length; i++)
         {
             Mission missionItem = missionCollection.Missions[i];
-
-            level = new Level(missionItem.Title, missionItem, missionItem.SpriteID, false, true);
+            missionChallanges = GetLevelObjectives(((LevelEnum)missionItem.ID).ToString());
+            level = new Level(missionItem.Title, missionItem, missionChallanges, missionItem.SpriteID, false, true);
 
             Instance.Levels.Add(level);
         }
 
         RefreshLevels();
+    }
+
+    private static void AddToListLevelChallenges(string id, LevelObjectiveData[] challenges)
+    {
+        Instance.LevelChallenges.Add(id, challenges);
+    }
+
+    public static Dictionary<string, LevelObjectiveData[]> GetListOfObjectives()
+    {
+        return Instance.LevelChallenges;
+    }
+
+    public static LevelObjectiveData[] GetLevelObjectives(string levelID)
+    {
+        LevelObjectiveData[] missionChallanges;
+        if (Instance.LevelChallenges.TryGetValue(levelID, out missionChallanges))
+        {
+            return missionChallanges;
+        }
+        return missionChallanges;
+    }
+
+    public static void LoadLevelProgress()
+    {
+        Instance.LevelChallenges = Instance.playerData.GetListOfObjectives();
+    }
+
+    public static void SaveLevelProgress()
+    {
+        Instance.playerData.SetListOfObjectives(Instance.LevelChallenges);
     }
 }

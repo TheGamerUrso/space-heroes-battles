@@ -257,7 +257,6 @@ public class GameController : MonoSingleton<GameController>
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
         GameManager.Instance.PlayerChallengesCheck();
         GameManager.Instance.UpdatePlayerStatistics();
-        GameManager.Instance.UnlockNextMission();
         GameManager.Instance.PlayerQuestCheck();
 
         GameManager.Instance.PostAchievementProgress(GameManager.AchievementType.KILL, playerData.Kills);

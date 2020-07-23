@@ -77,8 +77,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public static int LevelIndexSelected = 0;
     public string currentLevelLoaded;
-    private Mission currentMission;
-    private Dictionary<string, LevelObjectiveData[]> Challanges;
+    private Level currentMission;
     public Sprite[] sprites;
     private MissionCollection missionCollection;
 
@@ -87,32 +86,26 @@ public class GameManager : MonoSingleton<GameManager>
     public string GetStory(int missionIndex)
     {
         currentMission = PersistantData.GetMission(missionIndex - 1);
-        return currentMission.Description;
+        return currentMission.mission.Description;
     }
     public MissionCollection GetMissions()
     {
         return missionCollection;
     }
 
-    public Mission GetCurrentMission()
+    public Level GetCurrentMission()
     {
         return currentMission;
     }
 
-    public void SetMission(Mission mission)
+    public void SetMission(Level level)
     {
-        currentMission = mission;
-        LevelIndexSelected = mission.ID;
+        currentMission = level;
+        LevelIndexSelected = level.mission.ID;
         if (LevelIndexSelected > 0)
         {
             StoryController.Instance.ShowStory(GameManager.LevelIndexSelected);
         }
-    }
-
-    public LevelObjectiveData[] GetChallenges()
-    {
-        
-        return Challanges[((LevelEnum)currentMission.ID).ToString()];
     }
 
     public PlayerShipElement[] ListOfPlayerShips()
@@ -189,31 +182,14 @@ public class GameManager : MonoSingleton<GameManager>
         playerData = PersistantData.GetPlayerData();
         Events.OnLevelValueChanged += OnLevelValueChanged;
 
-        if (Challanges == null)
-            Challanges = playerData.GetListOfObjectives();
-
-        int missionsCompleted = 1;
-
-        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-        {
-            if (item.Value[0].completed == true)
-            {
-                missionsCompleted++;
-            }
-        }
-
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         missionCollection = PersistantData.GetMissionCollection();
 
-        playerData.LevelUnlocked = missionsCompleted;
-
-        Challanges = playerData.GetListOfObjectives();
-
         if (SceneManager.GetActiveScene().buildIndex == (int)LevelEnum.boot)
         {
-            LoadScene(LevelEnum.Intro,false);
+            LoadScene(LevelEnum.Intro, false);
         }
     }
 
@@ -232,7 +208,7 @@ public class GameManager : MonoSingleton<GameManager>
         StartCoroutine(ShowLoadingScreen((LevelEnum)SceneManager.GetActiveScene().buildIndex));
     }
 
-    public void LoadScene(LevelEnum level,bool showLoadingScreen = true)
+    public void LoadScene(LevelEnum level, bool showLoadingScreen = true)
     {
         StartCoroutine(ShowLoadingScreen(level, showLoadingScreen));
     }
@@ -331,9 +307,9 @@ public class GameManager : MonoSingleton<GameManager>
             LoadingScreen.SetActive(false);
         }
 
-     
+
     }
-    private IEnumerator ShowLoadingScreen(LevelEnum level,bool showLoadingScreen = true)
+    private IEnumerator ShowLoadingScreen(LevelEnum level, bool showLoadingScreen = true)
     {
         if (showLoadingScreen)
         {
@@ -395,12 +371,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void PlayerChallengesCheck()
     {
-        int levelIndex = LevelIndexSelected;
-        var levelName = "Level" + levelIndex;
+        Scene scene = SceneManager.GetActiveScene();
+
         var killed = Game.EnemySpawnInTotal * .9f;
         var collected = Game.EnemySpawnInTotal * .9f;
 
-        var levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+        Level level = GetCurrentMission();
+
+        var levelObjectiveDatas = level.objectiveListData;
 
         if (levelObjectiveDatas[0].completed == false)
         {
@@ -429,33 +407,22 @@ public class GameManager : MonoSingleton<GameManager>
             levelObjectiveDatas[3].completed = true;
             playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
         }
-    }
-
-    public void UnlockNextMission()
-    {
-        Dictionary<string, LevelObjectiveData[]> Challanges = playerData.GetListOfObjectives();
-        int missionsCompleted = 1;
-        foreach (KeyValuePair<string, LevelObjectiveData[]> item in Challanges)
-        {
-            if (item.Value[0].completed == true)
-            {
-                Notification notification = new Notification();
-                notification.Description = "New Mission Available";
-                notification.Name = "Mission Unlocked";
-                NotificationSystem.Instance.Add(notification);
-                missionsCompleted++;
-            }
-        }
 
         int levelIndex = GameManager.LevelIndexSelected;
+
         PostAchievementProgress(AchievementType.LEVEL, levelIndex);
+
+        var missionsCompleted = (level.mission.ID - (int)LevelEnum.Level0) + 1;
+
+        playerData.LevelUnlocked = missionsCompleted;
 
         if (missionsCompleted > 9)
         {
             playerData.SetSurvivalUnlockedLock(true);
         }
 
-        playerData.LevelUnlocked = missionsCompleted;
+        if (playerData == null)
+            playerData = PersistantData.GetPlayerData();
     }
 
     public void PlayerQuestCheck()

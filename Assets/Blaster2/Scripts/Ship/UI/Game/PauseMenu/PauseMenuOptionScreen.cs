@@ -29,7 +29,7 @@ public class PauseMenuOptionScreen : BaseOptions
 
         MissionTitle.text = mission.Title;
 
-        levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+        levelObjectiveDatas = currentLevel.objectiveListData;
 
         for (int i = 0; i < LevelObjectivesElements.Length; i++)
         {
@@ -62,8 +62,6 @@ public class PauseMenuOptionScreen : BaseOptions
         {
             if (levelObjectiveDatas[i].completed)
             {
-                LevelObjectivesElements[i].RefreshLevelObjectiveEement();
-
                 LevelObjectivesElements[i].CheckComplete();
             }
         }

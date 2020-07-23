@@ -17,7 +17,7 @@ public class PlayerData
 
 
     [Header("Progression")]
-    [Range(1,10)]
+    [Range(1, 10)]
     public int LevelUnlocked;
     public bool SurvivalUnlocked;
     public int[] UnlockedHeroes;
@@ -34,7 +34,7 @@ public class PlayerData
 
 
     [Header("Stats")]
-    [Range(0,1)]
+    [Range(0, 1)]
     public float PowerUpLevel = 0;
     [Range(0, 4)]
     public int PowerPackCollected = 0;
@@ -192,31 +192,6 @@ public class PlayerData
         return null;
     }
 
-    public void AddToListLevelChallenges(string id, LevelObjectiveData[] challenges)
-    {
-        ListOfLevelChallenges.Add(id, challenges);
-    }
-
-    public Dictionary<string, LevelObjectiveData[]> GetListOfObjectives()
-    {
-        return ListOfLevelChallenges;
-    }
-
-    public LevelObjectiveData[] GetLevelObjectivesByID(string levelId)
-    {
-        LevelObjectiveData[] objectives;
-        if (ListOfLevelChallenges.TryGetValue(levelId, out objectives))
-        {
-            return objectives;
-        }
-        return null;
-    }
-
-    public LevelObjectiveData[] GetLevelObjectives(string levelID)
-    {
-        return GetLevelObjectivesByID(levelID);
-    }
-
     public void SetMoneySpend(int ammount)
     {
         CoinSpend = ammount;
@@ -271,7 +246,7 @@ public class PlayerData
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
 
                 Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
-            }    
+            }
         }
         else
         {
@@ -310,5 +285,14 @@ public class PlayerData
         PowerPackCollected = 0;
     }
 
+    public Dictionary<string, LevelObjectiveData[]> GetListOfObjectives()
+    {
+        return ListOfLevelChallenges;
+    }
+
+    public void SetListOfObjectives(Dictionary<string, LevelObjectiveData[]> newList)
+    {
+        ListOfLevelChallenges = newList;
+    }
 }
 

@@ -12,22 +12,41 @@ public class LevelObjectivesElement : MonoBehaviour
 
     bool complete = false;
     [SerializeField] private Image ProgressFill;
-    AnimationCurve animationCurve; 
+    [SerializeField] private AnimationCurve animationCurve;
+
+    [SerializeField] private float speed = 1;
+    private float progressTimer = 0;
 
     public void SetLevelObjective(LevelObjectiveData levelObjectiveData)
     {
         this.levelObjectiveData = levelObjectiveData;
-        RefreshLevelObjectiveEement();
+        completedSprite.gameObject.SetActive(false);
+        failSpriet.gameObject.SetActive(false);
+
+        ID = GameManager.LevelIndexSelected;
+        DescriptionText.text = levelObjectiveData.description;
+
+        if (levelObjectiveData.completed)
+        {
+            ProgressFill.fillAmount = 1;
+            completedSprite.gameObject.SetActive(true);
+        }
+        else if (!levelObjectiveData.completed)
+        {
+            ProgressFill.fillAmount = 0;
+        }
     }
 
     private void Update()
     {
         if (complete)
         {
-            ProgressFill.fillAmount = Mathf.Lerp(ProgressFill.fillAmount, animationCurve.Evaluate(Time.time), 1);
-            if (ProgressFill.fillAmount == 1)
+            progressTimer += Time.deltaTime * speed;
+            ProgressFill.fillAmount = Mathf.Lerp(ProgressFill.fillAmount, animationCurve.Evaluate(progressTimer), 1);
+            if (ProgressFill.fillAmount >= 1)
             {
                 completedSprite.gameObject.SetActive(true);
+                complete = false;
             }
         }
     }
@@ -35,8 +54,9 @@ public class LevelObjectivesElement : MonoBehaviour
     public void MarkAsCompleted()
     {
         complete = true;
-      
+        progressTimer = 0;
     }
+
     public void MarkAsFailed()
     {
         failSpriet.gameObject.SetActive(true);
@@ -51,20 +71,6 @@ public class LevelObjectivesElement : MonoBehaviour
         else if (!levelObjectiveData.completed)
         {
             MarkAsFailed();
-        }
-    }
-
-    public void RefreshLevelObjectiveEement()
-    {
-        completedSprite.gameObject.SetActive(false);
-        failSpriet.gameObject.SetActive(false);
-
-        ID = GameManager.LevelIndexSelected;
-        DescriptionText.text = levelObjectiveData.description;
-
-        if (levelObjectiveData.completed)
-        {
-            MarkAsCompleted();
         }
     }
 }

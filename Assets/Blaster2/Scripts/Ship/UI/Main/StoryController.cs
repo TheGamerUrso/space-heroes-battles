@@ -9,8 +9,8 @@ public class StoryController : MonoSingleton<StoryController>
 
     public void Open()
     { 
-        Mission mission = PersistantData.GetMission(currentMission);
-        ConversationWidget.GetComponent<StoryView>().SetStory(mission.Description);
+        Level level = PersistantData.GetMission(currentMission);
+        ConversationWidget.GetComponent<StoryView>().SetStory(level.mission.Description);
 
         ConversationWidget.SetActive(true);
     }

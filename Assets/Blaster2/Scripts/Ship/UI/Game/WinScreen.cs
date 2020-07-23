@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class WinScreen : MonoBehaviour
 {
@@ -29,10 +30,10 @@ public class WinScreen : MonoBehaviour
     }
     public void ShowGameResult()
     {
-        levelName = "Level" + GameManager.LevelIndexSelected;
+        Scene scene = SceneManager.GetActiveScene();
+        levelName = ((LevelEnum)scene.buildIndex).ToString();
 
-        playerData = PersistantData.GetPlayerData();
-        levelObjectiveDatas = playerData.GetLevelObjectives(levelName);
+        levelObjectiveDatas = PersistantData.GetLevelObjectives(levelName);
 
         if (levelName.Equals("Level0"))
         {
@@ -48,7 +49,8 @@ public class WinScreen : MonoBehaviour
         float score = Game.Score;
         float tempScore = 0;
 
-     
+
+        yield return new WaitForSeconds(2.5f);
 
         while (tempScore < score)
         {
@@ -64,6 +66,8 @@ public class WinScreen : MonoBehaviour
 
         skip = false;
 
+        yield return new WaitForSeconds(3);
+
         foreach (LevelObjectivesElement item in levelObjectives)
         {
             item.gameObject.SetActive(false);
@@ -74,15 +78,11 @@ public class WinScreen : MonoBehaviour
             levelObjectives[i].SetLevelObjective(levelObjectiveDatas[i]);
         }
 
-        for (int i = 0; i < levelObjectives.Length; i++)
+        for (int i = 0; i < levelObjectiveDatas.Length; i++)
         {
             levelObjectives[i].gameObject.SetActive(true);
-
-            levelObjectives[i].RefreshLevelObjectiveEement();
-
             levelObjectives[i].CheckComplete();
-
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(.5f);
         }
 
         VideoRewardAd.SetActive(true);

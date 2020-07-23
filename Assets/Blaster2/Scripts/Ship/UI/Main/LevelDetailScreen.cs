@@ -26,7 +26,7 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 
         HideLevelObjectives();
 
-        if (currentMission.ID == (int)LevelEnum.Level0)
+        if (currentMission.mission.ID == (int)LevelEnum.Level0)
         {
             LevelDetailLevelTItle.text = "Survival";
             survivalHighscore.SetActive(true);
@@ -38,10 +38,10 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 
         ShowStoryButton.SetActive(true);
 
-        LevelDetailPreview.sprite = sprites[currentMission.SpriteID];
-        LevelDetailLevelTItle.text = currentMission.Title;
+        LevelDetailPreview.sprite = sprites[currentMission.mission.SpriteID];
+        LevelDetailLevelTItle.text = currentMission.mission.Title;
 
-        levelObjectiveDatas = GameManager.Instance.GetChallenges();
+        levelObjectiveDatas = currentMission.objectiveListData;
 
         RefreshLevelObjectiveData();
     }
