@@ -4,11 +4,17 @@ using UnityEngine.EventSystems;
 
 public class SimpleShipControls : MonoBehaviour
 {
+    public enum ControlSceme
+    {
+        CONTROL1, CONTROL2
+    }
+    public ControlSceme controlSceme;
+
     private PlayerShipData playerShipData;
     private PlayerData playerData;
 
     [SerializeField] private float tilt;
-    [SerializeField] private float Speed;
+
     [SerializeField] private GameObject ShipModel;
     private Vector3 targetPos;
     private Plane plane;
@@ -33,14 +39,11 @@ public class SimpleShipControls : MonoBehaviour
         offspec = new Vector3(0, 0, playerData.Distance);
         plane = new Plane(Vector3.up, transform.position);
 
-        Speed = playerShipData.Speed;
-
         Events.OnDistanceValueChanged = UpdateOffset;
     }
 
     public void SetTargetPosition()
     {
-
         if (Input.touchCount == 0)
         {
             ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -79,12 +82,31 @@ public class SimpleShipControls : MonoBehaviour
     {
         if (direction.magnitude > .1f)
         {
-            transform.Translate((direction + offspec) * Speed * movementSensitivity * Time.deltaTime, Space.World);
+            transform.Translate((direction + offspec) * playerShipData.Speed * movementSensitivity * Time.deltaTime, Space.World);
+        }
+    }
 
-            transform.position = new Vector3(
-                Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
-                yMove,
-                    Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
+    public void OnDragMove()
+    {
+        if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
+        {
+#if UNITY_EDITOR
+            if (Input.GetMouseButton(0))
+            {
+                transform.position += new Vector3(
+                    Input.GetAxis("Mouse X") * playerShipData.Speed * movementSensitivity * Time.deltaTime,
+                    transform.position.y,
+                    Input.GetAxis("Mouse Y") * playerShipData.Speed * Time.deltaTime);
+            }
+#endif
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                if (touch.phase == TouchPhase.Moved)
+                {
+                    transform.position += new Vector3(touch.deltaPosition.x * playerShipData.Speed * Time.deltaTime, 0, touch.deltaPosition.y * playerShipData.Speed * Time.deltaTime);
+                }
+            }
         }
     }
 
@@ -105,10 +127,12 @@ public class SimpleShipControls : MonoBehaviour
 
             movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
 
-
-            if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
+            if (controlSceme == ControlSceme.CONTROL1)
             {
-                SetTargetPosition();
+                if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
+                {
+                    SetTargetPosition();
+                }
             }
 
             if (!Game.IsPaused)
@@ -130,13 +154,25 @@ public class SimpleShipControls : MonoBehaviour
     private void LateUpdate()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
-        {
-            Move();
-        }
+
+            if (controlSceme == ControlSceme.CONTROL1)
+            {
+                Move();
+            }
+            else if (controlSceme == ControlSceme.CONTROL2)
+            {
+                OnDragMove();
+            }
+
+
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
+            yMove,
+                Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
     }
 
     public void Rotate()
-    {   
+    {
         if (ShouldRoate())
         {
             rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
@@ -158,6 +194,7 @@ public class SimpleShipControls : MonoBehaviour
 
         ShipModel.transform.localEulerAngles = targetEulerAngels;
     }
+
     public static bool IsMouseOverUI()
     {
         return EventSystem.current.IsPointerOverGameObject();

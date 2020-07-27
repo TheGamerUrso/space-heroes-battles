@@ -21,7 +21,7 @@ public class TurretSuper : SpecialAttack
 
             playerData.IncreaseSuperUse(); ;
 
-            turretDuration = weaponData.SuperChargeTime;
+            turretDuration = SuperChargeTime;
             Turrets.DeployTurret();
 
             SpecialActive = true;

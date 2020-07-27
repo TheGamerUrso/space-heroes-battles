@@ -25,9 +25,9 @@ public class ArtilleryProjectile : EnemyProjectile
         warning.Hide();
     }
 
-    public override void Setup(Vector3 shootDir, float dmg)
+    public override void Setup(WeaponScript weaponScript)
     {
-        base.Setup(shootDir, dmg);
+        base.Setup(weaponScript);
         timer = 1;
         fall = false;
         if (warning == null)

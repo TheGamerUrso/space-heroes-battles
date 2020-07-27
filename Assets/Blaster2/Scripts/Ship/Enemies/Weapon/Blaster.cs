@@ -15,7 +15,7 @@ public class Blaster : WeaponScript
         if (Time.time > newShot && AutoAttack)
         {
             AboutToShoot?.Invoke(false);
-            newShot = Time.time + weaponData.FireRate;
+            newShot = Time.time + FireRate;
 
             PlayWeaponFireSound();
 
@@ -24,9 +24,13 @@ public class Blaster : WeaponScript
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
                 dir = Cannons[i].position + Cannons[i].forward;
                 shootDir = (dir - Cannons[i].position).normalized;
+
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
-                InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, weaponData.Damage);
+
+                EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
+                enemyProjectile.Setup(this);
+                enemyProjectile.SetShootDir(shootDir);
             }
         }
     }

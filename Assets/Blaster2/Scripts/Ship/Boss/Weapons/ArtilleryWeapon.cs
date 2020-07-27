@@ -33,7 +33,7 @@ public class ArtilleryWeapon : Blaster
     {
         if (Time.time > newShot && AutoAttack && attack)
         {
-            newShot = Time.time + weaponData.FireRate;
+            newShot = Time.time + FireRate;
 
             PlayWeaponFireSound();
 
@@ -42,13 +42,17 @@ public class ArtilleryWeapon : Blaster
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
                 dir = Cannons[i].position + Cannons[i].up;
                 shootDir = (dir - Cannons[i].position).normalized;
+
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
-                InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, weaponData.Damage);
+
+                EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
+                enemyProjectile.Setup(this);
+                enemyProjectile.SetShootDir(shootDir);
             }
 
             numberOfAttacks++;
-           
+
         }
     }
 }

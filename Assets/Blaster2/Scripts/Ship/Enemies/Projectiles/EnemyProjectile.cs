@@ -13,13 +13,11 @@ public class EnemyProjectile : Projectile
             trailRenderer.Clear();
     }
 
-    public override void Setup(Vector3 shootDir, float dmg)
+    public override void Setup(WeaponScript weaponScript)
     {
-        this.shootDir = shootDir;
-       // transform.eulerAngles = new Vector3(0, Utilities.GetAngleFromVectorFloat3D(shootDir), 0);
-        if (dmg > 0)
-            Damage = dmg;
+        this.weaponScript = weaponScript;
     }
+
     public override void Movement()
     {
         Vector3 newPos = transform.position;
@@ -45,7 +43,7 @@ public class EnemyProjectile : Projectile
         if (other.CompareTag("Player"))
         {
             var destroyable = other.GetComponent<IDamagable>();
-            destroyable.TakeDamage(damage);
+            destroyable.TakeDamage(Damage);
             DestoryNow();
         }
     }

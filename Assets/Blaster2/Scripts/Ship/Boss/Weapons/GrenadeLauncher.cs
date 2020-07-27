@@ -14,13 +14,17 @@ public class GrenadeLauncher : WeaponScript
 
         if (Time.time > newShot && AutoAttack)
         {
-            newShot = Time.time + weaponData.FireRate;
+            newShot = Time.time + FireRate;
             int pos = Random.Range(0, Cannons.Length);
             GameObject bomb = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             bomb.transform.position = Cannons[pos].transform.position;
             bomb.transform.rotation = Cannons[pos].rotation;
-            bomb.GetComponent<GrenadeProjectile>().Setup(Cannons[pos].forward , weaponData.Damage);
-            bomb.GetComponent<EnemyProjectile>().Damage = weaponData.Damage;
+
+            Vector3 shootDir = Cannons[pos].forward;
+            Projectile enemyProjectile = bomb.GetComponent<Projectile>();
+            enemyProjectile.Setup(this);
+            enemyProjectile.SetShootDir(shootDir);
+
             PlayWeaponFireSound();
         }
     }

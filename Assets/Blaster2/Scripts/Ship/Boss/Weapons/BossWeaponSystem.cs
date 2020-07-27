@@ -12,12 +12,12 @@ public class BossWeaponSystem : WeaponScript
 
         if (m_CurHealth <= (0.6 * m_MaxHealth))
         {
-            weaponData.FireRate = 2;
+            FireRate = 2;
 
         }
         else if (m_CurHealth <= (0.4 * m_MaxHealth))
         {
-            weaponData.FireRate = 3;
+            FireRate = 3;
         }
         else
         {

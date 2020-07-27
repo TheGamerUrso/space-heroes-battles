@@ -5,10 +5,6 @@ public class Weapon_SO : ScriptableObject
 {
     public string Name;
     public PoolGameObjectType m_Projectile;
-    public float FireRate;
-    public float Damage;
-    public float SuperChargeTime;
-
     public AudioClip ShootSFX;
     public int Radius;
     public int Angle;

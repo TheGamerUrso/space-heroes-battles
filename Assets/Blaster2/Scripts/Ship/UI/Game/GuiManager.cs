@@ -168,7 +168,7 @@ public class GuiManager : MonoSingleton<GuiManager>
     public void LoadMainMenu()
     {
         Game.IsSurvivalMode = false;
-        Time.timeScale = 1;
+  
         GameManager.Instance.LoadMainenu();
 
         UIView activeMenuGO = null;

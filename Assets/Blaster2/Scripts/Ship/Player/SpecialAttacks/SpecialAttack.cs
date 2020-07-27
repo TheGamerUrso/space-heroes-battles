@@ -14,9 +14,9 @@ public class SpecialAttack : PlayerWeapon
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerShip = ship.GetComponent<PlayerShip>();
 
-        weaponData.SuperChargeTime = playerShipData.SuperChargeTime;
-        weaponData.Damage = playerShipData.SuperDamage;
-        weaponData.FireRate = playerShipData.FireRate;
+        SuperChargeTime = playerShipData.SuperChargeTime;
+        Damage = playerShipData.SuperDamage;
+        FireRate = playerShipData.FireRate;
     }
 
     public override void Update()
@@ -24,7 +24,7 @@ public class SpecialAttack : PlayerWeapon
         if (SpecialActive)
         {
             if (m_CountDownTimer == null)
-                m_CountDownTimer = new CountDownTimer(weaponData.SuperChargeTime);
+                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
             {
@@ -32,7 +32,7 @@ public class SpecialAttack : PlayerWeapon
                 if (m_CountDownTimer.countToZero())
                 {
 
-                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / weaponData.SuperChargeTime;
+                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
 
                 }
 

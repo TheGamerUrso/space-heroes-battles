@@ -7,14 +7,12 @@ public class Bomb : EnemyProjectile
     [SerializeField] private GameObject m_Prefab;
     public bool m_FollowPlayer;
     private float Angle = 22.5f;
-
-    //====================================================================================================
+    
     void Start()
     {
         StartCoroutine("ShootAllDirection");
     }
 
-    //====================================================================================================
     IEnumerator ShootAllDirection()
     {
         int num = 0;
@@ -24,7 +22,7 @@ public class Bomb : EnemyProjectile
         {
             newBullet = Instantiate(m_Prefab, transform.position,Quaternion.Euler(new Vector3(0, Angle * num, 0))) as GameObject;
             newBullet.SetActive(false);
-            newBullet.GetComponent<Projectile>().Damage = damage;
+            newBullet.GetComponent<Projectile>().Setup(weaponScript);
             listOfBullets.Add(newBullet);
             newBullet.name = "#" + Angle * num;
       

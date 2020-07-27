@@ -22,11 +22,13 @@ public class PlayerWeapon : WeaponScript
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerShip = ship.GetComponent<PlayerShip>();
+
+        Damage = playerShipData.Damage;
+        FireRate = playerShipData.FireRate;
     }
 
     public override void Update()
     {
-
         if (ship != null)
         {
             PlayerShip playerShip = ship.GetComponent<PlayerShip>();
@@ -78,8 +80,8 @@ public class PlayerWeapon : WeaponScript
 
         if (Time.time > newShot)
         {
-            newShot = Time.time + weaponData.FireRate;
-            InstansiateBulletsByWeaponType(foundPlayer.transform, ref weaponData.m_Projectile);
+            newShot = Time.time + FireRate;
+            InstansiateBulletsByWeaponType();
 
             PlayWeaponFireSound(true);
 
@@ -99,7 +101,7 @@ public class PlayerWeapon : WeaponScript
         }
     }
 
-    public void InstansiateBulletsByWeaponType(Transform ship, ref PoolGameObjectType m_Projectile)
+    public void InstansiateBulletsByWeaponType()
     {
         for (int i = 0; i < Cannons.Length; i++)
         {
@@ -108,7 +110,10 @@ public class PlayerWeapon : WeaponScript
 
             Vector3 shootDir = Cannons[i].forward;
             InstansiatedProjectile.transform.position = Cannons[i].position;
-            InstansiatedProjectile.GetComponent<PlayerProjectile>().Setup(shootDir, weaponData.Damage);
+
+            Projectile projectile = InstansiatedProjectile.GetComponent<Projectile>();
+            projectile.Setup(this);
+            projectile.SetShootDir(shootDir);
         }
     }
 

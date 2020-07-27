@@ -10,8 +10,8 @@ public class Boxer : BaseBossEnemy
         int destroyed = 0;
         for (int i = 0; i < DestroyableParts.Count; i++)
         {
-            IDamagable item = DestroyableParts[i];
-            if (item.CurrentHealth <= 0)
+            IDamagable part = DestroyableParts[i];
+            if (part.CurrentHealth <= 0)
             {
                 destroyed++;
             }

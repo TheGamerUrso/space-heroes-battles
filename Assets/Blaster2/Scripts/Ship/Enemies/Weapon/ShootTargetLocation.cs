@@ -20,7 +20,7 @@ public class ShootTargetLocation : WeaponScript
     {
         if (Time.time > newShot)
         {
-            newShot = Time.time + weaponData.FireRate;
+            newShot = Time.time + FireRate;
 
             PlayWeaponFireSound();
 
@@ -31,7 +31,12 @@ public class ShootTargetLocation : WeaponScript
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(playerLastLocation);
-                InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = weaponData.Damage;
+
+                EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
+                enemyProjectile.Setup(this);
+                enemyProjectile.SetShootDir(playerLastLocation);
+
+
                 InstansiatedProjectile.GetComponent<Rigidbody>().AddForce(playerLastLocation * 100, ForceMode.Impulse);
             }
         }

@@ -8,11 +8,9 @@ public class BaseBossEnemy : BaseEnemy
     public Action OnBossAttack;
     public Action<int, int> OnBossHit;
 
- 
     protected int hitIndex;
     protected int numberOfHits;
     [SerializeField] protected GameObject ExplosionsDeathEffect;
-
     [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
 
 
@@ -65,6 +63,7 @@ public class BaseBossEnemy : BaseEnemy
 
     public override void Update()
     {
+        base.Update();
         if (CurrentHealth > 0)
         {
             Attack();
@@ -121,16 +120,16 @@ public class BaseBossEnemy : BaseEnemy
         {
             for (int i = 0; i < Weapons.Length; i++)
             {
-                float newFireRate = Weapons[i].weaponData.FireRate - .2f;
+                float newFireRate = Weapons[i].FireRate - .2f;
 
-                Weapons[i].weaponData.FireRate = newFireRate;
+                Weapons[i].FireRate = newFireRate;
             }
         }
         else
         {
-            float newFireRate = Weapons[weaponIndex].weaponData.FireRate - .2f;
+            float newFireRate = Weapons[weaponIndex].FireRate - .2f;
 
-            Weapons[weaponIndex].weaponData.FireRate = newFireRate;
+            Weapons[weaponIndex].FireRate = newFireRate;
         }
     }
 
@@ -141,10 +140,10 @@ public class BaseBossEnemy : BaseEnemy
         MonoBehaviour go = part as MonoBehaviour;
         if (go != this)
         {
-            BaseEnemy baseEnemy = go.GetComponent<BaseEnemy>();
-            baseEnemy.MaxHealth = part.MaxHealth / 2;
+            BossDestroyablePart partGO = go.GetComponent<BossDestroyablePart>();
+            partGO.maxHealth = part.MaxHealth / 2;
             float health = part.MaxHealth;
-            baseEnemy.SetHealth(health);
+            partGO.SetHealth(health);
         }
     }
 

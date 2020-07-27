@@ -16,7 +16,7 @@ public class Turret : Ship, IDamagable
 
     public override void OnEnable()
     {
-        playerWeapon.weaponData.Damage = playerShipData.SuperDamage;
+        playerWeapon.Damage = playerShipData.SuperDamage;
     }
 
     public override void Start()

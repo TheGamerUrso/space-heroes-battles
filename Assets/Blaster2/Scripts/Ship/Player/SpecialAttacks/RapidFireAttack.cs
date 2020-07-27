@@ -27,7 +27,7 @@ public class RapidFireAttack : SpecialAttack
 
             playerData.IncreaseSuperUse();        
 
-            playerFireRate = playerWeapons[0].weaponData.FireRate;
+            playerFireRate = playerWeapons[0].FireRate;
 
             weaponCurrentType = playerShip.CurrentWeapnType;
 
@@ -35,7 +35,7 @@ public class RapidFireAttack : SpecialAttack
 
             for (int i = 0; i < playerWeapons.Length; i++)
             {
-                playerWeapons[i].weaponData.FireRate = .2f;
+                playerWeapons[i].FireRate = .2f;
             }
 
             SpecialActive = true;
@@ -47,7 +47,7 @@ public class RapidFireAttack : SpecialAttack
         {
             for (int i = 0; i < playerWeapons.Length; i++)
             {
-                playerWeapons[i].weaponData.FireRate = playerFireRate;
+                playerWeapons[i].FireRate = playerFireRate;
             }
 
             playerShip.SwitchWeapon(weaponCurrentType);

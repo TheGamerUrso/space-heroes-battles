@@ -9,15 +9,18 @@ public class BaseEnemy : Ship, IDamagable
     public Enemy_SO EnemyData;
     public bool IsAlive { get; set; }
 
-    public int Level { get; set; }
-    public float Damage { get; set; }
-    public float FireRate { get; set; }
-    public float Speed { get; set; }
-    public float CurrentHealth { get; set; }
-    public float MaxHealth { get; set; }
+    public int Level;
+    public float Damage;
+    public float FireRate;
+    public float Speed;
+    public float currentHealth;
+    public float maxHealth;
+    public float CurrentHealth { get { return currentHealth; } }
+    public float MaxHealth { get { return maxHealth; } }
 
-    [SerializeField] protected bool AutoEnableWeapon;
-    [SerializeField] protected BaseEnemyAI baseEnemyAI;
+    protected BaseEnemyAI baseEnemyAI;
+    protected bool AutoEnableWeapon;
+
     [SerializeField] protected WeaponScript[] Weapons;
     [SerializeField] protected float delayAttak = 3;
     protected BoxCollider boxCollider;
@@ -129,9 +132,11 @@ public class BaseEnemy : Ship, IDamagable
             }
             else if (HasShield == false)
             {
-                CurrentHealth -= dmg;
+                currentHealth -= dmg;
 
-                if (CurrentHealth < 1)
+                OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
+
+                if (currentHealth < 1)
                 {
                     Death();
                 }
@@ -181,9 +186,9 @@ public class BaseEnemy : Ship, IDamagable
     {
         Level = level;
 
-        MaxHealth = Level * EnemyData.baseHealth;
+        maxHealth = Level * EnemyData.baseHealth;
 
-        CurrentHealth = MaxHealth;
+        currentHealth = MaxHealth;
 
         Speed = EnemyData.baseSpeed;
 
@@ -193,11 +198,17 @@ public class BaseEnemy : Ship, IDamagable
 
         HasShield = false;
 
+        for (int weaponIndex = 0; weaponIndex < Weapons.Length; weaponIndex++)
+        {
+            Weapons[weaponIndex].Damage = Damage;
+            Weapons[weaponIndex].FireRate = FireRate;
+        }
+
     }
 
     public void SetCurrentHealth(float value)
     {
-        CurrentHealth = value;
+        currentHealth = value;
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
@@ -208,7 +219,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public virtual void Heal(float ammount)
     {
-      
+
     }
 
     public void EnableWeaponById(int id, bool solo = false)
@@ -245,7 +256,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public void SetHealth(float health)
     {
-        CurrentHealth = health;
+        currentHealth = health;
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 

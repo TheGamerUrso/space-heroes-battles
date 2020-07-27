@@ -67,8 +67,6 @@ public class PlayerShip : Ship, IDamagable
         playerData.NewGame();
 
         Events.OnLevelValueChanged += OnLevelValueChanged;
-
-
     }
 
     public void OnLevelValueChanged(int Level)
@@ -173,9 +171,9 @@ public class PlayerShip : Ship, IDamagable
     {
         weapon = GetCurrentActiveWeapon().GetComponent<WeaponScript>();
 
-        weapon.weaponData.FireRate = fireRate;
+        weapon.FireRate = fireRate;
         if (damage > 0)
-            weapon.weaponData.Damage = damage;
+            weapon.Damage = damage;
 
     }
 

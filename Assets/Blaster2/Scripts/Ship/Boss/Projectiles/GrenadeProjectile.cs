@@ -77,7 +77,7 @@ public class GrenadeProjectile : EnemyProjectile
 
         InstansiatedProjectile.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(pos[i]));
 
-        InstansiatedProjectile.GetComponent<EnemyProjectile>().Damage = weaponData.Damage;
+        InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(weaponScript);
 
     }
 }

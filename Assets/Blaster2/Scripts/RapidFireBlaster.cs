@@ -44,11 +44,15 @@ public class RapidFireBlaster : Blaster
             shootDir = (dir - Cannons[i].position).normalized;
             InstansiatedProjectile.transform.position = Cannons[i].position;
             InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
-            InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(shootDir, weaponData.Damage);
+
+            EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
+            enemyProjectile.Setup(this);
+            enemyProjectile.SetShootDir(shootDir);
+
             yield return new WaitForSeconds(weaponData.delayBetweenShots);
         }
         AboutToShoot?.Invoke(false);
-        newShot = Time.time + weaponData.FireRate;
+        newShot = Time.time + FireRate;
         IsShooting = false;
     }
 }

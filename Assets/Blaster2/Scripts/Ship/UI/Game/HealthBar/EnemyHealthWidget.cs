@@ -9,37 +9,24 @@ public class EnemyHealthWidget : BaseHealthWidget
     public bool Static;
     public bool AutoHide;
 
-
-    public override void OnStart()
+    public override void Awake()
     {
-        base.OnStart();
+        Hide();
+    }
+
+    public override void Start()
+    {
+        base.Start();
         UpdateHealthBar(100, 100);
     }
 
     public override void Setup(IDamagable ship, bool follow = true)
     {
-     
-        if (Target == null || Target != ship)
+        if (Target == null)
         {
-            MonoBehaviour monoGO = ship as MonoBehaviour;
-            if (monoGO != null)
-            {
-                Ship shipGo = monoGO.GetComponent<Ship>();
-                if (shipGo != null)
-                {
-                    ship.OnHealthChanged += UpdateHealthBar;
-                    Target = ship;
-                }
-                else
-                {
-                    Punch shipAccesory = monoGO.GetComponent<Punch>();
-                    if (shipAccesory != null)
-                    {
-                        shipAccesory.OnHealthChanged += UpdateHealthBar;
-                        Target = ship;
-                    }
-                }
-            }
+            MonoBehaviour go = ship as MonoBehaviour;
+            ship.OnHealthChanged += UpdateHealthBar;
+            Target = go.gameObject;
         }
     }
 
@@ -50,49 +37,30 @@ public class EnemyHealthWidget : BaseHealthWidget
             return;
         }
 
-        if (AutoHide)
-        {
-            Show();
-        }
-        Ship ship = Target as Ship;
-        if (ship != null)
-        {
-            bool m_HasShield = ship.HasShieldModule();
+        Show();
 
-            if (ShieldBarImage != null)
-            {
-                if (m_HasShield)
-                {
-                    ShieldBarImage.fillAmount = 1;
-                }
-                else
-                {
-                    ShieldBarImage.fillAmount = 0;
-                }
-            }
-
-        }
         timer = duration;
 
         base.UpdateHealthBar(currentHealth, maxHealth);
     }
-
-    public override void Tick()
+    public void LateUpdate()
     {
-        base.Tick();
         if (!Static)
         {
             if (Target != null)
             {
-                MonoBehaviour go = Target as MonoBehaviour;
-                if (go != null)
-                    SetHealthBarPosition(go.transform);
+                HealthBarTransform.transform.position = Camera.main.WorldToScreenPoint(Target.transform.position) + offset;
             }
         }
+    }
+
+    public override void Update()
+    {
+        base.Update();
 
         if (AutoHide)
         {
-            if (HealthBarImage.gameObject.activeSelf && timer > 0)
+            if (HealthbarCanvas.activeSelf && timer > 0)
             {
                 timer -= Time.deltaTime;
                 if (timer <= 0)

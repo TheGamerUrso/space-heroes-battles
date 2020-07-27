@@ -205,7 +205,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void ResetLevel()
     {
-        StartCoroutine(ShowLoadingScreen((LevelEnum)SceneManager.GetActiveScene().buildIndex));
+        StartCoroutine(ResetSceneAsync((LevelEnum)SceneManager.GetActiveScene().buildIndex));
     }
 
     public void LoadScene(LevelEnum level, bool showLoadingScreen = true)
@@ -261,6 +261,42 @@ public class GameManager : MonoSingleton<GameManager>
     {
         Events.OnSceneLoadProgress?.Invoke(progress);
         GameManager.Instance.sceneLoadProgress = progress;
+    }
+    private IEnumerator ResetSceneAsync(LevelEnum levelName)
+    {
+        string activeScene = SceneManager.GetActiveScene().name;
+
+        if (activeScene.Equals(levelName.ToString()))
+        {
+            SceneManager.LoadSceneAsync((int)levelName, LoadSceneMode.Single);
+
+        }
+        else
+        {
+            ao = SceneManager.LoadSceneAsync((int)levelName);
+
+            ao.completed += OnLoadOperationComplete;
+            _loadOperation.Add(ao);
+            currentLevelLoaded = levelName.ToString();
+
+            if (ao == null)
+            {
+                Debug.LogError("[SceneController] Unable to load level" + levelName);
+            }
+
+            while (ao.isDone == false)
+            {
+                UpdateProgress(ao.progress);
+                yield return null;
+            }
+
+            System.GC.Collect();
+
+            Hide();
+
+            yield return new WaitForSeconds(2.0f);
+            LoadingScreen.SetActive(false);
+        }
     }
 
     private IEnumerator LoadSceneAsync(LevelEnum levelName)

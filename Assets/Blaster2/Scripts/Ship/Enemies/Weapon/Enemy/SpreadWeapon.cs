@@ -29,12 +29,15 @@ public class SpreadWeapon : WeaponScript
             GameObject newBullet = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             newBullet.transform.position = transform.position;
             newBullet.transform.rotation = Quaternion.Euler(new Vector3(0, posToShoot, 0));
-            newBullet.GetComponent<Projectile>().Damage = weaponData.Damage;
+
+            EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
+            enemyProjectile.Setup(this);
+
             posToShoot += weaponData.Angle;
             yield return new WaitForSeconds(weaponData.delayBetweenShots);
             PlayWeaponFireSound();
         }
-        yield return new WaitForSeconds(weaponData.FireRate);
+        yield return new WaitForSeconds(FireRate);
         m_Shooting = false;
     }
 

@@ -10,6 +10,11 @@ public abstract class WeaponScript : MonoBehaviour
 
     protected Ship ship;
     public Weapon_SO weaponData;
+
+    public float FireRate;
+    public float Damage;
+    public float SuperChargeTime;
+
     [SerializeField] protected AudioSource source;
 
     [SerializeField]

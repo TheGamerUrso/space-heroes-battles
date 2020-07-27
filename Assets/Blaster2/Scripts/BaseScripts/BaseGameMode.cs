@@ -7,24 +7,21 @@ using UnityEngine.SceneManagement;
 
 public class BaseGameMode : MonoSingleton<BaseGameMode>
 {
+    public Level_SO level_SO;
+
     protected PlayerShip playerShip;
     protected EnemyElement enemyElement;
     protected bool BossBattleInitiated;
     protected GameObject currentBoss;
     protected PlayerData playerData;
-    [SerializeField] protected bool HasBoss;
 
-    [SerializeField] protected int numberOfEnemiesEachWave;
-    [Range(1, 16)]
-    [SerializeField] protected int waves;
-    [SerializeField] protected int availableEnemies;
-    [SerializeField] protected int LevelDifficulty = 1;
     [SerializeField] protected float cooldown;
     [SerializeField] protected float delay = 0;
-    [SerializeField] protected GameObject BossPrefab;
+
     protected bool pause;
 
     public int TotalEnemies;
+
 
     [SerializeField] protected List<EnemyElement> enemyElements;
     [SerializeField] protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();

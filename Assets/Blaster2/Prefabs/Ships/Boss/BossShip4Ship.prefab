@@ -286,19 +286,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b8b2588cd97a37645b56607f87dcd2a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipStats: {fileID: 11400000, guid: 69b42675001a626439b6e8b20717dbc2, type: 2}
-  Id: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  currentHealth: 0
   ShieldEffect: {fileID: 1512342256574877601}
-  ExplostionEffect: 6
+  Id: 0
+  EnemyData: {fileID: 11400000, guid: b436933dc86d2ee40a94f0145558a772, type: 2}
+  AutoEnableWeapon: 0
   baseEnemyAI: {fileID: 9045726662814918859}
   Weapons:
   - {fileID: 7542427212283797754}
   delayAttak: 3
-  DeathDelay: 0
   enemyElement:
     Name: 
     gameObjectType: 0
@@ -306,10 +301,6 @@ MonoBehaviour:
     currentNumberInScene: 0
     MaxNumberInScene: 0
     presentage: 0
-  HealthBarSettings: {fileID: 11400000, guid: 40623d1d7da61b945aba5500ba61149a, type: 2}
-  m_ValueOfEnemy: 500
-  AutoEnableWeapon: 0
-  BossAI: {fileID: 9045726662814918859}
   ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
     type: 3}
 --- !u!114 &9045726662814918859
@@ -343,6 +334,7 @@ MonoBehaviour:
   bossAI: {fileID: 9045726662814918859}
   HealthPresentage: 0
   phase: 0
+  DelayAttack: 0
 --- !u!114 &48225411585970168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -470,11 +462,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   Cannons: []
-  delayBetweenShots: 0
-  autoAttack: 0
-  fireRate: 0
-  damage: 0
-  timer: 0
 --- !u!82 &7297356080784055246
 AudioSource:
   m_ObjectHideFlags: 0

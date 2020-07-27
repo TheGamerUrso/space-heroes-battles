@@ -46,16 +46,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a582be06709c734aa9415dc2f988aa5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  currentGameState: 0
   EnemyWaypoints: {fileID: 7859075690984216277, guid: dd2227e119981fd40845868477c95a8b,
     type: 3}
   AsteroidBackgroundSpawner: {fileID: 1943903115844349262, guid: 449c524e7b88dcb47b1f5d202f96a48d,
     type: 3}
   PanelBackgroundSpawner: {fileID: 7677630165720129839, guid: a74394913ed9c774bae92f7eb4f1d22a,
     type: 3}
-  DynamicObjectsPrefab: {fileID: 6246367879046696495, guid: bd2744567858de84e92e532142618b05,
-    type: 3}
   Tutorial: {fileID: 1155719464663044819, guid: c5ce5fa73aae0ce41bcf16033947875b,
     type: 3}
+  GUI: {fileID: 1202903970341093440, guid: 8e620df920bdb2a4196c1aa8f673fd44, type: 3}
 --- !u!114 &423100214828483317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,15 +68,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4be8c7776a8ff448b1d1952473af242, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HasBoss: 0
-  numberOfEnemiesEachWave: 16
-  waves: 8
-  availableEnemies: 1
-  LevelDifficulty: 1
+  level_SO: {fileID: 11400000, guid: 04156a4c9e719224ca4cef7b6a59ac40, type: 2}
   cooldown: 1
   delay: 0.5
-  BossPrefab: {fileID: 4840490958191933900, guid: 204ce6e64b7ed1f4198ade76c7b59629,
-    type: 3}
   TotalEnemies: 12
   enemyElements:
   - Name: Enemy1
@@ -177,42 +171,42 @@ MonoBehaviour:
       type: 3}
     poolIndex: 10
   - name: PlayerRocket
-    ID: 0
+    ID: 1
     poolGameObjectType: 1
     PoolElementGameObjects: []
     PoolElementPrefab: {fileID: 1456814716516072, guid: 27438886da568484a8225f9a1d0d0eba,
       type: 3}
     poolIndex: 4
   - name: EnemyProjectile
-    ID: 0
+    ID: 2
     poolGameObjectType: 2
     PoolElementGameObjects: []
     PoolElementPrefab: {fileID: 1115371313746158, guid: c4fa3b077a35c1945af1b7aa4c69df3a,
       type: 3}
     poolIndex: 10
   - name: EnemyProjectileBall
-    ID: 0
+    ID: 3
     poolGameObjectType: 3
     PoolElementGameObjects: []
     PoolElementPrefab: {fileID: 8515811472706583946, guid: 98895335c17c14f40a3371167f20e280,
       type: 3}
     poolIndex: 10
   - name: EnemyProjectileRocket
-    ID: 0
+    ID: 4
     poolGameObjectType: 4
     PoolElementGameObjects: []
     PoolElementPrefab: {fileID: 4675817566442647257, guid: 2616b21c3c24e0341ac06465eaa199c9,
       type: 3}
     poolIndex: 10
   - name: EnemyGrenadeProjectile
-    ID: 0
+    ID: 5
     poolGameObjectType: 5
     PoolElementGameObjects: []
     PoolElementPrefab: {fileID: 8515811472706583946, guid: 820c1b46bce347e43830353b171b3e20,
       type: 3}
     poolIndex: 10
   - name: BulletExplosion
-    ID: 0
+    ID: 6
     poolGameObjectType: 6
     PoolElementGameObjects: []
     PoolElementPrefab: {fileID: 1323441078866724, guid: 0f7de209037dde94cb6fd1c49ad452ea,

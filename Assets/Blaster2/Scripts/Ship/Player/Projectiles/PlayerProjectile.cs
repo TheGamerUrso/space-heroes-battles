@@ -2,13 +2,9 @@ using UnityEngine;
 
 public class PlayerProjectile : Projectile
 {
-    public override void Setup(Vector3 shootDir, float dmg)
+    public override void Setup(WeaponScript weaponScript)
     {
-        this.shootDir = shootDir;
-        //transform.eulerAngles = new Vector3(0, Utilities.Get(shootDir), 0);
-        if (dmg > 0)
-            Damage = dmg;
-
+        this.weaponScript = weaponScript;
     }
 
     private void OnDisable()
@@ -31,9 +27,6 @@ public class PlayerProjectile : Projectile
     {
         GameObject explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
         explode.transform.position = transform.position;
-        //explosion.transform.position = transform.position + Vector3.up * 2;
-        //explosion.transform.rotation = Quaternion.identity;
-
         gameObject.SetActive(false);
     }
 
@@ -44,7 +37,7 @@ public class PlayerProjectile : Projectile
             var destroyable = other.GetComponent<IDamagable>();
             if (destroyable != null)
             {
-                destroyable.TakeDamage(damage);
+                destroyable.TakeDamage(Damage);
             }
             DestoryNow();
         }

@@ -4,28 +4,27 @@ using UnityEngine.UI;
 
 public class BossHealthWidget : EnemyHealthWidget
 {
-    private void OnEnable()
+    public override void Awake()
     {
+        base.Awake();
         HealthBarTransform.transform.localScale = new Vector3(0, 1, 1);
     }
 
-    public override void OnStart()
-    {
-        base.OnStart();       
-    }
     public override void Show()
     {
         base.Show();
         Appear();
     }
 
-    private void LateUpdate()
+    public override void Update()
     {
+        base.Update();
         if (Game.IsGameOver)
         {
             gameObject.SetActive(false);
         }
     }
+
     void Appear()
     {
         TweenParams tParams = new TweenParams().SetEase(Ease.Linear);
