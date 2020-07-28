@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class PlayerPowerCircleWidget : MonoBehaviour
 {
-   [SerializeField] private PlayerShip player;
+    [SerializeField] private PlayerShip player;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
 

@@ -206,12 +206,6 @@ public class BaseEnemy : Ship, IDamagable
 
     }
 
-    public void SetCurrentHealth(float value)
-    {
-        currentHealth = value;
-        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-    }
-
     public float GetHealthPresentage()
     {
         return (CurrentHealth / MaxHealth) * 100;

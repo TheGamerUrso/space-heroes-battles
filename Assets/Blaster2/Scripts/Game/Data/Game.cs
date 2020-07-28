@@ -19,7 +19,7 @@
     public static int CoinPicked;
     public static int TotalCoinsInGame;
 
-    public static int Multiplier = 1;
+    public static int Multiplier = 0;
     public static bool getDamaged;
 
     public static int EnemyKilled;
@@ -33,7 +33,7 @@
         CoinPicked = 0;
         SuperUsed = 0;
         getDamaged = false;
-        Multiplier = 1;
+        Multiplier = 0;
         EnemyKilled = 0;
         EnemyEscaped = 0;
     }
@@ -75,18 +75,23 @@
     }
     public static void SetCurrentEnemyKills(int Kills)
     {
-        EnemyKilled = Kills;  
+        EnemyKilled = Kills;
     }
-
-
-    public static void SetMultiplier(int value)
+    public static void ResetMultiplier()
     {
-        if (value < 4)
-        {
-            Multiplier = value;
-        }
-        Events.OnMultiplierChanged?.Invoke(Multiplier);
+        Multiplier = 0;
+        Events.OnMultiplierChanged?.Invoke();
     }
 
- 
+    public static void IncreaseMultiplier()
+    {
+        Multiplier++;
+        if (Multiplier >= 5)
+        {
+            Multiplier = 5;
+        }
+        Events.OnMultiplierChanged?.Invoke();
+    }
+
+
 }

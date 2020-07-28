@@ -17,9 +17,9 @@ public class GooglePlayOptions : BaseOptions
     public Button LeaderboardBut;
 
     protected Coroutine signupCoroutine;
-    public override void OnOptionEnter()
+    public override void Start()
     {
-        base.OnOptionEnter();
+        base.Start();
         if (Application.platform == RuntimePlatform.Android)
         {
             InitializeGooglePlayProfile();

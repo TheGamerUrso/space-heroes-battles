@@ -58,7 +58,7 @@ public class PersistantData : MonoSingleton<PersistantData>
                   Instance.playerData.MusicVolume,
                   Instance.playerData.AutoAttack,
                   Instance.playerData.mute,
-                  Instance.playerData.Distance);
+                  Instance.playerData.ControlScene);
 
             LoadLevelProgress();
 
@@ -119,13 +119,13 @@ public class PersistantData : MonoSingleton<PersistantData>
         survival.interactable = surivalLocked;
         survival.Locked = !surivalLocked;
 
-        for (int i = 1; i <= (Instance.Levels.Count - 1); i++)
+        for (int i = 1; i < Instance.Levels.Count; i++)
         {
             var Level = Instance.Levels[i];
 
             Level level = Instance.Levels[i];
-            Debug.Log(Level.mission.ID + " : " + (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level1));
-            if (Level.mission.ID <= (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level1))
+            Debug.Log(Level.mission.ID + " : " + (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level0));
+            if (Level.mission.ID <= (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level0))
             {
                 level.interactable = true;
                 level.Locked = false;

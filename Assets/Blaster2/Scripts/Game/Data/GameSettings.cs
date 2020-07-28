@@ -5,15 +5,15 @@ public struct GameSettings
     public static float MusicVolume;
     public static bool AutoAttack;
     public static bool mute;
-    public static float distance;
+    public static float controlSceme;
 
-    public GameSettings(float SFXVolume, float MusicVolume, bool AutoAttack, bool mute, float distance)
+    public GameSettings(float SFXVolume, float MusicVolume, bool AutoAttack, bool mute, float controlSceme)
     {
         GameSettings.SFXVolume = SFXVolume;
         GameSettings.MusicVolume = MusicVolume;
         GameSettings.AutoAttack = AutoAttack;
         GameSettings.mute = mute;
-        GameSettings.distance = distance;
+        GameSettings.controlSceme = controlSceme;
     }
 
     public static void ResetToDefault()
@@ -22,7 +22,7 @@ public struct GameSettings
         MusicVolume = .7f;
         AutoAttack = true;
         mute = false;
-        distance = 5;
+        controlSceme = 1;
     }
 
 

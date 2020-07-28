@@ -16,8 +16,7 @@ public class GuiManager : MonoSingleton<GuiManager>
     [SerializeField] private GameObject pauseButton;
 
     [SerializeField] private TextMeshProUGUI ScoreText;
-    [SerializeField] private TextMeshProUGUI CoinWidgetText;
-    [SerializeField] private TextMeshProUGUI CountdownWidgetText;
+    [SerializeField] private ScoreMultplierWidget scoreMultplierWidget;
 
     private TransmitionWidget transmittionWidget;
     private float timer;
@@ -30,7 +29,6 @@ public class GuiManager : MonoSingleton<GuiManager>
         Events.OnWin -= Win;
 
         Events.OnPauseGame -= ShowPauseMenu;
-        Events.OnCoinValueChanged -= UpdateCoinWidgetText;
         Events.OnScoreValueChanged -= UpdateScore;
     }
 
@@ -55,21 +53,12 @@ public class GuiManager : MonoSingleton<GuiManager>
         WinScreen = panelWin.GetComponent<UIView>();
         PauseScreen = panelPause.GetComponent<UIView>();
 
-        Events.OnCoinValueChanged += UpdateCoinWidgetText;
         Events.OnScoreValueChanged += UpdateScore;
         Events.OnGameOver += GameOver;
         Events.OnWin += Win;
-        Events.EnemyDied += EnemyDiedCallback;
         Events.OnPauseGame += ShowPauseMenu;
 
         UpdateScore(0);
-        UpdateCoinWidgetText(0);
-    }
-
-    public void EnemyDiedCallback(string name, BaseEnemy baseEnemy)
-    {
-        int score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
-        GuiManager.CreateFloatingText(score.ToString(), baseEnemy.transform.position);
     }
 
     private void Update()
@@ -92,24 +81,6 @@ public class GuiManager : MonoSingleton<GuiManager>
         }
     }
 
-    public void SetCountdownVisibility(bool enable)
-    {
-        CountdownWidgetText.gameObject.SetActive(enable);
-    }
-
-    public static void CountdownVisibility(bool enable)
-    {
-        Instance.SetCountdownVisibility(enable);
-    }
-    public static void Countdown(float countdown)
-    {
-        Instance.CountdownText(countdown);
-    }
-
-    public void CountdownText(float countdown)
-    {
-        CountdownWidgetText.text = Mathf.Round(countdown).ToString();
-    }
 
     public void ReplayButton()
     {
@@ -130,6 +101,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void ShowPauseMenu(bool value)
     {
+
         if (value)
         {
             Game.SlowMo = false;
@@ -142,18 +114,16 @@ public class GuiManager : MonoSingleton<GuiManager>
         }
     }
 
-
-    public void UpdateCoinWidgetText(int coin)
-    {
-        CoinWidgetText.text = coin.ToString();
-    }
-
     public void UpdateScore(int score)
     {
         string scoreText = string.Format("{00:00000000}", score);
         ScoreText.text = scoreText;
     }
 
+    public static void SetScoreMultipler(string text)
+    {
+        Instance.scoreMultplierWidget.SetText(text);
+    }
     public static void CreateFloatingText(string text, Vector3 pos)
     {
         GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
@@ -167,6 +137,8 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void LoadMainMenu()
     {
+        Game.IsGameOver = true;
+
         Game.IsSurvivalMode = false;
   
         GameManager.Instance.LoadMainenu();
@@ -181,10 +153,14 @@ public class GuiManager : MonoSingleton<GuiManager>
         {
             activeMenuGO = GameOverScreen;
         }
-        else if (PauseScreen.IsActive())
-        {
-            activeMenuGO = PauseScreen;
-        }
+
+        Events.ToggleSlowMo?.Invoke(false);
+        GameManager.Instance.PauseTheGame(false);
+
+        //else if (PauseScreen.IsActive())
+        //{
+        //    activeMenuGO = PauseScreen;
+        //}
 
         if (activeMenuGO != null)
             StartCoroutine(DelayCloseMenu(activeMenuGO, 1));

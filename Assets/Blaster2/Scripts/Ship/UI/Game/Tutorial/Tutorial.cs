@@ -18,11 +18,6 @@ public class Tutorial : MonoSingleton<Tutorial>
 
     public TutorialItem[] TutorailItemsToShow;
 
-    protected override void Awake()
-    {
-        base.Awake();
-    }
-
 
     private void Start()
     {
@@ -31,19 +26,22 @@ public class Tutorial : MonoSingleton<Tutorial>
 
     public void ShowTutorial(int itemToShowIndex)
     {
-        Game.IsPaused = true;
-        TutorialView.Show();
-        for (int i = 0; i < TutorailItemsToShow.Length; i++)
+        if (!Game.IsGameOver)
         {
-            TutorailItemsToShow[i].prefabItem.SetActive(false);
+            Game.IsPaused = true;
+            TutorialView.Show();
+            for (int i = 0; i < TutorailItemsToShow.Length; i++)
+            {
+                TutorailItemsToShow[i].prefabItem.SetActive(false);
 
+            }
+
+            Title.text = TutorailItemsToShow[itemToShowIndex].Name;
+            Description.text = TutorailItemsToShow[itemToShowIndex].Description;
+            TutorailItemsToShow[itemToShowIndex].prefabItem.SetActive(true);
+
+            Time.timeScale = 0;
         }
-
-        Title.text = TutorailItemsToShow[itemToShowIndex].Name;
-        Description.text = TutorailItemsToShow[itemToShowIndex].Description;
-        TutorailItemsToShow[itemToShowIndex].prefabItem.SetActive(true);
-
-        Time.timeScale = 0;
     }
 
     public void Close()

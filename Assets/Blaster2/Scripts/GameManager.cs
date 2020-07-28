@@ -75,19 +75,28 @@ public class GameManager : MonoSingleton<GameManager>
     }
     #endregion
 
-    public static int LevelIndexSelected = 0;
     public string currentLevelLoaded;
-    private Level currentMission;
+    private Level currentLevelSelected;
     public Sprite[] sprites;
     private MissionCollection missionCollection;
 
     public float sceneLoadProgress;
 
+    public Level GetCurrentLevelSelected()
+    {
+        if (currentLevelSelected == null)
+        {
+            currentLevelSelected = PersistantData.GetLevels()[1];
+        }
+        return currentLevelSelected;
+    }
+
     public string GetStory(int missionIndex)
     {
-        currentMission = PersistantData.GetMission(missionIndex - 1);
-        return currentMission.mission.Description;
+        currentLevelSelected = PersistantData.GetMission(missionIndex - 1);
+        return currentLevelSelected.mission.Description;
     }
+
     public MissionCollection GetMissions()
     {
         return missionCollection;
@@ -95,16 +104,21 @@ public class GameManager : MonoSingleton<GameManager>
 
     public Level GetCurrentMission()
     {
-        return currentMission;
+        return currentLevelSelected;
+    }
+
+    public Level GetMission(LevelEnum level)
+    {
+        return PersistantData.GetLevels()[(int)level - (int)LevelEnum.Level0];
     }
 
     public void SetMission(Level level)
     {
-        currentMission = level;
-        LevelIndexSelected = level.mission.ID;
-        if (LevelIndexSelected > 0)
+        currentLevelSelected = level;
+
+        if (level.mission.ID > 0)
         {
-            StoryController.Instance.ShowStory(GameManager.LevelIndexSelected);
+            StoryController.Instance.ShowStory(level);
         }
     }
 
@@ -401,8 +415,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SetSurvivalScore(int ammount)
     {
-        int levelIndex = GameManager.LevelIndexSelected;
-        playerData.SetScore(levelIndex, Game.Score);
+        playerData.SetScore(currentLevelSelected.mission.ID, ammount);
     }
 
     public void PlayerChallengesCheck()
@@ -444,7 +457,7 @@ public class GameManager : MonoSingleton<GameManager>
             playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        int levelIndex = GameManager.LevelIndexSelected;
+        int levelIndex = currentLevelSelected.mission.ID - (int)LevelEnum.Level0;
 
         PostAchievementProgress(AchievementType.LEVEL, levelIndex);
 
@@ -498,8 +511,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void UpdatePlayerStatistics()
     {
-        int levelIndex = GameManager.LevelIndexSelected;
-        var levelName = "Level" + levelIndex;
+        int levelIndex = currentLevelSelected.mission.ID - (int)LevelEnum.Level0;
+        var levelName = currentLevelSelected.ID;
         var killed = Game.EnemySpawnInTotal * .9f;
         var collected = Game.EnemySpawnInTotal * .9f;
 

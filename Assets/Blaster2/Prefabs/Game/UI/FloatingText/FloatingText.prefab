@@ -36,7 +36,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 200, y: 75}
+  m_SizeDelta: {x: 300, y: 75}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &774242304890772872
 Animator:
@@ -205,6 +205,11 @@ MonoBehaviour:
   FloatingTextPivot: {fileID: 774242304890772873}
   TextRectTransform: {fileID: 774242306204596097}
   offset: {x: 0, y: 10, z: 0}
+  duration: 1
+  vibriate: 5
+  elasticity: 1
+  ease: 28
+  size: {x: 0, y: 0, z: 0}
 --- !u!1 &774242306204596098
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,10 +270,11 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 10 XP
+  m_text: <color="yellow" + ">100</color> <color="orange">XP</color>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 551f3c95bda11c844974ae26a3b13eba, type: 2}
   m_sharedMaterial: {fileID: 21067373965588598, guid: 551f3c95bda11c844974ae26a3b13eba,
@@ -297,8 +303,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 40
-  m_fontSizeBase: 40
+  m_fontSize: 50
+  m_fontSizeBase: 50
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -338,7 +344,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 774242306204596103}
-    characterCount: 5
+    characterCount: 6
     spriteCount: 0
     spaceCount: 1
     wordCount: 2

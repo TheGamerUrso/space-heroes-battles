@@ -1,6 +1,6 @@
-﻿using System;
+﻿using EasyMobile;
+using System;
 using System.Collections.Generic;
-using EasyMobile;
 using UnityEngine;
 
 
@@ -46,7 +46,8 @@ public class PlayerData
     public float MusicVolume;
     public bool AutoAttack;
     public bool mute;
-    public float Distance;
+    [Range(1,2)]
+    public int ControlScene;
     [Range(0, 20)]
     public int MaxLevel;
     public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
@@ -73,7 +74,7 @@ public class PlayerData
         MusicVolume = .7f;
         AutoAttack = true;
         mute = false;
-        Distance = 5;
+        ControlScene = 1;
         playerShipData = new PlayerShipData[3];
         for (int i = 0; i < playerShipData.Length; i++)
         {
@@ -105,10 +106,10 @@ public class PlayerData
         Events.OnShipSelectValueChanged?.Invoke(CurrrentSelectedShip);
     }
 
-    public void SetDistance(int option)
+    public void SetControlSceme(int option)
     {
-        Distance = option;
-        Events.OnDistanceValueChanged?.Invoke(Distance);
+        ControlScene = option;
+        Events.OnControlScemeChange?.Invoke();
     }
 
     public void SetPowerPackCollected(int ammount)

@@ -56,7 +56,7 @@ public class Events
 
     public static Action<int> OnCoinValueChanged;
     public static Action<int> OnScoreValueChanged;
-    public static Action<int> OnMultiplierChanged;
+    public static Action OnMultiplierChanged;
 
 
 
@@ -74,7 +74,7 @@ public class Events
      */
     public static Action<int, float, float> OnXpValueChanged;
     public static Action<int> OnLevelValueChanged;
-    public static Action<float> OnDistanceValueChanged;
+    public static Action OnControlScemeChange;
     public static Action<float> OnSuperUseValueChanged;
     public static Action<int> CoinValueChanged;
     public static Action<float> PowerUpLevelValueChanged;

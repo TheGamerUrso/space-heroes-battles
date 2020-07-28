@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using TMPro;
+using DG.Tweening;
+
 public class FloatingText : MonoBehaviour
 {
     public float TTL;
@@ -13,6 +15,18 @@ public class FloatingText : MonoBehaviour
     public Vector3 offset;
     private Vector3 worldToScreenPos;
     private Vector3 targetPos;
+
+    public float duration = 1;
+    public int vibriate = 10;
+    public int elasticity = 1;
+    public Ease ease;
+    public Vector3 size;
+
+    public void Animate()
+    {
+        FloatingTextPivot.transform.DOPunchScale(size, duration, vibriate, elasticity).SetEase(ease);
+    }
+
     private void Start()
     {
         Cam = Camera.main;
@@ -30,6 +44,8 @@ public class FloatingText : MonoBehaviour
 
     public void ShowFloatingText(string text, Vector3 pos)
     {
+        Animate();
+
         targetPos = pos;
         Text.text = text;
 
@@ -41,9 +57,6 @@ public class FloatingText : MonoBehaviour
 
     void Update()
     {
-
-
-
         if (TTL > 0)
         {
             TTL -= Time.deltaTime;

@@ -13,12 +13,17 @@ public class PauseMenuOptionScreen : BaseOptions
     private Mission mission;
     private LevelObjectiveData[] levelObjectiveDatas;
 
-    public override void InitializeOptions()
+    public override void OnEnable()
     {
-        base.InitializeOptions();
-        Scene scene = SceneManager.GetActiveScene();
+        base.OnEnable();
+        RefreshLevelObjectiveElements();
+    }
 
-        string levelName = ((LevelEnum)scene.buildIndex).ToString();
+    public override void Start()
+    {
+        base.Start();
+
+        Scene scene = SceneManager.GetActiveScene();
 
         playerData = PersistantData.GetPlayerData();
 
@@ -41,15 +46,9 @@ public class PauseMenuOptionScreen : BaseOptions
             LevelObjectivesElements[i].SetLevelObjective(levelObjectiveDatas[i]);
             LevelObjectivesElements[i].gameObject.SetActive(true);
         }
-
     }
 
-    public override void OnOptionEnter()
-    {
-        base.OnOptionEnter();
 
-        RefreshLevelObjectiveElements();
-    }
 
     public void RefreshLevelObjectiveElements()
     {

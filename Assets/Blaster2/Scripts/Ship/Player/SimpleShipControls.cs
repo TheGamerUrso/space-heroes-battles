@@ -6,7 +6,7 @@ public class SimpleShipControls : MonoBehaviour
 {
     public enum ControlSceme
     {
-        CONTROL1, CONTROL2
+        CONTROL1 = 1, CONTROL2 = 2
     }
     public ControlSceme controlSceme;
 
@@ -19,8 +19,8 @@ public class SimpleShipControls : MonoBehaviour
     private Vector3 targetPos;
     private Plane plane;
     private Ray ray;
-    private Vector3 offspec;
-    private Touch currentTouch;
+    private float offset = 10;
+    private Touch touch;
     private Vector2 currentTouchPos;
     private float yMove = 0;
     private float movementSensitivity = .1f;
@@ -28,6 +28,7 @@ public class SimpleShipControls : MonoBehaviour
     private float rotVelocity;
     private Vector3 targetEulerAngels;
     private float point;
+    [SerializeField] private float Speed;
 
     public void Start()
     {
@@ -36,10 +37,12 @@ public class SimpleShipControls : MonoBehaviour
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        offspec = new Vector3(0, 0, playerData.Distance);
+        controlSceme = (ControlSceme)playerData.ControlScene;
         plane = new Plane(Vector3.up, transform.position);
 
-        Events.OnDistanceValueChanged = UpdateOffset;
+        Events.OnControlScemeChange = UpdateOffset;
+
+        Speed = playerShipData.Speed;
     }
 
     public void SetTargetPosition()
@@ -52,14 +55,14 @@ public class SimpleShipControls : MonoBehaviour
         {
             for (int i = 0; i < Input.touchCount; i++)
             {
-                currentTouch = Input.GetTouch(0);
-                switch (currentTouch.phase)
+                touch = Input.GetTouch(0);
+                switch (touch.phase)
                 {
                     case TouchPhase.Began:
-                        currentTouchPos = currentTouch.position;
+                        currentTouchPos = touch.position;
                         break;
                     case TouchPhase.Moved:
-                        currentTouchPos = currentTouch.position;
+                        currentTouchPos = touch.position;
                         ray = Camera.main.ScreenPointToRay(currentTouchPos);
                         break;
                     case TouchPhase.Stationary:
@@ -78,12 +81,11 @@ public class SimpleShipControls : MonoBehaviour
             targetPos = new Vector3(ray.GetPoint(point).x, yMove, ray.GetPoint(point).z);
     }
 
+    public AnimationCurve animationCurve;
+
     private void Move()
     {
-        if (direction.magnitude > .1f)
-        {
-            transform.Translate((direction + offspec) * playerShipData.Speed * movementSensitivity * Time.deltaTime, Space.World);
-        }
+        transform.position = Vector3.Lerp(transform.position, (targetPos + new Vector3(0,0, offset)), Speed * Time.deltaTime);
     }
 
     public void OnDragMove()
@@ -93,20 +95,42 @@ public class SimpleShipControls : MonoBehaviour
 #if UNITY_EDITOR
             if (Input.GetMouseButton(0))
             {
-                transform.position += new Vector3(
-                    Input.GetAxis("Mouse X") * playerShipData.Speed * movementSensitivity * Time.deltaTime,
+                transform.position = new Vector3(transform.position.x + Input.GetAxis("Mouse X") * Speed * Time.deltaTime,
                     transform.position.y,
-                    Input.GetAxis("Mouse Y") * playerShipData.Speed * Time.deltaTime);
+                    transform.position.z + Input.GetAxis("Mouse Y") * Speed * Time.deltaTime);
             }
 #endif
             if (Input.touchCount > 0)
             {
-                Touch touch = Input.GetTouch(0);
+                touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Moved)
                 {
-                    transform.position += new Vector3(touch.deltaPosition.x * playerShipData.Speed * Time.deltaTime, 0, touch.deltaPosition.y * playerShipData.Speed * Time.deltaTime);
+                    Vector3 targetPos = transform.position;
+                    targetPos.x += touch.deltaPosition.x * Speed * Time.deltaTime;
+                    targetPos.z += touch.deltaPosition.y * Speed * Time.deltaTime;
+                    transform.position = targetPos;
                 }
             }
+        }
+    }
+
+    private void LateUpdate()
+    {
+        if (GameController.CurrentGameState == GameController.GameState.GAME)
+        {
+            if (controlSceme == ControlSceme.CONTROL1)
+            {
+                Move();
+            }
+            else if (controlSceme == ControlSceme.CONTROL2)
+            {
+                OnDragMove();
+            }
+
+            transform.position = new Vector3(
+                Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
+                yMove,
+                    Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
         }
     }
 
@@ -114,19 +138,6 @@ public class SimpleShipControls : MonoBehaviour
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
-            direction = targetPos - transform.position;
-
-            if (direction.magnitude >= .1f)
-            {
-                movementSensitivity += Time.deltaTime;
-            }
-            else if (direction.magnitude < .1f)
-            {
-                movementSensitivity -= Time.deltaTime;
-            }
-
-            movementSensitivity = Mathf.Clamp(movementSensitivity, 0, 1f);
-
             if (controlSceme == ControlSceme.CONTROL1)
             {
                 if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
@@ -139,43 +150,26 @@ public class SimpleShipControls : MonoBehaviour
             {
                 Rotate();
             }
-
-            if (Input.touchCount > 0 || Input.GetMouseButton(0))
-            {
-                Game.SlowMo = false;
-            }
-            else
-            {
-                Game.SlowMo = true;
-            }
         }
     }
 
-    private void LateUpdate()
-    {
-        if (GameController.CurrentGameState == GameController.GameState.GAME)
-
-            if (controlSceme == ControlSceme.CONTROL1)
-            {
-                Move();
-            }
-            else if (controlSceme == ControlSceme.CONTROL2)
-            {
-                OnDragMove();
-            }
-
-
-        transform.position = new Vector3(
-            Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
-            yMove,
-                Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
-    }
 
     public void Rotate()
     {
         if (ShouldRoate())
         {
+
+#if UNITY_EDITOR
             rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
+#endif
+
+            if (Input.touchCount > 0)
+            {
+                touch = Input.GetTouch(0);
+                rotVelocity = -touch.deltaPosition.x * tilt;
+            }
+
+
             rotVelocity = Mathf.Clamp(rotVelocity, -35, 35);
         }
         else
@@ -200,9 +194,9 @@ public class SimpleShipControls : MonoBehaviour
         return EventSystem.current.IsPointerOverGameObject();
     }
 
-    public void UpdateOffset(float ammount)
+    public void UpdateOffset()
     {
-        offspec = new Vector3(0, 0, ammount);
+        controlSceme = (ControlSceme)playerData.ControlScene;
     }
 
     public bool ShouldRoate()

@@ -13,7 +13,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     [SerializeField] private TextMeshProUGUI PlayerLevelText;
     [SerializeField] private ShipSelect shipSelect;
 
-    private int levelIndex;
+    private Level level;
     private string levelName;
 
     private PlayerShipData playerShipData;
@@ -31,7 +31,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     {
         GooglePlayServicesManager.ShowAchievementa();
     }
-    
+
     private void Start()
     {
         GameManager.Instance.PauseTheGame(false);
@@ -42,7 +42,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
         Game.IsSurvivalMode = false;
-       
+
 
         if (PlayerPrefs.HasKey("SurvivalMode"))
         {
@@ -72,10 +72,10 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
     public void PlayGame()
     {
-        levelIndex = GameManager.LevelIndexSelected;
-        GameManager.Instance.LoadScene((LevelEnum)(levelIndex + 1));
+        level = GameManager.Instance.GetCurrentLevelSelected();
+        GameManager.Instance.LoadScene((LevelEnum)level.mission.ID);
     }
-   
+
 
 
 

@@ -182,8 +182,6 @@ public class PlayerShip : Ship, IDamagable
         base.InstallShieldModule();
         ShieldEffect.SetActive(HasShield);
 
-        GuiManager.CreateFloatingText("Shield Up", transform.localPosition);
-
         if (!PlayerPrefs.HasKey("ShieldTut"))
         {
             if (Tutorial.Instance)
@@ -212,8 +210,6 @@ public class PlayerShip : Ship, IDamagable
         {
             CurrentHealth = MaxHealth;
         }
-
-        GuiManager.CreateFloatingText("Heal up", transform.localPosition);
 
         if (!PlayerPrefs.HasKey("HealTut"))
         {
@@ -251,7 +247,7 @@ public class PlayerShip : Ship, IDamagable
                 invisibilityTimer = .25f;
                 var health = CurrentHealth - dmg;
                 SetHealth(health);
-                Game.Multiplier = 1;
+                Game.ResetMultiplier();
 
                 Events.PlayerShipHit?.Invoke();
 
@@ -415,8 +411,6 @@ public class PlayerShip : Ship, IDamagable
             TempFireRateBuff(0.01f * playerData.PowerPackCollected);
         }
 
-        GuiManager.CreateFloatingText("Power Up", transform.localPosition);
-
         if (!PlayerPrefs.HasKey("PowerTut"))
         {
             if (Tutorial.Instance)
@@ -501,7 +495,7 @@ public class PlayerShip : Ship, IDamagable
     public void SetWallet(int coin)
     {
         Game.CoinPicked += coin;
-        GuiManager.CreateFloatingText("$", transform.localPosition);
+        GuiManager.CreateFloatingText("<color=" + "yellow" + "> $ </color>", transform.localPosition);
 
         if (!PlayerPrefs.HasKey("CoinTut"))
         {

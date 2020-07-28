@@ -5,11 +5,11 @@ using UnityEngine;
 public class StoryController : MonoSingleton<StoryController>
 {
     public GameObject ConversationWidget;
-    private int currentMission;
+    private Level level;
 
     public void Open()
-    { 
-        Level level = PersistantData.GetMission(currentMission);
+    {
+
         ConversationWidget.GetComponent<StoryView>().SetStory(level.mission.Description);
 
         ConversationWidget.SetActive(true);
@@ -45,13 +45,13 @@ public class StoryController : MonoSingleton<StoryController>
         }
     }
 
-    public void ShowStory(int missionIndex)
+    public void ShowStory(Level level)
     {
-        currentMission = missionIndex;
-        if (!PlayerPrefsUtils.LoadBool("Level" + currentMission))
+        this.level = level;
+        if (!PlayerPrefsUtils.LoadBool(level.ID))
         {
             Open();
-            PlayerPrefsUtils.SaveBool("Level" + currentMission, 1);
+            PlayerPrefsUtils.SaveBool(level.ID, 1);
         }
     }
 }

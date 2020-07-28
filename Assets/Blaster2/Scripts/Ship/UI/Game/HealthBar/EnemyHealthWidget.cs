@@ -14,12 +14,6 @@ public class EnemyHealthWidget : BaseHealthWidget
         Hide();
     }
 
-    public override void Start()
-    {
-        base.Start();
-        UpdateHealthBar(100, 100);
-    }
-
     public override void Setup(IDamagable ship, bool follow = true)
     {
         if (Target == null)

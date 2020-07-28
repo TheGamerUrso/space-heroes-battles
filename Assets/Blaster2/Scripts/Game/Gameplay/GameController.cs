@@ -27,8 +27,7 @@ public class GameController : MonoSingleton<GameController>
     private PlayerData playerData;
     private PlayerShipData playerShipData;
     private BaseGameMode baseGameMode;
-    private float delayTheSlowMoEffectTimer = .3f;
-    private float delay = 4;
+
 
     public GameObject AsteroidBackgroundSpawner;
     public GameObject PanelBackgroundSpawner;
@@ -187,21 +186,32 @@ public class GameController : MonoSingleton<GameController>
         {
             float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
             playerData.EarnXP(XPEarned);
+
+            GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
         }
 
         playerData.SetPowerUpAmmount(.025f);
 
-        int score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
         int kills = Game.EnemyKilled + 1;
+        int score = baseEnemy.EnemyData.EnemyValue;
 
-        int multiplier = Game.Multiplier;
-        multiplier++;
+
+        if (Game.Multiplier > 0)
+        {
+            score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
+            GuiManager.SetScoreMultipler(score + "(x" + Game.Multiplier + ")");
+        }
+        else
+        {
+            GuiManager.SetScoreMultipler("" + score);
+        }
 
         Game.SetCurrentEnemyKills(kills);
 
         Game.SetScore(score);
 
-        Game.SetMultiplier(multiplier);
+        Game.IncreaseMultiplier();
+
 
 
 
@@ -260,7 +270,7 @@ public class GameController : MonoSingleton<GameController>
         GameManager.Instance.PlayerQuestCheck();
 
         GameManager.Instance.PostAchievementProgress(GameManager.AchievementType.KILL, playerData.Kills);
-       
+
         SaveSystem.SaveGame();
 
         yield return new WaitForSeconds(2.0f);
@@ -269,40 +279,6 @@ public class GameController : MonoSingleton<GameController>
 
         yield return new WaitForSeconds(2.0f);
         Events.OnWin?.Invoke(this);
- 
-    }
 
-    private void Update()
-    {
-        SlowMo();
-    }
-
-    public void SlowMo()
-    {
-        if (currentGameState == GameState.GAME)
-        {
-            if (delay > 0)
-            {
-                delay -= Time.deltaTime;
-            }
-            else
-            {
-                if (!Game.IsGameOver && !Game.IsPaused && Game.UseSlowMo)
-                {
-                    if (Game.SlowMo)
-                    {
-                        Time.timeScale = delayTheSlowMoEffectTimer;
-                    }
-                    else if (!Game.SlowMo && Time.timeScale < 1)
-                    {
-                        Time.timeScale = 1.0f;
-                    }
-                }
-            }
-        }
-        else
-        {
-            Time.timeScale = 1.0f;
-        }
     }
 }

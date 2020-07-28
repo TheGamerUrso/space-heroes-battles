@@ -15,6 +15,8 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 
     private LevelObjectiveData[] levelObjectiveDatas;
 
+    private Level level;
+
     public void Setup()
     {
         survivalHighscore.SetActive(false);
@@ -22,15 +24,15 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 
     public void ShowDetailScreen()
     {
-        var currentMission = GameManager.Instance.GetCurrentMission();
+        level = GameManager.Instance.GetCurrentLevelSelected();
 
         HideLevelObjectives();
 
-        if (currentMission.mission.ID == (int)LevelEnum.Level0)
+        if (level.mission.ID == (int)LevelEnum.Level0)
         {
             LevelDetailLevelTItle.text = "Survival";
             survivalHighscore.SetActive(true);
-         
+
             return;
         }
 
@@ -38,36 +40,33 @@ public class LevelDetailScreen : MonoSingleton<LevelDetailScreen>
 
         ShowStoryButton.SetActive(true);
 
-        LevelDetailPreview.sprite = sprites[currentMission.mission.SpriteID];
-        LevelDetailLevelTItle.text = currentMission.mission.Title;
+        LevelDetailPreview.sprite = sprites[level.mission.SpriteID];
+        LevelDetailLevelTItle.text = level.mission.Title;
 
-        levelObjectiveDatas = currentMission.objectiveListData;
+        levelObjectiveDatas = level.objectiveListData;
 
         RefreshLevelObjectiveData();
     }
 
-    public void Show(Level level, Mission currentMission)
+    public void Show(Level level)
     {
-        if (currentMission.ID == (int)LevelEnum.Level0)
+        if (level.mission.ID == (int)LevelEnum.Level0)
         {
-            GameManager.LevelIndexSelected = -1;
             ShowStoryButton.SetActive(true);
             LevelDetailLevelTItle.text = "Survival";
         }
         else
         {
-            GameManager.LevelIndexSelected = currentMission.ID;
             ShowStoryButton.SetActive(true);
             LevelDetailPreview.sprite = sprites[level.spriteId];
-            LevelDetailLevelTItle.text = currentMission.Title;
+            LevelDetailLevelTItle.text = level.mission.Title;
             RefreshLevelObjectiveData();
         }
     }
 
     public void PlayGame()
     {
-        var levelIndex = GameManager.LevelIndexSelected;
-        GameManager.Instance.LoadScene((LevelEnum)levelIndex);
+        GameManager.Instance.LoadScene((LevelEnum)level.mission.ID);
     }
 
     public void HideLevelObjectives()

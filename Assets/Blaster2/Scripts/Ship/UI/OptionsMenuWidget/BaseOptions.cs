@@ -10,7 +10,6 @@ public class BaseOptions : MonoBehaviour
     public delegate void OnOptionsChanged();
     public static event OnOptionsChanged OnOptionsRecieved;
 
-    protected float[] Distances = { 5, 10, 15 };
     public AudioMixerGroup MusicMixerGroup;
     public AudioMixerGroup SFXMixerGroup;
 
@@ -22,158 +21,16 @@ public class BaseOptions : MonoBehaviour
     protected GameObject Distance_Controls;
 
     protected RectTransform rectTransform;
-    public Button ShortButton;
-    public Button MidButton;
-    public Button LongButton;
-    public GameObject[] select;
 
-    public void OnEnable()
+    public virtual void OnEnable()
     {
-        OnOptionEnter();
+       
     }
 
 
-    private void Start()
+    public virtual void Start()
     {
-        InitializeOptions();
-    }
-
-    public virtual void OnOptionEnter()
-    {
-        //InitializeOptions();
-        //RefreshAutoFire();
-        // RefreshGlobalMute();
-        UpdateDistance();
-        //SaveSystem.LoadGameSettings(gameObject);
-        UpdateAudioVolume();
-    }
-
-    public virtual void InitializeOptions()
-    {
-        InitializeAudioOptions();
-    }
-
-    public void UpdateAudioVolume()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        if (playerData != null)
-        {
-            MusicVolume.value = playerData.MusicVolume;
-            SFXVolume.value = playerData.SFXVolume;
-        }
-    }
-    public void InitializeAudioOptions()
-    {
-        UpdateAudioVolume();
-
-        MusicVolume.onValueChanged.AddListener((value) =>
-        {
-            SetMusicVolume(value);
-        });
-
-        SFXVolume.onValueChanged.AddListener((value) =>
-        {
-            SetSFXVolume(value);
-        });
-    }
-
-    public void SetMusicVolume(float value)
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        playerData.MusicVolume = value;
-
-        AudioManager.SetMusicVolume(value);
-    }
-
-    public void SetSFXVolume(float value)
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        playerData.SFXVolume = value;
-
-        AudioManager.SetSoundVolume(value);
-    }
-    public void Mute()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        bool mute = playerData.mute;
-        if (mute)
-        {
-            playerData.mute = false;
-        }
-        else if (mute == false)
-        {
-            playerData.mute = true;
-        }
-        RefreshGlobalMute();
-    }
-    public void ToggleAutoFire()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        bool autofire = playerData.AutoAttack;
-        if (autofire)
-        {
-            playerData.AutoAttack = false;
-        }
-        else if (autofire == false)
-        {
-            playerData.AutoAttack = true;
-        }
-
-        RefreshAutoFire();
-    }
-
-    public void UpdateDistance()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        if (playerData == null)
-        {
-            return;
-        }
-        for (int i = 0; i < Distances.Length; i++)
-        {
-            if (Distances[i] == playerData.Distance)
-            {
-                select[i].SetActive(true);
-            }
-            else
-            {
-                select[i].SetActive(false);
-            }
-        }
-    }
-
-    public void RefreshGlobalMute()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        bool mute = playerData.mute;
-        if (mute)
-        {
-            AudioMute.text = "unMute";
-        }
-        else if (mute == false)
-        {
-            AudioMute.text = "Mute";
-        }
-    }
-    public void RefreshAutoFire()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        bool autofire = playerData.AutoAttack;
-        if (autofire)
-        {
-            AutoFire.text = "On";
-        }
-        else if (autofire == false)
-        {
-            AutoFire.text = "Off";
-        }
-    }
-    public void SetDistance(int distance)
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-
-        playerData.Distance = Distances[distance - 1];
-        UpdateDistance();
+        
     }
 
     public virtual void ExitAndSave()

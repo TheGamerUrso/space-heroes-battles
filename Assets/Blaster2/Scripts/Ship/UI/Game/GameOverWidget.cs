@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class GameOverWidget : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI m_Text;
+    private Level level;
+
     private void OnEnable()
     {
         ShowGameResult();
@@ -15,16 +17,13 @@ public class GameOverWidget : MonoBehaviour
 
     public void ShowGameResult()
     {
+        Scene scene = SceneManager.GetActiveScene();
+
         float score = Game.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
 
-        string levelName = "Level" + GameManager.LevelIndexSelected;
-
-        if (levelName.Equals("Level0"))
-        {
-            return;
-        }
+        level = GameManager.Instance.GetMission((LevelEnum)scene.buildIndex);
     }
 
     public void ReplayButton()

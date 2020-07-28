@@ -10,18 +10,22 @@ public class SurvivalGameOverScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_Text;
 
     public GameObject highscore;
+    private Level level;
 
     public void ShowResults()
     {
+        level = GameManager.Instance.GetCurrentLevelSelected();
+
         PlayerData playerData = PersistantData.GetPlayerData();
 
         string scoreText = string.Format("{00:0000000000}", Game.Score);
         m_Text.text = scoreText;
 
         highscore.SetActive(false);
+        int actualLevelIndex = level.mission.ID - (int)LevelEnum.Level0;
 
-        var score = playerData.GetScore(GameManager.LevelIndexSelected);
-        var hscore = playerData.GetHighScore(GameManager.LevelIndexSelected);
+        var score = playerData.GetScore(actualLevelIndex);
+        var hscore = playerData.GetHighScore(actualLevelIndex);
 
         if (Game.IsHightScore)
         {

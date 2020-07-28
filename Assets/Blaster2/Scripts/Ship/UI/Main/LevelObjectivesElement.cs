@@ -9,6 +9,7 @@ public class LevelObjectivesElement : MonoBehaviour
     [SerializeField] private LevelObjectiveData levelObjectiveData;
     [SerializeField] private Image completedSprite;
     [SerializeField] private Image failSpriet;
+    private Level level;
 
     bool complete = false;
     [SerializeField] private Image ProgressFill;
@@ -19,11 +20,13 @@ public class LevelObjectivesElement : MonoBehaviour
 
     public void SetLevelObjective(LevelObjectiveData levelObjectiveData)
     {
+        level = GameManager.Instance.GetCurrentLevelSelected();
+
         this.levelObjectiveData = levelObjectiveData;
         completedSprite.gameObject.SetActive(false);
         failSpriet.gameObject.SetActive(false);
 
-        ID = GameManager.LevelIndexSelected;
+        ID = level.mission.ID;
         DescriptionText.text = levelObjectiveData.description;
 
         if (levelObjectiveData.completed)
