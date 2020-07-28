@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
@@ -25,6 +24,7 @@ public static class SaveSystem
     {
         FileStream file = new FileStream(playerDataPath, FileMode.OpenOrCreate);
         PlayerData playerData = PersistantData.GetPlayerData();
+
         if (playerData != null)
         {
             try
@@ -45,13 +45,7 @@ public static class SaveSystem
 
     public static void LoadGame()
     {
-        PlayerData playerData = new PlayerData();
-
-        if (!File.Exists(playerDataPath))
-        {
-            playerData = new PlayerData();
-            PersistantData.ReplacePlayerData(playerData);
-        }
+        PlayerData playerData;
 
         FileStream file = new FileStream(playerDataPath, FileMode.Open);
 

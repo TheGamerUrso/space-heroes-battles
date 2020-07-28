@@ -59,11 +59,19 @@ public class PlayerShipData
     }
     #endregion
 
-    public PlayerShipData()
+    public PlayerShipData(Player_SO player)
     {
         level = 1;
         xp = 0;
         xpToLevel = 100;
+
+        Speed = player.baseSpeed;
+        Damage = player.baseDamage;
+        FireRate = player.baseFireRate;
+        SuperDamage = (level * player.baseSuperDamage);
+        SuperChargeTime = player.baseSpecialCountdown;
+        MagnetPower = 0;
+        MagnetDistance = 0;
         Upgrades = new int[Enum.GetValues(typeof(UpgradeTypeEnum)).Length];
     }
 

@@ -6,6 +6,8 @@ public class PlayerShip : Ship, IDamagable
 {
     public event Action<float, float> OnHealthChanged;
 
+    private SimpleShipControls shipController;
+
     [SerializeField] private Player_SO playerStats;
     [SerializeField] private PlayerWeapon[] Weapons;
     [SerializeField] private SpecialAttack specialAttack;
@@ -42,6 +44,7 @@ public class PlayerShip : Ship, IDamagable
     public override void Awake()
     {
         animator = GetComponentInChildren<Animator>();
+        shipController = GetComponent<SimpleShipControls>();
     }
 
     public override void Start()
@@ -67,6 +70,9 @@ public class PlayerShip : Ship, IDamagable
         playerData.NewGame();
 
         Events.OnLevelValueChanged += OnLevelValueChanged;
+
+
+        shipController.SetSpeed(playerShipData.Speed);
     }
 
     public void OnLevelValueChanged(int Level)

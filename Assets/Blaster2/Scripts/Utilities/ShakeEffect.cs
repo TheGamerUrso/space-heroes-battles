@@ -24,6 +24,7 @@ public class ShakeEffect : MonoBehaviour
 
     void OnEnable()
     {
+        Events.PlayerShipHit += StartEffect;
         originalPos = camTransform.localPosition;
     }
 
@@ -39,10 +40,6 @@ public class ShakeEffect : MonoBehaviour
     {
         shakeDuration = .5f;
 
-    }
-    private void Start()
-    {
-        Events.PlayerShipHit += StartEffect;
     }
 
     void Update()

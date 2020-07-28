@@ -173,6 +173,8 @@ public class GameController : MonoSingleton<GameController>
 
     private void EnemyDied(string name, BaseEnemy baseEnemy)
     {
+        Events.PlayerShipHit?.Invoke();
+
         int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
         int EnemyLevel = baseEnemy.Level;
         int levelDiffrence = PlayerLevel / EnemyLevel;

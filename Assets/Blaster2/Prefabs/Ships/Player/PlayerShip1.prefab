@@ -1484,8 +1484,8 @@ GameObject:
   - component: {fileID: 7441932457012430734}
   - component: {fileID: 7464520022955303596}
   - component: {fileID: 7475853966919305978}
-  - component: {fileID: 7404068972443167092}
   - component: {fileID: 7408276601133630756}
+  - component: {fileID: 7404068972443167092}
   - component: {fileID: 534651622424146018}
   m_Layer: 11
   m_Name: PlayerShip1
@@ -1539,22 +1539,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 7, y: 4, z: 8}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7404068972443167092
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7445852948154093078}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f68c27ff0e9c0d246914ebb3a314c1d5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  controlSceme: 1
-  tilt: 25
-  Speed: 0
-  ShipModel: {fileID: 9097074964119514946}
 --- !u!114 &7408276601133630756
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1578,6 +1562,28 @@ MonoBehaviour:
   specialAttack: {fileID: 9041299742170649821}
   audioSource: {fileID: 534651622424146018}
   ItemCollectedEffect: {fileID: 2943025348453709804}
+--- !u!114 &7404068972443167092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7445852948154093078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f68c27ff0e9c0d246914ebb3a314c1d5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  controlSceme: 1
+  tilt: 25
+  ShipModel: {fileID: 9097074964119514946}
+  Speed: 0
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!82 &534651622424146018
 AudioSource:
   m_ObjectHideFlags: 0

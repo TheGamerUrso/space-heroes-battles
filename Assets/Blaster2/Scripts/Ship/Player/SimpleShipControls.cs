@@ -19,7 +19,7 @@ public class SimpleShipControls : MonoBehaviour
     private Vector3 targetPos;
     private Plane plane;
     private Ray ray;
-    private float offset = 10;
+    private float offset = 8;
     private Touch touch;
     private Vector2 currentTouchPos;
     private float yMove = 0;
@@ -28,7 +28,12 @@ public class SimpleShipControls : MonoBehaviour
     private float rotVelocity;
     private Vector3 targetEulerAngels;
     private float point;
-    [SerializeField] private float Speed;
+    [SerializeField] private float Speed = 5;
+
+    public void SetSpeed(float speed)
+    {
+        Speed = speed;
+    }
 
     public void Start()
     {
@@ -41,7 +46,6 @@ public class SimpleShipControls : MonoBehaviour
         plane = new Plane(Vector3.up, transform.position);
 
         Events.OnControlScemeChange = UpdateOffset;
-
         Speed = playerShipData.Speed;
     }
 

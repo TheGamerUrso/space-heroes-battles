@@ -6,6 +6,8 @@ using UnityEngine;
 [Serializable]
 public class PersistantData : MonoSingleton<PersistantData>
 {
+    public Player_SO[] Players;
+
     public PlayerData playerData;
     public GameSettings gameSettings;
     public MissionCollection missionCollection;
@@ -37,7 +39,7 @@ public class PersistantData : MonoSingleton<PersistantData>
     {
         Instance.missionCollection = JsonSystem.LoadMissions();
         Instance.LevelObjectiveCollection = JsonSystem.LoadLevelObjectiveData();
-        Instance.playerData = new PlayerData(3);
+        Instance.playerData = new PlayerData(Instance.Players);
 
         GenerateLevelObjectiveData();
 

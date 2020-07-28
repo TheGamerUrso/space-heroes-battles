@@ -19,12 +19,18 @@ public class ScoreMultplierWidget : MonoBehaviour
 
     public void Animate()
     {
-        widgetPanel.transform.DOPunchScale(size, duration, vibriate, elasticity).SetEase(ease);
+        widgetPanel.transform.DOPunchScale(size, duration, vibriate, elasticity).SetEase(ease).OnComplete(() => { widgetPanel.transform.localScale = Vector3.one; });
+
+        widgetPanel.transform.localScale = new Vector3(Mathf.Clamp(widgetPanel.transform.localScale.x, 0, 1), Mathf.Clamp(widgetPanel.transform.localScale.y, 0, 1), Mathf.Clamp(widgetPanel.transform.localScale.z, 0, 1));
     }
     public void SetText(string text)
     {
-        Animate();
-        timer = 2;
+        if (!widgetPanel.gameObject.activeInHierarchy)
+        {
+            Animate();
+        }
+
+        timer = 1.5f;
         widgetPanel.gameObject.SetActive(true);
         ScoreMultText.text = text;
     }

@@ -55,7 +55,9 @@ public class PlayerData
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
-    public PlayerData(int number = 3)
+    public PlayerData() { }
+
+    public PlayerData(Player_SO[] players)
     {
         LevelUnlocked = 1;
         Score = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -75,10 +77,10 @@ public class PlayerData
         AutoAttack = true;
         mute = false;
         ControlScene = 1;
-        playerShipData = new PlayerShipData[3];
-        for (int i = 0; i < playerShipData.Length; i++)
+        playerShipData = new PlayerShipData[players.Length];
+        for (int i = 0; i < players.Length; i++)
         {
-            playerShipData[i] = new PlayerShipData();
+            playerShipData[i] = new PlayerShipData(players[i]);
         }
     }
 
