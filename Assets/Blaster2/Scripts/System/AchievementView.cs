@@ -7,18 +7,19 @@ using UnityEngine.UI;
 public class AchievementView : MonoBehaviour
 {
     private Achievement achievement;
-    private AchievementSystem achievementSystem;
+    private AchievementsScreen achievementsScreen;
 
-   [SerializeField] private Image image;
+
+    [SerializeField] private Image image;
     [SerializeField] private Image tick;
 
     [SerializeField] private TextMeshProUGUI Name;
     [SerializeField] private TextMeshProUGUI Description;
 
-    public void Initialize(Achievement achievement,AchievementSystem achievementSystem)
+    public void Initialize(Achievement achievement, AchievementsScreen achievementsScreen)
     {
         this.achievement = achievement;
-        this.achievementSystem = achievementSystem;
+        this.achievementsScreen = achievementsScreen;
         UpdateAchievelemtView();
     }
 
@@ -26,7 +27,7 @@ public class AchievementView : MonoBehaviour
     {
         if (achievement != null)
         {
-            image.sprite = achievement.Icon;
+            image.sprite = PersistantData.Instance.GetAchievementIcon(achievement.ID);
             if (achievement.completed)
             {
                 tick.gameObject.SetActive(true);

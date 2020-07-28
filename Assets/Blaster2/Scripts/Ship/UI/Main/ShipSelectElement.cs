@@ -82,9 +82,8 @@ public class ShipSelectElement : MonoBehaviour
                         num++;
                     }
                 }
-                Debug.Log(num / 3);
-                if (GooglePlayServicesManager.GetInitialized())
-                    GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Unlock_All_Heroes, num / 3);
+                
+                //TODO Achievement For Ship
 
             }
             else

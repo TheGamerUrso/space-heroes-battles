@@ -2,22 +2,28 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AchievementSystem : MonoSingleton<AchievementSystem>
+public class AchievementSystem
 {
-    List<Achievement> ListOfAchievement = new List<Achievement>();
-
-    public AchievementList achievementList;
-    public GameObject achievelemtViewElement;
-    public Transform container;
-
-    private void Start()
+    public static AchievementSystem instance;
+    public static AchievementSystem Instance
     {
-        for (int i = 0; i < achievementList.ListOfAchievelemtnts.Count; i++)
+        get
         {
-            GameObject element = Instantiate(achievelemtViewElement, container, false);
-            element.GetComponent<AchievementView>().Initialize(achievementList.ListOfAchievelemtnts[i], this);
+            return instance;
         }
     }
+
+    public List<Achievement> ListOfAchievement = new List<Achievement>();
+   
+    public AchievementSystem(List<Achievement> ListOfAchievement)
+    {
+        if(instance == null)
+        {
+            instance = this;
+        }
+        this.ListOfAchievement = ListOfAchievement;
+    }
+
     public void Progress(int index, int value)
     {
         for (int i = 0; i < ListOfAchievement.Count; i++)
@@ -55,6 +61,11 @@ public class AchievementSystem : MonoSingleton<AchievementSystem>
         {
             achievement.completed = true;
             achievement.Complete();
+            Notification notification = new Notification();
+            notification.Name = achievement.Name;
+            notification.icon = PersistantData.Instance.GetAchievementIcon(achievement.ID);
+            notification.Description = achievement.Description;
+            NotificationSystem.Instance.Add(notification);
         }
     }
 }

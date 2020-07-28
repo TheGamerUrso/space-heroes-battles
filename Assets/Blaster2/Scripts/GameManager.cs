@@ -163,6 +163,8 @@ public class GameManager : MonoSingleton<GameManager>
         new GooglePlayServicesManager();
         GooglePlayServicesManager.Initialize();
 
+        new AchievementSystem(PersistantData.Instance.Achievements.ListOfAchievelemtnts);
+
         pm.LoadPlayerSettings();
     }
 
@@ -421,11 +423,11 @@ public class GameManager : MonoSingleton<GameManager>
     public void PlayerChallengesCheck()
     {
         Scene scene = SceneManager.GetActiveScene();
+        Level level = GetMission((LevelEnum)scene.buildIndex);
 
         var killed = Game.EnemySpawnInTotal * .9f;
         var collected = Game.EnemySpawnInTotal * .9f;
 
-        Level level = GetCurrentMission();
 
         var levelObjectiveDatas = level.objectiveListData;
 
@@ -457,28 +459,22 @@ public class GameManager : MonoSingleton<GameManager>
             playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        int levelIndex = currentLevelSelected.mission.ID - (int)LevelEnum.Level0;
+        int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
 
-        PostAchievementProgress(AchievementType.LEVEL, levelIndex);
+        //TODO Achievement Progress for Level
 
-        var missionsCompleted = (level.mission.ID - (int)LevelEnum.Level0) + 1;
+        playerData.LevelUnlocked = levelIndex + 1; 
 
-        playerData.LevelUnlocked = missionsCompleted;
-
-        if (missionsCompleted > 9)
+        if (playerData.LevelUnlocked > 9)
         {
             playerData.SetSurvivalUnlockedLock(true);
         }
 
-        if (playerData == null)
-            playerData = PersistantData.GetPlayerData();
+
     }
 
     public void PlayerQuestCheck()
     {
-        if (playerData == null)
-            playerData = PersistantData.GetPlayerData();
-
         for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
         {
             ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
@@ -511,8 +507,11 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void UpdatePlayerStatistics()
     {
-        int levelIndex = currentLevelSelected.mission.ID - (int)LevelEnum.Level0;
-        var levelName = currentLevelSelected.ID;
+        Scene scene = SceneManager.GetActiveScene();
+        Level level = GetMission((LevelEnum)scene.buildIndex);
+        int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
+
+        var levelName = level.ID;
         var killed = Game.EnemySpawnInTotal * .9f;
         var collected = Game.EnemySpawnInTotal * .9f;
 

@@ -7,6 +7,8 @@ using UnityEngine;
 public class PersistantData : MonoSingleton<PersistantData>
 {
     public Player_SO[] Players;
+    public AchievementList Achievements;
+    public Sprite[] achievementIcons;
 
     public PlayerData playerData;
     public GameSettings gameSettings;
@@ -14,6 +16,12 @@ public class PersistantData : MonoSingleton<PersistantData>
     public LevelObjectiveCollection LevelObjectiveCollection;
     public List<Level> Levels = new List<Level>();
     public Dictionary<string, LevelObjectiveData[]> LevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
+    
+    public Sprite GetAchievementIcon(int id)
+    {
+        return achievementIcons[id];
+    }
+    
     public static List<Level> GetLevels()
     {
         return Instance.Levels;
@@ -22,6 +30,12 @@ public class PersistantData : MonoSingleton<PersistantData>
     public static void ReplacePlayerData(PlayerData playerData)
     {
         Instance.playerData = playerData;
+
+        if (playerData.Achievements == null)
+        {
+            playerData.Achievements = Instance.Achievements.ListOfAchievelemtnts;
+        }
+
     }
 
     public static void Load()

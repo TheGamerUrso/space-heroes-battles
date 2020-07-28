@@ -55,7 +55,8 @@ public class PlayerPowerCircleWidget : MonoBehaviour
         Events.PowerUpLevelValueChanged += PowerUpLevelChanged;
         Events.OnPowerPackCollected += PowerPackCollected;
 
-        PowerUpLevelChanged(playerData.GetPowerUpLevelPresentage());
+        PowerUpLevelChanged(0);
+        PowerPackCollected(0);
     }
 
     public void ActivateSpecial()

@@ -123,7 +123,8 @@ public class GameController : MonoSingleton<GameController>
     IEnumerator StartGameDelay()
     {
         AudioManager.PlayRandomMusic(true);
-
+        playerData.SetPowerUpAmmount(0);
+        playerData.ResetWeaponPowerUPCollected();
         Game.Reset();
 
         yield return new WaitForSeconds(1.0f);
@@ -214,9 +215,6 @@ public class GameController : MonoSingleton<GameController>
 
         Game.IncreaseMultiplier();
 
-
-
-
         playerData.Kills = kills;
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
 
@@ -270,8 +268,6 @@ public class GameController : MonoSingleton<GameController>
         GameManager.Instance.PlayerChallengesCheck();
         GameManager.Instance.UpdatePlayerStatistics();
         GameManager.Instance.PlayerQuestCheck();
-
-        GameManager.Instance.PostAchievementProgress(GameManager.AchievementType.KILL, playerData.Kills);
 
         SaveSystem.SaveGame();
 

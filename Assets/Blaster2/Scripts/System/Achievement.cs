@@ -9,7 +9,6 @@ public class Achievement
     public int ID;
     public string Name;
     public string Description;
-    public Sprite Icon;
     public bool completed;
     public int progress;
     public int requirement;

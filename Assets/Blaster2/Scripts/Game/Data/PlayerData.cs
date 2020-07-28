@@ -55,6 +55,8 @@ public class PlayerData
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
+    public List<Achievement> Achievements; 
+
     public PlayerData() { }
 
     public PlayerData(Player_SO[] players)

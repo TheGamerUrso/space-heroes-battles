@@ -62,7 +62,7 @@ public class DropController : MonoSingleton<DropController>
 
 
             bool hasShield = playerShip.HasShieldModule();
-            bool fullHealth = playerShip.GetHealthPresentage() == 100;
+            bool fullHealth = playerShip.GetHealthPresentage() == 1;
             bool dropExtra = false;
 
             itemTypeToSpawn = ListOfDropItems[0].DropItemsType;

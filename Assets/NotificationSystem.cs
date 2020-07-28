@@ -6,6 +6,7 @@ public class Notification
 {
     public int Index;
     public string Name;
+    public Sprite icon;
     public string Description;
 }
 

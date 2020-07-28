@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using EasyMobile;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class SurvivalGameOverScreen : MonoBehaviour
@@ -14,7 +15,8 @@ public class SurvivalGameOverScreen : MonoBehaviour
 
     public void ShowResults()
     {
-        level = GameManager.Instance.GetCurrentLevelSelected();
+        Scene scene = SceneManager.GetActiveScene();
+        level = GameManager.Instance.GetMission((LevelEnum)scene.buildIndex);
 
         PlayerData playerData = PersistantData.GetPlayerData();
 
