@@ -59,9 +59,9 @@ public class FollowPathAI : SimpleAI
         Path = newPath;
     }
 
-    public override void Setup()
+    public override void Start()
     {
-        base.Setup();
+        base.Start();
         startingPosition = transform.position;
 
         if (Path.Length == 0)
@@ -70,9 +70,9 @@ public class FollowPathAI : SimpleAI
         }
     }
 
-    public override void Enter()
+    public override void OnEnable()
     {
-        base.Enter();
+        base.OnEnable();
         currentPointToFollowIndex = 0;   
     }
 

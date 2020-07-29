@@ -30,43 +30,18 @@ public class BaseEnemyAI : MonoBehaviour
     protected int enterNameHash = Animator.StringToHash("Enter");
     protected int deathNameHash = Animator.StringToHash("Death");
 
-    public void OnEnable()
+    public virtual void OnEnable() { }
+
+    public virtual void Awake()
     {
-        Enter();
+        rigid = GetComponent<Rigidbody>();
+        enemy = GetComponent<BaseEnemy>();
+        animator = GetComponentInChildren<Animator>();
     }
 
-    private void Awake()
-    {
-        InitIfNeeded();
+    public virtual void Start() { }
 
-    }
-
-    public void Start() { Setup(); }
-
-    public virtual void Setup(){}
-
-    public virtual void InitIfNeeded()
-    {
-        if (rigid == null)
-        {
-            rigid = GetComponent<Rigidbody>();
-        }
-
-        if (enemy == null)
-        {
-            enemy = GetComponent<BaseEnemy>();
-        }
-
-        if (animator == null)
-        {
-            animator = GetComponentInChildren<Animator>();
-        }
-    }
-
-    private void Update()
-    {
-      
-    }
+    public virtual void Update() { }
 
     private void LateUpdate()
     {
@@ -74,8 +49,6 @@ public class BaseEnemyAI : MonoBehaviour
     }
 
     public virtual void Move(){}
-
-    public virtual void Enter(){}
 
     public void Leave()
     {
@@ -90,6 +63,7 @@ public class BaseEnemyAI : MonoBehaviour
             Leave();
         }
     }
+
     public virtual void EnableMovement()
     {
 

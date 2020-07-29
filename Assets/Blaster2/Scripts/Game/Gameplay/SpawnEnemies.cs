@@ -23,7 +23,7 @@ public class SpawnEnemies
     {
         AudioManager.Instance.PlayMusicById("Boss", true);
         GameObject currentBoss = GameObject.Instantiate(BossPrefab);
-        BaseEnemy enemy = currentBoss.GetComponent<BaseEnemy>();
+        BaseEnemy enemy = currentBoss.GetComponentInChildren<BaseEnemy>();
 
         enemy.SetStats(LevelDifficulty);
 

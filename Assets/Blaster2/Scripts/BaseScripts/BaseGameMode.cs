@@ -135,8 +135,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
             BossBattleInitiated = false;
 
-            Game.IsGameOver = true;
-
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.BOUNTY, int.Parse(id));
         }
     }

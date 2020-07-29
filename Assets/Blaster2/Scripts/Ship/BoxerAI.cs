@@ -10,14 +10,10 @@ public class BoxerAI : BaseBossEnemyAI
     public GameObject ShipPivot;
     public Ease ease;
     public float speed;
-    public override void Enter()
-    {
-        base.Enter();
-    }
 
-    public override void Setup()
+    public override void Start()
     {
-        base.Setup();
+        base.Start();
         cooldown = UnityEngine.Random.Range(4, 8);
 
         Sequence seq = DOTween.Sequence();

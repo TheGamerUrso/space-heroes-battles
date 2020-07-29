@@ -182,13 +182,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void OnLevelValueChanged(int Level)
     {
-        var lvlUp = Instantiate(LevelUpPrefab, transform, false);
-
-        PlayerShipData playerShipData = playerData.playerShipData[0];
-
-        if (GooglePlayServicesManager.GetInitialized())
-            GooglePlayServicesManager.ReportAchivementProgress(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power, playerShipData.level / 20);
-
+        Instantiate(LevelUpPrefab);
     }
 
     private void Start()
@@ -471,7 +465,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
 
-   
+
 
         //TODO Achievement Progress for Level
 

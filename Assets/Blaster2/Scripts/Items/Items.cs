@@ -92,7 +92,7 @@ public class Items : MonoBehaviour, IPickable
                 player.PowerUpCollected();
                 break;
             case ItemEnum.HEALTH:
-                player.Heal(itemData.ammount);
+                player.Heal(itemData.ammount * playerShipData.level);
                 break;
             case ItemEnum.EMPTY:
                 break;

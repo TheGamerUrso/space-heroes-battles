@@ -223,6 +223,8 @@ public class PlayerShip : Ship, IDamagable
             CurrentHealth = MaxHealth;
         }
 
+        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
+
         if (!PlayerPrefs.HasKey("HealTut"))
         {
             if (Tutorial.Instance)

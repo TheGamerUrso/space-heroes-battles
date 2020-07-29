@@ -9,15 +9,14 @@ public class SimpleAI : BaseEnemyAI
 
     protected bool Loop;
 
-    public override void Setup()
+    public override void Start()
     {
-        base.Setup();
-
         m_XVel = enemy.Speed / 2;
         m_ZVel = enemy.Speed;
 
         Direction = 0;
     }
+
 
     public override void Move()
     {

@@ -8,13 +8,13 @@ public class MoveMaterialOffset : MonoBehaviour
     public Move move;
 
     private string offsetKey = "_MainTex";
-    [SerializeField] private float scrollSpeed = 0.5F;
-    [SerializeField] private float xScrollSpeed = 0;
+    [SerializeField] private float speedX = 0.5F;
+    [SerializeField] private float speedY = 0;
 
     private Renderer rend;
 
-    [SerializeField] private float offset;
-    [SerializeField] private float offXset;
+    [SerializeField] private float offsetX;
+    [SerializeField] private float offsetY;
 
 
     void Start()
@@ -27,24 +27,21 @@ public class MoveMaterialOffset : MonoBehaviour
         switch (move)
         {
             case Move.Y:
-
-                offXset += xScrollSpeed * Time.deltaTime;
-
+                offsetY += speedY * Time.deltaTime;
                 break;
             case Move.X:
-                offset += scrollSpeed * Time.deltaTime;
-
+                offsetX += speedX * Time.deltaTime;
                 break;
             case Move.Both:
-                offset += scrollSpeed * Time.deltaTime;
-                offXset += xScrollSpeed * Time.deltaTime;
+                offsetX += speedX * Time.deltaTime;
+                offsetY += speedY * Time.deltaTime;
                 break;
             default:
                 break;
         }
 
 
-        rend.material.SetTextureOffset(offsetKey, new Vector2(offXset, offset));
+        rend.material.SetTextureOffset(offsetKey, new Vector2(offsetX, offsetY));
     }
 }
 

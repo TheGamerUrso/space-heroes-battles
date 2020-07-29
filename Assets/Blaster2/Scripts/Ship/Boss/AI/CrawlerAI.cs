@@ -12,9 +12,9 @@ public class CrawlerAI : BaseBossEnemyAI
     public float radius = 5;
     #endregion
 
-    public override void Enter()
+    public override void OnEnable()
     {
-        base.Enter();
+        base.OnEnable();
         int changeNum = Random.Range(0, 100);
         if (changeNum >= 50)
         {
