@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 [Serializable]
-public struct EnemyElement
+public class EnemyElement
 {
     public string Name;
     public PoolGameObjectType gameObjectType;
@@ -37,6 +37,7 @@ public class SpawnEnemies
         Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), 0, Constants.m_ZMax);
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
         BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
+        enemy.Id = enemyElement.Name + "_" + enemyElement.currentNumberInScene;
         FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
 
         if (followPathAI == null)

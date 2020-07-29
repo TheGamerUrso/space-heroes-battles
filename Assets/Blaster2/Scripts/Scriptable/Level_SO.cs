@@ -16,5 +16,6 @@ public class Level_SO : ScriptableObject
     [Range(1, 20)]
     public int LevelDifficulty = 1;
     public GameObject BossPrefab;
+    public List<EnemyElement> enemyElements;
 
 }

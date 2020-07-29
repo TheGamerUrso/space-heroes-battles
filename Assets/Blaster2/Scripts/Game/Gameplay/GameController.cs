@@ -77,7 +77,7 @@ public class GameController : MonoSingleton<GameController>
 
         Events.PlayerLost -= PlayerLostCallback;
         Events.GameEnded -= Win;
-        Events.EnemyDied -= EnemyDied;
+       // Events.EnemyDied -= EnemyDied;
     }
     protected override void Awake()
     {
@@ -113,7 +113,7 @@ public class GameController : MonoSingleton<GameController>
 
         Events.PlayerLost += PlayerLostCallback;
         Events.GameEnded += Win;
-        Events.EnemyDied += EnemyDied;
+        //Events.EnemyDied += EnemyDied;
 
         Game.UseSlowMo = false;
 
@@ -174,54 +174,57 @@ public class GameController : MonoSingleton<GameController>
 
     private void EnemyDied(string name, BaseEnemy baseEnemy)
     {
-        Events.PlayerShipHit?.Invoke();
+        Debug.Log(name + " : " + baseEnemy.Id + "=" + baseEnemy.Id.Equals(name));
 
-        int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
-        int EnemyLevel = baseEnemy.Level;
-        int levelDiffrence = PlayerLevel / EnemyLevel;
-
-        if (levelDiffrence == 0)
+        if (baseEnemy.Id.Equals(name))
         {
-            levelDiffrence = 1;
-        }
+            int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
+            int EnemyLevel = baseEnemy.Level;
+            int levelDiffrence = PlayerLevel / EnemyLevel;
 
-        if (!Game.IsSurvivalMode)
-        {
-            float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-            playerData.EarnXP(XPEarned);
+            if (levelDiffrence == 0)
+            {
+                levelDiffrence = 1;
+            }
 
-            GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
-        }
+            if (!Game.IsSurvivalMode)
+            {
+                float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+                playerData.EarnXP(XPEarned);
 
-        playerData.SetPowerUpAmmount(.025f);
+                GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
+            }
 
-        int kills = Game.EnemyKilled + 1;
-        int score = baseEnemy.EnemyData.EnemyValue;
+            playerData.SetPowerUpAmmount(.025f);
+
+            int kills = Game.EnemyKilled + 1;
+            int score = baseEnemy.EnemyData.EnemyValue;
 
 
-        if (Game.Multiplier > 0)
-        {
-            score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
-            GuiManager.SetScoreMultipler(score + "(x" + Game.Multiplier + ")");
-        }
-        else
-        {
-            GuiManager.SetScoreMultipler("" + score);
-        }
+            if (Game.Multiplier > 0)
+            {
+                score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
+                GuiManager.SetScoreMultipler(score + "(x" + Game.Multiplier + ")");
+            }
+            else
+            {
+                GuiManager.SetScoreMultipler("" + score);
+            }
 
-        Game.SetCurrentEnemyKills(kills);
+            Game.SetCurrentEnemyKills(kills);
 
-        Game.SetScore(score);
+            Game.SetScore(score);
 
-        Game.IncreaseMultiplier();
+            Game.IncreaseMultiplier();
 
-        playerData.Kills = kills;
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
+            playerData.Kills = kills;
+            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
 
-        if (objectiveData != null)
-        {
-            var newProgress = objectiveData.progress + playerData.Kills;
-            objectiveData.UpdateProgress(newProgress);
+            if (objectiveData != null)
+            {
+                var newProgress = objectiveData.progress + playerData.Kills;
+                objectiveData.UpdateProgress(newProgress);
+            }
         }
     }
 

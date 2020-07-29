@@ -238,8 +238,6 @@ MonoBehaviour:
   - {fileID: 5314960965966065054, guid: 26c7c70ceda555648ae62dbe681978d2, type: 3}
   pauseButton: {fileID: 4995459592883224056}
   ScoreText: {fileID: 7692009472603345933}
-  CoinWidgetText: {fileID: 7170929551085530177}
-  CountdownWidgetText: {fileID: 0}
   scoreMultplierWidget: {fileID: 4351225180411912595}
 --- !u!1 &1431464924218750251
 GameObject:
@@ -336,7 +334,7 @@ MonoBehaviour:
   widgetPanel: {fileID: 3365772664840674270}
   ScoreMultText: {fileID: 5664690745389049555}
   timer: 2
-  duration: 1
+  duration: 1.8
   vibriate: 5
   elasticity: 1
   ease: 25
@@ -351,12 +349,12 @@ GameObject:
   m_Component:
   - component: {fileID: 1416017995307803099}
   m_Layer: 5
-  m_Name: Congrats
+  m_Name: ScorePivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1416017995307803099
 RectTransform:
   m_ObjectHideFlags: 0
@@ -389,7 +387,7 @@ GameObject:
   - component: {fileID: 6529586541459530279}
   - component: {fileID: 5664690745389049555}
   m_Layer: 5
-  m_Name: CongratsText
+  m_Name: ScoreMultText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -441,7 +439,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Nice!
+  m_text: 100 (x1)
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 016922a772a91414eb27366c998052dc, type: 2}
   m_sharedMaterial: {fileID: 2100000, guid: f8c152c078292d94b8eae5ea50fbdb10, type: 2}
@@ -469,8 +467,8 @@ MonoBehaviour:
   m_outlineColor:
     serializedVersion: 2
     rgba: 4278190080
-  m_fontSize: 150
-  m_fontSizeBase: 150
+  m_fontSize: 80
+  m_fontSizeBase: 80
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -486,7 +484,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 0
+  m_firstOverflowCharacterIndex: -1
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -510,10 +508,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 5664690745389049555}
-    characterCount: 5
+    characterCount: 8
     spriteCount: 0
-    spaceCount: 0
-    wordCount: 1
+    spaceCount: 1
+    wordCount: 2
     linkCount: 0
     lineCount: 1
     pageCount: 1
@@ -540,6 +538,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1202903970341093447}
     m_Modifications:
+    - target: {fileID: 38781796889629558, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -300
+      objectReference: {fileID: 0}
     - target: {fileID: 38781797173306392, guid: 50de54ff3fe98534ab4af4d800e99ba1,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -638,6 +641,11 @@ PrefabInstance:
     - target: {fileID: 5408071078650717491, guid: 50de54ff3fe98534ab4af4d800e99ba1,
         type: 3}
       propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5511900119591744062, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5786569064959465765, guid: 50de54ff3fe98534ab4af4d800e99ba1,
@@ -785,6 +793,51 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8475269075659682650, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475269075659682650, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475269075659682650, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8475269075659682650, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606001411355135952, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.characterCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606001411355135952, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.spaceCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606001411355135952, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.wordCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606001411355135952, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.lineCount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8606001411355135952, guid: 50de54ff3fe98534ab4af4d800e99ba1,
+        type: 3}
+      propertyPath: m_textInfo.pageCount
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9030814161498362090, guid: 50de54ff3fe98534ab4af4d800e99ba1,
         type: 3}
       propertyPath: m_textInfo.characterCount
@@ -826,18 +879,6 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1723863247823242471}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7170929551085530177 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8387996171004995750, guid: 50de54ff3fe98534ab4af4d800e99ba1,
-    type: 3}
-  m_PrefabInstance: {fileID: 1723863247823242471}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &7692009472603345933 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9030814161498362090, guid: 50de54ff3fe98534ab4af4d800e99ba1,

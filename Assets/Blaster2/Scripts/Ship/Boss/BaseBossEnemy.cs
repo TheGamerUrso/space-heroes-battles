@@ -105,7 +105,7 @@ public class BaseBossEnemy : BaseEnemy
         {
             Destroy(HealthBar);
         }
-        Events.EnemyDied?.Invoke(gameObject.name, this);
+        Events.EnemyDied?.Invoke(Id, this);
     }
 
     IEnumerator DeathSequence()

@@ -140,7 +140,7 @@ public class PersistantData : MonoSingleton<PersistantData>
             var Level = Instance.Levels[i];
 
             Level level = Instance.Levels[i];
-            Debug.Log(Level.mission.ID + " : " + (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level0));
+        
             if (Level.mission.ID <= (Instance.playerData.LevelUnlocked + (int)LevelEnum.Level0))
             {
                 level.interactable = true;

@@ -14,20 +14,28 @@ public class StoryMode : BaseGameMode
 
     public override void Start()
     {
+        base.Start();
         playerShip = PlayerManager.GetPlayer();
 
         MissionCollection missionCollection = PersistantData.GetMissionCollection();
+        enemyElements = level_SO.enemyElements.ToList();
+
+        for (int i = 0; i < enemyElements.Count; i++)
+        {
+            enemyElements[i].currentNumberInScene = 0;
+        }
 
         Scene scene = SceneManager.GetActiveScene();
         int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
         Mission mission = missionCollection.GetMission(levelMission);
-        level_SO.LevelDifficulty = mission.Level;
+        LevelDifficulty = mission.Level;
 
+        availableEnemies = level_SO.availableEnemies;
         TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
 
         Game.EnemySpawnInTotal = TotalEnemies;
 
-        for (int i = 0; i < level_SO.availableEnemies; i++)
+        for (int i = 0; i < availableEnemies; i++)
         {
             ListOfEnemyElements.Add(enemyElements[i].Name, enemyElements[i]);
         }
@@ -54,7 +62,6 @@ public class StoryMode : BaseGameMode
         var startingTotalEnemies = TotalEnemies;
         int randomNumb = 0;
         var range = 0;
-        var rand = Random.Range(0, range);
         var top = 0;
 
         if ((GameController.Instance.currentGameState == GameController.GameState.START))
@@ -76,7 +83,7 @@ public class StoryMode : BaseGameMode
 
             while (TotalEnemies > 0 && !Game.IsGameOver)
             {
-                availableEnemie = enemyElements.GetRange(0, level_SO.availableEnemies);
+                availableEnemie = enemyElements.GetRange(0, availableEnemies);
 
                 do
                 {
@@ -91,6 +98,8 @@ public class StoryMode : BaseGameMode
                         range += tempList[i].presentage;
                     }
                 }
+                
+                var rand = Random.Range(0, range);
 
                 for (int i = 0; i < tempList.Count; i++)
                 {
@@ -110,7 +119,7 @@ public class StoryMode : BaseGameMode
 
                 if (TotalEnemies - 1 >= 0)
                 {
-                    enemGO = SpawnEnemies.SpawnEnemyElement(enemyElement);
+                    enemGO = SpawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), LevelDifficulty);
                     Enemies.Add(enemGO);
                 }
 
@@ -135,7 +144,7 @@ public class StoryMode : BaseGameMode
                     {
                         BossBattleInitiated = true;
 
-                        currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab, level_SO.LevelDifficulty);
+                        currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab, LevelDifficulty);
 
                         Enemies.Add(currentBoss);
                     }
@@ -157,6 +166,16 @@ public class StoryMode : BaseGameMode
             }
 
         }
+    }
+
+    public EnemyElement GetEnemyElemeny(string id)
+    {
+        EnemyElement enemyElement;
+        if (ListOfEnemyElements.TryGetValue(id, out enemyElement))
+        {
+            return enemyElement;
+        }
+        return enemyElement;
     }
 }
 

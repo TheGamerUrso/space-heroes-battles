@@ -450,8 +450,6 @@ public class PlayerShip : Ship, IDamagable
 
     public void SwitchWeapon(int WeaponTypeIndex)
     {
-        CurrentWeapnType = WeaponTypeIndex;
-
         for (int i = 0; i < Weapons.Length; i++)
         {
             Weapons[i].gameObject.SetActive(false);

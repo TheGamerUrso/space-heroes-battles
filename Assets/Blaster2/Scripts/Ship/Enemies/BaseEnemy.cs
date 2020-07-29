@@ -5,7 +5,7 @@ public class BaseEnemy : Ship, IDamagable
 {
     public event Action<float, float> OnHealthChanged;
 
-    public int Id;
+    public string Id;
     public Enemy_SO EnemyData;
     public bool IsAlive { get; set; }
 
@@ -34,19 +34,6 @@ public class BaseEnemy : Ship, IDamagable
 
     [HideInInspector] public EnemyElement enemyElement;
 
-    public override void OnDisable()
-    {
-        if (baseGameMode == null)
-        {
-            baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
-        }
-
-        if (baseGameMode != null)
-        {
-            baseGameMode.UnregisterEnemy(this);
-        }
-    }
-
     public override void OnEnable()
     {
         IsAlive = true;
@@ -57,24 +44,14 @@ public class BaseEnemy : Ship, IDamagable
         {
             EnableAllWeapon();
         }
-
-        if (baseGameMode != null)
-        {
-            baseGameMode.RegisterEnemy(this);
-        }
-
     }
+
 
     public override void Awake()
     {
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
-
-        if (baseGameMode == null)
-        {
-            baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
-        }
     }
 
     public override void Start()
@@ -109,7 +86,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public void Leave()
     {
-        Events.EnemyEscaped?.Invoke(gameObject.name, this);
+        Events.EnemyEscaped?.Invoke(Id, this);
     }
 
     public virtual void TakeDamage(float dmg)
@@ -149,7 +126,7 @@ public class BaseEnemy : Ship, IDamagable
 
     public virtual void Hit()
     {
-        Events.EnemyGotHit?.Invoke(gameObject.name, this);
+        Events.EnemyGotHit?.Invoke(Id, this);
     }
 
     public virtual void Death()
@@ -159,7 +136,7 @@ public class BaseEnemy : Ship, IDamagable
             IsAlive = false;
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
-            Events.EnemyDied?.Invoke(gameObject.name, this);
+            Events.EnemyDied?.Invoke(Id, this);
             HealthBar.Hide();
             gameObject.SetActive(false);
         }

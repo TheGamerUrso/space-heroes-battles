@@ -114,7 +114,6 @@ public class ComboKillIndicator : MonoBehaviour
             finalText = congratulations[num];
         }
 
-        Debug.Log("Num : " + num);
         confratulationText.text = finalText;
 
         timerCooldown = Random.Range(2, 4);
