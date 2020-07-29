@@ -24,6 +24,11 @@ public class ObjectivesElement : MonoBehaviour
     private PlayerData playerData;
     private int currentPlayerLevel;
 
+
+    private float xpToEarn;
+    private int coinToEarn;
+
+
     public void InitializeObjective(ObjectiveData objectiveData)
     {
         Button.interactable = false;
@@ -32,10 +37,47 @@ public class ObjectivesElement : MonoBehaviour
 
         Button.onClick.AddListener(() =>
         {
-             Events.OnObjectiveChange(this, new Events.ObjectiveEventArgs(objectiveData));
+            Complete();
         });
 
         RefreshQuests();
+
+        playerData = PersistantData.GetPlayerData();
+        currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
+
+        switch ((ObjectiveTypeEnum)objectiveData.objectiveType)
+        {
+            case ObjectiveTypeEnum.KILL:
+                xpToEarn = 50 * currentPlayerLevel;
+                coinToEarn = 250;
+                break;
+            case ObjectiveTypeEnum.USE:
+                xpToEarn = 20 * currentPlayerLevel;
+                coinToEarn = 200;
+                break;
+            case ObjectiveTypeEnum.UNHARMED:
+                xpToEarn = 75 * currentPlayerLevel;
+                coinToEarn = 275;
+                break;
+            case ObjectiveTypeEnum.SURVIVE:
+                xpToEarn = 25 * currentPlayerLevel;
+                coinToEarn = 225;
+                break;
+            case ObjectiveTypeEnum.SPEND:
+                xpToEarn = 15 * currentPlayerLevel;
+                coinToEarn = objectiveData.progress / 3;
+                break;
+            case ObjectiveTypeEnum.BOUNTY:
+                xpToEarn = 100 * currentPlayerLevel;
+                coinToEarn = 300;
+                break;
+            case ObjectiveTypeEnum.SCORE:
+                xpToEarn = 80 * currentPlayerLevel;
+                coinToEarn = 280;
+                break;
+            default:
+                break;
+        }
     }
 
     public void LoadingIndicator()
@@ -54,35 +96,22 @@ public class ObjectivesElement : MonoBehaviour
     {
         if (!objectiveData.claimed && objectiveData.completed)
         {
-            switch ((ObjectiveType)objectiveData.objectiveType)
+            playerData.AddCoin(coinToEarn);
+            playerData.EarnXP(xpToEarn);
+
+            switch ((ObjectiveTypeEnum)objectiveData.objectiveType)
             {
-                case ObjectiveType.Kill:
-                    playerData.AddCoin(40);
-                    playerData.EarnXP(25 * currentPlayerLevel);
-                    break;
-                case ObjectiveType.Use:
-                    playerData.AddCoin(40);
-                    playerData.EarnXP(15 * currentPlayerLevel);
+                case ObjectiveTypeEnum.USE:
                     playerData.SetTotalSuperUsed(0);
                     break;
-                case ObjectiveType.Unharmed:
-                    playerData.AddCoin(40);
-                    playerData.EarnXP(50 * currentPlayerLevel);
+                case ObjectiveTypeEnum.UNHARMED:
                     playerData.SetHitInGame(false);
                     break;
-                case ObjectiveType.survive:
-                    playerData.AddCoin(40);
-                    playerData.EarnXP(50 * currentPlayerLevel);
+                case ObjectiveTypeEnum.SURVIVE:
                     playerData.SetWaveSurvived(0);
                     break;
-                case ObjectiveType.spend:
-                    int moneySpend = objectiveData.progress;
-                    playerData.AddCoin(moneySpend / 3);
-                    playerData.EarnXP(10 * currentPlayerLevel);
+                case ObjectiveTypeEnum.SPEND:              
                     playerData.SetMoneySpend(0);
-                    break;
-
-                default:
                     break;
             }
 
@@ -90,6 +119,8 @@ public class ObjectivesElement : MonoBehaviour
             objectiveData.claimed = true;
             Button.interactable = false;
             RefreshQuests();
+
+            Events.OnObjectiveChange?.Invoke(objectiveData);
         }
     }
     public void SetRewardInfo()
@@ -97,39 +128,15 @@ public class ObjectivesElement : MonoBehaviour
         playerData = PersistantData.GetPlayerData();
         currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
 
-        switch ((ObjectiveType)objectiveData.objectiveType)
-        {
-            case ObjectiveType.Kill:
-                rewardText.text = 25 * currentPlayerLevel + "xp";
-                CoinReward.text = "100 xp";
-                break;
-            case ObjectiveType.Use:
-                rewardText.text = 15 * currentPlayerLevel + "xp";
-                CoinReward.text = "40 xp";
-                break;
-            case ObjectiveType.Unharmed:
-                rewardText.text = 50 * currentPlayerLevel + "xp";
-                CoinReward.text = "40 xp";
-                break;
-            case ObjectiveType.survive:
-                rewardText.text = 50 * currentPlayerLevel + "xp";
-                CoinReward.text = "40 xp";
-                break;
-            case ObjectiveType.spend:
-
-                rewardText.text = 10 * currentPlayerLevel + "xp";
-                CoinReward.text = "" + objectiveData.progress / 3;
-                break;
-
-            default:
-                break;
-        }
+        rewardText.text = xpToEarn + "xp";
+        CoinReward.text = coinToEarn + "$";
     }
+
     public void RefreshQuests()
     {
         CompletedGameObject.SetActive(objectiveData.claimed);
 
-        if ((ObjectiveType)objectiveData.objectiveType == ObjectiveType.Unharmed)
+        if ((ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.UNHARMED || (ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.BOUNTY)
         {
             ObjectiveDescriptionText.text = objectiveData.Description;
             if (objectiveData.completed && !objectiveData.claimed)

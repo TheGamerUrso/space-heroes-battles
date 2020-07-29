@@ -1,9 +1,9 @@
 ﻿using System;
 using UnityEngine;
 
-public enum ObjectiveType
+public enum ObjectiveTypeEnum
 {
-    Kill = 0, Use = 1, Unharmed = 2, survive = 3, spend = 4
+    KILL = 0, USE = 1, UNHARMED = 2, SURVIVE = 3, SPEND = 4, BOUNTY = 5,SCORE = 6
 }
 
 [Serializable]
@@ -49,14 +49,15 @@ public class ObjectiveData
     {
         if (!completed)
         {
-            this.progress = progress;
+            this.progress += progress;
 
-            if (progress >= requirment)
+            if (this.progress >= requirment)
             {
                 completed = true;
                 progress = 0;
 
                 Notification notification = new Notification();
+                notification.Name = Id;
                 notification.Description = Description;
 
                 NotificationSystem.Instance.Add(notification);

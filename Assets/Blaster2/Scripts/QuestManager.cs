@@ -8,57 +8,57 @@ public class QuestManager : MonoBehaviour
 
     [SerializeField] private Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
     [SerializeField] private GameObject[] ObjectiveLocations;
-    private List<ObjectiveType> ListOfAvailableObjectiveTypes;
+    private List<ObjectiveTypeEnum> ListOfAvailableObjectiveTypes;
     private float ResetTimer = 2f;
     private bool allObjectivesCompleted = false;
-    private int objectiveIndex = 0;
 
+    private PlayerData playerData;
 
     private void Start()
     {
+        playerData = PersistantData.GetPlayerData();
+
         InitializeObjectives();
         RefreshObjectives();
+
+        Events.OnObjectiveChange += CheckObjective;
     }
 
     public void CreateNewObjective()
     {
-        ListOfAvailableObjectiveTypes = Enum.GetValues(typeof(ObjectiveType)).Cast<ObjectiveType>().ToList();
-        PlayerData playerData = PersistantData.GetPlayerData();
+        ListOfAvailableObjectiveTypes = Enum.GetValues(typeof(ObjectiveTypeEnum)).Cast<ObjectiveTypeEnum>().ToList();
 
+        ObjectiveTypeEnum objectiveType;
         ObjectiveData objectiveData = null;
-        ObjectiveType objectiveType;
 
         for (int i = 0; i < 3; i++)
         {
             int randoNumber = UnityEngine.Random.Range(0, ListOfAvailableObjectiveTypes.Count);
 
-            objectiveData = null;
             objectiveType = ListOfAvailableObjectiveTypes[randoNumber];
-
 
             switch (objectiveType)
             {
-                case ObjectiveType.Kill:
-                    objectiveData = new ObjectiveData(i, "Defeat", UnityEngine.Random.Range(100, 500), 0, 0, "Kill <color=orange> X / % </color>   enemies");
+                case ObjectiveTypeEnum.KILL:
+                    objectiveData = new ObjectiveData(i, "Defeat", UnityEngine.Random.Range(100, 500), 0, (int)objectiveType, "Kill <color=orange> X / % </color>   enemies");
                     break;
-
-                case ObjectiveType.Use:
-                    objectiveData = new ObjectiveData(i, "Use", UnityEngine.Random.Range(10, 25), 0, 1, "Use super <color=orange> X / % </color>  times");
+                case ObjectiveTypeEnum.USE:
+                    objectiveData = new ObjectiveData(i, "Use", UnityEngine.Random.Range(10, 25), 0, (int)objectiveType, "Use super <color=orange> X / % </color>  times");
                     break;
-
-                case ObjectiveType.Unharmed:
-                    objectiveData = new ObjectiveData(i, "Unharmed", 1, 0, 2, "Complete a level without getting hit");
+                case ObjectiveTypeEnum.UNHARMED:
+                    objectiveData = new ObjectiveData(i, "Unharmed", 1, 0, (int)objectiveType, "Complete a level without getting hit");
                     break;
-
-                case ObjectiveType.survive:
-                    objectiveData = new ObjectiveData(i, "Survie", UnityEngine.Random.Range(1, 7), 0, 3, "Play <color=orange> X / % </color>  Levels");
+                case ObjectiveTypeEnum.SURVIVE:
+                    objectiveData = new ObjectiveData(i, "Survie", UnityEngine.Random.Range(1, 7), 0, (int)objectiveType, "Play Level <color=orange> X  </color>");
                     break;
-
-                case ObjectiveType.spend:
-                    objectiveData = new ObjectiveData(i, "Spend_1", UnityEngine.Random.Range(500, 1000), 0, 4, "Spend <color=orange> X / % </color>  coins");
+                case ObjectiveTypeEnum.SPEND:
+                    objectiveData = new ObjectiveData(i, "Spend_1", UnityEngine.Random.Range(100, 250), 0, (int)objectiveType, "Spend <color=orange> X / % </color>  coins");
                     break;
-
-                default:
+                case ObjectiveTypeEnum.BOUNTY:
+                    objectiveData = new ObjectiveData(i, "BOUNTY", UnityEngine.Random.Range(1, 5), 0, (int)objectiveType, "Kill BOSS <color=orange> X  </color>");
+                    break;
+                case ObjectiveTypeEnum.SCORE:
+                    objectiveData = new ObjectiveData(i, "BOUNTY", UnityEngine.Random.Range(10000, 50000), 0, (int)objectiveType, "Achieve <color=orange> X  </color> Score In a Level");
                     break;
             }
 
@@ -68,8 +68,10 @@ public class QuestManager : MonoBehaviour
         }
 
 
+        var objectiveIndex = 0;
         GameObject objectiveGO;
         ObjectivesElement objectivesElement;
+
         foreach (ObjectiveData item in ListOfObjectives.Values)
         {
             objectiveGO = ObjectiveLocations[objectiveIndex];
@@ -77,7 +79,7 @@ public class QuestManager : MonoBehaviour
 
             objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
             objectivesElement.InitializeObjective(item);
-            Events.OnObjectiveChange += CheckObjective;
+
             objectivesElement.ResetStatus();
 
             if (objectiveGO.GetComponent<ObjectivesElement>().objectiveData != null)
@@ -90,11 +92,8 @@ public class QuestManager : MonoBehaviour
         RefreshObjectives();
     }
 
-    public void CheckObjective(object sender, Events.ObjectiveEventArgs e)
+    public void CheckObjective(ObjectiveData objectiveData)
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        ObjectiveData objectiveData = e.objectiveData;
-
         ListOfObjectives.Remove(objectiveData.Id);
 
         int numberOfCompletdQuest = 0;
@@ -145,8 +144,6 @@ public class QuestManager : MonoBehaviour
 
     public void GenerateNewObjectives()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-
         foreach (var item in playerData.ListOfOnGoingObjectives.ToList())
         {
             playerData.ListOfOnGoingObjectives.Remove(item);
@@ -178,8 +175,6 @@ public class QuestManager : MonoBehaviour
                 objectiveGO = ObjectiveLocations[objectiveIndex];
                 objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
                 objectivesElement.InitializeObjective(item);
-                Events.OnObjectiveChange += CheckObjective;
-
                 objectiveIndex++;
             }
         }

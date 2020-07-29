@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class BaseBossEnemy : BaseEnemy
 {
+    private PlayerData playerData;
     public Action OnBossAttack;
     public Action<int, int> OnBossHit;
 
@@ -24,9 +25,9 @@ public class BaseBossEnemy : BaseEnemy
     public override void Start()
     {
         base.Start();
+        playerData = PersistantData.GetPlayerData();
 
         currentWeaponActive = 0;
-
         DisableAllWeapons();
     }
 
@@ -35,30 +36,23 @@ public class BaseBossEnemy : BaseEnemy
         if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0)
         {
             return;
-        }
-
-        hitIndex++;
-        OnBossHit?.Invoke(hitIndex, numberOfHits);
+        }  
 
         base.TakeDamage(damage);
 
-        if (CurrentHealth < 0)
-        {
-            EnableColliders(false);
-            Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
-        }
     }
 
     public override void Hit()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
+        hitIndex++;
+        OnBossHit?.Invoke(hitIndex, numberOfHits);
+
+   
 
         if (playerData != null)
         {
             playerData.IncreasePowerUp(.05f);
         }
-
-
     }
 
     public override void Update()
@@ -101,15 +95,23 @@ public class BaseBossEnemy : BaseEnemy
                 item.gameObject.SetActive(false);
             }
         }
+
         if (HealthBar != null)
         {
             Destroy(HealthBar);
         }
-        Events.EnemyDied?.Invoke(Id, this);
+
+        Events.BossDied?.Invoke(Id, this);
     }
 
     IEnumerator DeathSequence()
     {
+        if (CurrentHealth < 0)
+        {
+            EnableColliders(false);
+            Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
+        }
+
         yield return new WaitForSeconds(4.0f);
         base.Death();
     }

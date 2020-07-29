@@ -9,6 +9,10 @@ public class SlowMo : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetJoystickNames().Length > 0)
+        {
+            return;
+        }
         if (Input.touchCount > 0 || Input.GetMouseButton(0))
         {
             Game.SlowMo = false;
@@ -24,6 +28,7 @@ public class SlowMo : MonoBehaviour
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
+           
 
             if (!Game.IsGameOver && !Game.IsPaused && Game.UseSlowMo)
             {

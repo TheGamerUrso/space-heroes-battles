@@ -425,8 +425,8 @@ public class GameManager : MonoSingleton<GameManager>
         Scene scene = SceneManager.GetActiveScene();
         Level level = GetMission((LevelEnum)scene.buildIndex);
 
-        var killed = Game.EnemySpawnInTotal * .9f;
-        var collected = Game.EnemySpawnInTotal * .9f;
+        var killed = Game.EnemyKilled / Game.EnemySpawnInTotal;
+        var collected = Game.CoinPicked / Game.EnemySpawnInTotal;
 
 
         var levelObjectiveDatas = level.objectiveListData;
@@ -437,33 +437,45 @@ public class GameManager : MonoSingleton<GameManager>
             playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        float enemyKilled = Game.EnemyKilled;
-
-        if (!levelObjectiveDatas[1].completed && enemyKilled >= killed)
+        if (!levelObjectiveDatas[1].completed && killed < .8f)
         {
             levelObjectiveDatas[1].completed = true;
-            playerData.EarnXP(30 * playerData.GetCurrentPlayerShipData().level);
+            playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        if (!levelObjectiveDatas[2].completed && playerData.PlayedGame && !playerData.GotHitInGame)
+        if (!levelObjectiveDatas[2].completed && killed < .4f)
         {
             levelObjectiveDatas[2].completed = true;
             playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
         }
-
-        float coinEarnInGame = Game.CoinPicked;
-
-        if (!levelObjectiveDatas[3].completed && coinEarnInGame >= 0 && coinEarnInGame >= collected)
+        if (!levelObjectiveDatas[3].completed && killed < .2f)
         {
             levelObjectiveDatas[3].completed = true;
-            playerData.EarnXP(10 * playerData.GetCurrentPlayerShipData().level);
+            playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
+        }
+
+        if (!levelObjectiveDatas[4].completed && playerData.PlayedGame && !playerData.GotHitInGame)
+        {
+            levelObjectiveDatas[4].completed = true;
+            playerData.EarnXP(80 * playerData.GetCurrentPlayerShipData().level);
+        }
+
+        if (levelObjectiveDatas.Length > 5)
+        {
+            if (!levelObjectiveDatas[5].completed)
+            {
+                levelObjectiveDatas[5].completed = true;
+                playerData.EarnXP(100 * playerData.GetCurrentPlayerShipData().level);
+            }
         }
 
         int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
 
+   
+
         //TODO Achievement Progress for Level
 
-        playerData.LevelUnlocked = levelIndex + 1; 
+        playerData.LevelUnlocked = levelIndex + 1;
 
         if (playerData.LevelUnlocked > 9)
         {
@@ -473,35 +485,35 @@ public class GameManager : MonoSingleton<GameManager>
 
     }
 
-    public void PlayerQuestCheck()
+    [ContextMenu("Finish Quests")]
+    public void FInishQuests()
     {
         for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
         {
             ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
-            switch ((ObjectiveType)objective.objectiveType)
+            objective.UpdateProgress(objective.requirment);
+        }
+    }
+
+    public void PlayerQuestProgress(ObjectiveTypeEnum type, int progress)
+    {
+        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(type);
+
+        Scene scene = SceneManager.GetActiveScene();
+        Level level = GetMission((LevelEnum)scene.buildIndex);
+        int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
+        if (objectiveData != null)
+        {
+            if (type == ObjectiveTypeEnum.SURVIVE)
             {
-                //case ObjectiveType.Use:
-                //    if (objective.completed == false)
-                //    {
-                //        objective.UpdateProgress(playerData.superUsed);
-                //    }
-                //    break;
-                case ObjectiveType.Unharmed:
-                    if (objective.completed == false)
-                    {
-                        if (playerData.GotHitInGame == false)
-                        {
-                            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                            objectiveData.UpdateProgress(1);
-                        }
-                    }
-                    break;
-                case ObjectiveType.survive:
-                    var surviveProgress = objective.progress;
-                    surviveProgress++;
-                    objective.UpdateProgress(surviveProgress);
-                    break;
+                if (progress.Equals(levelIndex))
+                {
+                    objectiveData.UpdateProgress(1);
+                }
+                return;
             }
+
+            objectiveData.UpdateProgress(progress);
         }
     }
 
@@ -511,14 +523,17 @@ public class GameManager : MonoSingleton<GameManager>
         Level level = GetMission((LevelEnum)scene.buildIndex);
         int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
 
-        var levelName = level.ID;
-        var killed = Game.EnemySpawnInTotal * .9f;
-        var collected = Game.EnemySpawnInTotal * .9f;
-
         playerData.SetScore(levelIndex, Game.Score);
         playerData.PlayedGame = true;
         playerData.Coins += Game.CoinPicked;
         playerData.Kills += Game.EnemyKilled;
+
+        PlayerQuestProgress(ObjectiveTypeEnum.SURVIVE, levelIndex);
+
+        if (!Game.PlayerGotHit)
+        {
+            Instance.PlayerQuestProgress(ObjectiveTypeEnum.UNHARMED, 0);
+        }
 
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 

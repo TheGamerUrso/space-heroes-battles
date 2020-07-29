@@ -77,7 +77,7 @@ public class GameController : MonoSingleton<GameController>
 
         Events.PlayerLost -= PlayerLostCallback;
         Events.GameEnded -= Win;
-       // Events.EnemyDied -= EnemyDied;
+        Events.EnemyDied -= EnemyDied;
     }
     protected override void Awake()
     {
@@ -113,7 +113,7 @@ public class GameController : MonoSingleton<GameController>
 
         Events.PlayerLost += PlayerLostCallback;
         Events.GameEnded += Win;
-        //Events.EnemyDied += EnemyDied;
+        Events.EnemyDied += EnemyDied;
 
         Game.UseSlowMo = false;
 
@@ -174,8 +174,6 @@ public class GameController : MonoSingleton<GameController>
 
     private void EnemyDied(string name, BaseEnemy baseEnemy)
     {
-        Debug.Log(name + " : " + baseEnemy.Id + "=" + baseEnemy.Id.Equals(name));
-
         if (baseEnemy.Id.Equals(name))
         {
             int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
@@ -218,13 +216,9 @@ public class GameController : MonoSingleton<GameController>
             Game.IncreaseMultiplier();
 
             playerData.Kills = kills;
-            ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Kill);
 
-            if (objectiveData != null)
-            {
-                var newProgress = objectiveData.progress + playerData.Kills;
-                objectiveData.UpdateProgress(newProgress);
-            }
+            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
+            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, 1);
         }
     }
 
@@ -270,7 +264,6 @@ public class GameController : MonoSingleton<GameController>
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
         GameManager.Instance.PlayerChallengesCheck();
         GameManager.Instance.UpdatePlayerStatistics();
-        GameManager.Instance.PlayerQuestCheck();
 
         SaveSystem.SaveGame();
 

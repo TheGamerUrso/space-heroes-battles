@@ -1,7 +1,6 @@
 ﻿using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
-
 public class SimpleShipControls : MonoBehaviour
 {
     public enum ControlSceme
@@ -42,11 +41,12 @@ public class SimpleShipControls : MonoBehaviour
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        controlSceme = (ControlSceme)playerData.ControlScene;
+
         plane = new Plane(Vector3.up, transform.position);
 
         Events.OnControlScemeChange = UpdateOffset;
         Speed = playerShipData.Speed;
+        controlSceme = (ControlSceme)playerData.ControlScene;
     }
 
     public void SetTargetPosition()
@@ -89,7 +89,7 @@ public class SimpleShipControls : MonoBehaviour
 
     private void Move()
     {
-        transform.position = Vector3.Lerp(transform.position, (targetPos + new Vector3(0,0, offset)), Speed * Time.deltaTime);
+        transform.position = Vector3.Lerp(transform.position, (targetPos + new Vector3(0, 0, offset)), Speed * Time.deltaTime);
     }
 
     public void OnDragMove()
@@ -172,7 +172,6 @@ public class SimpleShipControls : MonoBehaviour
                 touch = Input.GetTouch(0);
                 rotVelocity = -touch.deltaPosition.x * tilt;
             }
-
 
             rotVelocity = Mathf.Clamp(rotVelocity, -35, 35);
         }

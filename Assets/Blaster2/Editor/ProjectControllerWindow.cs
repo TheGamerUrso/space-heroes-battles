@@ -239,7 +239,7 @@ public class ProjectControllerWindow : EditorWindow
     public void CompleteObjective(int index)
     {
         PlayerData playerData = PersistantData.GetPlayerData();
-        if ((ObjectiveType)playerData.ListOfOnGoingObjectives[index].objectiveType == ObjectiveType.Unharmed)
+        if ((ObjectiveTypeEnum)playerData.ListOfOnGoingObjectives[index].objectiveType == ObjectiveTypeEnum.UNHARMED)
         {
             playerData.PlayedGame = true;
             playerData.GotHitInGame = false;

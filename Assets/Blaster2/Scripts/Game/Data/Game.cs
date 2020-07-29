@@ -20,7 +20,7 @@
     public static int TotalCoinsInGame;
 
     public static int Multiplier = 0;
-    public static bool getDamaged;
+    public static bool PlayerGotHit;
 
     public static int EnemyKilled;
     public static int EnemyEscaped;
@@ -32,7 +32,7 @@
         WaveSurvived = 0;
         CoinPicked = 0;
         SuperUsed = 0;
-        getDamaged = false;
+        PlayerGotHit = false;
         Multiplier = 0;
         EnemyKilled = 0;
         EnemyEscaped = 0;
@@ -54,24 +54,19 @@
         Events.OnCoinValueChanged?.Invoke(CoinPicked);
     }
 
-    public static void SetGotDamaged(int value)
+    public static void GotHit()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-        if (objectiveData != null)
-            objectiveData.UpdateProgress(1);
+        if (PlayerGotHit == false)
+        {
+            PlayerGotHit = true;
+        }
     }
 
     public static void SetSuperUsed(int value)
     {
         SuperUsed = value;
-        PlayerData playerData = PersistantData.GetPlayerData();
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Use);
-        if (objectiveData != null)
-        {
-            var newProgress = objectiveData.progress + SuperUsed;
-            objectiveData.UpdateProgress(SuperUsed);
-        }
+        GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.USE,SuperUsed);
+
     }
     public static void SetCurrentEnemyKills(int Kills)
     {

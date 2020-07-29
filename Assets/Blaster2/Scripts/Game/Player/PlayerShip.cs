@@ -108,6 +108,16 @@ public class PlayerShip : Ship, IDamagable
 
 
 #if UNITY_ANDROID
+        if (Input.GetJoystickNames().Length > 0)
+        {
+            if (playerPowerUp >= 1)
+            {
+                if (Input.GetButtonDown("XboxXButton"))
+                {
+                    ActivateSpecial();
+                }
+            }
+        }
 
         if (Time.timeScale == 0)
         {
@@ -119,47 +129,10 @@ public class PlayerShip : Ship, IDamagable
 
         if (Input.touchCount > 0)
         {
-            Touch touch = Input.GetTouch(0);
+
             if (playerPowerUp >= 1)
             {
-                switch (touch.phase)
-                {
-                    case TouchPhase.Began:
-                        clicked = true;
-                        clicktimes++;
-                        break;
-                    case TouchPhase.Moved:
-                        break;
 
-                    case TouchPhase.Stationary:
-                        break;
-
-                    case TouchPhase.Ended:
-                        break;
-
-                    case TouchPhase.Canceled:
-                        break;
-
-                    default:
-                        break;
-                }
-
-                if (clicked && clicktimer > 0)
-                {
-                    clicktimer -= Time.deltaTime;
-                    if (clicktimer <= 0)
-                    {
-                        clicked = false;
-                        clicktimer = 1;
-                        clicktimes = 0;
-                    }
-                }
-
-                if (clicktimes > 1 || touch.tapCount > 2)
-                {
-                    clicktimes = 0;
-                    ActivateSpecial();
-                }
             }
         }
 #endif
@@ -171,7 +144,40 @@ public class PlayerShip : Ship, IDamagable
         }
     }
 
+    float clickDelay = .25f;
+    public void TouchShoot()
+    {
+        Touch touch = Input.GetTouch(0);
+        if (touch.phase == TouchPhase.Began)
+        {
+            if (clickDelay <= 0)
+            {
+                clicked = true;
+                clicktimes++;
+                clickDelay = .5f;
+            }
+        }
 
+
+        if (clicked && clicktimer > 0)
+        {
+            clicktimer -= Time.deltaTime;
+            clickDelay -= Time.deltaTime;
+
+            if (clicktimer <= 0)
+            {
+                clicked = false;
+                clicktimer = 1;
+                clicktimes = 0;
+            }
+        }
+
+        if (clicktimes > 1)
+        {
+            clicktimes = 0;
+            ActivateSpecial();
+        }
+    }
 
     public void UpdateWeaponStats(float fireRate, float damage = 0)
     {
@@ -257,14 +263,7 @@ public class PlayerShip : Ship, IDamagable
 
                 Events.PlayerShipHit?.Invoke();
 
-                if (playerData.GotHitInGame == false)
-                {
-                    PlayerData playerData = PersistantData.GetPlayerData();
-                    ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(ObjectiveType.Unharmed);
-                    if (objectiveData != null)
-                        objectiveData.UpdateProgress(0);
-                    playerData.GotHitInGame = true;
-                }
+                Game.GotHit();
 
                 if (GetHealthPresentage() < .5f)
                 {
@@ -470,13 +469,19 @@ public class PlayerShip : Ship, IDamagable
 
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
         playerShipData.Speed = playerStats.baseSpeed + UpgradeStats[(int)UpgradeTypeEnum.Speed];
-        playerShipData.Damage = playerStats.baseDamage + UpgradeStats[(int)UpgradeTypeEnum.Damage];
+        playerShipData.Damage = (level * playerStats.baseDamage) + UpgradeStats[(int)UpgradeTypeEnum.Damage];
         playerShipData.FireRate = playerStats.baseFireRate - UpgradeStats[(int)UpgradeTypeEnum.FireRate];
         playerShipData.SuperDamage = (level * playerStats.baseSuperDamage) + UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
         playerShipData.SuperChargeTime = playerStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
         playerShipData.MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
         playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
         HasArmorUprade = UpgradeStats[(int)UpgradeTypeEnum.ArmorUpgrade] == 1 ? true : false;
+
+
+        for (int i = 0; i < Weapons.Length; i++)
+        {
+            Weapons[i].SetStats(playerShipData);
+        }
     }
 
     public void SetHealth(float health)

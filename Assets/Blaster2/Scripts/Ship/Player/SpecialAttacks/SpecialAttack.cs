@@ -82,4 +82,10 @@ public class SpecialAttack : PlayerWeapon
         else
             return 0;
     }
+
+    public override void SetStats(PlayerShipData playerShipData)
+    {
+        Damage = playerShipData.SuperDamage;
+        SuperChargeTime = playerShipData.SuperChargeTime;
+    }
 }

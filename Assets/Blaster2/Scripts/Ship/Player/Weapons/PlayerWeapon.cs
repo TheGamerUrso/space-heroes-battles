@@ -22,9 +22,6 @@ public class PlayerWeapon : WeaponScript
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerShip = ship.GetComponent<PlayerShip>();
-
-        Damage = playerShipData.Damage;
-        FireRate = playerShipData.FireRate;
     }
 
     public override void Update()
@@ -64,7 +61,9 @@ public class PlayerWeapon : WeaponScript
 
         holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
-        if (!holdFire && Input.GetMouseButton(0))
+        var shouldShoot = Input.GetMouseButton(0) || Input.GetButton("XboxAButton");
+        
+        if (!holdFire && shouldShoot)
         {
             Shoot();
         }
@@ -115,6 +114,13 @@ public class PlayerWeapon : WeaponScript
             projectile.Setup(this);
             projectile.SetShootDir(shootDir);
         }
+    }
+
+
+    public virtual void SetStats(PlayerShipData playerShipData)
+    {
+        Damage = playerShipData.Damage;
+        FireRate = playerShipData.FireRate;
     }
 
 

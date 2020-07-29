@@ -136,12 +136,13 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
             BossBattleInitiated = false;
 
             Game.IsGameOver = true;
+
+            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.BOUNTY, int.Parse(id));
         }
     }
 
     public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
     {
-        Debug.Log(id + " : " + baseEnemy.Id + "=" + baseEnemy.Id.Equals(id));
         if (baseEnemy.Id.Equals(id))
         {
             baseEnemy.enemyElement.currentNumberInScene--;

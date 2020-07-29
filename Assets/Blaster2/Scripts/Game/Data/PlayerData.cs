@@ -185,11 +185,11 @@ public class PlayerData
         return -1;
     }
 
-    public ObjectiveData GetOnGoingObjectiveById(ObjectiveType objectiveType)
+    public ObjectiveData GetOnGoingObjectiveById(ObjectiveTypeEnum objectiveType)
     {
         for (int i = 0; i < ListOfOnGoingObjectives.Count; i++)
         {
-            if ((ObjectiveType)ListOfOnGoingObjectives[i].objectiveType == objectiveType)
+            if ((ObjectiveTypeEnum)ListOfOnGoingObjectives[i].objectiveType == objectiveType)
             {
                 return ListOfOnGoingObjectives[i];
             }

@@ -88,7 +88,7 @@ public class Events
      */
     public static Action<string, bool> OnScreenChanged;
 
-    public static EventHandler<ObjectiveEventArgs> OnObjectiveChange;
+    public static Action<ObjectiveData> OnObjectiveChange;
     public static Action<ObjectivesElement> OnClickEvent = delegate { };
 
 
