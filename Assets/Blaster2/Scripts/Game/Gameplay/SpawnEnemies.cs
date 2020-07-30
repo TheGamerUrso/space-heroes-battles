@@ -29,7 +29,7 @@ public class SpawnEnemies
 
         enemy.SetStats(LevelDifficulty);
 
-        BaseGameMode.Instance.TotalEnemies++;
+        BaseGameMode.Instance.spawnInfo.TotalEnemies++;
         return currentBoss;
     }
 
@@ -107,7 +107,7 @@ public class SpawnEnemies
 
         enemy.SetStats(LevelDifficulty);
 
-        BaseGameMode.Instance.TotalEnemies--;
+        BaseGameMode.Instance.spawnInfo.TotalEnemies--;
 
         previousPos = spawnPos;
 

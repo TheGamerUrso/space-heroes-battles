@@ -3,7 +3,34 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+
+[Serializable]
+public struct GameInfo
+{
+    public bool pause;
+    public bool BossBattleInitiated;
+    public int waves;
+    public int LevelDifficulty;
+
+    public void Reset()
+    {
+        pause = false;
+        BossBattleInitiated = false;
+    }
+}
+
+[Serializable]
+public struct SpawnInfo
+{
+    public int TotalEnemies;
+    public int availableEnemies;
+    public List<EnemyElement> enemyElements;
+
+    public void Reset()
+    {
+        enemyElements.Clear();
+    }
+}
 
 public class BaseGameMode : MonoSingleton<BaseGameMode>
 {
@@ -11,31 +38,20 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     protected PlayerShip playerShip;
     protected EnemyElement enemyElement;
-    protected bool BossBattleInitiated;
+
     protected GameObject currentBoss;
     protected PlayerData playerData;
 
-    [Range(1, 16)]
-    public int waves;
-    [Range(1, 7)]
-    public int availableEnemies;
-    [Range(1, 20)]
-    public int LevelDifficulty = 1;
+    public GameInfo gameInfo;
+    public SpawnInfo spawnInfo;
 
-    [SerializeField] protected float cooldown;
-    [SerializeField] protected float delay = 0;
-
-    protected bool pause;
-
-    public int TotalEnemies;
-
-
-    [SerializeField] protected List<EnemyElement> enemyElements;
-    [SerializeField] protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
+    protected float cooldown = 1f;
+    protected float delay = 0.5f;
 
     protected List<GameObject> Enemies = new List<GameObject>();
-    protected List<EnemyElement> availableEnemie;
-    protected List<EnemyElement> tempList;
+    protected List<EnemyElement> availableEnemie = new List<EnemyElement>();
+    protected List<EnemyElement> tempList = new List<EnemyElement>();
+    protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
 
 
     public int EnemySpawnedInTotal { get; set; }
@@ -64,10 +80,10 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public void LateUpdate()
     {
-        pause = false;
+        gameInfo.pause = false;
         if (Enemies.Count >= 8)
         {
-            pause = true;
+            gameInfo.pause = true;
         }
     }
 
@@ -102,7 +118,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     {
         if (baseEnemy.Id.Equals(id))
         {
-            playerData.SetSuperMeter(playerData.PowerUpLevel +  0.025f);
+            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
         }
     }
 
@@ -131,9 +147,9 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
             Enemies.Remove(baseEnemy.gameObject);
 
-            TotalEnemies--;
+            spawnInfo.TotalEnemies--;
 
-            BossBattleInitiated = false;
+            gameInfo.BossBattleInitiated = false;
 
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.BOUNTY, int.Parse(id));
         }
@@ -150,6 +166,14 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
             DropController.PickRandomDropItem(baseEnemy.transform);
         }
     }
+    public EnemyElement GetEnemyElemeny(string id)
+    {
+        EnemyElement enemyElement;
+        if (ListOfEnemyElements.TryGetValue(id, out enemyElement))
+        {
+            return enemyElement;
+        }
+        return enemyElement;
+    }
 
-    
 }

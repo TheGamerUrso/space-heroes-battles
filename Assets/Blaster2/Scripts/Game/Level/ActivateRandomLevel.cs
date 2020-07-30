@@ -4,6 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+
 public class ActivateRandomLevel : MonoBehaviour
 {
     [SerializeField] private Camera cameraMain;
@@ -14,7 +15,7 @@ public class ActivateRandomLevel : MonoBehaviour
     [SerializeField] private float cooldown;
 
     [SerializeField] private GameObject[] levels;
-
+    private List<GameObject> ListOfLevels = new List<GameObject>();
     private bool fadeIn;
     private bool fadeOut;
 
@@ -30,15 +31,26 @@ public class ActivateRandomLevel : MonoBehaviour
     [SerializeField] private LayerMask defaultLayer;
     [SerializeField] private LayerMask hyperspaceLayer;
 
-    private Asteroids[] asteroids;
+    private GameObject previousLevel;
 
-
-    private void Start()
+    private void Awake()
     {
         cameraMain = Camera.main;
         survivalMode = GameObject.FindObjectOfType<SurvivalMode>();
         Events.OnWaveEnded = ActivateHyperdrive;
         defaultLayer = cameraMain.cullingMask;
+
+
+        foreach (GameObject item in levels)
+        {
+            GameObject levelItem = Instantiate(item, transform, false);
+            levelItem.name = item.name;
+            ListOfLevels.Add(levelItem);
+        }
+    }
+
+    private void Start()
+    {
         ChooseNewLevel();
     }
 
@@ -61,12 +73,6 @@ public class ActivateRandomLevel : MonoBehaviour
 
     private void Update()
     {
-        //Debug Only
-        //if (Input.GetKeyDown(KeyCode.H))
-        //{
-        //    ActivateHyperdrive();
-        //}
-
         if (fadeIn)
         {
             c = Fade.color;
@@ -129,17 +135,45 @@ public class ActivateRandomLevel : MonoBehaviour
 
     public void ChooseNewLevel()
     {
-        for (int i = 0; i < levels.Length; i++)
+        for (int i = 0; i < ListOfLevels.Count; i++)
         {
-            levels[i].SetActive(false);
+            ListOfLevels[i].SetActive(false);
         }
 
         int randLevel = 0;
         randLevel = Random.Range(0, levels.Length);
-        levels[randLevel].SetActive(true);
+        GameObject levelToLoad = ListOfLevels[randLevel];
 
+        if (previousLevel != null && previousLevel == levelToLoad)
+        {
+            if (randLevel == 0)
+            {
+                randLevel += 1;
+            }
+            else if (randLevel < levels.Length)
+            {
+                randLevel -= 1;
+            }
+            else
+            {
+                var randomNum = Random.Range(1, 100);
+                if (randomNum >= 50)
+                {
+                    randLevel += 1;
+                }
+                else
+                {
+                    randLevel -= 1;
+                }
+            }
+            levelToLoad = ListOfLevels[randLevel];
+        }
 
-        lightMapSwitcher.SetLevelLightmap(levels[randLevel].name);
+        levelToLoad.SetActive(true);
+
+        previousLevel = levelToLoad;
+
+        lightMapSwitcher.SetLevelLightmap(ListOfLevels[randLevel].name);
     }
 
 }

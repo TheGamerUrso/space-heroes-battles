@@ -7,39 +7,42 @@ using UnityEngine.SceneManagement;
 
 public class StoryMode : BaseGameMode
 {
-    WaitForEndOfFrame waitForEndOfFrame = new WaitForEndOfFrame();
-    WaitForSeconds waitForSec = new WaitForSeconds(1);
     WaitForSeconds waitForCooldown = new WaitForSeconds(1);
-    WaitForSeconds waitforOneSec = new WaitForSeconds(1);
     WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
+    WaitForSeconds waitForSec;
 
     public override void Start()
     {
         base.Start();
-        playerShip = PlayerManager.GetPlayer();
 
         MissionCollection missionCollection = PersistantData.GetMissionCollection();
-        enemyElements = level_SO.enemyElements.ToList();
 
-        for (int i = 0; i < enemyElements.Count; i++)
+
+        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
         {
-            enemyElements[i].currentNumberInScene = 0;
+            spawnInfo.enemyElements[i].currentNumberInScene = 0;
         }
 
         Scene scene = SceneManager.GetActiveScene();
         int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
         Mission mission = missionCollection.GetMission(levelMission);
-        LevelDifficulty = mission.Level;
 
-        availableEnemies = level_SO.availableEnemies;
-        TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
 
-        Game.EnemySpawnInTotal = TotalEnemies;
+        playerShip = PlayerManager.GetPlayer();
 
-        for (int i = 0; i < availableEnemies; i++)
+        spawnInfo.enemyElements = level_SO.enemyElements.ToList();
+        gameInfo.LevelDifficulty = mission.Level;
+
+        spawnInfo.availableEnemies = level_SO.availableEnemies;
+        spawnInfo.TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
+
+        Game.EnemySpawnInTotal = spawnInfo.TotalEnemies;
+
+        for (int i = 0; i < spawnInfo.availableEnemies; i++)
         {
-            ListOfEnemyElements.Add(enemyElements[i].Name, enemyElements[i]);
+            ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
         }
+
 
         StartCoroutine(StartGameDelay());
     }
@@ -60,7 +63,7 @@ public class StoryMode : BaseGameMode
         waitForSec = new WaitForSeconds(delay);
         waitForCooldown = new WaitForSeconds(cooldown);
 
-        var startingTotalEnemies = TotalEnemies;
+        var startingTotalEnemies = spawnInfo.TotalEnemies;
         var randomNumb = 0;
         var range = 0;
         var top = 0;
@@ -85,9 +88,9 @@ public class StoryMode : BaseGameMode
 
             Game.UseSlowMo = true;
 
-            while (TotalEnemies > 0 && !Game.IsGameOver)
+            while (spawnInfo.TotalEnemies > 0 && !Game.IsGameOver)
             {
-                availableEnemie = enemyElements.GetRange(0, availableEnemies);
+                availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
 
 
                 do
@@ -133,16 +136,16 @@ public class StoryMode : BaseGameMode
                     }
                 }
 
-                if (pause)
+                if (gameInfo.pause)
                 {
-                    yield return new WaitUntil(() => !pause);
+                    yield return new WaitUntil(() => !gameInfo.pause);
                 }
 
                 if (repetition <= 3 || tempList.Count > 1)
                 {
-                    if (TotalEnemies - 1 >= 0)
+                    if (spawnInfo.TotalEnemies - 1 >= 0)
                     {
-                        enemGO = SpawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), LevelDifficulty);
+                        enemGO = SpawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
                         Enemies.Add(enemGO);
                         previousSpawnEnemy = enemyElement;
                     }
@@ -164,18 +167,18 @@ public class StoryMode : BaseGameMode
                     yield return new WaitForSeconds(2.0f);
 
                     Debug.Log("Boss Battle");
-                    if (!BossBattleInitiated)
+                    if (!gameInfo.BossBattleInitiated)
                     {
-                        BossBattleInitiated = true;
+                        gameInfo.BossBattleInitiated = true;
 
-                        currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab, LevelDifficulty);
+                        currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab,gameInfo.LevelDifficulty);
 
                         Enemies.Add(currentBoss);
                     }
 
-                    if (BossBattleInitiated)
+                    if (gameInfo.BossBattleInitiated)
                     {
-                        yield return new WaitUntil(() => !BossBattleInitiated);
+                        yield return new WaitUntil(() => !gameInfo.BossBattleInitiated);
                     }
                 }
 
@@ -192,15 +195,7 @@ public class StoryMode : BaseGameMode
         }
     }
 
-    public EnemyElement GetEnemyElemeny(string id)
-    {
-        EnemyElement enemyElement;
-        if (ListOfEnemyElements.TryGetValue(id, out enemyElement))
-        {
-            return enemyElement;
-        }
-        return enemyElement;
-    }
+
 }
 
 
