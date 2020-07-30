@@ -14,11 +14,6 @@ public class WarningSignWidget : MonoBehaviour
     public GameObject WarningSign;
     public float TTL = 4;
 
-    private void OnDestroy()
-    {
-        DOTween.KillAll();
-    }
-
     private void Start()
     {
         Sequence fadeAnim = DOTween.Sequence();
@@ -26,33 +21,25 @@ public class WarningSignWidget : MonoBehaviour
   .Append(WarningSign.GetComponent<Image>().DOFade(1, .25f))
   .Append(WarningSign.GetComponent<Image>().DOFade(0, .25f))
   .Append(WarningSign.GetComponent<Image>().DOFade(1, .25f)).SetLoops(-1);
-
-
     }
+
     public float angle;
     public Vector3 targetDir;
     public LayerMask enemies;
     public Collider[] colliders;
+
     private void FixedUpdate()
     {
         colliders = Physics.OverlapSphere(followTarget.transform.position, 40, enemies);
         if (colliders.Length > 0)
         {
-            if (colliders[0].GetComponent<BaseEnemy>().enemyElement.gameObjectType == PoolGameObjectType.Enemy3)
+            BaseEnemy baseEnemy = colliders[0].GetComponent<BaseEnemy>();
+            if (baseEnemy != null && baseEnemy.enemyElement.gameObjectType == PoolGameObjectType.Enemy3)
             {
-                Target = colliders[0].gameObject;
-            }
-        }
-    }
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(followTarget.transform.position, 40);
-        if (colliders.Length > 0)
-        {
-            Gizmos.color = Color.green;
-            if (colliders[0].GetComponent<BaseEnemy>().enemyElement.gameObjectType == PoolGameObjectType.Enemy3)
-            {
-                Gizmos.color = Color.red;
+                if (colliders[0].gameObject != null)
+                {
+                    Target = colliders[0].gameObject;
+                }
             }
         }
     }

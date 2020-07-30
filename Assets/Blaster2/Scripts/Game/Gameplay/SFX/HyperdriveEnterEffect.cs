@@ -16,6 +16,10 @@ public class HyperdriveEnterEffect : MonoBehaviour
         baseEnemyAI = GetComponent<BaseEnemyAI>();
         baseEnemy = GetComponent<BaseEnemy>();
     }
+    private void OnDestroy()
+    {
+        DOTween.Clear();
+    }
 
     public virtual void OnEnable()
     {

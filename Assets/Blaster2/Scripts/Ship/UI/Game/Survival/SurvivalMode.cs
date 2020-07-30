@@ -49,7 +49,7 @@ public class SurvivalMode : BaseGameMode
 
     public void NewWave()
     {
-        gameInfo.waves = 4;
+        gameInfo.waves++;
 
         HasBoss = false;
 
@@ -58,9 +58,7 @@ public class SurvivalMode : BaseGameMode
 
         if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
         {
-            //spawnInfo.availableEnemies++;
-
-            spawnInfo.availableEnemies = 6;
+            spawnInfo.availableEnemies++;
 
             if (spawnInfo.availableEnemies > spawnInfo.enemyElements.Count)
             {
@@ -217,9 +215,11 @@ public class SurvivalMode : BaseGameMode
 
                 active = true;
 
-                active = Events.OnWaveEnded();
-
-                yield return new WaitUntil(() => !active);
+                while (active)
+                {
+                    active = Events.OnWaveEnded();
+                    yield return null;
+                }
 
                 AudioManager.PlayRandomMusic(true);
 
