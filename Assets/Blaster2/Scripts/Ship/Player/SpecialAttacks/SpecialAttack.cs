@@ -32,7 +32,7 @@ public class SpecialAttack : PlayerWeapon
                 if (m_CountDownTimer.countToZero())
                 {
 
-                    playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                    playerData.SetSuperMeter(m_CountDownTimer.m_CountdownTimer / SuperChargeTime);
 
                 }
 
@@ -47,7 +47,7 @@ public class SpecialAttack : PlayerWeapon
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerData.PowerUpLevel = 0;
+                playerData.SetSuperMeter(0);
             }
         }
 

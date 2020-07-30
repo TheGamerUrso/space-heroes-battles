@@ -26,9 +26,12 @@ public class SpreadWeapon : WeaponScript
         int posToShoot = weaponData.Radius;
         for (int i = 0; i < m_NumberOfBullets; i++)
         {
-            GameObject newBullet = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-            newBullet.transform.position = transform.position;
-            newBullet.transform.rotation = Quaternion.Euler(new Vector3(0, posToShoot, 0));
+            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+            InstansiatedProjectile.SetActive(true);
+
+
+            InstansiatedProjectile.transform.position = transform.position;
+            InstansiatedProjectile.transform.rotation = Quaternion.Euler(new Vector3(0, posToShoot, 0));
 
             EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
             enemyProjectile.Setup(this);

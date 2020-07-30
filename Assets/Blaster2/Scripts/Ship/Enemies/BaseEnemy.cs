@@ -136,6 +136,7 @@ public class BaseEnemy : Ship, IDamagable
             IsAlive = false;
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
+            explostion.SetActive(true);
             Events.EnemyDied?.Invoke(Id, this);
             HealthBar.Hide();
             gameObject.SetActive(false);

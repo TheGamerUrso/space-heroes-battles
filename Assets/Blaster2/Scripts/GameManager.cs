@@ -419,9 +419,7 @@ public class GameManager : MonoSingleton<GameManager>
         Scene scene = SceneManager.GetActiveScene();
         Level level = GetMission((LevelEnum)scene.buildIndex);
 
-        var killed = Game.EnemyKilled / Game.EnemySpawnInTotal;
-        var collected = Game.CoinPicked / Game.EnemySpawnInTotal;
-
+        var killed = (Game.EnemySpawnInTotal - Game.EnemyKilled) / Game.EnemySpawnInTotal;
 
         var levelObjectiveDatas = level.objectiveListData;
 

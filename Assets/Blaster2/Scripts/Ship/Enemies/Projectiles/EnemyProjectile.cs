@@ -35,6 +35,7 @@ public class EnemyProjectile : Projectile
     {
         explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
         explosion.transform.SetPositionAndRotation(transform.position + Vector3.up * 2, Quaternion.identity);
+        explosion.SetActive(true);
         gameObject.SetActive(false);
     }
 

@@ -20,6 +20,8 @@ public class PlanetGenerator : MonoBehaviour
             GameObject planet = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.Planet) as GameObject;
             planet.transform.position = new Vector3(UnityEngine.Random.Range(-600, 600), -500, 2300);
             planet.transform.rotation = Quaternion.identity;
+
+            planet.SetActive(true);
         }
     }
 }

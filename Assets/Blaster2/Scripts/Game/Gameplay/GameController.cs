@@ -123,7 +123,7 @@ public class GameController : MonoSingleton<GameController>
     IEnumerator StartGameDelay()
     {
         AudioManager.PlayRandomMusic(true);
-        playerData.SetPowerUpAmmount(0);
+        playerData.SetSuperMeter(0);
         playerData.ResetWeaponPowerUPCollected();
         Game.Reset();
 
@@ -193,7 +193,7 @@ public class GameController : MonoSingleton<GameController>
                 GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
             }
 
-            playerData.SetPowerUpAmmount(.025f);
+            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
 
             int kills = Game.EnemyKilled + 1;
             int score = baseEnemy.EnemyData.EnemyValue;
@@ -275,4 +275,6 @@ public class GameController : MonoSingleton<GameController>
         Events.OnWin?.Invoke(this);
 
     }
+
+   
 }

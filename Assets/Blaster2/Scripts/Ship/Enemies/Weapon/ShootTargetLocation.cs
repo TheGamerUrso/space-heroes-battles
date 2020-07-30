@@ -29,6 +29,8 @@ public class ShootTargetLocation : WeaponScript
                 playerLastLocation = Target.transform.position + (new Vector3(Random.insideUnitCircle.x, 0, Random.insideUnitCircle.y) * 2) - transform.position;
                 playerLastLocation.Normalize();
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+                InstansiatedProjectile.SetActive(true);
+
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(playerLastLocation);
 

@@ -21,6 +21,9 @@ public class GuiManager : MonoSingleton<GuiManager>
     private TransmitionWidget transmittionWidget;
     private float timer;
 
+    public GameObject WarningSign;
+
+
     protected override void OnCleanup()
     {
         base.OnCleanup();
@@ -43,7 +46,7 @@ public class GuiManager : MonoSingleton<GuiManager>
         timer = 1;
         var panelPause = Instantiate(UIPrefabs[1], transform, false);
         var panelGameOver = Instantiate(UIPrefabs[2], transform, false);
-        var panelWin = Instantiate(UIPrefabs[3], transform, false);    
+        var panelWin = Instantiate(UIPrefabs[3], transform, false);
 
         panelGameOver.name = UIPrefabs[2].name;
         panelWin.name = UIPrefabs[3].name;
@@ -80,7 +83,6 @@ public class GuiManager : MonoSingleton<GuiManager>
             }
         }
     }
-
 
     public void ReplayButton()
     {
@@ -127,6 +129,8 @@ public class GuiManager : MonoSingleton<GuiManager>
     public static void CreateFloatingText(string text, Vector3 pos)
     {
         GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
+        m_floatingTextScript.SetActive(true);
+
         m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(text, pos);
     }
 
@@ -140,7 +144,7 @@ public class GuiManager : MonoSingleton<GuiManager>
         Game.IsGameOver = true;
 
         Game.IsSurvivalMode = false;
-  
+
         GameManager.Instance.LoadMainenu();
 
         UIView activeMenuGO = null;

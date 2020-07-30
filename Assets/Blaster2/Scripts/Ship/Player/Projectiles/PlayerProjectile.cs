@@ -25,7 +25,8 @@ public class PlayerProjectile : Projectile
 
     public override void DestoryNow()
     {
-        GameObject explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        explode.SetActive(true);
         explode.transform.position = transform.position;
         gameObject.SetActive(false);
     }

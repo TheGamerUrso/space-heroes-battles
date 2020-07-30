@@ -207,8 +207,10 @@ public class PlayerShip : Ship, IDamagable
     public void Death()
     {
         Game.UseSlowMo = false;
+
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(playerStats.ExplostionEffect);
         explostion.transform.position = transform.position;
+        explostion.SetActive(true);
 
         Events.PlayerLost?.Invoke();
         gameObject.SetActive(false);
@@ -384,11 +386,7 @@ public class PlayerShip : Ship, IDamagable
             }
             else
             {
-                if (playerData != null)
-                {
-                    playerData.IncreasePowerUp(.025f);
-                }
-
+                playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
             }
 
             TempFireRateUpgrade = false;

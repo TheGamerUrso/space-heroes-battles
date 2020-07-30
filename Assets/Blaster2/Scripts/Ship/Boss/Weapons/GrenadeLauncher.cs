@@ -16,12 +16,16 @@ public class GrenadeLauncher : WeaponScript
         {
             newShot = Time.time + FireRate;
             int pos = Random.Range(0, Cannons.Length);
-            GameObject bomb = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-            bomb.transform.position = Cannons[pos].transform.position;
-            bomb.transform.rotation = Cannons[pos].rotation;
+
+            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+            InstansiatedProjectile.transform.position = Cannons[pos].transform.position;
+            InstansiatedProjectile.transform.rotation = Cannons[pos].rotation;
 
             Vector3 shootDir = Cannons[pos].forward;
-            Projectile enemyProjectile = bomb.GetComponent<Projectile>();
+
+            InstansiatedProjectile.SetActive(true);
+
+            Projectile enemyProjectile = InstansiatedProjectile.GetComponent<Projectile>();
             enemyProjectile.Setup(this);
             enemyProjectile.SetShootDir(shootDir);
 

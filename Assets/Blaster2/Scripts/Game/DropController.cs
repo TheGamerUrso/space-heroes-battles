@@ -151,6 +151,10 @@ public class DropController : MonoSingleton<DropController>
                 GameObject drop = PoolManager.Instance.GetObjectFromPool(ListOfDropItems[0].DropItemsType);
                 drop.transform.position = transform.position;
                 drop.transform.rotation = Quaternion.identity;
+
+
+                extraDrop.SetActive(true);
+                drop.SetActive(true);
             }
             else if (dropExtra == false)
             {
@@ -158,6 +162,7 @@ public class DropController : MonoSingleton<DropController>
                 extraDrop.transform.position = transform.position;
                 extraDrop.transform.rotation = Quaternion.identity;
                 Game.TotalCoinsInGame++;
+                extraDrop.SetActive(true);
             }
              return;
         }

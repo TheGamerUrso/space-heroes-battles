@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -60,9 +61,11 @@ public class StoryMode : BaseGameMode
         waitForCooldown = new WaitForSeconds(cooldown);
 
         var startingTotalEnemies = TotalEnemies;
-        int randomNumb = 0;
+        var randomNumb = 0;
         var range = 0;
         var top = 0;
+        var repetition = 0;
+        EnemyElement previousSpawnEnemy = null;
 
         if ((GameController.Instance.currentGameState == GameController.GameState.START))
         {
@@ -74,6 +77,7 @@ public class StoryMode : BaseGameMode
 
         while (!Game.IsGameOver)
         {
+
             if (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState == GameController.GameState.GAME)
             {
                 yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
@@ -84,6 +88,7 @@ public class StoryMode : BaseGameMode
             while (TotalEnemies > 0 && !Game.IsGameOver)
             {
                 availableEnemie = enemyElements.GetRange(0, availableEnemies);
+
 
                 do
                 {
@@ -98,7 +103,7 @@ public class StoryMode : BaseGameMode
                         range += tempList[i].presentage;
                     }
                 }
-                
+
                 var rand = Random.Range(0, range);
 
                 for (int i = 0; i < tempList.Count; i++)
@@ -108,6 +113,22 @@ public class StoryMode : BaseGameMode
                     {
                         enemyElement = tempList[i];
                         randomNumb = i;
+
+                        if (tempList.Count > 1)
+                        {
+                            if (previousSpawnEnemy != null)
+                            {
+                                if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
+                                {
+                                    repetition++;
+                                }
+                                else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
+                                {
+                                    repetition = 0;
+                                }
+                            }
+                        }
+
                         break;
                     }
                 }
@@ -117,13 +138,16 @@ public class StoryMode : BaseGameMode
                     yield return new WaitUntil(() => !pause);
                 }
 
-                if (TotalEnemies - 1 >= 0)
+                if (repetition <= 3 || tempList.Count > 1)
                 {
-                    enemGO = SpawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), LevelDifficulty);
-                    Enemies.Add(enemGO);
+                    if (TotalEnemies - 1 >= 0)
+                    {
+                        enemGO = SpawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), LevelDifficulty);
+                        Enemies.Add(enemGO);
+                        previousSpawnEnemy = enemyElement;
+                    }
+                    yield return waitForCooldown;
                 }
-
-                yield return waitForCooldown;
             }
 
             if (playerShip.CurrentHealth > 0)

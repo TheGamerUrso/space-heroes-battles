@@ -94,7 +94,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 10, y: 10, z: 1}
+  m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &3284521956280892763
 AudioSource:
@@ -364,6 +364,7 @@ GameObject:
   m_Component:
   - component: {fileID: 261318949141982497}
   - component: {fileID: 7782219445370976390}
+  - component: {fileID: 1384746468587515203}
   m_Layer: 19
   m_Name: Pivot
   m_TagString: Untagged
@@ -406,6 +407,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &1384746468587515203
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9022633802110794449}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4f61a5e0d1ed3741a3b76fd194643c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Random: 0
+  m_Rotation: {x: 0, y: 75, z: 0}
+  useDeltaTime: 1
 --- !u!1001 &3620986262333928759
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -427,7 +443,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4976213834678592, guid: 6d7f4fb9a58cedf4998b9bac4a0a6bbf, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.37
+      value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4976213834678592, guid: 6d7f4fb9a58cedf4998b9bac4a0a6bbf, type: 3}
       propertyPath: m_LocalPosition.z

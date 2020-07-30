@@ -13,6 +13,8 @@ public class RocketLauncher : SpecialAttack
                 InstansiatedProjectile =
                     PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
 
+                InstansiatedProjectile.SetActive(true);
+
                 InstansiatedProjectile.transform.position = transform.position;
 
                 Projectile enemyProjectile = InstansiatedProjectile.GetComponent<Projectile>();

@@ -24,7 +24,7 @@ public class Blaster : WeaponScript
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
                 dir = Cannons[i].position + Cannons[i].forward;
                 shootDir = (dir - Cannons[i].position).normalized;
-
+                InstansiatedProjectile.SetActive(true);
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 

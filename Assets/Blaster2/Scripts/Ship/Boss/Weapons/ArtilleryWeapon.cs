@@ -43,6 +43,8 @@ public class ArtilleryWeapon : Blaster
                 dir = Cannons[i].position + Cannons[i].up;
                 shootDir = (dir - Cannons[i].position).normalized;
 
+                InstansiatedProjectile.SetActive(true);
+
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 

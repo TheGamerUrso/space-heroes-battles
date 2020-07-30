@@ -70,7 +70,7 @@ public class LaserSuper : SpecialAttack
 
                     if (m_CountDownTimer.countToZero())
                     {
-                        playerData.PowerUpLevel = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
+                        playerData.SetSuperMeter(m_CountDownTimer.m_CountdownTimer / SuperChargeTime);
                     }
 
                     Shoot();
@@ -82,7 +82,7 @@ public class LaserSuper : SpecialAttack
                 laiser.DeactiveLaser();
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerData.PowerUpLevel = 0;
+                playerData.SetSuperMeter(0);
             }
         }
 

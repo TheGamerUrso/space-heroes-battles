@@ -58,7 +58,7 @@ public class QuestManager : MonoBehaviour
                     objectiveData = new ObjectiveData(i, "BOUNTY", UnityEngine.Random.Range(1, 5), 0, (int)objectiveType, "Kill BOSS <color=orange> X  </color>");
                     break;
                 case ObjectiveTypeEnum.SCORE:
-                    objectiveData = new ObjectiveData(i, "BOUNTY", UnityEngine.Random.Range(10000, 50000), 0, (int)objectiveType, "Achieve <color=orange> X  </color> Score In a Level");
+                    objectiveData = new ObjectiveData(i, "SCORE", UnityEngine.Random.Range(10000, 50000), 0, (int)objectiveType, "Achieve <color=orange> X  </color> Score In a Level");
                     break;
             }
 

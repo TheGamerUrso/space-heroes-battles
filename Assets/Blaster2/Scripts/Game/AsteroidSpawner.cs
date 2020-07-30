@@ -39,6 +39,8 @@ public class AsteroidSpawner : MonoBehaviour
 
         GameObject asteroid = PoolManager.Instance.GetObjectFromPool(poolGameObjectType);
 
+        asteroid.SetActive(true);
+
         float ypos = UnityEngine.Random.Range(yMaxSpawn.x, yMaxSpawn.y);
         spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), ypos, (Constants.m_ZMax) + (ypos * -1));
 

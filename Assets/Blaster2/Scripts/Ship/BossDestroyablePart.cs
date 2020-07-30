@@ -85,6 +85,7 @@ public class BossDestroyablePart : MonoBehaviour, IDamagable
     {
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
         explostion.transform.position = transform.position;
+        explostion.SetActive(true);
         fireEffect.SetActive(true);
     }
     public void Attack(Action<bool> callback)

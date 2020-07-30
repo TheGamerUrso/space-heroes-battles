@@ -36,7 +36,7 @@ public class BaseBossEnemy : BaseEnemy
         if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0)
         {
             return;
-        }  
+        }
 
         base.TakeDamage(damage);
 
@@ -46,13 +46,7 @@ public class BaseBossEnemy : BaseEnemy
     {
         hitIndex++;
         OnBossHit?.Invoke(hitIndex, numberOfHits);
-
-   
-
-        if (playerData != null)
-        {
-            playerData.IncreasePowerUp(.05f);
-        }
+        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.5f);
     }
 
     public override void Update()
@@ -109,7 +103,21 @@ public class BaseBossEnemy : BaseEnemy
         if (CurrentHealth < 0)
         {
             EnableColliders(false);
-            Instantiate(ExplosionsDeathEffect, transform.position, Quaternion.identity);
+
+            Vector3[] positions ={
+                 transform.position,
+                transform.position + (transform.right * 50),
+                  transform.position - (transform.right * 50),
+                    transform.position + (transform.forward * 50),
+                      transform.position - (transform.forward * 50)
+            };
+
+            for (int i = 0; i < 5; i++)
+            {
+                var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
+                explostion.transform.position = positions[i];
+                explostion.SetActive(true);
+            }
         }
 
         yield return new WaitForSeconds(4.0f);

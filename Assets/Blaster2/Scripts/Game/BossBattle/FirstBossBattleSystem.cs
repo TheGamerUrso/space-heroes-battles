@@ -37,7 +37,7 @@ public class FirstBossBattleSystem : BaseBossBattle
 
         if (playerData != null)
         {
-            playerData.IncreasePowerUp(.05f);
+            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.05f);
         }
 
         hitIndex++;

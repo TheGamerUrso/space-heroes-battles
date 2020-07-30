@@ -75,6 +75,8 @@ public class GrenadeProjectile : EnemyProjectile
     {
         InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
 
+        InstansiatedProjectile.SetActive(true);
+
         InstansiatedProjectile.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(pos[i]));
 
         InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(weaponScript);

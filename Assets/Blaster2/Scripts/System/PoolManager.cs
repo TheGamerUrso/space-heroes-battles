@@ -163,7 +163,6 @@ public class PoolManager : MonoSingleton<PoolManager>
             tempGameObjectPrefab = TempNumberOfGameObject[x];
             if (tempGameObjectPrefab.activeInHierarchy == false)
             {
-                tempGameObjectPrefab.SetActive(true);
                 return tempGameObjectPrefab;
             }
             else

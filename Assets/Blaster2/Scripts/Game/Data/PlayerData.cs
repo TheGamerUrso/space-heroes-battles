@@ -55,7 +55,10 @@ public class PlayerData
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
-    public List<Achievement> Achievements; 
+    public List<Achievement> Achievements;
+
+    public int multiplier = 1;
+    public int ammount = 50;
 
     public PlayerData() { }
 
@@ -88,8 +91,8 @@ public class PlayerData
 
     public void NewGame()
     {
-        PowerUpLevel = 0;
-        PowerPackCollected = 0;
+        SetSuperMeter(0);
+        SetPowerPackCollected(0);
     }
 
     public void RemoveCoin(int ammount)
@@ -126,9 +129,13 @@ public class PlayerData
         Events.OnPowerPackCollected?.Invoke(PowerPackCollected);
     }
 
-    public void SetPowerUpAmmount(float ammount)
+    public void SetSuperMeter(float ammount)
     {
-        PowerUpLevel += ammount;
+        PowerUpLevel = ammount;
+        if (PowerUpLevel > 1)
+        {
+            PowerUpLevel = 1;
+        }
         Events.PowerUpLevelValueChanged?.Invoke(PowerUpLevel);
     }
 
@@ -248,7 +255,7 @@ public class PlayerData
             {
                 Level++;
                 XP = 0;
-                xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
+                xpToLevel = (Level / multiplier + Level % multiplier) * ammount * Mathf.Pow(multiplier, Level / multiplier);
 
                 Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
             }
@@ -273,14 +280,7 @@ public class PlayerData
         currentPlayerShipSelected.Upgrades[upgrade] = value;
         SaveSystem.SaveGame();
     }
-    public void IncreasePowerUp(float value)
-    {
-        PowerUpLevel += value;
-        if (PowerUpLevel > 1)
-        {
-            PowerUpLevel = 1;
-        }
-    }
+
     public float GetPowerUpLevelPresentage()
     {
         return PowerUpLevel / 1;

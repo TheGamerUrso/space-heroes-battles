@@ -102,7 +102,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     {
         if (baseEnemy.Id.Equals(id))
         {
-            playerData.SetPowerUpAmmount(0.025f);
+            playerData.SetSuperMeter(playerData.PowerUpLevel +  0.025f);
         }
     }
 
@@ -118,7 +118,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
     {
-        playerData.SetPowerUpAmmount(0.025f);
+        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
     }
 
     public virtual void BossDiedCallback(string id, BaseEnemy baseEnemy)

@@ -42,6 +42,9 @@ public class RapidFireBlaster : Blaster
             InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             dir = Cannons[i].position + Cannons[i].forward;
             shootDir = (dir - Cannons[i].position).normalized;
+
+            InstansiatedProjectile.SetActive(true);
+
             InstansiatedProjectile.transform.position = Cannons[i].position;
             InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 
@@ -49,6 +52,8 @@ public class RapidFireBlaster : Blaster
             enemyProjectile.Setup(this);
             enemyProjectile.SetShootDir(shootDir);
 
+
+          
             yield return new WaitForSeconds(weaponData.delayBetweenShots);
         }
         AboutToShoot?.Invoke(false);

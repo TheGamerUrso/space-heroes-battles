@@ -45,7 +45,7 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 5, y: 5, z: 2}
+  m_Size: {x: 5, y: 5, z: 5}
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!82 &-2902371998952344208
 AudioSource:
@@ -190,6 +190,7 @@ GameObject:
   m_Component:
   - component: {fileID: 259027365925482286}
   - component: {fileID: 7209718429834026999}
+  - component: {fileID: 2062624147646500436}
   m_Layer: 19
   m_Name: Pivot
   m_TagString: Untagged
@@ -232,6 +233,21 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2062624147646500436
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1011029424759967205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d4f61a5e0d1ed3741a3b76fd194643c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Random: 0
+  m_Rotation: {x: 0, y: 75, z: 0}
+  useDeltaTime: 1
 --- !u!1 &4002416830972459971
 GameObject:
   m_ObjectHideFlags: 0
@@ -5141,7 +5157,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3105850965961062348}
-  - component: {fileID: 2673630321713878000}
   m_Layer: 19
   m_Name: Item
   m_TagString: Untagged
@@ -5166,21 +5181,6 @@ Transform:
   m_Father: {fileID: 259027365925482286}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2673630321713878000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6125446383974817305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d4f61a5e0d1ed3741a3b76fd194643c1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Random: 0
-  m_Rotation: {x: 0, y: 75, z: 0}
-  useDeltaTime: 1
 --- !u!1001 &2539287190422564405
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5404,7 +5404,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4171512263729966, guid: 8377235c67ae2dd43afcdc05fa8f96f0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -2.5
       objectReference: {fileID: 0}
     - target: {fileID: 4171512263729966, guid: 8377235c67ae2dd43afcdc05fa8f96f0, type: 3}
       propertyPath: m_LocalPosition.z
