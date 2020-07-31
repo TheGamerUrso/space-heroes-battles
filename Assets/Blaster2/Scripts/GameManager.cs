@@ -411,7 +411,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SetSurvivalScore(int ammount)
     {
-        playerData.SetScore(currentLevelSelected.mission.ID, ammount);
+        playerData.SetScore((int)LevelEnum.Level0, ammount);
     }
 
     public void PlayerChallengesCheck()

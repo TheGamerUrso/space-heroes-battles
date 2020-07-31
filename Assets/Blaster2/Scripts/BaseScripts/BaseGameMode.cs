@@ -39,7 +39,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected PlayerShip playerShip;
     protected EnemyElement enemyElement;
 
-    protected GameObject currentBoss;
+    protected BaseBossEnemy currentBoss;
     protected PlayerData playerData;
 
     public GameInfo gameInfo;
@@ -53,6 +53,9 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected List<EnemyElement> tempList = new List<EnemyElement>();
     protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
 
+    protected WaitForSeconds waitForCooldown = new WaitForSeconds(1);
+    protected WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
+    protected WaitForSeconds waitForSec;
 
     public int EnemySpawnedInTotal { get; set; }
 
@@ -87,18 +90,9 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         }
     }
 
-    protected IEnumerator StartGameDelay()
+    protected virtual IEnumerator StartGameDelay()
     {
-        yield return new WaitForSeconds(2.0f);
-        StartGame();
-    }
-
-    public virtual void StartGame()
-    {
-        string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
-        GuiManager.PlayTrasmition(transmitions);
-
-        StartCoroutine(Spawn());
+        yield return null;
     }
 
     public virtual IEnumerator Spawn()
@@ -141,29 +135,66 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     {
         if (baseEnemy.Id.Equals(id))
         {
-            baseEnemy.enemyElement.currentNumberInScene--;
-
-            DropController.PickRandomDropItem(baseEnemy.transform);
-
             Enemies.Remove(baseEnemy.gameObject);
 
             spawnInfo.TotalEnemies--;
 
             gameInfo.BossBattleInitiated = false;
 
-            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.BOUNTY, int.Parse(id));
+            int BossId = id[id.Length - 1];
+
+            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.BOUNTY, BossId);
         }
     }
 
-    public void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
+    public virtual void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
     {
-        if (baseEnemy.Id.Equals(id))
+        if (baseEnemy.Id.Equals(baseEnemy.Id))
         {
             baseEnemy.enemyElement.currentNumberInScene--;
+            DropController.PickRandomDropItem(baseEnemy.transform);
 
             Enemies.Remove(baseEnemy.gameObject);
 
-            DropController.PickRandomDropItem(baseEnemy.transform);
+            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+
+            int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
+            int EnemyLevel = baseEnemy.Level;
+            int levelDiffrence = PlayerLevel / EnemyLevel;
+
+            if (levelDiffrence == 0)
+            {
+                levelDiffrence = 1;
+            }
+
+            float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+            playerData.EarnXP(XPEarned);
+
+            GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
+
+            int kills = Game.EnemyKilled + 1;
+            int score = baseEnemy.EnemyData.EnemyValue;
+
+            if (Game.Multiplier > 0)
+            {
+                score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
+                GuiManager.SetScoreMultipler(score + "(x" + Game.Multiplier + ")");
+            }
+            else
+            {
+                GuiManager.SetScoreMultipler("" + score);
+            }
+
+            Game.SetCurrentEnemyKills(kills);
+
+            Game.SetScore(score);
+
+            Game.IncreaseMultiplier();
+
+            playerData.Kills = kills;
+
+            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, 1);
+            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
         }
     }
     public EnemyElement GetEnemyElemeny(string id)

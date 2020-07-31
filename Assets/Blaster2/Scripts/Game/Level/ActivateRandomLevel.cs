@@ -37,7 +37,7 @@ public class ActivateRandomLevel : MonoBehaviour
     {
         cameraMain = Camera.main;
         survivalMode = GameObject.FindObjectOfType<SurvivalMode>();
-        Events.OnWaveEnded = ActivateHyperdrive;
+        Events.HyperspaceEnded = ActivateHyperdrive;
         defaultLayer = cameraMain.cullingMask;
 
 

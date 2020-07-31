@@ -21,16 +21,18 @@ public class SpawnEnemies
 {
     private static Vector3 previousPos;
 
-    public static GameObject SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
+    public static BaseBossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
     {
         AudioManager.Instance.PlayMusicById("Boss", true);
         GameObject currentBoss = GameObject.Instantiate(BossPrefab);
-        BaseEnemy enemy = currentBoss.GetComponentInChildren<BaseEnemy>();
+        currentBoss.name = BossPrefab.name;
 
+        BaseBossEnemy enemy = currentBoss.GetComponentInChildren<BaseBossEnemy>();
+        enemy.Id = currentBoss.name;
         enemy.SetStats(LevelDifficulty);
 
         BaseGameMode.Instance.spawnInfo.TotalEnemies++;
-        return currentBoss;
+        return enemy;
     }
 
     public static GameObject SpawnEnemyElement(EnemyElement enemyElement, int LevelDifficulty = 1)
@@ -38,8 +40,6 @@ public class SpawnEnemies
         enemyElement.currentNumberInScene++;
 
         Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), 0, Constants.m_ZMax);
-
-        Vector3 worldToScreen = Camera.main.WorldToScreenPoint(spawnPos);
 
         if (enemyElement.gameObjectType == PoolGameObjectType.Enemy2 ||
             enemyElement.gameObjectType == PoolGameObjectType.Enemy6 ||
@@ -50,6 +50,8 @@ public class SpawnEnemies
                 Vector3 diff = spawnPos - previousPos;
                 if (diff.magnitude <= 10)
                 {
+                    int randDist = UnityEngine.Random.Range(40, 60);
+
                     if (spawnPos.x > previousPos.x)
                     {
                         spawnPos.x += 20;
@@ -67,18 +69,16 @@ public class SpawnEnemies
                     {
                         spawnPos.x -= 20;
                     }
-
-                    if (worldToScreen.x + 20 >= Screen.width)
+            
+                    if (spawnPos.x + randDist >= Constants.m_XMax)
                     {
-                        spawnPos.x -= UnityEngine.Random.Range(40, 60);
+                        spawnPos.x -= randDist;
                     }
 
-                    if (worldToScreen.x - 20 <= 0)
+                    if ((spawnPos.x - randDist <= Constants.m_XMin))
                     {
-                        spawnPos.x += UnityEngine.Random.Range(40, 60);
-                    }
-
-                    Debug.Log(spawnPos + " : " + worldToScreen + " : " + diff);
+                        spawnPos.x += randDist;
+                    }          
                 }
             }
 

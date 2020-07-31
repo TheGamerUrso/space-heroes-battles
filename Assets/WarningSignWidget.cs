@@ -53,8 +53,6 @@ public class WarningSignWidget : MonoBehaviour
         {
             bool isOffScreen = targetPositionScreenPoint.x <= 0 || targetPositionScreenPoint.x >= Screen.width || targetPositionScreenPoint.y <= 0 || targetPositionScreenPoint.y >= Screen.height;
 
-            WarningSign.SetActive(true);
-
             if (isOffScreen)
             {
                 WarningSign.SetActive(false);
@@ -73,6 +71,17 @@ public class WarningSignWidget : MonoBehaviour
             angle = UtilsClass.GetAngleFromVector(targetDir);
 
             transform.eulerAngles = new Vector3(0, 0, angle);
+
+
+            if (Target.activeInHierarchy)
+            {
+                WarningSign.SetActive(true);
+            }
+            else
+            {
+                WarningSign.SetActive(false);
+                Target = null;
+            }
         }
 
     }

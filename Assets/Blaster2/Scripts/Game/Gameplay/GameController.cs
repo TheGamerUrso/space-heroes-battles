@@ -75,13 +75,17 @@ public class GameController : MonoSingleton<GameController>
     {
         base.OnCleanup();
 
-        Events.PlayerLost -= PlayerLostCallback;
+        Events.PlayerLost -= GameOver;
         Events.GameEnded -= Win;
         Events.EnemyDied -= EnemyDied;
     }
+
     protected override void Awake()
     {
         base.Awake();
+
+        Application.targetFrameRate = 60;
+        Game.UseSlowMo = false;
 
         baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
 
@@ -102,75 +106,21 @@ public class GameController : MonoSingleton<GameController>
         {
             Instantiate(Tutorial, transform, false);
         }
+
+        Events.PlayerLost += GameOver;
+        Events.GameEnded += Win;
+        Events.EnemyDied += EnemyDied;
+
     }
 
     void Start()
     {
-        Application.targetFrameRate = 60;
-
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-
-        Events.PlayerLost += PlayerLostCallback;
-        Events.GameEnded += Win;
-        Events.EnemyDied += EnemyDied;
-
-        Game.UseSlowMo = false;
-
+   
         SetGameState(GameState.START);
     }
 
-    IEnumerator StartGameDelay()
-    {
-        AudioManager.PlayRandomMusic(true);
-        playerData.SetSuperMeter(0);
-        playerData.ResetWeaponPowerUPCollected();
-        Game.Reset();
-
-        yield return new WaitForSeconds(1.0f);
-
-        if (PlayerManager.GetPlayer() == null)
-        {
-            int shipSelected = playerData.CurrrentSelectedShip;
-            player = PlayerManager.CreatePlayer(shipSelected);
-            playerShip = player.GetComponentInChildren<PlayerShip>();
-        }
-
-        baseGameMode.InitReference(playerData, playerShip);
-        playerShip.DisableFire();
-        yield return new WaitForSeconds(2.0f);
-        playerShip.EnableFire();
-        SetGameState(GameState.GAME);
-    }
-
-    public void SetGameState(GameState gameState)
-    {
-        switch (gameState)
-        {
-            case GameState.START:
-                StartCoroutine(StartGameDelay());
-                break;
-            case GameState.GAME:
-
-                break;
-            case GameState.GAMEOVER:
-                if (Game.IsGameOver == false)
-                {
-                    Game.IsGameOver = true;
-                    StartCoroutine(DelayGameOver());
-                }
-                break;
-            case GameState.WIN:
-                if (!Game.IsGameOver)
-                {
-                    Game.IsGameOver = true;
-
-                    StartCoroutine(DelayWinScreen());
-                }
-                break;
-        }
-        currentGameState = gameState;
-    }
 
     private void EnemyDied(string name, BaseEnemy baseEnemy)
     {
@@ -222,11 +172,6 @@ public class GameController : MonoSingleton<GameController>
         }
     }
 
-    private void PlayerLostCallback()
-    {
-        GameOver();
-    }
-
     public void Win()
     {
         SetGameState(GameState.WIN);
@@ -235,6 +180,29 @@ public class GameController : MonoSingleton<GameController>
     public void GameOver()
     {
         SetGameState(GameState.GAMEOVER);
+    }
+
+    IEnumerator StartGameDelay()
+    {
+        AudioManager.PlayRandomMusic(true);
+        playerData.SetSuperMeter(0);
+        playerData.ResetWeaponPowerUPCollected();
+        Game.Reset();
+
+        yield return new WaitForSeconds(1.0f);
+
+        if (PlayerManager.GetPlayer() == null)
+        {
+            int shipSelected = playerData.CurrrentSelectedShip;
+            player = PlayerManager.CreatePlayer(shipSelected);
+            playerShip = player.GetComponentInChildren<PlayerShip>();
+        }
+
+        baseGameMode.InitReference(playerData, playerShip);
+        playerShip.DisableFire();
+        yield return new WaitForSeconds(2.0f);
+        playerShip.EnableFire();
+        SetGameState(GameState.GAME);
     }
 
     IEnumerator DelayGameOver()
@@ -276,5 +244,34 @@ public class GameController : MonoSingleton<GameController>
 
     }
 
-   
+    public void SetGameState(GameState gameState)
+    {
+        switch (gameState)
+        {
+            case GameState.START:
+                StartCoroutine(StartGameDelay());
+                break;
+            case GameState.GAME:
+
+                break;
+            case GameState.GAMEOVER:
+                if (Game.IsGameOver == false)
+                {
+                    Game.IsGameOver = true;
+                    StartCoroutine(DelayGameOver());
+                }
+                break;
+            case GameState.WIN:
+                if (!Game.IsGameOver)
+                {
+                    Game.IsGameOver = true;
+
+                    StartCoroutine(DelayWinScreen());
+                }
+                break;
+        }
+        currentGameState = gameState;
+    }
+
+
 }

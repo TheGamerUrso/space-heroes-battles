@@ -7,10 +7,6 @@ using UnityEngine.SceneManagement;
 
 public class StoryMode : BaseGameMode
 {
-    WaitForSeconds waitForCooldown = new WaitForSeconds(1);
-    WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
-    WaitForSeconds waitForSec;
-
     public override void Start()
     {
         base.Start();
@@ -47,9 +43,10 @@ public class StoryMode : BaseGameMode
         StartCoroutine(StartGameDelay());
     }
 
-
-    public override void StartGame()
+    protected override IEnumerator StartGameDelay()
     {
+        yield return waitForCooldown;
+
         string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
         GuiManager.PlayTrasmition(transmitions);
 
@@ -173,7 +170,7 @@ public class StoryMode : BaseGameMode
 
                         currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab,gameInfo.LevelDifficulty);
 
-                        Enemies.Add(currentBoss);
+                        Enemies.Add(currentBoss.gameObject);
                     }
 
                     if (gameInfo.BossBattleInitiated)

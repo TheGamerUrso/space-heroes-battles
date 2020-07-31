@@ -18,6 +18,10 @@ public class LowHealthIndicator : MonoBehaviour
 
     public AudioClip alarmSFX;
     public AudioSource audioSource;
+
+    private float count;
+    private float timer;
+
     private void Start()
     {
         image.gameObject.SetActive(Active);
@@ -32,41 +36,35 @@ public class LowHealthIndicator : MonoBehaviour
             Color c = image.color;
             c.a = Mathf.Lerp(c.a, animationCurve.Evaluate(Time.time), 1);
             image.color = c;
+
+            timer -= Time.deltaTime;
+
+            if (timer <= 0)
+            {
+                timer = 1;
+                count++;
+                audioSource.PlayOneShot(alarmSFX);                
+            }
         }
 
         if (playerShip.GetHealthPresentage() <= 0 || playerShip.GetHealthPresentage() > .5f)
         {
             if (Active)
             {
-                StopAllCoroutines();
                 Active = false;
+                count = 0;
+                timer = 0;
             }
         }
         else if (playerShip.GetHealthPresentage() <= .5f)
         {
             if (!Active)
             {
-                StopAllCoroutines();
                 Active = true;
-                StartCoroutine(PlayAlarm());
+                image.color = defaultColor;
+                count = 0;
                 image.gameObject.SetActive(true);
             }
         }
     }
-
-    IEnumerator PlayAlarm()
-    {
-        image.color = defaultColor;
-
-        var count = 0;
-
-        while (count <= 3)
-        {
-            audioSource.PlayOneShot(alarmSFX);
-            yield return new WaitForSeconds(1.0f);
-            count++;
-        }
-    }
-
-
 }

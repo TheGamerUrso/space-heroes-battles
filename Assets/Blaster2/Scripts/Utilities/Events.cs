@@ -35,7 +35,7 @@ public class Events
     public static Action PlayerLost;
 
 
-    public static Func<bool> OnWaveEnded;
+    public static Func<bool> HyperspaceEnded;
 
 
     /**
