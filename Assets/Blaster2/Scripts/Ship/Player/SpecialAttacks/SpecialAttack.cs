@@ -13,10 +13,6 @@ public class SpecialAttack : PlayerWeapon
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerShip = ship.GetComponent<PlayerShip>();
-
-        SuperChargeTime = playerShipData.SuperChargeTime;
-        Damage = playerShipData.SuperDamage;
-        FireRate = playerShipData.FireRate;
     }
 
     public override void Update()
@@ -83,9 +79,10 @@ public class SpecialAttack : PlayerWeapon
             return 0;
     }
 
-    public override void SetStats(PlayerShipData playerShipData)
+    public override void SetStats(PlayerShipData playerShipData,int weaponType = 1)
     {
         Damage = playerShipData.SuperDamage;
         SuperChargeTime = playerShipData.SuperChargeTime;
+        FireRate = playerShipData.FireRate;
     }
 }

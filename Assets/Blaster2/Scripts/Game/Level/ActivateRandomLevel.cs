@@ -33,6 +33,11 @@ public class ActivateRandomLevel : MonoBehaviour
 
     private GameObject previousLevel;
 
+    public AudioSource audioSource;
+    public AudioClip starting;
+    public AudioClip traveling;
+    public AudioClip ending;
+
     private void Awake()
     {
         cameraMain = Camera.main;
@@ -84,7 +89,8 @@ public class ActivateRandomLevel : MonoBehaviour
 
     IEnumerator Hyperdrive()
     {
-        active = true;
+        audioSource.PlayOneShot(starting);
+           active = true;
         text.text = "Hyperdrive in";
 
         yield return new WaitForSeconds(.5f);
@@ -102,7 +108,7 @@ public class ActivateRandomLevel : MonoBehaviour
 
         yield return new WaitForSeconds(.5f);
         text.text = "";
-
+        audioSource.PlayOneShot(traveling);
         fadeIn = true;
         while (c.a < 1)
         {
@@ -128,6 +134,7 @@ public class ActivateRandomLevel : MonoBehaviour
         ChooseNewLevel();
 
         yield return new WaitForSeconds(1.0f);
+        audioSource.PlayOneShot(ending);
         cameraMain.cullingMask = defaultLayer;
         WrapTunnelFX.SetActive(false);
         active = false;

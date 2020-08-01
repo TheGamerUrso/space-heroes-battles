@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using DG.Tweening;
+using System.Collections;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,20 +10,21 @@ public class SurvivalMode : BaseGameMode
     private bool BossWave = false;
     private GameObject BossPrefab;
     private bool FirstRun;
+    public override void InitReference(PlayerData playerData, PlayerShip playerShip)
+    {
+        base.InitReference(playerData, playerShip);
+        gameInfo.LevelDifficulty = playerData.GetCurrentPlayerShipData().level;
+    }
 
     public override void Start()
     {
         base.Start();
-
-        AudioManager.PlayRandomMusic(true);
 
         playerShip = PlayerManager.GetPlayer();
 
         Game.IsSurvivalMode = true;
 
         gameInfo.waves = 0;
-
-        gameInfo.LevelDifficulty = level_SO.LevelDifficulty;
 
         spawnInfo.enemyElements = level_SO.enemyElements;
         spawnInfo.availableEnemies = level_SO.availableEnemies;
@@ -31,7 +33,7 @@ public class SurvivalMode : BaseGameMode
         Game.EnemySpawnInTotal = spawnInfo.TotalEnemies;
 
 
-        for (int i = 0; i < spawnInfo.availableEnemies; i++)
+        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
         {
             ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
         }
@@ -39,10 +41,9 @@ public class SurvivalMode : BaseGameMode
         StartCoroutine(StartGameDelay());
     }
 
-
     public void NewWave()
     {
- 
+        AudioManager.PlayRandomMusic(true);
 
         BossWave = false;
 
@@ -93,9 +94,10 @@ public class SurvivalMode : BaseGameMode
 
         waitForSec = new WaitForSeconds(delay);
         waitForCooldown = new WaitForSeconds(cooldown);
-        
+
         var repetition = 0;
         var active = false;
+        var rewardToClaim = false;
 
         EnemyElement previousSpawnEnemy = null;
 
@@ -108,7 +110,7 @@ public class SurvivalMode : BaseGameMode
 
 
         while (!Game.IsGameOver)
-        {     
+        {
             if (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState == GameController.GameState.GAME)
             {
                 yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
@@ -172,7 +174,7 @@ public class SurvivalMode : BaseGameMode
                     yield return new WaitUntil(() => !gameInfo.pause);
                 }
 
-                if (repetition <= 3 && tempList.Count > 1)
+                if (repetition <= 3 && tempList.Count >= 1)
                 {
                     if (spawnInfo.TotalEnemies - 1 >= 0)
                     {
@@ -212,10 +214,19 @@ public class SurvivalMode : BaseGameMode
                     }
 
                     active = true;
+
                 }
             }
 
+            GuiManager.Instance.ShowRewardScreen();
 
+            rewardToClaim = true;
+
+            while (rewardToClaim)
+            {
+                rewardToClaim = Events.ClaimedReward();
+                yield return null;
+            }
 
             yield return waitForFourSeconds;
 
@@ -242,15 +253,6 @@ public class SurvivalMode : BaseGameMode
             {
                 DropController.PickRandomDropItem(baseEnemy.transform);
             }
-        }
-    }
-
-    public override void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
-    {
-        base.EnemyDiedCallback(id, baseEnemy);
-        if (baseEnemy.Id.Equals(baseEnemy.Id))
-        {
-          
         }
     }
 }

@@ -62,7 +62,7 @@ public class PlayerWeapon : WeaponScript
         holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
         var shouldShoot = Input.GetMouseButton(0) || Input.GetButton("XboxAButton");
-        
+
         if (!holdFire && shouldShoot)
         {
             Shoot();
@@ -118,9 +118,9 @@ public class PlayerWeapon : WeaponScript
     }
 
 
-    public virtual void SetStats(PlayerShipData playerShipData)
+    public virtual void SetStats(PlayerShipData playerShipData, int weaponType = 1)
     {
-        Damage = playerShipData.Damage;
+        Damage = playerShipData.Damage / (weaponType + 1);
         FireRate = playerShipData.FireRate;
     }
 

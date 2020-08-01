@@ -38,6 +38,9 @@ public class Events
     public static Func<bool> HyperspaceEnded;
 
 
+    public static Func<bool> ClaimedReward;
+    public static Action<int,RewardTypeEnum> ClaimReward;
+
     /**
      * BaseGame Mode Events
      */

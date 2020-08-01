@@ -50,13 +50,12 @@ public class PlayerShip : Ship, IDamagable
     public override void Start()
     {
         playerData = PersistantData.GetPlayerData();
+        playerData.NewGame();
 
         if (!HasArmorUprade)
         {
             Events.PlayerShipHit += DownGradeWeapon;
         }
-
-        SwitchWeapon(0);
 
         playerShipData = playerData.GetCurrentPlayerShipData();
 
@@ -66,13 +65,14 @@ public class PlayerShip : Ship, IDamagable
 
         SetStats(playerShipData.level);
 
-
-        playerData.NewGame();
+ 
 
         Events.OnLevelValueChanged += OnLevelValueChanged;
 
 
         shipController.SetSpeed(playerShipData.Speed);
+
+        SwitchWeapon(0);
     }
 
     public void OnLevelValueChanged(int Level)
@@ -455,6 +455,7 @@ public class PlayerShip : Ship, IDamagable
         }
 
         Weapons[WeaponTypeIndex].gameObject.SetActive(true);
+        Weapons[WeaponTypeIndex].SetStats(playerShipData, WeaponTypeIndex);
     }
 
     public SpecialAttack GetSpecialAttack()
@@ -480,8 +481,12 @@ public class PlayerShip : Ship, IDamagable
 
         for (int i = 0; i < Weapons.Length; i++)
         {
-            Weapons[i].SetStats(playerShipData);
+            Weapons[i].SetStats(playerShipData, CurrentWeapnType);
         }
+
+        specialAttack.SetStats(playerShipData);
+
+
     }
 
     public void SetHealth(float health)
