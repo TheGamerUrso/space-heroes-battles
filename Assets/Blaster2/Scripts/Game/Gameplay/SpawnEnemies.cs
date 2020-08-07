@@ -16,10 +16,17 @@ public class EnemyElement
     public int presentage;
 }
 
-
 public class SpawnEnemies
 {
     private static Vector3 previousPos;
+
+    public List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
+    private int previousIndex = 0;
+
+    public SpawnEnemies(List<SpawnPoint> spawnPoints)
+    {
+        this.spawnPoints = spawnPoints;
+    }
 
     public static BaseBossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
     {
@@ -35,54 +42,31 @@ public class SpawnEnemies
         return enemy;
     }
 
-    public static GameObject SpawnEnemyElement(EnemyElement enemyElement, int LevelDifficulty = 1)
+    IEnumerator EnableSpawnPointAgain(SpawnPoint spawnPoint)
+    {
+        yield return new WaitForSeconds(2.0f);
+        spawnPoint.used = false;
+    }
+
+    public GameObject SpawnEnemyElement(EnemyElement enemyElement, int LevelDifficulty = 1)
     {
         enemyElement.currentNumberInScene++;
 
-        Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), 0, Constants.m_ZMax);
+        SpawnPoint[] tempList = spawnPoints.Where(x => x.used == false).ToArray();
 
-        if (enemyElement.gameObjectType == PoolGameObjectType.Enemy2 ||
-            enemyElement.gameObjectType == PoolGameObjectType.Enemy6 ||
-               enemyElement.gameObjectType == PoolGameObjectType.Enemy7)
-        {
-            if (previousPos != Vector3.zero)
-            {
-                Vector3 diff = spawnPos - previousPos;
-                if (diff.magnitude <= 10)
-                {
-                    int randDist = UnityEngine.Random.Range(40, 60);
+        int spawnIndex = UnityEngine.Random.Range(0, tempList.Length);
 
-                    if (spawnPos.x > previousPos.x)
-                    {
-                        spawnPos.x += 20;
-                    }
-                    else if (spawnPos.x <= previousPos.x)
-                    {
-                        spawnPos.x -= 20;
-                    }
+        //spawnPoints[previousIndex].used = false;
 
-                    if (spawnPos.y > previousPos.y)
-                    {
-                        spawnPos.x += 20;
-                    }
-                    else if (spawnPos.y <= previousPos.y)
-                    {
-                        spawnPos.x -= 20;
-                    }
-            
-                    if (spawnPos.x + randDist >= Constants.m_XMax)
-                    {
-                        spawnPos.x -= randDist;
-                    }
+        GameController.Instance.StartCoroutine(EnableSpawnPointAgain(spawnPoints[previousIndex]));
 
-                    if ((spawnPos.x - randDist <= Constants.m_XMin))
-                    {
-                        spawnPos.x += randDist;
-                    }          
-                }
-            }
+        Vector3 spawnPos = tempList[spawnIndex].spawnPoint.transform.position;
 
-        }
+        previousIndex = spawnIndex;
+
+        spawnPoints[spawnIndex].used = true;
+
+        //spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), 0, Constants.m_ZMax);
 
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 

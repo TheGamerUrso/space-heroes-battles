@@ -5,6 +5,14 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
+public class SpawnPoint
+{
+    public string Name;
+    public bool used;
+    public GameObject spawnPoint;
+}
+
+[Serializable]
 public struct GameInfo
 {
     public bool pause;
@@ -57,6 +65,9 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
     protected WaitForSeconds waitForSec;
 
+    [SerializeField]protected List<SpawnPoint> SpawnPoints = new List<SpawnPoint>();
+    protected SpawnEnemies spawnEnemies;
+
     public int EnemySpawnedInTotal { get; set; }
 
     public virtual void InitReference(PlayerData playerData, PlayerShip playerShip)
@@ -71,7 +82,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Events.EnemyDied -= EnemyDiedCallback;
         Events.EnemyEscaped -= EnemyEscapedCallback;
         Events.BossDied -= BossDiedCallback;
-        Events.EnemyGotHit -= BossGotHit;
+        Events.EnemyGotHit -= EnemyGotHitCallback;
     }
 
     public virtual void Start()
@@ -80,6 +91,8 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Events.EnemyDied += EnemyDiedCallback;
         Events.BossDied += BossDiedCallback;
         Events.EnemyGotHit += EnemyGotHitCallback;
+
+        spawnEnemies = new SpawnEnemies(SpawnPoints);
     }
 
     public void LateUpdate()

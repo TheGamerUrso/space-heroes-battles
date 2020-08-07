@@ -21,7 +21,7 @@ public class AsteroidSpawner : MonoBehaviour
 
             var spawnAsteroid = rand.Next(100);
 
-            if (spawnAsteroid <= 90)
+            if (spawnAsteroid <= 10)
             {
                 SpawnAsteroid();
             }

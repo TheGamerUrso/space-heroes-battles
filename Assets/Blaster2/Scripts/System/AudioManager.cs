@@ -16,7 +16,7 @@ public class AudioManager : MonoSingleton<AudioManager>
 {
     // public static AudioManager instance;
     [HideInInspector] public List<AudioTrack> SoundClips = new List<AudioTrack>();
-    [HideInInspector] public List<AudioTrack> MusicClips = new List<AudioTrack>();
+    public List<AudioTrack> MusicClips = new List<AudioTrack>();
 
     public AudioSource source;
     public AudioSource BackgroundMusic;
@@ -63,7 +63,7 @@ public class AudioManager : MonoSingleton<AudioManager>
     public static void SetMusicVolume(float value)
     {
         musicVolume = value;
-       Instance.MusicMixerGroup.audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
+        Instance.MusicMixerGroup.audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
     }
 
 
@@ -107,7 +107,7 @@ public class AudioManager : MonoSingleton<AudioManager>
 
             SetSoundVolume(playerData.SFXVolume);
         }
-      
+
     }
 
     public bool PlayingMusic()
@@ -171,7 +171,7 @@ public class AudioManager : MonoSingleton<AudioManager>
         }
     }
 
-    public void PlaySoundByClip(AudioClip clip,bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+    public void PlaySoundByClip(AudioClip clip, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
         if (usePitch)
         {

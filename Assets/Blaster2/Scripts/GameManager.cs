@@ -82,6 +82,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     public float sceneLoadProgress;
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            playerData.EarnXP(100);
+        }
+    }
+
     public Level GetCurrentLevelSelected()
     {
         if (currentLevelSelected == null)

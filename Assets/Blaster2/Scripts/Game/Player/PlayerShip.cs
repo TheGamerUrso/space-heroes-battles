@@ -33,7 +33,7 @@ public class PlayerShip : Ship, IDamagable
 
 
     private bool HasArmorUprade;
-
+    float clickDelay = .25f;
     #endregion Weapons
 
     public override void OnDestroy()
@@ -65,7 +65,7 @@ public class PlayerShip : Ship, IDamagable
 
         SetStats(playerShipData.level);
 
- 
+
 
         Events.OnLevelValueChanged += OnLevelValueChanged;
 
@@ -102,22 +102,7 @@ public class PlayerShip : Ship, IDamagable
             return;
         }
 
-        float playerPowerUp = 0;
-
-        playerPowerUp = playerData.GetPowerUpLevelPresentage();
-
-
-#if UNITY_ANDROID
-        if (Input.GetJoystickNames().Length > 0)
-        {
-            if (playerPowerUp >= 1)
-            {
-                if (Input.GetButtonDown("XboxXButton"))
-                {
-                    ActivateSpecial();
-                }
-            }
-        }
+        var playerPowerUp = playerData.GetPowerUpLevelPresentage();
 
         if (Time.timeScale == 0)
         {
@@ -129,13 +114,41 @@ public class PlayerShip : Ship, IDamagable
 
         if (Input.touchCount > 0)
         {
+            Touch touch = Input.GetTouch(0);
+            clicktimes = touch.tapCount;
+        }
 
-            if (playerPowerUp >= 1)
+#if UNITY_EDITOR
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (!clicked)
             {
+                clicked = true;
+                clicktimer = clickDelay;
+            }
+            clicktimes++;
+        }
 
+
+        if (clicked)
+        {
+            clicktimer -= Time.deltaTime;
+
+            if (clicktimer <= 0)
+            {
+                clicked = false;
+                clicktimes = 0;
             }
         }
 #endif
+
+        if (clicktimes > 1)
+        {
+            if (playerPowerUp >= 1)
+            {
+                ActivateSpecial();
+            }
+        }
 
         if (playerData.PowerPackCollected >= 5)
         {
@@ -144,39 +157,11 @@ public class PlayerShip : Ship, IDamagable
         }
     }
 
-    float clickDelay = .25f;
+
     public void TouchShoot()
     {
-        Touch touch = Input.GetTouch(0);
-        if (touch.phase == TouchPhase.Began)
-        {
-            if (clickDelay <= 0)
-            {
-                clicked = true;
-                clicktimes++;
-                clickDelay = .5f;
-            }
-        }
 
 
-        if (clicked && clicktimer > 0)
-        {
-            clicktimer -= Time.deltaTime;
-            clickDelay -= Time.deltaTime;
-
-            if (clicktimer <= 0)
-            {
-                clicked = false;
-                clicktimer = 1;
-                clicktimes = 0;
-            }
-        }
-
-        if (clicktimes > 1)
-        {
-            clicktimes = 0;
-            ActivateSpecial();
-        }
     }
 
     public void UpdateWeaponStats(float fireRate, float damage = 0)

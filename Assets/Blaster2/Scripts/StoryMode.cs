@@ -13,6 +13,10 @@ public class StoryMode : BaseGameMode
 
         MissionCollection missionCollection = PersistantData.GetMissionCollection();
 
+        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
+        {
+            level_SO.enemyElements[i].currentNumberInScene = 0;
+        }
 
         for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
         {
@@ -61,9 +65,7 @@ public class StoryMode : BaseGameMode
         waitForCooldown = new WaitForSeconds(cooldown);
 
         var startingTotalEnemies = spawnInfo.TotalEnemies;
-        var randomNumb = 0;
-        var range = 0;
-        var top = 0;
+
         var repetition = 0;
         EnemyElement previousSpawnEnemy = null;
 
@@ -89,6 +91,8 @@ public class StoryMode : BaseGameMode
             {
                 availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
 
+                var randomNumber = 0;
+                var total = 0;
 
                 do
                 {
@@ -96,40 +100,35 @@ public class StoryMode : BaseGameMode
                     yield return null;
                 } while (tempList.Count == 0);
 
-                for (int i = 0; i < tempList.Count; i++)
+
+                foreach (var item in tempList)
                 {
-                    if (tempList[i].presentage > 0f)
-                    {
-                        range += tempList[i].presentage;
-                    }
+                    total += item.presentage;
                 }
 
-                var rand = Random.Range(0, range);
+                randomNumber = Random.Range(0, total);
 
                 for (int i = 0; i < tempList.Count; i++)
                 {
-                    top += tempList[i].presentage;
-                    if (rand < top)
+                    if (randomNumber <= tempList[i].presentage)
                     {
                         enemyElement = tempList[i];
-                        randomNumb = i;
 
-                        if (tempList.Count > 1)
+                        if (previousSpawnEnemy != null && tempList.Count > 0)
                         {
-                            if (previousSpawnEnemy != null)
+                            if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
                             {
-                                if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
-                                {
-                                    repetition++;
-                                }
-                                else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
-                                {
-                                    repetition = 0;
-                                }
+                                repetition++;
+                            }
+                            else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
+                            {
+                                repetition = 0;
                             }
                         }
-
-                        break;
+                    }
+                    else
+                    {
+                        randomNumber -= tempList[i].presentage;
                     }
                 }
 
@@ -138,11 +137,11 @@ public class StoryMode : BaseGameMode
                     yield return new WaitUntil(() => !gameInfo.pause);
                 }
 
-                if (repetition <= 3 || tempList.Count > 1)
+                if (((enemyElement != null && repetition <= 2) && tempList.Count > 1 ) || tempList.Count == 1)
                 {
                     if (spawnInfo.TotalEnemies - 1 >= 0)
                     {
-                        enemGO = SpawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
+                        enemGO = spawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
                         Enemies.Add(enemGO);
                         previousSpawnEnemy = enemyElement;
                     }
@@ -168,7 +167,7 @@ public class StoryMode : BaseGameMode
                     {
                         gameInfo.BossBattleInitiated = true;
 
-                        currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab,gameInfo.LevelDifficulty);
+                        currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab, gameInfo.LevelDifficulty);
 
                         Enemies.Add(currentBoss.gameObject);
                     }

@@ -15,6 +15,13 @@ public class SurvivalMode : BaseGameMode
         base.InitReference(playerData, playerShip);
         gameInfo.LevelDifficulty = playerData.GetCurrentPlayerShipData().level;
     }
+    private void Awake()
+    {
+        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
+        {
+            level_SO.enemyElements[i].currentNumberInScene = 0;
+        }
+    }
 
     public override void Start()
     {
@@ -32,11 +39,14 @@ public class SurvivalMode : BaseGameMode
 
         Game.EnemySpawnInTotal = spawnInfo.TotalEnemies;
 
+       
 
         for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
         {
             ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
         }
+
+   
 
         StartCoroutine(StartGameDelay());
     }
@@ -122,9 +132,8 @@ public class SurvivalMode : BaseGameMode
             {
                 availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
 
-                var randomNumb = 0;
-                var range = 0;
-                var top = 0;
+                var randomNumber = 0;
+                var total = 0;
 
                 do
                 {
@@ -136,36 +145,38 @@ public class SurvivalMode : BaseGameMode
                 {
                     if (tempList[i].presentage > 0f)
                     {
-                        range += tempList[i].presentage;
+                        total += tempList[i].presentage;
                     }
                 }
 
-                var rand = Random.Range(0, range);
+                randomNumber = Random.Range(0, total);
 
                 for (int i = 0; i < tempList.Count; i++)
                 {
-                    top += tempList[i].presentage;
-                    if (rand < top)
+                    if (randomNumber <= tempList[i].presentage)
                     {
                         enemyElement = tempList[i];
-                        randomNumb = i;
+                    }
+                    else
+                    {
+                        randomNumber -= tempList[i].presentage;
+                    }
+                }
 
-                        if (tempList.Count > 1)
+
+                if (tempList.Count > 1)
+                {
+                    if (previousSpawnEnemy != null)
+                    {
+                        if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
                         {
-                            if (previousSpawnEnemy != null)
-                            {
-                                if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
-                                {
-                                    repetition++;
-                                }
-                                else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
-                                {
-                                    repetition = 0;
-                                }
-                            }
+                            repetition++;
+                            Debug.Log(previousSpawnEnemy.gameObjectType.ToString() + " " + repetition);
                         }
-
-                        break;
+                        else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
+                        {
+                            repetition = 0;
+                        }
                     }
                 }
 
@@ -174,11 +185,11 @@ public class SurvivalMode : BaseGameMode
                     yield return new WaitUntil(() => !gameInfo.pause);
                 }
 
-                if (repetition <= 3 && tempList.Count >= 1)
+                if (repetition <= 2 && tempList.Count >= 1)
                 {
                     if (spawnInfo.TotalEnemies - 1 >= 0)
                     {
-                        enemGO = SpawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
+                        enemGO = spawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
                         Enemies.Add(enemGO);
                         previousSpawnEnemy = enemyElement;
                     }

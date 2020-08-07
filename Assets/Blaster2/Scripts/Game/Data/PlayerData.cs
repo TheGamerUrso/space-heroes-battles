@@ -57,7 +57,7 @@ public class PlayerData
 
     public List<Achievement> Achievements;
 
-    public int multiplier = 1;
+    public int multiplier = 10;
     public int ammount = 50;
 
     public PlayerData() { }
