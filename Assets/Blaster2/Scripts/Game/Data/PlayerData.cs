@@ -75,8 +75,7 @@ public class PlayerData
         SuperUsed = 0;
         GotHitInGame = false;
         PlayedGame = false;
-        UnlockedHeroes = new int[4];
-        UnlockedHeroes[0] = 1;
+        UnlockedHeroes = new int[3] { 1, 0, 0 };
         SFXVolume = .7f;
         MusicVolume = .7f;
         AutoAttack = true;
