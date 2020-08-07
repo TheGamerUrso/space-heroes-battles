@@ -86,6 +86,8 @@ MonoBehaviour:
     m_RotationOrder: 4
   image: {fileID: 1339095443369447297}
   alpha: 0
+  defaultColor: {r: 0, g: 0, b: 0, a: 0}
+  HealedColor: {r: 0, g: 0, b: 0, a: 0}
   alarmSFX: {fileID: 8300000, guid: d0888bf451bd66b48951e9488b462d44, type: 3}
   audioSource: {fileID: 453835733016189640}
 --- !u!1 &3585934913949424637
@@ -484,6 +486,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8698dc1b1ded32144829f695c3ccea52, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
   speed: 1
 --- !u!1 &9006864246789000389
 GameObject:
@@ -934,10 +937,21 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 9006864246963517242}
     m_Modifications:
+    - target: {fileID: 758445965696700512, guid: f0e0997512f1c704889c817e8d1143ce,
+        type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733,
+        type: 2}
     - target: {fileID: 6640532851698655334, guid: f0e0997512f1c704889c817e8d1143ce,
         type: 3}
       propertyPath: m_Name
       value: PlayerShip3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6640532851698655334, guid: f0e0997512f1c704889c817e8d1143ce,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6643966822035450366, guid: f0e0997512f1c704889c817e8d1143ce,
         type: 3}
@@ -994,6 +1008,24 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6751643282018932896, guid: f0e0997512f1c704889c817e8d1143ce,
+        type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733,
+        type: 2}
+    - target: {fileID: 6751712437248883658, guid: f0e0997512f1c704889c817e8d1143ce,
+        type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733,
+        type: 2}
+    - target: {fileID: 6751813029164971422, guid: f0e0997512f1c704889c817e8d1143ce,
+        type: 3}
+      propertyPath: weaponData
+      value: 
+      objectReference: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733,
+        type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: f0e0997512f1c704889c817e8d1143ce, type: 3}
 --- !u!82 &453835733016189640 stripped

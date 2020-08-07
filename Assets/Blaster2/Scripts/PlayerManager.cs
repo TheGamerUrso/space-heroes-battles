@@ -42,15 +42,9 @@ public class PlayerManager
             id = 0;
         }
 
-        currentPlayer = GameObject.Find("Player1Prefab");
+        currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
 
-        if (currentPlayer == null)
-        {
-
-            currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
-
-            currentPlayer.SetActive(true);
-        }
+        currentPlayer.SetActive(true);
 
         return currentPlayer;
     }
