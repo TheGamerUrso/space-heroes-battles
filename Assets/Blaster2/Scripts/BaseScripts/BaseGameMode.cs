@@ -53,7 +53,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     public GameInfo gameInfo;
     public SpawnInfo spawnInfo;
 
-    protected float cooldown = 1f;
+    [SerializeField] protected float cooldown = 1f;
     protected float delay = 0.5f;
 
     protected List<GameObject> Enemies = new List<GameObject>();
@@ -61,11 +61,14 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected List<EnemyElement> tempList = new List<EnemyElement>();
     protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
 
-    protected WaitForSeconds waitForCooldown = new WaitForSeconds(1);
-    protected WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
-    protected WaitForSeconds waitForSec;
+    protected WaitForSeconds shortDelay;
+    protected WaitForSeconds CooldownTimer;
 
-    [SerializeField]protected List<SpawnPoint> SpawnPoints = new List<SpawnPoint>();
+    protected WaitForSeconds shortWait = new WaitForSeconds(1);
+    protected WaitForSeconds longWait = new WaitForSeconds(2);
+
+
+    [SerializeField] protected List<SpawnPoint> SpawnPoints = new List<SpawnPoint>();
     protected SpawnEnemies spawnEnemies;
 
     public int EnemySpawnedInTotal { get; set; }

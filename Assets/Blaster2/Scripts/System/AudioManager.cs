@@ -171,6 +171,11 @@ public class AudioManager : MonoSingleton<AudioManager>
         }
     }
 
+    public void SetPitch(float pitch)
+    {
+        BackgroundMusic.pitch = pitch;
+    }
+
     public void PlaySoundByClip(AudioClip clip, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
         if (usePitch)

@@ -9,8 +9,8 @@ public class RewardBox : MonoBehaviour
     private bool claimed;
     private bool opened;
     private bool notAvailable = false;
-    [HideInInspector] private int ID;
-    [HideInInspector] public Camera CameraReview;
+    [SerializeField] private int ID;
+    [SerializeField] private Camera CameraReview;
     [SerializeField] private RenderTexture renderTexture;
     [SerializeField] private Animator Box;
     private RewardTypeEnum rewardTypeEnum;
@@ -22,16 +22,22 @@ public class RewardBox : MonoBehaviour
         claimed = false;
         this.rewardTypeEnum = rewardTypeEnum;
     }
+
+    private void OnDestroy()
+    {
+        Events.ClaimReward -= ClaimReward;
+    }
     private void OnEnable()
     {
-        Box.SetTrigger("Reset");
         Box.ResetTrigger("Open");
     }
+
     void Start()
     {
         CameraReview.targetTexture = renderTexture;
         Events.ClaimReward += ClaimReward;
     }
+
     private void Update()
     {
         if (claimed && !notAvailable)
@@ -51,16 +57,25 @@ public class RewardBox : MonoBehaviour
         if (!claimed)
         {
             claimed = true;
-            Box.SetTrigger("Open");
+            OpenChest();
             Events.ClaimReward?.Invoke(ID, rewardTypeEnum);
         }
+    }
+
+    public void OpenChest()
+    {
+        Box.SetTrigger("Open");
+    }
+
+    public void CloseChest()
+    {
+        Box.SetTrigger("Close");
     }
 
     public void ClaimReward(int Id, RewardTypeEnum rewardTypeEnum)
     {
         if (ID.Equals(Id))
         {
-            Box.SetTrigger("Close");
             claimed = true;
         }
         notAvailable = true;

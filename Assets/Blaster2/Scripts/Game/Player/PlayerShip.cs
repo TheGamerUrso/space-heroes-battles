@@ -45,6 +45,8 @@ public class PlayerShip : Ship, IDamagable
     {
         animator = GetComponentInChildren<Animator>();
         shipController = GetComponent<SimpleShipControls>();
+
+        Events.PlayerShipHit -= DownGradeWeapon;
     }
 
     public override void Start()

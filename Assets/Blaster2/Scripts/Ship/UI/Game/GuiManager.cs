@@ -116,7 +116,6 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void ShowPauseMenu(bool value)
     {
-
         if (value)
         {
             Game.SlowMo = false;
@@ -224,8 +223,6 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     private IEnumerator GameOverCoroutine()
     {
-        AudioManager.PlayMusic("GameOver", false);
-
         yield return new WaitForSeconds(2.0f);
 
         GameOverScreen.Show();

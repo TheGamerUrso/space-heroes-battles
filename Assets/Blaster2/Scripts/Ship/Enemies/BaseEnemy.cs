@@ -156,7 +156,7 @@ public class BaseEnemy : Ship, IDamagable
         {
             var destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(destroyable.MaxHealth / 2);
-            TakeDamage(destroyable.CurrentHealth);
+            TakeDamage(CurrentHealth);
         }
     }
 

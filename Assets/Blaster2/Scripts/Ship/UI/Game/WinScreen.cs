@@ -90,8 +90,20 @@ public class WinScreen : MonoBehaviour
 
     public void ReplayButton()
     {
-        GameManager.Instance.ResetLevel();
+        Scene scene = SceneManager.GetActiveScene();
+        int nextLevelID = (scene.buildIndex + 1) - (int)LevelEnum.Level0;
+
+        if (nextLevelID > 9)
+        {
+            nextLevelID = 9;
+        }
+
+        Level nextLevel = PersistantData.GetLevels()[nextLevelID];
+
+        GameManager.Instance.SetMission(nextLevel);
+        GameManager.Instance.LoadScene((LevelEnum)nextLevel.mission.ID);
     }
+
     public void LoadMainMenu()
     {
         GuiManager.Instance.LoadMainMenu();

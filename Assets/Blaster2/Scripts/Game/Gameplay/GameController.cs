@@ -218,6 +218,8 @@ public class GameController : MonoSingleton<GameController>
 
         SaveSystem.SaveGame();
 
+        AudioManager.PlayMusic("GameOver", false);
+
         yield return new WaitForSeconds(2.0f);
 
         Events.OnGameOver?.Invoke(this);
@@ -258,6 +260,7 @@ public class GameController : MonoSingleton<GameController>
                 if (Game.IsGameOver == false)
                 {
                     Game.IsGameOver = true;
+
                     StartCoroutine(DelayGameOver());
                 }
                 break;

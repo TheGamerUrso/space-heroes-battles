@@ -1,27 +1,24 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class StoryMode : BaseGameMode
 {
+    protected override void Awake()
+    {
+        base.Awake();
+
+        shortDelay = new WaitForSeconds(delay);
+        CooldownTimer = new WaitForSeconds(cooldown);
+    }
+
     public override void Start()
     {
         base.Start();
 
         MissionCollection missionCollection = PersistantData.GetMissionCollection();
 
-        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
-        {
-            level_SO.enemyElements[i].currentNumberInScene = 0;
-        }
-
-        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
-        {
-            spawnInfo.enemyElements[i].currentNumberInScene = 0;
-        }
 
         Scene scene = SceneManager.GetActiveScene();
         int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
@@ -38,6 +35,11 @@ public class StoryMode : BaseGameMode
 
         Game.EnemySpawnInTotal = spawnInfo.TotalEnemies;
 
+        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
+        {
+            spawnInfo.enemyElements[i].currentNumberInScene = 0;
+        }
+
         for (int i = 0; i < spawnInfo.availableEnemies; i++)
         {
             ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
@@ -49,7 +51,7 @@ public class StoryMode : BaseGameMode
 
     protected override IEnumerator StartGameDelay()
     {
-        yield return waitForCooldown;
+        yield return CooldownTimer;
 
         string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
         GuiManager.PlayTrasmition(transmitions);
@@ -57,141 +59,160 @@ public class StoryMode : BaseGameMode
         StartCoroutine(Spawn());
     }
 
+    GameObject enemGO = null;
+    EnemyElement previousSpawnEnemy = null;
+    int repetition = 0;
+    System.Random r;
+
     public override IEnumerator Spawn()
     {
-        GameObject enemGO;
-
-        waitForSec = new WaitForSeconds(delay);
-        waitForCooldown = new WaitForSeconds(cooldown);
-
+        r = new System.Random();
         var startingTotalEnemies = spawnInfo.TotalEnemies;
-
-        var repetition = 0;
-        EnemyElement previousSpawnEnemy = null;
-
-        if ((GameController.Instance.currentGameState == GameController.GameState.START))
-        {
-            yield return new WaitUntil(() => (GameController.Instance.currentGameState == GameController.GameState.GAME));
-        }
-
-        yield return new WaitForSeconds(1.0f);
-
 
         while (!Game.IsGameOver)
         {
+            if ((GameController.Instance.currentGameState == GameController.GameState.START))
+            {
+                yield return new WaitUntil(() => (GameController.Instance.currentGameState == GameController.GameState.GAME));
+            }
+
+            yield return shortWait;
 
             if (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState == GameController.GameState.GAME)
             {
                 yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
             }
 
+            yield return shortWait;
+
             Game.UseSlowMo = true;
 
-            while (spawnInfo.TotalEnemies > 0 && !Game.IsGameOver)
+            availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
+            availableEnemie.Reverse();
+
+            while (spawnInfo.TotalEnemies > 0)
             {
-                availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
-
-                var randomNumber = 0;
-                var total = 0;
-
-                do
-                {
-                    tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene && x.presentage > 0)).ToList();
-                    yield return null;
-                } while (tempList.Count == 0);
-
-
-                foreach (var item in tempList)
-                {
-                    total += item.presentage;
-                }
-
-                randomNumber = Random.Range(0, total);
-
-                for (int i = 0; i < tempList.Count; i++)
-                {
-                    if (randomNumber <= tempList[i].presentage)
-                    {
-                        enemyElement = tempList[i];
-
-                        if (previousSpawnEnemy != null && tempList.Count > 0)
-                        {
-                            if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
-                            {
-                                repetition++;
-                            }
-                            else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
-                            {
-                                repetition = 0;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        randomNumber -= tempList[i].presentage;
-                    }
-                }
-
                 if (gameInfo.pause)
                 {
                     yield return new WaitUntil(() => !gameInfo.pause);
                 }
 
-                if (((enemyElement != null && repetition <= 2) && tempList.Count > 1 ) || tempList.Count == 1)
+                ChooseRandomEnemyToSpawn();
+
+                if (repetition <= 2)
                 {
                     if (spawnInfo.TotalEnemies - 1 >= 0)
                     {
-                        enemGO = spawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
-                        Enemies.Add(enemGO);
-                        previousSpawnEnemy = enemyElement;
+                        if (enemyElement != null)
+                        {
+                            enemGO = spawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
+                            Enemies.Add(enemGO);
+                            previousSpawnEnemy = enemyElement;
+                        }
                     }
-                    yield return waitForCooldown;
                 }
+
+                yield return CooldownTimer;
+                CooldownTimer = new WaitForSeconds(cooldown);
             }
 
-            if (playerShip.CurrentHealth > 0)
+            yield return shortWait;
+
+            if (Game.IsGameOver)
             {
-                if (Enemies.Count > 0)
+                break;
+            }
+        }
+
+        if (playerShip.CurrentHealth > 0)
+        {
+            if (Enemies.Count > 0)
+            {
+                yield return new WaitUntil(() => Enemies.Count <= 0);
+            }
+
+            if (level_SO.HasBoss)
+            {
+                GuiManager.PlayTrasmition(null, true);
+
+                yield return longWait;
+
+                Debug.Log("Boss Battle");
+                if (!gameInfo.BossBattleInitiated)
                 {
-                    yield return new WaitUntil(() => Enemies.Count <= 0);
+                    gameInfo.BossBattleInitiated = true;
+
+                    currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab, gameInfo.LevelDifficulty);
+
+                    Enemies.Add(currentBoss.gameObject);
                 }
 
-                if (level_SO.HasBoss)
+                if (gameInfo.BossBattleInitiated)
                 {
-                    GuiManager.PlayTrasmition(null, true);
-
-                    yield return new WaitForSeconds(2.0f);
-
-                    Debug.Log("Boss Battle");
-                    if (!gameInfo.BossBattleInitiated)
-                    {
-                        gameInfo.BossBattleInitiated = true;
-
-                        currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab, gameInfo.LevelDifficulty);
-
-                        Enemies.Add(currentBoss.gameObject);
-                    }
-
-                    if (gameInfo.BossBattleInitiated)
-                    {
-                        yield return new WaitUntil(() => !gameInfo.BossBattleInitiated);
-                    }
-                }
-
-
-                yield return waitForFourSeconds;
-
-                if (!Game.IsGameOver)
-                {
-                    Events.GameEnded?.Invoke();
-                    Game.UseSlowMo = false;
+                    yield return new WaitUntil(() => !gameInfo.BossBattleInitiated);
                 }
             }
 
+
+            yield return longWait;
+
+            if (!Game.IsGameOver)
+            {
+                Events.GameEnded?.Invoke();
+                Game.UseSlowMo = false;
+            }
         }
+
     }
 
+    public void ChooseRandomEnemyToSpawn()
+    {
+        tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene && x.presentage > 0)).ToList();
 
+        if (tempList.Count > 0)
+        {
+            if (tempList.Count > 1)
+            {
+                double diceRoll = r.NextDouble() * 100;
+                double cumulative = 0.0;
+                
+                for (int i = 0; i < tempList.Count; i++)
+                {
+                    cumulative += tempList[i].presentage;
+
+                    if (diceRoll < cumulative)
+                    {
+                        enemyElement = tempList[i];
+                        break;
+                    }
+                }
+            }
+            else
+            {
+                enemyElement = tempList[0];
+            }
+
+            if (tempList.Count > 1)
+            {
+                if (previousSpawnEnemy != null)
+                {
+                    if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
+                    {
+                        repetition++;
+                    }
+                    else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
+                    {
+                        repetition = 0;
+                    }
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
 
 

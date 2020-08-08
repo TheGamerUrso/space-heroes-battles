@@ -13,6 +13,8 @@ public enum RewardTypeEnum
 
 public class RewardWidget : MonoBehaviour
 {
+    private int RewardBoxSelected;
+
     public GameObject widgetPanel;
 
     public GameObject rewardPanel;
@@ -43,6 +45,9 @@ public class RewardWidget : MonoBehaviour
         rewardPanel.SetActive(true);
         reward.SetActive(false);
         GetNewRewards();
+
+        Time.timeScale = 1.0f;
+        Game.UseSlowMo = false;
     }
 
     private void Start()
@@ -52,6 +57,7 @@ public class RewardWidget : MonoBehaviour
 
     public void ClaimReward(int Id, RewardTypeEnum rewardTypeEnum)
     {
+        RewardBoxSelected = Id;
         rewardType = rewardTypeEnum;
         StartCoroutine(ClaimRewarded());
     }
@@ -72,6 +78,10 @@ public class RewardWidget : MonoBehaviour
 
     IEnumerator ClaimRewarded()
     {
+        yield return new WaitForSeconds(2.0f);
+
+        rewardBoxes[RewardBoxSelected].CloseChest();
+        
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
         PlayerShip playerShip = PlayerManager.GetPlayer();
@@ -117,9 +127,10 @@ public class RewardWidget : MonoBehaviour
         reward.SetActive(false);
         widgetPanel.SetActive(false);
 
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(3.0f);
 
         RewardClaimed();
+        Game.UseSlowMo = true;
     }
 
 }
