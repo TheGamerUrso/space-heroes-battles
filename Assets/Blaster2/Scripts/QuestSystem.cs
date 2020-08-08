@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class QuestManager : MonoBehaviour
+public class QuestSystem : MonoBehaviour
 {
 
     [SerializeField] private Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
@@ -90,6 +90,15 @@ public class QuestManager : MonoBehaviour
         }
 
         RefreshObjectives();
+    }
+
+    [ContextMenu("Complete Quest")]
+    public void CompleteQuests()
+    {
+        foreach (var item in playerData.ListOfOnGoingObjectives.ToList())
+        {
+            item.UpdateProgress(item.requirment);
+        }
     }
 
     public void CheckObjective(ObjectiveData objectiveData)
