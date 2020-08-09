@@ -7,9 +7,10 @@ public class LevelDetailSurvival : MonoBehaviour
 {
     public TextMeshProUGUI score;
 
-    public void Update()
+    private void OnEnable()
     {
         PlayerData playerData = PersistantData.GetPlayerData();
         score.text = "Highscore \n" + playerData.GetHighScore(0);
     }
+
 }

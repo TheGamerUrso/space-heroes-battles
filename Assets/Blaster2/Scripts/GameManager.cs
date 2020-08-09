@@ -400,7 +400,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SetSurvivalScore(int ammount)
     {
-        playerData.SetScore((int)LevelEnum.Level0, ammount);
+        playerData.SetScore(0, ammount);
     }
 
     public void PlayerChallengesCheck()
