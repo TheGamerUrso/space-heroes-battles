@@ -9,6 +9,10 @@ public class LevelWidget : MonoBehaviour
     private PlayerShipData playerShipData;
     [SerializeField] private TextMeshProUGUI PlayerLevelText;
 
+    private bool updateText;
+    private int level;
+    private float ActualLevelToShow;
+
     private void OnDestroy()
     {
         Events.OnLevelValueChanged -= SetPlayerLevelText;
@@ -25,6 +29,20 @@ public class LevelWidget : MonoBehaviour
 
         SetPlayerLevelText(playerShipData.level);
     }
+
+    private void Update()
+    {
+        if (updateText)
+        {
+            ActualLevelToShow = Mathf.Lerp(ActualLevelToShow, level, .4f);
+            PlayerLevelText.text = string.Format("{0}", Mathf.Round(ActualLevelToShow));
+            if (ActualLevelToShow == level)
+            {
+                updateText = false;
+            }
+        }
+    }
+
     public void NewShipSelected(int shipSelected)
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
@@ -34,7 +52,7 @@ public class LevelWidget : MonoBehaviour
 
     public void SetPlayerLevelText(int lvl)
     {
-        PlayerLevelText.text = string.Format("{0}", lvl);
-
+        level = lvl;
+        updateText = true;
     }
 }

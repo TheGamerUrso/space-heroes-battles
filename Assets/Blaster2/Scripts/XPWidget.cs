@@ -45,9 +45,9 @@ public class XPWidget : MonoBehaviour
     private void Update()
     {
         if (updateText) {
-            ActualXpToShow = Mathf.Lerp(ActualXpToShow, xp, .2f);
-            ActualXpToLevelToShow = Mathf.Lerp(ActualXpToLevelToShow, xpToLevel, .2f);
-            PlayerXPText.text = Mathf.Round(xp) + " / " + Math.Round(xpToLevel);
+            ActualXpToShow = Mathf.Lerp(ActualXpToShow, xp, .4f);
+            ActualXpToLevelToShow = Mathf.Lerp(ActualXpToLevelToShow, xpToLevel, .4f);
+            PlayerXPText.text = Mathf.Round(ActualXpToShow) + " / " + Math.Round(ActualXpToLevelToShow);
             if (ActualXpToLevelToShow == xpToLevel && ActualXpToShow == xp)
             {
                 updateText = false;

@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Doozy.Engine.UI;
 using UnityEngine;
 
 [System.Serializable]
