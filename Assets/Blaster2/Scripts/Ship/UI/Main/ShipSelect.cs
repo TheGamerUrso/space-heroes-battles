@@ -45,7 +45,7 @@ public class ShipSelect : MonoSingleton<ShipSelect>
     public void SelectShip(int shipID)
     {
         currentShipSelected = shipID;
-        playerData.CurrrentSelectedShip = currentShipSelected;
+        playerData.SetCurrentSelectShip(currentShipSelected);
         Refresh();
     }
 
@@ -92,7 +92,7 @@ public class ShipSelect : MonoSingleton<ShipSelect>
         }
         else if (playerData.UnlockedHeroes[currentShipSelected] == 1)
         {
-            playerData.CurrrentSelectedShip = currentShipSelected;
+            playerData.SetCurrentSelectShip(currentShipSelected);
         }
     }
 
