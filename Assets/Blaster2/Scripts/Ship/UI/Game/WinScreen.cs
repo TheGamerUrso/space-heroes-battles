@@ -88,7 +88,8 @@ public class WinScreen : MonoBehaviour
         VideoRewardAd.SetActive(true);
     }
 
-    public void ReplayButton()
+
+    public void NextLevelButton()
     {
         Scene scene = SceneManager.GetActiveScene();
         int nextLevelID = (scene.buildIndex + 1) - (int)LevelEnum.Level0;
@@ -102,6 +103,12 @@ public class WinScreen : MonoBehaviour
 
         GameManager.Instance.SetMission(nextLevel);
         GameManager.Instance.LoadScene((LevelEnum)nextLevel.mission.ID);
+    }
+
+    public void ReplayButton()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        GameManager.Instance.LoadScene((LevelEnum)scene.buildIndex);
     }
 
     public void LoadMainMenu()

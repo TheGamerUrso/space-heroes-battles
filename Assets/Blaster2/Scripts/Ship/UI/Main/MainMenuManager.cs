@@ -32,8 +32,15 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         GooglePlayServicesManager.ShowAchievementa();
     }
 
+    [ContextMenu("Get Safe Area")]
+    public void GetSafeArea()
+    {
+        Debug.Log(Screen.safeArea);
+    }
+
     private void Start()
     {
+
         GameManager.Instance.PauseTheGame(false);
         AudioManager.PlayMusic("Menu");
         Application.targetFrameRate = 30;
