@@ -1,7 +1,7 @@
 ﻿using DG.Tweening;
 using UnityEngine;
 
-public class FollowPathAI : SimpleAI
+public class EMFollowPath : EnemyMove
 {
     #region FollowPath AI Config
     [Header("FollowPath AI Config")]
@@ -17,29 +17,27 @@ public class FollowPathAI : SimpleAI
     protected Vector3 targetRotation;
 
     [SerializeField] protected bool reverse;
-    [SerializeField] protected bool SpawnAtFirstPath;
     [SerializeField] protected bool Auto;
+
     private Vector3 newPos;
     private float step;
     private int curPath;
-    private Vector3 dir;
-    private Transform[] PathList;
     private GameObject path;
     protected float pathMagnitude;
     #endregion
 
-    public void GeneratePath()
+
+    public void GeneratePathByIndex(int Index)
     {
         // Debug.Log("Generate new Path");
-        curPath = Random.Range(0, PathIndex.Length);
+        curPath = Index;
         if (Waypoints.Instance == null)
         {
             return;
         }
 
         path = Waypoints.Instance.GetPath(PathIndex[curPath]);
-
-        Transform[] PathList = TransformExtention.GetChildrenAsList(path.transform);
+        Transform[] PathList = path.transform.GetChildrenAsList();
 
         GeneratePath(PathList);
 
@@ -48,10 +46,30 @@ public class FollowPathAI : SimpleAI
         Reset = false;
         Auto = true;
 
-        if (SpawnAtFirstPath)
+        // transform.position = Path[0].position]
+    }
+
+    public int GeneratePath()
+    {
+        // Debug.Log("Generate new Path");
+        curPath = Random.Range(0, PathIndex.Length);
+        if (Waypoints.Instance == null)
         {
-            transform.position = Path[0].position;        
+            return -1;
         }
+
+        path = Waypoints.Instance.GetPath(PathIndex[curPath]);
+        Transform[] PathList = path.transform.GetChildrenAsList();
+
+        GeneratePath(PathList);
+
+
+        currentPointToFollowIndex = 0;
+        Reset = false;
+        Auto = true;
+
+        // transform.position = Path[0].position;
+        return curPath;
     }
 
     public void GeneratePath(Transform[] newPath)
@@ -62,6 +80,7 @@ public class FollowPathAI : SimpleAI
     public override void Start()
     {
         base.Start();
+
         startingPosition = transform.position;
 
         if (Path.Length == 0)
@@ -73,7 +92,7 @@ public class FollowPathAI : SimpleAI
     public override void OnEnable()
     {
         base.OnEnable();
-        currentPointToFollowIndex = 0;   
+        currentPointToFollowIndex = 0;
     }
 
     public override void Move()
@@ -87,8 +106,8 @@ public class FollowPathAI : SimpleAI
                 {
                     if (Reset && !PingPong)
                     {
-                        rigid.MovePosition(startingPosition);
-                        //transform.position = startingPosition;
+                        Vector3 startDir = (startingPosition - transform.position).normalized;
+                        transform.position += startDir * speed * Time.deltaTime;
                         currentPointToFollowIndex = 0;
                     }
                     else if (!Reset && PingPong)
@@ -130,19 +149,18 @@ public class FollowPathAI : SimpleAI
             Path[currentPointToFollowIndex].position = newPos;
 
 
-            Vector3 direction = (newPos - transform.position);
-            Vector3 normalizedDirection = direction.normalized;
-            float distance = direction.magnitude;
+            Vector3 direction = (newPos - transform.position).normalized;
+            float distance = Vector3.Distance(transform.position, newPos);
 
             if (distance > 1)
             {
-                transform.Translate(normalizedDirection * m_ZVel * Time.deltaTime,Space.World);
+                transform.position += direction * speed * Time.deltaTime;
             }
 
             if (RotateTowardDir)
             {
                 step = RotationSpeed * Time.deltaTime;
-                targetRotation = Vector3.Lerp(targetRotation, normalizedDirection, step);
+                targetRotation = Vector3.Lerp(targetRotation, direction, step);
                 transform.rotation = Quaternion.LookRotation(targetRotation, Vector3.up);
             }
         }

@@ -217,14 +217,4 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
         }
     }
-    public EnemyElement GetEnemyElemeny(string id)
-    {
-        EnemyElement enemyElement;
-        if (ListOfEnemyElements.TryGetValue(id, out enemyElement))
-        {
-            return enemyElement;
-        }
-        return enemyElement;
-    }
-
 }

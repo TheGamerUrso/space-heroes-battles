@@ -301,7 +301,7 @@ public static class TransformExtention
     /// </summary>
     /// <param name="transform"></param>
     /// <returns></returns>
-    public static Transform[] GetChildrenAsList(Transform transform)
+    public static Transform[] GetChildrenAsList(this Transform transform)
     {
         List<Transform> childrenInTransform = new List<Transform>();
         foreach (Transform item in transform)

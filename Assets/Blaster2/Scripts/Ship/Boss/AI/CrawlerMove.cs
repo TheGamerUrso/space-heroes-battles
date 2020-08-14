@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrawlerAI : BaseBossEnemyAI
+public class CrawlerMove : BaseBossMove
 {
     #region Curcular Movement Settings
     [Header("Curcular Movement Settings")]
     public bool CurclularMove;
     public float angle = 0;
-    float speed = (2 * Mathf.PI) / 5; //2*PI in degress is 360, so you get 5 seconds to complete a circle
     public float radius = 5;
     #endregion
 
@@ -21,6 +20,13 @@ public class CrawlerAI : BaseBossEnemyAI
             speed *= -1;
         }
     }
+    public override void Start()
+    {
+        base.Awake();
+
+        speed = (2 * Mathf.PI) / 5; //2*PI in degress is 360, so you get 5 seconds to complete a circle
+    }
+
 
     public override void EnableMovement()
     {
@@ -40,14 +46,14 @@ public class CrawlerAI : BaseBossEnemyAI
     {
         angle += speed * Time.deltaTime; //if you want to switch direction, use -= instead of +=
 
-        xVel = Mathf.Cos(angle) * radius + .8f;
-        zVel = Mathf.Sin(angle) * radius + 100;
+        var xVel = Mathf.Cos(angle) * radius + .8f;
+        var zVel = Mathf.Sin(angle) * radius + 100;
 
         Vector3 newPos = transform.position;
         newPos.x = xVel;
         newPos.z = zVel;
         transform.position = Vector3.MoveTowards(transform.position, newPos, .5f);
     }
-   
+
 
 }

@@ -50,6 +50,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 0}
+  FireRate: 0
+  Damage: 0
+  SuperChargeTime: 0
   source: {fileID: 272390576023665920}
   particleSFX:
   - {fileID: 2772072528494646783}
@@ -532,10 +535,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 73bfd5308d0fe16499dff24d401459c9, type: 2}
+  FireRate: 0
+  Damage: 0
+  SuperChargeTime: 0
   source: {fileID: 4071990685124905878}
   particleSFX: []
   Cannons: []
-  turretDuration: 1
   Turrets: {fileID: 3709093859757610385}
 --- !u!82 &4071990685124905878
 AudioSource:
@@ -892,6 +897,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 0}
+  FireRate: 0
+  Damage: 0
+  SuperChargeTime: 0
   source: {fileID: 272390576023665920}
   particleSFX:
   - {fileID: 6751621632664860184}
@@ -1042,6 +1050,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 0}
+  FireRate: 0
+  Damage: 0
+  SuperChargeTime: 0
   source: {fileID: 272390576023665920}
   particleSFX:
   - {fileID: 6751577260762977608}
@@ -1362,6 +1373,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 0}
+  FireRate: 0
+  Damage: 0
+  SuperChargeTime: 0
   source: {fileID: 272390576023665920}
   particleSFX:
   - {fileID: 6751297612334504278}
@@ -1510,6 +1524,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
+  FireRate: 0
+  Damage: 0
+  SuperChargeTime: 0
   source: {fileID: 272390576023665920}
   particleSFX:
   - {fileID: 6751467185547401996}
@@ -1778,9 +1795,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f68c27ff0e9c0d246914ebb3a314c1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlSceme: 0
   tilt: 5
-  Speed: 1.5
   ShipModel: {fileID: 2640992793129728498}
+  Speed: 1.5
+  animationCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  Sensitivity: 2.5
 --- !u!114 &6754395505337494356
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1805,8 +1830,6 @@ MonoBehaviour:
   audioSource: {fileID: 534651622424146018, guid: 60511731143211c4a9fd177c8b163ddc,
     type: 3}
   ItemCollectedEffect: {fileID: 1387533736273963289}
-  CanFire: 1
-  CurrentWeapnType: 0
 --- !u!82 &-382077550390661723
 AudioSource:
   m_ObjectHideFlags: 0

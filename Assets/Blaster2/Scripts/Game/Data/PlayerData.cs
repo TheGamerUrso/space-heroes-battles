@@ -58,7 +58,7 @@ public class PlayerData
     public List<Achievement> Achievements;
 
     public int multiplier = 10;
-    public int ammount = 50;
+    public int ammount = 100;
 
     public PlayerData() { }
 
@@ -254,6 +254,7 @@ public class PlayerData
             {
                 Level++;
                 XP = 0;
+
                 xpToLevel = (Level / multiplier + Level % multiplier) * ammount * Mathf.Pow(multiplier, Level / multiplier);
 
                 Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);

@@ -106,9 +106,9 @@ GameObject:
   - component: {fileID: 1330112429161260340}
   - component: {fileID: 1338249362927483178}
   - component: {fileID: 1349775451676661262}
-  - component: {fileID: 1435941801030838864}
   - component: {fileID: 4585798423900489478}
   - component: {fileID: 8789287769288364698}
+  - component: {fileID: 3915976184962548989}
   m_Layer: 15
   m_Name: EnemyShip3
   m_TagString: Enemy
@@ -160,37 +160,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &1435941801030838864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332800252941561598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1e4237b3175d47f43a49e3ee38849178, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShieldEffect: {fileID: 5123420270638370231}
-  Id: 0
-  EnemyData: {fileID: 11400000, guid: 1efe9ab896acc8144bd88510b795658d, type: 2}
-  Level: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  currentHealth: 0
-  maxHealth: 0
-  Weapons:
-  - {fileID: 5013369994354922169}
-  delayAttak: 3
-  enemyElement:
-    Name: 
-    gameObjectType: 0
-    Prefab: {fileID: 0}
-    currentNumberInScene: 0
-    MaxNumberInScene: 0
-    presentage: 0
 --- !u!114 &4585798423900489478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -203,9 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b421540695a251140a34f21e36d3c698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bAppeared: 0
-  bEntered: 0
-  PathIndex: 0400000003000000050000000600000007000000
+  PathIndex: 04000000050000000600000007000000
   Path: []
   currentPointToFollowIndex: 0
   PingPong: 0
@@ -213,7 +180,6 @@ MonoBehaviour:
   Reset: 0
   RotationSpeed: 0
   reverse: 0
-  SpawnAtFirstPath: 1
   Auto: 1
 --- !u!205 &8789287769288364698
 LODGroup:
@@ -279,6 +245,37 @@ LODGroup:
     - renderer: {fileID: 0}
     - renderer: {fileID: 0}
   m_Enabled: 1
+--- !u!114 &3915976184962548989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332800252941561598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf025f489adc1a8469debef10bfc1cd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShieldEffect: {fileID: 5123420270638370231}
+  Id: 3
+  EnemyData: {fileID: 11400000, guid: 1efe9ab896acc8144bd88510b795658d, type: 2}
+  Level: 0
+  Damage: 0
+  FireRate: 0
+  Speed: 0
+  currentHealth: 0
+  maxHealth: 0
+  Weapons:
+  - {fileID: 5013369994354922169}
+  delayAttak: 3
+  enemyElement:
+    Name: 
+    gameObjectType: 0
+    Prefab: {fileID: 0}
+    currentNumberInScene: 0
+    MaxNumberInScene: 0
+    presentage: 0
 --- !u!1 &2814254901604060151
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,9 +1,10 @@
 using DG.Tweening;
 using UnityEngine;
 
-public class ManeuverEnemy : SimpleAI
+public class ManeuverEnemy : EnemyMove
 {
-    private bool firstTime;
+    protected int Direction;
+    protected bool directionChanged;
 
     public override void Start()
     {
@@ -11,11 +12,16 @@ public class ManeuverEnemy : SimpleAI
         int waitTime = UnityEngine.Random.Range(2, 4);
         InvokeRepeating("Maneuver", 1, waitTime);
 
+        Direction = 0;
+
     }
 
     public override void Move()
     {
-        base.Move();
+        movement = (transform.forward * Speed) + (transform.right * (Speed / 2));
+        movement.x *= Direction;
+        transform.position += movement * Time.deltaTime;
+
 
         if (transform.position.x > Constants.m_XMax)
         {
@@ -25,6 +31,8 @@ public class ManeuverEnemy : SimpleAI
         {
             Direction = -1;
         }
+
+        CheckOutOfSight();
     }
 
     private void Maneuver()

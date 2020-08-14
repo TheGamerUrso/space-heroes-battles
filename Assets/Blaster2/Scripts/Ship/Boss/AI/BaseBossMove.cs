@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseBossEnemyAI : BaseEnemyAI
+public class BaseBossMove : EnemyMove
 {
     #region Boss AI Config
     [Header("Boss AI Config")]
@@ -32,7 +32,7 @@ public class BaseBossEnemyAI : BaseEnemyAI
 
     public override void Start()
     {
-        m_XVel = GetComponent<BaseEnemy>().Speed;
+        speed = GetComponent<BaseEnemy>().Speed;
     }
 
     public virtual void ChangeWaypointByIndex(int currentPointToFollowIndex)

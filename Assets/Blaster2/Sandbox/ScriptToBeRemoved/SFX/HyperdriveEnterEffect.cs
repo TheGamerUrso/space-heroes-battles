@@ -1,4 +1,5 @@
-﻿using DG.Tweening;
+﻿
+using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,12 +9,12 @@ public class HyperdriveEnterEffect : MonoBehaviour
     [SerializeField] protected GameObject shipPivot;
     [SerializeField] private Ease easeMode;
     [SerializeField] protected float speed;
-    protected BaseEnemyAI baseEnemyAI;
+    protected EnemyMove baseEnemyAI;
     protected BaseEnemy baseEnemy;
 
     public virtual void Awake()
     {
-        baseEnemyAI = GetComponent<BaseEnemyAI>();
+        baseEnemyAI = GetComponent<EnemyMove>();
         baseEnemy = GetComponent<BaseEnemy>();
     }
     private void OnDestroy()
@@ -52,7 +53,7 @@ public class HyperdriveEnterEffect : MonoBehaviour
             {
                 baseEnemy.HealthBar.Show();
             }
-            baseEnemy.EnableColliders(true);
+     
         });
     }
 

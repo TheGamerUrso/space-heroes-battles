@@ -87,6 +87,9 @@ public class SimpleShipControls : MonoBehaviour
 
     public AnimationCurve animationCurve;
 
+    public float Sensitivity = 0.1f;
+
+
     private void Move()
     {
         transform.position = Vector3.Lerp(transform.position, (targetPos + new Vector3(0, 0, offset)), Speed * Time.deltaTime);
@@ -101,7 +104,7 @@ public class SimpleShipControls : MonoBehaviour
             {
                 transform.position = new Vector3(transform.position.x + Input.GetAxis("Mouse X") * Speed * Time.deltaTime,
                     transform.position.y,
-                    transform.position.z + Input.GetAxis("Mouse Y") * Speed * Time.deltaTime);
+                    transform.position.z + Input.GetAxis("Mouse Y") * Sensitivity * Speed * Time.deltaTime);
             }
 #endif
             if (Input.touchCount > 0)

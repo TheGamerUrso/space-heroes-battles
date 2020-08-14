@@ -1,16 +1,16 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using DG.Tweening;
+using System.Collections;
 using UnityEngine;
 
-public class BaseEnemyAI : MonoBehaviour
+public class EnemyMove : MonoBehaviour
 {
-    [Header("Enemy AI Config")]
+    protected bool Loop;
 
     protected BaseEnemy enemy;
-    protected Rigidbody rigid;
     protected Animator animator;
     protected Coroutine EnterCoroutine;
 
+    [Header("Enemy AI Config")]
     protected Vector3 startingPosition;
     protected Vector3 dist;
     protected Vector2 MaxScreenBound;
@@ -19,43 +19,43 @@ public class BaseEnemyAI : MonoBehaviour
     protected float delay = .5f;
     protected Vector3 movement;
 
-    protected float m_XVel;
-    protected float m_ZVel;
 
-    public float xVel { get { return m_XVel; } set { m_XVel = value; } }
-    public float zVel { get { return m_ZVel; } set { m_ZVel = value; } }
-
-    public bool bAppeared, bEntered;
-
-    protected int enterNameHash = Animator.StringToHash("Enter");
-    protected int deathNameHash = Animator.StringToHash("Death");
-
+    protected float speed;
+    public float Speed { get { return speed; } set { speed = value; } }
     public virtual void OnEnable() { }
 
     public virtual void Awake()
     {
-        rigid = GetComponent<Rigidbody>();
         enemy = GetComponent<BaseEnemy>();
         animator = GetComponentInChildren<Animator>();
     }
 
-    public virtual void Start() { }
+    public virtual void Start(){}
 
-    public virtual void Update() { }
+  
+
+    public virtual void Update() { 
+
+    
+    }
 
     private void LateUpdate()
     {
         Move();
     }
 
-    public virtual void Move(){}
+    public virtual void Move()
+    {
+        movement = (transform.forward * Speed) + (transform.right * (Speed/2));
+        transform.position += movement * Time.deltaTime;
+        CheckOutOfSight();
+    }
 
     public void Leave()
     {
         enemy.Leave();
         gameObject.SetActive(false);
     }
-
     public void CheckOutOfSight()
     {
         if (transform.position.z < Constants.m_ZMin)
@@ -63,9 +63,9 @@ public class BaseEnemyAI : MonoBehaviour
             Leave();
         }
     }
-
     public virtual void EnableMovement()
     {
 
     }
+
 }

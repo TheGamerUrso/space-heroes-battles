@@ -34,12 +34,6 @@ public class SurvivalMode : BaseGameMode
 
         for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
         {
-            spawnInfo.enemyElements[i].currentNumberInScene = 0;
-        }
-
-
-        for (int i = 0; i < spawnInfo.enemyElements.Count; i++)
-        {
             ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
         }
 
@@ -93,18 +87,14 @@ public class SurvivalMode : BaseGameMode
 
     GameObject enemGO = null;
     EnemyElement previousSpawnEnemy = null;
-    int repetition = 0;
-    System.Random r;
+
     bool active = false;
     bool rewardToClaim = false;
 
     public override IEnumerator Spawn()
     {
-        r = new System.Random();
-
         while (!Game.IsGameOver)
         {
-
             if ((GameController.Instance.currentGameState == GameController.GameState.START))
             {
                 yield return new WaitUntil(() => (GameController.Instance.currentGameState == GameController.GameState.GAME));
@@ -122,8 +112,7 @@ public class SurvivalMode : BaseGameMode
             Game.UseSlowMo = true;
 
             availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
-            availableEnemie.Reverse();
-
+            var repeat = 1;
             while (spawnInfo.TotalEnemies > 0)
             {
                 if (gameInfo.pause)
@@ -133,18 +122,32 @@ public class SurvivalMode : BaseGameMode
 
                 ChooseRandomEnemyToSpawn();
 
-                if (repetition <= 2)
+                if (spawnInfo.TotalEnemies - 1 >= 0)
                 {
-                    if (spawnInfo.TotalEnemies - 1 >= 0)
+                    if (enemyElement != null)
                     {
-                        if (enemyElement != null)
+
+                        if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
                         {
-                            enemGO = spawnEnemies.SpawnEnemyElement(GetEnemyElemeny(enemyElement.Name), gameInfo.LevelDifficulty);
-                            Enemies.Add(enemGO);
-                            previousSpawnEnemy = enemyElement;
+                            repeat = 4;
+                        }
+                        else
+                        {
+                            repeat = 1;
+                        }
+
+                        for (int i = 0; i < repeat; i++)
+                        {
+                            if (spawnInfo.TotalEnemies - 1 >= 0)
+                            {
+                                enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
+                                Enemies.Add(enemGO);
+                                yield return new WaitForSeconds(.5f);
+                            }
                         }
                     }
                 }
+
 
                 yield return CooldownTimer;
                 CooldownTimer = new WaitForSeconds(cooldown);
@@ -225,46 +228,10 @@ public class SurvivalMode : BaseGameMode
 
     public void ChooseRandomEnemyToSpawn()
     {
-        tempList = availableEnemie.Where(x => (x.currentNumberInScene < x.MaxNumberInScene && x.presentage > 0)).ToList();
-
-        if (tempList.Count > 0)
+        if (availableEnemie.Count > 0)
         {
-            if (tempList.Count > 1)
-            {
-                double diceRoll = r.NextDouble() * 100;
-                double cumulative = 0.0;
-
-                for (int i = 0; i < tempList.Count; i++)
-                {
-                    cumulative += tempList[i].presentage;
-
-                    if (diceRoll < cumulative)
-                    {
-                        enemyElement = tempList[i];
-                        break;
-                    }
-                }
-            }
-            else
-            {
-                enemyElement = tempList[0];
-            }
-
-            if (tempList.Count > 1)
-            {
-                if (previousSpawnEnemy != null)
-                {
-                    if (previousSpawnEnemy.gameObjectType == enemyElement.gameObjectType)
-                    {
-                        repetition++;
-                        Debug.Log(previousSpawnEnemy.gameObjectType.ToString() + " " + repetition);
-                    }
-                    else if (previousSpawnEnemy.gameObjectType != enemyElement.gameObjectType)
-                    {
-                        repetition = 0;
-                    }
-                }
-            }
+            int randEnemyIndex = UnityEngine.Random.Range(0, availableEnemie.Count);
+            enemyElement = availableEnemie[randEnemyIndex];
         }
     }
 }
