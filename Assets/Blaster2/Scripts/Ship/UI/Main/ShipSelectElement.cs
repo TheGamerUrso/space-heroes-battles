@@ -5,23 +5,32 @@ using UnityEngine.UI;
 
 public class ShipSelectElement : MonoBehaviour
 {
-    public ShipSelect shipSelect;
-    public int ID;
-    public ShipSelectData shipSelectData;
-    public bool Locked;
-    public Button PurchaseButton;
-    public Image Icon;
-    public Image LockImage;
-    public TextMeshProUGUI CostText;
+    [SerializeField] private ShipSelect shipSelect;
+    [SerializeField] private int ID;
+    [SerializeField] private ShipSelectData shipSelectData;
+    private bool Locked;
+    [SerializeField] private Button PurchaseButton;
+    [SerializeField] private Image Icon;
+    [SerializeField] private Image LockImage;
+    [SerializeField] private TextMeshProUGUI CostText;
+    private PlayerData playerData;
 
     private void Start()
     {
         Icon.sprite = shipSelectData.Icon;
         CostText.text = shipSelectData.Cost.ToString();
-        if (shipSelectData.Cost == 0)
+
+        playerData = PersistantData.GetPlayerData();
+
+        if (playerData.UnlockedHeroes[ID] == 0)
+        {
+            Lock();
+        }
+        else if (playerData.UnlockedHeroes[ID] == 1)
         {
             Unlock();
         }
+
     }
 
     private void Update()
@@ -31,8 +40,6 @@ public class ShipSelectElement : MonoBehaviour
 
     public void RefreshElement()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-
         int coins = playerData.Coins;
 
         if (coins >= shipSelectData.Cost)
@@ -82,7 +89,7 @@ public class ShipSelectElement : MonoBehaviour
                         num++;
                     }
                 }
-                
+
                 //TODO Achievement For Ship
 
             }

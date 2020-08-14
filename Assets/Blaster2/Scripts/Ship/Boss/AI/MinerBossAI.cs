@@ -1,4 +1,4 @@
-﻿public class MinerBossAI : BaseBossEnemyAI
+﻿public class MinerBossAI : BaseBossMove
 {
 
 

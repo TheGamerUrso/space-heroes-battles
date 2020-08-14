@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DG.Tweening;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -78,6 +79,9 @@ public class GameController : MonoSingleton<GameController>
         Events.PlayerLost -= GameOver;
         Events.GameEnded -= Win;
         Events.EnemyDied -= EnemyDied;
+
+        DOTween.Clear(true);
+        DOTween.ClearCachedTweens();
     }
 
     protected override void Awake()
@@ -218,6 +222,8 @@ public class GameController : MonoSingleton<GameController>
 
         SaveSystem.SaveGame();
 
+        AudioManager.PlayMusic("GameOver", false);
+
         yield return new WaitForSeconds(2.0f);
 
         Events.OnGameOver?.Invoke(this);
@@ -258,6 +264,7 @@ public class GameController : MonoSingleton<GameController>
                 if (Game.IsGameOver == false)
                 {
                     Game.IsGameOver = true;
+
                     StartCoroutine(DelayGameOver());
                 }
                 break;

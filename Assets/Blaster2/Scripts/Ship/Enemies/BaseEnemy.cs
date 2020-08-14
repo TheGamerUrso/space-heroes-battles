@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class BaseEnemy : Ship, IDamagable
@@ -9,6 +10,7 @@ public class BaseEnemy : Ship, IDamagable
     public Enemy_SO EnemyData;
     public bool IsAlive { get; set; }
 
+    [Header("STATS")]
     public int Level;
     public float Damage;
     public float FireRate;
@@ -18,32 +20,25 @@ public class BaseEnemy : Ship, IDamagable
     public float CurrentHealth { get { return currentHealth; } }
     public float MaxHealth { get { return maxHealth; } }
 
-    protected BaseEnemyAI baseEnemyAI;
-    protected bool AutoEnableWeapon;
-
+    [Space(2)]
     [SerializeField] protected WeaponScript[] Weapons;
     [SerializeField] protected float delayAttak = 3;
+    protected bool AutoEnableWeapon;
     protected BoxCollider boxCollider;
     protected bool CanAttack;
     protected int currentWeaponActive;
     protected float takeDamageDelay;
 
-    public EnemyHealthWidget HealthBar { get; set; }
+    protected EnemyMove enemyMove;
 
-    private BaseGameMode baseGameMode;
+
+    public EnemyHealthWidget HealthBar { get; set; }
 
     [HideInInspector] public EnemyElement enemyElement;
 
     public override void OnEnable()
     {
         IsAlive = true;
-
-        DisableAllWeapons();
-
-        if (AutoEnableWeapon)
-        {
-            EnableAllWeapon();
-        }
     }
 
 
@@ -52,6 +47,7 @@ public class BaseEnemy : Ship, IDamagable
         HasShield = false;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
+        enemyMove = GetComponent<EnemyMove>();
     }
 
     public override void Start()
@@ -70,10 +66,12 @@ public class BaseEnemy : Ship, IDamagable
             HealthBar.Setup(this, false);
         }
 
-        baseEnemyAI = GetComponent<SimpleAI>();
         ShieldEffect.SetActive(HasShield);
 
         SetStats(Level);
+
+
+        enemyMove.Speed = Speed;
     }
 
     public override void Update()
@@ -156,7 +154,7 @@ public class BaseEnemy : Ship, IDamagable
         {
             var destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(destroyable.MaxHealth / 2);
-            TakeDamage(destroyable.CurrentHealth);
+            TakeDamage(CurrentHealth);
         }
     }
 

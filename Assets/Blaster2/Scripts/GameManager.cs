@@ -82,6 +82,14 @@ public class GameManager : MonoSingleton<GameManager>
 
     public float sceneLoadProgress;
 
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            playerData.EarnXP(100);
+        }
+    }
+
     public Level GetCurrentLevelSelected()
     {
         if (currentLevelSelected == null)
@@ -118,7 +126,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         if (level.mission.ID > 0)
         {
-            StoryController.Instance.ShowStory(level);
+            //StoryController.Instance.ShowStory(level);
         }
     }
 
@@ -311,50 +319,31 @@ public class GameManager : MonoSingleton<GameManager>
 
     private IEnumerator LoadSceneAsync(LevelEnum levelName)
     {
-        string activeScene = SceneManager.GetActiveScene().name;
+        ao = SceneManager.LoadSceneAsync((int)levelName);
 
-        if (activeScene.Equals(levelName.ToString()))
+        ao.completed += OnLoadOperationComplete;
+        _loadOperation.Add(ao);
+        currentLevelLoaded = levelName.ToString();
+
+        if (ao == null)
         {
-            SceneManager.LoadSceneAsync((int)levelName, LoadSceneMode.Single);
-
-        }
-        else
-        {
-            ao = SceneManager.LoadSceneAsync((int)levelName, LoadSceneMode.Additive);
-
-            ao.completed += OnLoadOperationComplete;
-            _loadOperation.Add(ao);
-            currentLevelLoaded = levelName.ToString();
-
-            if (ao == null)
-            {
-                Debug.LogError("[SceneController] Unable to load level" + levelName);
-            }
-
-            while (ao.isDone == false)
-            {
-                UpdateProgress(ao.progress);
-                yield return null;
-            }
-
-            UnloadLevel(activeScene);
-
-            if (unloading)
-            {
-                yield return new WaitUntil(() => !unloading);
-            }
-
-
-            System.GC.Collect();
-
-            Hide();
-
-            yield return new WaitForSeconds(2.0f);
-            LoadingScreen.SetActive(false);
+            Debug.LogError("[SceneController] Unable to load level" + levelName);
         }
 
+        while (ao.isDone == false)
+        {
+            UpdateProgress(ao.progress);
+            yield return null;
+        }
 
+        System.GC.Collect();
+
+        Hide();
+
+        yield return new WaitForSeconds(2.0f);
+        LoadingScreen.SetActive(false);
     }
+
     private IEnumerator ShowLoadingScreen(LevelEnum level, bool showLoadingScreen = true)
     {
         if (showLoadingScreen)
@@ -411,7 +400,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SetSurvivalScore(int ammount)
     {
-        playerData.SetScore((int)LevelEnum.Level0, ammount);
+        playerData.SetScore(0, ammount);
     }
 
     public void PlayerChallengesCheck()

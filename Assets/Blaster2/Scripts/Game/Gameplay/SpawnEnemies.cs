@@ -16,10 +16,21 @@ public class EnemyElement
     public int presentage;
 }
 
-
 public class SpawnEnemies
 {
     private static Vector3 previousPos;
+
+    public List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
+    public bool enemy1Spawned;
+    private int previousIndex = 0;
+    private int previousPath = 0;
+    EnemyElement prevEnemyElement;
+
+
+    public SpawnEnemies(List<SpawnPoint> spawnPoints)
+    {
+        this.spawnPoints = spawnPoints;
+    }
 
     public static BaseBossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
     {
@@ -35,60 +46,44 @@ public class SpawnEnemies
         return enemy;
     }
 
-    public static GameObject SpawnEnemyElement(EnemyElement enemyElement, int LevelDifficulty = 1)
+    IEnumerator EnableSpawnPointAgain(SpawnPoint spawnPoint)
+    {
+        yield return new WaitForSeconds(2.0f);
+        spawnPoint.used = false;
+    }
+
+    public GameObject SpawnEnemyElement(EnemyElement enemyElement, int LevelDifficulty = 1)
     {
         enemyElement.currentNumberInScene++;
+        BaseGameMode.Instance.spawnInfo.TotalEnemies--;
 
-        Vector3 spawnPos = new Vector3(UnityEngine.Random.Range(Constants.m_XMin, Constants.m_XMax), 0, Constants.m_ZMax);
+        SpawnPoint[] tempList = spawnPoints.Where(x => x.used == false).ToArray();
+        int spawnIndex = UnityEngine.Random.Range(0, tempList.Length);
+        Vector3 spawnPos = tempList[spawnIndex].spawnPoint.transform.position;
 
-        if (enemyElement.gameObjectType == PoolGameObjectType.Enemy2 ||
-            enemyElement.gameObjectType == PoolGameObjectType.Enemy6 ||
-               enemyElement.gameObjectType == PoolGameObjectType.Enemy7)
+   
+
+        if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
         {
-            if (previousPos != Vector3.zero)
+            if (enemy1Spawned)
             {
-                Vector3 diff = spawnPos - previousPos;
-                if (diff.magnitude <= 10)
-                {
-                    int randDist = UnityEngine.Random.Range(40, 60);
-
-                    if (spawnPos.x > previousPos.x)
-                    {
-                        spawnPos.x += 20;
-                    }
-                    else if (spawnPos.x <= previousPos.x)
-                    {
-                        spawnPos.x -= 20;
-                    }
-
-                    if (spawnPos.y > previousPos.y)
-                    {
-                        spawnPos.x += 20;
-                    }
-                    else if (spawnPos.y <= previousPos.y)
-                    {
-                        spawnPos.x -= 20;
-                    }
-            
-                    if (spawnPos.x + randDist >= Constants.m_XMax)
-                    {
-                        spawnPos.x -= randDist;
-                    }
-
-                    if ((spawnPos.x - randDist <= Constants.m_XMin))
-                    {
-                        spawnPos.x += randDist;
-                    }          
-                }
+                previousIndex = spawnIndex;
             }
-
         }
+        else
+        {
+            enemy1Spawned = false;
+            spawnPoints[previousIndex].used = false;
+            spawnPoints[spawnIndex].used = true;
+        }
+
+        GameController.Instance.StartCoroutine(EnableSpawnPointAgain(spawnPoints[spawnIndex]));
 
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 
         BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
         enemy.Id = enemyElement.Name + "_" + enemyElement.currentNumberInScene;
-        FollowPathAI followPathAI = enemGO.GetComponent<FollowPathAI>();
+        EMFollowPath followPathAI = enemGO.GetComponent<EMFollowPath>();
 
         enemGO.SetActive(true);
 
@@ -99,18 +94,35 @@ public class SpawnEnemies
         }
         else
         {
-            enemGO.transform.position = spawnPos;
-            followPathAI.GeneratePath();
+            int pathIndex = followPathAI.GeneratePath();
+
+            if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
+            {
+                if (enemy1Spawned)
+                {
+                    enemGO.transform.position = previousPos;
+                    followPathAI.GeneratePathByIndex(previousPath);
+                }
+                else
+                {
+                    enemy1Spawned = true;
+                    previousPath = pathIndex;
+                    enemGO.transform.position = spawnPos;
+                }
+            }
+
+            enemy.enemyElement = enemyElement;
+
+            enemy.SetStats(LevelDifficulty);
+
+
+
+            previousPos = spawnPos;
+            prevEnemyElement = enemyElement;
         }
 
-        enemy.enemyElement = enemyElement;
-
-        enemy.SetStats(LevelDifficulty);
-
-        BaseGameMode.Instance.spawnInfo.TotalEnemies--;
-
-        previousPos = spawnPos;
 
         return enemGO;
     }
+
 }

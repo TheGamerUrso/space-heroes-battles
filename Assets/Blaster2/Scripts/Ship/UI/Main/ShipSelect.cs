@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Doozy.Engine.UI;
 using UnityEngine;
 
 [System.Serializable]
@@ -29,32 +28,7 @@ public class ShipSelect : MonoSingleton<ShipSelect>
 
     private void Start()
     {
-        Initialize();
-    }
-
-    public void Initialize()
-    {
         playerData = PersistantData.GetPlayerData();
-
-        if (playerData.UnlockedHeroes.Length == 0)
-        {
-            playerData.UnlockedHeroes[0] = 1;
-            shipSelectElement[0].Unlock();
-        }
-
-
-        for (int i = 1; i < shipSelectElement.Length; i++)
-        {
-            if (playerData.UnlockedHeroes[i] > 0)
-            {
-                shipSelectElement[i].Unlock();
-            }
-            else if (playerData.UnlockedHeroes[i] == 0)
-            {
-                shipSelectElement[i].Lock();
-            }
-        }
-
         currentShipSelected = playerData.CurrrentSelectedShip;
 
         Events.OnShipSelect += SelectShip;
@@ -70,7 +44,7 @@ public class ShipSelect : MonoSingleton<ShipSelect>
     public void SelectShip(int shipID)
     {
         currentShipSelected = shipID;
-        playerData.CurrrentSelectedShip = currentShipSelected;
+        playerData.SetCurrentSelectShip(currentShipSelected);
         Refresh();
     }
 
@@ -117,7 +91,7 @@ public class ShipSelect : MonoSingleton<ShipSelect>
         }
         else if (playerData.UnlockedHeroes[currentShipSelected] == 1)
         {
-            playerData.CurrrentSelectedShip = currentShipSelected;
+            playerData.SetCurrentSelectShip(currentShipSelected);
         }
     }
 

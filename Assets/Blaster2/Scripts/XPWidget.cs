@@ -10,6 +10,14 @@ public class XPWidget : MonoBehaviour
     private PlayerShipData playerShipData;
     [SerializeField] private TextMeshProUGUI PlayerXPText;
 
+    public bool updateText;
+
+    private float xp;
+    private float xpToLevel;
+
+    private float ActualXpToShow;
+    private float ActualXpToLevelToShow;
+
     private void OnDestroy()
     {
         Events.OnXpValueChanged -= SetPlayerXP;
@@ -34,8 +42,22 @@ public class XPWidget : MonoBehaviour
         SetPlayerXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
     }
 
+    private void Update()
+    {
+        if (updateText) {
+            ActualXpToShow = Mathf.Lerp(ActualXpToShow, xp, .4f);
+            ActualXpToLevelToShow = Mathf.Lerp(ActualXpToLevelToShow, xpToLevel, .4f);
+            PlayerXPText.text = Mathf.Round(ActualXpToShow) + " / " + Math.Round(ActualXpToLevelToShow);
+            if (ActualXpToLevelToShow == xpToLevel && ActualXpToShow == xp)
+            {
+                updateText = false;
+            }
+        }
+    }
     public void SetPlayerXP(int lvl, float xp, float xpToLevel)
     {
-        PlayerXPText.text = Mathf.Round(xp) + " / " + Math.Round(xpToLevel);
+        this.xp = xp;
+        this.xpToLevel = xpToLevel;
+        updateText = true;
     }
 }

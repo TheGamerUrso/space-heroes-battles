@@ -78,7 +78,6 @@ GameObject:
   - component: {fileID: 7298843048530300145}
   - component: {fileID: 3726831270533528845}
   - component: {fileID: 4027941564653448092}
-  - component: {fileID: 913530427361385497}
   - component: {fileID: 2225013079835527159}
   m_Layer: 15
   m_Name: EnemyShip1
@@ -173,9 +172,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b421540695a251140a34f21e36d3c698, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bAppeared: 0
-  bEntered: 0
-  PathIndex: 01000000020000000300000005000000
+  PathIndex: 010000000200000003000000
   Path: []
   currentPointToFollowIndex: 0
   PingPong: 0
@@ -183,7 +180,6 @@ MonoBehaviour:
   Reset: 0
   RotationSpeed: 2
   reverse: 0
-  SpawnAtFirstPath: 1
   Auto: 1
 --- !u!82 &4027941564653448092
 AudioSource:
@@ -282,21 +278,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &913530427361385497
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332800252941561598}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9edc1c931f490c64ba2e21d2e0f54e91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shipPivot: {fileID: 3223586283285619861}
-  easeMode: 1
-  speed: 0
 --- !u!205 &2225013079835527159
 LODGroup:
   m_ObjectHideFlags: 0

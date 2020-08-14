@@ -28,17 +28,17 @@ public class SlowMo : MonoBehaviour
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
-           
-
             if (!Game.IsGameOver && !Game.IsPaused && Game.UseSlowMo)
             {
                 if (Game.SlowMo)
                 {
                     Time.timeScale = delayTheSlowMoEffectTimer;
+                    AudioManager.Instance.SetPitch(.8f);
                 }
                 else if (!Game.SlowMo && Time.timeScale < 1)
                 {
                     Time.timeScale = 1.0f;
+                    AudioManager.Instance.SetPitch(1.0f);
                 }
             }
         }

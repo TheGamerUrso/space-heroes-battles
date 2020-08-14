@@ -5,6 +5,14 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
+public class SpawnPoint
+{
+    public string Name;
+    public bool used;
+    public GameObject spawnPoint;
+}
+
+[Serializable]
 public struct GameInfo
 {
     public bool pause;
@@ -45,7 +53,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     public GameInfo gameInfo;
     public SpawnInfo spawnInfo;
 
-    protected float cooldown = 1f;
+    [SerializeField] protected float cooldown = 1f;
     protected float delay = 0.5f;
 
     protected List<GameObject> Enemies = new List<GameObject>();
@@ -53,9 +61,15 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected List<EnemyElement> tempList = new List<EnemyElement>();
     protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
 
-    protected WaitForSeconds waitForCooldown = new WaitForSeconds(1);
-    protected WaitForSeconds waitForFourSeconds = new WaitForSeconds(4);
-    protected WaitForSeconds waitForSec;
+    protected WaitForSeconds shortDelay;
+    protected WaitForSeconds CooldownTimer;
+
+    protected WaitForSeconds shortWait = new WaitForSeconds(1);
+    protected WaitForSeconds longWait = new WaitForSeconds(2);
+
+
+    [SerializeField] protected List<SpawnPoint> SpawnPoints = new List<SpawnPoint>();
+    protected SpawnEnemies spawnEnemies;
 
     public int EnemySpawnedInTotal { get; set; }
 
@@ -71,7 +85,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Events.EnemyDied -= EnemyDiedCallback;
         Events.EnemyEscaped -= EnemyEscapedCallback;
         Events.BossDied -= BossDiedCallback;
-        Events.EnemyGotHit -= BossGotHit;
+        Events.EnemyGotHit -= EnemyGotHitCallback;
     }
 
     public virtual void Start()
@@ -80,6 +94,8 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Events.EnemyDied += EnemyDiedCallback;
         Events.BossDied += BossDiedCallback;
         Events.EnemyGotHit += EnemyGotHitCallback;
+
+        spawnEnemies = new SpawnEnemies(SpawnPoints);
     }
 
     public void LateUpdate()
@@ -201,14 +217,4 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
         }
     }
-    public EnemyElement GetEnemyElemeny(string id)
-    {
-        EnemyElement enemyElement;
-        if (ListOfEnemyElements.TryGetValue(id, out enemyElement))
-        {
-            return enemyElement;
-        }
-        return enemyElement;
-    }
-
 }

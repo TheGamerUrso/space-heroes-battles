@@ -138,6 +138,7 @@ public class ActivateRandomLevel : MonoBehaviour
         cameraMain.cullingMask = defaultLayer;
         WrapTunnelFX.SetActive(false);
         active = false;
+        AudioManager.PlayRandomMusic(true);
     }
 
     public void ChooseNewLevel()
