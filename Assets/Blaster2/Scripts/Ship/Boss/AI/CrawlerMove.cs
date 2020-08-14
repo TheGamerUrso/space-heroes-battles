@@ -2,28 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CrawlerMove : BaseBossMove
+public class CrawlerMove : EnemyMove
 {
-    #region Curcular Movement Settings
-    [Header("Curcular Movement Settings")]
+    public BaseBossEnemy BossEnemy;
+
+    public bool StartBattle;
+
+
     public bool CurclularMove;
     public float angle = 0;
     public float radius = 5;
-    #endregion
 
     public override void OnEnable()
     {
-        base.OnEnable();
         int changeNum = Random.Range(0, 100);
         if (changeNum >= 50)
         {
             speed *= -1;
         }
     }
+
     public override void Start()
     {
-        base.Awake();
-
+        StartCoroutine(DelayStart());
         speed = (2 * Mathf.PI) / 5; //2*PI in degress is 360, so you get 5 seconds to complete a circle
     }
 
@@ -33,12 +34,14 @@ public class CrawlerMove : BaseBossMove
         CurclularMove = true;
     }
 
-    public override void Move()
+    public override void LateUpdate()
     {
-        base.Move();
-        if (CurclularMove)
+        if (StartBattle)
         {
-            CircularMovement();
+            if (CurclularMove)
+            {
+                CircularMovement();
+            }
         }
     }
 
@@ -55,5 +58,15 @@ public class CrawlerMove : BaseBossMove
         transform.position = Vector3.MoveTowards(transform.position, newPos, .5f);
     }
 
+
+    IEnumerator DelayStart()
+    {
+        yield return new WaitForSeconds(4);
+
+        BossEnemy.EnableAllWeapon();
+        BossEnemy.EnableColliders(true);
+        BossEnemy.HealthBar.Show();
+        StartBattle = true;
+    }
 
 }

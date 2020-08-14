@@ -355,7 +355,7 @@ Animator:
   m_Controller: {fileID: 9100000, guid: 35c33a99cf372d44ea9a748a4c0400a7, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
-  m_ApplyRootMotion: 1
+  m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
@@ -462,7 +462,6 @@ GameObject:
   - component: {fileID: 7309549720617316060}
   - component: {fileID: 5551472741575618557}
   - component: {fileID: 7689907254152611043}
-  - component: {fileID: 1641576106740101568}
   m_Layer: 15
   m_Name: BossShip2Ship
   m_TagString: Enemy
@@ -526,10 +525,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1730fc4be78db646a5a7db5ba211800, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bAppeared: 0
-  bEntered: 0
-  cooldown: 0
-  WaypointPrefab: {fileID: 0}
+  BossEnemy: {fileID: 0}
+  StartBattle: 0
   CurclularMove: 0
   angle: 0
   radius: 25
@@ -566,21 +563,6 @@ MonoBehaviour:
     presentage: 0
   ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
     type: 3}
---- !u!114 &1641576106740101568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4840490958191933900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9edc1c931f490c64ba2e21d2e0f54e91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shipPivot: {fileID: 3732655105240309294}
-  easeMode: 28
-  speed: 8
 --- !u!1 &6049227061383995164
 GameObject:
   m_ObjectHideFlags: 0

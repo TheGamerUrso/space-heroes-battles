@@ -355,7 +355,6 @@ GameObject:
   - component: {fileID: 4767090198587326564}
   - component: {fileID: 2780336969355454707}
   - component: {fileID: 3838654647032766279}
-  - component: {fileID: 3388580291489998268}
   m_Layer: 15
   m_Name: BossShip3Ship
   m_TagString: Enemy
@@ -422,7 +421,7 @@ MonoBehaviour:
   ShieldEffect: {fileID: 6174798991898319939}
   Id: 3
   EnemyData: {fileID: 11400000, guid: 060fc5b36ebf35145ab28eaebde0b7cb, type: 2}
-  Level: 0
+  Level: 15
   Damage: 0
   FireRate: 0
   Speed: 0
@@ -452,17 +451,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc45aea9cb00ce448ae6ddce32c6d3a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bAppeared: 0
-  bEntered: 0
-  cooldown: 0
-  WaypointPrefab: {fileID: 0}
+  BossEnemy: {fileID: 0}
+  Positions:
+  - {x: 0, y: 0, z: 100}
+  - {x: -20, y: 0, z: 100}
+  - {x: 0, y: 0, z: 80}
+  - {x: 20, y: 0, z: 80}
+  currentPos: 0
+  StartBattle: 0
+  changePositionTimer: 0
   punches:
   - {fileID: 4677157009031953761}
   - {fileID: 8260462937045628444}
   attacking: 0
   ShipPivot: {fileID: 258049314037477805}
-  ease: 1
-  speed: 1
 --- !u!114 &3838654647032766279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -476,25 +478,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bossEnemy: {fileID: 4767090198587326564}
-  bossAI: {fileID: 2780336969355454707}
+  bossMove: {fileID: 0}
   HealthPresentage: 0
   phase: 0
   DelayAttack: 0
---- !u!114 &3388580291489998268
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9189114927098632632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9edc1c931f490c64ba2e21d2e0f54e91, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  shipPivot: {fileID: 258049314037477805}
-  easeMode: 28
-  speed: 4
 --- !u!1001 &538807800429423466
 PrefabInstance:
   m_ObjectHideFlags: 0

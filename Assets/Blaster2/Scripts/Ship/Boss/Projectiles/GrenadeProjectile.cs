@@ -74,12 +74,15 @@ public class GrenadeProjectile : EnemyProjectile
     private void InstansiateProjectiles(int i)
     {
         InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(weaponData.m_Projectile);
+        InstansiatedProjectile.transform.position = transform.position;
+        InstansiatedProjectile.transform.rotation = Quaternion.Euler(pos[i]);
+
+        Vector3 shootDir = InstansiatedProjectile.transform.forward;
 
         InstansiatedProjectile.SetActive(true);
 
-        InstansiatedProjectile.transform.SetPositionAndRotation(transform.position, Quaternion.Euler(pos[i]));
-
-        InstansiatedProjectile.GetComponent<EnemyProjectile>().Setup(weaponScript);
-
+        Projectile enemyProjectile = InstansiatedProjectile.GetComponent<Projectile>();
+        enemyProjectile.Setup(weaponScript);
+        enemyProjectile.SetShootDir(shootDir);
     }
 }

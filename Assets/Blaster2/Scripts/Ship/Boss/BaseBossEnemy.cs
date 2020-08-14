@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BaseBossEnemy : BaseEnemy
+public class BaseBossEnemy : Enemy
 {
     private PlayerData playerData;
     public Action OnBossAttack;
@@ -13,7 +13,6 @@ public class BaseBossEnemy : BaseEnemy
     protected int numberOfHits;
     [SerializeField] protected GameObject ExplosionsDeathEffect;
     [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
-
 
     public override void OnEnable()
     {

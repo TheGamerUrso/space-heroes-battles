@@ -47,10 +47,10 @@ public class Events
     public static Action GameEnded;
     public static Action<int, int, int> GameStatsChanged;
 
-    public static Action<string, BaseEnemy> BossDied;
-    public static Action<string, BaseEnemy> EnemyDied;
-    public static Action<string, BaseEnemy> EnemyGotHit;
-    public static Action<string, BaseEnemy> EnemyEscaped;
+    public static Action<string, Enemy> BossDied;
+    public static Action<string, Enemy> EnemyDied;
+    public static Action<string, Enemy> EnemyGotHit;
+    public static Action<string, Enemy> EnemyEscaped;
 
 
     /**

@@ -10,12 +10,12 @@ public class HyperdriveEnterEffect : MonoBehaviour
     [SerializeField] private Ease easeMode;
     [SerializeField] protected float speed;
     protected EnemyMove baseEnemyAI;
-    protected BaseEnemy baseEnemy;
+    protected Enemy baseEnemy;
 
     public virtual void Awake()
     {
         baseEnemyAI = GetComponent<EnemyMove>();
-        baseEnemy = GetComponent<BaseEnemy>();
+        baseEnemy = GetComponent<Enemy>();
     }
     private void OnDestroy()
     {
@@ -43,7 +43,7 @@ public class HyperdriveEnterEffect : MonoBehaviour
     public virtual void OnActivated()
     {
         baseEnemy.EnableColliders(false);
-        GetComponent<BaseEnemy>().DisableAllWeapons();
+        GetComponent<Enemy>().DisableAllWeapons();
         shipPivot.transform.localPosition = new Vector3(0, 0, -120);
         shipPivot.transform.DOLocalMoveZ(0, speed).SetEase(easeMode).OnComplete(() =>
         {

@@ -104,7 +104,7 @@ public class SimpleShipControls : MonoBehaviour
             {
                 transform.position = new Vector3(transform.position.x + Input.GetAxis("Mouse X") * Speed * Time.deltaTime,
                     transform.position.y,
-                    transform.position.z + Input.GetAxis("Mouse Y") * Sensitivity * Speed * Time.deltaTime);
+                    transform.position.z + Input.GetAxis("Mouse Y")  * Speed * Time.deltaTime);
             }
 #endif
             if (Input.touchCount > 0)

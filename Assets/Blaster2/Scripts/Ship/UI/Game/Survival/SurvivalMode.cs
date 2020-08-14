@@ -211,7 +211,7 @@ public class SurvivalMode : BaseGameMode
         }
     }
 
-    public override void BossDiedCallback(string id, BaseEnemy baseEnemy)
+    public override void BossDiedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {

@@ -126,7 +126,7 @@ public class GameController : MonoSingleton<GameController>
     }
 
 
-    private void EnemyDied(string name, BaseEnemy baseEnemy)
+    private void EnemyDied(string name, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(name))
         {

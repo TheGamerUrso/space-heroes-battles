@@ -81,7 +81,7 @@ public class SpawnEnemies
 
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 
-        BaseEnemy enemy = enemGO.GetComponent<BaseEnemy>();
+        Enemy enemy = enemGO.GetComponent<Enemy>();
         enemy.Id = enemyElement.Name + "_" + enemyElement.currentNumberInScene;
         EMFollowPath followPathAI = enemGO.GetComponent<EMFollowPath>();
 

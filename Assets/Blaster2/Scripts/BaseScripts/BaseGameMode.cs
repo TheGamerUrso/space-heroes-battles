@@ -117,7 +117,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         yield return null;
     }
 
-    public void BossEscapedCallback(string id, BaseEnemy baseEnemy)
+    public void BossEscapedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
@@ -125,7 +125,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         }
     }
 
-    public void BossGotHit(string id, BaseEnemy baseEnemy)
+    public void BossGotHit(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
@@ -133,7 +133,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         }
     }
 
-    public void EnemyEscapedCallback(string id, BaseEnemy baseEnemy)
+    public void EnemyEscapedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
@@ -143,12 +143,12 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         }
     }
 
-    public void EnemyGotHitCallback(string id, BaseEnemy baseEnemy)
+    public void EnemyGotHitCallback(string id, Enemy baseEnemy)
     {
         playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
     }
 
-    public virtual void BossDiedCallback(string id, BaseEnemy baseEnemy)
+    public virtual void BossDiedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
@@ -164,7 +164,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         }
     }
 
-    public virtual void EnemyDiedCallback(string id, BaseEnemy baseEnemy)
+    public virtual void EnemyDiedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(baseEnemy.Id))
         {

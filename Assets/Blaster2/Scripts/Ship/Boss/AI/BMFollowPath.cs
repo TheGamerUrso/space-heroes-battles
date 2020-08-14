@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BMFollowPath : BaseBossMove
+public class BMFollowPath : BossMove
 {
 
 

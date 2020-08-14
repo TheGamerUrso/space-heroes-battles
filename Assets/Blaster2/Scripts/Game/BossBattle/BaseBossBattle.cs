@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseBossBattle : MonoBehaviour
 {
     [SerializeField] protected BaseBossEnemy bossEnemy;
-    [SerializeField] protected BaseBossMove bossAI;
+    [SerializeField] protected EnemyMove bossMove;
     [SerializeField] protected float HealthPresentage;
     [SerializeField] protected int phase;
     public float DelayAttack;
@@ -27,7 +27,7 @@ public class BaseBossBattle : MonoBehaviour
 
     public virtual void OnStart()
     {
-        bossAI = GetComponent<BaseBossMove>();
+        bossMove = GetComponent<EnemyMove>();
         bossEnemy = GetComponent<BaseBossEnemy>();
         bossEnemy.OnBossAttack = Phases;
         bossEnemy.OnBossHit = BossHit;
