@@ -7,7 +7,7 @@ namespace EasyMobile.Demo
 {
     public class NativeUIDemo : MonoBehaviour
     {
-
+        public GameObject isIOSDarkModeBool;
         public GameObject isFirstButtonBool;
         public GameObject isSecondButtonBool;
         public GameObject isThirdButtonBool;
@@ -19,6 +19,20 @@ namespace EasyMobile.Demo
             // Init EM runtime if needed (useful in case only this scene is built).
             if (!RuntimeManager.IsInitialized())
                 RuntimeManager.Init();
+        }
+
+        void Start()
+        {
+            UpdateIOSDarkModeBool();
+        }
+
+        IEnumerator OnApplicationFocus(bool focus)
+        {
+            if (focus)
+            {
+                yield return null;
+                UpdateIOSDarkModeBool();
+            }
         }
 
         public void ShowThreeButtonsAlert()
@@ -45,11 +59,11 @@ namespace EasyMobile.Demo
 
         public void ShowToast()
         {
-            #if UNITY_ANDROID
+#if UNITY_ANDROID
             NativeUI.ShowToast("This is a sample Android toast");
-            #else
+#else
             NativeUI.Alert("Alert", "Toasts are available on Android only.");
-            #endif
+#endif
         }
 
         void OnAlertComplete(int buttonIndex)
@@ -72,6 +86,14 @@ namespace EasyMobile.Demo
                 demoUtils.DisplayBool(isThirdButtonBool, true, "isThirdButtonClicked: TRUE");
             else
                 demoUtils.DisplayBool(isThirdButtonBool, false, "isThirdButtonClicked: FALSE");
+        }
+
+        private void UpdateIOSDarkModeBool()
+        {
+            if (NativeUI.GetCurrentIOSUserInterfaceStyle() == NativeUI.UserInterfaceStyle.Dark)
+                demoUtils.DisplayBool(isIOSDarkModeBool, true, "isIOSDarkMode: TRUE");
+            else
+                demoUtils.DisplayBool(isIOSDarkModeBool, false, "isIOSDarkMode: FALSE");
         }
     }
 }

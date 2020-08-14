@@ -1,0 +1,4 @@
+public class FirstBoss : BaseBossEnemy
+{
+
+}

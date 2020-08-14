@@ -6,7 +6,7 @@ using EasyMobile.Internal;
 namespace EasyMobile
 {
     [Serializable]
-    public class UnityAdsSettings
+    public class UnityAdsSettings : AdNetworkSettings
     {
         /// <summary>
         /// Gets or sets the Unity Monetization app identifier.

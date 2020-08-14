@@ -71,7 +71,7 @@ namespace EasyMobile
 
         #region Android Toasts
 
-        #if UNITY_ANDROID
+#if UNITY_ANDROID
         /// <summary>
         /// Shows a toast message (Android only).
         /// </summary>
@@ -81,7 +81,32 @@ namespace EasyMobile
         {   
             AlertPopup.ShowToast(message, isLongToast);
         }
-        #endif
+#endif
+
+        #endregion
+
+        #region UserInterfaceStyle check
+
+        public enum UserInterfaceStyle
+        {
+            Unspecified = 0,
+            Light = 1,
+            Dark = 2
+        }
+
+        /// <summary>
+        /// Gets the current user interface style defined by the <see cref="UserInterfaceStyle"/> enum.
+        /// This method currently works on iOS only. On Android it always returns <see cref="UserInterfaceStyle.Unspecified"/>.
+        /// </summary>
+        /// <returns></returns>
+        public static UserInterfaceStyle GetCurrentIOSUserInterfaceStyle()
+        {
+#if UNITY_IOS && !UNITY_EDITOR
+            return (UserInterfaceStyle)Internal.NativeAPIs.iOS.iOSNativeAlert.GetCurrentUserInterfaceStyle();
+#else
+            return UserInterfaceStyle.Unspecified;
+#endif
+        }
 
         #endregion
     }

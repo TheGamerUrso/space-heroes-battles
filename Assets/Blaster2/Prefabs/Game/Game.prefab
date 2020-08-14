@@ -1,0 +1,357 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &5756676870995636411
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5756676870995636389}
+  - component: {fileID: 5756676870995636388}
+  - component: {fileID: 423100214828483317}
+  - component: {fileID: 2809522326191343149}
+  - component: {fileID: 8827658923504723636}
+  - component: {fileID: 2236001977290902304}
+  m_Layer: 0
+  m_Name: Game
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5756676870995636389
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756676870995636411}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5756676870995636388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756676870995636411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a582be06709c734aa9415dc2f988aa5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentGameState: 0
+  EnemyWaypoints: {fileID: 7859075690984216277, guid: dd2227e119981fd40845868477c95a8b,
+    type: 3}
+  AsteroidBackgroundSpawner: {fileID: 1943903115844349262, guid: 449c524e7b88dcb47b1f5d202f96a48d,
+    type: 3}
+  PanelBackgroundSpawner: {fileID: 7677630165720129839, guid: a74394913ed9c774bae92f7eb4f1d22a,
+    type: 3}
+  Tutorial: {fileID: 1155719464663044819, guid: c5ce5fa73aae0ce41bcf16033947875b,
+    type: 3}
+  GUI: {fileID: 0}
+--- !u!114 &423100214828483317
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756676870995636411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4be8c7776a8ff448b1d1952473af242, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  level_SO: {fileID: 11400000, guid: fc4db25d5d075ad4ba1cbceb57ed461b, type: 2}
+  waves: 0
+  availableEnemies: 0
+  LevelDifficulty: 1
+  cooldown: 1
+  delay: 0.5
+  TotalEnemies: 12
+  enemyElements: []
+--- !u!114 &2809522326191343149
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756676870995636411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 341368c343c8f7a4cb022207492d091f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListOfDropItems:
+  - Name: Coin
+    chance: 100
+    DropItemsType: 8
+  - Name: Power Up
+    chance: 10
+    DropItemsType: 9
+  - Name: Shield
+    chance: 2
+    DropItemsType: 10
+  - Name: Health
+    chance: 5
+    DropItemsType: 11
+  DropShield: 0
+  DropHealth: 0
+  shieldDropCooldown: 2
+  healthDropCooldown: 2
+  powerDropCooldown: 2
+--- !u!114 &8827658923504723636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756676870995636411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41e96d434fe87bc42a030978757f4fd4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PoolElements:
+  - name: PlaterProjectile
+    ID: 0
+    poolGameObjectType: 0
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1199722678018898, guid: 3d5fe1e4a9fe1114fa43c311b5291b03,
+      type: 3}
+    poolIndex: 10
+  - name: PlayerRocket
+    ID: 1
+    poolGameObjectType: 1
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1456814716516072, guid: 27438886da568484a8225f9a1d0d0eba,
+      type: 3}
+    poolIndex: 4
+  - name: EnemyProjectile
+    ID: 2
+    poolGameObjectType: 2
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1115371313746158, guid: c4fa3b077a35c1945af1b7aa4c69df3a,
+      type: 3}
+    poolIndex: 10
+  - name: EnemyProjectileBall
+    ID: 3
+    poolGameObjectType: 3
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 8515811472706583946, guid: 98895335c17c14f40a3371167f20e280,
+      type: 3}
+    poolIndex: 10
+  - name: EnemyProjectileRocket
+    ID: 4
+    poolGameObjectType: 4
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 4675817566442647257, guid: 2616b21c3c24e0341ac06465eaa199c9,
+      type: 3}
+    poolIndex: 10
+  - name: EnemyGrenadeProjectile
+    ID: 5
+    poolGameObjectType: 5
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 8515811472706583946, guid: 820c1b46bce347e43830353b171b3e20,
+      type: 3}
+    poolIndex: 10
+  - name: BulletExplosion
+    ID: 6
+    poolGameObjectType: 6
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1323441078866724, guid: 0f7de209037dde94cb6fd1c49ad452ea,
+      type: 3}
+    poolIndex: 10
+  - name: ShipExplosion
+    ID: 0
+    poolGameObjectType: 7
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1290715649332758, guid: 587eaecaa621be74486f351c78b4f0a8,
+      type: 3}
+    poolIndex: 10
+  - name: Item_Coin
+    ID: 0
+    poolGameObjectType: 8
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1229202716366748, guid: 94282afae2bc24d48932837c4f41a5fb,
+      type: 3}
+    poolIndex: 10
+  - name: Item_PowerUp
+    ID: 0
+    poolGameObjectType: 9
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1740518930378352, guid: 6a421a7816faab441b9d3b5f0421321f,
+      type: 3}
+    poolIndex: 4
+  - name: Item_Shield
+    ID: 0
+    poolGameObjectType: 10
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1807487819155766, guid: 7f0c036ff2852c54aa4078d90eee6a33,
+      type: 3}
+    poolIndex: 4
+  - name: Item_Health
+    ID: 0
+    poolGameObjectType: 11
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1414064191941446, guid: aaf5cd29a9a159941aa2daa4c08c0a9a,
+      type: 3}
+    poolIndex: 4
+  - name: Planet
+    ID: 0
+    poolGameObjectType: 12
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1222427978729010, guid: 944448b62c7dd494f9e0c6cbfcc3a6ac,
+      type: 3}
+    poolIndex: 4
+  - name: FloatingText
+    ID: 0
+    poolGameObjectType: 13
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 774242305979726595, guid: 4694840285a9f8149a767a747f0b5cf7,
+      type: 3}
+    poolIndex: 8
+  - name: Enemy1
+    ID: 0
+    poolGameObjectType: 14
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1332800252941561598, guid: d56b4ad3aeb59f64eb13779cd4813f73,
+      type: 3}
+    poolIndex: 8
+  - name: Enemy2
+    ID: 0
+    poolGameObjectType: 15
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 553, guid: 8c6aca03346661b43a33c7b0c3932ce4, type: 3}
+    poolIndex: 2
+  - name: Enemy3
+    ID: 0
+    poolGameObjectType: 16
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1332800252941561598, guid: 78c2de61abfbc2041888882a7f1b294c,
+      type: 3}
+    poolIndex: 2
+  - name: Enemy4
+    ID: 0
+    poolGameObjectType: 17
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 8746143244605377970, guid: 6cc9cfdfe0b5ecd4480249906c2b8249,
+      type: 3}
+    poolIndex: 2
+  - name: Enemy5
+    ID: 0
+    poolGameObjectType: 18
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 8246661451200889219, guid: 7e49bedb3a3ce6d48b8131f173f7f6d9,
+      type: 3}
+    poolIndex: 2
+  - name: Enemy6
+    ID: 0
+    poolGameObjectType: 19
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 4159772285747209524, guid: 4b2b188850041a34bad593d730419e77,
+      type: 3}
+    poolIndex: 2
+  - name: Asteroid1
+    ID: 0
+    poolGameObjectType: 20
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 4384748419955371235, guid: 2333ba32047e75f4ca4c0f2144b16458,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid2
+    ID: 0
+    poolGameObjectType: 21
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 7454818506603261067, guid: 90cdb3e048f8d894e83874ee13f21323,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid3
+    ID: 0
+    poolGameObjectType: 22
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 5145680605341523605, guid: 6d8ec05e1e45fbc40af0f993e827b85b,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid4
+    ID: 0
+    poolGameObjectType: 23
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 6681874357279547675, guid: 23b903f5e292ec44db4dcca3e9d8ef0d,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid5
+    ID: 0
+    poolGameObjectType: 24
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 6420050078302219584, guid: 065978eee6a3b2c44acbc48520e57bfa,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid6
+    ID: 0
+    poolGameObjectType: 25
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 2121649335681701177, guid: 655cc58ec96daae4db476e43c78b475b,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid7
+    ID: 0
+    poolGameObjectType: 26
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 4887090407927972199, guid: 76a1328b646370a4baee957c3cc171ec,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid8
+    ID: 0
+    poolGameObjectType: 27
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1224243324632423930, guid: e872bf91db94976458910601e9ed8488,
+      type: 3}
+    poolIndex: 4
+  - name: Asteroid9
+    ID: 0
+    poolGameObjectType: 28
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 7853857187445289392, guid: 984fe2bdb0681734b9a6b14d67a6a3d1,
+      type: 3}
+    poolIndex: 4
+  - name: Enemy7
+    ID: 0
+    poolGameObjectType: 29
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 909528553737987564, guid: b59411f6a2bcd4b4793baca74e43c511,
+      type: 3}
+    poolIndex: 4
+  - name: Boss3Artilery
+    ID: 0
+    poolGameObjectType: 30
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 1360991355, guid: be1623ebc30d7614baebdb2aa6419f35,
+      type: 3}
+    poolIndex: 8
+  - name: BossProjectile1
+    ID: 0
+    poolGameObjectType: 31
+    PoolElementGameObjects: []
+    PoolElementPrefab: {fileID: 8515811472706583946, guid: 59282e4ed1a528044b52be5ec70b7eaf,
+      type: 3}
+    poolIndex: 8
+--- !u!114 &2236001977290902304
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5756676870995636411}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 66893db4bee252c488a377b03f73c407, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

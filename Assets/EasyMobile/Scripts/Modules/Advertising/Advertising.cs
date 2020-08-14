@@ -17,7 +17,7 @@ namespace EasyMobile
         private static AppLovinClientImpl sAppLovinClient;
         private static ChartboostClientImpl sChartboostClient;
         private static AudienceNetworkClientImpl sAudienceNetworkClient;
-        private static HeyzapClientImpl sHeyzapClient;
+        private static FairBidClientImpl sFairBidClient;
         private static MoPubClientImpl sMoPubClient;
         private static IronSourceClientImpl sIronSourceClient;
         private static TapjoyClientImpl sTapjoyClient;
@@ -150,16 +150,16 @@ namespace EasyMobile
         }
 
         /// <summary>
-        /// Gets the Heyzap client.
+        /// Gets the FairBid client.
         /// </summary>
-        /// <value>The heyzap client.</value>
-        public static HeyzapClientImpl HeyzapClient
+        /// <value>The FairBid client.</value>
+        public static FairBidClientImpl FairBidClient
         {
             get
             {
-                if (sHeyzapClient == null)
-                    sHeyzapClient = SetupAdClient(AdNetwork.Heyzap) as HeyzapClientImpl;
-                return sHeyzapClient;
+                if (sFairBidClient == null)
+                    sFairBidClient = SetupAdClient(AdNetwork.FairBid) as FairBidClientImpl;
+                return sFairBidClient;
             }
         }
 
@@ -287,9 +287,9 @@ namespace EasyMobile
 
         void Start()
         {
-            // Show Heyzap Test Suite if needed.
-            if (EM_Settings.Advertising.Heyzap.ShowTestSuite)
-                HeyzapClient.ShowTestSuite();
+            // Show FairBid Test Suite if needed.
+            if (EM_Settings.Advertising.FairBid.ShowTestSuite)
+                FairBidClient.ShowTestSuite();
 
             AutoAdLoadingMode = EM_Settings.Advertising.AutoAdLoadingMode;
         }
@@ -1169,8 +1169,8 @@ namespace EasyMobile
                     return ChartboostClientImpl.CreateClient();
                 case AdNetwork.AudienceNetwork:
                     return AudienceNetworkClientImpl.CreateClient();
-                case AdNetwork.Heyzap:
-                    return HeyzapClientImpl.CreateClient();
+                case AdNetwork.FairBid:
+                    return FairBidClientImpl.CreateClient();
                 case AdNetwork.IronSource:
                     return IronSourceClientImpl.CreateClient();
                 case AdNetwork.MoPub:
@@ -1230,8 +1230,8 @@ namespace EasyMobile
                     return ChartboostClient;
                 case AdNetwork.AudienceNetwork:
                     return AudienceNetworkClient;
-                case AdNetwork.Heyzap:
-                    return HeyzapClient;
+                case AdNetwork.FairBid:
+                    return FairBidClient;
                 case AdNetwork.MoPub:
                     return MoPubClient;
                 case AdNetwork.IronSource:

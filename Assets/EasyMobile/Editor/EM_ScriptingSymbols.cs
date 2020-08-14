@@ -19,7 +19,7 @@ namespace EasyMobile.Editor
         public const string AdMob = "EM_ADMOB";
         public const string AppLovin = "EM_APPLOVIN";
         public const string Chartboost = "EM_CHARTBOOST";
-        public const string Heyzap = "EM_HEYZAP";
+        public const string FairBid = "EM_FAIRBID";
         public const string MoPub = "EM_MOPUB";
         public const string FBAudience = "EM_FBAN";
         public const string IronSource = "EM_IRONSOURCE";

@@ -10,16 +10,17 @@ namespace EasyMobile.Editor
         #region Uppercase Sections GUI
 
         private Dictionary<string, bool> uppercaseSectionsFoldoutStates = new Dictionary<string, bool>();
+        private Dictionary<string, bool> uppercaseSectionsToggleStates = new Dictionary<string, bool>();
 
         private const int DefaultSectionHeaderIconWidth = 20;
         private const int DefaultSectionHeaderIconHeight = 20;
         private const int ChevronIconWidth = 10;
         private const int ChevronIconRightMargin = 5;
 
-        private void DrawUppercaseSection(string key, string sectionName, Action drawer, Action disableModule, Action enableModule, SerializedProperty triggerProperty, Texture2D sectionIcon = null)
+        private void DrawUppercaseSection(string key, string sectionName, Action drawer, Action disableModule, Action enableModule, SerializedProperty triggerProperty, Texture2D sectionIcon = null, bool defautFoldout = true)
         {
             if (!uppercaseSectionsFoldoutStates.ContainsKey(key))
-                uppercaseSectionsFoldoutStates.Add(key, true);
+                uppercaseSectionsFoldoutStates.Add(key, defautFoldout);
 
             bool foldout = uppercaseSectionsFoldoutStates[key];
 
@@ -75,10 +76,10 @@ namespace EasyMobile.Editor
             EditorGUILayout.EndVertical();
         }
 
-        private void DrawUppercaseSection(string key, string sectionName, Action drawer, Texture2D sectionIcon = null)
+        private void DrawUppercaseSection(string key, string sectionName, Action drawer, Texture2D sectionIcon = null, bool defaultFoldout = true)
         {
             if (!uppercaseSectionsFoldoutStates.ContainsKey(key))
-                uppercaseSectionsFoldoutStates.Add(key, true);
+                uppercaseSectionsFoldoutStates.Add(key, defaultFoldout);
 
             bool foldout = uppercaseSectionsFoldoutStates[key];
 
@@ -87,9 +88,9 @@ namespace EasyMobile.Editor
             EditorGUILayout.BeginHorizontal(foldout ? EM_GUIStyleManager.UppercaseSectionHeaderExpand : EM_GUIStyleManager.UppercaseSectionHeaderCollapse);
 
             // Header icon.
-            EditorGUILayout.LabelField(new GUIContent(sectionIcon ?? EM_GUIStyleManager.UppercaseSectionHeaderIcon), 
-                EM_GUIStyleManager.GetCustomStyle("Uppercase Section Header Icon"), 
-                GUILayout.Width(DefaultSectionHeaderIconWidth), 
+            EditorGUILayout.LabelField(new GUIContent(sectionIcon ?? EM_GUIStyleManager.UppercaseSectionHeaderIcon),
+                EM_GUIStyleManager.GetCustomStyle("Uppercase Section Header Icon"),
+                GUILayout.Width(DefaultSectionHeaderIconWidth),
                 GUILayout.Height(DefaultSectionHeaderIconHeight));
 
             // Header label (and button).
@@ -113,12 +114,21 @@ namespace EasyMobile.Editor
             EditorGUILayout.EndVertical();
         }
 
-        private bool DrawUppercaseSectionWithToggle(string key, string sectionName, bool toggle, Action drawer, Texture2D sectionIcon = null)
+        private bool DrawUppercaseSectionWithToggle(string key, string sectionName, bool toggle, Action drawer, Texture2D sectionIcon = null, bool defaultFoldout = true)
         {
             if (!uppercaseSectionsFoldoutStates.ContainsKey(key))
-                uppercaseSectionsFoldoutStates.Add(key, true);
+                uppercaseSectionsFoldoutStates.Add(key, defaultFoldout);
+
+            if (!uppercaseSectionsToggleStates.ContainsKey(key))
+                uppercaseSectionsToggleStates.Add(key, false);
 
             bool foldout = uppercaseSectionsFoldoutStates[key];
+            EditorGUILayout.BeginVertical();
+            EditorGUILayout.BeginHorizontal();
+            GUILayout.FlexibleSpace();
+            EditorGUILayout.EndHorizontal();
+            EditorGUILayout.EndVertical();
+            float horizontalSize = GUILayoutUtility.GetLastRect().width;
 
             EditorGUILayout.BeginVertical(EM_GUIStyleManager.GetCustomStyle("Uppercase Section Box"), GUILayout.MinHeight(foldout ? 30 : 0));
 
@@ -132,11 +142,22 @@ namespace EasyMobile.Editor
 
             // The toggle.
             var headerRect = GUILayoutUtility.GetLastRect();
-            var toogleX = headerRect.x + EditorGUIUtility.currentViewWidth - 100;
+            var toogleX = horizontalSize - 40 - 5 - ChevronIconWidth - ChevronIconRightMargin;
             var toggleRect = new Rect(toogleX, headerRect.y - 2, 40, 24);
             var result = EditorGUI.Toggle(toggleRect, toggle, EM_GUIStyleManager.GetCustomStyle("Module Toggle"));
 
-            // Header label (and button).
+            // Expand or contract the foldout according to the toggle state.
+            if ((result && !uppercaseSectionsToggleStates[key]) || (!result && uppercaseSectionsToggleStates[key]))
+            {
+                // Just toggled on or off.
+                uppercaseSectionsFoldoutStates[key] = result;
+                foldout = uppercaseSectionsFoldoutStates[key];
+            }
+
+            // Save toggle state.
+            uppercaseSectionsToggleStates[key] = result;
+
+            // Header label (and button to control the foldout).
             if (GUILayout.Button(sectionName, EM_GUIStyleManager.GetCustomStyle("Uppercase Section Header Label")))
                 uppercaseSectionsFoldoutStates[key] = !uppercaseSectionsFoldoutStates[key];
 
@@ -159,9 +180,9 @@ namespace EasyMobile.Editor
             return result;
         }
 
-        private void DrawUppercaseSectionWithToggle(string key, string sectionName, SerializedProperty toggleProperty, Action drawer, Texture2D sectionIcon = null)
+        private void DrawUppercaseSectionWithToggle(string key, string sectionName, SerializedProperty toggleProperty, Action drawer, Texture2D sectionIcon = null, bool defaultFoldout = true)
         {
-            toggleProperty.boolValue = DrawUppercaseSectionWithToggle(key, sectionName, toggleProperty.boolValue, drawer, sectionIcon);
+            toggleProperty.boolValue = DrawUppercaseSectionWithToggle(key, sectionName, toggleProperty.boolValue, drawer, sectionIcon, defaultFoldout);
         }
 
         private Texture2D GetChevronIcon(bool foldout)
@@ -183,7 +204,7 @@ namespace EasyMobile.Editor
                 {
                     if (priorDrawAct != null)
                         priorDrawAct();
-                    
+
                     foreach (var permission in modulePermissions)
                         DrawAndroidPermission(permission.ElementName, permission.Value);
 
@@ -203,7 +224,7 @@ namespace EasyMobile.Editor
                 {
                     if (priorDrawAct != null)
                         priorDrawAct();
-                    
+
                     foreach (var item in modulePlistItems)
                         DrawEditableIOSInfoPlistItem(item);
 
@@ -299,7 +320,7 @@ namespace EasyMobile.Editor
                 fixedWidth = 20,
             };
 
-            EditorGUILayout.BeginVertical(EM_GUIStyleManager.GetCustomStyle("Tool Box"), 
+            EditorGUILayout.BeginVertical(EM_GUIStyleManager.GetCustomStyle("Tool Box"),
                 GUILayout.Width(EM_GUIStyleManager.toolboxWidth));
 
             if (foldout)
@@ -380,7 +401,7 @@ namespace EasyMobile.Editor
 
                 var buttonResults = new ArrayItemToolboxButtonResults();
                 buttonResults.isDeleteButton = false;
-                buttonResults.isMoveUpButton = false;   
+                buttonResults.isMoveUpButton = false;
                 buttonResults.isMoveDownButton = false;
 
                 DrawArrayElementWithToolbox(
@@ -426,14 +447,14 @@ namespace EasyMobile.Editor
                 contents[i] = new GUIContent(values[i]);
 
             // If the current value doesn't belong to the list, select the first value, which normally should be "None".
-            int currentIndex = Mathf.Max(Array.IndexOf(values, currentVal), 0);                           
+            int currentIndex = Mathf.Max(Array.IndexOf(values, currentVal), 0);
             int newIndex = EditorGUILayout.Popup(
-                               label, 
-                               currentIndex, 
+                               label,
+                               currentIndex,
                                contents,
                                options
                            );
-                
+
             return values[newIndex];
         }
     }

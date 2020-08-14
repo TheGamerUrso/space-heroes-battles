@@ -22,11 +22,15 @@ namespace EasyMobile.Demo
         [SerializeField]
         private float imagePadding = 5;
 
+#if UNITY_IOS || UNITY_ANDROID
+
         [SerializeField]
         private FullScreenMovieControlMode videoControlMode = FullScreenMovieControlMode.Full;
 
         [SerializeField]
         private FullScreenMovieScalingMode videoScalingMode = FullScreenMovieScalingMode.None;
+
+#endif
 
         [SerializeField]
         private MediaResultView viewPrefab = null;
@@ -189,8 +193,10 @@ namespace EasyMobile.Demo
         {
             var view = Instantiate(viewPrefab, viewRoot);
             view.VideoBackground = videoBackground;
+#if UNITY_IOS || UNITY_ANDROID
             view.VideoControlMode = videoControlMode;
             view.VideoScalingMode = videoScalingMode;
+#endif
             view.gameObject.SetActive(true);
             view.UpdateWithModel(model);
             displayedViews.Add(view);
