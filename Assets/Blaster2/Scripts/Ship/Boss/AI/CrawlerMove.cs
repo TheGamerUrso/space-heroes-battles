@@ -55,7 +55,7 @@ public class CrawlerMove : EnemyMove
         Vector3 newPos = transform.position;
         newPos.x = xVel;
         newPos.z = zVel;
-        transform.position = Vector3.MoveTowards(transform.position, newPos, .5f);
+        transform.position = newPos;
     }
 
 

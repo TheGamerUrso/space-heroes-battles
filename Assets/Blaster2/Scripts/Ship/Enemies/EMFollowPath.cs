@@ -9,7 +9,7 @@ public class EMFollowPath : EnemyMove
     public Transform[] Path;
     public int currentPointToFollowIndex;
 
-    [SerializeField] protected bool PingPong = false;
+    [SerializeField] public bool PingPong = false;
     [SerializeField] protected bool RotateTowardDir = false;
     [SerializeField] public bool Reset = false;
     [SerializeField] protected float RotationSpeed;
@@ -29,8 +29,14 @@ public class EMFollowPath : EnemyMove
 
     public void GeneratePathByIndex(int Index)
     {
-        // Debug.Log("Generate new Path");
         curPath = Index;
+
+        PingPong = false;
+        if (curPath == 0)
+        {
+            PingPong = true;
+        }
+
         if (Waypoints.Instance == null)
         {
             return;
@@ -51,13 +57,13 @@ public class EMFollowPath : EnemyMove
 
     public int GeneratePath()
     {
-        // Debug.Log("Generate new Path");
         curPath = Random.Range(0, PathIndex.Length);
+
         if (Waypoints.Instance == null)
         {
             return -1;
         }
-
+        
         path = Waypoints.Instance.GetPath(PathIndex[curPath]);
         Transform[] PathList = path.transform.GetChildrenAsList();
 

@@ -61,7 +61,7 @@ public class SpawnEnemies
         int spawnIndex = UnityEngine.Random.Range(0, tempList.Length);
         Vector3 spawnPos = tempList[spawnIndex].spawnPoint.transform.position;
 
-   
+
 
         if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
         {
@@ -82,19 +82,31 @@ public class SpawnEnemies
         GameObject enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
 
         Enemy enemy = enemGO.GetComponent<Enemy>();
+        enemy.SetStats(LevelDifficulty);
+
         enemy.Id = enemyElement.Name + "_" + enemyElement.currentNumberInScene;
         EMFollowPath followPathAI = enemGO.GetComponent<EMFollowPath>();
 
+        enemGO.transform.position = spawnPos;
+        
+        enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
+       
         enemGO.SetActive(true);
 
-        if (followPathAI == null)
+        if (followPathAI != null)
         {
-            enemGO.transform.position = spawnPos;
-            enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
-        }
-        else
-        {
+            enemy.enemyElement = enemyElement;
+
             int pathIndex = followPathAI.GeneratePath();
+
+            if (enemyElement.gameObjectType == PoolGameObjectType.Enemy4)
+            {
+                followPathAI.PingPong = false;
+                if (pathIndex == 0)
+                {
+                    followPathAI.PingPong = true;
+                }
+            }
 
             if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
             {
@@ -110,12 +122,6 @@ public class SpawnEnemies
                     enemGO.transform.position = spawnPos;
                 }
             }
-
-            enemy.enemyElement = enemyElement;
-
-            enemy.SetStats(LevelDifficulty);
-
-
 
             previousPos = spawnPos;
             prevEnemyElement = enemyElement;

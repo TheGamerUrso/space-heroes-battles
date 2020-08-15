@@ -51,8 +51,6 @@ public class Enemy : Ship, IDamagable
 
     public override void Start()
     {
-        SetStats(1);
-
         if (HealthBar != null)
         {
             HealthBar.GetComponent<BaseHealthWidget>();

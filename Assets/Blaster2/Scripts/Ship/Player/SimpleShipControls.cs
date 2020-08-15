@@ -13,7 +13,6 @@ public class SimpleShipControls : MonoBehaviour
     private PlayerData playerData;
 
     [SerializeField] private float tilt;
-
     [SerializeField] private GameObject ShipModel;
     private Vector3 targetPos;
     private Plane plane;
@@ -22,8 +21,6 @@ public class SimpleShipControls : MonoBehaviour
     private Touch touch;
     private Vector2 currentTouchPos;
     private float yMove = 0;
-    private float movementSensitivity = .1f;
-    private Vector3 direction;
     private float rotVelocity;
     private Vector3 targetEulerAngels;
     private float point;
@@ -104,7 +101,7 @@ public class SimpleShipControls : MonoBehaviour
             {
                 transform.position = new Vector3(transform.position.x + Input.GetAxis("Mouse X") * Speed * Time.deltaTime,
                     transform.position.y,
-                    transform.position.z + Input.GetAxis("Mouse Y")  * Speed * Time.deltaTime);
+                    transform.position.z + Input.GetAxis("Mouse Y") * Speed * Time.deltaTime);
             }
 #endif
             if (Input.touchCount > 0)
@@ -112,10 +109,7 @@ public class SimpleShipControls : MonoBehaviour
                 touch = Input.GetTouch(0);
                 if (touch.phase == TouchPhase.Moved)
                 {
-                    Vector3 targetPos = transform.position;
-                    targetPos.x += touch.deltaPosition.x * Speed * Time.deltaTime;
-                    targetPos.z += touch.deltaPosition.y * Speed * Time.deltaTime;
-                    transform.position = targetPos;
+                    transform.position = new Vector3(transform.position.x + touch.deltaPosition.x * Speed * Time.deltaTime, transform.position.y, transform.position.z + touch.deltaPosition.y * Speed * Time.deltaTime);
                 }
             }
         }
