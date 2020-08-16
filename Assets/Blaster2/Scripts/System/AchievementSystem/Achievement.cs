@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[Serializable]
+public class Achievement
+{
+    public bool completed;
+    public int ID;
+    public string Name;
+    public string Description;
+    public int progress;
+    public int requirement;
+
+    public void Report(int value)
+    {
+        progress = value;
+    }
+
+    public void Check()
+    {
+        if (!completed && progress >= requirement)
+        {
+            completed = true;
+
+            Notification notification = new Notification();
+            notification.Name = Name;
+            notification.icon = PersistantData.Instance.GetAchievementIcon(ID);
+            notification.Description = Description;
+            NotificationSystem.Instance.Add(notification);
+        }
+    }
+}

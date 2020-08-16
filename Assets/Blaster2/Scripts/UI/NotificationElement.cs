@@ -27,7 +27,9 @@ public class NotificationElement : MonoBehaviour, IPointerClickHandler
         TimesUp = callback;
         this.notification = notification;
         this.notificationSystem = notificationSystem;
-        this.Icon.sprite = notification.icon;
+
+        if (notification.icon != null)
+            this.Icon.sprite = notification.icon;
 
         DescriptionText.text = notification.Description;
 

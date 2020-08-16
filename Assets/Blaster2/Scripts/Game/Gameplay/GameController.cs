@@ -172,7 +172,7 @@ public class GameController : MonoSingleton<GameController>
             playerData.Kills = kills;
 
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
-            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, 1);
+            GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, kills);
         }
     }
 

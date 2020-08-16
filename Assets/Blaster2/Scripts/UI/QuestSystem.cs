@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class QuestSystem : MonoBehaviour
+public class QuestSystem : MonoSingleton<QuestSystem>
 {
 
     [SerializeField] private Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
@@ -40,22 +40,22 @@ public class QuestSystem : MonoBehaviour
             switch (objectiveType)
             {
                 case ObjectiveTypeEnum.KILL:
-                    objectiveData = new ObjectiveData(i, "Defeat", UnityEngine.Random.Range(100, 500), 0, (int)objectiveType, "Kill <color=orange> X / % </color>   enemies");
+                    objectiveData = new ObjectiveData(i, "Defeat", UnityEngine.Random.Range(128, 256), 0, (int)objectiveType, "Kill <color=orange> X / % </color>   enemies");
                     break;
                 case ObjectiveTypeEnum.USE:
-                    objectiveData = new ObjectiveData(i, "Use", UnityEngine.Random.Range(10, 25), 0, (int)objectiveType, "Use super <color=orange> X / % </color>  times");
+                    objectiveData = new ObjectiveData(i, "Use", UnityEngine.Random.Range(3, 10), 0, (int)objectiveType, "Use super <color=orange> X / % </color>  times");
                     break;
                 case ObjectiveTypeEnum.UNHARMED:
                     objectiveData = new ObjectiveData(i, "Unharmed", 1, 0, (int)objectiveType, "Complete a level without getting hit");
                     break;
                 case ObjectiveTypeEnum.SURVIVE:
-                    objectiveData = new ObjectiveData(i, "Survie", UnityEngine.Random.Range(1, 7), 0, (int)objectiveType, "Play Level <color=orange> X  </color>");
+                    objectiveData = new ObjectiveData(i, "Survie", UnityEngine.Random.Range(1, 7), 0, (int)objectiveType, "Play Level <color=orange> X </color>");
                     break;
                 case ObjectiveTypeEnum.SPEND:
                     objectiveData = new ObjectiveData(i, "Spend_1", UnityEngine.Random.Range(100, 250), 0, (int)objectiveType, "Spend <color=orange> X / % </color>  coins");
                     break;
                 case ObjectiveTypeEnum.BOUNTY:
-                    objectiveData = new ObjectiveData(i, "BOUNTY", UnityEngine.Random.Range(1, 5), 0, (int)objectiveType, "Kill BOSS <color=orange> X  </color>");
+                    objectiveData = new ObjectiveData(i, "BOUNTY", UnityEngine.Random.Range(1, 4), 0, (int)objectiveType, "Kill  <color=orange> X </color> BOSS");
                     break;
                 case ObjectiveTypeEnum.SCORE:
                     objectiveData = new ObjectiveData(i, "SCORE", UnityEngine.Random.Range(10000, 50000), 0, (int)objectiveType, "Achieve <color=orange> X  </color> Score In a Level");
@@ -84,7 +84,7 @@ public class QuestSystem : MonoBehaviour
 
             if (objectiveGO.GetComponent<ObjectivesElement>().objectiveData != null)
             {
-                playerData.ListOfOnGoingObjectives.Add(objectiveGO.GetComponent<ObjectivesElement>().objectiveData);
+                playerData.ListOfOnGoingObjectives.Add(item);
                 objectiveIndex++;
             }
         }
@@ -134,11 +134,6 @@ public class QuestSystem : MonoBehaviour
             ResetTimer = 2f;
             GenerateNewObjectives();
         }
-        else
-        {
-            RefreshObjectives();
-        }
-
     }
 
     public void LoadingNewObjectives()

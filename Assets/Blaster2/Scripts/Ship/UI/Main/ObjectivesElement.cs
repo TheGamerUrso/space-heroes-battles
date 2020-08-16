@@ -40,7 +40,7 @@ public class ObjectivesElement : MonoBehaviour
             Complete();
         });
 
-        RefreshQuests();
+
 
         playerData = PersistantData.GetPlayerData();
         currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
@@ -78,6 +78,8 @@ public class ObjectivesElement : MonoBehaviour
             default:
                 break;
         }
+
+        RefreshQuests();
     }
 
     public void LoadingIndicator()
@@ -110,7 +112,7 @@ public class ObjectivesElement : MonoBehaviour
                 case ObjectiveTypeEnum.SURVIVE:
                     playerData.SetWaveSurvived(0);
                     break;
-                case ObjectiveTypeEnum.SPEND:              
+                case ObjectiveTypeEnum.SPEND:
                     playerData.SetMoneySpend(0);
                     break;
             }
@@ -136,22 +138,22 @@ public class ObjectivesElement : MonoBehaviour
     {
         CompletedGameObject.SetActive(objectiveData.claimed);
 
-        if ((ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.UNHARMED || (ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.BOUNTY)
+        if ((ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.UNHARMED)
         {
             ObjectiveDescriptionText.text = objectiveData.Description;
-            if (objectiveData.completed && !objectiveData.claimed)
-            {
-                Button.interactable = true;
-            }
+        }
+        else if ((ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.BOUNTY || (ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.SURVIVE)
+        {
+            ObjectiveDescriptionText.text = objectiveData.Description.Replace(" X ", "" + objectiveData.requirment);
         }
         else
         {
-            ObjectiveDescriptionText.text = objectiveData.Description.Replace("X", "" + objectiveData.progress);
-            if (objectiveData.completed && !objectiveData.claimed)
-            {
-                Button.interactable = true;
-            }
+            ObjectiveDescriptionText.text = objectiveData.Description.Replace(" X ", "" + objectiveData.progress);
+        }
 
+        if (objectiveData.completed && !objectiveData.claimed)
+        {
+            Button.interactable = true;
         }
 
         SetRewardInfo();

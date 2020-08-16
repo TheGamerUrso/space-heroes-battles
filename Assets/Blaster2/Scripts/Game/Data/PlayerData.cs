@@ -258,6 +258,8 @@ public class PlayerData
                 xpToLevel = (Level / multiplier + Level % multiplier) * ammount * Mathf.Pow(multiplier, Level / multiplier);
 
                 Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
+
+                AchievementSystem.instance.Report(13, Level);
             }
         }
         else

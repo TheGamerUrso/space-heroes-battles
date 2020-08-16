@@ -62,8 +62,7 @@ public class ObjectiveData
 
                 NotificationSystem.Instance.Add(notification);
 
-                //if (ObjectiveCompleteNotification.Instance != null)
-                //    ObjectiveCompleteNotification.Instance.AddToQue(this);
+                QuestSystem.Instance.RefreshObjectives();
             }
         }
 

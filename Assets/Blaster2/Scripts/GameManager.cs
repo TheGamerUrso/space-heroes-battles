@@ -2,13 +2,10 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using System.Collections;
-using Doozy.Engine.UI;
 using UnityEngine.UI;
 using EasyMobile;
-using System.Linq;
 
 [Serializable]
 public struct PlayerShipElement
@@ -19,7 +16,6 @@ public struct PlayerShipElement
 
 public class GameManager : MonoSingleton<GameManager>
 {
-    public enum AchievementType { LEVEL, KILL, UNLOCKHERO }
 
     private GameStateEnum currentGameState = GameStateEnum.PRELOAD;
     private static float DefaultTimeDeltaScale;
@@ -358,7 +354,7 @@ public class GameManager : MonoSingleton<GameManager>
     {
         LoadingScreen.SetActive(true);
         Content.SetActive(true);
-        //BlockRaycast.blocksRaycasts = true;
+
         for (int i = 0; i < Gates.Length; i++)
         {
             GateControl gate = Gates[i];
@@ -450,13 +446,13 @@ public class GameManager : MonoSingleton<GameManager>
             }
         }
 
+
         int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
-
-
-
-        //TODO Achievement Progress for Level
+        int AchievementIndex = level.mission.ID - (int)LevelEnum.Level1;
 
         playerData.LevelUnlocked = levelIndex + 1;
+
+        AchievementSystem.instance.Report(AchievementIndex, 1);
 
         if (playerData.LevelUnlocked > 9)
         {
@@ -487,9 +483,9 @@ public class GameManager : MonoSingleton<GameManager>
         {
             if (type == ObjectiveTypeEnum.SURVIVE)
             {
-                if (progress.Equals(levelIndex))
+                if (objectiveData.requirment.Equals(levelIndex))
                 {
-                    objectiveData.UpdateProgress(1);
+                    objectiveData.UpdateProgress(levelIndex);
                 }
                 return;
             }
@@ -518,36 +514,11 @@ public class GameManager : MonoSingleton<GameManager>
 
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
+        AchievementSystem.instance.Report(10, Game.EnemyKilled);
+        AchievementSystem.instance.Report(11, Game.EnemyKilled);
 
         SaveSystem.SaveGame();
     }
-
-    public void PostAchievementProgress(AchievementType achievement, int progress)
-    {
-#if UNITY_ANDROID
-        if (GooglePlayServicesManager.GetInitialized())
-        {
-            switch (achievement)
-            {
-                case AchievementType.LEVEL:
-                    GooglePlayServicesManager.UnlockAchievement(progress);
-
-                    break;
-                case AchievementType.KILL:
-                    GooglePlayServicesManager.ReportAchivementProgress(EM_GameServicesConstants.Achievement_Piece_of_Cake, progress);
-                    GooglePlayServicesManager.ReportAchivementProgress(EM_GameServicesConstants.Achievement_Destroyer, progress);
-                    break;
-                case AchievementType.UNLOCKHERO:
-                    break;
-                default:
-                    break;
-            }
-        }
-#elif UNITY_EDITOR
-     Debug.Log("Unlocked" + achievement.ToString()); 
-#endif
-    }
-
 }
 
 
