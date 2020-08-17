@@ -29,7 +29,7 @@ public class GameController : MonoSingleton<GameController>
     private PlayerShipData playerShipData;
     private BaseGameMode baseGameMode;
 
-
+    public bool HasAsteroids;
     public GameObject AsteroidBackgroundSpawner;
     public GameObject PanelBackgroundSpawner;
 
@@ -96,7 +96,7 @@ public class GameController : MonoSingleton<GameController>
         if (EnemyWaypoints != null)
             Instantiate(EnemyWaypoints, transform, false);
 
-        if (AsteroidBackgroundSpawner != null)
+        if (AsteroidBackgroundSpawner != null && HasAsteroids)
         {
             Instantiate(AsteroidBackgroundSpawner, transform, false);
         }

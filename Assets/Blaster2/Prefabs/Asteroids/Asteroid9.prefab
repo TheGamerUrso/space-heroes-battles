@@ -1,5 +1,33 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!64 &7972259278974822712
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292865514680789480}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: 4300000, guid: c575f81e621f61742a5caba98f82a259, type: 3}
+--- !u!114 &265159008943375704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 292865514680789480}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7025f37819cce974cb4328efc1462d3d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  currentHealth: 0
+  maxHealth: 0
 --- !u!1 &7853857187445289392
 GameObject:
   m_ObjectHideFlags: 0
@@ -10,15 +38,14 @@ GameObject:
   m_Component:
   - component: {fileID: 7219149934086849653}
   - component: {fileID: 5900399708043152248}
-  - component: {fileID: 5627476743250693714}
-  - component: {fileID: 425608538841562040}
-  m_Layer: 10
+  - component: {fileID: -8627539589580037447}
+  m_Layer: 15
   m_Name: Asteroid9
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7219149934086849653
 Transform:
   m_ObjectHideFlags: 0
@@ -50,7 +77,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &5627476743250693714
+--- !u!114 &-8627539589580037447
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,30 +86,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 7853857187445289392}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c2172b7d13e62149a20cae7d4644396, type: 3}
+  m_Script: {fileID: 11500000, guid: 26a885290820374429dcd5afd76b392e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Destroyed: 0
-  currentHealth: 25
-  maxHealth: 0
-  yVel: 1
-  speed: 15
-  rotSpeed: 0
+  Speed: 10
   AsteroidTransform: {fileID: 7050971367490172855}
-  takeDamageDelay: 0
---- !u!65 &425608538841562040
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7853857187445289392}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  rotSpeed: 10
 --- !u!1001 &6878314128433051901
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -115,8 +124,24 @@ PrefabInstance:
       propertyPath: m_Name
       value: Asteroid_008
       objectReference: {fileID: 0}
+    - target: {fileID: 6585628126507684117, guid: 215442d031ddac741b3e231cee7a548f,
+        type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 6585628126507684117, guid: 215442d031ddac741b3e231cee7a548f,
+        type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 215442d031ddac741b3e231cee7a548f, type: 3}
+--- !u!1 &292865514680789480 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6585628126507684117, guid: 215442d031ddac741b3e231cee7a548f,
+    type: 3}
+  m_PrefabInstance: {fileID: 6878314128433051901}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &7050971367490172855 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4516753463576547146, guid: 215442d031ddac741b3e231cee7a548f,

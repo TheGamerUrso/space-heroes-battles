@@ -125,7 +125,7 @@ public class ActivateRandomLevel : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        Asteroids[] asteroids = GameObject.FindObjectsOfType<Asteroids>();
+        AsteroidMove[] asteroids = GameObject.FindObjectsOfType<AsteroidMove>();
         for (int i = 0; i < asteroids.Length; i++)
         {
             asteroids[i].gameObject.SetActive(false);
