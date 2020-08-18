@@ -162,6 +162,8 @@ public class GameManager : MonoSingleton<GameManager>
 
         PlayerManager pm = new PlayerManager(this, this);
 
+        new GPServices();
+
         new AdvertismentManager();
         AdvertismentManager.Initialize();
 
@@ -189,7 +191,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
-        new GPServices().ManagedInit();
+     
 
         Hide();
 
@@ -520,15 +522,7 @@ public class GameManager : MonoSingleton<GameManager>
         SaveSystem.SaveGame();
     }
 
-    // Event handlers
-    void OnUserLoginSucceeded()
-    {
-        Debug.Log("User logged in successfully.");
-    }
-    void OnUserLoginFailed()
-    {
 
-    }
 }
 
 
