@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
-using EasyMobile;
 
 [Serializable]
 public struct PlayerShipElement
@@ -140,6 +139,8 @@ public class GameManager : MonoSingleton<GameManager>
     protected override void OnCleanup()
     {
         base.OnCleanup();
+
+
         Events.OnLevelValueChanged -= OnLevelValueChanged;
     }
 
@@ -163,9 +164,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         new AdvertismentManager();
         AdvertismentManager.Initialize();
-
-        new GooglePlayServicesManager();
-        GooglePlayServicesManager.Initialize();
 
         new AchievementSystem(PersistantData.Instance.Achievements.ListOfAchievelemtnts);
 
@@ -191,6 +189,8 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
+        new GPServices().ManagedInit();
+
         Hide();
 
         playerData = PersistantData.GetPlayerData();
@@ -518,6 +518,16 @@ public class GameManager : MonoSingleton<GameManager>
         AchievementSystem.instance.Report(11, Game.EnemyKilled);
 
         SaveSystem.SaveGame();
+    }
+
+    // Event handlers
+    void OnUserLoginSucceeded()
+    {
+        Debug.Log("User logged in successfully.");
+    }
+    void OnUserLoginFailed()
+    {
+
     }
 }
 

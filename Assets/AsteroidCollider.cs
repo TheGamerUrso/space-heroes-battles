@@ -9,6 +9,7 @@ public class AsteroidCollider : MonoBehaviour, IDamagable
     private bool Destroyed = false;
     [SerializeField] private float currentHealth;
     [SerializeField] private float maxHealth;
+
     public float MaxHealth
     {
         get { return maxHealth; }

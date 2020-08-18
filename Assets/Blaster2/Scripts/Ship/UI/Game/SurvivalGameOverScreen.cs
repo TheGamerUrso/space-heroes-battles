@@ -1,10 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using EasyMobile;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class SurvivalGameOverScreen : MonoBehaviour
 {

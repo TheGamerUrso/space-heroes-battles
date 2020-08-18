@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -28,9 +27,9 @@ public class GooglePlayOptions : BaseOptions
 
     public void InitializeGooglePlayProfile()
     {
-        User user = GooglePlayServicesManager.GetUserInfo();
+        User user = GPServices.GetUserInfo();
 
-        if (EasyMobile.GameServices.IsInitialized() || user != null)
+        if (GPServices.IsInitialized() || user != null)
         {
             profile.SetActive(true);
 
@@ -38,7 +37,7 @@ public class GooglePlayOptions : BaseOptions
 
             signInBut.GetComponent<Image>().sprite = buttonSprites[1];
         }
-        else if (!EasyMobile.GameServices.IsInitialized() || user == null)
+        else if (!GPServices.IsInitialized() || user == null)
         {
             profile.SetActive(false);
             username.text = string.Format("User{0}", Random.Range(1000, 9999));
@@ -49,15 +48,15 @@ public class GooglePlayOptions : BaseOptions
     public void LogIn()
     {
 
-        if (EasyMobile.GameServices.IsInitialized())
+        if (GPServices.IsInitialized())
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[1];
-            GooglePlayServicesManager.SignOut();
+            GPServices.SignOut();
         }
         else
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[0];
-            GooglePlayServicesManager.SignIn();
+            GPServices.SignIn();
         }
 
         if (signupCoroutine != null)
@@ -70,22 +69,22 @@ public class GooglePlayOptions : BaseOptions
 
     public IEnumerator SignUp()
     {
-        while (!GooglePlayServicesManager.GetInitialized())
+        while (!GPServices.IsInitialized())
         {
-            if (GooglePlayServicesManager.GetInitialized())
+            if (GPServices.IsInitialized())
             {
                 signInBut.GetComponent<Image>().sprite = buttonSprites[0];
-                GooglePlayServicesManager.SignOut();
+                GPServices.SignOut();
             }
             else
             {
                 signInBut.GetComponent<Image>().sprite = buttonSprites[1];
-                GooglePlayServicesManager.SignIn();
+                GPServices.SignIn();
             }
             yield return new WaitForSeconds(1);
         }
 
-        if (GooglePlayServicesManager.GetInitialized())
+        if (GPServices.IsInitialized())
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[0];
         }
@@ -93,16 +92,15 @@ public class GooglePlayOptions : BaseOptions
         {
             signInBut.GetComponent<Image>().sprite = buttonSprites[1];
         }
-
     }
 
     public void ShowLeaderboards()
     {
-        GooglePlayServicesManager.ShowLeaderboards();
+        GPServices.ShowLeaderboard();
     }
 
     public void ShowAchievement()
     {
-        GooglePlayServicesManager.ShowAchievementa();
+        GPServices.ShowAchievements();
     }
 }

@@ -5,30 +5,16 @@ public class Turret : Ship, IDamagable
 {
     private PlayerShipData playerShipData;
     private PlayerData playerData;
+    [SerializeField] private WeaponScript playerWeapon;
 
-    public PlayerWeapon playerWeapon;
     public bool IsAlive { get; set; }
-   public float MaxHealth { get; set; }
+    public float MaxHealth { get; set; }
 
     public float CurrentHealth { get; set; }
 
     public event Action<float, float> OnHealthChanged;
 
-    public override void OnEnable()
-    {
-        playerWeapon.Damage = playerShipData.SuperDamage;
-    }
-
-    public override void Start()
-    {
-        playerData = PersistantData.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-    }
-
-    public void Deactivate()
-    {
-        Destroy(gameObject);
-    }
+    public void Deactivate() => Destroy(gameObject);
 
     private void OnTriggerEnter(Collider other)
     {
@@ -51,13 +37,7 @@ public class Turret : Ship, IDamagable
         }
     }
 
-    public void Heal(float ammount)
-    {
-     
-    }
+    public void Heal(float ammount) { }
 
-    public void Death()
-    {
-        Destroy(gameObject);
-    }
+    public void Death() => Destroy(gameObject);
 }

@@ -1,5 +1,4 @@
-﻿using EasyMobile;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -165,8 +164,7 @@ public class PlayerData
             {
                 HighScore[level] = score;
                 if (level == 0)
-                {
-                    GooglePlayServicesManager.ReportLeaderboards((long)score, EM_GameServicesConstants.Leaderboard_Survival_Mode);
+                {          
                     Game.IsHightScore = true;
                 }
 
@@ -266,7 +264,6 @@ public class PlayerData
         {
             XP = 0;
             xpToLevel = 0;
-            GooglePlayServicesManager.UnlockAchivement(EasyMobile.EM_GameServicesConstants.Achievement_Max_Power);
         }
 
         currentPlayerShipSelected.level = Level;

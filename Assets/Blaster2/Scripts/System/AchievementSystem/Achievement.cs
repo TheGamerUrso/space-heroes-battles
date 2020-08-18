@@ -12,6 +12,7 @@ public class Achievement
     public string Description;
     public int progress;
     public int requirement;
+    public string achievementID;
 
     public void Report(int value)
     {
@@ -20,6 +21,8 @@ public class Achievement
 
     public void Check()
     {
+        GPServices.ReportAchievementProgress(achievementID, progress);
+
         if (!completed && progress >= requirement)
         {
             completed = true;
@@ -28,7 +31,9 @@ public class Achievement
             notification.Name = Name;
             notification.icon = PersistantData.Instance.GetAchievementIcon(ID);
             notification.Description = Description;
-            NotificationSystem.Instance.Add(notification);
+            NotificationSystem.Instance.Add(notification);  
         }
+
+
     }
 }

@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.SceneManagement;
-using EasyMobile;
 using UnityEngine.Advertisements;
 
 public class MainMenuManager : MonoSingleton<MainMenuManager>
@@ -24,12 +23,12 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
     public void ShowLeaderboards()
     {
-        GooglePlayServicesManager.ShowLeaderboards();
+        GPServices.ShowLeaderboard();
     }
 
     public void ShowAchievement()
     {
-        GooglePlayServicesManager.ShowAchievementa();
+        GPServices.ShowAchievements();
     }
 
     [ContextMenu("Get Safe Area")]
