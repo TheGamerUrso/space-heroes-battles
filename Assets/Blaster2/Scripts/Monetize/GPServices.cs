@@ -25,20 +25,15 @@ public class GPServices : MonoSingleton<GPServices>
         GameServices.UserLoginSucceeded -= OnUserLoginSucceeded;
         GameServices.UserLoginFailed -= OnUserLoginFailed;
     }
+
     private void Start()
     {
         GameServices.ManagedInit();
     }
 
-    public void ManagedInit()
-    {
-    
-    }
-
     public static bool IsInitialized()
     {
-        //GameServices.IsInitialized()
-        return false;
+        return GameServices.IsInitialized();
     }
 
     public static void ShowLeaderboard()
@@ -162,7 +157,7 @@ public class GPServices : MonoSingleton<GPServices>
     }
     void OnUserLoginFailed()
     {
-
+        Debug.Log("User logged in Failed.");
     }
 }
 

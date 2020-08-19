@@ -9,39 +9,65 @@ public class SlowMo : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetJoystickNames().Length > 0)
-        {
-            return;
-        }
-        if (Input.touchCount > 0 || Input.GetMouseButton(0))
-        {
-            Game.SlowMo = false;
-        }
-        else
-        {
-            Game.SlowMo = true;
-        }
 
         DoSlowMo();
     }
+
+    public bool SlowMoAvailable()
+    {
+        return !Game.IsGameOver && !Game.IsPaused && Game.UseSlowMo;
+    }
+
     public void DoSlowMo()
     {
-        if (GameController.CurrentGameState == GameController.GameState.GAME)
+        switch (GameController.CurrentGameState)
         {
-            if (!Game.IsGameOver && !Game.IsPaused && Game.UseSlowMo)
-            {
-                if (Game.SlowMo)
+            case GameController.GameState.START:
+                ResetTime();
+                break;
+            case GameController.GameState.GAME:
+
+                if (Input.touchCount > 0 || Input.GetMouseButton(0))
                 {
-                    Time.timeScale = delayTheSlowMoEffectTimer;
-                    AudioManager.Instance.SetPitch(.8f);
+                    Game.SlowMo = false;
                 }
-                else if (!Game.SlowMo && Time.timeScale < 1)
+                else
                 {
-                    Time.timeScale = 1.0f;
-                    AudioManager.Instance.SetPitch(1.0f);
+                    Game.SlowMo = true;
                 }
-            }
+
+                if (SlowMoAvailable())
+                {
+                    if (Game.SlowMo)
+                    {
+                        SlowTime();
+                    }
+                    else if (!Game.SlowMo && Time.timeScale < 1)
+                    {
+                        ResetTime();
+                    }
+                }
+                break;
+            case GameController.GameState.GAMEOVER:
+                ResetTime();
+                break;
+            case GameController.GameState.WIN:
+                ResetTime();
+                break;
+            default:
+                break;
         }
+    }
+
+    public void ResetTime()
+    {
+        Time.timeScale = 1.0f;
+        AudioManager.Instance.SetPitch(1.0f);
+    }
+    public void SlowTime()
+    {
+        Time.timeScale = delayTheSlowMoEffectTimer;
+        AudioManager.Instance.SetPitch(.8f);
     }
 
 }

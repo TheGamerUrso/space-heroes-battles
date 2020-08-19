@@ -45,7 +45,7 @@ public class PlayerData
     public float MusicVolume;
     public bool AutoAttack;
     public bool mute;
-    [Range(1,2)]
+    [Range(1, 2)]
     public int ControlScene;
     [Range(0, 20)]
     public int MaxLevel;
@@ -55,9 +55,6 @@ public class PlayerData
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
     public List<Achievement> Achievements;
-
-    public int multiplier = 10;
-    public int ammount = 100;
 
     public PlayerData() { }
 
@@ -164,7 +161,7 @@ public class PlayerData
             {
                 HighScore[level] = score;
                 if (level == 0)
-                {          
+                {
                     Game.IsHightScore = true;
                 }
 
@@ -253,7 +250,7 @@ public class PlayerData
                 Level++;
                 XP = 0;
 
-                xpToLevel = (Level / multiplier + Level % multiplier) * ammount * Mathf.Pow(multiplier, Level / multiplier);
+                xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
 
                 Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
 

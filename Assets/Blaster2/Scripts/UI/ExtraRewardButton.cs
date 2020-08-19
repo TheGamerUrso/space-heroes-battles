@@ -17,6 +17,7 @@ public class ExtraRewardButton : MonoBehaviour
 
         //Advertising.RewardedAdSkipped += RewardedAdSkippedHandler;
     }
+
     // Event handler called when a rewarded ad has completed
     //void RewardedAdCompletedHandler(RewardedAdNetwork network, AdPlacement location)
     //{

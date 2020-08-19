@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 public class SimpleShipControls : MonoBehaviour
@@ -9,6 +10,8 @@ public class SimpleShipControls : MonoBehaviour
     }
     public ControlSceme controlSceme;
 
+    private Camera _cam;
+
     private PlayerShipData playerShipData;
     private PlayerData playerData;
 
@@ -18,132 +21,116 @@ public class SimpleShipControls : MonoBehaviour
     private Plane plane;
     private Ray ray;
     private float offset = 8;
-    private Touch touch;
-    private Vector2 currentTouchPos;
-    private float yMove = 0;
-    private float rotVelocity;
-    private Vector3 targetEulerAngels;
-    private float point;
-    [SerializeField] private float Speed = 5;
+
+
+    [SerializeField] private float Speed = 50;
+
+    private float rotationSpeed;
+
+    private Vector3 targetRotation;
+
+    private float hitPoint;
+
+    private Vector2 currentPos;
+    private Vector2 previousPos;
+
+    private float deltaX;
+    private float deltaY;
 
     public void SetSpeed(float speed)
     {
         Speed = speed;
     }
 
+    void LoadPlayerData()
+    {
+        playerData = PersistantData.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        controlSceme = (ControlSceme)playerData.ControlScene;
+        Speed = playerShipData.Speed;
+    }
+    private void Awake()
+    {
+        _cam = Camera.main;
+    }
+
     public void Start()
     {
         targetPos = transform.position;
-
-        playerData = PersistantData.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-
-
         plane = new Plane(Vector3.up, transform.position);
-
         Events.OnControlScemeChange = UpdateOffset;
-        Speed = playerShipData.Speed;
-        controlSceme = (ControlSceme)playerData.ControlScene;
+        LoadPlayerData();
     }
 
-    public void SetTargetPosition()
+    public void SetTargetPosition(Vector2 screenPos)
     {
-        if (Input.touchCount == 0)
-        {
-            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        }
-        else
-        {
-            for (int i = 0; i < Input.touchCount; i++)
-            {
-                touch = Input.GetTouch(0);
-                switch (touch.phase)
-                {
-                    case TouchPhase.Began:
-                        currentTouchPos = touch.position;
-                        break;
-                    case TouchPhase.Moved:
-                        currentTouchPos = touch.position;
-                        ray = Camera.main.ScreenPointToRay(currentTouchPos);
-                        break;
-                    case TouchPhase.Stationary:
-                        break;
-                    case TouchPhase.Ended:
-                        currentTouchPos = transform.position;
-                        break;
-                }
-            }
+        ray = _cam.ScreenPointToRay(screenPos);
 
-        }
-
-        plane = new Plane(Vector3.up, transform.position);
-        point = 0f;
-        if (plane.Raycast(ray, out point))
-            targetPos = new Vector3(ray.GetPoint(point).x, yMove, ray.GetPoint(point).z);
+        if (plane.Raycast(ray, out hitPoint))
+            targetPos = new Vector3(ray.GetPoint(hitPoint).x, 0, ray.GetPoint(hitPoint).z);
     }
 
-    public AnimationCurve animationCurve;
 
-    public float Sensitivity = 0.1f;
-
-
-    private void Move()
-    {
-        transform.position = Vector3.Lerp(transform.position, (targetPos + new Vector3(0, 0, offset)), Speed * Time.deltaTime);
-    }
 
     public void OnDragMove()
     {
-        if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
+
+        if (Application.isEditor)
         {
-#if UNITY_EDITOR
             if (Input.GetMouseButton(0))
             {
-                transform.position = new Vector3(transform.position.x + Input.GetAxis("Mouse X") * Speed * Time.deltaTime,
-                    transform.position.y,
-                    transform.position.z + Input.GetAxis("Mouse Y") * Speed * Time.deltaTime);
+                currentPos = Input.mousePosition;
+                var normlised = (currentPos - previousPos).normalized;
+
+                deltaX = normlised.x;
+                deltaY = normlised.y;
+
+                transform.Translate(new Vector3((deltaX * Speed * Time.deltaTime), 0, (deltaY * Speed * Time.deltaTime)));
+
+                previousPos = currentPos;
             }
-#endif
-            if (Input.touchCount > 0)
+        }
+        else
+        {
+            if (Input.touchCount > 0 && !IsMouseOverUI())
             {
-                touch = Input.GetTouch(0);
-                if (touch.phase == TouchPhase.Moved)
+                if (Input.GetTouch(0).phase == TouchPhase.Moved)
                 {
-                    transform.position = new Vector3(transform.position.x + touch.deltaPosition.x * Speed * Time.deltaTime, transform.position.y, transform.position.z + touch.deltaPosition.y * Speed * Time.deltaTime);
+                    currentPos = Input.GetTouch(0).position;
+                    var normlised = (currentPos - previousPos).normalized;
+
+                    deltaX = normlised.x;
+                    deltaY = normlised.y;
+
+                    transform.Translate(new Vector3((deltaX * Speed * Time.deltaTime), 0, (deltaY * Speed * Time.deltaTime)));
+
+                    previousPos = currentPos;
                 }
             }
         }
     }
-
-    private void LateUpdate()
-    {
-        if (GameController.CurrentGameState == GameController.GameState.GAME)
-        {
-            if (controlSceme == ControlSceme.CONTROL1)
-            {
-                Move();
-            }
-            else if (controlSceme == ControlSceme.CONTROL2)
-            {
-                OnDragMove();
-            }
-
-            transform.position = new Vector3(
-                Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),
-                yMove,
-                    Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
-        }
-    }
-
     private void Update()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
             if (controlSceme == ControlSceme.CONTROL1)
             {
-                if ((Input.touchCount > 0 || Input.GetMouseButton(0)) && !IsMouseOverUI())
+                if (Application.isEditor)
                 {
-                    SetTargetPosition();
+                    if (Input.GetMouseButton(0) && !IsMouseOverUI())
+                    {
+                        SetTargetPosition(Input.mousePosition);
+                        MoveToTarget();
+                    }
+                }
+                else
+                {
+                    if (Input.touchCount > 0 && !IsMouseOverUI())
+                    {
+                        Touch firstTouch = Input.GetTouch(0);
+                        SetTargetPosition(firstTouch.position);
+                        MoveToTarget();
+                    }
                 }
             }
 
@@ -151,56 +138,42 @@ public class SimpleShipControls : MonoBehaviour
             {
                 Rotate();
             }
+
+            ClampTransform();
         }
     }
 
+
+    private void FixedUpdate()
+    {
+        if (controlSceme == ControlSceme.CONTROL2)
+        {
+            OnDragMove();
+        }
+    }
 
     public void Rotate()
     {
         if (ShouldRoate())
         {
-
-#if UNITY_EDITOR
-            rotVelocity = -(Input.GetAxis("Mouse X")) * tilt;
-#endif
-
-            if (Input.touchCount > 0)
-            {
-                touch = Input.GetTouch(0);
-                rotVelocity = -touch.deltaPosition.x * tilt;
-            }
-
-            rotVelocity = Mathf.Clamp(rotVelocity, -35, 35);
+            rotationSpeed = -deltaX * tilt;
+            rotationSpeed = Mathf.Clamp(rotationSpeed, -35, 35);
         }
         else
         {
-            rotVelocity = 0;
+            rotationSpeed = 0;
         }
 
-        targetEulerAngels = ShipModel.transform.localEulerAngles;
-
-        targetEulerAngels = new Vector3(
-              targetEulerAngels.x
-            , targetEulerAngels.y,
-              Mathf.LerpAngle(
-                targetEulerAngels.z,
-           rotVelocity, .1f));
-
-        ShipModel.transform.localEulerAngles = targetEulerAngels;
+        targetRotation = ShipModel.transform.localEulerAngles;
+        targetRotation = new Vector3(targetRotation.x, targetRotation.y, Mathf.LerpAngle(targetRotation.z, rotationSpeed, .1f));
+        ShipModel.transform.localEulerAngles = targetRotation;
     }
 
-    public static bool IsMouseOverUI()
-    {
-        return EventSystem.current.IsPointerOverGameObject();
-    }
+    private void MoveToTarget() => transform.position = Vector3.MoveTowards(transform.position, targetPos + new Vector3(0, 0, offset), Speed * Time.deltaTime);
+    public static bool IsMouseOverUI() => EventSystem.current.IsPointerOverGameObject();
+    public void UpdateOffset() => controlSceme = (ControlSceme)playerData.ControlScene;
+    public bool ShouldRoate() => (Input.touchCount > 0 || Input.GetMouseButton(0));
+    public void ClampTransform()=> transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),0, Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
+    
 
-    public void UpdateOffset()
-    {
-        controlSceme = (ControlSceme)playerData.ControlScene;
-    }
-
-    public bool ShouldRoate()
-    {
-        return (Input.touchCount > 0 || Input.GetMouseButton(0));
-    }
 }

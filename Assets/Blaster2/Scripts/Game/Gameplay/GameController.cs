@@ -18,6 +18,10 @@ public class GameController : MonoSingleton<GameController>
     {
         get
         {
+            if(Instance == null)
+            {
+                return GameState.GAME;
+            }
             return Instance.currentGameState;
         }
     }

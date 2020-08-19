@@ -21,7 +21,7 @@ public class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T>
             _instance = _instance ? _instance : FindObjectOfType<T>();
             if (!_instance)
             {
-                Debug.LogError($"[Singleton] No instance of singleton '{typeof(T)}' found!");
+                Debug.LogWarning($"[Singleton] No instance of singleton '{typeof(T)}' found!");
             }
 
             return _instance;
