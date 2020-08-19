@@ -42,7 +42,6 @@ public class SpawnEnemies
         enemy.Id = currentBoss.name;
         enemy.SetStats(LevelDifficulty);
 
-        BaseGameMode.Instance.spawnInfo.TotalEnemies++;
         return enemy;
     }
 
@@ -55,7 +54,6 @@ public class SpawnEnemies
     public GameObject SpawnEnemyElement(EnemyElement enemyElement, int LevelDifficulty = 1)
     {
         enemyElement.currentNumberInScene++;
-        BaseGameMode.Instance.spawnInfo.TotalEnemies--;
 
         SpawnPoint[] tempList = spawnPoints.Where(x => x.used == false).ToArray();
         int spawnIndex = UnityEngine.Random.Range(0, tempList.Length);

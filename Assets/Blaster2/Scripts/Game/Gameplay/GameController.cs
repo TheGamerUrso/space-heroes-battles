@@ -13,12 +13,13 @@ public class GameController : MonoSingleton<GameController>
         START, GAME, GAMEOVER, WIN
     }
 
-    public GameState currentGameState = GameState.START;
+    private GameState currentGameState = GameState.START;
+
     public static GameState CurrentGameState
     {
         get
         {
-            if(Instance == null)
+            if (Instance == null)
             {
                 return GameState.GAME;
             }
@@ -43,10 +44,6 @@ public class GameController : MonoSingleton<GameController>
 
     private void OnApplicationFocus(bool focus)
     {
-#if UNITY_EDITOR
-
-        return;
-#endif
         if (Application.platform == RuntimePlatform.Android)
         {
             if (!focus)
@@ -61,9 +58,6 @@ public class GameController : MonoSingleton<GameController>
 
     private void OnApplicationPause(bool Paused)
     {
-#if UNITY_EDITOR
-        return;
-#endif
         if (Application.platform == RuntimePlatform.Android)
         {
             if (Paused)
@@ -125,7 +119,7 @@ public class GameController : MonoSingleton<GameController>
     {
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-   
+
         SetGameState(GameState.START);
     }
 
@@ -247,11 +241,12 @@ public class GameController : MonoSingleton<GameController>
 
         yield return new WaitForSeconds(2.0f);
 
+        AudioManager.PlayMusic("Victory", false);
+
         playerShip?.Exit();
 
         yield return new WaitForSeconds(2.0f);
         Events.OnWin?.Invoke(this);
-
     }
 
     public void SetGameState(GameState gameState)

@@ -4,15 +4,21 @@ using DG.Tweening;
 
 public class ComboKillIndicator : MonoBehaviour
 {
-    public readonly string[] congratulations = { "Not Bad", "Nice!", "Good!", "Great!", "Suberb!", "Perfect!", "Godlike!" };
+    public readonly string[] congratulations = { "Not Bad", "Nice!", "Good!", "Great!", "Supser","Suberb!", "Perfect!", "Godlike!" };
 
-    public GameObject TextCanvas;
-    public TextMeshProUGUI confratulationText;
+    [SerializeField]private GameObject TextCanvas;
+    [SerializeField]private TextMeshProUGUI confratulationText;
 
 
     private float TTL = 1;
     private float timerCooldown = 1;
     private int perfect;
+
+    private float duration = 1;
+    private int vibriate = 5;
+    private int elasticity = 1;
+    private Ease ease = Ease.InOutQuart;
+    private Vector3 size = new Vector3(.25f, .25f, .25f);
 
     private void OnDestroy()
     {
@@ -36,11 +42,6 @@ public class ComboKillIndicator : MonoBehaviour
         TextCanvas.SetActive(false);
     }
 
-    public float duration = 1;
-    public int vibriate = 10;
-    public int elasticity = 1;
-    public Ease ease;
-    public Vector3 size;
 
     public void Animate()
     {
@@ -50,16 +51,11 @@ public class ComboKillIndicator : MonoBehaviour
     public void OnMultiplierChanged()
     {
         perfect++;
+
         if (Game.Multiplier == 0)
         {
             perfect = 0;
         }
-
-        //if (!PlayerPrefs.HasKey("KillMultiTut"))
-        //{
-        //    Tutorial.Instance.ShowTutorial(6);
-        //    PlayerPrefs.SetInt("KillMultiTut", 1);
-        //}
 
         if (timerCooldown <= 0 && TextCanvas.activeInHierarchy == false)
         {

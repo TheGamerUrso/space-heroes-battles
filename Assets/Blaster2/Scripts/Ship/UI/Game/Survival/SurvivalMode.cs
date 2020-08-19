@@ -95,14 +95,14 @@ public class SurvivalMode : BaseGameMode
     {
         while (!Game.IsGameOver)
         {
-            if ((GameController.Instance.currentGameState == GameController.GameState.START))
+            if (GameController.CurrentGameState == GameController.GameState.START)
             {
-                yield return new WaitUntil(() => (GameController.Instance.currentGameState == GameController.GameState.GAME));
+                yield return new WaitUntil(() => (GameController.CurrentGameState == GameController.GameState.GAME));
             }
 
             yield return shortWait;
 
-            if (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState == GameController.GameState.GAME)
+            if (GuiManager.Instance.IsTrasnmiting() || GameController.CurrentGameState == GameController.GameState.GAME)
             {
                 yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
             }
@@ -113,7 +113,8 @@ public class SurvivalMode : BaseGameMode
 
             availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
             var repeat = 1;
-            while (spawnInfo.TotalEnemies > 0)
+
+            for (int i = spawnInfo.TotalEnemies; i < 0; i--)
             {
                 if (gameInfo.pause)
                 {
@@ -136,7 +137,7 @@ public class SurvivalMode : BaseGameMode
                             repeat = 1;
                         }
 
-                        for (int i = 0; i < repeat; i++)
+                        for (int repeatIndex = 0; repeatIndex < repeat; repeatIndex++)
                         {
                             if (spawnInfo.TotalEnemies - 1 >= 0)
                             {
@@ -147,7 +148,6 @@ public class SurvivalMode : BaseGameMode
                         }
                     }
                 }
-
 
                 yield return CooldownTimer;
                 CooldownTimer = new WaitForSeconds(cooldown);

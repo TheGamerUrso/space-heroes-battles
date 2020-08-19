@@ -43,14 +43,11 @@ public class WinScreen : MonoBehaviour
         StartCoroutine(ShowGameResults());
     }
 
-
     private IEnumerator ShowGameResults()
     {
         float score = Game.Score;
         float tempScore = 0;
-
-
-        yield return new WaitForSeconds(2.5f);
+        yield return new WaitForSeconds(2);
 
         while (tempScore < score)
         {
@@ -66,7 +63,7 @@ public class WinScreen : MonoBehaviour
 
         skip = false;
 
-        yield return new WaitForSeconds(3);
+        yield return new WaitForSeconds(1);
 
         foreach (LevelObjectivesElement item in levelObjectives)
         {

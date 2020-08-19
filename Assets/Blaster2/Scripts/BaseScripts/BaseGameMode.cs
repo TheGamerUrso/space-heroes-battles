@@ -154,8 +154,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         {
             Enemies.Remove(baseEnemy.gameObject);
 
-            spawnInfo.TotalEnemies--;
-
             gameInfo.BossBattleInitiated = false;
 
             int BossId = id[id.Length - 1];

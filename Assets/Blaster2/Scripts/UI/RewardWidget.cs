@@ -29,8 +29,9 @@ public class RewardWidget : MonoBehaviour
 
 
     public string[] rewardText = { "X Gold Earned", "X XP Earned", "SHIP REPAIRED", "SHIELD INSTALLED", "POWER UP", "DECREASE SUPER COOLDOWN" };
-    public GameObject reward;
+    public GameObject rewardResultPanel;
     public TextMeshProUGUI RewardText;
+
     private void OnDestroy()
     {
         Events.ClaimReward -= ClaimReward;
@@ -43,7 +44,7 @@ public class RewardWidget : MonoBehaviour
         Events.ClaimedReward = RewardClaimed;
 
         rewardPanel.SetActive(true);
-        reward.SetActive(false);
+        rewardResultPanel.SetActive(false);
         GetNewRewards();
 
         Time.timeScale = 1.0f;
@@ -120,15 +121,16 @@ public class RewardWidget : MonoBehaviour
         }
 
         RewardText.text = textToShow;
-        reward.SetActive(true);
-
-        yield return new WaitForSeconds(2.0f);
-
-        reward.SetActive(false);
-        widgetPanel.SetActive(false);
+        rewardResultPanel.SetActive(true);
+        rewardPanel.SetActive(false);
 
         yield return new WaitForSeconds(3.0f);
 
+        rewardResultPanel.SetActive(false);
+
+
+        yield return new WaitForSeconds(3.0f);
+        widgetPanel.SetActive(false);
         RewardClaimed();
         Game.UseSlowMo = true;
     }

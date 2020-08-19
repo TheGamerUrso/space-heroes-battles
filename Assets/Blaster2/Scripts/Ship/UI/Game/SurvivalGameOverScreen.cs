@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,22 +9,51 @@ public class SurvivalGameOverScreen : MonoBehaviour
 
     public GameObject highscore;
     private Level level;
+    private bool skip;
 
     public void ShowResults()
     {
         Scene scene = SceneManager.GetActiveScene();
         level = GameManager.Instance.GetMission((LevelEnum)scene.buildIndex);
 
-        PlayerData playerData = PersistantData.GetPlayerData();
-
-        string scoreText = string.Format("{00:0000000000}", Game.Score);
+        float score = Game.Score;
+        string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
 
-        highscore.SetActive(false);
-        int actualLevelIndex = level.mission.ID - (int)LevelEnum.Level0;
+        StartCoroutine(ScoreCoroutine());
 
-        var score = playerData.GetScore(actualLevelIndex);
-        var hscore = playerData.GetHighScore(actualLevelIndex);
+        highscore.SetActive(false);      
+    }
+
+    public void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            skip = true;
+        }
+    }
+
+    private IEnumerator ScoreCoroutine()
+    {
+        float score = Game.Score;
+        float tempScore = 0;
+        string scoreText;
+
+        yield return new WaitForSeconds(.2f);
+
+        while (tempScore < score)
+        {
+            tempScore = Mathf.Lerp(tempScore, score, .5f);
+            scoreText = string.Format("{00:0000000000}", tempScore);
+            m_Text.text = scoreText;
+            if (skip)
+            {
+                tempScore = score;
+            }
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(1);
 
         if (Game.IsHightScore)
         {

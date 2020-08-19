@@ -214,28 +214,13 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void Win(GameController gc)
     {
-        StartCoroutine(WinCoroutine());
-    }
-    public void GameOver(GameController gc)
-    {
-        StartCoroutine(GameOverCoroutine());
-    }
-
-    private IEnumerator GameOverCoroutine()
-    {
-        yield return new WaitForSeconds(2.0f);
-
-        GameOverScreen.Show();
-    }
-
-    public IEnumerator WinCoroutine()
-    {
-        AudioManager.PlayMusic("Victory", false);
-
-        yield return new WaitForSeconds(2.0f);
-
         WinScreen.Show();
         WinScreen.GetComponent
             <WinScreen>().ShowGameResult();
     }
+    public void GameOver(GameController gc)
+    {
+        GameOverScreen.Show();
+    }
+
 }

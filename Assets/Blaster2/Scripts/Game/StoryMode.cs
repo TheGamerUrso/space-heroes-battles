@@ -60,15 +60,14 @@ public class StoryMode : BaseGameMode
     {
         var startingTotalEnemies = spawnInfo.TotalEnemies;
 
-
-        if ((GameController.Instance.currentGameState == GameController.GameState.START))
+        if (GameController.CurrentGameState == GameController.GameState.START)
         {
-            yield return new WaitUntil(() => (GameController.Instance.currentGameState == GameController.GameState.GAME));
+            yield return new WaitUntil(() => (GameController.CurrentGameState == GameController.GameState.GAME));
         }
 
         yield return shortWait;
 
-        if (GuiManager.Instance.IsTrasnmiting() || GameController.Instance.currentGameState == GameController.GameState.GAME)
+        if (GuiManager.Instance.IsTrasnmiting() || GameController.CurrentGameState == GameController.GameState.GAME)
         {
             yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
         }
@@ -78,8 +77,8 @@ public class StoryMode : BaseGameMode
         Game.UseSlowMo = true;
 
         availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
-        var repeat = 1;
-        while (spawnInfo.TotalEnemies > 0)
+
+        for (int enemyIndex = spawnInfo.TotalEnemies; enemyIndex > 0; enemyIndex--)
         {
             if (gameInfo.pause)
             {
@@ -88,32 +87,31 @@ public class StoryMode : BaseGameMode
 
             ChooseRandomEnemyToSpawn();
 
-            if (spawnInfo.TotalEnemies - 1 >= 0)
+            if (enemyElement != null)
             {
-                if (enemyElement != null)
+                if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
                 {
-
-                    if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
+                    for (int i = 0; i < 4; i++)
                     {
-                        repeat = 4;
-                    }
-                    else
-                    {
-                        repeat = 1;
-                    }
-
-                    for (int i = 0; i < repeat; i++)
-                    {
-                        if (spawnInfo.TotalEnemies - 1 >= 0)
+                        if (enemyIndex - 1 > 0)
                         {
                             enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
                             Enemies.Add(enemGO);
+                            enemyIndex--;
                             yield return new WaitForSeconds(.5f);
+                        }
+                        else
+                        {
+                            continue;
                         }
                     }
                 }
+                else
+                {
+                    enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
+                    Enemies.Add(enemGO);
+                }
             }
-
 
             yield return CooldownTimer;
             CooldownTimer = new WaitForSeconds(cooldown);

@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
+using EasyMobile;
 
 [Serializable]
 public struct PlayerShipElement
@@ -147,6 +148,11 @@ public class GameManager : MonoSingleton<GameManager>
     protected override void Awake()
     {
         base.Awake();
+
+
+        if (!RuntimeManager.IsInitialized())
+            RuntimeManager.Init();
+
         DontDestroyOnLoad(gameObject);
 
         _instancedSystemPrefabs = new List<GameObject>();
