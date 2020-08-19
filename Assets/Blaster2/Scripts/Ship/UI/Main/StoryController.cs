@@ -9,6 +9,7 @@ public class StoryController : MonoSingleton<StoryController>
 
     public void Open()
     {
+        level = GameManager.Instance.GetCurrentLevelSelected();
 
         ConversationWidget.GetComponent<StoryView>().SetStory(level.mission.Description);
 

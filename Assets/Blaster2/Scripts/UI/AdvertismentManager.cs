@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-public class AdvertismentManager : Singleton<AdvertismentManager>
+public class AdvertismentManager : MonoSingleton<AdvertismentManager>
 {
 
     public static string gameId = "2725712";

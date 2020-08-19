@@ -149,7 +149,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         base.Awake();
 
-
         if (!RuntimeManager.IsInitialized())
             RuntimeManager.Init();
 
@@ -168,9 +167,6 @@ public class GameManager : MonoSingleton<GameManager>
 
         PlayerManager pm = new PlayerManager(this, this);
 
-        new GPServices();
-
-        new AdvertismentManager();
         AdvertismentManager.Initialize();
 
         new AchievementSystem(PersistantData.Instance.Achievements.ListOfAchievelemtnts);
