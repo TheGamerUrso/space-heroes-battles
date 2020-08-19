@@ -31,7 +31,7 @@ public class Rocket : PlayerProjectile
 
             if (!m_Target.activeInHierarchy)
             {
-                m_Target = null;
+                m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity);
             }
         }
 
@@ -40,8 +40,6 @@ public class Rocket : PlayerProjectile
         {
             shootDir = Vector3.forward;
         }
-
-        //Debug.DrawRay(transform.position, shootDir, Color.red);
 
         transform.Translate(shootDir * speed * Time.deltaTime, Space.World);
 

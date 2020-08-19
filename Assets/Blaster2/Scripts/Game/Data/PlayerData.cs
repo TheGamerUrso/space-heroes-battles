@@ -143,16 +143,6 @@ public class PlayerData
         SurvivalUnlocked = value;
     }
 
-
-    public void SetSurvivalScore(int score)
-    {
-        SurvivalScore = score;
-        if (SurvivalScore > SurvivalHighScore)
-        {
-            SurvivalHighScore = SurvivalScore;
-        }
-    }
-
     public void SetScore(int level, float score)
     {
         if (level < Score.Length && level >= 0)

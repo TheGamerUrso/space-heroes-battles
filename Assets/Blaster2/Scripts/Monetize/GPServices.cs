@@ -50,7 +50,7 @@ public class GPServices : MonoSingleton<GPServices>
 #endif
         }
     }
-    public static void ReportLeaderboards(long score, string leaderboard)
+    public static void ReportLeaderboards(long score)
     {
         // Report a score of 100
         // EM_GameServicesConstants.Sample_Leaderboard is the generated name constant
@@ -64,7 +64,7 @@ public class GPServices : MonoSingleton<GPServices>
 
     public static void LoadScores()
     {
-        GameServices.LoadScores(EM_GameServicesConstants.Leaderboard_SurvivalMode, 10, 20, TimeScope.Today, UserScope.Global, OnScoresLoaded);
+        GameServices.LoadScores(EM_GameServicesConstants.Leaderboard_SurvivalMode, 10, 20, TimeScope.Week, UserScope.Global, OnScoresLoaded);
     }
 
     public static void OnScoresLoaded(string leaderboardName, IScore[] scores)
@@ -85,13 +85,16 @@ public class GPServices : MonoSingleton<GPServices>
 
     private static void OnLocalUserScoreLoaded(string leaderboardName, IScore score)
     {
+        var playerData = PersistantData.GetPlayerData();
         if (score != null)
         {
             Debug.Log("Your score is: " + score.value);
+            playerData.SetScore(0, score.value);
         }
         else
         {
             Debug.Log("You don't have any score reported to leaderboard " + leaderboardName);
+            playerData.SetScore(0, 0);
         }
     }
 

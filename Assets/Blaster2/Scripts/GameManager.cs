@@ -191,8 +191,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     private void Start()
     {
-     
-
         Hide();
 
         playerData = PersistantData.GetPlayerData();
@@ -206,6 +204,10 @@ public class GameManager : MonoSingleton<GameManager>
         if (SceneManager.GetActiveScene().buildIndex == (int)LevelEnum.boot)
         {
             LoadScene(LevelEnum.Intro, false);
+        }
+        if (GPServices.IsInitialized())
+        {
+            GPServices.LoadLocalUserScore();
         }
     }
 
@@ -399,6 +401,7 @@ public class GameManager : MonoSingleton<GameManager>
     public void SetSurvivalScore(int ammount)
     {
         playerData.SetScore(0, ammount);
+        GPServices.ReportLeaderboards(ammount);
     }
 
     public void PlayerChallengesCheck()

@@ -36,18 +36,21 @@ public static class HelperUtils
         GameObject enemyTarget = null;
         foreach (GameObject enemy in Enemies)
         {
-            float dist = Vector3.Distance(position, enemy.transform.position);
-            if (dist <= maxRange)
+            if (!enemy.GetComponent<AsteroidMove>())
             {
-                if (enemyTarget == null)
+                float dist = Vector3.Distance(position, enemy.transform.position);
+                if (dist <= maxRange)
                 {
-                    enemyTarget = enemy;
-                }
-                else
-                {
-                    if (Vector3.Distance(position, enemy.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
+                    if (enemyTarget == null)
                     {
                         enemyTarget = enemy;
+                    }
+                    else
+                    {
+                        if (Vector3.Distance(position, enemy.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
+                        {
+                            enemyTarget = enemy;
+                        }
                     }
                 }
             }

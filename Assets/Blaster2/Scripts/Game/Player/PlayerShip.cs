@@ -226,44 +226,45 @@ public class PlayerShip : Ship, IDamagable
 
     public void TakeDamage(float dmg)
     {
-        if (IsAlive())
+        if (!IsDead())
         {
-            return;
-        }
+            audioSource.PlayOneShot(playerStats.hitSFX);
 
-        audioSource.PlayOneShot(playerStats.hitSFX);
-
-        if (dmg >= MaxHealth)
-        {
-            dmg = MaxHealth - 1;
-        }
-
-        if (HasShield == true)
-        {
-            HasShield = false;
-            ShieldEffect.SetActive(HasShield);
-        }
-        else if (HasShield == false)
-        {
-            if (invisibilityTimer <= 0)
+            if (dmg >= MaxHealth)
             {
-                invisibilityTimer = .25f;
-                var health = CurrentHealth - dmg;
-                SetHealth(health);
-                Game.ResetMultiplier();
+                dmg = MaxHealth - 1;
+            }
 
-                Events.PlayerShipHit?.Invoke();
-
-                Game.GotHit();
-
-                if (GetHealthPresentage() < .5f)
+            if (HasShield == true)
+            {
+                HasShield = false;
+                ShieldEffect.SetActive(HasShield);
+            }
+            else if (HasShield == false)
+            {
+                if (invisibilityTimer <= 0)
                 {
-                    audioSource.PlayOneShot(playerStats.alarmSFX);
-                }
+                    invisibilityTimer = .25f;
 
-                if (CurrentHealth < 1)
-                {
-                    Death();
+                    var health = CurrentHealth - dmg;
+
+                    SetHealth(health);
+
+                    Game.ResetMultiplier();
+
+                    Events.PlayerShipHit?.Invoke();
+
+                    Game.GotHit();
+
+                    if (GetHealthPresentage() < .5f)
+                    {
+                        audioSource.PlayOneShot(playerStats.alarmSFX);
+                    }
+
+                    if (CurrentHealth < 1)
+                    {
+                        Death();
+                    }
                 }
             }
         }
@@ -488,7 +489,7 @@ public class PlayerShip : Ship, IDamagable
     }
 
 
-    public bool IsAlive()
+    public bool IsDead()
     {
         return CurrentHealth <= 0;
     }
