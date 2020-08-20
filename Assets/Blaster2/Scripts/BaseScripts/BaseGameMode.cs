@@ -42,6 +42,9 @@ public struct SpawnInfo
 
 public class BaseGameMode : MonoSingleton<BaseGameMode>
 {
+    public static int NumberOfEnemies;
+    public int MaxNumberOfEnemies;
+
     public Level_SO level_SO;
 
     protected PlayerShip playerShip;

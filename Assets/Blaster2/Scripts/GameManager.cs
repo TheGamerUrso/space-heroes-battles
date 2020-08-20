@@ -21,8 +21,6 @@ public class GameManager : MonoSingleton<GameManager>
     private static float DefaultTimeDeltaScale;
     WaitForSeconds shortWait = new WaitForSeconds(2.0f);
 
-
-
     private PlayerData playerData;
     private PlayerShipData playerShipData;
 
@@ -481,23 +479,31 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void PlayerQuestProgress(ObjectiveTypeEnum type, int progress)
     {
+
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(type);
 
-        Scene scene = SceneManager.GetActiveScene();
-        Level level = GetMission((LevelEnum)scene.buildIndex);
-        int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
-        if (objectiveData != null)
+        if (type == ObjectiveTypeEnum.SPEND)
         {
-            if (type == ObjectiveTypeEnum.SURVIVE)
-            {
-                if (objectiveData.requirment.Equals(levelIndex))
-                {
-                    objectiveData.UpdateProgress(levelIndex);
-                }
-                return;
-            }
-
             objectiveData.UpdateProgress(progress);
+        }
+        else
+        {
+            Scene scene = SceneManager.GetActiveScene();
+            Level level = GetMission((LevelEnum)scene.buildIndex);
+            int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
+            if (objectiveData != null)
+            {
+                if (type == ObjectiveTypeEnum.SURVIVE)
+                {
+                    if (objectiveData.requirment.Equals(levelIndex))
+                    {
+                        objectiveData.UpdateProgress(levelIndex);
+                    }
+                    return;
+                }
+
+                objectiveData.UpdateProgress(progress);
+            }
         }
     }
 
@@ -527,7 +533,18 @@ public class GameManager : MonoSingleton<GameManager>
         SaveSystem.SaveGame();
     }
 
+    [ContextMenu("Unlimited Money")]
+    public void AddCoin()
+    {
+        playerData.AddCoin(99999999);
+    }
 
+
+    [ContextMenu("Level Up")]
+    public void LevelUp()
+    {
+        playerData.EarnXP(playerShipData.xpToLevel - playerShipData.xp);
+    }
 }
 
 

@@ -61,7 +61,7 @@ public class PlayerWeapon : WeaponScript
 
         holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
-        var shouldShoot = Input.GetMouseButton(0) || Input.GetButton("XboxAButton");
+        var shouldShoot = Input.GetMouseButton(0);
 
         if (!holdFire && shouldShoot)
         {

@@ -13,6 +13,10 @@ public class QuestSystem : MonoSingleton<QuestSystem>
     private bool allObjectivesCompleted = false;
 
     private PlayerData playerData;
+    private void OnEnable()
+    {
+        RefreshObjectives();
+    }
 
     private void Start()
     {
@@ -92,14 +96,14 @@ public class QuestSystem : MonoSingleton<QuestSystem>
         RefreshObjectives();
     }
 
-    [ContextMenu("Complete Quest")]
-    public void CompleteQuests()
-    {
-        foreach (var item in playerData.ListOfOnGoingObjectives.ToList())
-        {
-            item.UpdateProgress(item.requirment);
-        }
-    }
+    //[ContextMenu("Complete Quest")]
+    //public void CompleteQuests()
+    //{
+    //    foreach (var item in playerData.ListOfOnGoingObjectives.ToList())
+    //    {
+    //        item.UpdateProgress(item.requirment);
+    //    }
+    //}
 
     public void CheckObjective(ObjectiveData objectiveData)
     {

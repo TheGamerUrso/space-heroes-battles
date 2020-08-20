@@ -12,7 +12,7 @@ public class boot
         GameManager gameManager = GameObject.FindObjectOfType<GameManager>();
         if (gameManager == null)
         {
-            GameObject gmObject = GameObject.Instantiate(Resources.Load("GameManager")) as GameObject;
+           GameObject gmObject = GameObject.Instantiate(Resources.Load("GameManager")) as GameObject;
             gmObject.name = "GameManager";
         }
     }

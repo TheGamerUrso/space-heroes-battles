@@ -36,8 +36,6 @@ public class GameController : MonoSingleton<GameController>
 
     public bool HasAsteroids;
     public GameObject AsteroidBackgroundSpawner;
-    public GameObject PanelBackgroundSpawner;
-
     public GameObject Tutorial;
 
     public GameObject GUI;
@@ -97,11 +95,6 @@ public class GameController : MonoSingleton<GameController>
         if (AsteroidBackgroundSpawner != null && HasAsteroids)
         {
             Instantiate(AsteroidBackgroundSpawner, transform, false);
-        }
-
-        if (PanelBackgroundSpawner != null)
-        {
-            Instantiate(PanelBackgroundSpawner, transform, false);
         }
 
         if (Tutorial != null)
@@ -172,6 +165,7 @@ public class GameController : MonoSingleton<GameController>
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, kills);
         }
+        BaseGameMode.NumberOfEnemies--;
     }
 
     public void Win()
@@ -185,8 +179,7 @@ public class GameController : MonoSingleton<GameController>
     }
 
     IEnumerator StartGameDelay()
-    {
-        AudioManager.PlayRandomMusic(true);
+    {       
         playerData.SetSuperMeter(0);
         playerData.ResetWeaponPowerUPCollected();
         Game.Reset();
@@ -218,6 +211,11 @@ public class GameController : MonoSingleton<GameController>
             GameManager.Instance.SetSurvivalScore(Game.Score);
         }
 
+        playerData.Coins += Game.CoinPicked;
+
+        AchievementSystem.instance.Report(10, Game.EnemyKilled);
+        AchievementSystem.instance.Report(11, Game.EnemyKilled);
+
         SaveSystem.SaveGame();
 
         AudioManager.PlayMusic("GameOver", false);
@@ -226,7 +224,7 @@ public class GameController : MonoSingleton<GameController>
 
         Events.OnGameOver?.Invoke(this);
 
-        SaveSystem.SaveGame();
+
     }
 
     IEnumerator DelayWinScreen()

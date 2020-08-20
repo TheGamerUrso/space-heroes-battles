@@ -61,8 +61,6 @@ public class ObjectiveData
                 notification.Description = Description;
 
                 NotificationSystem.Instance.Add(notification);
-
-                QuestSystem.Instance.RefreshObjectives();
             }
         }
 

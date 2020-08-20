@@ -66,6 +66,16 @@ public class Upgrade
         playerShipData.SetUpgradeByType(upgradeData.upgradeType, Level);
 
         playerData.RemoveCoin(Cost);
+
+        if (upgradeData.CostPerLevel.Length > 0)
+        {
+            Cost = upgradeData.CostPerLevel[Level];
+        }
+        else
+        {
+            Cost = upgradeData.Cost;
+        }
+
     }
 
     public void SetPlayerShipData()

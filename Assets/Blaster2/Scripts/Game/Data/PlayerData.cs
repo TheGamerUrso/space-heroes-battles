@@ -93,6 +93,7 @@ public class PlayerData
     public void RemoveCoin(int ammount)
     {
         Coins -= ammount;
+        GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SPEND, ammount);
         Events.OnCoinValueChanged?.Invoke(Coins);
     }
 
@@ -216,6 +217,7 @@ public class PlayerData
         {
             Coins = 9999999;
         }
+        Events.OnCoinValueChanged?.Invoke(Coins);
     }
 
     public PlayerShipData GetCurrentPlayerShipData()

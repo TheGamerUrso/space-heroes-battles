@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class StoryMode : BaseGameMode
 {
+
+
     protected override void Awake()
     {
         base.Awake();
@@ -23,12 +25,13 @@ public class StoryMode : BaseGameMode
         Scene scene = SceneManager.GetActiveScene();
         int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
         Mission mission = missionCollection.GetMission(levelMission);
-
+        AudioManager.PlayMusic(((LevelEnum)scene.buildIndex).ToString());
 
         playerShip = PlayerManager.GetPlayer();
 
         spawnInfo.enemyElements = level_SO.enemyElements.ToList();
-        gameInfo.LevelDifficulty = mission.Level;
+
+        gameInfo.LevelDifficulty = level_SO.LevelDifficulty;
 
         spawnInfo.availableEnemies = level_SO.availableEnemies;
         spawnInfo.TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
@@ -85,6 +88,11 @@ public class StoryMode : BaseGameMode
                 yield return new WaitUntil(() => !gameInfo.pause);
             }
 
+            while (NumberOfEnemies >= MaxNumberOfEnemies)
+            {
+                yield return new WaitForSeconds(.5f);
+            }
+
             ChooseRandomEnemyToSpawn();
 
             if (enemyElement != null)
@@ -111,6 +119,7 @@ public class StoryMode : BaseGameMode
                     enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
                     Enemies.Add(enemGO);
                 }
+                NumberOfEnemies++;
             }
 
             yield return CooldownTimer;
