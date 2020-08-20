@@ -8,20 +8,20 @@ namespace EasyMobile
 {
 	public static class EM_GameServicesConstants
 	{
-		public const string Achievement_Level_3 = "Level 3";
-		public const string Achievement_Reach_Max_Level = "Reach Max Level";
-		public const string Achievement_Level_8 = "Level 8";
-		public const string Achievement_Unlock_All_Heroes = "Unlock All Heroes";
-		public const string Achievement_Prologue = "Prologue";
-		public const string Achievement_Destroy_500_Enemies = "Destroy 500 Enemies";
-		public const string Achievement_Destroy_1000_Enemies = "Destroy 1000 Enemies";
-		public const string Achievement_Level_4 = "Level 4";
-		public const string Achievement_Level_5 = "Level 5";
-		public const string Achievement_Level_6 = "Level 6";
-		public const string Achievement_Level_7 = "Level 7";
-		public const string Leaderboard_SurvivalMode = "SurvivalMode";
-		public const string Achievement_Level_1 = "Level 1";
-		public const string Achievement_Level_2 = "Level 2";
+		public const string Leaderboard_HeroesAssemble = "HeroesAssemble";
+		public const string Leaderboard_Level8 = "Level8";
+		public const string Leaderboard_Level2 = "Level2";
+		public const string Leaderboard_MaxPower = "MaxPower";
+		public const string Leaderboard_Level5 = "Level5";
+		public const string Leaderboard_Level6 = "Level6";
+		public const string Achievement_SurvivalMode = "SurvivalMode";
+		public const string Leaderboard_Level9 = "Level9";
+		public const string Leaderboard_Level3 = "Level3";
+		public const string Leaderboard_Level4 = "Level4";
+		public const string Leaderboard_Destroyer = "Destroyer";
+		public const string Leaderboard_Pieceofcake = "Pieceofcake";
+		public const string Leaderboard_Level1 = "Level1";
+		public const string Leaderboard_Level7 = "Level7";
 
 	}
 }

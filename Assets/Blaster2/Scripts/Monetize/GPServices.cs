@@ -55,16 +55,16 @@ public class GPServices : MonoSingleton<GPServices>
         // Report a score of 100
         // EM_GameServicesConstants.Sample_Leaderboard is the generated name constant
         // of a leaderboard named "Sample Leaderboard"
-        GameServices.ReportScore(score, EM_GameServicesConstants.Leaderboard_SurvivalMode);
+        //GameServices.ReportScore(score, EM_GameServicesConstants.Leaderboard_SurvivalMode);
     }
     public static void LoadLocalUserScore()
     {
-        GameServices.LoadLocalUserScore(EM_GameServicesConstants.Leaderboard_SurvivalMode, OnLocalUserScoreLoaded);
+        //GameServices.LoadLocalUserScore(EM_GameServicesConstants.Leaderboard_SurvivalMode, OnLocalUserScoreLoaded);
     }
 
     public static void LoadScores()
     {
-        GameServices.LoadScores(EM_GameServicesConstants.Leaderboard_SurvivalMode, 10, 20, TimeScope.Week, UserScope.Global, OnScoresLoaded);
+       // GameServices.LoadScores(EM_GameServicesConstants.Leaderboard_SurvivalMode, 10, 20, TimeScope.Week, UserScope.Global, OnScoresLoaded);
     }
 
     public static void OnScoresLoaded(string leaderboardName, IScore[] scores)
