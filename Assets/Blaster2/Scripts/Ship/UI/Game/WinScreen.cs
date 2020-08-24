@@ -88,24 +88,12 @@ public class WinScreen : MonoBehaviour
 
     public void NextLevelButton()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        int nextLevelID = (scene.buildIndex + 1) - (int)LevelEnum.Level0;
-
-        if (nextLevelID > 9)
-        {
-            nextLevelID = 9;
-        }
-
-        Level nextLevel = PersistantData.GetLevels()[nextLevelID];
-
-        GameManager.Instance.SetMission(nextLevel);
-        GameManager.Instance.LoadScene((LevelEnum)nextLevel.mission.ID);
+        GameManager.Instance.NextLevel();
     }
 
     public void ReplayButton()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        GameManager.Instance.LoadScene((LevelEnum)scene.buildIndex);
+        GameManager.Instance.ResetLevel();
     }
 
     public void LoadMainMenu()

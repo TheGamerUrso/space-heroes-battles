@@ -10,15 +10,6 @@ public class RapidFireAttack : SpecialAttack
     protected float playerFireRate;
     private bool RapidFireModeOn;
 
-    public override void Start()
-    {
-        base.Start();
-        if (playerWeapons == null)
-        {
-            playerWeapons = GameObject.FindObjectsOfType<PlayerWeapon>();
-        }
-    }
-
     public override void ActivateSpecial()
     {
         if (SpecialActive == false)

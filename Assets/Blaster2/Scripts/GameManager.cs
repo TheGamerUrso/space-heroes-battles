@@ -221,6 +221,7 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
+    [ContextMenu("Reset Level")]
     public void ResetLevel()
     {
         StartCoroutine(ResetSceneAsync((LevelEnum)SceneManager.GetActiveScene().buildIndex));
@@ -230,7 +231,23 @@ public class GameManager : MonoSingleton<GameManager>
     {
         StartCoroutine(ShowLoadingScreen(level, showLoadingScreen));
     }
+    [ContextMenu("Next Level")]
+    public void NextLevel()
+    {
+        Scene scene = SceneManager.GetActiveScene();
+        int nextLevelID = (scene.buildIndex + 1) - (int)LevelEnum.Level0;
 
+        if (nextLevelID > 9)
+        {
+            nextLevelID = 9;
+        }
+
+        Level nextLevel = PersistantData.GetLevels()[nextLevelID];
+
+        GameManager.Instance.SetMission(nextLevel);
+        GameManager.Instance.LoadScene((LevelEnum)nextLevel.mission.ID);
+    }
+    [ContextMenu("Load Menu")]
     public void LoadMainenu()
     {
         Game.ShowAdCounter--;
@@ -280,6 +297,7 @@ public class GameManager : MonoSingleton<GameManager>
         Events.OnSceneLoadProgress?.Invoke(progress);
         GameManager.Instance.sceneLoadProgress = progress;
     }
+
     private IEnumerator ResetSceneAsync(LevelEnum levelName)
     {
         string activeScene = SceneManager.GetActiveScene().name;

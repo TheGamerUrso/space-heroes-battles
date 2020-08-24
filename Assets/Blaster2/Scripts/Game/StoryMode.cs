@@ -29,6 +29,8 @@ public class StoryMode : BaseGameMode
 
         playerShip = PlayerManager.GetPlayer();
 
+        NumberOfEnemies = 0;
+
         spawnInfo.enemyElements = level_SO.enemyElements.ToList();
 
         gameInfo.LevelDifficulty = level_SO.LevelDifficulty;
@@ -42,7 +44,7 @@ public class StoryMode : BaseGameMode
         {
             ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
         }
-
+   
 
         StartCoroutine(StartGameDelay());
     }

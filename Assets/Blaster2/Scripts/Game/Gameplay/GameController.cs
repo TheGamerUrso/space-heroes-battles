@@ -166,6 +166,10 @@ public class GameController : MonoSingleton<GameController>
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, kills);
         }
         BaseGameMode.NumberOfEnemies--;
+        if (BaseGameMode.NumberOfEnemies <= 0)
+        {
+            BaseGameMode.NumberOfEnemies = 0;
+        }
     }
 
     public void Win()
