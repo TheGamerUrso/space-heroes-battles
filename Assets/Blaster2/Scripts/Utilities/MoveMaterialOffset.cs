@@ -7,7 +7,7 @@ public class MoveMaterialOffset : MonoBehaviour
     public enum Move { Y, X, Both }
     public Move move;
 
-    private string offsetKey = "_MainTex";
+    private string offsetKey = "_BaseMap";
     [SerializeField] private float speedX = 0.5F;
     [SerializeField] private float speedY = 0;
 

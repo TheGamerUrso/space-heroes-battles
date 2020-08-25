@@ -5,6 +5,7 @@ using UnityEngine;
 public class LavaFlow : MonoBehaviour
 {
     private string offsetKey = "_LavaTex";
+    private string MainTextOffset = "_MainTex";
     public float scrollSpeed = 0.5F;
     public float xScrollSpeed = 0;
     public Renderer rend;
@@ -32,5 +33,6 @@ public class LavaFlow : MonoBehaviour
             offXset = Mathf.Sin(Time.time * frequently) * magnitute;
         }
         rend.material.SetTextureOffset(offsetKey, new Vector2(offXset, offset));
+        rend.material.SetTextureOffset(MainTextOffset, new Vector2(offXset, offset));
     }
 }
