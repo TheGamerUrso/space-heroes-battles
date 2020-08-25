@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
 using EasyMobile;
+using UnityEngine.Analytics;
 
 [Serializable]
 public struct PlayerShipElement
@@ -483,6 +484,41 @@ public class GameManager : MonoSingleton<GameManager>
             playerData.SetSurvivalUnlockedLock(true);
         }
 
+        Dictionary<string, object> analyticDict = new Dictionary<string, object>()
+       {
+                { levelObjectiveDatas[0].ID.ToString() , levelObjectiveDatas[0].completed },
+                { levelObjectiveDatas[1].ID.ToString() , levelObjectiveDatas[1].completed },
+                { levelObjectiveDatas[2].ID.ToString() , levelObjectiveDatas[2].completed },
+                { levelObjectiveDatas[3].ID.ToString() , levelObjectiveDatas[3].completed },
+                { levelObjectiveDatas[4].ID.ToString() , levelObjectiveDatas[4].completed },
+       };
+
+        if (levelObjectiveDatas.Length > 5)
+        {
+            analyticDict = new Dictionary<string, object>()
+            {
+                { levelObjectiveDatas[0].ID.ToString() , levelObjectiveDatas[0].completed },
+                { levelObjectiveDatas[1].ID.ToString() , levelObjectiveDatas[1].completed },
+                { levelObjectiveDatas[2].ID.ToString() , levelObjectiveDatas[2].completed },
+                { levelObjectiveDatas[3].ID.ToString() , levelObjectiveDatas[3].completed },
+                { levelObjectiveDatas[4].ID.ToString() , levelObjectiveDatas[4].completed },
+                { levelObjectiveDatas[5].ID.ToString() , levelObjectiveDatas[5].completed }
+            };
+        }
+        else
+        {
+            analyticDict = new Dictionary<string, object>()
+            {
+                { levelObjectiveDatas[0].ID.ToString() , levelObjectiveDatas[0].completed },
+                { levelObjectiveDatas[1].ID.ToString() , levelObjectiveDatas[1].completed },
+                { levelObjectiveDatas[2].ID.ToString() , levelObjectiveDatas[2].completed },
+                { levelObjectiveDatas[3].ID.ToString() , levelObjectiveDatas[3].completed },
+                { levelObjectiveDatas[4].ID.ToString() , levelObjectiveDatas[4].completed }
+            };
+        }
+
+        AnalyticsResult analyticsResults = Analytics.CustomEvent(" Player Died " + level.ID, analyticDict);
+        Debug.Log("analyticsResults:" + analyticsResults);
 
     }
 
@@ -563,6 +599,12 @@ public class GameManager : MonoSingleton<GameManager>
     public void LevelUp()
     {
         playerData.EarnXP(playerShipData.xpToLevel - playerShipData.xp);
+    }
+
+    [ContextMenu("Generate New Challenges")]
+    public void GeneratedQuest()
+    {
+        QuestSystem.Instance.GenerateNewObjectives();
     }
 }
 

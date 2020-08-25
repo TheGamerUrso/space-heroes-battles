@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 [Serializable]
 public class Upgrade
@@ -76,6 +78,15 @@ public class Upgrade
             Cost = upgradeData.Cost;
         }
 
+        AnalyticsResult analyticsResults = Analytics.CustomEvent(
+            " Upgrade Bought",
+                new Dictionary<string, object>()
+                {
+                {upgradeData.upgradeType.ToString(),Level }
+                }
+            );
+
+        Debug.Log("analyticsResults:" + analyticsResults);
     }
 
     public void SetPlayerShipData()

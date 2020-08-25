@@ -18,14 +18,21 @@ public class QuestSystem : MonoSingleton<QuestSystem>
         RefreshObjectives();
     }
 
+    private void OnDestroy()
+    {
+        Events.OnObjectiveChange -= CheckObjective;
+    }
+
     private void Start()
     {
+        Events.OnObjectiveChange += CheckObjective;
+
         playerData = PersistantData.GetPlayerData();
 
         InitializeObjectives();
         RefreshObjectives();
 
-        Events.OnObjectiveChange += CheckObjective;
+  
     }
 
     public void CreateNewObjective()
@@ -149,6 +156,7 @@ public class QuestSystem : MonoSingleton<QuestSystem>
             objectiveGO.GetComponent<ObjectivesElement>().LoadingIndicator();
         }
     }
+
 
     public void GenerateNewObjectives()
     {

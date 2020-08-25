@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 public enum ObjectiveTypeEnum
 {
-    KILL = 0, USE = 1, UNHARMED = 2, SURVIVE = 3, SPEND = 4, BOUNTY = 5,SCORE = 6
+    KILL = 0, USE = 1, UNHARMED = 2, SURVIVE = 3, SPEND = 4, BOUNTY = 5, SCORE = 6
 }
 
 [Serializable]
@@ -61,6 +63,12 @@ public class ObjectiveData
                 notification.Description = Description;
 
                 NotificationSystem.Instance.Add(notification);
+
+
+                AnalyticsResult analyticsResults = Analytics.CustomEvent(
+                   Id + " Challenge Completed");
+
+                Debug.Log("analyticsResults:" + analyticsResults);
             }
         }
 

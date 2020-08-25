@@ -46,8 +46,6 @@ public class PlayerShip : Ship, IDamagable
     {
         animator = GetComponentInChildren<Animator>();
         shipController = GetComponent<SimpleShipControls>();
-
-
     }
 
     public override void Start()

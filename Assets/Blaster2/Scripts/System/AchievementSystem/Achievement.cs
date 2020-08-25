@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Analytics;
 
 [Serializable]
 public class Achievement
@@ -21,19 +22,20 @@ public class Achievement
 
     public void Check()
     {
-        GPServices.ReportAchievementProgress(achievementID, progress);
-
         if (!completed && progress >= requirement)
         {
             completed = true;
+
+            GPServices.ReportAchievementProgress(achievementID, progress);
 
             Notification notification = new Notification();
             notification.Name = Name;
             notification.icon = PersistantData.Instance.GetAchievementIcon(ID);
             notification.Description = Description;
-            NotificationSystem.Instance.Add(notification);  
+            NotificationSystem.Instance.Add(notification);
+
+            AnalyticsResult analyticsResults = Analytics.CustomEvent(" Achievement Unlocked" + Name);
+            Debug.Log("analyticsResults:" + analyticsResults);
         }
-
-
     }
 }
