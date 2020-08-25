@@ -39,6 +39,7 @@ public class PlayerShip : Ship, IDamagable
     public override void OnDestroy()
     {
         Events.OnLevelValueChanged -= OnLevelValueChanged;
+        Events.PlayerShipHit -= DownGradeWeapon;
     }
 
     public override void Awake()
@@ -46,7 +47,7 @@ public class PlayerShip : Ship, IDamagable
         animator = GetComponentInChildren<Animator>();
         shipController = GetComponent<SimpleShipControls>();
 
-        Events.PlayerShipHit -= DownGradeWeapon;
+
     }
 
     public override void Start()

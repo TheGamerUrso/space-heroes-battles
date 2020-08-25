@@ -55,16 +55,17 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion Tweening
 
     #region Properties 
+    private static GameStateEnum _currentGameState;
     public static GameStateEnum CurrentGameState
     {
         get
         {
-            return CurrentGameState;
+            return _currentGameState;
         }
 
         private set
         {
-            CurrentGameState = value;
+            _currentGameState = value;
         }
     }
     #endregion

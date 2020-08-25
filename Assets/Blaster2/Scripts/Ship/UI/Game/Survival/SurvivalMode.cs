@@ -23,7 +23,7 @@ public class SurvivalMode : BaseGameMode
         playerShip = PlayerManager.GetPlayer();
 
         Game.IsSurvivalMode = true;
-        NumberOfEnemies = 0;
+
         gameInfo.waves = 0;
 
         spawnInfo.enemyElements = level_SO.enemyElements.ToList();
@@ -122,7 +122,7 @@ public class SurvivalMode : BaseGameMode
                     yield return new WaitUntil(() => !gameInfo.pause);
                 }
 
-                while (NumberOfEnemies >= MaxNumberOfEnemies)
+                while (Game.NumberOfEnemies >= MaxNumberOfEnemies)
                 {
                     yield return new WaitForSeconds(.5f);
                 }
@@ -151,7 +151,7 @@ public class SurvivalMode : BaseGameMode
                                 Enemies.Add(enemGO);
                                 yield return new WaitForSeconds(.5f);
 
-                                NumberOfEnemies++;
+                                Game.NumberOfEnemies++;
                             }
                         }
                     }

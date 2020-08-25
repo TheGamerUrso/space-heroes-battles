@@ -84,6 +84,8 @@ public class GameController : MonoSingleton<GameController>
     {
         base.Awake();
 
+        GameManager.Instance.ChangeGameState(GameStateEnum.GAME);
+
         Application.targetFrameRate = 60;
         Game.UseSlowMo = false;
 
@@ -121,6 +123,8 @@ public class GameController : MonoSingleton<GameController>
     {
         if (baseEnemy.Id.Equals(name))
         {
+            Game.NumberOfEnemies--;
+
             int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
             int EnemyLevel = baseEnemy.Level;
             int levelDiffrence = PlayerLevel / EnemyLevel;
@@ -165,11 +169,7 @@ public class GameController : MonoSingleton<GameController>
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, kills);
         }
-        BaseGameMode.NumberOfEnemies--;
-        if (BaseGameMode.NumberOfEnemies <= 0)
-        {
-            BaseGameMode.NumberOfEnemies = 0;
-        }
+
     }
 
     public void Win()

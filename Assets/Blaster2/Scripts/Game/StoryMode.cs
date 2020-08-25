@@ -21,15 +21,12 @@ public class StoryMode : BaseGameMode
 
         MissionCollection missionCollection = PersistantData.GetMissionCollection();
 
-
         Scene scene = SceneManager.GetActiveScene();
         int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
         Mission mission = missionCollection.GetMission(levelMission);
         AudioManager.PlayMusic(((LevelEnum)scene.buildIndex).ToString());
 
         playerShip = PlayerManager.GetPlayer();
-
-        NumberOfEnemies = 0;
 
         spawnInfo.enemyElements = level_SO.enemyElements.ToList();
 
@@ -44,9 +41,28 @@ public class StoryMode : BaseGameMode
         {
             ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
         }
-   
+
 
         StartCoroutine(StartGameDelay());
+    }
+
+    public float reachMaxEnemiesTimer = 2;
+
+    public void Update()
+    {
+        if (reachMaxEnemiesTimer > 0)
+        {
+            reachMaxEnemiesTimer -= Time.deltaTime;
+            if (reachMaxEnemiesTimer <= 0)
+            {
+                Game.NumberOfEnemies--;
+                reachMaxEnemiesTimer = 2;
+                if (Game.NumberOfEnemies <= 0)
+                {
+                    Game.NumberOfEnemies = 0;
+                }
+            }
+        }
     }
 
     protected override IEnumerator StartGameDelay()
@@ -83,14 +99,17 @@ public class StoryMode : BaseGameMode
 
         availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
 
-        for (int enemyIndex = spawnInfo.TotalEnemies; enemyIndex > 0; enemyIndex--)
+        for (int enemyIndex = 0; enemyIndex <= spawnInfo.TotalEnemies; enemyIndex++)
         {
+            Debug.Log("Enemies Remanining: " + (spawnInfo.TotalEnemies - enemyIndex) + " : NumberOfEnemiesOnScreen " + Game.NumberOfEnemies);
+            Debug.Log("NumberOfEnemiesOnScreen " + Game.NumberOfEnemies);
+           
             if (gameInfo.pause)
             {
                 yield return new WaitUntil(() => !gameInfo.pause);
             }
 
-            while (NumberOfEnemies >= MaxNumberOfEnemies)
+            while (Game.NumberOfEnemies >= MaxNumberOfEnemies)
             {
                 yield return new WaitForSeconds(.5f);
             }
@@ -103,11 +122,11 @@ public class StoryMode : BaseGameMode
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        if (enemyIndex - 1 > 0)
+                        if (enemyIndex + 1 > spawnInfo.TotalEnemies)
                         {
                             enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
                             Enemies.Add(enemGO);
-                            enemyIndex--;
+                            enemyIndex++;
                             yield return new WaitForSeconds(.5f);
                         }
                         else
@@ -121,7 +140,7 @@ public class StoryMode : BaseGameMode
                     enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
                     Enemies.Add(enemGO);
                 }
-                NumberOfEnemies++;
+                Game.NumberOfEnemies++;
             }
 
             yield return CooldownTimer;

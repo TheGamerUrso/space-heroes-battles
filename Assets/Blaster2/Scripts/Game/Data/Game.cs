@@ -1,5 +1,8 @@
 ﻿public struct Game
 {
+    public static int NumberOfEnemies = 0;
+
+
     public static int ShowAdCounter = 5;
     public static int MaxLevelUnlocked = 5;
 
@@ -36,6 +39,7 @@
         Multiplier = 0;
         EnemyKilled = 0;
         EnemyEscaped = 0;
+        NumberOfEnemies = 0;
     }
     public static int GetScore()
     {
