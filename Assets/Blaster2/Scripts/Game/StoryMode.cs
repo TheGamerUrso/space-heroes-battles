@@ -101,9 +101,6 @@ public class StoryMode : BaseGameMode
 
         for (int enemyIndex = 0; enemyIndex <= spawnInfo.TotalEnemies; enemyIndex++)
         {
-            Debug.Log("Enemies Remanining: " + (spawnInfo.TotalEnemies - enemyIndex) + " : NumberOfEnemiesOnScreen " + Game.NumberOfEnemies);
-            Debug.Log("NumberOfEnemiesOnScreen " + Game.NumberOfEnemies);
-
             if (gameInfo.pause)
             {
                 yield return new WaitUntil(() => !gameInfo.pause);

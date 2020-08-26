@@ -36,7 +36,7 @@ public static class HelperUtils
         GameObject enemyTarget = null;
         foreach (GameObject enemy in Enemies)
         {
-            if (!enemy.GetComponent<AsteroidMove>())
+            if (!enemy.GetComponent<AsteroidMove>() && !enemy.GetComponent<Enemy>().HasShieldModule())
             {
                 float dist = Vector3.Distance(position, enemy.transform.position);
                 if (dist <= maxRange)

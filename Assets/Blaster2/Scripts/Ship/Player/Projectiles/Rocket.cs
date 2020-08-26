@@ -1,8 +1,19 @@
 ﻿using UnityEngine;
 
-public class Rocket : PlayerProjectile
+public class Rocket : Projectile
 {
     public GameObject m_Target;
+
+    public override void Setup(WeaponScript weaponScript)
+    {
+        this.weaponScript = weaponScript;
+    }
+
+    private void OnDisable()
+    {
+        if (trailRenderer)
+            trailRenderer.Clear();
+    }
 
     protected override void OnEnable()
     {
@@ -24,7 +35,6 @@ public class Rocket : PlayerProjectile
 
     public override void Movement()
     {
-
         if (m_Target != null)
         {
             shootDir = (m_Target.transform.position - transform.position).normalized;
@@ -53,4 +63,23 @@ public class Rocket : PlayerProjectile
         }
     }
 
+    public override void DestoryNow()
+    {
+        var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        explode.SetActive(true);
+        explode.transform.position = transform.position;
+        gameObject.SetActive(false);
+    }
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            var destroyable = other.GetComponent<IDamagable>();
+            if (destroyable != null)
+            {
+                destroyable.TakeDamage(Damage);
+            }
+            DestoryNow();
+        }
+    }
 }

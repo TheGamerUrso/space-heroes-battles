@@ -115,7 +115,7 @@ public class SurvivalMode : BaseGameMode
             availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
             var repeat = 1;
 
-            for (int i = spawnInfo.TotalEnemies; i < 0; i--)
+            for (int enemyIndex = 0; enemyIndex <= spawnInfo.TotalEnemies; enemyIndex++)
             {
                 if (gameInfo.pause)
                 {
@@ -127,37 +127,51 @@ public class SurvivalMode : BaseGameMode
                     yield return new WaitForSeconds(.5f);
                 }
 
-                ChooseRandomEnemyToSpawn();
+                var random = Random.Range(0, 100); // draw a number between 0 and 99
+                int lowLim;    // lowLim and hiLim are automatically set for each enemy
+                int hiLim = 0;
+                for (int l_enemy = 0; l_enemy < availableEnemie.Count; l_enemy++)
+                {
+                    lowLim = hiLim; // set low limit...
+                    hiLim += availableEnemie[l_enemy].presentage; // and high limit
+                    if (random >= lowLim && random < hiLim)
+                    { // instantiate it!
+                       // Debug.Log(l_enemy + "=" + lowLim + ":" + random + ":" + hiLim);
+                        enemyElement = availableEnemie[l_enemy];
+                        break;
+                    }
+                }
+
 
                 if (spawnInfo.TotalEnemies - 1 >= 0)
                 {
                     if (enemyElement != null)
                     {
-
                         if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
                         {
-                            repeat = 4;
+                            for (int i = 0; i < 4; i++)
+                            {
+                                if (enemyIndex + 1 < spawnInfo.TotalEnemies)
+                                {
+                                    enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
+                                    Enemies.Add(enemGO);
+                                    enemyIndex++;
+                                    yield return new WaitForSeconds(.5f);
+                                }
+                                else
+                                {
+                                    continue;
+                                }
+                            }
                         }
                         else
                         {
-                            repeat = 1;
+                            enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
+                            Enemies.Add(enemGO);
                         }
-
-                        for (int repeatIndex = 0; repeatIndex < repeat; repeatIndex++)
-                        {
-                            if (spawnInfo.TotalEnemies - 1 >= 0)
-                            {
-                                enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
-                                Enemies.Add(enemGO);
-                                yield return new WaitForSeconds(.5f);
-
-                                Game.NumberOfEnemies++;
-                            }
-                        }
+                        Game.NumberOfEnemies++;
                     }
-  
                 }
-
                 yield return CooldownTimer;
                 CooldownTimer = new WaitForSeconds(cooldown);
             }

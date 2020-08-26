@@ -2,9 +2,17 @@ using UnityEngine;
 
 public class PlayerProjectile : Projectile
 {
+    public Material[] playerMaterials;
+
     public override void Setup(WeaponScript weaponScript)
     {
         this.weaponScript = weaponScript;
+    }
+    protected override void OnAwake()
+    {
+        base.OnAwake();
+        PlayerData playerData = PersistantData.GetPlayerData();
+        meshRenderer.material = playerMaterials[playerData.CurrrentSelectedShip];
     }
 
     private void OnDisable()

@@ -14,6 +14,7 @@ public abstract class Projectile : MonoBehaviour
     [SerializeField] protected float speed;
     [SerializeField] protected PoolGameObjectType ExplosionPrefab;
 
+    protected MeshRenderer meshRenderer;
     protected GameObject explosion;
     protected Transform EffectsHolder;
     protected TrailRenderer trailRenderer;
@@ -34,6 +35,7 @@ public abstract class Projectile : MonoBehaviour
     {
         rigid = GetComponent<Rigidbody>();
         trailRenderer = GetComponent<TrailRenderer>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
     }
 
     public virtual void Setup(WeaponScript weaponScript) { }
