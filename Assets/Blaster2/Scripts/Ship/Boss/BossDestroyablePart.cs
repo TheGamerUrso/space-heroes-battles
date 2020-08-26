@@ -31,7 +31,7 @@ public class BossDestroyablePart : MonoBehaviour, IDamagable
     protected EnemyHealthWidget healthBar;
 
 
-    [SerializeField] protected BaseBossEnemy baseBossEnemy;
+    [SerializeField] protected BossEnemy baseBossEnemy;
     [SerializeField] protected GameObject fireEffect;
     [SerializeField] protected GameObject prepareToAttack;
     [SerializeField] protected BoxCollider boxCollider;
@@ -162,8 +162,7 @@ public class BossDestroyablePart : MonoBehaviour, IDamagable
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             var destroyable = other.GetComponent<IDamagable>();
-            destroyable.TakeDamage(destroyable.MaxHealth / 2);
-            TakeDamage(destroyable.CurrentHealth);
+            destroyable.TakeDamage(Damage);
         }
     }
 

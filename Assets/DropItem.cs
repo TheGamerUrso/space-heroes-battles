@@ -11,7 +11,7 @@ public class DropProbabilities
     public PoolGameObjectType DropItemsType;
 }
 
-public class DropController : MonoSingleton<DropController>
+public class DropItem : MonoBehaviour
 {
     [SerializeField] private List<DropProbabilities> ListOfDropItems = new List<DropProbabilities>();
 
@@ -43,9 +43,9 @@ public class DropController : MonoSingleton<DropController>
         }
     }
 
-    public static void PickRandomDropItem(Transform transform)
+    public void PickRandomDropItem(Transform transform)
     {
-        Instance.PickRandomEnemyToSpawn(transform);
+        PickRandomEnemyToSpawn(transform);
     }
 
     public void PickRandomEnemyToSpawn(Transform transform)
@@ -91,7 +91,7 @@ public class DropController : MonoSingleton<DropController>
                         itemTypeToSpawn = ListOfDropItems[i].DropItemsType;
                         break;
                     }
-                }            
+                }
 
                 if (itemTypeToSpawn == PoolGameObjectType.ItemShield)
                 {
@@ -164,7 +164,7 @@ public class DropController : MonoSingleton<DropController>
                 Game.TotalCoinsInGame++;
                 extraDrop.SetActive(true);
             }
-             return;
+            return;
         }
 
     }

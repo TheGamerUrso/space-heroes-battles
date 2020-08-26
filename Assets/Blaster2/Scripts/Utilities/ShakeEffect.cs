@@ -19,12 +19,13 @@ public class ShakeEffect : MonoBehaviour
 
     private void OnDestroy()
     {
-        Events.PlayerShipHit -= StartEffect;
+        Events.ShakeCamera -= StartEffect;
+
     }
 
     void OnEnable()
     {
-        Events.PlayerShipHit += StartEffect;
+        Events.ShakeCamera += StartEffect;
         originalPos = camTransform.localPosition;
     }
 
@@ -39,12 +40,15 @@ public class ShakeEffect : MonoBehaviour
     public void StartEffect()
     {
         shakeDuration = .5f;
-
     }
+    public void StartEffect(float duration)
+    {
+        shakeDuration = duration;
+    }
+
 
     void Update()
     {
-
         if (shakeDuration > 0)
         {
             camTransform.localPosition = originalPos + Random.insideUnitSphere * shakeAmount;

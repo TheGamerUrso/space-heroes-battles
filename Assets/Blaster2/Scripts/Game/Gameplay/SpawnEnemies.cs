@@ -32,13 +32,13 @@ public class SpawnEnemies
         this.spawnPoints = spawnPoints;
     }
 
-    public static BaseBossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
+    public static BossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
     {
         AudioManager.Instance.PlayMusicById("Boss", true);
         GameObject currentBoss = GameObject.Instantiate(BossPrefab);
         currentBoss.name = BossPrefab.name;
 
-        BaseBossEnemy enemy = currentBoss.GetComponentInChildren<BaseBossEnemy>();
+        BossEnemy enemy = currentBoss.GetComponentInChildren<BossEnemy>();
         enemy.Id = currentBoss.name;
         enemy.SetStats(LevelDifficulty);
 

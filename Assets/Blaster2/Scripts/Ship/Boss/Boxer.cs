@@ -3,22 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Boxer : BaseBossEnemy
+public class Boxer : BossEnemy
 {
-    public override void TakeDamage(float damage)
-    {
-        int destroyed = 0;
-        for (int i = 0; i < DestroyableParts.Count; i++)
-        {
-            IDamagable part = DestroyableParts[i];
-            if (part.CurrentHealth <= 0)
-            {
-                destroyed++;
-            }
-        }
-        if (destroyed == 2)
-        {
-            base.TakeDamage(damage);
-        }
-    }
+
 }

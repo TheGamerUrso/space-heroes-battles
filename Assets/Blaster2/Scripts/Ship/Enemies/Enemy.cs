@@ -1,8 +1,16 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public class Enemy : Ship, IDamagable
 {
+    public enum EnemyType
+    {
+        SimpleEnemy, EnemyWithWeapons
+    }
+
+    [SerializeField] private EnemyType enemyType;
+
     public event Action<float, float> OnHealthChanged;
 
     public string Id;
@@ -27,9 +35,9 @@ public class Enemy : Ship, IDamagable
     protected bool CanAttack;
     protected int currentWeaponActive;
     protected float takeDamageDelay;
-
     protected EnemyMove enemyMove;
 
+    [SerializeField] protected DropItem dropItem;
 
     public EnemyHealthWidget HealthBar { get; set; }
 
@@ -51,6 +59,9 @@ public class Enemy : Ship, IDamagable
 
     public override void Start()
     {
+        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+
         if (HealthBar != null)
         {
             HealthBar.GetComponent<BaseHealthWidget>();
@@ -65,10 +76,14 @@ public class Enemy : Ship, IDamagable
 
         ShieldEffect.SetActive(HasShield);
 
-        SetStats(Level);
-
+        SetStats(playerShipData.level);
 
         enemyMove.Speed = Speed;
+
+        if (enemyType == EnemyType.EnemyWithWeapons)
+        {
+            StartCoroutine(ActivateWeapons());
+        }
     }
 
     public override void Update()
@@ -135,6 +150,10 @@ public class Enemy : Ship, IDamagable
             Events.EnemyDied?.Invoke(Id, this);
             HealthBar.Hide();
             gameObject.SetActive(false);
+
+            Events.ShakeCamera?.Invoke(.5f);
+
+            dropItem.PickRandomDropItem(transform);
         }
     }
 
@@ -226,4 +245,18 @@ public class Enemy : Ship, IDamagable
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
+    //Enemy With Weapon Type Methods
+    IEnumerator ActivateWeapons()
+    {
+        yield return new WaitForSeconds(2);
+
+        EnableWeaponById(0);
+
+        if (HealthBar != null)
+        {
+            HealthBar.Show();
+        }
+
+        EnableColliders(true);
+    }
 }

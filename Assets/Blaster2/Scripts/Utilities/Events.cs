@@ -47,7 +47,9 @@ public class Events
     public static Action GameEnded;
     public static Action<int, int, int> GameStatsChanged;
 
-    public static Action<string, Enemy> BossDied;
+    public static Action<string, BossEnemy> BossDied;
+    public static Action<string, BossEnemy> BossHit;
+
     public static Action<string, Enemy> EnemyDied;
     public static Action<string, Enemy> EnemyGotHit;
     public static Action<string, Enemy> EnemyEscaped;
@@ -62,6 +64,7 @@ public class Events
     public static Action OnMultiplierChanged;
 
 
+    public static Action<float> ShakeCamera;
 
     /**
      *GameController

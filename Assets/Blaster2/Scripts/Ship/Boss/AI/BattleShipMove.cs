@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class BattleShipMove : EnemyMove
 {
-    public BaseBossEnemy BossEnemy;
+    public BossEnemy BossEnemy;
     public Vector3[] Positions;
     public int currentPos;
     public bool StartBattle;

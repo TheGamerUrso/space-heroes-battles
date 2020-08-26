@@ -39,7 +39,6 @@ public class PlayerShip : Ship, IDamagable
     public override void OnDestroy()
     {
         Events.OnLevelValueChanged -= OnLevelValueChanged;
-        Events.PlayerShipHit -= DownGradeWeapon;
     }
 
     public override void Awake()
@@ -52,11 +51,6 @@ public class PlayerShip : Ship, IDamagable
     {
         playerData = PersistantData.GetPlayerData();
         playerData.NewGame();
-
-        if (!HasArmorUprade)
-        {
-            Events.PlayerShipHit += DownGradeWeapon;
-        }
 
         playerShipData = playerData.GetCurrentPlayerShipData();
 
@@ -251,7 +245,12 @@ public class PlayerShip : Ship, IDamagable
 
                     Game.ResetMultiplier();
 
-                    Events.PlayerShipHit?.Invoke();
+                    if (!HasArmorUprade)
+                    {
+                        DownGradeWeapon();
+                    }
+
+                    Events.ShakeCamera?.Invoke(.5f);
 
                     Game.GotHit();
 

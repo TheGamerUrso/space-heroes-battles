@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class BattleShipBoss : BaseBossEnemy
+public class BattleShipBoss : BossEnemy
 {
 
 }

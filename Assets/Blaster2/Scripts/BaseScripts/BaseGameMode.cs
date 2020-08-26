@@ -49,7 +49,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected PlayerShip playerShip;
     protected EnemyElement enemyElement;
 
-    protected BaseBossEnemy currentBoss;
+    protected BossEnemy currentBoss;
     protected PlayerData playerData;
 
     public GameInfo gameInfo;
@@ -96,6 +96,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Events.EnemyDied += EnemyDiedCallback;
         Events.BossDied += BossDiedCallback;
         Events.EnemyGotHit += EnemyGotHitCallback;
+        Events.BossHit += BossEnemyHitCallback;;
 
         spawnEnemies = new SpawnEnemies(SpawnPoints);
     }
@@ -147,10 +148,15 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     public void EnemyGotHitCallback(string id, Enemy baseEnemy)
     {
-        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.01f);
     }
 
-    public virtual void BossDiedCallback(string id, Enemy baseEnemy)
+    public void BossEnemyHitCallback(string id, BossEnemy bossEnemy)
+    {
+        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.01f);
+    }
+
+    public virtual void BossDiedCallback(string id, BossEnemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
@@ -169,7 +175,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         if (baseEnemy.Id.Equals(baseEnemy.Id))
         {
             baseEnemy.enemyElement.currentNumberInScene--;
-            DropController.PickRandomDropItem(baseEnemy.transform);
 
             Enemies.Remove(baseEnemy.gameObject);
 

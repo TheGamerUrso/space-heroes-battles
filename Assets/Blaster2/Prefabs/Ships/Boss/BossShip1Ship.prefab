@@ -223,10 +223,12 @@ GameObject:
   - component: {fileID: 4660212937986508}
   - component: {fileID: 2464397369735043055}
   - component: {fileID: 65213140867149424}
-  - component: {fileID: 114236196184715900}
-  - component: {fileID: 7958594226798513858}
   - component: {fileID: 2755692470012960215}
-  - component: {fileID: 7324290701054904434}
+  - component: {fileID: 4294589153714391665}
+  - component: {fileID: 7459453241527146481}
+  - component: {fileID: 4790407874549868097}
+  - component: {fileID: 7585477641208722753}
+  - component: {fileID: 7915367997388769000}
   m_Layer: 15
   m_Name: BossShip1Ship
   m_TagString: Enemy
@@ -278,56 +280,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 13.611361, y: 17.225319, z: 27.100159}
   m_Center: {x: 0.10956478, y: 0.16679001, z: 4.32518}
---- !u!114 &114236196184715900
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400881148121724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57b021d75c87f4248803f7c8556fc1c2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShieldEffect: {fileID: 5475483398764465055}
-  Id: 1
-  EnemyData: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
-  Level: 1
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  currentHealth: 0
-  maxHealth: 0
-  Weapons:
-  - {fileID: 1109897118374461629}
-  delayAttak: 3
-  enemyElement:
-    Name: 
-    gameObjectType: 0
-    Prefab: {fileID: 0}
-    currentNumberInScene: 0
-    MaxNumberInScene: 0
-    presentage: 0
-  ExplosionsDeathEffect: {fileID: 6223385713231036574, guid: ae045c23fe923154087dd60b7b3eebbb,
-    type: 3}
---- !u!114 &7958594226798513858
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1400881148121724}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 238ca75f78be6754e8c35c52d9979b6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bossEnemy: {fileID: 114236196184715900}
-  bossMove: {fileID: 7324290701054904434}
-  HealthPresentage: 0
-  phase: 0
-  DelayAttack: 0
 --- !u!205 &2755692470012960215
 LODGroup:
   m_ObjectHideFlags: 0
@@ -356,7 +308,104 @@ LODGroup:
     - renderer: {fileID: 2560959043898651901}
     - renderer: {fileID: 8239437870419639404}
   m_Enabled: 1
---- !u!114 &7324290701054904434
+--- !u!82 &4294589153714391665
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400881148121724}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 4565465319176861744, guid: 9425bb409cfc98f4a8e71adb82785c85,
+    type: 2}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!114 &7459453241527146481
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -365,10 +414,44 @@ MonoBehaviour:
   m_GameObject: {fileID: 1400881148121724}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0174027c062b067419d786d147d6b6e3, type: 3}
+  m_Script: {fileID: 11500000, guid: 2141b119b04bb4b41ac14fb8d558948f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BossEnemy: {fileID: 114236196184715900}
+  ShieldEffect: {fileID: 5475483398764465055}
+  bossType: 0
+  Id: 1
+  EnemyData: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
+  Level: 0
+  Damage: 0
+  FireRate: 0
+  Speed: 0
+  currentHealth: 0
+  maxHealth: 0
+  enemyElement:
+    Name: 
+    gameObjectType: 0
+    Prefab: {fileID: 0}
+    currentNumberInScene: 0
+    MaxNumberInScene: 0
+    presentage: 0
+  dropItem: {fileID: 0}
+  bossEnemyMove: {fileID: 0}
+  Weapons:
+  - {fileID: 1109897118374461629}
+  delayAttak: 3
+--- !u!114 &4790407874549868097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400881148121724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc7e3d2feee366d4da34c0475497bb0b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveType: 0
   Positions:
   - {x: 0, y: 0, z: 100}
   - {x: -20, y: 0, z: 80}
@@ -377,6 +460,68 @@ MonoBehaviour:
   currentPos: 0
   StartBattle: 0
   changePositionTimer: 4
+  bossEnemy: {fileID: 0}
+  animator: {fileID: 0}
+  Loop: 0
+  startingPosition: {x: 0, y: 0, z: 0}
+  dist: {x: 0, y: 0, z: 0}
+  MaxScreenBound: {x: 0, y: 0}
+  MinScreenBound: {x: 0, y: 0}
+  timer: 0
+  delay: 0.5
+  movement: {x: 0, y: 0, z: 0}
+  speed: 0
+  CurclularMove: 0
+  angle: 0
+  radius: 5
+--- !u!114 &7585477641208722753
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400881148121724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e97daa28d94330b4fbf318a197f61ec2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListOfDropItems:
+  - Name: 
+    chance: 50
+    DropItemsType: 8
+  - Name: 
+    chance: 30
+    DropItemsType: 9
+  - Name: 
+    chance: 10
+    DropItemsType: 10
+  - Name: 
+    chance: 10
+    DropItemsType: 11
+  DropShield: 0
+  DropHealth: 0
+  shieldDropCooldown: 4
+  healthDropCooldown: 3
+  powerDropCooldown: 1
+--- !u!114 &7915367997388769000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1400881148121724}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a5557c88959570469c32bc23780e760, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bossBattleType: 0
+  bossEnemy: {fileID: 7459453241527146481}
+  bossMove: {fileID: 4790407874549868097}
+  HealthPresentage: 0
+  phase: 0
+  DelayAttack: 0
 --- !u!1 &34919499715813744
 GameObject:
   m_ObjectHideFlags: 0
@@ -1751,15 +1896,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
---- !u!23 &6496501245759998070 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 3128134536713736652, guid: d3fc50cdc4c12b049a6126285460a62b,
-    type: 3}
-  m_PrefabInstance: {fileID: 8160919169623939514}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &8718913436729569544 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 702180202422806706, guid: d3fc50cdc4c12b049a6126285460a62b,
+    type: 3}
+  m_PrefabInstance: {fileID: 8160919169623939514}
+  m_PrefabAsset: {fileID: 0}
+--- !u!23 &6496501245759998070 stripped
+MeshRenderer:
+  m_CorrespondingSourceObject: {fileID: 3128134536713736652, guid: d3fc50cdc4c12b049a6126285460a62b,
     type: 3}
   m_PrefabInstance: {fileID: 8160919169623939514}
   m_PrefabAsset: {fileID: 0}

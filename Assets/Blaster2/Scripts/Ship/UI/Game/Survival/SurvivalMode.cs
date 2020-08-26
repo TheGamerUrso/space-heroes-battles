@@ -220,18 +220,11 @@ public class SurvivalMode : BaseGameMode
         }
     }
 
-    public override void BossDiedCallback(string id, Enemy baseEnemy)
+    public override void BossDiedCallback(string id, BossEnemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
             base.BossDiedCallback(id, baseEnemy);
-
-            int rand = Random.Range(4, 8);
-
-            for (int i = 0; i < rand; i++)
-            {
-                DropController.PickRandomDropItem(baseEnemy.transform);
-            }
         }
     }
 
