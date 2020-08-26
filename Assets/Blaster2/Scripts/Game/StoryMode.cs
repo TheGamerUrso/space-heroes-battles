@@ -103,7 +103,7 @@ public class StoryMode : BaseGameMode
         {
             Debug.Log("Enemies Remanining: " + (spawnInfo.TotalEnemies - enemyIndex) + " : NumberOfEnemiesOnScreen " + Game.NumberOfEnemies);
             Debug.Log("NumberOfEnemiesOnScreen " + Game.NumberOfEnemies);
-           
+
             if (gameInfo.pause)
             {
                 yield return new WaitUntil(() => !gameInfo.pause);
@@ -114,7 +114,21 @@ public class StoryMode : BaseGameMode
                 yield return new WaitForSeconds(.5f);
             }
 
-            ChooseRandomEnemyToSpawn();
+            var random = Random.Range(0, 100); // draw a number between 0 and 99
+            int lowLim;    // lowLim and hiLim are automatically set for each enemy
+            int hiLim = 0;
+            for (int l_enemy = 0; l_enemy < availableEnemie.Count; l_enemy++)
+            {
+                lowLim = hiLim; // set low limit...
+                hiLim += availableEnemie[l_enemy].presentage; // and high limit
+                if (random >= lowLim && random < hiLim)
+                { // instantiate it!
+                    Debug.Log(l_enemy + "=" + lowLim + ":" + random + ":" + hiLim);
+                    enemyElement = availableEnemie[l_enemy];
+                    break;
+                }
+            }
+
 
             if (enemyElement != null)
             {
@@ -122,7 +136,7 @@ public class StoryMode : BaseGameMode
                 {
                     for (int i = 0; i < 4; i++)
                     {
-                        if (enemyIndex + 1 > spawnInfo.TotalEnemies)
+                        if (enemyIndex + 1 < spawnInfo.TotalEnemies)
                         {
                             enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
                             Enemies.Add(enemGO);
