@@ -18,12 +18,19 @@ public class User
 }
 public class GPServices : MonoSingleton<GPServices>
 {
+    protected override void OnCleanup()
+    {
+        base.OnCleanup();
+        GameServices.UserLoginSucceeded -= OnUserLoginSucceeded;
+        GameServices.UserLoginFailed -= OnUserLoginFailed;
+    }
+
     protected override void Awake()
     {
         base.Awake();
       
-        GameServices.UserLoginSucceeded -= OnUserLoginSucceeded;
-        GameServices.UserLoginFailed -= OnUserLoginFailed;
+        GameServices.UserLoginSucceeded += OnUserLoginSucceeded;
+        GameServices.UserLoginFailed += OnUserLoginFailed;
     }
 
     private void Start()

@@ -113,5 +113,7 @@ public class Events
      * Upgrade Events 
      */
     public static Action OnPurchased;
+
+    public static Action RefreshUpdateData;
 }
 

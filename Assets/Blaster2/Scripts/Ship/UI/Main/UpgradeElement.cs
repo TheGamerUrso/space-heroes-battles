@@ -24,10 +24,22 @@ public class UpgradeElement : MonoBehaviour
     private UpgradeScreen upgradeScreen;
 
     private Color TextdefaultColor;
+
     private void OnEnable()
     {
-        Refresh();
+        Events.RefreshUpdateData?.Invoke();
     }
+
+    private void OnDestroy()
+    {
+        Events.RefreshUpdateData -= Refresh;
+    }
+
+    private void Start()
+    {
+        Events.RefreshUpdateData += Refresh;
+    }
+
     public void SetUpgradeElement(Upgrade upgrade, UpgradeScreen upgradeScreen)
     {
         this.upgrade = upgrade;
@@ -44,7 +56,7 @@ public class UpgradeElement : MonoBehaviour
 
     public void Refresh()
     {
-        if(playerData == null)
+        if (playerData == null)
         {
             return;
         }
@@ -55,6 +67,7 @@ public class UpgradeElement : MonoBehaviour
         MessageText.gameObject.SetActive(false);
         NotAvailable.SetActive(false);
         Price.color = TextdefaultColor;
+        buyButton.EnableButton();
 
         if (upgrade.ProgressPresentage == 1)
         {
@@ -88,6 +101,8 @@ public class UpgradeElement : MonoBehaviour
 
     public void BuyButton()
     {
+        upgradeScreen.RefreshUpgrades();
+
         if (upgrade.ProgressPresentage == 1)
         {
             return;
@@ -97,8 +112,6 @@ public class UpgradeElement : MonoBehaviour
         {
             upgrade.Buy();
         }
-
-        upgradeScreen.RefreshUpgrades();
     }
 
     public void Warn(string message)
