@@ -83,7 +83,7 @@ public class SpawnEnemies
         enemy.SetStats(LevelDifficulty);
 
         enemy.Id = enemyElement.Name + "_" + enemyElement.currentNumberInScene;
-        EMFollowPath followPathAI = enemGO.GetComponent<EMFollowPath>();
+        EnemyMove followPathAI = enemGO.GetComponent<EnemyMove>();
 
         enemGO.transform.position = spawnPos;
         
@@ -91,7 +91,7 @@ public class SpawnEnemies
        
         enemGO.SetActive(true);
 
-        if (followPathAI != null)
+        if (followPathAI.moveType == EnemyMove.EnemyMoveType.FollowPath)
         {
             enemy.enemyElement = enemyElement;
 

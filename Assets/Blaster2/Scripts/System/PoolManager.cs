@@ -33,7 +33,6 @@ public enum PoolGameObjectType
     ItemPowerUp,
     ItemShield,
     ItemHealth,
-    Planet,
     FloatingText,
     Enemy1,
     Enemy2,
