@@ -10,6 +10,7 @@ public class SurvivalMode : BaseGameMode
     private bool BossWave = false;
     private GameObject BossPrefab;
     private bool FirstRun;
+
     public override void InitReference(PlayerData playerData, PlayerShip playerShip)
     {
         base.InitReference(playerData, playerShip);
@@ -29,6 +30,7 @@ public class SurvivalMode : BaseGameMode
         spawnInfo.enemyElements = level_SO.enemyElements.ToList();
         spawnInfo.availableEnemies = level_SO.availableEnemies;
         spawnInfo.TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
+        gameInfo.LevelDifficulty = level_SO.LevelDifficulty;
 
         Game.EnemySpawnInTotal = spawnInfo.TotalEnemies;
 
@@ -59,8 +61,6 @@ public class SurvivalMode : BaseGameMode
 
         if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
         {
-
-            gameInfo.LevelDifficulty++;
             spawnInfo.availableEnemies++;
 
             if (spawnInfo.availableEnemies > spawnInfo.enemyElements.Count)
@@ -117,6 +117,8 @@ public class SurvivalMode : BaseGameMode
 
             for (int enemyIndex = 0; enemyIndex <= spawnInfo.TotalEnemies; enemyIndex++)
             {
+                spawnInfo.enemyIndexTrack = enemyIndex;
+
                 if (gameInfo.pause)
                 {
                     yield return new WaitUntil(() => !gameInfo.pause);

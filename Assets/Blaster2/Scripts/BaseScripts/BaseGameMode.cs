@@ -33,7 +33,7 @@ public struct SpawnInfo
     public int TotalEnemies;
     public int availableEnemies;
     public List<EnemyElement> enemyElements;
-
+    public int enemyIndexTrack;
     public void Reset()
     {
         enemyElements.Clear();
