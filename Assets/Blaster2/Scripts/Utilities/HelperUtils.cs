@@ -29,27 +29,28 @@ public static class HelperUtils
     }
 
 
-    public static GameObject GetClosest(string Tag, Vector3 position, float maxRange)
+    public static GameObject GetClosest(string Tag, Vector3 position, float maxRange, LayerMask targetLayer)
     {
-        GameObject[] Enemies;
-        Enemies = GameObject.FindGameObjectsWithTag(Tag);
+        Collider[] Enemies;
+        Enemies = Physics.OverlapSphere(position, maxRange, targetLayer);
         GameObject enemyTarget = null;
-        foreach (GameObject enemy in Enemies)
+        foreach (Collider enemy in Enemies)
         {
-            if (!enemy.GetComponent<AsteroidMove>() && !enemy.GetComponent<Enemy>().HasShieldModule())
+            Enemy en = enemy.GetComponent<Enemy>();
+            if (en.IsAlive && !enemy.GetComponent<Enemy>().HasShieldModule())
             {
                 float dist = Vector3.Distance(position, enemy.transform.position);
                 if (dist <= maxRange)
                 {
                     if (enemyTarget == null)
                     {
-                        enemyTarget = enemy;
+                        enemyTarget = enemy.gameObject;
                     }
                     else
                     {
                         if (Vector3.Distance(position, enemy.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
                         {
-                            enemyTarget = enemy;
+                            enemyTarget = enemy.gameObject;
                         }
                     }
                 }

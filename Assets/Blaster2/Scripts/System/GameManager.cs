@@ -122,7 +122,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         if (level.mission.ID > 0)
         {
-            //StoryController.Instance.ShowStory(level);
+            StoryController.Instance.ShowStory(level);
         }
     }
 

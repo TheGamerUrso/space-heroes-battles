@@ -3,7 +3,7 @@
 public class Rocket : Projectile
 {
     public GameObject m_Target;
-
+    public LayerMask enemyLayer;
     public override void Setup(WeaponScript weaponScript)
     {
         this.weaponScript = weaponScript;
@@ -17,7 +17,7 @@ public class Rocket : Projectile
 
     protected override void OnEnable()
     {
-        m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity);
+        m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity, enemyLayer);
         if (m_Target != null)
         {
    
@@ -41,7 +41,7 @@ public class Rocket : Projectile
 
             if (!m_Target.activeInHierarchy)
             {
-                m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity);
+                m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity, enemyLayer);
             }
         }
 

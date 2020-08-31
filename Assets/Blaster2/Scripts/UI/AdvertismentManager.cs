@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using EasyMobile;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Advertisements;
@@ -19,10 +20,10 @@ public class AdvertismentManager : MonoSingleton<AdvertismentManager>
         }
 
         // Grants the module-level consent for the Advertising module.
-        // if (Advertising.DataPrivacyConsent == ConsentStatus.Unknown)
-        // {
-        //      Advertising.GrantDataPrivacyConsent();
-        // }
+        if (Advertising.DataPrivacyConsent == ConsentStatus.Unknown)
+        {
+            Advertising.GrantDataPrivacyConsent();
+        }
     }
 
 
@@ -47,24 +48,24 @@ public class AdvertismentManager : MonoSingleton<AdvertismentManager>
     public static void ShowRewardedVideo()
     {
         //// Check if rewarded ad is ready
-        //bool isReady = Advertising.IsRewardedAdReady();
+        bool isReady = Advertising.IsRewardedAdReady();
 
-        //// Show it if it's ready
-        //if (isReady)
-        //{
-        //    Advertising.ShowRewardedAd();
-        //}
+        //Show it if it's ready
+        if (isReady)
+        {
+            Advertising.ShowRewardedAd();
+        }
     }
     public static void ShowAdvertisment()
     {
         //// Check if interstitial ad is ready
-        //bool isReady = Advertising.IsInterstitialAdReady();
+        bool isReady = Advertising.IsInterstitialAdReady();
 
-        //// Show it if it's ready
-        //if (isReady)
-        //{
-        //    Advertising.ShowInterstitialAd();
-        //}
+        // Show it if it's ready
+        if (isReady)
+        {
+            Advertising.ShowInterstitialAd();
+        }
     }
 
 }
