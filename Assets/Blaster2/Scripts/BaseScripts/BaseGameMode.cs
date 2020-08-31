@@ -68,7 +68,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
     protected WaitForSeconds shortWait = new WaitForSeconds(1);
     protected WaitForSeconds longWait = new WaitForSeconds(2);
-
+    protected WaitForSeconds RewardWait = new WaitForSeconds(5);
 
     [SerializeField] protected List<SpawnPoint> SpawnPoints = new List<SpawnPoint>();
     protected SpawnEnemies spawnEnemies;

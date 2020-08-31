@@ -138,7 +138,7 @@ public class SurvivalMode : BaseGameMode
                     hiLim += availableEnemie[l_enemy].presentage; // and high limit
                     if (random >= lowLim && random < hiLim)
                     { // instantiate it!
-                       // Debug.Log(l_enemy + "=" + lowLim + ":" + random + ":" + hiLim);
+                      // Debug.Log(l_enemy + "=" + lowLim + ":" + random + ":" + hiLim);
                         enemyElement = availableEnemie[l_enemy];
                         break;
                     }
@@ -205,23 +205,26 @@ public class SurvivalMode : BaseGameMode
                     if (gameInfo.BossBattleInitiated)
                     {
                         yield return new WaitUntil(() => !gameInfo.BossBattleInitiated);
+
+
+                        yield return RewardWait;
+
+                        GuiManager.Instance.ShowRewardScreen();
+                        rewardToClaim = true;
+
+                        while (rewardToClaim)
+                        {
+                            rewardToClaim = Events.ClaimedReward();
+                            yield return longWait;
+                        }
+
+                        yield return RewardWait;
                     }
 
                     active = true;
                 }
 
-                yield return longWait;
 
-                GuiManager.Instance.ShowRewardScreen();
-                rewardToClaim = true;
-
-                while (rewardToClaim)
-                {
-                    rewardToClaim = Events.ClaimedReward();
-                    yield return longWait;
-                }
-
-                yield return longWait;
 
                 while (active)
                 {

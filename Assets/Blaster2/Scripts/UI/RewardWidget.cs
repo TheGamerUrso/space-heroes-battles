@@ -28,7 +28,7 @@ public class RewardWidget : MonoBehaviour
     private RewardTypeEnum rewardType;
 
 
-    public string[] rewardText = { "x Gold Earned", "x XP Earned", "SHIP REPAIRED", "SHIELD INSTALLED", "POWER UP", "DECREASE SUPER COOLDOWN" };
+    public string[] rewardText = { "X gold earned", "X xp earned", "ship repaired", "Shield Installed", "power up", "Decrease super cooldown" };
     public GameObject rewardResultPanel;
     public TextMeshProUGUI RewardText;
 
@@ -82,7 +82,7 @@ public class RewardWidget : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         rewardBoxes[RewardBoxSelected].CloseChest();
         yield return new WaitForSeconds(1.0f);
-        
+
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
         PlayerShip playerShip = PlayerManager.GetPlayer();
@@ -92,13 +92,13 @@ public class RewardWidget : MonoBehaviour
         {
             case RewardTypeEnum.Gold:
                 int rewardCoin = Random.Range(50, 300);
-                textToShow = rewardText[(int)RewardTypeEnum.Gold].Replace("x", rewardCoin.ToString());
+                textToShow = rewardText[(int)RewardTypeEnum.Gold].Replace("X", rewardCoin.ToString());
                 playerData.AddCoin(rewardCoin);
                 RewardText.text = textToShow;
                 break;
             case RewardTypeEnum.XP:
                 float xpReward = Random.Range(50, 200);
-                textToShow = rewardText[(int)RewardTypeEnum.XP].Replace("x", xpReward.ToString());
+                textToShow = rewardText[(int)RewardTypeEnum.XP].Replace("X", xpReward.ToString());
                 xpReward = Mathf.Clamp(xpReward, 1, playerShipData.xpToLevel);
                 playerData.EarnXP(xpReward);
                 break;
@@ -116,7 +116,8 @@ public class RewardWidget : MonoBehaviour
                 break;
             case RewardTypeEnum.SUPER:
                 textToShow = rewardText[(int)RewardTypeEnum.SUPER];
-                playerData.SetSuperMeter(.5f);
+                float power = playerData.PowerUpLevel + .5f;
+                playerData.SetSuperMeter(power);
                 break;
         }
 
@@ -127,7 +128,7 @@ public class RewardWidget : MonoBehaviour
 
         yield return new WaitForSeconds(3.0f);
 
-    
+
         rewardResultPanel.SetActive(false);
 
 
