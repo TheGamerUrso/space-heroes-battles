@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BossEnemy : Ship, IDamagable
+public class BossEnemy : Ship, IDamagable,ITargetable
 {
     public enum BossEnemyType
     {
@@ -40,7 +40,34 @@ public class BossEnemy : Ship, IDamagable
     private int currentWeaponActive;
     private float takeDamageDelay;
 
-    public EnemyHealthWidget HealthBar { get; set; }
+    [SerializeField] private EnemyHealthWidget healthbar;
+    public EnemyHealthWidget HealthBar
+    {
+        get
+        {
+            return healthbar;
+        }
+        set
+        {
+            healthbar = value;
+        }
+    }
+
+    public GameObject target
+    {
+        get
+        {
+            return gameObject;
+        }
+    }
+
+    public bool Targetable
+    {
+        get
+        {
+            return HasShieldModule() || IsAlive;
+        }
+    }
 
     private PlayerData playerData;
     public Action OnBossAttack;
@@ -71,17 +98,7 @@ public class BossEnemy : Ship, IDamagable
         playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
-        if (HealthBar != null)
-        {
-            HealthBar.GetComponent<BaseHealthWidget>();
-        }
-
-        if (EnemyData.HealthBarSettings != null)
-        {
-            GameObject initializedHealthWidget = Instantiate(EnemyData.HealthBarSettings.HealthBarPrefab, transform, false);
-            HealthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            HealthBar.Setup(this, false);
-        }
+        healthbar.Setup(this, false);
 
         ShieldEffect.SetActive(HasShield);
 

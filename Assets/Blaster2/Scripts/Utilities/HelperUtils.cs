@@ -34,27 +34,31 @@ public static class HelperUtils
         Collider[] Enemies;
         Enemies = Physics.OverlapSphere(position, maxRange, targetLayer);
         GameObject enemyTarget = null;
+
         foreach (Collider enemy in Enemies)
         {
-            Enemy en = enemy.GetComponent<Enemy>();
-            if (en.IsAlive && !enemy.GetComponent<Enemy>().HasShieldModule())
+            ITargetable targetable = enemy.GetComponent<ITargetable>();
+            if (targetable != null)
             {
-                float dist = Vector3.Distance(position, enemy.transform.position);
-                if (dist <= maxRange)
+                if (targetable.Targetable)
                 {
-                    if (enemyTarget == null)
+                    float dist = Vector3.Distance(position, targetable.target.transform.position);
+                    if (dist <= maxRange)
                     {
-                        enemyTarget = enemy.gameObject;
-                    }
-                    else
-                    {
-                        if (Vector3.Distance(position, enemy.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
+                        if (enemyTarget == null)
                         {
-                            enemyTarget = enemy.gameObject;
+                            enemyTarget = targetable.target;
+                        }
+                        else
+                        {
+                            if (Vector3.Distance(position, targetable.target.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
+                            {
+                                enemyTarget = targetable.target;
+                            }
                         }
                     }
                 }
-            }
+            }    
         }
         return enemyTarget;
     }

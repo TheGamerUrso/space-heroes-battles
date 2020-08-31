@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 
-public class Enemy : Ship, IDamagable
+public class Enemy : Ship, IDamagable, ITargetable
 {
     public enum EnemyType
     {
@@ -40,6 +40,21 @@ public class Enemy : Ship, IDamagable
     [SerializeField] protected DropItem dropItem;
 
     public EnemyHealthWidget HealthBar { get; set; }
+
+    public GameObject target {
+        get
+        {
+            return gameObject;
+        }
+    }
+
+    public bool Targetable
+    {
+        get
+        {
+            return HasShieldModule() || IsAlive;
+        }
+    }
 
     [HideInInspector] public EnemyElement enemyElement;
 

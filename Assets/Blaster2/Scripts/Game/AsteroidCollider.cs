@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AsteroidCollider : MonoBehaviour, IDamagable
+public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
 {
     public event Action<float, float> OnHealthChanged;
     private bool Destroyed = false;
@@ -21,6 +21,23 @@ public class AsteroidCollider : MonoBehaviour, IDamagable
         get { return currentHealth; }
         set { currentHealth = value; }
     }
+
+    public GameObject target
+    {
+        get
+        {
+            return gameObject;
+        }
+    }
+
+    public bool Targetable
+    {
+        get
+        {
+            return !Destroyed;
+        }
+    }
+
 
     private Rigidbody rigid;
     private float force = 2500;

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossDestroyablePart : MonoBehaviour, IDamagable
+public class BossDestroyablePart : MonoBehaviour, IDamagable,ITargetable
 {
     public event Action<float, float> OnHealthChanged;
     protected Action<bool> Attacked;
@@ -26,6 +26,23 @@ public class BossDestroyablePart : MonoBehaviour, IDamagable
     public float maxHealth;
     public float CurrentHealth { get { return currentHealth; } }
     public float MaxHealth { get { return maxHealth; } }
+
+    public GameObject target
+    {
+        get
+        {
+            return gameObject;
+        }
+    }
+
+    public bool Targetable
+    {
+        get
+        {
+            return IsAlive;
+        }
+    }
+
     public Animator animator;
 
     protected EnemyHealthWidget healthBar;

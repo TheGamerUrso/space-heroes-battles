@@ -54,7 +54,6 @@ public class ArtilleryWeapon : Blaster
             }
 
             numberOfAttacks++;
-
         }
     }
 }

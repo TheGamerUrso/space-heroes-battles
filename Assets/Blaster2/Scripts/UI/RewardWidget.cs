@@ -28,7 +28,7 @@ public class RewardWidget : MonoBehaviour
     private RewardTypeEnum rewardType;
 
 
-    public string[] rewardText = { "X Gold Earned", "X XP Earned", "SHIP REPAIRED", "SHIELD INSTALLED", "POWER UP", "DECREASE SUPER COOLDOWN" };
+    public string[] rewardText = { "x Gold Earned", "x XP Earned", "SHIP REPAIRED", "SHIELD INSTALLED", "POWER UP", "DECREASE SUPER COOLDOWN" };
     public GameObject rewardResultPanel;
     public TextMeshProUGUI RewardText;
 
@@ -79,9 +79,9 @@ public class RewardWidget : MonoBehaviour
 
     IEnumerator ClaimRewarded()
     {
-        yield return new WaitForSeconds(2.0f);
-
+        yield return new WaitForSeconds(1.0f);
         rewardBoxes[RewardBoxSelected].CloseChest();
+        yield return new WaitForSeconds(1.0f);
         
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
@@ -92,13 +92,13 @@ public class RewardWidget : MonoBehaviour
         {
             case RewardTypeEnum.Gold:
                 int rewardCoin = Random.Range(50, 300);
-                textToShow = rewardText[(int)RewardTypeEnum.Gold].Replace("X", rewardCoin.ToString());
+                textToShow = rewardText[(int)RewardTypeEnum.Gold].Replace("x", rewardCoin.ToString());
                 playerData.AddCoin(rewardCoin);
                 RewardText.text = textToShow;
                 break;
             case RewardTypeEnum.XP:
                 float xpReward = Random.Range(50, 200);
-                textToShow = rewardText[(int)RewardTypeEnum.XP].Replace("X", xpReward.ToString());
+                textToShow = rewardText[(int)RewardTypeEnum.XP].Replace("x", xpReward.ToString());
                 xpReward = Mathf.Clamp(xpReward, 1, playerShipData.xpToLevel);
                 playerData.EarnXP(xpReward);
                 break;
@@ -124,12 +124,14 @@ public class RewardWidget : MonoBehaviour
         rewardResultPanel.SetActive(true);
         rewardPanel.SetActive(false);
 
+
         yield return new WaitForSeconds(3.0f);
 
+    
         rewardResultPanel.SetActive(false);
 
 
-        yield return new WaitForSeconds(3.0f);
+        yield return new WaitForSeconds(1.0f);
         widgetPanel.SetActive(false);
         RewardClaimed();
         Game.UseSlowMo = true;
