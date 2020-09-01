@@ -59,7 +59,7 @@ public class SurvivalMode : BaseGameMode
         string[] transmitions = { "Wave:\n" + gameInfo.waves };
         GuiManager.PlayTrasmition(transmitions);
 
-        if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
+        if (gameInfo.waves > 0 && gameInfo.waves % 4 == 0)
         {
             spawnInfo.availableEnemies++;
 
@@ -70,10 +70,29 @@ public class SurvivalMode : BaseGameMode
 
         }
 
-        if (gameInfo.waves > 0 && gameInfo.waves % 4 == 0)
+        if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
         {
             BossPrefab = BossFights[Random.Range(0, BossFights.Length)];
             BossWave = true;
+        }
+    }
+
+    public float reachMaxEnemiesTimer = 2;
+
+    public void Update()
+    {
+        if (reachMaxEnemiesTimer > 0)
+        {
+            reachMaxEnemiesTimer -= Time.deltaTime;
+            if (reachMaxEnemiesTimer <= 0)
+            {
+                Game.NumberOfEnemies--;
+                reachMaxEnemiesTimer = 2;
+                if (Game.NumberOfEnemies <= 0)
+                {
+                    Game.NumberOfEnemies = 0;
+                }
+            }
         }
     }
 
@@ -113,12 +132,9 @@ public class SurvivalMode : BaseGameMode
             Game.UseSlowMo = true;
 
             availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
-            var repeat = 1;
 
-            for (int enemyIndex = 0; enemyIndex <= spawnInfo.TotalEnemies; enemyIndex++)
+            for (int enemyIndex = 0; enemyIndex < spawnInfo.TotalEnemies; enemyIndex++)
             {
-                spawnInfo.enemyIndexTrack = enemyIndex;
-
                 if (gameInfo.pause)
                 {
                     yield return new WaitUntil(() => !gameInfo.pause);
@@ -129,51 +145,33 @@ public class SurvivalMode : BaseGameMode
                     yield return new WaitForSeconds(.5f);
                 }
 
-                var random = Random.Range(0, 100); // draw a number between 0 and 99
-                int lowLim;    // lowLim and hiLim are automatically set for each enemy
-                int hiLim = 0;
-                for (int l_enemy = 0; l_enemy < availableEnemie.Count; l_enemy++)
-                {
-                    lowLim = hiLim; // set low limit...
-                    hiLim += availableEnemie[l_enemy].presentage; // and high limit
-                    if (random >= lowLim && random < hiLim)
-                    { // instantiate it!
-                      // Debug.Log(l_enemy + "=" + lowLim + ":" + random + ":" + hiLim);
-                        enemyElement = availableEnemie[l_enemy];
-                        break;
-                    }
-                }
+                var random = Random.Range(0, availableEnemie.Count);
 
+                enemyElement = availableEnemie[random];
 
-                if (spawnInfo.TotalEnemies - 1 >= 0)
+                if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
                 {
-                    if (enemyElement != null)
+                    for (int i = 0; i < 4; i++)
                     {
-                        if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
-                        {
-                            for (int i = 0; i < 4; i++)
-                            {
-                                if (enemyIndex + 1 < spawnInfo.TotalEnemies)
-                                {
-                                    enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
-                                    Enemies.Add(enemGO);
-                                    enemyIndex++;
-                                    yield return new WaitForSeconds(.5f);
-                                }
-                                else
-                                {
-                                    continue;
-                                }
-                            }
-                        }
-                        else
+                        if (enemyIndex + 1 <= spawnInfo.TotalEnemies)
                         {
                             enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
                             Enemies.Add(enemGO);
+                            enemyIndex++;
+                            yield return new WaitForSeconds(.5f);
                         }
-                        Game.NumberOfEnemies++;
+                        else
+                        {
+                            continue;
+                        }
                     }
                 }
+                else
+                {
+                    enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
+                    Enemies.Add(enemGO);
+                }
+
                 yield return CooldownTimer;
                 CooldownTimer = new WaitForSeconds(cooldown);
             }

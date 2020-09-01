@@ -123,6 +123,36 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &341390205
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 341390206}
+  m_Layer: 0
+  m_Name: DynamicObjects
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &341390206
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341390205}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 4
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &434107619 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9210976522043267712, guid: 064037ab28f23424a906c8d5f8ec7a76,
@@ -219,12 +249,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9350f4112eb69c64e90a8a9c863af3cc, type: 3}
---- !u!1 &1399691352 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 174126822107494902, guid: 35cea2d3e7ef09b4ab6ae68062250d2c,
-    type: 3}
-  m_PrefabInstance: {fileID: 1358694718812111617}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1358694718812111617
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -536,20 +560,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2294709504884878955, guid: 064037ab28f23424a906c8d5f8ec7a76,
-        type: 3}
-      propertyPath: GUI
-      value: 
-      objectReference: {fileID: 1399691352}
     - target: {fileID: 2294709504884878964, guid: 064037ab28f23424a906c8d5f8ec7a76,
         type: 3}
       propertyPath: m_Name
       value: GameSurvivalMode
-      objectReference: {fileID: 0}
-    - target: {fileID: 9210976522043267712, guid: 064037ab28f23424a906c8d5f8ec7a76,
-        type: 3}
-      propertyPath: m_Enabled
-      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 064037ab28f23424a906c8d5f8ec7a76, type: 3}

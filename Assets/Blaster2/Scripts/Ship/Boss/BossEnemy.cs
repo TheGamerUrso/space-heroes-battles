@@ -83,6 +83,7 @@ public class BossEnemy : Ship, IDamagable,ITargetable
         IsAlive = true;
         EnableColliders(false);
         currentWeaponActive = 1;
+        Game.NumberOfEnemies++;
     }
     public override void Awake()
     {
@@ -248,6 +249,8 @@ public class BossEnemy : Ship, IDamagable,ITargetable
         }
 
         Events.BossDied?.Invoke(Id, this);
+
+
     }
 
     IEnumerator DeathSequence()
@@ -285,12 +288,15 @@ public class BossEnemy : Ship, IDamagable,ITargetable
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
             explostion.SetActive(true);
-            //Events.EnemyDied?.Invoke(Id, this);
+            Events.BossDied?.Invoke(Id, this);
             HealthBar.Hide();
-            gameObject.SetActive(false);
+    
 
             dropItem.PickRandomDropItem(transform);
+
+            Destroy(transform.parent.gameObject);
         }
+
     }
 
     public void SetFireRate(int weaponIndex = 0, bool all = true)
