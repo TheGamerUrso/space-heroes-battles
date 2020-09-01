@@ -71,13 +71,14 @@ public class GameOverWidget : MonoBehaviour
 
         if (retried >= 5)
         {
+            retried = 0;
             AdvertismentManager.ShowAdvertisment();
         }
         else
         {
             GameManager.Instance.ResetLevel();
         }
-        PlayerPrefs.SetInt("SurvivalAd", retried);
+  
     }
 
     public void LoadMainMenu()
@@ -91,6 +92,7 @@ public class GameOverWidget : MonoBehaviour
     {
         Debug.Log("Interstitial ad has been closed.");
         GameManager.Instance.ResetLevel();
+        PlayerPrefs.SetInt("SurvivalAd", 0);
     }
 
     // Unsubscribe

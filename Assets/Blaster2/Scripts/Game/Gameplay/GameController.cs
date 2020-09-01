@@ -136,13 +136,12 @@ public class GameController : MonoSingleton<GameController>
                 levelDiffrence = 1;
             }
 
-            if (!Game.IsSurvivalMode)
-            {
-                float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-                playerData.EarnXP(XPEarned);
 
-                GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
-            }
+            float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+            playerData.EarnXP(XPEarned);
+
+            GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
+
 
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
 
@@ -202,7 +201,7 @@ public class GameController : MonoSingleton<GameController>
     }
 
     IEnumerator StartGameDelay()
-    {       
+    {
         playerData.SetSuperMeter(0);
         playerData.ResetWeaponPowerUPCollected();
         Game.Reset();

@@ -93,7 +93,7 @@ public class SurvivalGameOverScreen : MonoBehaviour
             GameManager.Instance.ResetLevel();
         }
 
-        PlayerPrefs.SetInt("SurvivalAd", retried);  
+    
     }
 
     // The event handler
@@ -101,6 +101,8 @@ public class SurvivalGameOverScreen : MonoBehaviour
     {
         Debug.Log("Interstitial ad has been closed.");
         GameManager.Instance.ResetLevel();
+
+        PlayerPrefs.SetInt("SurvivalAd", 0);
     }
 
     // Unsubscribe
