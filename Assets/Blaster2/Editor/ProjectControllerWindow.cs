@@ -241,8 +241,6 @@ public class ProjectControllerWindow : EditorWindow
         PlayerData playerData = PersistantData.GetPlayerData();
         if ((ObjectiveTypeEnum)playerData.ListOfOnGoingObjectives[index].objectiveType == ObjectiveTypeEnum.UNHARMED)
         {
-            playerData.PlayedGame = true;
-            playerData.GotHitInGame = false;
             playerData.ListOfOnGoingObjectives[index].UpdateProgress(1);
         }
         else { playerData.ListOfOnGoingObjectives[index].UpdateProgress(playerData.ListOfOnGoingObjectives[index].requirment); }

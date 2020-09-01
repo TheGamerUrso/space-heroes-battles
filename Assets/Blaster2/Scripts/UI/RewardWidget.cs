@@ -28,7 +28,7 @@ public class RewardWidget : MonoBehaviour
     private RewardTypeEnum rewardType;
 
 
-    public string[] rewardText = { "X gold earned", "X xp earned", "ship repaired", "Shield Installed", "power up", "Decrease super cooldown" };
+    public string[] rewardText = { "% gold earned", "% xp earned", "ship repaired", "Shield Installed", "power up", "Decrease super cooldown" };
     public GameObject rewardResultPanel;
     public TextMeshProUGUI RewardText;
 
@@ -92,13 +92,13 @@ public class RewardWidget : MonoBehaviour
         {
             case RewardTypeEnum.Gold:
                 int rewardCoin = Random.Range(50, 300);
-                textToShow = rewardText[(int)RewardTypeEnum.Gold].Replace("X", rewardCoin.ToString());
+                textToShow = rewardText[(int)RewardTypeEnum.Gold].Replace("%", rewardCoin.ToString());
                 playerData.AddCoin(rewardCoin);
                 RewardText.text = textToShow;
                 break;
             case RewardTypeEnum.XP:
                 float xpReward = Random.Range(50, 200);
-                textToShow = rewardText[(int)RewardTypeEnum.XP].Replace("X", xpReward.ToString());
+                textToShow = rewardText[(int)RewardTypeEnum.XP].Replace("%", xpReward.ToString());
                 xpReward = Mathf.Clamp(xpReward, 1, playerShipData.xpToLevel);
                 playerData.EarnXP(xpReward);
                 break;

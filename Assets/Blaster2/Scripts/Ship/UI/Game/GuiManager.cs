@@ -189,15 +189,20 @@ public class GuiManager : MonoSingleton<GuiManager>
         Menu.Hide();
     }
 
-    public static void PlayTrasmition(string[] transmitions, bool boss = false)
+    public static void PlayTrasmition(string[] transmitions)
     {
-        Instance.ShowTrasmition(transmitions, boss);
+        Instance.ShowTrasmition(transmitions);
     }
 
-    public void ShowTrasmition(string[] transmitions, bool boss = false)
+    public void BossWarning()
+    {
+        transmittionWidget.BossWarning();
+    }
+
+    public void ShowTrasmition(string[] transmitions)
     {
         if (transmittionWidget)
-            transmittionWidget.RecieveTransmition(transmitions, boss);
+            transmittionWidget.RecieveTransmition(transmitions);
     }
 
     public bool IsTrasnmiting()

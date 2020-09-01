@@ -120,7 +120,7 @@ public class PlayerWeapon : WeaponScript
 
     public virtual void SetStats(PlayerShipData playerShipData, int weaponType = 1)
     {
-        Damage = playerShipData.Damage / (weaponType + 1);
+        Damage = playerShipData.Damage;
         FireRate = playerShipData.FireRate;
     }
 

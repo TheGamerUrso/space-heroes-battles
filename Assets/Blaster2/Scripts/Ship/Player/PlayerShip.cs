@@ -68,6 +68,8 @@ public class PlayerShip : Ship, IDamagable
         shipController.SetSpeed(playerShipData.Speed);
 
         SwitchWeapon(0);
+
+        playerData.GotHitInGame = false;
     }
 
     public void OnLevelValueChanged(int Level)
@@ -222,7 +224,7 @@ public class PlayerShip : Ship, IDamagable
         if (!IsDead())
         {
             audioSource.PlayOneShot(playerStats.hitSFX);
-
+            playerData.GotHitInGame = true; ;
             if (dmg >= MaxHealth)
             {
                 dmg = MaxHealth - 1;

@@ -5,8 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class StoryMode : BaseGameMode
 {
-
-
     protected override void Awake()
     {
         base.Awake();
@@ -28,41 +26,21 @@ public class StoryMode : BaseGameMode
 
         playerShip = PlayerManager.GetPlayer();
 
-        spawnInfo.enemyElements = level_SO.enemyElements.ToList();
-
         gameInfo.LevelDifficulty = level_SO.LevelDifficulty;
 
-        spawnInfo.availableEnemies = level_SO.availableEnemies;
-        spawnInfo.TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
+        gameInfo.availableEnemies = level_SO.availableEnemies;
+        gameInfo.TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
+        gameInfo.CurrentTotalEnemies = gameInfo.TotalEnemies;
 
-        Game.EnemySpawnInTotal = spawnInfo.TotalEnemies;
+        Game.EnemySpawnInTotal = gameInfo.TotalEnemies;
 
-        for (int i = 0; i < spawnInfo.availableEnemies; i++)
+        for (int i = 0; i < SpawnPoints.Count; i++)
         {
-            ListOfEnemyElements.Add(spawnInfo.enemyElements[i].Name, spawnInfo.enemyElements[i]);
+            SpawnPoints[i].enemyElements = gameInfo.enemyElements;
+            SpawnPoints[i].LevelDifficulty = gameInfo.LevelDifficulty;
         }
-
 
         StartCoroutine(StartGameDelay());
-    }
-
-    public float reachMaxEnemiesTimer = 2;
-
-    public void Update()
-    {
-        if (reachMaxEnemiesTimer > 0)
-        {
-            reachMaxEnemiesTimer -= Time.deltaTime;
-            if (reachMaxEnemiesTimer <= 0)
-            {
-                Game.NumberOfEnemies--;
-                reachMaxEnemiesTimer = 2;
-                if (Game.NumberOfEnemies <= 0)
-                {
-                    Game.NumberOfEnemies = 0;
-                }
-            }
-        }
     }
 
     protected override IEnumerator StartGameDelay()
@@ -79,7 +57,7 @@ public class StoryMode : BaseGameMode
 
     public override IEnumerator Spawn()
     {
-        var startingTotalEnemies = spawnInfo.TotalEnemies;
+        var startingTotalEnemies = gameInfo.TotalEnemies;
 
         if (GameController.CurrentGameState == GameController.GameState.START)
         {
@@ -97,88 +75,45 @@ public class StoryMode : BaseGameMode
 
         Game.UseSlowMo = true;
 
-        availableEnemie = spawnInfo.enemyElements.GetRange(0, spawnInfo.availableEnemies);
-
-        for (int enemyIndex = 0; enemyIndex <= spawnInfo.TotalEnemies; enemyIndex++)
+        while (gameInfo.CurrentTotalEnemies > 0)
         {
-            if (gameInfo.pause)
+            while (gameInfo.pause)
             {
-                yield return new WaitUntil(() => !gameInfo.pause);
+                yield return shortWait;
             }
 
-            while (Game.NumberOfEnemies >= MaxNumberOfEnemies)
-            {
-                yield return new WaitForSeconds(.5f);
-            }
+            gameInfo.CurrentTotalEnemies--;
+       
+            var random = Random.Range(0, SpawnPoints.Count);
 
-            var random = Random.Range(0, 100); // draw a number between 0 and 99
-            int lowLim;    // lowLim and hiLim are automatically set for each enemy
-            int hiLim = 0;
-            for (int l_enemy = 0; l_enemy < availableEnemie.Count; l_enemy++)
-            {
-                lowLim = hiLim; // set low limit...
-                hiLim += availableEnemie[l_enemy].presentage; // and high limit
-                if (random >= lowLim && random < hiLim)
-                { // instantiate it!
-                    Debug.Log(l_enemy + "=" + lowLim + ":" + random + ":" + hiLim);
-                    enemyElement = availableEnemie[l_enemy];
-                    break;
-                }
-            }
-
-
-            if (enemyElement != null)
-            {
-                if (enemyElement.gameObjectType == PoolGameObjectType.Enemy1)
-                {
-                    for (int i = 0; i < 4; i++)
-                    {
-                        if (enemyIndex + 1 < spawnInfo.TotalEnemies)
-                        {
-                            enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
-                            Enemies.Add(enemGO);
-                            enemyIndex++;
-                            yield return new WaitForSeconds(.5f);
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-                }
-                else
-                {
-                    enemGO = spawnEnemies.SpawnEnemyElement(enemyElement, gameInfo.LevelDifficulty);
-                    Enemies.Add(enemGO);
-                }
-                Game.NumberOfEnemies++;
-            }
+            enemGO = SpawnPoints[random].SpawnEnemyElement();
+            Enemies.Add(enemGO);
 
             yield return CooldownTimer;
             CooldownTimer = new WaitForSeconds(cooldown);
+        }
+
+        if (Enemies.Count > 0)
+        {
+            yield return new WaitUntil(() => Enemies.Count <= 0);
         }
 
         yield return shortWait;
 
         if (playerShip.CurrentHealth > 0)
         {
-            if (Enemies.Count > 0)
-            {
-                yield return new WaitUntil(() => Enemies.Count <= 0);
-            }
-
+            
             if (level_SO.HasBoss)
             {
-                GuiManager.PlayTrasmition(null, true);
+                GuiManager.Instance.BossWarning();
 
                 yield return longWait;
 
-                Debug.Log("Boss Battle");
                 if (!gameInfo.BossBattleInitiated)
                 {
                     gameInfo.BossBattleInitiated = true;
 
-                    currentBoss = SpawnEnemies.SpawnBoss(level_SO.BossPrefab, gameInfo.LevelDifficulty);
+                    currentBoss = SpawnBoss(level_SO.BossPrefab, gameInfo.LevelDifficulty);
 
                     Enemies.Add(currentBoss.gameObject);
                 }
@@ -201,14 +136,7 @@ public class StoryMode : BaseGameMode
 
     }
 
-    public void ChooseRandomEnemyToSpawn()
-    {
-        if (availableEnemie.Count > 0)
-        {
-            int randEnemyIndex = UnityEngine.Random.Range(0, availableEnemie.Count);
-            enemyElement = availableEnemie[randEnemyIndex];
-        }
-    }
+
 }
 
 

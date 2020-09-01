@@ -10,36 +10,32 @@ public class TransmitionWidget : MonoBehaviour
     public Animator BossStageWarning;
     public string[] transmitions;
 
-   public AudioClip TransmitionSFX;
+    public AudioClip TransmitionSFX;
     public AudioSource audioSource;
 
 
 
-    public void RecieveTransmition(string[] transmitions,bool boss = false)
+    public void RecieveTransmition(string[] transmitions)
     {
         TransmitionText.text = "Transmition Incoming";
 
         this.transmitions = transmitions;
         if (IncomingTransmition == false)
         {
-            if (boss)
-            {
-                if(!Game.IsGameOver)
-                    StartCoroutine(WarningBossIncomingEvent());
-            }
-            else {
-                audioSource.PlayOneShot(TransmitionSFX);
-                if(!Game.IsGameOver)
-                    StartCoroutine(TranmisionEvent());
-            }
+            audioSource.PlayOneShot(TransmitionSFX);
+            if (!Game.IsGameOver)
+                StartCoroutine(TranmisionEvent());
         }
     }
 
+    public void BossWarning()
+    {
+        if (!Game.IsGameOver)
+            StartCoroutine(WarningBossIncomingEvent());
+    }
 
     private IEnumerator WarningBossIncomingEvent()
     {
-      
-
         AnimationClip[] animatorClipInfo = BossStageWarning.runtimeAnimatorController.animationClips;
         float length = animatorClipInfo[0].length;
         WaitForSeconds delay = new WaitForSeconds(length);

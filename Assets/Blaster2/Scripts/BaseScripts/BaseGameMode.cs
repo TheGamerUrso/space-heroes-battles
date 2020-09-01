@@ -5,40 +5,34 @@ using System.Linq;
 using UnityEngine;
 
 [Serializable]
-public class SpawnPoint
+public class EnemyElement
 {
     public string Name;
-    public bool used;
-    public GameObject spawnPoint;
+    public PoolGameObjectType gameObjectType;
 }
 
 [Serializable]
-public struct GameInfo
+public class GameInfo
 {
     public bool pause;
     public bool BossBattleInitiated;
     public int waves;
     public int LevelDifficulty;
 
-    public void Reset()
+    public int TotalEnemies;
+    public int CurrentTotalEnemies;
+    public int availableEnemies;
+
+    public List<EnemyElement> enemyElements;
+
+    public GameInfo(List<EnemyElement> enemyElements)
     {
         pause = false;
         BossBattleInitiated = false;
+        this.enemyElements = enemyElements;
     }
 }
 
-[Serializable]
-public struct SpawnInfo
-{
-    public int TotalEnemies;
-    public int availableEnemies;
-    public List<EnemyElement> enemyElements;
-    public int enemyIndexTrack;
-    public void Reset()
-    {
-        enemyElements.Clear();
-    }
-}
 
 public class BaseGameMode : MonoSingleton<BaseGameMode>
 {
@@ -53,15 +47,11 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected PlayerData playerData;
 
     public GameInfo gameInfo;
-    public SpawnInfo spawnInfo;
 
     [SerializeField] protected float cooldown = 1f;
     protected float delay = 0.5f;
 
     protected List<GameObject> Enemies = new List<GameObject>();
-    protected List<EnemyElement> availableEnemie = new List<EnemyElement>();
-    protected List<EnemyElement> tempList = new List<EnemyElement>();
-    protected Dictionary<string, EnemyElement> ListOfEnemyElements = new Dictionary<string, EnemyElement>();
 
     protected WaitForSeconds shortDelay;
     protected WaitForSeconds CooldownTimer;
@@ -70,8 +60,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     protected WaitForSeconds longWait = new WaitForSeconds(2);
     protected WaitForSeconds RewardWait = new WaitForSeconds(5);
 
-    [SerializeField] protected List<SpawnPoint> SpawnPoints = new List<SpawnPoint>();
-    protected SpawnEnemies spawnEnemies;
+    [SerializeField] protected List<EnemySpawner> SpawnPoints = new List<EnemySpawner>();
 
     public int EnemySpawnedInTotal { get; set; }
 
@@ -96,9 +85,7 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
         Events.EnemyDied += EnemyDiedCallback;
         Events.BossDied += BossDiedCallback;
         Events.EnemyGotHit += EnemyGotHitCallback;
-        Events.BossHit += BossEnemyHitCallback;;
-
-        spawnEnemies = new SpawnEnemies(SpawnPoints);
+        Events.BossHit += BossEnemyHitCallback;
     }
 
     public void LateUpdate()
@@ -140,7 +127,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     {
         if (baseEnemy.Id.Equals(id))
         {
-            baseEnemy.enemyElement.currentNumberInScene--;
             Enemies.Remove(baseEnemy.gameObject);
             Game.EnemyEscaped++;
         }
@@ -174,8 +160,6 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
     {
         if (baseEnemy.Id.Equals(baseEnemy.Id))
         {
-            baseEnemy.enemyElement.currentNumberInScene--;
-
             Enemies.Remove(baseEnemy.gameObject);
 
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
@@ -221,5 +205,18 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.KILL, 1);
             GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SCORE, score);
         }
+    }
+
+    public static BossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
+    {
+        AudioManager.Instance.PlayMusicById("Boss", true);
+        GameObject currentBoss = GameObject.Instantiate(BossPrefab);
+        currentBoss.name = BossPrefab.name;
+
+        BossEnemy enemy = currentBoss.GetComponentInChildren<BossEnemy>();
+        enemy.Id = currentBoss.name;
+        enemy.SetStats(LevelDifficulty);
+
+        return enemy;
     }
 }

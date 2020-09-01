@@ -116,11 +116,11 @@ public class GameManager : MonoSingleton<GameManager>
         return PersistantData.GetLevels()[(int)level - (int)LevelEnum.Level0];
     }
 
-    public void SetMission(Level level)
+    public void SetMission(Level level, bool showStory = true)
     {
         currentLevelSelected = level;
 
-        if (level.mission.ID > 0)
+        if (level.mission.ID > 0 && showStory)
         {
             StoryController.Instance.ShowStory(level);
         }
@@ -246,7 +246,7 @@ public class GameManager : MonoSingleton<GameManager>
 
         Level nextLevel = PersistantData.GetLevels()[nextLevelID];
 
-        GameManager.Instance.SetMission(nextLevel);
+        GameManager.Instance.SetMission(nextLevel,false);
         GameManager.Instance.LoadScene((LevelEnum)nextLevel.mission.ID);
     }
     [ContextMenu("Load Menu")]
@@ -456,7 +456,7 @@ public class GameManager : MonoSingleton<GameManager>
             playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
         }
 
-        if (!levelObjectiveDatas[4].completed && playerData.PlayedGame && !playerData.GotHitInGame)
+        if (!levelObjectiveDatas[4].completed && !playerData.GotHitInGame)
         {
             levelObjectiveDatas[4].completed = true;
             playerData.EarnXP(80 * playerData.GetCurrentPlayerShipData().level);

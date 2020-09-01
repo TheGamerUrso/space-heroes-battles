@@ -10,6 +10,6 @@ public class GameWaveWidget : MonoBehaviour
 
     void Update()
     {
-        WaveText.text = "" + (survivalMode.spawnInfo.TotalEnemies - survivalMode.spawnInfo.enemyIndexTrack);
+        WaveText.text = "" + survivalMode.gameInfo.CurrentTotalEnemies + " / " + survivalMode.gameInfo.TotalEnemies;
     }
 }
