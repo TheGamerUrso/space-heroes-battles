@@ -536,28 +536,30 @@ public class GameManager : MonoSingleton<GameManager>
     {
 
         ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(type);
-
-        if (type == ObjectiveTypeEnum.SPEND)
+        if (objectiveData != null)
         {
-            objectiveData.UpdateProgress(progress);
-        }
-        else
-        {
-            Scene scene = SceneManager.GetActiveScene();
-            Level level = GetMission((LevelEnum)scene.buildIndex);
-            int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
-            if (objectiveData != null)
+            if (type == ObjectiveTypeEnum.SPEND)
             {
-                if (type == ObjectiveTypeEnum.SURVIVE)
-                {
-                    if (objectiveData.requirment.Equals(levelIndex))
-                    {
-                        objectiveData.UpdateProgress(levelIndex);
-                    }
-                    return;
-                }
-
                 objectiveData.UpdateProgress(progress);
+            }
+            else
+            {
+                Scene scene = SceneManager.GetActiveScene();
+                Level level = GetMission((LevelEnum)scene.buildIndex);
+                int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
+                if (objectiveData != null)
+                {
+                    if (type == ObjectiveTypeEnum.SURVIVE)
+                    {
+                        if (objectiveData.requirment.Equals(levelIndex))
+                        {
+                            objectiveData.UpdateProgress(levelIndex);
+                        }
+                        return;
+                    }
+
+                    objectiveData.UpdateProgress(progress);
+                }
             }
         }
     }
