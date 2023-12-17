@@ -164,22 +164,21 @@ public class BaseGameMode : MonoSingleton<BaseGameMode>
 
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
 
-            if (!Game.IsSurvivalMode)
+
+            int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
+            int EnemyLevel = baseEnemy.Level;
+            int levelDiffrence = PlayerLevel / EnemyLevel;
+
+            if (levelDiffrence == 0)
             {
-                int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
-                int EnemyLevel = baseEnemy.Level;
-                int levelDiffrence = PlayerLevel / EnemyLevel;
-
-                if (levelDiffrence == 0)
-                {
-                    levelDiffrence = 1;
-                }
-
-                float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-                playerData.EarnXP(XPEarned);
-
-                GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
+                levelDiffrence = 1;
             }
+
+            float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+            playerData.EarnXP(XPEarned);
+
+            GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
+
 
             int kills = Game.EnemyKilled + 1;
             int score = baseEnemy.EnemyData.EnemyValue;

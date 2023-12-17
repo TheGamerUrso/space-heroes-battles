@@ -11,7 +11,6 @@ public class PersistantData : MonoSingleton<PersistantData>
 
     public PlayerData playerData;
     public GameSettings gameSettings;
-    public MissionCollection missionCollection;
     
     public Sprite GetAchievementIcon(int id)
     {

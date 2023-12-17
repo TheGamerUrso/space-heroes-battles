@@ -12,7 +12,6 @@
     public static bool IsGameOver;
     public static bool IsHightScore = false;
     public static bool IsTransmiting;
-    public static bool IsSurvivalMode;
     public static bool UseSlowMo;
     public static bool SlowMo;
 

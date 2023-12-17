@@ -72,7 +72,6 @@ public class GameManager : MonoSingleton<GameManager>
 
     public string currentLevelLoaded;
     public Sprite[] sprites;
-    private MissionCollection missionCollection;
 
     public float sceneLoadProgress;
 
@@ -342,11 +341,6 @@ public class GameManager : MonoSingleton<GameManager>
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
             Game.IsPaused = false;
         }
-    }
-
-    public void SetSurvivalScore(int ammount)
-    {
-        playerData.SetScore(ammount);
     }
 
     [ContextMenu("Finish Quests")]

@@ -21,8 +21,6 @@ public class SurvivalMode : BaseGameMode
     {
         base.Start();
 
-        Game.IsSurvivalMode = true;
-
         gameInfo.waves = 0;
 
         playerShip = PlayerManager.GetPlayer();

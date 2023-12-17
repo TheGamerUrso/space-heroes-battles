@@ -59,8 +59,6 @@ public class SurvivalGameOverScreen : MonoBehaviour
         }
 
         Game.IsHightScore = false;
-
-        Game.IsSurvivalMode = false;
     }
 
     public void QuitButton()

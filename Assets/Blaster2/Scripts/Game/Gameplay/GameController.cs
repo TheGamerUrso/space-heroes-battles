@@ -211,11 +211,7 @@ public class GameController : MonoSingleton<GameController>
 
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
-        if (Game.IsSurvivalMode)
-        {
-            GameManager.Instance.SetSurvivalScore(Game.Score);
-        }
-
+        playerData.SetScore(Game.Score);
         playerData.Coins += Game.CoinPicked;
 
         AchievementSystem.instance.Report(10, Game.EnemyKilled);

@@ -153,9 +153,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void LoadMainMenu()
     {
-        Game.IsGameOver = true;
-
-        Game.IsSurvivalMode = false;
+        Game.IsGameOver = true; 
 
         GameManager.Instance.LoadMainenu();
 
@@ -175,7 +173,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
         //else if (PauseScreen.IsActive())
         //{
-        //    activeMenuGO = PauseScreen;
+        //    activeMenuGO = PauseScreen;   
         //}
 
         if (activeMenuGO != null)

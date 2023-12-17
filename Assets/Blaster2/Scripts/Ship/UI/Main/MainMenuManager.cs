@@ -24,8 +24,6 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     private PlayerShipData playerShipData;
     private PlayerData playerData;
 
-    [SerializeField] private Mission currentMission;
-
     [SerializeField] private UIScreens[] MainMenuScreens;
 
     private string previousScreen;
@@ -38,41 +36,23 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     }
 
     private void Start()
-    {
+    {      
+        GameManager.Instance.PauseTheGame(false);
+        AudioManager.PlayMusic("Menu");
+        Application.targetFrameRate = 30;
+
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.Name.Equals("Upgrades") || item.Name.Equals("Levels"))
+            if (item.Name.Equals("Upgrades"))
             {
                 item.m_UIElement.gameObject.SetActive(false);
                 Events.OnScreenChanged?.Invoke(item.Name, false);
             }
         }
-        GameManager.Instance.PauseTheGame(false);
-        AudioManager.PlayMusic("Menu");
-        Application.targetFrameRate = 30;
 
         playerData = PersistantData.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
-        Game.IsSurvivalMode = false;
-
-
-        if (PlayerPrefs.HasKey("SurvivalMode"))
-        {
-            if (playerData.SurvivalUnlocked)
-            {
-                int announceModUnlocked = PlayerPrefs.GetInt("SurvivalMode");
-                if (announceModUnlocked == 0)
-                {
-                    PlayerPrefs.SetInt("SurvivalMode", 1);
-
-                    Notification notification = new Notification();
-                    notification.Description = "Survival Mode Unlocked";
-
-                    NotificationSystem.Instance.Add(notification);
-                }
-            }
-        }
 
         shipSelect.SetShipTexture(playerData.CurrrentSelectedShip);
     }
@@ -174,7 +154,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
                     item.m_UIElement.Show();
                     Events.OnScreenChanged?.Invoke(item.Name, true);
-                    if (IsScrene(previousScreen, "Levels") || IsScrene(previousScreen, "Upgrades"))
+                    if (IsScrene(previousScreen, "Upgrades"))
                     {
                         previousScreen = "Quest";
                     }
