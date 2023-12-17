@@ -44,7 +44,6 @@ public class PlayerData
     public int ControlScene;
     [Range(0, 20)]
     public int MaxLevel;
-    public Dictionary<string, LevelObjectiveData[]> ListOfLevelChallenges = new Dictionary<string, LevelObjectiveData[]>();
     public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
@@ -256,14 +255,5 @@ public class PlayerData
         PowerPackCollected = 0;
     }
 
-    public Dictionary<string, LevelObjectiveData[]> GetListOfObjectives()
-    {
-        return ListOfLevelChallenges;
-    }
-
-    public void SetListOfObjectives(Dictionary<string, LevelObjectiveData[]> newList)
-    {
-        ListOfLevelChallenges = newList;
-    }
 }
 

@@ -14,10 +14,7 @@ public class WinScreen : MonoBehaviour
 
     [Header("Win Widget Config")]
     public LevelObjectivesElement[] levelObjectives;
-    private LevelObjectiveData[] levelObjectiveDatas;
 
-
-    public GameObject VideoRewardAd;
     public bool skip;
     private string scoreText;
 
@@ -32,13 +29,6 @@ public class WinScreen : MonoBehaviour
     {
         Scene scene = SceneManager.GetActiveScene();
         levelName = ((LevelEnum)scene.buildIndex).ToString();
-
-        levelObjectiveDatas = PersistantData.GetLevelObjectives(levelName);
-
-        if (levelName.Equals("Level0"))
-        {
-            return;
-        }
 
         StartCoroutine(ShowGameResults());
     }

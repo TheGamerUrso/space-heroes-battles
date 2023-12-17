@@ -39,36 +39,4 @@ public static class JsonSystem
            Debug.LogError("Can't read File" + e.Message);
         }
     }
-
-    public static LevelObjectiveCollection LoadLevelObjectiveData()
-    {
-        var jsonTextFile = Resources.Load<TextAsset>("Data/LevelObjectives");
-        try
-        {
-            return JsonUtility.FromJson<LevelObjectiveCollection>(jsonTextFile.text);
-        }
-        catch (ArgumentException e)
-        {
-            Debug.LogError("Can't read File" + e.Message);
-        }
-        return new LevelObjectiveCollection();
-    }
-
-    public static void SaveLevelObjectiveData(LevelObjective LevelObjective)
-    {
-        LevelObjectivePath = Application.dataPath + "/Resources/Data/LevelObjectives.json";
-        try
-        {
-            using (StreamWriter stream = new StreamWriter(LevelObjectivePath))
-            {
-                string json = JsonUtility.ToJson(LevelObjective);
-                stream.Write(json);
-            }
-        }
-        catch (ArgumentException e)
-        {
-            Debug.LogError("Can't read File" + e.Message);
-        }
-    }
-
 }
