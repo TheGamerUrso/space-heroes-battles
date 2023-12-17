@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using UnityEngine.UI;
-using EasyMobile;
 using UnityEngine.Analytics;
 
 [Serializable]
@@ -72,7 +71,6 @@ public class GameManager : MonoSingleton<GameManager>
     #endregion
 
     public string currentLevelLoaded;
-    private Level currentLevelSelected;
     public Sprite[] sprites;
     private MissionCollection missionCollection;
 
@@ -86,45 +84,6 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    public Level GetCurrentLevelSelected()
-    {
-        if (currentLevelSelected == null)
-        {
-            currentLevelSelected = PersistantData.GetLevels()[1];
-        }
-        return currentLevelSelected;
-    }
-
-    public string GetStory(int missionIndex)
-    {
-        currentLevelSelected = PersistantData.GetMission(missionIndex - 1);
-        return currentLevelSelected.mission.Description;
-    }
-
-    public MissionCollection GetMissions()
-    {
-        return missionCollection;
-    }
-
-    public Level GetCurrentMission()
-    {
-        return currentLevelSelected;
-    }
-
-    public Level GetMission(LevelEnum level)
-    {
-        return PersistantData.GetLevels()[(int)level - (int)LevelEnum.Level0];
-    }
-
-    public void SetMission(Level level, bool showStory = true)
-    {
-        currentLevelSelected = level;
-
-        if (level.mission.ID > 0 && showStory)
-        {
-            StoryController.Instance.ShowStory(level);
-        }
-    }
 
     public PlayerShipElement[] ListOfPlayerShips()
     {
@@ -149,9 +108,6 @@ public class GameManager : MonoSingleton<GameManager>
     {
         base.Awake();
 
-        if (!RuntimeManager.IsInitialized())
-            RuntimeManager.Init();
-
         DontDestroyOnLoad(gameObject);
 
         _instancedSystemPrefabs = new List<GameObject>();
@@ -166,8 +122,6 @@ public class GameManager : MonoSingleton<GameManager>
         PersistantData.LoadData();
 
         PlayerManager pm = new PlayerManager(this, this);
-
-        AdvertismentManager.Initialize();
 
         new AchievementSystem(PersistantData.Instance.Achievements.ListOfAchievelemtnts);
 
@@ -201,15 +155,9 @@ public class GameManager : MonoSingleton<GameManager>
         playerData = PersistantData.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        missionCollection = PersistantData.GetMissionCollection();
-
         if (SceneManager.GetActiveScene().buildIndex == (int)LevelEnum.boot)
         {
             LoadScene(LevelEnum.Intro, false);
-        }
-        if (GPServices.IsInitialized())
-        {
-            GPServices.LoadLocalUserScore();
         }
     }
 
@@ -233,32 +181,10 @@ public class GameManager : MonoSingleton<GameManager>
     {
         StartCoroutine(ShowLoadingScreen(level, showLoadingScreen));
     }
-    [ContextMenu("Next Level")]
-    public void NextLevel()
-    {
-        Scene scene = SceneManager.GetActiveScene();
-        int nextLevelID = (scene.buildIndex + 1) - (int)LevelEnum.Level0;
 
-        if (nextLevelID > 9)
-        {
-            nextLevelID = 9;
-        }
-
-        Level nextLevel = PersistantData.GetLevels()[nextLevelID];
-
-        GameManager.Instance.SetMission(nextLevel,false);
-        GameManager.Instance.LoadScene((LevelEnum)nextLevel.mission.ID);
-    }
     [ContextMenu("Load Menu")]
     public void LoadMainenu()
     {
-        Game.ShowAdCounter--;
-        if (Game.ShowAdCounter <= 0)
-        {
-            Game.ShowAdCounter = 5;
-            AdvertismentManager.ShowAdvertisment();
-        }
-
         LoadScene(LevelEnum.Main);
     }
 
@@ -420,106 +346,7 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void SetSurvivalScore(int ammount)
     {
-        playerData.SetScore(0, ammount);
-        GPServices.ReportLeaderboards(ammount);
-    }
-
-    public void PlayerChallengesCheck()
-    {
-        Scene scene = SceneManager.GetActiveScene();
-        Level level = GetMission((LevelEnum)scene.buildIndex);
-
-        var killed = (Game.EnemySpawnInTotal - Game.EnemyKilled) / Game.EnemySpawnInTotal;
-
-        var levelObjectiveDatas = level.objectiveListData;
-
-        if (levelObjectiveDatas[0].completed == false)
-        {
-            levelObjectiveDatas[0].completed = true;
-            playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        if (!levelObjectiveDatas[1].completed && killed < .8f)
-        {
-            levelObjectiveDatas[1].completed = true;
-            playerData.EarnXP(20 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        if (!levelObjectiveDatas[2].completed && killed < .4f)
-        {
-            levelObjectiveDatas[2].completed = true;
-            playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
-        }
-        if (!levelObjectiveDatas[3].completed && killed < .2f)
-        {
-            levelObjectiveDatas[3].completed = true;
-            playerData.EarnXP(40 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        if (!levelObjectiveDatas[4].completed && !playerData.GotHitInGame)
-        {
-            levelObjectiveDatas[4].completed = true;
-            playerData.EarnXP(80 * playerData.GetCurrentPlayerShipData().level);
-        }
-
-        if (levelObjectiveDatas.Length > 5)
-        {
-            if (!levelObjectiveDatas[5].completed)
-            {
-                levelObjectiveDatas[5].completed = true;
-                playerData.EarnXP(100 * playerData.GetCurrentPlayerShipData().level);
-            }
-        }
-
-
-        int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
-        int AchievementIndex = level.mission.ID - (int)LevelEnum.Level1;
-
-        playerData.LevelUnlocked = levelIndex + 1;
-
-        AchievementSystem.instance.Report(AchievementIndex, 1);
-
-        if (playerData.LevelUnlocked > 9)
-        {
-            playerData.SetSurvivalUnlockedLock(true);
-        }
-
-        Dictionary<string, object> analyticDict = new Dictionary<string, object>()
-       {
-                { levelObjectiveDatas[0].ID.ToString() , levelObjectiveDatas[0].completed },
-                { levelObjectiveDatas[1].ID.ToString() , levelObjectiveDatas[1].completed },
-                { levelObjectiveDatas[2].ID.ToString() , levelObjectiveDatas[2].completed },
-                { levelObjectiveDatas[3].ID.ToString() , levelObjectiveDatas[3].completed },
-                { levelObjectiveDatas[4].ID.ToString() , levelObjectiveDatas[4].completed },
-       };
-
-        if (levelObjectiveDatas.Length > 5)
-        {
-            analyticDict = new Dictionary<string, object>()
-            {
-                { levelObjectiveDatas[0].ID.ToString() , levelObjectiveDatas[0].completed },
-                { levelObjectiveDatas[1].ID.ToString() , levelObjectiveDatas[1].completed },
-                { levelObjectiveDatas[2].ID.ToString() , levelObjectiveDatas[2].completed },
-                { levelObjectiveDatas[3].ID.ToString() , levelObjectiveDatas[3].completed },
-                { levelObjectiveDatas[4].ID.ToString() , levelObjectiveDatas[4].completed },
-                { levelObjectiveDatas[5].ID.ToString() , levelObjectiveDatas[5].completed }
-            };
-        }
-        else
-        {
-            analyticDict = new Dictionary<string, object>()
-            {
-                { levelObjectiveDatas[0].ID.ToString() , levelObjectiveDatas[0].completed },
-                { levelObjectiveDatas[1].ID.ToString() , levelObjectiveDatas[1].completed },
-                { levelObjectiveDatas[2].ID.ToString() , levelObjectiveDatas[2].completed },
-                { levelObjectiveDatas[3].ID.ToString() , levelObjectiveDatas[3].completed },
-                { levelObjectiveDatas[4].ID.ToString() , levelObjectiveDatas[4].completed }
-            };
-        }
-
-        AnalyticsResult analyticsResults = Analytics.CustomEvent(" Player Died " + level.ID, analyticDict);
-        Debug.Log("analyticsResults:" + analyticsResults);
-
+        playerData.SetScore(ammount);
     }
 
     [ContextMenu("Finish Quests")]
@@ -545,19 +372,12 @@ public class GameManager : MonoSingleton<GameManager>
             else
             {
                 Scene scene = SceneManager.GetActiveScene();
-                Level level = GetMission((LevelEnum)scene.buildIndex);
-                int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
                 if (objectiveData != null)
                 {
                     if (type == ObjectiveTypeEnum.SURVIVE)
                     {
-                        if (objectiveData.requirment.Equals(levelIndex))
-                        {
-                            objectiveData.UpdateProgress(levelIndex);
-                        }
                         return;
                     }
-
                     objectiveData.UpdateProgress(progress);
                 }
             }
@@ -566,16 +386,12 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void UpdatePlayerStatistics()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        Level level = GetMission((LevelEnum)scene.buildIndex);
-        int levelIndex = level.mission.ID - (int)LevelEnum.Level0;
-
-        playerData.SetScore(levelIndex, Game.Score);
+        playerData.SetScore(Game.Score);
         playerData.PlayedGame = true;
         playerData.Coins += Game.CoinPicked;
         playerData.Kills += Game.EnemyKilled;
 
-        PlayerQuestProgress(ObjectiveTypeEnum.SURVIVE, levelIndex);
+        PlayerQuestProgress(ObjectiveTypeEnum.SURVIVE, 0);
 
         if (!Game.PlayerGotHit)
         {

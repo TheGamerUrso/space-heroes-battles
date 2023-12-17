@@ -4,7 +4,7 @@ using UnityEngine;
 public class HighscoreScreen : MonoBehaviour
 {
     private PlayerData playerData;
-    public TextMeshProUGUI[] HighScore;
+    public TextMeshProUGUI HighScore;
 
     private void Start()
     {
@@ -15,16 +15,11 @@ public class HighscoreScreen : MonoBehaviour
     {
         PlayerData playerData = PersistantData.GetPlayerData();
 
-        MissionCollection missionCollection = PersistantData.GetMissionCollection();
 
-        int numberOfLevels = missionCollection.Missions.Length;
-
-        for (int i = 0; i < HighScore.Length; i++)
-        {
-            float highscore = playerData.GetHighScore(i + 1);
+            float highscore = playerData.GetHighScore();
             string scoreText = string.Format("{00:00000000}", highscore);
-            HighScore[i].text = string.Format("Level {0} : {1}", missionCollection.Missions[i+1].ID, scoreText);
-        }
+            HighScore.text = string.Format("{0}", scoreText);
+        
 
     }
 }

@@ -17,11 +17,8 @@ public class StoryMode : BaseGameMode
     {
         base.Start();
 
-        MissionCollection missionCollection = PersistantData.GetMissionCollection();
-
         Scene scene = SceneManager.GetActiveScene();
         int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
-        Mission mission = missionCollection.GetMission(levelMission);
         AudioManager.PlayMusic(((LevelEnum)scene.buildIndex).ToString());
 
         playerShip = PlayerManager.GetPlayer();

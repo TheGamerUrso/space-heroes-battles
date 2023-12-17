@@ -1,5 +1,4 @@
-﻿using EasyMobile;
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,16 +21,16 @@ public class Achievement
         switch (ID)
         {        
             case 10:
-                GPServices.ReportAchievementProgress(EM_GameServicesConstants.Achievement_Pieceofcake, progress);
+           //Achievement_Pieceofcake
                 break;
             case 11:
-                GPServices.ReportAchievementProgress(EM_GameServicesConstants.Achievement_Destroyer, progress);
+                //Achievement_Destroyer
                 break;
             case 12:
-                GPServices.ReportAchievementProgress(EM_GameServicesConstants.Achievement_HeroesAssemble, progress);
+          //Achievement_HeroesAssemble
                 break;
             case 13:
-                GPServices.ReportAchievementProgress(EM_GameServicesConstants.Achievement_MaxPower, progress);
+                //Achievement_MaxPower
                 break;
         }
     }
@@ -44,43 +43,43 @@ public class Achievement
             switch (ID)
             {
                 case 0:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Prologue);
+         //Achievement_Prologue
                     break;
                 case 1:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level2);
+           //Achievement_Level2
                     break;
                 case 2:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level3);
+              //Achievement_Level3
                     break;
                 case 3:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level4);
+                 //Achievement_Level4
                     break;
                 case 4:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level5);
+               //Achievement_Level5
                     break;
                 case 5:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level6);
+                  //Achievement_Level6
                     break;
                 case 7:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level7);
+                //Achievement_Level7
                     break;
                 case 8:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level8);
+                //Achievement_Level8
                     break;
                 case 9:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Level9);
+                   //Achievement_Level9
                     break;
                 case 10:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Pieceofcake);
+             //Achievement_Pieceofcake
                     break;
                 case 11:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_Destroyer);
+                   //Achievement_Destroyer
                     break;
                 case 12:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_HeroesAssemble);
+                    //Achievement_HeroesAssemble
                     break;
                 case 13:
-                    GPServices.UnlockAchievement(EM_GameServicesConstants.Achievement_MaxPower);
+                    //Achievement_MaxPower
                     break;
                 default:
                     break;
@@ -92,9 +91,6 @@ public class Achievement
             notification.icon = PersistantData.Instance.GetAchievementIcon(ID);
             notification.Description = Description;
             NotificationSystem.Instance.Add(notification);
-
-            AnalyticsResult analyticsResults = Analytics.CustomEvent(" Achievement Unlocked" + Name);
-            Debug.Log("analyticsResults:" + analyticsResults);
         }
     }
 }

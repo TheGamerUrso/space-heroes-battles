@@ -9,7 +9,7 @@ public class OptionScreen : GooglePlayOptions
     public override void ExitAndSave()
     {
         base.ExitAndSave();
-        ScreenManager.Instance.Close();
+        MainMenuManager.Instance.Close();
     }
 
 }

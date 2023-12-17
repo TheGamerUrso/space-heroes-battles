@@ -1,5 +1,4 @@
-﻿using EasyMobile;
-using System.Collections;
+﻿using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -9,19 +8,12 @@ public class SurvivalGameOverScreen : MonoBehaviour
     [SerializeField] private TextMeshProUGUI m_Text;
 
     public GameObject highscore;
-    private Level level;
+
     private bool skip;
     private int retried = 0;
-    private void OnEnable()
-    {
-        Advertising.InterstitialAdCompleted += InterstitialAdCompletedHandler;
-    }
-
+  
     public void ShowResults()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        level = GameManager.Instance.GetMission((LevelEnum)scene.buildIndex);
-
         float score = Game.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
@@ -78,37 +70,6 @@ public class SurvivalGameOverScreen : MonoBehaviour
 
     public void ReplayButton()
     {
-        if (PlayerPrefs.HasKey("SurvivalAd"))
-        {
-            retried = PlayerPrefs.GetInt("SurvivalAd");
-            retried++;
-        }
-
-        if (retried >= 5)
-        {
-            AdvertismentManager.ShowAdvertisment();
-        }
-        else
-        {
-            GameManager.Instance.ResetLevel();
-        }
-
-    
+         GameManager.Instance.ResetLevel();
     }
-
-    // The event handler
-    void InterstitialAdCompletedHandler(InterstitialAdNetwork network, AdLocation location)
-    {
-        Debug.Log("Interstitial ad has been closed.");
-        GameManager.Instance.ResetLevel();
-
-        PlayerPrefs.SetInt("SurvivalAd", 0);
-    }
-
-    // Unsubscribe
-    void OnDisable()
-    {
-        Advertising.InterstitialAdCompleted -= InterstitialAdCompletedHandler;
-    }
-
 }

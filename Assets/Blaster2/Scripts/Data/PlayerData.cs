@@ -6,13 +6,8 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    [Header("Surval Mode")]
-    public long SurvivalScore;
-    public long SurvivalHighScore;
-
-    [Header("Story Mode")]
-    public float[] Score;
-    public float[] HighScore;
+    public float Score;
+    public float HighScore;
 
 
     [Header("Progression")]
@@ -60,9 +55,8 @@ public class PlayerData
 
     public PlayerData(Player_SO[] players)
     {
-        LevelUnlocked = 1;
-        Score = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-        HighScore = new float[9] { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+        Score = 0;
+        HighScore = 0;
         Coins = 0;
         Kills = 0;
         PowerUpLevel = 0;
@@ -93,7 +87,7 @@ public class PlayerData
     public void RemoveCoin(int ammount)
     {
         Coins -= ammount;
-        GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SPEND, ammount);
+       // GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SPEND, ammount);
         Events.OnCoinValueChanged?.Invoke(Coins);
     }
 
@@ -144,37 +138,21 @@ public class PlayerData
         SurvivalUnlocked = value;
     }
 
-    public void SetScore(int level, float score)
+    public void SetScore(float score)
     {
-        if (level < Score.Length && level >= 0)
-        {
-            if (score > Score[level])
+      if (score > Score)
             {
-                HighScore[level] = score;
-                if (level == 0)
-                {
-                    Game.IsHightScore = true;
-                }
-
+                HighScore = score;
             }
-            Score[level] = score;
-        }
+            Score = score;
     }
-    public float GetHighScore(int level)
+    public float GetHighScore()
     {
-        if (level < HighScore.Length && level >= 0)
-        {
-            return HighScore[level];
-        }
-        return -1;
+        return HighScore;
     }
-    public float GetScore(int level)
+    public float GetScore()
     {
-        if (level < Score.Length && level >= 0)
-        {
-            return Score[level];
-        }
-        return -1;
+       return Score;
     }
 
     public ObjectiveData GetOnGoingObjectiveById(ObjectiveTypeEnum objectiveType)

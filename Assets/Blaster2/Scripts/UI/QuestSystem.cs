@@ -198,7 +198,8 @@ public class QuestSystem : MonoSingleton<QuestSystem>
     }
 
     public void PlayButton()
-    {
-        ScreenManager.Instance.Open("Levels");
+    {       
+        LevelEnum[] levels ={LevelEnum.Level0,LevelEnum.Level1,LevelEnum.Level2,LevelEnum.Level3,LevelEnum.Level4,LevelEnum.Level5,LevelEnum.Level6,LevelEnum.Level7,LevelEnum.Level8,LevelEnum.Level9};
+        GameManager.Instance.LoadScene(levels[UnityEngine.Random.Range(0,levels.Length)]);
     }
 }

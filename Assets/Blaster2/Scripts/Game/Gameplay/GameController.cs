@@ -176,27 +176,10 @@ public class GameController : MonoSingleton<GameController>
     public void Win()
     {
         SetGameState(GameState.WIN);
-
-        Scene scene = SceneManager.GetActiveScene();
-        Level level = GameManager.Instance.GetMission((LevelEnum)scene.buildIndex);
-
-
-        AnalyticsResult analyticsResults = Analytics.CustomEvent(" Complete Level "
-            + level.ID);
-
-        Debug.Log("analyticsResults:" + analyticsResults);
     }
 
     public void GameOver()
     {
-        Scene scene = SceneManager.GetActiveScene();
-        Level level = GameManager.Instance.GetMission((LevelEnum)scene.buildIndex);
-
-        AnalyticsResult analyticsResults = Analytics.CustomEvent(" Player Died "
-            + level.ID);
-
-        Debug.Log("analyticsResults:" + analyticsResults);
-
         SetGameState(GameState.GAMEOVER);
     }
 
@@ -254,7 +237,7 @@ public class GameController : MonoSingleton<GameController>
         Time.timeScale = 1.0f;
 
         playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-        GameManager.Instance.PlayerChallengesCheck();
+
         GameManager.Instance.UpdatePlayerStatistics();
 
         SaveSystem.SaveGame();

@@ -69,26 +69,12 @@ public class WinScreen : MonoBehaviour
         {
             item.gameObject.SetActive(false);
         }
-
-        for (int i = 0; i < levelObjectiveDatas.Length; i++)
-        {
-            levelObjectives[i].SetLevelObjective(levelObjectiveDatas[i]);
-        }
-
-        for (int i = 0; i < levelObjectiveDatas.Length; i++)
-        {
-            levelObjectives[i].gameObject.SetActive(true);
-            levelObjectives[i].CheckComplete();
-            yield return new WaitForSeconds(.5f);
-        }
-
-        VideoRewardAd.SetActive(true);
     }
 
 
     public void NextLevelButton()
     {
-        GameManager.Instance.NextLevel();
+        GameManager.Instance.LoadMainenu();
     }
 
     public void ReplayButton()

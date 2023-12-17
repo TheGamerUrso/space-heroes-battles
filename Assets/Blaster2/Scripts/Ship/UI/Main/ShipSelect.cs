@@ -113,6 +113,6 @@ public class ShipSelect : MonoSingleton<ShipSelect>
 
     public void DoneSelect()
     {
-        ScreenManager.Instance.Close();
+        MainMenuManager.Instance.Close();
     }
 }
