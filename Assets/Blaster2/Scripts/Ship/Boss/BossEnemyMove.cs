@@ -31,6 +31,7 @@ public class BossEnemyMove : MonoBehaviour
     [SerializeField] private float timer;
     [SerializeField] private float delay = .5f;
     private Vector3 movement;
+    private Vector3 targetPosition;
 
     [SerializeField] private float speed;
     public float Speed { get { return speed; } set { speed = value; } }
@@ -67,6 +68,8 @@ public class BossEnemyMove : MonoBehaviour
     {
         bossEnemy = GetComponent<BossEnemy>();
         animator = GetComponentInChildren<Animator>();
+
+        targetPosition = transform.position;
     }
 
     public virtual void Start()
@@ -78,7 +81,10 @@ public class BossEnemyMove : MonoBehaviour
         StartCoroutine(DelayStart());
     }
 
-    public virtual void Update() { }
+    public virtual void Update() {
+
+        transform.position = Vector3.Lerp(transform.position,targetPosition,speed * Time.deltaTime);
+     }
 
     public virtual void LateUpdate()
     {
@@ -181,10 +187,10 @@ public class BossEnemyMove : MonoBehaviour
         var xVel = Mathf.Cos(angle) * radius + .8f;
         var zVel = Mathf.Sin(angle) * radius + 100;
 
-        Vector3 newPos = transform.position;
+        Vector3 newPos = targetPosition;
         newPos.x = xVel;
         newPos.z = zVel;
-        transform.position = newPos;
+        targetPosition = newPos;
     }
 
 }
