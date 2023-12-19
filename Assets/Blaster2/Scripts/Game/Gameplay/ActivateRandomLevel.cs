@@ -21,7 +21,7 @@ public class ActivateRandomLevel : MonoBehaviour
 
     private Color c;
 
-    SurvivalMode survivalMode;
+    BaseGameMode survivalMode;
     private bool active;
     private bool firstTime = true;
     [SerializeField] private float speed = 0.5f;
@@ -41,7 +41,7 @@ public class ActivateRandomLevel : MonoBehaviour
     private void Awake()
     {
         cameraMain = Camera.main;
-        survivalMode = GameObject.FindObjectOfType<SurvivalMode>();
+        survivalMode = GameController.GetGameMode();
         Events.HyperspaceEnded = ActivateHyperdrive;
         defaultLayer = cameraMain.cullingMask;
 

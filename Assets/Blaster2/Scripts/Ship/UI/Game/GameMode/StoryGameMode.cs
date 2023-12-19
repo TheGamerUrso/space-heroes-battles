@@ -1,16 +1,24 @@
 ﻿using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class StoryMode : BaseGameMode
-{
-    protected override void Awake()
-    {
-        base.Awake();
+public class StoryGameMode : BaseGameMode
+{    
+    GameObject enemGO = null;
 
-        shortDelay = new WaitForSeconds(delay);
-        CooldownTimer = new WaitForSeconds(cooldown);
+    public override void SetGameMode()
+    {
+        base.SetGameMode();
+        gameInfo.LevelDifficulty = level_SO.LevelDifficulty;
+        for (int i = 0; i < SpawnPoints.Count; i++)
+        {
+            SpawnPoints[i].enemyElements = gameInfo.enemyElements;
+            SpawnPoints[i].LevelDifficulty = gameInfo.LevelDifficulty;
+        }
+
+        Scene scene = SceneManager.GetActiveScene();
+        int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
+        AudioManager.PlayMusic(((LevelEnum)scene.buildIndex).ToString());
     }
 
     public override void Start()
@@ -21,39 +29,13 @@ public class StoryMode : BaseGameMode
         int levelMission = scene.buildIndex - (int)LevelEnum.Level1;
         AudioManager.PlayMusic(((LevelEnum)scene.buildIndex).ToString());
 
-        playerShip = PlayerManager.GetPlayer();
-
-        gameInfo.LevelDifficulty = level_SO.LevelDifficulty;
-
-        gameInfo.availableEnemies = level_SO.availableEnemies;
-        gameInfo.TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
-        gameInfo.CurrentTotalEnemies = gameInfo.TotalEnemies;
-
-        Game.EnemySpawnInTotal = gameInfo.TotalEnemies;
-
-        for (int i = 0; i < SpawnPoints.Count; i++)
-        {
-            SpawnPoints[i].enemyElements = gameInfo.enemyElements;
-            SpawnPoints[i].LevelDifficulty = gameInfo.LevelDifficulty;
-        }
-
         StartCoroutine(StartGameDelay());
     }
 
-    protected override IEnumerator StartGameDelay()
-    {
-        yield return CooldownTimer;
-
+    public override IEnumerator UpdateGameMode()
+    {       
         string[] transmitions = { "Enemies Approaching", "Defeat them", "Good Luck" };
         GuiManager.PlayTrasmition(transmitions);
-
-        StartCoroutine(Spawn());
-    }
-
-    GameObject enemGO = null;
-
-    public override IEnumerator Spawn()
-    {
         var startingTotalEnemies = gameInfo.TotalEnemies;
 
         if (GameController.CurrentGameState == GameController.GameState.START)
@@ -79,12 +61,7 @@ public class StoryMode : BaseGameMode
                 yield return shortWait;
             }
 
-            gameInfo.CurrentTotalEnemies--;
-       
-            var random = Random.Range(0, SpawnPoints.Count);
-
-            enemGO = SpawnPoints[random].SpawnEnemyElement();
-            Enemies.Add(enemGO);
+            Spawn();
 
             yield return CooldownTimer;
             CooldownTimer = new WaitForSeconds(cooldown);
@@ -106,14 +83,7 @@ public class StoryMode : BaseGameMode
 
                 yield return longWait;
 
-                if (!gameInfo.BossBattleInitiated)
-                {
-                    gameInfo.BossBattleInitiated = true;
-
-                    currentBoss = SpawnBoss(level_SO.BossPrefab, gameInfo.LevelDifficulty);
-
-                    Enemies.Add(currentBoss.gameObject);
-                }
+                SpawnBoss();
 
                 if (gameInfo.BossBattleInitiated)
                 {
@@ -130,9 +100,28 @@ public class StoryMode : BaseGameMode
                 Game.UseSlowMo = false;
             }
         }
-
     }
 
+    public override void Spawn()
+    {
+        gameInfo.CurrentTotalEnemies--;
+        var random = Random.Range(0, SpawnPoints.Count);
+        enemGO = SpawnPoints[random].SpawnEnemyElement();
+        Enemies.Add(enemGO);
+    }
+
+    public override void SpawnBoss()
+    {
+        if (!gameInfo.BossBattleInitiated)
+        {
+            gameInfo.BossBattleInitiated = true;
+
+            currentBoss = level_SO.BossPrefab;
+            SpawnBoss(currentBoss, gameInfo.LevelDifficulty);
+
+            Enemies.Add(currentBoss.gameObject);
+        }
+    }
 
 }
 

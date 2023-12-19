@@ -6,10 +6,13 @@ using UnityEngine;
 public class GameWaveWidget : MonoBehaviour
 {
     public TextMeshProUGUI WaveText;
-    public SurvivalMode survivalMode;
-
+    public BaseGameMode survivalMode;
+    void Start(){
+       survivalMode = GameController.GetGameMode();
+    }
     void Update()
     {
+        if(survivalMode==null)return;
         WaveText.text = "" + survivalMode.gameInfo.CurrentTotalEnemies + " / " + survivalMode.gameInfo.TotalEnemies;
     }
 }

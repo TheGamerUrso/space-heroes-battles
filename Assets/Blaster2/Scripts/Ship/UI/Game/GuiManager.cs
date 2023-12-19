@@ -45,6 +45,11 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     private void Start()
     {
+        Events.OnScoreValueChanged += UpdateScore;
+        Events.OnGameOver += GameOver;
+        Events.OnWin += Win;
+        Events.OnPauseGame += ShowPauseMenu;
+
         timer = 1;
         var panelPause = Instantiate(UIPrefabs[1], transform, false);
         var panelGameOver = Instantiate(UIPrefabs[2], transform, false);
@@ -60,13 +65,7 @@ public class GuiManager : MonoSingleton<GuiManager>
         WinScreen = panelWin.GetComponent<UIView>();
         PauseScreen = panelPause.GetComponent<UIView>();
 
-
         rewardWidgetPanel = rewardWidget.GetComponent<RewardWidget>();
-
-        Events.OnScoreValueChanged += UpdateScore;
-        Events.OnGameOver += GameOver;
-        Events.OnWin += Win;
-        Events.OnPauseGame += ShowPauseMenu;
 
         UpdateScore(0);
     }
