@@ -6,16 +6,24 @@ public class Enemy : Ship, IDamagable, ITargetable
 {
     public enum EnemyType
     {
-        SimpleEnemy, EnemyWithWeapons
+        SimpleEnemy, EnemyWithWeapons,  Boss1, Boss2, Boss3, Boxer
     }
 
-    [SerializeField] private EnemyType enemyType;
+    public virtual event Action<float, float> OnHealthChanged;
+    public Action OnEnemyAttack;
+    public Action<int, int> OnEnemyHit;
 
-    public event Action<float, float> OnHealthChanged;
+    #region Components
+    [SerializeField] private EnemyType enemyType;
+    protected EnemyMove enemyMove;
+    #endregion
+
 
     public string Id;
     public Enemy_SO EnemyData;
-    public bool IsAlive { get; set; }
+  
+    
+    #region Stats
 
     [Header("STATS")]
     public int Level;
@@ -26,18 +34,31 @@ public class Enemy : Ship, IDamagable, ITargetable
     public float maxHealth;
     public float CurrentHealth { get { return currentHealth; } }
     public float MaxHealth { get { return maxHealth; } }
-
+    #endregion
+    
+    #region Weapons
     [Space(2)]
     [SerializeField] protected WeaponScript[] Weapons;
     [SerializeField] protected float delayAttak = 3;
     protected bool AutoEnableWeapon;
-    protected BoxCollider boxCollider;
     protected bool CanAttack;
     protected int currentWeaponActive;
+    #endregion
+   
+   #region Collision
+    protected BoxCollider boxCollider;
     protected float takeDamageDelay;
-    protected EnemyMove enemyMove;
+    protected int hitIndex;
+    protected int numberOfHits;
+   #endregion
+   
+   #region Health
 
-    public EnemyHealthWidget HealthBar { get; set; }
+    public bool IsAlive { get; set; }
+    public virtual EnemyHealthWidget HealthBar { get; set; }
+   #endregion
+
+    protected PlayerData playerData;
 
     public GameObject target {
         get
@@ -60,43 +81,54 @@ public class Enemy : Ship, IDamagable, ITargetable
     {
         IsAlive = true;
         Game.NumberOfEnemies++;
+        currentWeaponActive = 1;
     }
 
 
     public override void Awake()
     {
-        HasShield = false;
+        OnEnemyHit = OnEnemyHitHandled;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
         enemyMove = GetComponent<EnemyMove>();
     }
 
     public override void Start()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
+    { 
+        HasShield = false;
+
+        playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
-        if (HealthBar != null)
-        {
-            HealthBar.GetComponent<BaseHealthWidget>();
-        }
-
-        if (EnemyData.HealthBarSettings != null)
-        {
-            GameObject initializedHealthWidget = Instantiate(EnemyData.HealthBarSettings.HealthBarPrefab, transform, false);
-            HealthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            HealthBar.Setup(this, false);
-        }
+        SetEnemyHealthUI();
 
         ShieldEffect.SetActive(HasShield);
 
         SetStats(playerShipData.level);
 
         enemyMove.Speed = Speed;
+        
+        currentWeaponActive = 0;
+
+        DisableAllWeapons();
 
         if (enemyType == EnemyType.EnemyWithWeapons)
         {
             StartCoroutine(ActivateWeapons());
+        }
+    }
+
+    public virtual void SetEnemyHealthUI()
+    {
+        if (HealthBar != null)
+        {
+            HealthBar.GetComponent<BaseHealthWidget>();
+        }
+        if (EnemyData.HealthBarSettings != null)
+        {
+            GameObject initializedHealthWidget = Instantiate(EnemyData.HealthBarSettings.HealthBarPrefab, transform, false);
+            HealthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
+            HealthBar.Setup(this, false);
         }
     }
 
@@ -108,7 +140,7 @@ public class Enemy : Ship, IDamagable, ITargetable
         }
     }
 
-    public void Leave()
+    public virtual void Leave()
     {
         Events.EnemyEscaped?.Invoke(Id, this);
     }
@@ -144,13 +176,14 @@ public class Enemy : Ship, IDamagable, ITargetable
             }
 
         }
-
         Hit();
     }
 
     public virtual void Hit()
-    {
+    {  
+        hitIndex++;
         Events.EnemyGotHit?.Invoke(Id, this);
+        OnEnemyHit?.Invoke(hitIndex, numberOfHits);
     }
 
     public virtual void Death()
@@ -185,6 +218,29 @@ public class Enemy : Ship, IDamagable, ITargetable
             var destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(destroyable.MaxHealth / 2);
         }
+    }
+    public void SetFireRate(int weaponIndex = 0, bool all = true)
+    {
+        if (all)
+        {
+            for (int i = 0; i < Weapons.Length; i++)
+            {
+                float newFireRate = Weapons[i].FireRate - .2f;
+
+                Weapons[i].FireRate = newFireRate;
+            }
+        }
+        else
+        {
+            float newFireRate = Weapons[weaponIndex].FireRate - .2f;
+
+            Weapons[weaponIndex].FireRate = newFireRate;
+        }
+    }
+       
+    public virtual void AddDamagablePart(IDamagable part)
+    {
+
     }
 
     public override void SetStats(int level)
@@ -260,7 +316,7 @@ public class Enemy : Ship, IDamagable, ITargetable
     }
 
     //Enemy With Weapon Type Methods
-    IEnumerator ActivateWeapons()
+    public IEnumerator ActivateWeapons()
     {
         yield return new WaitForSeconds(2);
 
@@ -272,5 +328,14 @@ public class Enemy : Ship, IDamagable, ITargetable
         }
 
         EnableColliders(true);
+    }
+
+    public virtual void OnEnemyHitHandled(int hitIndex, int numberOfHits){
+
+    }
+
+    protected virtual void DestroyOwnedProjectiles()
+    {
+
     }
 }
