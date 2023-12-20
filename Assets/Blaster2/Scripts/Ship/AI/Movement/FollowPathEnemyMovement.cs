@@ -63,7 +63,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
                     }
                     else if (!Reset && !PingPong)
                     {
-                        Leave();
+                        ExitLevel();
                     }
                 }
                 else if (currentPointToFollowIndex == 0)

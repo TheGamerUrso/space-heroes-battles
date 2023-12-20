@@ -11,7 +11,7 @@ public class PlaceTurrets : MonoBehaviour
         for (int i = 0; i < Turrents.Length; i++)
         {
             Turret Turret = Turrents[i].GetComponent<Turret>();
-            Turret.Deactivate();
+            Turret.ExitLevel();
         }
     }
     public void DeployTurret()

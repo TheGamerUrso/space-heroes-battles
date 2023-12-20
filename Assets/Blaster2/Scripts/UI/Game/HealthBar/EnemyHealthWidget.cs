@@ -9,59 +9,47 @@ public class EnemyHealthWidget : BaseHealthWidget
     public bool Static;
     public bool AutoHide;
 
-    public override void Awake()
-    {
-        Hide();
-    }
-
-    public override void Setup(IDamagable ship, bool follow = true)
-    {
-        if (Target == null)
-        {
-            MonoBehaviour go = ship as MonoBehaviour;
-            ship.OnHealthChanged += UpdateHealthBar;
-            Target = go.gameObject;
-        }
-    }
+    public override void Awake() => Hide();
 
     protected override void UpdateHealthBar(float currentHealth, float maxHealth)
     {
-        if (Target == null)
-        {
-            return;
-        }
-
+        if (ship == null) return;
         Show();
-
         timer = duration;
-
         base.UpdateHealthBar(currentHealth, maxHealth);
     }
+
+    public override void Setup(IDamagable damagable, bool follow = true)
+    {
+        Setup(damagable);
+        Static = follow;
+    }
+
     public void LateUpdate()
     {
-        if (!Static)
-        {
-            if (Target != null)
-            {
-                HealthBarTransform.transform.position = Camera.main.WorldToScreenPoint(Target.transform.position) + offset;
-            }
-        }
+        if (Static) return;
+        if (ship == null) return;
+        HealthBarTransform.transform.position = Camera.main.WorldToScreenPoint(ship.transform.position) + offset;
     }
 
     public override void Update()
     {
         base.Update();
+        if (!AutoHide) return;
 
-        if (AutoHide)
+
+        if (HealthbarCanvas.activeSelf && timer > 0)
         {
-            if (HealthbarCanvas.activeSelf && timer > 0)
+            timer -= Time.deltaTime;
+            if (timer <= 0)
             {
-                timer -= Time.deltaTime;
-                if (timer <= 0)
-                {
-                    Hide();
-                }
+                Hide();
             }
+        }
+
+        if (Game.IsGameOver)
+        {
+            gameObject.SetActive(false);
         }
     }
 

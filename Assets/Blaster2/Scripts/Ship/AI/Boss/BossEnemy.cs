@@ -5,25 +5,8 @@ using System.Collections.Generic;
 
 public class BossEnemy : Enemy, IDamagable, ITargetable
 {
-    public override event Action<float, float> OnHealthChanged;
     #region Components
     [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
-    #endregion
-
-    #region Health
-    [SerializeField] private EnemyHealthWidget healthbar;
-
-    public override EnemyHealthWidget HealthBar
-    {
-        get
-        {
-            return healthbar;
-        }
-        set
-        {
-            healthbar = value;
-        }
-    }
     #endregion
 
     [SerializeField] protected bool StartBattle;
@@ -36,13 +19,21 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
 
     public override void Start()
     {
-        base.Start();   
-        baseEnemyMovement.Speed = Speed;    
+        base.Start();
+        baseEnemyMovement.Speed = Speed;
     }
-
     public override void SetEnemyHealthUI()
     {
-        healthbar.Setup(this, false);
+        if (HealthBar != null)
+        {
+            HealthBar.GetComponent<BaseHealthWidget>();
+        }
+        if (EnemyData.HealthBarSettings != null)
+        {
+            GameObject initializedHealthWidget = Instantiate(EnemyData.HealthBarSettings.HealthBarPrefab, transform, false);
+            HealthBar = initializedHealthWidget.GetComponent<BaseHealthWidget>();
+            HealthBar.GetComponent<EnemyHealthWidget>().Setup(this, true);
+        }
     }
 
     public override void Update()
@@ -53,15 +44,14 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
             Attack();
         }
     }
-
-    public override void Leave()
+    public override void ExitLevel()
     {
 
     }
 
     public override void TakeDamage(float dmg)
     {
-        if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0)return;
+        if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0) return;
         if (IsAlive == false) return;
 
         ShieldEffect.SetActive(IsProtected());
@@ -78,11 +68,11 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
             }
             else if (HasShield == false)
             {
-                currentHealth -= dmg;
+                CurrentHealth -= dmg;
 
                 OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
-                if (currentHealth < 1)
+                if (CurrentHealth < 1)
                 {
                     Death();
                 }
@@ -208,35 +198,35 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
                       transform.position - (transform.forward * 50)
             };
 
-            for (int i = 0; i < 5; i++)
-            {
-                var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
-                explostion.transform.position = positions[i];
-                explostion.SetActive(true);
-            }
+        for (int i = 0; i < 5; i++)
+        {
+            var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
+            explostion.transform.position = positions[i];
+            explostion.SetActive(true);
+        }
     }
 
     private bool IsProtected()
     {
         int destroyed = 0;
-            if (DestroyableParts.Count > 0)
+        if (DestroyableParts.Count > 0)
         {
             if (destroyed < DestroyableParts.Count)
             {
-                 return true;   
+                return true;
             }
             else
             {
-                   return true;   
+                return true;
             }
 
         }
         else
         {
-            return false;   
+            return false;
         }
     }
-    
+
     public override IEnumerator DelayStart()
     {
         HealthBar.Show();

@@ -49,9 +49,9 @@ public class BaseEnemyMovement : MonoBehaviour
 
     }
 
-    public void Leave()
+    public void ExitLevel()
     {
-        enemy.Leave();
+        enemy.ExitLevel();
         gameObject.SetActive(false);
     }
 
@@ -59,7 +59,7 @@ public class BaseEnemyMovement : MonoBehaviour
     {
         if (transform.position.z < Constants.m_ZMin)
         {
-            Leave();
+            ExitLevel();
         }
     }
     public virtual void EnableMovement()

@@ -80,7 +80,6 @@ GameObject:
   - component: {fileID: 4027941564653448092}
   - component: {fileID: 2225013079835527159}
   - component: {fileID: 1435941801030838864}
-  - component: {fileID: 4685268796591568825}
   - component: {fileID: 7040328620464427082}
   m_Layer: 15
   m_Name: EnemyShip1
@@ -310,8 +309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4237b3175d47f43a49e3ee38849178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 4027941564653448092}
   ShieldEffect: {fileID: 6666128051353428309}
-  enemyType: 0
   Id: 0
   EnemyData: {fileID: 11400000, guid: dfc53e26d4cfa3e43bfc020c49e3e568, type: 2}
   Level: 0
@@ -325,28 +324,6 @@ MonoBehaviour:
   enemyElement:
     Name: 
     gameObjectType: 0
---- !u!114 &4685268796591568825
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332800252941561598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bf86117c41873d47a03ccb3c469a708, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveType: 1
-  PathIndex: 0100000002000000030000000a0000000b000000
-  Path: []
-  currentPointToFollowIndex: 0
-  PingPong: 0
-  RotateTowardDir: 1
-  Reset: 0
-  RotationSpeed: 2
-  reverse: 0
-  Auto: 1
 --- !u!114 &7040328620464427082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -361,7 +338,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PathIndex: 0100000002000000030000000a0000000b000000
   Path: []
-  currentPointToFollowIndex: 0
   PingPong: 0
   RotateTowardDir: 1
   Reset: 0

@@ -1,24 +1,18 @@
 using UnityEngine;
 
-public class PlayerProjectile : Projectile
+public class PlayerProjectile : BaseProjectile
 {
     public Material[] playerMaterials;
 
-    public override void Setup(WeaponScript weaponScript)
+    public override void Setup(BaseWeapon baseWeapon)
     {
-        this.weaponScript = weaponScript;
+        this.baseWeapon = baseWeapon;
     }
     protected override void OnAwake()
     {
         base.OnAwake();
         PlayerData playerData = PersistantData.GetPlayerData();
         meshRenderer.material = playerMaterials[playerData.CurrrentSelectedShip];
-    }
-
-    private void OnDisable()
-    {
-        if (trailRenderer)
-            trailRenderer.Clear();
     }
 
     public override void Movement()
@@ -39,7 +33,7 @@ public class PlayerProjectile : Projectile
         gameObject.SetActive(false);
     }
 
-    public void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Enemy"))
         {

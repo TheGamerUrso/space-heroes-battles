@@ -5,16 +5,9 @@ public class Turret : Ship, IDamagable
 {
     private PlayerShipData playerShipData;
     private PlayerData playerData;
-    [SerializeField] private WeaponScript playerWeapon;
+    [SerializeField] private BaseWeapon baseWeapon;
 
-    public bool IsAlive { get; set; }
-    public float MaxHealth { get; set; }
-
-    public float CurrentHealth { get; set; }
-
-    public event Action<float, float> OnHealthChanged;
-
-    public void Deactivate() => Destroy(gameObject);
+    public override void ExitLevel() => Destroy(gameObject);
 
     private void OnTriggerEnter(Collider other)
     {
@@ -28,7 +21,7 @@ public class Turret : Ship, IDamagable
         }
     }
 
-    public void TakeDamage(float dmg)
+    public override void TakeDamage(float dmg)
     {
         CurrentHealth -= dmg;
         if (CurrentHealth < 0)
@@ -37,7 +30,23 @@ public class Turret : Ship, IDamagable
         }
     }
 
-    public void Heal(float ammount) { }
+    public override void Heal(float ammount) { }
 
-    public void Death() => Destroy(gameObject);
+    public override void Death() => Destroy(gameObject);
+
+    public override float GetHealthPresentage()
+    {
+        return (CurrentHealth / MaxHealth);
+    }
+
+    public override void SwitchWeapon(int Id,bool Solo = false)
+    {
+       // No Other Weapons
+    }
+
+    public override void EnterLevel()
+    {
+       
+    }
+
 }

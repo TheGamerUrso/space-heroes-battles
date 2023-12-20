@@ -4,55 +4,16 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealthWidget : MonoBehaviour
+public class PlayerHealthWidget : BaseHealthWidget
 {
-    public PlayerShip player;
-
-    [SerializeField] private Color fullHealthColor = Color.green;
-    [SerializeField] private Color zeroHealthColor = Color.red;
-
-    [SerializeField] private GameObject HealthWidget;
     [SerializeField] private TextMeshProUGUI HealthText = null;
-    [SerializeField] private Image m_HealthImage = null;
 
-    private float targetHealth = 0;
-    private float maxTargetHealth = 0;
-
-    [SerializeField] private Image SecondaryHealth;
-    [SerializeField] private float speed = 1;
-
-    private void OnDestroy()
+    protected override void UpdateHealthBar(float currentHealth, float maxHealth)
     {
-        if (player != null)
-        {
-            player.OnHealthChanged -= UpdatePlayerHealth;
-        }
-    }
-
-    private void Start()
-    {
-        player.OnHealthChanged += UpdatePlayerHealth;
-
-        UpdatePlayerHealth(player.CurrentHealth, player.MaxHealth);
-    }
-
-    private void Update()
-    {
-        SecondaryHealth.fillAmount = Mathf.Lerp(SecondaryHealth.fillAmount, m_HealthImage.fillAmount,speed);
-    }
-    public void UpdatePlayerHealth(float CurrentHealth, float MaxHealth)
-    {
-  
-        HealthText.text = string.Format("{0}/{1}", Mathf.Round(CurrentHealth), MaxHealth);
-
+        base.UpdateHealthBar(currentHealth, maxHealth);
         CurrentHealth -= 20;
         MaxHealth -= 20;
-
-        m_HealthImage.fillAmount = (CurrentHealth / MaxHealth);
-        maxTargetHealth = MaxHealth;
-        targetHealth = CurrentHealth;
-
-        m_HealthImage.color = Color.Lerp(zeroHealthColor, fullHealthColor, targetHealth / maxTargetHealth);
+        HealthText.text = string.Format("{0}/{1}", Mathf.Round(currentHealth), maxHealth);
     }
 
 }

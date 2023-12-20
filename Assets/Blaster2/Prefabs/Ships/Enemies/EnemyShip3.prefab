@@ -112,7 +112,6 @@ GameObject:
   - component: {fileID: 9150635060109897703}
   - component: {fileID: 8789287769288364698}
   - component: {fileID: 5108569732464677299}
-  - component: {fileID: 1175882203903320607}
   - component: {fileID: 8638822757699578507}
   m_Layer: 15
   m_Name: EnemyShip3
@@ -120,7 +119,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1330112429161260340
 Transform:
   m_ObjectHideFlags: 0
@@ -339,8 +338,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4237b3175d47f43a49e3ee38849178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 9150635060109897703}
   ShieldEffect: {fileID: 5123420270638370231}
-  enemyType: 1
   Id: 3
   EnemyData: {fileID: 11400000, guid: 1efe9ab896acc8144bd88510b795658d, type: 2}
   Level: 0
@@ -350,33 +349,11 @@ MonoBehaviour:
   currentHealth: 0
   maxHealth: 0
   Weapons:
-  - {fileID: 5013369994354922169}
+  - {fileID: 7527641515363991993}
   delayAttak: 3
   enemyElement:
     Name: 
     gameObjectType: 0
---- !u!114 &1175882203903320607
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332800252941561598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bf86117c41873d47a03ccb3c469a708, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveType: 1
-  PathIndex: 0400000005000000060000000700000008000000090000000c0000000d000000
-  Path: []
-  currentPointToFollowIndex: 0
-  PingPong: 0
-  RotateTowardDir: 0
-  Reset: 0
-  RotationSpeed: 0
-  reverse: 0
-  Auto: 1
 --- !u!114 &8638822757699578507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -391,7 +368,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PathIndex: 0400000005000000060000000700000008000000090000000c0000000d000000
   Path: []
-  currentPointToFollowIndex: 0
   PingPong: 0
   RotateTowardDir: 0
   Reset: 0
@@ -495,10 +471,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3781399891190712214}
-  - component: {fileID: 5013369994354922169}
   - component: {fileID: 3759783846819226875}
+  - component: {fileID: 7527641515363991993}
   m_Layer: 0
-  m_Name: Blaster
+  m_Name: DefaultWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -523,28 +499,6 @@ Transform:
   m_Father: {fileID: 1093830612569945346}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5013369994354922169
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6930591429460259878}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1f5c8c65ca8fd0f4d92ea8cf778250a1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponData: {fileID: 11400000, guid: 58117d96f0b961f4285c9632c81231fb, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
-  source: {fileID: 3759783846819226875}
-  particleSFX:
-  - {fileID: 3664621009983405295}
-  - {fileID: 8291066298646143448}
-  - {fileID: 3974421399216521812}
-  Cannons: []
 --- !u!82 &3759783846819226875
 AudioSource:
   m_ObjectHideFlags: 0
@@ -642,6 +596,29 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &7527641515363991993
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6930591429460259878}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89da5e5a2736ddc458ea5dce6adb9ea6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ship: {fileID: 0}
+  weaponData: {fileID: 11400000, guid: 58117d96f0b961f4285c9632c81231fb, type: 2}
+  FireRate: 0
+  Damage: 0
+  SuperChargeTime: 0
+  source: {fileID: 3759783846819226875}
+  particleSFX:
+  - {fileID: 3664621009983405295}
+  - {fileID: 8291066298646143448}
+  - {fileID: 3974421399216521812}
+  Cannons: []
 --- !u!1 &7139212067088178604
 GameObject:
   m_ObjectHideFlags: 0
@@ -1625,7 +1602,7 @@ PrefabInstance:
         type: 3}
       propertyPath: blaster
       value: 
-      objectReference: {fileID: 5013369994354922169}
+      objectReference: {fileID: 0}
     - target: {fileID: 7695827512263247735, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: m_Name
@@ -1650,7 +1627,7 @@ PrefabInstance:
         type: 3}
       propertyPath: weaponScript
       value: 
-      objectReference: {fileID: 5013369994354922169}
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 7153150056736260772, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}

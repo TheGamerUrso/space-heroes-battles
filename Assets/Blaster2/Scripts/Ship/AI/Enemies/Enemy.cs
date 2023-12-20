@@ -4,25 +4,15 @@ using UnityEngine;
 
 public class Enemy : Ship, IDamagable, ITargetable
 {
-    public enum EnemyType
-    {
-        SimpleEnemy, EnemyWithWeapons, Boss1, Boss2, Boss3, Boxer
-    }
-
-    public virtual event Action<float, float> OnHealthChanged;
     public Action OnEnemyAttack;
     public Action<int, int> OnEnemyHit;
 
     #region Components
-    [SerializeField] private EnemyType enemyType;
     protected BaseEnemyMovement baseEnemyMovement;
     #endregion
 
-
     public string Id;
     public Enemy_SO EnemyData;
-
-
     #region Stats
 
     [Header("STATS")]
@@ -30,15 +20,11 @@ public class Enemy : Ship, IDamagable, ITargetable
     public float Damage;
     public float FireRate;
     public float Speed;
-    public float currentHealth;
-    public float maxHealth;
-    public float CurrentHealth { get { return currentHealth; } }
-    public float MaxHealth { get { return maxHealth; } }
     #endregion
 
     #region Weapons
     [Space(2)]
-    [SerializeField] protected WeaponScript[] Weapons;
+    [SerializeField] protected BaseWeapon[] Weapons;
     [SerializeField] protected float delayAttak = 3;
     protected bool AutoEnableWeapon;
     protected bool CanAttack;
@@ -50,12 +36,6 @@ public class Enemy : Ship, IDamagable, ITargetable
     protected float takeDamageDelay;
     protected int hitIndex;
     protected int numberOfHits;
-    #endregion
-
-    #region Health
-
-    public bool IsAlive { get; set; }
-    public virtual EnemyHealthWidget HealthBar { get; set; }
     #endregion
 
     protected PlayerData playerData;
@@ -101,7 +81,7 @@ public class Enemy : Ship, IDamagable, ITargetable
         playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
-        SetEnemyHealthUI();
+
 
         ShieldEffect.SetActive(HasShield);
 
@@ -112,7 +92,7 @@ public class Enemy : Ship, IDamagable, ITargetable
         currentWeaponActive = 0;
 
         DisableAllWeapons();
-
+        SetEnemyHealthUI();
         HealthBar.Show();
 
         StartCoroutine(DelayStart());
@@ -127,8 +107,8 @@ public class Enemy : Ship, IDamagable, ITargetable
         if (EnemyData.HealthBarSettings != null)
         {
             GameObject initializedHealthWidget = Instantiate(EnemyData.HealthBarSettings.HealthBarPrefab, transform, false);
-            HealthBar = (EnemyHealthWidget)initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            HealthBar.Setup(this, false);
+            HealthBar = initializedHealthWidget.GetComponent<EnemyHealthWidget>();
+            HealthBar.GetComponent<EnemyHealthWidget>().Setup(this, false);
         }
     }
 
@@ -140,12 +120,7 @@ public class Enemy : Ship, IDamagable, ITargetable
         }
     }
 
-    public virtual void Leave()
-    {
-        Events.EnemyEscaped?.Invoke(Id, this);
-    }
-
-    public virtual void TakeDamage(float dmg)
+    public override void TakeDamage(float dmg)
     {
         if (IsAlive == false)
         {
@@ -165,11 +140,11 @@ public class Enemy : Ship, IDamagable, ITargetable
             }
             else if (HasShield == false)
             {
-                currentHealth -= dmg;
+                CurrentHealth -= dmg;
 
                 OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
 
-                if (currentHealth < 1)
+                if (CurrentHealth < 1)
                 {
                     Death();
                 }
@@ -179,14 +154,14 @@ public class Enemy : Ship, IDamagable, ITargetable
         Hit();
     }
 
-    public virtual void Hit()
+    public override void Hit()
     {
         hitIndex++;
         Events.EnemyGotHit?.Invoke(Id, this);
         OnEnemyHit?.Invoke(hitIndex, numberOfHits);
     }
 
-    public virtual void Death()
+    public override void Death()
     {
         if (IsAlive)
         {
@@ -247,9 +222,9 @@ public class Enemy : Ship, IDamagable, ITargetable
     {
         Level = level;
 
-        maxHealth = Level * EnemyData.baseHealth;
+        MaxHealth = Level * EnemyData.baseHealth;
 
-        currentHealth = MaxHealth;
+        CurrentHealth = MaxHealth;
 
         Speed = EnemyData.baseSpeed;
 
@@ -267,17 +242,17 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     }
 
-    public float GetHealthPresentage()
+    public override float GetHealthPresentage()
     {
         return (CurrentHealth / MaxHealth) * 100;
     }
 
-    public virtual void Heal(float ammount)
+    public override void Heal(float ammount)
     {
 
     }
 
-    public void EnableWeaponById(int id, bool solo = false)
+    public override void SwitchWeapon(int id, bool solo = false)
     {
         if (solo)
         {
@@ -309,12 +284,6 @@ public class Enemy : Ship, IDamagable, ITargetable
         }
     }
 
-    public void SetHealth(float health)
-    {
-        currentHealth = health;
-        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-    }
-
     public virtual void OnEnemyHitHandled(int hitIndex, int numberOfHits)
     {
 
@@ -330,9 +299,19 @@ public class Enemy : Ship, IDamagable, ITargetable
         HealthBar.Show();
         yield return new WaitForSeconds(2);
         EnableColliders(true);
-        if (enemyType != EnemyType.SimpleEnemy)
+        if (Weapons.Length != 0)
         {
-            EnableWeaponById(0);
+            SwitchWeapon(0);
         }
+    }
+
+    public override void EnterLevel()
+    {
+
+    }
+
+    public override void ExitLevel()
+    {
+        Events.EnemyEscaped?.Invoke(Id, this);
     }
 }

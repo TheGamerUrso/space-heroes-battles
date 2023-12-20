@@ -7,6 +7,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1175882203903320607, guid: 78c2de61abfbc2041888882a7f1b294c,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1330112429161260340, guid: 78c2de61abfbc2041888882a7f1b294c,
         type: 3}
       propertyPath: m_RootOrder
@@ -78,6 +83,11 @@ PrefabInstance:
       propertyPath: FollowRotation
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 5108569732464677299, guid: 78c2de61abfbc2041888882a7f1b294c,
+        type: 3}
+      propertyPath: Weapons.Array.data[0]
+      value: 
+      objectReference: {fileID: 8545522780643281579}
     - target: {fileID: 6254200487674624818, guid: 78c2de61abfbc2041888882a7f1b294c,
         type: 3}
       propertyPath: m_LocalRotation.w
@@ -101,34 +111,19 @@ PrefabInstance:
     - target: {fileID: 6930591429460259878, guid: 78c2de61abfbc2041888882a7f1b294c,
         type: 3}
       propertyPath: m_Name
-      value: ThreeSlotWeapon
+      value: DefaultWeapon
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 78c2de61abfbc2041888882a7f1b294c, type: 3}
---- !u!1 &909528553737987564 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1332800252941561598, guid: 78c2de61abfbc2041888882a7f1b294c,
+--- !u!114 &8545522780643281579 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7527641515363991993, guid: 78c2de61abfbc2041888882a7f1b294c,
     type: 3}
   m_PrefabInstance: {fileID: 2224854779476134674}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &9084131088328207748
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 909528553737987564}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4687ecd9d34220419f712282eba66b2, type: 3}
+  m_Script: {fileID: 11500000, guid: 89da5e5a2736ddc458ea5dce6adb9ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PathIndex: 0400000005000000060000000700000008000000090000000c0000000d000000
-  Path: []
-  currentPointToFollowIndex: 0
-  PingPong: 0
-  RotateTowardDir: 0
-  Reset: 0
-  RotationSpeed: 0
-  reverse: 0
-  Auto: 1

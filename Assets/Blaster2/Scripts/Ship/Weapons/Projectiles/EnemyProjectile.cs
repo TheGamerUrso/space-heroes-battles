@@ -1,21 +1,17 @@
 using UnityEngine;
 
-public class EnemyProjectile : Projectile
+public class EnemyProjectile : BaseProjectile
 {
     public GameObject Target;
     public Vector3 TargetLastPosition;
 
     public bool FollowTarget;
 
-    private void OnDisable()
-    {
-        if (trailRenderer)
-            trailRenderer.Clear();
-    }
+ 
 
-    public override void Setup(WeaponScript weaponScript)
+    public override void Setup(BaseWeapon baseWeapon)
     {
-        this.weaponScript = weaponScript;
+        this.baseWeapon = baseWeapon;
     }
 
     public override void Movement()
@@ -39,9 +35,9 @@ public class EnemyProjectile : Projectile
         gameObject.SetActive(false);
     }
 
-    public void OnTriggerEnter(Collider other)
+    public override void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+         if (other.CompareTag("Player"))
         {
             var destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(Damage);

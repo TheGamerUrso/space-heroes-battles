@@ -35,7 +35,7 @@ public class ShootTargetLocation : WeaponScript
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(playerLastLocation);
 
                 EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
-                enemyProjectile.Setup(this);
+               // enemyProjectile.Setup(this);
                 enemyProjectile.SetShootDir(playerLastLocation);
 
 

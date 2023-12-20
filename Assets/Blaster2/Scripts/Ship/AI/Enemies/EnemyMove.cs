@@ -201,7 +201,7 @@ public class EnemyMove : MonoBehaviour
 
     public void Leave()
     {
-        enemy.Leave();
+        enemy.ExitLevel();
         gameObject.SetActive(false);
     }
 

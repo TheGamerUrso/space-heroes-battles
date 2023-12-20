@@ -31,7 +31,7 @@ public class GameController : MonoSingleton<GameController>
 
     [SerializeField] private GameObject EnemyWaypoints;
     private GameObject player;
-    private PlayerShip playerShip;
+    private Ship playerShip;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
     private BaseGameMode baseGameMode;
@@ -173,7 +173,7 @@ public class GameController : MonoSingleton<GameController>
 
         AudioManager.PlayMusic("Victory", false);
 
-        playerShip?.Exit();
+        playerShip?.ExitLevel();
 
         yield return new WaitForSeconds(2.0f);
         Events.OnWin?.Invoke(this);

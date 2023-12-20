@@ -4,37 +4,29 @@ using UnityEngine;
 
 public class PlayerShip : Ship, IDamagable
 {
-    public event Action<float, float> OnHealthChanged;
-
+    [Space()]
     private SimpleShipControls shipController;
-
-    [SerializeField] private Player_SO playerStats;
-    [SerializeField] private PlayerWeapon[] Weapons;
-    [SerializeField] private SpecialAttack specialAttack;
-    [SerializeField] private AudioSource audioSource;
     [SerializeField] private ParticleSystem ItemCollectedEffect;
+    [Space()]
+    [SerializeField] private Player_SO playerStats;
 
-    private WeaponScript weapon;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
 
-
+    [Space()]
     #region Weapons
-    private bool TempFireRateUpgrade;
+    [Header("Weapons")]
+    [SerializeField] private DefaultPlayerWeapon[] Weapons;
+    [SerializeField] private BaseSpecialAttack specialAttack;
     private float invisibilityTimer;
     private int clicktimes;
     private float clicktimer;
     private bool clicked;
-
-    public bool CanFire { get; private set; }
-    public float MaxHealth { get; private set; }
-    public float CurrentHealth { get; private set; }
-    public int CurrentWeapnType { get; set; }
-
-
-    private bool HasArmorUprade;
     float clickDelay = .25f;
     #endregion Weapons
+
+    private bool TempFireRateUpgrade;
+    private bool HasArmorUprade;
 
     public override void OnDestroy()
     {
@@ -60,8 +52,6 @@ public class PlayerShip : Ship, IDamagable
 
         SetStats(playerShipData.level);
 
-
-
         Events.OnLevelValueChanged += OnLevelValueChanged;
 
 
@@ -70,6 +60,8 @@ public class PlayerShip : Ship, IDamagable
         SwitchWeapon(0);
 
         playerData.GotHitInGame = false;
+        HealthBar = GameObject.FindAnyObjectByType<PlayerHealthWidget>();
+        HealthBar.Setup(this);
     }
 
     public void OnLevelValueChanged(int Level)
@@ -154,24 +146,16 @@ public class PlayerShip : Ship, IDamagable
         }
     }
 
-
-    public void TouchShoot()
-    {
-
-
-    }
-
     public void UpdateWeaponStats(float fireRate, float damage = 0)
     {
-        weapon = GetCurrentActiveWeapon().GetComponent<WeaponScript>();
+        var currenActivetWeapon = GetCurrentActiveWeapon().GetComponent<WeaponScript>();
 
-        weapon.FireRate = fireRate;
+        currenActivetWeapon.FireRate = fireRate;
         if (damage > 0)
-            weapon.Damage = damage;
-
+            currenActivetWeapon.Damage = damage;
     }
 
-    public override void InstallShieldModule()
+    public override void InstallShield()
     {
         base.InstallShieldModule();
         ShieldEffect.SetActive(HasShield);
@@ -186,7 +170,7 @@ public class PlayerShip : Ship, IDamagable
         }
     }
 
-    public void Death()
+    public override void Death()
     {
         Game.UseSlowMo = false;
 
@@ -198,7 +182,7 @@ public class PlayerShip : Ship, IDamagable
         gameObject.SetActive(false);
     }
 
-    public void Heal(float ammount)
+    public override void Heal(float ammount)
     {
         CurrentHealth += ammount;
 
@@ -219,7 +203,7 @@ public class PlayerShip : Ship, IDamagable
         }
     }
 
-    public void TakeDamage(float dmg)
+    public override void TakeDamage(float dmg)
     {
         if (!IsDead())
         {
@@ -305,7 +289,7 @@ public class PlayerShip : Ship, IDamagable
         animator.SetTrigger(Constants.PLAYERENTERSTRINGKEY);
     }
 
-    public void Exit()
+    public override void ExitLevel()
     {
         if (animator == null)
         {
@@ -435,18 +419,18 @@ public class PlayerShip : Ship, IDamagable
         return Weapons[CurrentWeapnType].gameObject;
     }
 
-    public void SwitchWeapon(int WeaponTypeIndex)
+    public override void SwitchWeapon(int Id, bool Solo = false)
     {
         for (int i = 0; i < Weapons.Length; i++)
         {
             Weapons[i].gameObject.SetActive(false);
         }
 
-        Weapons[WeaponTypeIndex].gameObject.SetActive(true);
-        Weapons[WeaponTypeIndex].SetStats(playerShipData, WeaponTypeIndex);
+        Weapons[Id].gameObject.SetActive(true);
+        Weapons[Id].SetStats(playerShipData, Id);
     }
 
-    public SpecialAttack GetSpecialAttack()
+    public BaseSpecialAttack GetSpecialAttack()
     {
         return specialAttack;
     }
@@ -473,25 +457,6 @@ public class PlayerShip : Ship, IDamagable
         }
 
         specialAttack.SetStats(playerShipData);
-
-
-    }
-
-    public void SetHealth(float health)
-    {
-        CurrentHealth = health;
-        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-    }
-
-    public float GetHealthPresentage()
-    {
-        return (CurrentHealth / MaxHealth);
-    }
-
-
-    public bool IsDead()
-    {
-        return CurrentHealth <= 0;
     }
 
     public void SetWallet(int coin)
@@ -510,13 +475,8 @@ public class PlayerShip : Ship, IDamagable
         }
     }
 
+    public override void EnterLevel()
+    {
 
-    public void EnableFire()
-    {
-        CanFire = true;
-    }
-    public void DisableFire()
-    {
-        CanFire = false;
     }
 }

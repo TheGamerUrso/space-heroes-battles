@@ -3,15 +3,13 @@ using UnityEngine.UI;
 
 public class BaseHealthWidget : MonoBehaviour
 {
-    public float MaxHealth { get; private set; }
-    public float CurrentHealth { get; private set; }
-
-    public GameObject Target;
+    public float MaxHealth { get; protected set; }
+    public float CurrentHealth { get; protected set; }
+    public Ship ship;
     protected Color currentColor;
 
-    [SerializeField] protected Color RedColor = Color.red;
-    [SerializeField] protected Color GreenColor = Color.green;
-
+    [SerializeField] protected Color fullHealthColor = Color.green;
+    [SerializeField] protected Color zeroHealthColor = Color.red;
     [SerializeField] protected GameObject HealthbarCanvas;
     [SerializeField] protected GameObject HealthBarTransform;
 
@@ -19,20 +17,24 @@ public class BaseHealthWidget : MonoBehaviour
     [SerializeField] protected Image ActualHealthBarImage;
     [SerializeField] protected Image ShieldBarImage;
 
-    public float lerpSpeed;
+    public float lerpSpeed = 1;
 
     [SerializeField] protected Vector3 offset;
-
-    public virtual void Setup(IDamagable ship, bool follow = true) { }
-    public virtual void Setup(IDamagable ship)
+   private void OnDestroy()
     {
-        MonoBehaviour go = ship as MonoBehaviour;
-        ship.OnHealthChanged += UpdateHealthBar;
-        Target = go.gameObject;
+        ship.OnHealthChanged -= UpdateHealthBar;
+    }
+    public virtual void Setup(IDamagable damagable, bool follow = true) { }
+    public virtual void Setup(IDamagable damagable)
+    {
+        MonoBehaviour mono = damagable as MonoBehaviour;
+        ship = mono.GetComponent<Ship>();
+        mono.GetComponent<Ship>().OnHealthChanged += UpdateHealthBar;
+        UpdateHealthBar(ship.CurrentHealth, ship.MaxHealth);
     }
     public virtual void Awake() { }
 
-    public virtual void Start() { }
+    public virtual void Start(){}
     public virtual void Update()
     {
         ActualHealthBarImage.fillAmount = Mathf.Lerp(ActualHealthBarImage.fillAmount, HealthBarImage.fillAmount, lerpSpeed);
@@ -53,6 +55,6 @@ public class BaseHealthWidget : MonoBehaviour
         this.CurrentHealth = currentHealth;
         this.MaxHealth = maxHealth;
         HealthBarImage.fillAmount = CurrentHealth / MaxHealth;
-        HealthBarImage.color = Color.Lerp(RedColor, GreenColor, HealthBarImage.fillAmount);
+        HealthBarImage.color = Color.Lerp(zeroHealthColor, fullHealthColor, HealthBarImage.fillAmount);
     }
 }

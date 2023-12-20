@@ -11,6 +11,7 @@ public class BaseBossEnemyMovement : BaseEnemyMovement
     [SerializeField] protected float changePositionTimer;
 
     protected Vector3 targetPosition;
+    public BossDestroyablePart[] bossDestroyableParts;
     public override void Awake()
     {
         base.Awake();

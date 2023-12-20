@@ -6,7 +6,6 @@ using UnityEngine;
 public class BoxerEnemyMovement : BaseBossEnemyMovement
 {
     [Header("Movement")]
-    public Punch[] punches;
     public bool attacking;
     public GameObject ShipPivot;
     private float cooldown;
@@ -21,9 +20,9 @@ public class BoxerEnemyMovement : BaseBossEnemyMovement
 
             if (cooldown <= 0)
             {
-                if (punches.Length > 0)
+                if (bossDestroyableParts.Length > 0)
                 {
-                    List<Punch> newList = punches.Where(x => x.CurrentHealth > 0).ToList();
+                    List<BossDestroyablePart> newList = bossDestroyableParts.Where(x => x.CurrentHealth > 0).ToList();
                     int rand = UnityEngine.Random.Range(0, newList.Count);
                     if (newList.Count > 0)
                     {

@@ -5,7 +5,7 @@ using UnityEngine;
 public class Laser : MonoBehaviour
 {
     public LineRenderer m_LineRenderer;
-    public LaserSuper laserSuper;
+    public LaserSpecialAttack laserSuper;
     public bool active;
     public float maxLaserDistance;
     public LayerMask enemies;

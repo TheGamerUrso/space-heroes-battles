@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class AboutToShootIndicator : MonoBehaviour
 {
-    public Blaster weaponScript;
+    public BaseWeapon baseWeapon;
     public bool playEffect;
     public float speed;
     public float size = 1;
 
     void Start()
     {
-        weaponScript.AboutToShoot += AboutToShoot;
+        baseWeapon.AboutToShoot += AboutToShoot;
     }
 
     public void AboutToShoot(bool shooting)
