@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BossEnemy : Ship, IDamagable,ITargetable
+public class BossEnemy : Ship, IDamagable, ITargetable
 {
     public enum BossEnemyType
     {
@@ -30,7 +30,6 @@ public class BossEnemy : Ship, IDamagable,ITargetable
 
     [Space(2)]
     [HideInInspector] public EnemyElement enemyElement;
-    [SerializeField] private DropItem dropItem;
     [SerializeField] private BossEnemyMove bossEnemyMove;
     [SerializeField] private WeaponScript[] Weapons;
     [SerializeField] private float delayAttak = 3;
@@ -87,7 +86,7 @@ public class BossEnemy : Ship, IDamagable,ITargetable
     }
     public override void Awake()
     {
-        HasShield = false;
+        OnBossHit = OnBossHitHandled;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
         bossEnemyMove = GetComponent<BossEnemyMove>();
@@ -96,6 +95,9 @@ public class BossEnemy : Ship, IDamagable,ITargetable
     public override void Start()
     {
         base.Start();
+
+        HasShield = false;
+
         playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
 
@@ -106,8 +108,6 @@ public class BossEnemy : Ship, IDamagable,ITargetable
         SetStats(playerShipData.level);
 
         bossEnemyMove.Speed = Speed;
-
-
 
         currentWeaponActive = 0;
 
@@ -279,7 +279,7 @@ public class BossEnemy : Ship, IDamagable,ITargetable
 
         for (int i = 0; i < 4; i++)
         {
-            dropItem.PickRandomDropItem(transform);
+             DropItem.Instance.PickRandomDropItem(transform);
         }
 
         if (IsAlive)
@@ -290,9 +290,9 @@ public class BossEnemy : Ship, IDamagable,ITargetable
             explostion.SetActive(true);
             Events.BossDied?.Invoke(Id, this);
             HealthBar.Hide();
-    
 
-            dropItem.PickRandomDropItem(transform);
+
+             DropItem.Instance.PickRandomDropItem(transform);
 
             Destroy(transform.parent.gameObject);
         }
@@ -432,5 +432,20 @@ public class BossEnemy : Ship, IDamagable,ITargetable
         }
 
         EnableColliders(true);
+    }
+
+    public void OnBossHitHandled(int hitIndex, int numberOfHits)
+    {
+        if (GuiManager.Instance.IsTrasnmiting())
+        {
+            return;
+        }
+
+        PlayerData playerData = PersistantData.GetPlayerData();
+
+        if (playerData != null)
+        {
+            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.05f);
+        }
     }
 }

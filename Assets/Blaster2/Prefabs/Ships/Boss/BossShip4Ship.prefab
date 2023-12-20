@@ -346,8 +346,6 @@ GameObject:
   - component: {fileID: 7294846388428409297}
   - component: {fileID: 6262896633623649025}
   - component: {fileID: 139721936401397398}
-  - component: {fileID: 5873290647687893104}
-  - component: {fileID: 3982603022016305187}
   m_Layer: 15
   m_Name: BossShip4Ship
   m_TagString: Enemy
@@ -570,7 +568,6 @@ MonoBehaviour:
   enemyElement:
     Name: 
     gameObjectType: 0
-  dropItem: {fileID: 5873290647687893104}
   bossEnemyMove: {fileID: 139721936401397398}
   Weapons:
   - {fileID: 9034308879276091843}
@@ -610,54 +607,6 @@ MonoBehaviour:
   - {fileID: 8260462937045628444}
   attacking: 0
   ShipPivot: {fileID: 258049314037477805}
---- !u!114 &5873290647687893104
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9189114927098632632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e97daa28d94330b4fbf318a197f61ec2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ListOfDropItems:
-  - Name: 
-    chance: 50
-    DropItemsType: 8
-  - Name: 
-    chance: 30
-    DropItemsType: 9
-  - Name: 
-    chance: 10
-    DropItemsType: 10
-  - Name: 
-    chance: 10
-    DropItemsType: 11
-  DropShield: 0
-  DropHealth: 0
-  shieldDropCooldown: 4
-  healthDropCooldown: 3
-  powerDropCooldown: 1
---- !u!114 &3982603022016305187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9189114927098632632}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5557c88959570469c32bc23780e760, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bossBattleType: 3
-  bossEnemy: {fileID: 6262896633623649025}
-  bossMove: {fileID: 139721936401397398}
-  HealthPresentage: 0
-  phase: 0
-  DelayAttack: 0
 --- !u!1001 &538807800429423466
 PrefabInstance:
   m_ObjectHideFlags: 0

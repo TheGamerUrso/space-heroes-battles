@@ -37,8 +37,6 @@ public class Enemy : Ship, IDamagable, ITargetable
     protected float takeDamageDelay;
     protected EnemyMove enemyMove;
 
-    [SerializeField] protected DropItem dropItem;
-
     public EnemyHealthWidget HealthBar { get; set; }
 
     public GameObject target {
@@ -169,7 +167,7 @@ public class Enemy : Ship, IDamagable, ITargetable
 
             Events.ShakeCamera?.Invoke(.5f);
 
-            dropItem.PickRandomDropItem(transform);
+            DropItem.Instance.PickRandomDropItem(transform);
         }
     }
 

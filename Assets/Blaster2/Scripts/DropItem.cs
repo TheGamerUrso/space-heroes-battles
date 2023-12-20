@@ -13,6 +13,8 @@ public class DropProbabilities
 
 public class DropItem : MonoBehaviour
 {
+    public static DropItem Instance { get { return instance; } }
+    private static DropItem instance;
     [SerializeField] private List<DropProbabilities> ListOfDropItems = new List<DropProbabilities>();
 
     [SerializeField] private bool DropShield;
@@ -24,7 +26,13 @@ public class DropItem : MonoBehaviour
 
     private PoolGameObjectType itemTypeToSpawn;
     private PlayerShip playerShip;
-
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+    }
     private void Update()
     {
         if (powerDropCooldown > 0)

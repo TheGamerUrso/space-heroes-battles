@@ -476,8 +476,6 @@ GameObject:
   - component: {fileID: 9207942272359163586}
   - component: {fileID: 1068093558479904139}
   - component: {fileID: 3133812284189527132}
-  - component: {fileID: 7860979229292698850}
-  - component: {fileID: 5168342717376869549}
   m_Layer: 15
   m_Name: BossShip2Ship
   m_TagString: Enemy
@@ -687,7 +685,6 @@ MonoBehaviour:
   enemyElement:
     Name: 
     gameObjectType: 0
-  dropItem: {fileID: 7860979229292698850}
   bossEnemyMove: {fileID: 3133812284189527132}
   Weapons:
   - {fileID: 3957692921025793793}
@@ -721,42 +718,6 @@ MonoBehaviour:
   punches: []
   attacking: 0
   ShipPivot: {fileID: 0}
---- !u!114 &7860979229292698850
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4840490958191933900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e97daa28d94330b4fbf318a197f61ec2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ListOfDropItems: []
-  DropShield: 0
-  DropHealth: 0
-  shieldDropCooldown: 4
-  healthDropCooldown: 3
-  powerDropCooldown: 1
---- !u!114 &5168342717376869549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4840490958191933900}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3a5557c88959570469c32bc23780e760, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bossBattleType: 1
-  bossEnemy: {fileID: 1068093558479904139}
-  bossMove: {fileID: 3133812284189527132}
-  HealthPresentage: 0
-  phase: 0
-  DelayAttack: 0
 --- !u!1 &6049227061383995164
 GameObject:
   m_ObjectHideFlags: 0
