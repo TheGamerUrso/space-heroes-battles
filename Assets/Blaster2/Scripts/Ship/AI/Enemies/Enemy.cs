@@ -6,7 +6,7 @@ public class Enemy : Ship, IDamagable, ITargetable
 {
     public enum EnemyType
     {
-        SimpleEnemy, EnemyWithWeapons,  Boss1, Boss2, Boss3, Boxer
+        SimpleEnemy, EnemyWithWeapons, Boss1, Boss2, Boss3, Boxer
     }
 
     public virtual event Action<float, float> OnHealthChanged;
@@ -15,14 +15,14 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     #region Components
     [SerializeField] private EnemyType enemyType;
-    protected EnemyMove enemyMove;
+    protected BaseEnemyMovement baseEnemyMovement;
     #endregion
 
 
     public string Id;
     public Enemy_SO EnemyData;
-  
-    
+
+
     #region Stats
 
     [Header("STATS")]
@@ -35,7 +35,7 @@ public class Enemy : Ship, IDamagable, ITargetable
     public float CurrentHealth { get { return currentHealth; } }
     public float MaxHealth { get { return maxHealth; } }
     #endregion
-    
+
     #region Weapons
     [Space(2)]
     [SerializeField] protected WeaponScript[] Weapons;
@@ -44,23 +44,24 @@ public class Enemy : Ship, IDamagable, ITargetable
     protected bool CanAttack;
     protected int currentWeaponActive;
     #endregion
-   
-   #region Collision
+
+    #region Collision
     protected BoxCollider boxCollider;
     protected float takeDamageDelay;
     protected int hitIndex;
     protected int numberOfHits;
-   #endregion
-   
-   #region Health
+    #endregion
+
+    #region Health
 
     public bool IsAlive { get; set; }
     public virtual EnemyHealthWidget HealthBar { get; set; }
-   #endregion
+    #endregion
 
     protected PlayerData playerData;
 
-    public GameObject target {
+    public GameObject target
+    {
         get
         {
             return gameObject;
@@ -90,11 +91,11 @@ public class Enemy : Ship, IDamagable, ITargetable
         OnEnemyHit = OnEnemyHitHandled;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
-        enemyMove = GetComponent<EnemyMove>();
+        baseEnemyMovement = GetComponent<BaseEnemyMovement>();
     }
 
     public override void Start()
-    { 
+    {
         HasShield = false;
 
         playerData = PersistantData.GetPlayerData();
@@ -106,16 +107,15 @@ public class Enemy : Ship, IDamagable, ITargetable
 
         SetStats(playerShipData.level);
 
-        enemyMove.Speed = Speed;
-        
+        baseEnemyMovement.Speed = Speed;
+
         currentWeaponActive = 0;
 
         DisableAllWeapons();
 
-        if (enemyType == EnemyType.EnemyWithWeapons)
-        {
-            StartCoroutine(ActivateWeapons());
-        }
+        HealthBar.Show();
+
+        StartCoroutine(DelayStart());
     }
 
     public virtual void SetEnemyHealthUI()
@@ -180,7 +180,7 @@ public class Enemy : Ship, IDamagable, ITargetable
     }
 
     public virtual void Hit()
-    {  
+    {
         hitIndex++;
         Events.EnemyGotHit?.Invoke(Id, this);
         OnEnemyHit?.Invoke(hitIndex, numberOfHits);
@@ -237,7 +237,7 @@ public class Enemy : Ship, IDamagable, ITargetable
             Weapons[weaponIndex].FireRate = newFireRate;
         }
     }
-       
+
     public virtual void AddDamagablePart(IDamagable part)
     {
 
@@ -315,27 +315,24 @@ public class Enemy : Ship, IDamagable, ITargetable
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
 
-    //Enemy With Weapon Type Methods
-    public IEnumerator ActivateWeapons()
+    public virtual void OnEnemyHitHandled(int hitIndex, int numberOfHits)
     {
-        yield return new WaitForSeconds(2);
-
-        EnableWeaponById(0);
-
-        if (HealthBar != null)
-        {
-            HealthBar.Show();
-        }
-
-        EnableColliders(true);
-    }
-
-    public virtual void OnEnemyHitHandled(int hitIndex, int numberOfHits){
 
     }
 
     protected virtual void DestroyOwnedProjectiles()
     {
 
+    }
+
+    public virtual IEnumerator DelayStart()
+    {
+        HealthBar.Show();
+        yield return new WaitForSeconds(2);
+        EnableColliders(true);
+        if (enemyType != EnemyType.SimpleEnemy)
+        {
+            EnableWeaponById(0);
+        }
     }
 }

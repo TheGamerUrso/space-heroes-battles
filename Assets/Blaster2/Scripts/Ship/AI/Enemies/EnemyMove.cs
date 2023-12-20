@@ -6,7 +6,7 @@ public class EnemyMove : MonoBehaviour
 {
     public enum EnemyMoveType
     {
-        SimpleMove,FollowPath, ManeuverEnemy
+        SimpleMove,FollowPath, ManeuverEnemy,Crawler,Boxer,Boss1,Boss4
     }
 
     public EnemyMoveType moveType;

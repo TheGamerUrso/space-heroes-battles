@@ -345,7 +345,7 @@ GameObject:
   - component: {fileID: 5572915942502871607}
   - component: {fileID: 7294846388428409297}
   - component: {fileID: 6262896633623649025}
-  - component: {fileID: 139721936401397398}
+  - component: {fileID: 4265265386448999681}
   m_Layer: 15
   m_Name: BossShip4Ship
   m_TagString: Enemy
@@ -557,7 +557,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShieldEffect: {fileID: 6174798991898319939}
   enemyType: 4
-  Id: 4
+  Id: 12
   EnemyData: {fileID: 11400000, guid: 060fc5b36ebf35145ab28eaebde0b7cb, type: 2}
   Level: 15
   Damage: 0
@@ -571,9 +571,8 @@ MonoBehaviour:
   enemyElement:
     Name: 
     gameObjectType: 0
-  bossEnemyMove: {fileID: 139721936401397398}
   healthbar: {fileID: 0}
---- !u!114 &139721936401397398
+--- !u!114 &4265265386448999681
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -582,26 +581,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 9189114927098632632}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cc7e3d2feee366d4da34c0475497bb0b, type: 3}
+  m_Script: {fileID: 11500000, guid: e22062d1b40b3454d9a645c539f844b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveType: 3
-  Positions:
-  - {x: 0, y: 0, z: 100}
-  - {x: -20, y: 0, z: 80}
-  - {x: 0, y: 0, z: 80}
-  - {x: 20, y: 0, z: 80}
+  Positions: []
   currentPos: 0
   StartBattle: 0
   changePositionTimer: 0
-  bossEnemy: {fileID: 0}
-  animator: {fileID: 0}
-  timer: 0
-  delay: 0.5
-  speed: 0
-  CurclularMove: 0
-  angle: 0
-  radius: 5
   punches:
   - {fileID: 4677157009031953761}
   - {fileID: 8260462937045628444}

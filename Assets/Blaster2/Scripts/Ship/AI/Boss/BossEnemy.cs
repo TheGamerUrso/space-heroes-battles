@@ -7,10 +7,7 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
 {
     public override event Action<float, float> OnHealthChanged;
     #region Components
-    [SerializeField] private BossEnemyMove bossEnemyMove;
-
-        [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
-
+    [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
     #endregion
 
     #region Health
@@ -29,6 +26,7 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
     }
     #endregion
 
+    [SerializeField] protected bool StartBattle;
 
     public override void OnEnable()
     {
@@ -36,21 +34,15 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
         EnableColliders(false);
     }
 
-    public override void Awake()
-    {
-        base.Awake();
-        bossEnemyMove = GetComponent<BossEnemyMove>();
-    }
-
     public override void Start()
     {
         base.Start();   
-        bossEnemyMove.Speed = Speed;    
+        baseEnemyMovement.Speed = Speed;    
     }
 
     public override void SetEnemyHealthUI()
     {
-          healthbar.Setup(this, false);
+        healthbar.Setup(this, false);
     }
 
     public override void Update()
@@ -243,5 +235,15 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
         {
             return false;   
         }
+    }
+    
+    public override IEnumerator DelayStart()
+    {
+        HealthBar.Show();
+        yield return new WaitForSeconds(2);
+        EnableAllWeapon();
+        EnableColliders(true);
+        StartBattle = true;
+        baseEnemyMovement.EnableMovement();
     }
 }
