@@ -112,7 +112,7 @@ public class ComboKillIndicator : MonoBehaviour
 
         confratulationText.text = finalText;
 
-        timerCooldown = Random.Range(2, 4);
+        timerCooldown = Random.Range(4, 8);
     }
 
 }
