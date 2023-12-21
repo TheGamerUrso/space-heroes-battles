@@ -67,7 +67,7 @@ public class GrenadeProjectile : BaseEnemyProjectile
         Fire();
         Ball.SetActive(false);
         yield return new WaitForSeconds(1.0f);
-        gameObject.SetActive(false);
+        DestoryNow();
     }
 
     private void InstansiateProjectiles(int i)
@@ -80,8 +80,8 @@ public class GrenadeProjectile : BaseEnemyProjectile
 
         InstansiatedProjectile.SetActive(true);
 
-        Projectile enemyProjectile = InstansiatedProjectile.GetComponent<Projectile>();
-       // enemyProjectile.Setup(weaponScript);
-        enemyProjectile.SetShootDir(shootDir);
+        BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
+        projectile.SetOwner(baseWeapon);
+        projectile.SetShootDir(shootDir);
     }
 }

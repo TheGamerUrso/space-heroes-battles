@@ -24,9 +24,9 @@ public class EnemyDoubleShotWeapon : BaseWeapon
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 
-                EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
-                enemyProjectile.SetOwner(this);
-                enemyProjectile.SetShootDir(shootDir);
+                BaseProjectile baseProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
+                baseProjectile.SetOwner(this);
+                baseProjectile.SetShootDir(shootDir);
             }
 
             yield return new WaitForSeconds(.5f);

@@ -205,7 +205,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &8246661451200889218
 Transform:
   m_ObjectHideFlags: 0
@@ -416,15 +416,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1544188833340423206}
-  ShieldEffect: {fileID: 4283895241739180047}
   Id: 5
-  EnemyData: {fileID: 11400000, guid: b5034ea580a850b42aec6c430cf26469, type: 2}
+  ShieldEffect: {fileID: 4283895241739180047}
   Level: 0
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  EnemyData: {fileID: 11400000, guid: b5034ea580a850b42aec6c430cf26469, type: 2}
   Weapons:
   - {fileID: 4232778761907163628}
   delayAttak: 3
@@ -443,6 +443,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4687ecd9d34220419f712282eba66b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
   PathIndex: 0400000005000000060000000700000008000000090000000c0000000d000000
   Path: []
   PingPong: 0
@@ -595,7 +596,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccf60b4c1ad83dc4ea5b41cb347c07a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
+  ship: {fileID: 2453403282377496382}
   weaponData: {fileID: 11400000, guid: ec35bfd892a602e4abbdc82d0c561d25, type: 2}
   FireRate: 0
   Damage: 0

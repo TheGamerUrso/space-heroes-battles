@@ -22,7 +22,7 @@ public class EnemyHealthWidget : BaseHealthWidget
     public override void Setup(IDamagable damagable, bool follow = true)
     {
         Setup(damagable);
-        Static = follow;
+        Static = !follow;
     }
 
     public void LateUpdate()

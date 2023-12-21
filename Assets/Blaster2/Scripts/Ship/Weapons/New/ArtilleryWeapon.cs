@@ -31,30 +31,25 @@ public class ArtilleryWeapon : BaseWeapon
 
     public override void Shoot()
     {
-        if (Time.time > newShot && AutoAttack && attack)
+        PlayWeaponFireSound();
+
+        for (int i = 0; i < Cannons.Length; i++)
         {
-            newShot = Time.time + FireRate;
+            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+            dir = Cannons[i].position + Cannons[i].up;
+            shootDir = (dir - Cannons[i].position).normalized;
 
-            PlayWeaponFireSound();
+            InstansiatedProjectile.SetActive(true);
 
-            for (int i = 0; i < Cannons.Length; i++)
-            {
-                InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-                dir = Cannons[i].position + Cannons[i].up;
-                shootDir = (dir - Cannons[i].position).normalized;
+            InstansiatedProjectile.transform.position = Cannons[i].position;
+            InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 
-                InstansiatedProjectile.SetActive(true);
-
-                InstansiatedProjectile.transform.position = Cannons[i].position;
-                InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
-
-                EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
-               //enemyProjectile.Setup(this);
-                enemyProjectile.SetShootDir(shootDir);
-            }
-
-            numberOfAttacks++;
+            BaseProjectile baseProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
+            baseProjectile.SetOwner(this);
+            baseProjectile.SetShootDir(shootDir);
         }
+
+        numberOfAttacks++;
     }
 }
 

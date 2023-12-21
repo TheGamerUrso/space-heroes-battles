@@ -5,31 +5,20 @@ public class GrenadeLauncherWeapon : BaseWeapon
 {
     public override void Shoot()
     {
-        timer = newShot - Time.time;
+        int pos = Random.Range(0, Cannons.Length);
 
-        if (timer < 1.5f)
-        {
-            AboutToShoot?.Invoke(true);
-        }
+        InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
+        InstansiatedProjectile.transform.position = Cannons[pos].transform.position;
+        InstansiatedProjectile.transform.rotation = Cannons[pos].rotation;
 
-        if (Time.time > newShot && AutoAttack)
-        {
-            newShot = Time.time + FireRate;
-            int pos = Random.Range(0, Cannons.Length);
+        Vector3 shootDir = Cannons[pos].forward;
 
-            InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
-            InstansiatedProjectile.transform.position = Cannons[pos].transform.position;
-            InstansiatedProjectile.transform.rotation = Cannons[pos].rotation;
+        InstansiatedProjectile.SetActive(true);
 
-            Vector3 shootDir = Cannons[pos].forward;
+        BaseProjectile enemyProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
+        enemyProjectile.SetOwner(this);
+        enemyProjectile.SetShootDir(shootDir);
 
-            InstansiatedProjectile.SetActive(true);
-
-            BaseProjectile enemyProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-            enemyProjectile.SetOwner(this);
-            enemyProjectile.SetShootDir(shootDir);
-
-            PlayWeaponFireSound();
-        }
+        PlayWeaponFireSound();
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class BaseEnemyMovement : MonoBehaviour
 {
-    protected Enemy enemy;
+    protected Ship shipOwner;
     protected Animator animator;
 
     protected bool Loop;
@@ -18,30 +18,32 @@ public class BaseEnemyMovement : MonoBehaviour
     protected float delay = .5f;
     protected Vector3 movement;
 
-    protected float speed;
+    [SerializeField] protected float speed;
     public float Speed { get { return speed; } set { speed = value; } }
 
     public virtual void OnDestroy() { }
-    public virtual void OnEnable() 
+    public virtual void OnEnable()
     {
- 
+
     }
 
     public virtual void Awake()
     {
-        enemy = GetComponent<Enemy>();
+        shipOwner = GetComponent<Ship>();
         animator = GetComponentInChildren<Animator>();
     }
 
-    public virtual void Start(){
-       
-    } 
+    public virtual void Start()
+    {
+
+    }
 
     public virtual void Update() { }
 
     public virtual void LateUpdate()
     {
-      Movement();
+        if (shipOwner.IsAlive == false) return;
+        Movement();
     }
 
     public virtual void Movement()
@@ -51,7 +53,7 @@ public class BaseEnemyMovement : MonoBehaviour
 
     public void ExitLevel()
     {
-        enemy.ExitLevel();
+        shipOwner.ExitLevel();
         gameObject.SetActive(false);
     }
 

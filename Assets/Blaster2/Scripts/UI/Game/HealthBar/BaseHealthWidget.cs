@@ -22,7 +22,8 @@ public class BaseHealthWidget : MonoBehaviour
     [SerializeField] protected Vector3 offset;
    private void OnDestroy()
     {
-        ship.OnHealthChanged -= UpdateHealthBar;
+        if(ship)
+            ship.OnHealthChanged -= UpdateHealthBar;
     }
     public virtual void Setup(IDamagable damagable, bool follow = true) { }
     public virtual void Setup(IDamagable damagable)

@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2646400951740711296}
   - component: {fileID: 8132643417449901915}
-  - component: {fileID: 4090011375437285214}
+  - component: {fileID: 842377148}
   m_Layer: 0
   m_Name: DefaultBossWeapon
   m_TagString: Untagged
@@ -135,7 +135,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &4090011375437285214
+--- !u!114 &842377148
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -144,10 +144,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 2644192601680030190}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cf5971c9f8272ca4fbfe3e5eec420ffb, type: 3}
+  m_Script: {fileID: 11500000, guid: 124afc7764702d14389b1fd294845f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
+  ship: {fileID: 4842373185020336355}
   weaponData: {fileID: 11400000, guid: 7d9e38a6896440242a1fe408eff79197, type: 2}
   FireRate: 0
   Damage: 0
@@ -422,20 +422,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 2247208141990872419}
-  ShieldEffect: {fileID: 8019238402802615437}
   Id: 10
-  EnemyData: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
+  ShieldEffect: {fileID: 8019238402802615437}
   Level: 1
   Damage: 0
   FireRate: 0
   Speed: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  EnemyData: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
   Weapons:
-  - {fileID: 4090011375437285214}
+  - {fileID: 842377148}
   delayAttak: 3
   enemyElement:
     Name: 
     gameObjectType: 0
-  StartBattle: 0
+  DestroyableParts: []
+  Phase: 0
 --- !u!114 &7745621745924028864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,14 +451,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c88147df97e79a419122c2e7b25fba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
   Positions:
+  - {x: 0, y: 0, z: 100}
+  - {x: -20, y: 0, z: 100}
+  - {x: 20, y: 0, z: 100}
   - {x: 0, y: 0, z: 80}
-  - {x: -20, y: 0, z: 80}
-  - {x: 20, y: 0, z: 80}
-  - {x: 0, y: 0, z: 60}
   currentPos: 0
   changePositionTimer: 0
   bossDestroyableParts: []
+  speedByPhase: 2
 --- !u!1 &2645545865169793035
 GameObject:
   m_ObjectHideFlags: 0
@@ -890,7 +895,7 @@ PrefabInstance:
         type: 3}
       propertyPath: baseWeapon
       value: 
-      objectReference: {fileID: 4090011375437285214}
+      objectReference: {fileID: 842377148}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -1370,7 +1375,7 @@ PrefabInstance:
         type: 3}
       propertyPath: baseWeapon
       value: 
-      objectReference: {fileID: 4090011375437285214}
+      objectReference: {fileID: 842377148}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -1659,7 +1664,7 @@ PrefabInstance:
         type: 3}
       propertyPath: baseWeapon
       value: 
-      objectReference: {fileID: 4090011375437285214}
+      objectReference: {fileID: 842377148}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -2061,7 +2066,7 @@ PrefabInstance:
         type: 3}
       propertyPath: baseWeapon
       value: 
-      objectReference: {fileID: 4090011375437285214}
+      objectReference: {fileID: 842377148}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -2168,7 +2173,7 @@ PrefabInstance:
         type: 3}
       propertyPath: baseWeapon
       value: 
-      objectReference: {fileID: 4090011375437285214}
+      objectReference: {fileID: 842377148}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript

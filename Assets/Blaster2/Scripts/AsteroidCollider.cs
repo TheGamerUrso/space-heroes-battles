@@ -85,9 +85,9 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
     {
         if (other.gameObject.tag.Equals(Constants.PLAYTERTAG))
         {
-            var destroyable = other.gameObject.GetComponent<IDamagable>();
-            destroyable.TakeDamage(destroyable.MaxHealth / 2);
-            TakeDamage(destroyable.MaxHealth);
+            var ship = other.gameObject.GetComponent<Ship>();
+            ship.TakeDamage(ship.MaxHealth / 2);
+            TakeDamage(ship.MaxHealth);
         }
     }
 }

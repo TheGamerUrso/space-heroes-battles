@@ -21,7 +21,7 @@ public class CrawlerEnemyMovement : BaseBossEnemyMovement
     public override void Start()
     {
         base.Start();
-        speed = (2 * Mathf.PI) / 5; //2*PI in degress is 360, so you get 5 seconds to complete a circle
+        speed = (2 * Mathf.PI) / 2; //2*PI in degress is 360, so you get 5 seconds to complete a circle
     }
 
     public override void Movement()
@@ -39,11 +39,16 @@ public class CrawlerEnemyMovement : BaseBossEnemyMovement
         angle += speed * Time.deltaTime; //if you want to switch direction, use -= instead of +=
 
         var xVel = Mathf.Cos(angle) * radius + .8f;
-        var zVel = Mathf.Sin(angle) * radius + 100;
+        var zVel = Mathf.Sin(angle) * radius + 80;
 
         Vector3 newPos = targetPosition;
         newPos.x = xVel;
         newPos.z = zVel;
         targetPosition = newPos;
+    }
+
+    public override void OnBossPhaseChangedHandled(int Phase)
+    {
+
     }
 }

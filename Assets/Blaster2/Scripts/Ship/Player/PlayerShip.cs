@@ -40,7 +40,7 @@ public class PlayerShip : Ship, IDamagable
     }
 
     public override void Start()
-    {        
+    {
         Events.OnLevelValueChanged += OnLevelValueChanged;
 
         playerData = PersistantData.GetPlayerData();
@@ -59,6 +59,8 @@ public class PlayerShip : Ship, IDamagable
 
         HealthBar = GameObject.FindAnyObjectByType<PlayerHealthWidget>();
         HealthBar.Setup(this);
+
+        IsAlive = true;
     }
 
     public void OnLevelValueChanged(int Level)
@@ -201,50 +203,49 @@ public class PlayerShip : Ship, IDamagable
 
     public override void TakeDamage(float dmg)
     {
-        if (!IsDead())
+        if (!IsAlive) return;
+
+        audioSource.PlayOneShot(playerStats.hitSFX);
+        playerData.GotHitInGame = true; ;
+        if (dmg >= MaxHealth)
         {
-            audioSource.PlayOneShot(playerStats.hitSFX);
-            playerData.GotHitInGame = true; ;
-            if (dmg >= MaxHealth)
-            {
-                dmg = MaxHealth - 1;
-            }
+            dmg = MaxHealth - 1;
+        }
 
-            if (HasShield == true)
+        if (HasShield == true)
+        {
+            HasShield = false;
+            ShieldEffect.SetActive(HasShield);
+        }
+        else if (HasShield == false)
+        {
+            if (invisibilityTimer <= 0)
             {
-                HasShield = false;
-                ShieldEffect.SetActive(HasShield);
-            }
-            else if (HasShield == false)
-            {
-                if (invisibilityTimer <= 0)
+                invisibilityTimer = .25f;
+
+                var health = CurrentHealth - dmg;
+
+                SetHealth(health);
+
+                Game.ResetMultiplier();
+
+                if (!HasArmorUprade)
                 {
-                    invisibilityTimer = .25f;
+                    DownGradeWeapon();
+                }
 
-                    var health = CurrentHealth - dmg;
+                Events.ShakeCamera?.Invoke(.5f);
 
-                    SetHealth(health);
+                Game.GotHit();
 
-                    Game.ResetMultiplier();
+                if (GetHealthPresentage() < .5f)
+                {
+                    audioSource.PlayOneShot(playerStats.alarmSFX);
+                }
 
-                    if (!HasArmorUprade)
-                    {
-                        DownGradeWeapon();
-                    }
-
-                    Events.ShakeCamera?.Invoke(.5f);
-
-                    Game.GotHit();
-
-                    if (GetHealthPresentage() < .5f)
-                    {
-                        audioSource.PlayOneShot(playerStats.alarmSFX);
-                    }
-
-                    if (CurrentHealth < 1)
-                    {
-                        Death();
-                    }
+                if (CurrentHealth < 1)
+                {
+                    Death();
                 }
             }
         }

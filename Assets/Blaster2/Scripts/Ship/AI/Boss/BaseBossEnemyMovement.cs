@@ -12,16 +12,27 @@ public class BaseBossEnemyMovement : BaseEnemyMovement
 
     protected Vector3 targetPosition;
     public BossDestroyablePart[] bossDestroyableParts;
+    protected bool RandomMovement;
+    
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        shipOwner.GetComponent<BossEnemy>().OnBossPhaseChanged-=OnBossPhaseChangedHandled;
+    }
+
     public override void Awake()
     {
         base.Awake();
         targetPosition = transform.position;
-    }
+        shipOwner.GetComponent<BossEnemy>().OnBossPhaseChanged+=OnBossPhaseChangedHandled;
 
+    }
+    
     public override void Update()
     {
         transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
     }
+    
     public override void LateUpdate()
     {
         base.LateUpdate();
@@ -36,6 +47,8 @@ public class BaseBossEnemyMovement : BaseEnemyMovement
     {
 
     }
+
+    public virtual void OnBossPhaseChangedHandled(int Phase){}
 }
 
 

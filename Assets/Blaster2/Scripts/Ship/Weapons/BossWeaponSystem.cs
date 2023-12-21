@@ -7,8 +7,8 @@ public class BossWeaponSystem : WeaponScript
 {   
     public void Phases()
     {
-        float m_CurHealth = GetComponent<IDamagable>().CurrentHealth;
-        float m_MaxHealth = GetComponent<IDamagable>().MaxHealth;
+        float m_CurHealth = GetComponent<Ship>().CurrentHealth;
+        float m_MaxHealth = GetComponent<Ship>().MaxHealth;
 
         if (m_CurHealth <= (0.6 * m_MaxHealth))
         {

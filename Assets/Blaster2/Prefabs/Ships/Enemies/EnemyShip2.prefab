@@ -53,7 +53,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &825
 Transform:
   m_ObjectHideFlags: 0
@@ -273,15 +273,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: -6424459942528458188}
-  ShieldEffect: {fileID: 2138503217037189460}
   Id: 2
-  EnemyData: {fileID: 11400000, guid: 083802b9891d56740b1d537bff6f75a4, type: 2}
+  ShieldEffect: {fileID: 2138503217037189460}
   Level: 0
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  EnemyData: {fileID: 11400000, guid: 083802b9891d56740b1d537bff6f75a4, type: 2}
   Weapons:
   - {fileID: 5387066570048745163}
   delayAttak: 3
@@ -300,6 +300,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
 --- !u!1 &554
 GameObject:
   m_ObjectHideFlags: 0
@@ -1426,6 +1427,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 5387066570048745163}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 0}
@@ -1545,6 +1551,11 @@ PrefabInstance:
       propertyPath: speed
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 5387066570048745163}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript

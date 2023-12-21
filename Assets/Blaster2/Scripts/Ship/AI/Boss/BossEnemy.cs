@@ -3,25 +3,40 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class BossEnemy : Enemy, IDamagable, ITargetable
+public class BossEnemy : Enemy
 {
+    public Action<int> OnBossPhaseChanged;
     #region Components
-    [SerializeField] protected List<IDamagable> DestroyableParts = new List<IDamagable>();
+    [SerializeField] protected List<BossDestroyablePart> DestroyableParts = new List<BossDestroyablePart>();
     #endregion
 
-    [SerializeField] protected bool StartBattle;
+    public bool StartBattle{get;protected set;}
+    [SerializeField] private int Phase;
 
     public override void OnEnable()
     {
         base.OnEnable();
         EnableColliders(false);
     }
+    public override void OnDestroy()
+    {
+        base.OnDestroy();
+        OnBossPhaseChanged -= OnBossPhaseChangedHandled;
+    }
+
+    public override void Awake()
+    {
+        base.Awake();
+        OnBossPhaseChanged -= OnBossPhaseChangedHandled;
+    }
 
     public override void Start()
     {
         base.Start();
         baseEnemyMovement.Speed = Speed;
+        Phase = 1;
     }
+
     public override void SetEnemyHealthUI()
     {
         if (HealthBar != null)
@@ -32,7 +47,7 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
         {
             GameObject initializedHealthWidget = Instantiate(EnemyData.HealthBarSettings.HealthBarPrefab, transform, false);
             HealthBar = initializedHealthWidget.GetComponent<BaseHealthWidget>();
-            HealthBar.GetComponent<EnemyHealthWidget>().Setup(this, true);
+            HealthBar.GetComponent<EnemyHealthWidget>().Setup(this, false);
         }
     }
 
@@ -62,6 +77,13 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
         {
             takeDamageDelay = .1f;
 
+            foreach (var part in DestroyableParts)
+            {
+                if (part.IsAlive)
+                {
+                    return;
+                }
+            }
             if (HasShield)
             {
                 HasShield = false;
@@ -76,6 +98,7 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
                 {
                     Death();
                 }
+                IncreasePhase();
             }
             ShieldEffect.SetActive(HasShield);
         }
@@ -158,20 +181,6 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
         }
     }
 
-    public override void AddDamagablePart(IDamagable part)
-    {
-        DestroyableParts.Add(part);
-
-        MonoBehaviour go = part as MonoBehaviour;
-        if (go != this)
-        {
-            BossDestroyablePart partGO = go.GetComponent<BossDestroyablePart>();
-            partGO.maxHealth = part.MaxHealth / 2;
-            float health = part.MaxHealth;
-            partGO.SetHealth(health);
-        }
-    }
-
     public override void OnEnemyHitHandled(int hitIndex, int numberOfHits)
     {
         if (GuiManager.Instance.IsTrasnmiting())
@@ -228,12 +237,33 @@ public class BossEnemy : Enemy, IDamagable, ITargetable
     }
 
     public override IEnumerator DelayStart()
-    {
+    {     
+        Debug.Log("BossEnemy-> DelayStart");
         HealthBar.Show();
-        yield return new WaitForSeconds(2);
+        yield return new WaitForSeconds(4);
         EnableAllWeapon();
         EnableColliders(true);
         StartBattle = true;
         baseEnemyMovement.EnableMovement();
+    }
+
+    public void IncreasePhase()
+    {
+        if (GetHealthPresentage() < 50f && Phase != 2)
+        {
+            Phase = 2;
+            OnBossPhaseChanged?.Invoke(Phase);
+        }
+        else if (GetHealthPresentage() < 25f && Phase != 3)
+        {
+            Phase = 3;
+            OnBossPhaseChanged?.Invoke(Phase);
+        }
+
+    }
+
+    public virtual void OnBossPhaseChangedHandled(int Phase)
+    {
+       SetFireRate(0.2f);
     }
 }

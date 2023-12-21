@@ -205,7 +205,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e55044970d971841b2bf45231c02a00, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
+  ship: {fileID: 5222130039554980034}
   weaponData: {fileID: 11400000, guid: ba632cf56013c404e9e0e52b62ee738f, type: 2}
   FireRate: 0
   Damage: 0
@@ -363,7 +363,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6995417894872332923}
   m_LocalRotation: {x: 0, y: -1, z: 0, w: 0.00000028088027}
-  m_LocalPosition: {x: 0, y: 0, z: 100}
+  m_LocalPosition: {x: 0, y: 0, z: 80}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -558,23 +558,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 8912198117137558034}
-  ShieldEffect: {fileID: 5414371441509973888}
   Id: 12
-  EnemyData: {fileID: 11400000, guid: 060fc5b36ebf35145ab28eaebde0b7cb, type: 2}
+  ShieldEffect: {fileID: 5414371441509973888}
   Level: 15
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  EnemyData: {fileID: 11400000, guid: 060fc5b36ebf35145ab28eaebde0b7cb, type: 2}
   Weapons:
   - {fileID: 7202008812173789696}
   delayAttak: 3
   enemyElement:
     Name: 
     gameObjectType: 0
-  healthbar: {fileID: 6956627043950290241}
-  StartBattle: 0
+  DestroyableParts:
+  - {fileID: 15023000589089177}
+  - {fileID: 407250212782109604}
+  Phase: 0
 --- !u!114 &2712214334770869954
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -587,11 +589,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22062d1b40b3454d9a645c539f844b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
   Positions:
+  - {x: 0, y: 0, z: 100}
+  - {x: -20, y: 0, z: 100}
+  - {x: 20, y: 0, z: 100}
   - {x: 0, y: 0, z: 80}
-  - {x: -20, y: 0, z: 80}
-  - {x: 20, y: 0, z: 80}
-  - {x: 0, y: 0, z: 60}
   currentPos: 0
   changePositionTimer: 0
   bossDestroyableParts:
@@ -628,97 +631,9 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5823582437350554444}
-  - {fileID: 6956627043950290240}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &353565782111176487
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 767654189804046151}
-    m_Modifications:
-    - target: {fileID: 7233618025502483040, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_Name
-      value: BossEnemyHealthBar
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
---- !u!4 &6956627043950290240 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-    type: 3}
-  m_PrefabInstance: {fileID: 353565782111176487}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6956627043950290241 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7233618025502483046, guid: 26029f53ee0293242a35609dfeebfbdd,
-    type: 3}
-  m_PrefabInstance: {fileID: 353565782111176487}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf49cc4b7c2fa74dafb0efaaeb1c5b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1061186731540986221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1532,6 +1447,12 @@ PrefabInstance:
     - {fileID: 5157364096292476427, guid: f02fc7c542bfd164893022c5c85a0958, type: 3}
     - {fileID: 8491877466991517046, guid: f02fc7c542bfd164893022c5c85a0958, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: f02fc7c542bfd164893022c5c85a0958, type: 3}
+--- !u!82 &72861508929626136 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1795279471946770609, guid: f02fc7c542bfd164893022c5c85a0958,
+    type: 3}
+  m_PrefabInstance: {fileID: 1866959761606215849}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &320565242685163455 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2133059572404490006, guid: f02fc7c542bfd164893022c5c85a0958,
@@ -1571,15 +1492,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679bb825e4b91584aa2f530c7f69df34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAlive: 0
-  enemyData: {fileID: 11400000, guid: 41f7bb24918329f4f9bdb5ac90422fac, type: 2}
+  audioSource: {fileID: 72861508929626136}
+  Id: Boss3Arm_R
+  ShieldEffect: {fileID: 0}
   Level: 1
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 100
-  animator: {fileID: 6451533102047271651}
+  MaxHealth: 0
+  CurrentHealth: 0
+  shipOwner: {fileID: 5222130039554980034}
+  EnemyData: {fileID: 11400000, guid: 41f7bb24918329f4f9bdb5ac90422fac, type: 2}
   baseBossEnemy: {fileID: 5222130039554980034}
   fireEffect: {fileID: 448857427072043418}
   prepareToAttack: {fileID: 8805531597043660610}
@@ -1596,9 +1519,9 @@ BoxCollider:
     type: 3}
   m_PrefabInstance: {fileID: 1866959761606215849}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &1895042772428588654 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 262419746777697991, guid: f02fc7c542bfd164893022c5c85a0958,
+--- !u!82 &997374680395627140 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1459066216001810989, guid: f02fc7c542bfd164893022c5c85a0958,
     type: 3}
   m_PrefabInstance: {fileID: 1866959761606215849}
   m_PrefabAsset: {fileID: 0}
@@ -1638,15 +1561,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 679bb825e4b91584aa2f530c7f69df34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  IsAlive: 0
-  enemyData: {fileID: 11400000, guid: 41f7bb24918329f4f9bdb5ac90422fac, type: 2}
+  audioSource: {fileID: 997374680395627140}
+  Id: Boss3Arm_L
+  ShieldEffect: {fileID: 0}
   Level: 1
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 100
-  animator: {fileID: 1895042772428588654}
+  MaxHealth: 0
+  CurrentHealth: 0
+  shipOwner: {fileID: 5222130039554980034}
+  EnemyData: {fileID: 11400000, guid: 41f7bb24918329f4f9bdb5ac90422fac, type: 2}
   baseBossEnemy: {fileID: 5222130039554980034}
   fireEffect: {fileID: 2296282270516393375}
   prepareToAttack: {fileID: 6669180055013238117}

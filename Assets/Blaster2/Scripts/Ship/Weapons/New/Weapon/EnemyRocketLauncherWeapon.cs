@@ -23,10 +23,9 @@ public class EnemyRocketLauncherWeapon : BaseWeapon
                 InstansiatedProjectile.SetActive(true);
                 InstansiatedProjectile.transform.position = Cannons[i].position;
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
-
-                EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
-                enemyProjectile.SetOwner(this);
-                enemyProjectile.SetShootDir(shootDir);
+           BaseProjectile baseProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
+                baseProjectile.SetOwner(this);
+                baseProjectile.SetShootDir(shootDir);
 
             }
 

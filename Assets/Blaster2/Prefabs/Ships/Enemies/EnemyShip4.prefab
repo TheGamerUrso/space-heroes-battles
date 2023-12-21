@@ -628,15 +628,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 4182043450637214606}
-  ShieldEffect: {fileID: 3847717439273420311}
   Id: 4
-  EnemyData: {fileID: 11400000, guid: 90626a35d5ac4214eb8661c3af477e1a, type: 2}
+  ShieldEffect: {fileID: 3847717439273420311}
   Level: 0
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  EnemyData: {fileID: 11400000, guid: 90626a35d5ac4214eb8661c3af477e1a, type: 2}
   Weapons:
   - {fileID: 4334602396277418716}
   delayAttak: 3
@@ -655,6 +655,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4687ecd9d34220419f712282eba66b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
   PathIndex: 000000000400000005000000
   Path: []
   PingPong: 0
@@ -1269,6 +1270,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 4334602396277418716}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 0}
@@ -1487,6 +1493,11 @@ PrefabInstance:
       propertyPath: speed
       value: 1.4
       objectReference: {fileID: 0}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 4334602396277418716}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript

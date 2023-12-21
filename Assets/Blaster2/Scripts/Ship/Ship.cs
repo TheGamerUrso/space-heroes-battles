@@ -3,12 +3,15 @@ using UnityEngine;
 
 public abstract class Ship : MonoBehaviour
 {
+
     public Action<float, float> OnHealthChanged;
     protected Animator animator;
     [SerializeField] protected AudioSource audioSource;
+
+    public string Id;
     #region Health
 
-    public bool IsAlive { get; set; }
+    public bool IsAlive { get; protected set; }
     public virtual BaseHealthWidget HealthBar { get; set; }
     #endregion
     #region Shield
@@ -22,8 +25,13 @@ public abstract class Ship : MonoBehaviour
     #endregion Weapons
 
     #region Stats
-    public float MaxHealth { get; protected set; }
-    public float CurrentHealth { get; protected set; }
+    [Header("STATS")]
+    public int Level;
+    public float Damage;
+    public float FireRate;
+    public float Speed;
+    public float MaxHealth;
+    public float CurrentHealth;
     #endregion
 
     #region Methods
@@ -77,10 +85,6 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void InstallShield() { }
 
-    public bool IsDead()
-    {
-        return CurrentHealth <= 0;
-    }
     public virtual void TakeDamage(float dmg) { }
 
     public virtual void Hit() { }

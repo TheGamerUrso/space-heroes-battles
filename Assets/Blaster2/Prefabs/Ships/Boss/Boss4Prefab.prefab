@@ -149,7 +149,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8092688070467040324}
-  - {fileID: 5335607119729864830}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -366,21 +365,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19527fa7bf0e4d4bad8352f14bef76e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
+  ship: {fileID: 7581689389241976176}
   weaponData: {fileID: 11400000, guid: 3abe3156ae1ac80488b6ae5633accdb3, type: 2}
   FireRate: 0
   Damage: 0
   SuperChargeTime: 0
   source: {fileID: 7536490629950735607}
-  particleSFX:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  particleSFX: []
   Cannons: []
 --- !u!1 &8096141989676415350
 GameObject:
@@ -640,23 +631,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 3916361207229813623}
-  ShieldEffect: {fileID: 1814809603173044376}
   Id: 13
-  EnemyData: {fileID: 11400000, guid: b436933dc86d2ee40a94f0145558a772, type: 2}
+  ShieldEffect: {fileID: 1814809603173044376}
   Level: 1
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  EnemyData: {fileID: 11400000, guid: b436933dc86d2ee40a94f0145558a772, type: 2}
   Weapons:
   - {fileID: 7313706618808958915}
   delayAttak: 3
   enemyElement:
     Name: 
     gameObjectType: 0
-  healthbar: {fileID: 5335607119729864831}
-  StartBattle: 0
+  DestroyableParts: []
+  Phase: 0
 --- !u!114 &2018519549167971973
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -669,14 +660,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c88147df97e79a419122c2e7b25fba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
   Positions:
+  - {x: 0, y: 0, z: 100}
+  - {x: -20, y: 0, z: 100}
+  - {x: 20, y: 0, z: 100}
   - {x: 0, y: 0, z: 80}
-  - {x: -20, y: 0, z: 80}
-  - {x: 20, y: 0, z: 80}
-  - {x: 0, y: 0, z: 60}
   currentPos: 0
   changePositionTimer: 0
   bossDestroyableParts: []
+  speedByPhase: 0.8
 --- !u!1 &8097347456373023211
 GameObject:
   m_ObjectHideFlags: 0
@@ -1131,93 +1124,6 @@ ParticleSystemRenderer:
     type: 3}
   m_PrefabInstance: {fileID: 2374675209450186353}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &3344234036149817881
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 8708230148599612763}
-    m_Modifications:
-    - target: {fileID: 7233618025502483040, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_Name
-      value: BossEnemyHealthBar
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
---- !u!4 &5335607119729864830 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd,
-    type: 3}
-  m_PrefabInstance: {fileID: 3344234036149817881}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &5335607119729864831 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7233618025502483046, guid: 26029f53ee0293242a35609dfeebfbdd,
-    type: 3}
-  m_PrefabInstance: {fileID: 3344234036149817881}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf49cc4b7c2fa74dafb0efaaeb1c5b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &4753549651877590945
 PrefabInstance:
   m_ObjectHideFlags: 0

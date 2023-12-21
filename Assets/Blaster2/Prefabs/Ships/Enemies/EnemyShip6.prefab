@@ -158,7 +158,7 @@ GameObject:
   - component: {fileID: 6174728767924027997}
   - component: {fileID: 6689064611682042993}
   m_Layer: 0
-  m_Name: Enemy4Weapon
+  m_Name: SpreadShotWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 124afc7764702d14389b1fd294845f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
+  ship: {fileID: 107279591863547797}
   weaponData: {fileID: 11400000, guid: e0ee6a6c2d9eddc4fbcb5e3ba80f5da0, type: 2}
   FireRate: 0
   Damage: 0
@@ -365,7 +365,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &4159772285747209526
 Transform:
   m_ObjectHideFlags: 0
@@ -373,7 +373,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4159772285747209524}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -381,7 +381,7 @@ Transform:
   - {fileID: 4441316680085613361}
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!54 &4159772285747209512
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -566,15 +566,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: -6129767246450191439}
-  ShieldEffect: {fileID: 2727753562502703441}
   Id: 6
-  EnemyData: {fileID: 11400000, guid: 4c12e56a29fc3a5449a545324fd8f889, type: 2}
+  ShieldEffect: {fileID: 2727753562502703441}
   Level: 0
   Damage: 0
   FireRate: 0
   Speed: 0
-  currentHealth: 0
-  maxHealth: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  EnemyData: {fileID: 11400000, guid: 4c12e56a29fc3a5449a545324fd8f889, type: 2}
   Weapons:
   - {fileID: 6689064611682042993}
   delayAttak: 3
@@ -593,6 +593,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  speed: 0
 --- !u!1 &4159772285780595337
 GameObject:
   m_ObjectHideFlags: 0
@@ -934,6 +935,11 @@ PrefabInstance:
       propertyPath: speed
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -1368,6 +1374,11 @@ PrefabInstance:
       propertyPath: speed
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -1816,6 +1827,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 0}
@@ -2021,6 +2037,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 0}
@@ -2125,6 +2146,11 @@ PrefabInstance:
       propertyPath: speed
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -2232,6 +2258,11 @@ PrefabInstance:
       propertyPath: speed
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript
@@ -2774,6 +2805,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 0}
@@ -2879,6 +2915,11 @@ PrefabInstance:
       propertyPath: speed
       value: 1.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
+        type: 3}
+      propertyPath: baseWeapon
+      value: 
+      objectReference: {fileID: 6689064611682042993}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b,
         type: 3}
       propertyPath: weaponScript

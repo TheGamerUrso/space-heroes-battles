@@ -17,14 +17,14 @@ public class EnemySpreadShotWeapon : BaseWeapon
         {
             InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(ProjectilePrefab);
             dir = Cannons[i].position + Cannons[i].forward;
-            shootDir = (Cannons[i].position - dir).normalized;
+            shootDir = ( dir - Cannons[i].position).normalized;
 
             InstansiatedProjectile.transform.position = Cannons[i].position;
             InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 
-            EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
-            enemyProjectile.SetOwner(this);
-            enemyProjectile.SetShootDir(shootDir);
+            BaseProjectile baseProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
+            baseProjectile.SetOwner(this);
+            baseProjectile.SetShootDir(shootDir);
 
             InstansiatedProjectile.SetActive(true);
         }

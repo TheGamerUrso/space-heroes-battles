@@ -11,16 +11,7 @@ public class Enemy : Ship, IDamagable, ITargetable
     protected BaseEnemyMovement baseEnemyMovement;
     #endregion
 
-    public string Id;
     public Enemy_SO EnemyData;
-    #region Stats
-
-    [Header("STATS")]
-    public int Level;
-    public float Damage;
-    public float FireRate;
-    public float Speed;
-    #endregion
 
     #region Weapons
     [Space(2)]
@@ -75,23 +66,19 @@ public class Enemy : Ship, IDamagable, ITargetable
     }
 
     public override void Start()
-    {
-        HasShield = false;
-
+    {     
         playerData = PersistantData.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-
-
-
-        ShieldEffect.SetActive(HasShield);
-
         SetStats(playerShipData.level);
 
+        HasShield = false;
+        ShieldEffect.SetActive(HasShield);
+   
         baseEnemyMovement.Speed = Speed;
-
         currentWeaponActive = 0;
 
         DisableAllWeapons();
+
         SetEnemyHealthUI();
         HealthBar.Show();
 
@@ -108,7 +95,7 @@ public class Enemy : Ship, IDamagable, ITargetable
         {
             GameObject initializedHealthWidget = Instantiate(EnemyData.HealthBarSettings.HealthBarPrefab, transform, false);
             HealthBar = initializedHealthWidget.GetComponent<EnemyHealthWidget>();
-            HealthBar.GetComponent<EnemyHealthWidget>().Setup(this, false);
+            HealthBar.GetComponent<EnemyHealthWidget>().Setup(this,true);
         }
     }
 
@@ -190,32 +177,28 @@ public class Enemy : Ship, IDamagable, ITargetable
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
-            var destroyable = other.GetComponent<IDamagable>();
-            destroyable.TakeDamage(destroyable.MaxHealth / 2);
+            var ship = other.GetComponent<Ship>();
+            ship.TakeDamage(ship.MaxHealth / 2);
         }
     }
-    public void SetFireRate(int weaponIndex = 0, bool all = true)
+
+    public void SetFireRate(float fireRate = .2f,int weaponIndex = 0, bool all = true)
     {
         if (all)
         {
             for (int i = 0; i < Weapons.Length; i++)
             {
-                float newFireRate = Weapons[i].FireRate - .2f;
+                float newFireRate = Weapons[i].FireRate - fireRate;
 
                 Weapons[i].FireRate = newFireRate;
             }
         }
         else
         {
-            float newFireRate = Weapons[weaponIndex].FireRate - .2f;
+            float newFireRate = Weapons[weaponIndex].FireRate - fireRate;
 
             Weapons[weaponIndex].FireRate = newFireRate;
         }
-    }
-
-    public virtual void AddDamagablePart(IDamagable part)
-    {
-
     }
 
     public override void SetStats(int level)
@@ -263,7 +246,8 @@ public class Enemy : Ship, IDamagable, ITargetable
     }
 
     public void EnableAllWeapon()
-    {
+    {     
+        Debug.Log(gameObject.name + "");
         if (Weapons.Length > 0)
         {
             for (int i = 0; i < Weapons.Length; i++)
@@ -296,7 +280,8 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     public virtual IEnumerator DelayStart()
     {
-        HealthBar.Show();
+        Debug.Log("Enemy-> DelayStart");
+        //HealthBar.Show();
         yield return new WaitForSeconds(2);
         EnableColliders(true);
         if (Weapons.Length != 0)
