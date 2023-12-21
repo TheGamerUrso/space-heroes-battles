@@ -27,34 +27,36 @@ public abstract class BaseProjectile : MonoBehaviour
         if (trailRenderer)
             trailRenderer.Clear();
     }
-    protected virtual void OnAwake() => SetInitialReference();
+    
+    protected virtual void OnAwake()
+    {
 
+    }
 
     private void Awake()
     {
+        rigid = GetComponent<Rigidbody>();
+        trailRenderer = GetComponent<TrailRenderer>();
+        meshRenderer = GetComponentInChildren<MeshRenderer>();
         OnAwake();
     }
 
     private void Start() => OnStart();
 
-    public virtual void SetInitialReference()
+    public virtual void SetOwner(BaseWeapon baseWeapon)
     {
-        rigid = GetComponent<Rigidbody>();
-        trailRenderer = GetComponent<TrailRenderer>();
-        meshRenderer = GetComponentInChildren<MeshRenderer>();
+        this.baseWeapon = baseWeapon;
     }
-
-    public virtual void Setup(BaseWeapon baseWeapon) { }
     public virtual void OnStart() { }
     private void LateUpdate() => Movement();
 
     public abstract void Movement();
 
-     public virtual void DestoryNow()
+    public virtual void DestoryNow()
     {
-        explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-        explosion.transform.SetPositionAndRotation(transform.position + Vector3.up * 2, Quaternion.identity);
-        explosion.SetActive(true);
+        var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        explode.SetActive(true);
+        explode.transform.position = transform.position;
         gameObject.SetActive(false);
     }
 

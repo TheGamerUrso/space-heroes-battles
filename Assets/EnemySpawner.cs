@@ -23,25 +23,26 @@ public class EnemySpawner : MonoBehaviour
 
         enemy.SetStats(LevelDifficulty);
         enemy.Id = enemyElement.Name;
-        EnemyMove followPathAI = enemGO.GetComponent<EnemyMove>();
 
+        BaseEnemyMovement enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
         enemGO.transform.position = spawnPos;
         enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
 
         enemGO.SetActive(true);
 
-        if (followPathAI.moveType == EnemyMove.EnemyMoveType.FollowPath)
+        FollowPathEnemyMovement followPathEnemyMovement = enemyMovement.GetComponent<FollowPathEnemyMovement>();
+        if (followPathEnemyMovement)
         {
             enemy.enemyElement = enemyElement;
 
-            int pathIndex = followPathAI.GeneratePath();
+            int pathIndex = followPathEnemyMovement.GeneratePath();
 
             if (enemyElement.gameObjectType == PoolGameObjectType.Enemy4)
             {
-                followPathAI.PingPong = false;
+                followPathEnemyMovement.PingPong = false;
                 if (pathIndex == 0)
                 {
-                    followPathAI.PingPong = true;
+                    followPathEnemyMovement.PingPong = true;
                 }
             }
         }
@@ -60,27 +61,15 @@ public class EnemySpawner : MonoBehaviour
 
         enemy.SetStats(LevelDifficulty);
         enemy.Id = enemyElement.Name;
-        EnemyMove followPathAI = enemGO.GetComponent<EnemyMove>();
 
         enemGO.transform.position = spawnPos;
         enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
-
         enemGO.SetActive(true);
 
-        if (followPathAI.moveType == EnemyMove.EnemyMoveType.FollowPath)
+        FollowPathEnemyMovement enemyMovement = enemGO.GetComponent<FollowPathEnemyMovement>();
+        if (enemyMovement)
         {
-            enemy.enemyElement = enemyElement;
-
-            int pathIndex = followPathAI.GeneratePath();
-
-            if (enemyElement.gameObjectType == PoolGameObjectType.Enemy4)
-            {
-                followPathAI.PingPong = false;
-                if (pathIndex == 0)
-                {
-                    followPathAI.PingPong = true;
-                }
-            }
+           enemyMovement.Initialize(enemyElement);
         }
         return enemGO;
     }

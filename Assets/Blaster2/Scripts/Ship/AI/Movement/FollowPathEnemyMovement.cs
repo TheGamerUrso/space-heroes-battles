@@ -33,6 +33,22 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
             transform.position = Path[0].position;
 
     }
+    public void Initialize(EnemyElement newEnemyElement)
+    {
+        var enemyElement = newEnemyElement;
+
+        int pathIndex = GeneratePath();
+
+        if (enemyElement.gameObjectType == PoolGameObjectType.Enemy4)
+        {
+            PingPong = false;
+            if (pathIndex == 0)
+            {
+                PingPong = true;
+            }
+        }
+    }
+
     public override void Start()
     {
         startingPosition = transform.position;
@@ -42,6 +58,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
             GeneratePath();
         }
     }
+
     public override void Movement()
     {
         if (Path.Length > 0)

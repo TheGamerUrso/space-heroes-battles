@@ -9,7 +9,7 @@ public class BaseSpecialAttack : BaseWeapon
     public bool SpecialActive { get; protected set; } = false;
 
     protected CountDownTimer m_CountDownTimer;
-    private PlayerShip playerShip;
+
     public override void Start()
     {
         playerData = PersistantData.GetPlayerData();

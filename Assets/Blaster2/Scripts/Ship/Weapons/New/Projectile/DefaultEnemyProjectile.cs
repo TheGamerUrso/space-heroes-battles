@@ -4,22 +4,6 @@ using UnityEngine;
 
 public class DefaultEnemyProjectile : BaseProjectile
 {
-    public GameObject Target;
-    public Vector3 TargetLastPosition;
-
-    public bool FollowTarget;
-
-    private void OnDisable()
-    {
-        if (trailRenderer)
-            trailRenderer.Clear();
-    }
-
-    public override void Setup(BaseWeapon baseWeapon)
-    {
-        this.baseWeapon = baseWeapon;
-    }
-
     public override void Movement()
     {
         Vector3 newPos = transform.position;

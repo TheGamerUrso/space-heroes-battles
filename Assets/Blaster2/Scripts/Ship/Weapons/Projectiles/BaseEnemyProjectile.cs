@@ -4,18 +4,7 @@ using UnityEngine;
 
 public class BaseEnemyProjectile : BaseProjectile
 {
-    public GameObject Target;
-    public Vector3 TargetLastPosition;
-
-    public bool FollowTarget;
-
-    private void OnDisable()
-    {
-        if (trailRenderer)
-            trailRenderer.Clear();
-    }
-
-    public override void Setup(BaseWeapon baseWeapon)
+    public override void SetOwner(BaseWeapon baseWeapon)
     {
         this.baseWeapon = baseWeapon;
     }

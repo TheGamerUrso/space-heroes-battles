@@ -23,7 +23,7 @@ public class EnemySpreadShotWeapon : BaseWeapon
             InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 
             EnemyProjectile enemyProjectile = InstansiatedProjectile.GetComponent<EnemyProjectile>();
-            enemyProjectile.Setup(this);
+            enemyProjectile.SetOwner(this);
             enemyProjectile.SetShootDir(shootDir);
 
             InstansiatedProjectile.SetActive(true);

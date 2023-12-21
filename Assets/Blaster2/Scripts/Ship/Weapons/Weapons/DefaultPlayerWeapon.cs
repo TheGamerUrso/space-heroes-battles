@@ -112,7 +112,7 @@ public class DefaultPlayerWeapon : BaseWeapon
             InstansiatedProjectile.transform.position = Cannons[i].position;
 
             BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-            projectile.Setup(this);
+            projectile.SetOwner(this);
             projectile.SetShootDir(shootDir);
         }
     }

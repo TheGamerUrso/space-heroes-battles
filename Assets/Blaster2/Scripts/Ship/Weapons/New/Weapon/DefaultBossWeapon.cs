@@ -38,7 +38,7 @@ public class DefaultBossWeapon : BaseWeapon
             InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 
             BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-            projectile.Setup(this);
+            projectile.SetOwner(this);
             projectile.SetShootDir(shootDir);
 
             yield return new WaitForSeconds(weaponData.delayBetweenShots);

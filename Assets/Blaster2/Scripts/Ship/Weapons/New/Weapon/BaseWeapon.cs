@@ -40,8 +40,12 @@ public abstract class BaseWeapon : MonoBehaviour
     {
         source = GetComponent<AudioSource>();
         Cannons = transform.Cast<Transform>().ToArray();
-        ship = GetComponentInParent<Ship>();
         Initialize();
+    }
+
+    public void SetOwner(Ship ship)
+    {
+        this.ship = ship;
     }
 
     public virtual void Update()

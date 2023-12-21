@@ -9,7 +9,7 @@ public class EnemyProjectile : BaseProjectile
 
  
 
-    public override void Setup(BaseWeapon baseWeapon)
+    public override void SetOwner(BaseWeapon baseWeapon)
     {
         this.baseWeapon = baseWeapon;
     }
@@ -29,9 +29,9 @@ public class EnemyProjectile : BaseProjectile
 
     public override void DestoryNow()
     {
-        explosion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
+        explode.SetActive(true);
         explosion.transform.SetPositionAndRotation(transform.position + Vector3.up * 2, Quaternion.identity);
-        explosion.SetActive(true);
         gameObject.SetActive(false);
     }
 

@@ -10,18 +10,16 @@ public class RocketLauncherSpecialAttack : BaseSpecialAttack
             {
                 newShot = Time.time + FireRate;
 
-                InstansiatedProjectile =
-                    PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
+                InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.PlayerRocket);
 
                 InstansiatedProjectile.SetActive(true);
 
                 InstansiatedProjectile.transform.position = transform.position;
 
                 BaseProjectile enemyProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-                enemyProjectile.Setup(this);
+                enemyProjectile.SetOwner(this);
 
                 PlayWeaponFireSound();
-
             }
         }
     }

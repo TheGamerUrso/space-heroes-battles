@@ -25,9 +25,9 @@ public class ArtilleryProjectile : EnemyProjectile
         warning.Hide();
     }
 
-    public override void Setup(BaseWeapon baseWeapon)
+    public override void SetOwner(BaseWeapon baseWeapon)
     {
-        base.Setup(baseWeapon);
+        base.SetOwner(baseWeapon);
         timer = 1;
         fall = false;
         if (warning == null)

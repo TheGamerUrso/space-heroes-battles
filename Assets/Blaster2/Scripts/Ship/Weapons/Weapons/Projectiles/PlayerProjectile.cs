@@ -4,10 +4,11 @@ public class PlayerProjectile : BaseProjectile
 {
     public Material[] playerMaterials;
 
-    public override void Setup(BaseWeapon baseWeapon)
+    public override void SetOwner(BaseWeapon baseWeapon)
     {
         this.baseWeapon = baseWeapon;
     }
+
     protected override void OnAwake()
     {
         base.OnAwake();
@@ -23,14 +24,6 @@ public class PlayerProjectile : BaseProjectile
         {
             gameObject.SetActive(false);
         }
-    }
-
-    public override void DestoryNow()
-    {
-        var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
-        explode.SetActive(true);
-        explode.transform.position = transform.position;
-        gameObject.SetActive(false);
     }
 
     public override void OnTriggerEnter(Collider other)

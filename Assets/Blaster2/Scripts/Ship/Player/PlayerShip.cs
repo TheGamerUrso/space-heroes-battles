@@ -40,26 +40,23 @@ public class PlayerShip : Ship, IDamagable
     }
 
     public override void Start()
-    {
+    {        
+        Events.OnLevelValueChanged += OnLevelValueChanged;
+
         playerData = PersistantData.GetPlayerData();
         playerData.NewGame();
 
         playerShipData = playerData.GetCurrentPlayerShipData();
+        shipController.SetSpeed(playerShipData.Speed);
 
-        HasShield = playerShipData.HasShield;
-
+        playerShipData.NewGame(out HasShield);
         ShieldEffect.SetActive(HasShield);
 
         SetStats(playerShipData.level);
 
-        Events.OnLevelValueChanged += OnLevelValueChanged;
-
-
-        shipController.SetSpeed(playerShipData.Speed);
-
         SwitchWeapon(0);
+        specialAttack.SetOwner(this);
 
-        playerData.GotHitInGame = false;
         HealthBar = GameObject.FindAnyObjectByType<PlayerHealthWidget>();
         HealthBar.Setup(this);
     }
@@ -148,8 +145,7 @@ public class PlayerShip : Ship, IDamagable
 
     public void UpdateWeaponStats(float fireRate, float damage = 0)
     {
-        var currenActivetWeapon = GetCurrentActiveWeapon().GetComponent<WeaponScript>();
-
+        var currenActivetWeapon = GetCurrentActiveWeapon().GetComponent<BaseWeapon>();
         currenActivetWeapon.FireRate = fireRate;
         if (damage > 0)
             currenActivetWeapon.Damage = damage;
