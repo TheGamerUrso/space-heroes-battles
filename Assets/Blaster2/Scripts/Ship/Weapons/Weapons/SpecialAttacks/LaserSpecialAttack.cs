@@ -11,47 +11,26 @@ public class LaserSpecialAttack : BaseSpecialAttack
     public float laserSize;
     public LineRenderer lineRenderer;
 
-    public override void ActivateSpecial()
+    public override void OnActivateSpecial()
     {
-        if (!SpecialActive)
-        {
-            SpecialActive = true;
-            source.PlayOneShot(weaponData.ShootSFX);
-
-            int superUsed = Game.SuperUsed + 1;
-            Game.SetSuperUsed(superUsed);
-            ship.DisableFire();
-
-            laserSize = 0;
-            laiser.ActiveLaser();
-            lineRenderer.widthMultiplier = laserSize;
-
-     
-        }
+        ship.DisableFire();
+        laserSize = 0;
+        laiser.ActiveLaser();
+        lineRenderer.widthMultiplier = laserSize;
     }
-    public override void DeactivateSpecial()
+    public override void OnDeactivateSpecial()
     {
-        if (SpecialActive)
-        {
-            laserSize = 0;
-            laiser.DeactiveLaser();
-            lineRenderer.widthMultiplier = laserSize;
-            ship.EnableFire();
-
-            base.DeactivateSpecial();
-        }
+        laiser.fullCharge = false;
+        ship.EnableFire();
+        laserSize = 0;
+        laiser.DeactiveLaser();
+        lineRenderer.widthMultiplier = laserSize;
     }
 
     public override void Update()
     {
         if (SpecialActive)
         {
-            ActivateSpecial();
-            if (m_CountDownTimer == null)
-            {
-                m_CountDownTimer = new CountDownTimer(SuperChargeTime);
-            }
-
             laserSize = Mathf.Lerp(laserSize, 4, 1);
 
             if (laserSize > 4)
@@ -60,37 +39,28 @@ public class LaserSpecialAttack : BaseSpecialAttack
             }
 
             lineRenderer.widthMultiplier = laserSize;
-
-            if (m_CountDownTimer.m_CountdownTimer >= 0)
-            {
-                if (laserSize == 4)
-                {
-                    laiser.fullCharge = true;
-                    m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
-
-                    if (m_CountDownTimer.countToZero())
-                    {
-                        playerData.SetSuperMeter(m_CountDownTimer.m_CountdownTimer / SuperChargeTime);
-                    }
-
-                    Shoot();
-                }
-            }
-            else
-            {
-                laiser.fullCharge = false;
-                laiser.DeactiveLaser();
-                DeactivateSpecial();
-                m_CountDownTimer = null;
-                playerData.SetSuperMeter(0);
-            }
         }
-
-        float powerLevel = playerData.GetPowerUpLevelPresentage();
-
-        if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
+        if (laserSize == 4)
         {
-            ActivateSpecial();
+            laiser.fullCharge = true;
+            base.Update();
         }
+    }
+
+    public void LaiserWidth()
+    {
+        laserSize = Mathf.Lerp(laserSize, 4, 1);
+
+        if (laserSize > 4)
+        {
+            laserSize = 4;
+        }
+
+        lineRenderer.widthMultiplier = laserSize;
+    }
+
+    public override void Shoot()
+    {
+        base.Shoot();
     }
 }

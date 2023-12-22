@@ -398,6 +398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
   FireRate: 0
   Damage: 0
@@ -599,6 +600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
   FireRate: 0
   Damage: 0
@@ -799,7 +801,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faedbe193391217438e99925da59ab78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioSource: {fileID: 2009061848612604927}
+  Id: 
   ShieldEffect: {fileID: 7646615145772614478}
+  Level: 0
+  Damage: 0
+  FireRate: 0
+  Speed: 0
+  MaxHealth: 0
+  CurrentHealth: 0
+  ItemCollectedEffect: {fileID: 280781531771403593}
   playerStats: {fileID: 11400000, guid: a61232b41a212b549a5e00e07be2900b, type: 2}
   Weapons:
   - {fileID: 3672169683319691227}
@@ -808,8 +819,6 @@ MonoBehaviour:
   - {fileID: 3671842536856095359}
   - {fileID: 8032367144032042201}
   specialAttack: {fileID: 5656591244530284495}
-  audioSource: {fileID: 2009061848612604927}
-  ItemCollectedEffect: {fileID: 280781531771403593}
 --- !u!82 &2009061848612604927
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1047,6 +1056,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
   FireRate: 0
   Damage: 0
@@ -1332,6 +1342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
   FireRate: 0
   Damage: 0
@@ -1487,6 +1498,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a41fa3863b515a4abeddb0da228ba95, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
   FireRate: 0
   Damage: 0
@@ -1835,7 +1847,7 @@ GameObject:
   - component: {fileID: 4712354770063655544}
   - component: {fileID: 5656591244530284495}
   m_Layer: 11
-  m_Name: LaserMode
+  m_Name: LaiserSpecialAttack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1966,6 +1978,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 399ae6c069f62a7458079d37631bd8c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 3673750318685682059}
   weaponData: {fileID: 11400000, guid: 540f6e43400aba24e9f9b9172b1dd55a, type: 2}
   FireRate: 0
   Damage: 0
@@ -2047,7 +2060,6 @@ MonoBehaviour:
     SuperChargeTime: 0
     MagnetPower: 0
     MagnetDistance: 0
-  playerShip: {fileID: 3673750318685682059}
   laiser: {fileID: 4119458728088854212}
   laserSize: 0
   lineRenderer: {fileID: 6491659003616258864}

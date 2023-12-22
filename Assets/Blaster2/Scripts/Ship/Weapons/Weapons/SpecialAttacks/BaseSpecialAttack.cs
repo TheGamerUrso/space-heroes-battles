@@ -28,7 +28,6 @@ public class BaseSpecialAttack : BaseWeapon
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-
                     playerData.SetSuperMeter(m_CountDownTimer.m_CountdownTimer / SuperChargeTime);
 
                 }
@@ -56,21 +55,35 @@ public class BaseSpecialAttack : BaseWeapon
         }
     }
 
+    public virtual void OnUpdate()
+    {
+
+    }
+
     public virtual void ActivateSpecial()
     {
         if (SpecialActive == false)
-        {
+        {    
+            SpecialActive = true;
             source.PlayOneShot(weaponData.ShootSFX);
 
             int superUsed = Game.SuperUsed + 1;
             Game.SetSuperUsed(superUsed);
 
-            SpecialActive = true;
+            OnActivateSpecial();
         }
     }
+
+    public virtual void OnActivateSpecial(){}
+    public virtual void OnDeactivateSpecial(){}
+
     public virtual void DeactivateSpecial()
     {
-        SpecialActive = false;
+        if (SpecialActive)
+        {
+            SpecialActive = false;
+            OnDeactivateSpecial();
+        }
     }
     public float GetPowerUpCountdown()
     {
