@@ -55,7 +55,7 @@ public class BaseGameMode : MonoBehaviour
     [SerializeField] protected List<EnemySpawner> SpawnPoints = new List<EnemySpawner>();
 
     public int EnemySpawnedInTotal { get; set; }
-
+    public int EnemiesCount;
     public virtual void SetGameMode()
     {
         playerShip = PlayerManager.GetPlayer();
@@ -130,7 +130,8 @@ public class BaseGameMode : MonoBehaviour
     {
         if (baseEnemy.Id.Equals(baseEnemy.Id))
         {
-            Enemies.Remove(baseEnemy.gameObject);
+            EnemiesCount--;
+            //Enemies.Remove(baseEnemy.gameObject);
         }
     }
 
@@ -138,7 +139,8 @@ public class BaseGameMode : MonoBehaviour
     {
         if (baseEnemy.Id.Equals(id))
         {
-            Enemies.Remove(baseEnemy.gameObject);
+            //Enemies.Remove(baseEnemy.gameObject);
+            EnemiesCount--;
             gameInfo.BossBattleInitiated = false;
         }
     }
@@ -146,14 +148,16 @@ public class BaseGameMode : MonoBehaviour
     {
         if (baseEnemy.Id.Equals(id))
         {
-            Enemies.Remove(baseEnemy.gameObject);
+            EnemiesCount--;
+            //Enemies.Remove(baseEnemy.gameObject);
         }
     }
     public void BossEscapedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
-        {
-            Enemies.Remove(baseEnemy.gameObject);
+        {   
+            EnemiesCount--;
+            //Enemies.Remove(baseEnemy.gameObject);
         }
     }
 

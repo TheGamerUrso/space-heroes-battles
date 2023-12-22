@@ -159,12 +159,9 @@ public class BossEnemy : Enemy
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
             explostion.SetActive(true);
-            Events.BossDied?.Invoke(Id, this);
             HealthBar.Hide();
-
             Events.ShakeCamera?.Invoke(.5f);
             DropItem.Instance.PickRandomDropItem(transform);
-
             Destroy(transform.parent.gameObject);
         }
     }
@@ -238,7 +235,6 @@ public class BossEnemy : Enemy
 
     public override IEnumerator DelayStart()
     {     
-        Debug.Log("BossEnemy-> DelayStart");
         HealthBar.Show();
         yield return new WaitForSeconds(4);
         EnableAllWeapon();

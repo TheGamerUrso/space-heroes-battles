@@ -8,7 +8,7 @@ public class SurvivalGameMode : BaseGameMode
 
     bool active = false;
     bool rewardToClaim = false;
-
+    
     public override void SetGameMode()
     {
         base.SetGameMode();
@@ -32,7 +32,7 @@ public class SurvivalGameMode : BaseGameMode
         string[] transmitions = { "Wave:\n" + gameInfo.waves };
         GuiManager.PlayTrasmition(transmitions);
 
-        if (gameInfo.waves > 0 && gameInfo.waves % 4 == 0)
+        if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
         {
             gameInfo.availableEnemies++;
 
@@ -43,7 +43,7 @@ public class SurvivalGameMode : BaseGameMode
 
         }
 
-        if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
+        if (gameInfo.waves > 0)
         {
             BossWave = true;
         }
@@ -89,18 +89,18 @@ public class SurvivalGameMode : BaseGameMode
                 CooldownTimer = new WaitForSeconds(cooldown);
             }
 
-            if (Enemies.Count > 0)
+            if (EnemiesCount > 0)
             {
-                yield return new WaitUntil(() => Enemies.Count <= 0);
+                yield return new WaitUntil(() => EnemiesCount <= 0);
             }
 
             yield return shortWait;
 
             if (playerShip.CurrentHealth > 0)
             {
-                if (Enemies.Count > 0)
+                if (EnemiesCount > 0)
                 {
-                    yield return new WaitUntil(() => Enemies.Count <= 0);
+                    yield return new WaitUntil(() => EnemiesCount <= 0);
                 }
 
                 if (BossWave)
@@ -150,7 +150,8 @@ public class SurvivalGameMode : BaseGameMode
 
         var random = Random.Range(0, SpawnPoints.Count);
         enemGO = SpawnPoints[random].SpawnEnemyElement(gameInfo.availableEnemies);
-        Enemies.Add(enemGO);
+        EnemiesCount++;
+        //Enemies.Add(enemGO);
     }
 
     public override void SpawnBoss()
@@ -161,8 +162,8 @@ public class SurvivalGameMode : BaseGameMode
 
             currentBoss = BossFights[Random.Range(0, BossFights.Length)];
             SpawnBoss(currentBoss, gameInfo.LevelDifficulty);
-
-            Enemies.Add(currentBoss.gameObject);
+            EnemiesCount++;
+            //Enemies.Add(currentBoss.gameObject);
         }
     }
 }

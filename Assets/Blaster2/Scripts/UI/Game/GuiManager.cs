@@ -20,7 +20,7 @@ public class GuiManager : MonoSingleton<GuiManager>
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private ScoreMultplierWidget scoreMultplierWidget;
 
-    private TransmitionWidget transmittionWidget;
+    [SerializeField]private TransmitionWidget transmittionWidget;
     private float timer;
 
     public GameObject WarningSign;
