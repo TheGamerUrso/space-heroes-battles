@@ -134,7 +134,8 @@ public class GameManager : MonoSingleton<GameManager>
         CurrentGameState = nextGameState;
 
         if (nextGameState == GameStateEnum.GAME)
-        {
+        {    
+       
             Events.OnLoadDataCompleted?.Invoke();
         }
     }
@@ -343,62 +344,6 @@ public class GameManager : MonoSingleton<GameManager>
         }
     }
 
-    [ContextMenu("Finish Quests")]
-    public void FInishQuests()
-    {
-        for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
-        {
-            ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
-            objective.UpdateProgress(objective.requirment);
-        }
-    }
-
-    public void PlayerQuestProgress(ObjectiveTypeEnum type, int progress)
-    {
-
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(type);
-        if (objectiveData != null)
-        {
-            if (type == ObjectiveTypeEnum.SPEND)
-            {
-                objectiveData.UpdateProgress(progress);
-            }
-            else
-            {
-                Scene scene = SceneManager.GetActiveScene();
-                if (objectiveData != null)
-                {
-                    if (type == ObjectiveTypeEnum.SURVIVE)
-                    {
-                        return;
-                    }
-                    objectiveData.UpdateProgress(progress);
-                }
-            }
-        }
-    }
-
-    public void UpdatePlayerStatistics()
-    {
-        playerData.SetScore(Game.Score);
-        playerData.PlayedGame = true;
-        playerData.Coins += Game.CoinPicked;
-        playerData.Kills += Game.EnemyKilled;
-
-        PlayerQuestProgress(ObjectiveTypeEnum.SURVIVE, 0);
-
-        if (!Game.PlayerGotHit)
-        {
-            Instance.PlayerQuestProgress(ObjectiveTypeEnum.UNHARMED, 0);
-        }
-
-        playerShipData.Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-
-        AchievementSystem.instance.Report(10, Game.EnemyKilled);
-        AchievementSystem.instance.Report(11, Game.EnemyKilled);
-
-        SaveSystem.SaveGame();
-    }
 
     [ContextMenu("Unlimited Money")]
     public void AddCoin()
@@ -413,11 +358,7 @@ public class GameManager : MonoSingleton<GameManager>
         playerData.EarnXP(playerShipData.xpToLevel - playerShipData.xp);
     }
 
-    [ContextMenu("Generate New Challenges")]
-    public void GeneratedQuest()
-    {
-        QuestSystem.Instance.GenerateNewObjectives();
-    }
+
 }
 
 

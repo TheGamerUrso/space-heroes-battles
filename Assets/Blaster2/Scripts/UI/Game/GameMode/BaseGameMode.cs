@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using UnityEngine;
 
 [Serializable]
@@ -35,30 +36,23 @@ public class GameInfo
 
 public class BaseGameMode : MonoBehaviour
 {
-    public int MaxNumberOfEnemies;
     public Level_SO level_SO;
     public GameInfo gameInfo;
-    protected PlayerShip playerShip;
-    protected EnemyElement enemyElement;
     [SerializeField] protected GameObject[] BossFights;
+    [SerializeField] protected List<EnemySpawner> SpawnPoints = new List<EnemySpawner>();
     protected GameObject currentBoss;
-    protected GameObject spawnedBoss;
-    protected PlayerData playerData;
     [SerializeField] protected float cooldown = 1f;
     protected float delay = 0.5f;
-    protected List<GameObject> Enemies = new List<GameObject>();
     protected WaitForSeconds shortDelay;
     protected WaitForSeconds CooldownTimer;
+
+    protected int EnemiesCount;
     protected WaitForSeconds shortWait = new WaitForSeconds(1);
     protected WaitForSeconds longWait = new WaitForSeconds(2);
     protected WaitForSeconds RewardWait = new WaitForSeconds(5);
-    [SerializeField] protected List<EnemySpawner> SpawnPoints = new List<EnemySpawner>();
 
-    public int EnemySpawnedInTotal { get; set; }
-    public int EnemiesCount;
     public virtual void SetGameMode()
     {
-        playerShip = PlayerManager.GetPlayer();
         shortDelay = new WaitForSeconds(delay);
         CooldownTimer = new WaitForSeconds(cooldown);
 
@@ -69,22 +63,26 @@ public class BaseGameMode : MonoBehaviour
     }
 
     private void OnDestroy()
-    {
-        Events.EnemyDied -= EnemyDiedCallback;
-        Events.EnemyEscaped -= EnemyEscapedCallback;
-        Events.BossDied -= BossDiedCallback;
+    { 
+        Events.EnemyDied -= OnEnemyDiedHandled;
+        Events.BossDied -= OnEnemyDiedHandled;
+        Events.EnemyGotHit -= OnEnemyHitHandled;
+        Events.BossHit -= OnEnemyHitHandled;
+        Events.EnemyEscaped -= OnEnemyEscapedCallback;
     }
 
     public virtual void Awake()
-    {
-        Events.EnemyEscaped += EnemyEscapedCallback;
-        Events.EnemyDied += EnemyDiedCallback;
-        Events.BossDied += BossDiedCallback;
+    {        
+
+        Events.EnemyDied += OnEnemyDiedHandled;
+        Events.BossDied += OnEnemyDiedHandled;
+        Events.EnemyGotHit += OnEnemyHitHandled;
+        Events.BossHit += OnEnemyHitHandled;
+        Events.EnemyEscaped += OnEnemyEscapedCallback;
     }
 
     public virtual void Start()
     {
-        playerData = PersistantData.GetPlayerData();
         SetGameMode();
         StartCoroutine(StartGameDelay());
     }
@@ -92,7 +90,7 @@ public class BaseGameMode : MonoBehaviour
     public void LateUpdate()
     {
         gameInfo.pause = false;
-        if (Enemies.Count >= 8)
+        if (EnemiesCount >= 8)
         {
             gameInfo.pause = true;
         }
@@ -124,42 +122,119 @@ public class BaseGameMode : MonoBehaviour
         return enemy;
     }
 
-    //Callbacks
+    public void GameOver()
+    {
+        StartCoroutine(DelayGameOver());
+    }
+      IEnumerator DelayGameOver()
+    {  
+       
+        Time.timeScale = 1.0f;
+        var playerData = PersistantData.GetPlayerData();
+        playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
+    
+        playerData.PlayedGame = true;
+        playerData.SetScore(Game.Score);
+        playerData.Coins += Game.CoinPicked;
 
-    public virtual void EnemyDiedCallback(string id, Enemy baseEnemy)
+ 
+        QuestSystem.Instance.UpdateQuestProgress();
+        
+        SaveSystem.SaveGame();
+
+        AudioManager.PlayMusic("GameOver", false);
+
+        yield return new WaitForSeconds(2.0f);
+
+        Events.OnGameOver?.Invoke(this);
+    }
+
+    public void Win()
+    {
+             StartCoroutine(DelayWinScreen());
+    }
+
+    IEnumerator DelayWinScreen()
+    {
+        Time.timeScale = 1.0f;
+
+        PersistantData.GetPlayerData().GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
+
+        QuestSystem.Instance.UpdateQuestProgress();
+
+        SaveSystem.SaveGame();
+
+        yield return new WaitForSeconds(2.0f);
+
+        AudioManager.PlayMusic("Victory", false);
+
+        PlayerManager.GetPlayer()?.ExitLevel();
+
+        yield return new WaitForSeconds(2.0f);
+        Events.OnWin?.Invoke(this);
+    }
+
+    //=================================================================================
+    public virtual void OnEnemyDiedHandled(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(baseEnemy.Id))
         {
-            EnemiesCount--;
-            //Enemies.Remove(baseEnemy.gameObject);
-        }
-    }
+            if (baseEnemy.GetComponent<BossEnemy>())
+            {
+                Debug.Log("You Killed A Boss");
+            }
+            else
+            {
+                Debug.Log("You Killed an Enemy");
+            }
 
-    public virtual void BossDiedCallback(string id, BossEnemy baseEnemy)
-    {
-        if (baseEnemy.Id.Equals(id))
-        {
-            //Enemies.Remove(baseEnemy.gameObject);
-            EnemiesCount--;
+            EnemiesCount--;      
+     
+            var playerData = PersistantData.GetPlayerData();       
+            int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
+            int EnemyLevel = baseEnemy.Level;
+            int levelDiffrence = PlayerLevel / EnemyLevel;
+            if (levelDiffrence == 0)levelDiffrence = 1;
+            float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+            
+          
+            int score = baseEnemy.EnemyData.EnemyValue;
+            playerData.EarnXP(XPEarned);
+            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+            score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
+            var ultiplierTextToShow = Game.Multiplier > 1 ? $"{score} + (x {Game.Multiplier} )" :  $"{score}";
+            GuiManager.SetScoreMultipler(ultiplierTextToShow);
+            Game.NumberOfEnemies--;
+            Game.EnemyKilled++;
+            Game.SetScore(score);
+            Game.IncreaseMultiplier();
+            
+            GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
+            
+            if(baseEnemy.GetComponent<BossEnemy>() == null)return;
+            Game.BossBountyKilledId = id[id.Length - 1];  
             gameInfo.BossBattleInitiated = false;
+       
         }
     }
-    public void EnemyEscapedCallback(string id, Enemy baseEnemy)
+
+    public void OnEnemyEscapedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
             EnemiesCount--;
-            //Enemies.Remove(baseEnemy.gameObject);
+            if(baseEnemy.GetComponent<BossEnemy>())return;
+            Game.EnemyEscaped++;
         }
     }
-    public void BossEscapedCallback(string id, Enemy baseEnemy)
+
+    public void OnEnemyHitHandled(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
-        {   
-            EnemiesCount--;
-            //Enemies.Remove(baseEnemy.gameObject);
+        {    
+            var playerData = PersistantData.GetPlayerData();
+            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
         }
-    }
-
-
+    } 
 }
+//=================================================================================  

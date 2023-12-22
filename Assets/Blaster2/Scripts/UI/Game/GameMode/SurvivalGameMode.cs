@@ -13,7 +13,7 @@ public class SurvivalGameMode : BaseGameMode
     {
         base.SetGameMode();
         gameInfo.waves = 0;
-        gameInfo.LevelDifficulty = playerData.GetCurrentPlayerShipData().level;
+        gameInfo.LevelDifficulty =  PersistantData.GetPlayerData().GetCurrentPlayerShipData().level;
         for (int i = 0; i < SpawnPoints.Count; i++)
         {
             SpawnPoints[i].enemyElements = gameInfo.enemyElements;
@@ -57,7 +57,7 @@ public class SurvivalGameMode : BaseGameMode
         }
 
         yield return shortWait;
-        playerShip = PlayerManager.GetPlayer();
+
         while (!Game.IsGameOver)
         {
             NewWave();
@@ -96,7 +96,7 @@ public class SurvivalGameMode : BaseGameMode
 
             yield return shortWait;
 
-            if (playerShip.CurrentHealth > 0)
+            if (PlayerManager.GetPlayer().CurrentHealth > 0)
             {
                 if (EnemiesCount > 0)
                 {

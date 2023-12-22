@@ -214,13 +214,13 @@ public class GuiManager : MonoSingleton<GuiManager>
         }
     }
 
-    public void Win(GameController gc)
+    public void Win(BaseGameMode baseGameMode)
     {
         WinScreen.Show();
         WinScreen.GetComponent
             <WinScreen>().ShowGameResult();
     }
-    public void GameOver(GameController gc)
+    public void GameOver(BaseGameMode baseGameMode)
     {
         GameOverScreen.Show();
     }

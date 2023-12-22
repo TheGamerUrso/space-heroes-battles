@@ -67,14 +67,14 @@ public class StoryGameMode : BaseGameMode
             CooldownTimer = new WaitForSeconds(cooldown);
         }
 
-        if (Enemies.Count > 0)
+        if (EnemiesCount> 0)
         {
-            yield return new WaitUntil(() => Enemies.Count <= 0);
+            yield return new WaitUntil(() => EnemiesCount <= 0);
         }
 
         yield return shortWait;
 
-        if (playerShip.CurrentHealth > 0)
+        if (PlayerManager.GetPlayer().CurrentHealth > 0)
         {
             
             if (level_SO.HasBoss)
@@ -104,10 +104,10 @@ public class StoryGameMode : BaseGameMode
 
     public override void Spawn()
     {
+        EnemiesCount++;
         gameInfo.CurrentTotalEnemies--;
         var random = Random.Range(0, SpawnPoints.Count);
         enemGO = SpawnPoints[random].SpawnEnemyElement();
-        Enemies.Add(enemGO);
     }
 
     public override void SpawnBoss()
@@ -119,7 +119,7 @@ public class StoryGameMode : BaseGameMode
             currentBoss = level_SO.BossPrefab;
             SpawnBoss(currentBoss, gameInfo.LevelDifficulty);
 
-            Enemies.Add(currentBoss.gameObject);
+           EnemiesCount++;
         }
     }
 

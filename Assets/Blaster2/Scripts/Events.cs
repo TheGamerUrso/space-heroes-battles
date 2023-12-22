@@ -69,8 +69,8 @@ public class Events
     /**
      *GameController
      */
-    public static Action<GameController> OnGameOver;
-    public static Action<GameController> OnWin;
+    public static Action<BaseGameMode> OnGameOver;
+    public static Action<BaseGameMode> OnWin;
 
 
 

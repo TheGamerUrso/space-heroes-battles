@@ -21,13 +21,13 @@
     public static int CoinPicked;
     public static int TotalCoinsInGame;
 
-    public static int Multiplier = 0;
+    public static int Multiplier = 1;
     public static bool PlayerGotHit;
-
     public static int EnemyKilled;
     public static int EnemyEscaped;
     public static int EnemySpawnInTotal;
-    public static void Reset()
+    public static int BossBountyKilledId;
+    public static void NewGame()
     {
         IsGameOver = false;
         Score = 0;
@@ -35,10 +35,11 @@
         CoinPicked = 0;
         SuperUsed = 0;
         PlayerGotHit = false;
-        Multiplier = 0;
+        Multiplier = 1;
         EnemyKilled = 0;
         EnemyEscaped = 0;
         NumberOfEnemies = 0;
+        BossBountyKilledId = -1;
     }
     public static int GetScore()
     {
@@ -68,8 +69,6 @@
     public static void SetSuperUsed(int value)
     {
         SuperUsed = value;
-        GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.USE,SuperUsed);
-
     }
     public static void SetCurrentEnemyKills(int Kills)
     {
@@ -77,7 +76,7 @@
     }
     public static void ResetMultiplier()
     {
-        Multiplier = 0;
+        Multiplier = 1;
         Events.OnMultiplierChanged?.Invoke();
     }
 
