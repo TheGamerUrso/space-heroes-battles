@@ -281,6 +281,7 @@ GameObject:
   - component: {fileID: 2406176206008801006}
   - component: {fileID: 7750451458050231462}
   - component: {fileID: 1368961782361354534}
+  - component: {fileID: 6793978884611170704}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -343,6 +344,7 @@ MonoBehaviour:
   currentLevelLoaded: 
   sprites: []
   sceneLoadProgress: 0
+  IsPaused: 0
 --- !u!114 &7750451458050231462
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -409,6 +411,7 @@ MonoBehaviour:
   - {fileID: 21300000, guid: dde85f26a7e3b984b881f57502229056, type: 3}
   playerData:
     Score: 0
+    ScoreLastGame: 0
     HighScore: 0
     LevelUnlocked: 0
     SurvivalUnlocked: 0
@@ -418,8 +421,12 @@ MonoBehaviour:
     CoinSpend: 0
     SuperUsed: 0
     WaveSurvived: 0
-    GotHitInGame: 0
+    CoinPicked: 0
     PlayedGame: 0
+    GotHitInGame: 0
+    BossBountyKilledId: 0
+    EnemyKilled: 0
+    EnemyEscaped: 0
     PowerUpLevel: 0
     PowerPackCollected: 0
     CurrrentSelectedShip: 0
@@ -432,6 +439,19 @@ MonoBehaviour:
     ListOfOnGoingObjectives: []
     playerShipData: []
     Achievements: []
+--- !u!114 &6793978884611170704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2406176206008801007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 344f1874da73c854c89b2a0e68396843, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ListOfOnGoingObjectives: []
 --- !u!1 &2447033531847806924
 GameObject:
   m_ObjectHideFlags: 0

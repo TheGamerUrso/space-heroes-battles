@@ -6,25 +6,13 @@ public class TurretSpecialAttack : BaseSpecialAttack
 {
     [SerializeField] private PlaceTurrets Turrets;
 
-    public override void ActivateSpecial()
+    public override void OnActivateSpecial()
     {
-        if (SpecialActive == false)
-        {
-            source.PlayOneShot(weaponData.ShootSFX);
-
-            playerData.IncreaseSuperUse(); ;
-
-            Turrets.DeployTurret();
-
-            SpecialActive = true;
-        }
+         Turrets.DeployTurret();
     }
-    public override void DeactivateSpecial()
+
+    public override void OnDeactivateSpecial()
     {
-        if (SpecialActive)
-        {
             Turrets.DeactiveTurret();
-            base.DeactivateSpecial();
-        }
     }
 }

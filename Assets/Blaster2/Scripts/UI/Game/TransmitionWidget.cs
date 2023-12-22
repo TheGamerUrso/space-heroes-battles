@@ -23,14 +23,14 @@ public class TransmitionWidget : MonoBehaviour
         if (IncomingTransmition == false)
         {
             audioSource.PlayOneShot(TransmitionSFX);
-            if (!Game.IsGameOver)
+            if (!GameController.Instance.IsGameOver)
                 StartCoroutine(TranmisionEvent());
         }
     }
 
     public void BossWarning()
     {
-        if (!Game.IsGameOver)
+        if (!GameController.Instance.IsGameOver)
             StartCoroutine(WarningBossIncomingEvent());
     }
 

@@ -170,7 +170,7 @@ public class PlayerShip : Ship, IDamagable
 
     public override void Death()
     {
-        Game.UseSlowMo = false;
+        GameController.Instance.UseSlowMo = false;
 
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(playerStats.ExplostionEffect);
         explostion.transform.position = transform.position;
@@ -206,7 +206,7 @@ public class PlayerShip : Ship, IDamagable
         if (!IsAlive) return;
 
         audioSource.PlayOneShot(playerStats.hitSFX);
-        playerData.GotHitInGame = true; ;
+
         if (dmg >= MaxHealth)
         {
             dmg = MaxHealth - 1;
@@ -222,21 +222,20 @@ public class PlayerShip : Ship, IDamagable
             if (invisibilityTimer <= 0)
             {
                 invisibilityTimer = .25f;
-
+            
                 var health = CurrentHealth - dmg;
 
                 SetHealth(health);
 
-                Game.ResetMultiplier();
+                GameController.Instance.ResetMultiplier();
 
                 if (!HasArmorUprade)
                 {
                     DownGradeWeapon();
                 }
+                playerData.GotHitInGame =true;
 
-                Events.ShakeCamera?.Invoke(.5f);
-
-                Game.GotHit();
+                Events.ShakeCamera?.Invoke(.5f);       
 
                 if (GetHealthPresentage() < .5f)
                 {
@@ -402,7 +401,8 @@ public class PlayerShip : Ship, IDamagable
     }
 
     public void ActivateSpecial()
-    {
+    {      
+        playerData.SuperUsed++;
         specialAttack.ActivateSpecial();
     }
 
@@ -458,7 +458,7 @@ public class PlayerShip : Ship, IDamagable
 
     public void SetWallet(int coin)
     {
-        Game.CoinPicked += coin;
+        playerData.AddCoin(coin);
         GuiManager.CreateFloatingText("<color=" + "yellow" + "> $ </color>", transform.localPosition);
 
         if (!PlayerPrefs.HasKey("CoinTut"))

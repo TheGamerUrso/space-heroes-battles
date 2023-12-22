@@ -14,7 +14,8 @@ public class SurvivalGameOverScreen : MonoBehaviour
   
     public void ShowResults()
     {
-        float score = Game.Score;
+         var playerData = PersistantData.GetPlayerData();
+        float score = playerData.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
 
@@ -33,7 +34,8 @@ public class SurvivalGameOverScreen : MonoBehaviour
 
     private IEnumerator ScoreCoroutine()
     {
-        float score = Game.Score;
+        var playerData = PersistantData.GetPlayerData();
+        float score = playerData.Score;
         float tempScore = 0;
         string scoreText;
 
@@ -53,12 +55,12 @@ public class SurvivalGameOverScreen : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        if (Game.IsHightScore)
+        if (GameController.Instance.IsHightScore)
         {
             highscore.SetActive(true);
         }
 
-        Game.IsHightScore = false;
+        GameController.Instance.IsHightScore = false;
     }
 
     public void QuitButton()

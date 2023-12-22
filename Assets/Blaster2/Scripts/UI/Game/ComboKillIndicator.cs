@@ -52,7 +52,7 @@ public class ComboKillIndicator : MonoBehaviour
     {
         perfect++;
 
-        if (Game.Multiplier == 0)
+        if (GameController.Instance.Multiplier == 0)
         {
             perfect = 0;
         }

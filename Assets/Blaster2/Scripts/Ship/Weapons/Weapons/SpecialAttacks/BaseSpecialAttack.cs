@@ -63,13 +63,10 @@ public class BaseSpecialAttack : BaseWeapon
     public virtual void ActivateSpecial()
     {
         if (SpecialActive == false)
-        {    
+        {
             SpecialActive = true;
+            playerData.SetUsedSuperCount(1);
             source.PlayOneShot(weaponData.ShootSFX);
-
-            int superUsed = Game.SuperUsed + 1;
-            Game.SetSuperUsed(superUsed);
-
             OnActivateSpecial();
         }
     }

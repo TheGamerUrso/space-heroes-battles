@@ -7,6 +7,7 @@ using UnityEngine;
 public class PlayerData
 {
     public float Score;
+    public float ScoreLastGame;
     public float HighScore;
 
 
@@ -20,12 +21,14 @@ public class PlayerData
     public int Coins;
     public int Kills;
     public int CoinSpend;
-    public int SuperUsed;
+    public int SuperUsed = 0;
     public int WaveSurvived;
-
-    public bool GotHitInGame;
+    public int CoinPicked;
     public bool PlayedGame;
-
+    public bool GotHitInGame;
+    public int BossBountyKilledId;
+    public int EnemyKilled;
+    public int EnemyEscaped;
 
     [Header("Stats")]
     [Range(0, 1)]
@@ -79,23 +82,34 @@ public class PlayerData
 
     public void NewGame()
     {
+        EnemyKilled = 0;
+        EnemyEscaped = 0;
+        Score = 0;
+        CoinPicked = 0;
+        BossBountyKilledId = -1;
         SetSuperMeter(0);
         SetPowerPackCollected(0);
     }
-
-    public void RemoveCoin(int ammount)
+    public void SetPlayerKillsCounter(int KillsCounter)
     {
-        Coins -= ammount;
-       // GameManager.Instance.PlayerQuestProgress(ObjectiveTypeEnum.SPEND, ammount);
-        Events.OnCoinValueChanged?.Invoke(Coins);
+        if (KillsCounter == 0)
+        {
+            Kills = KillsCounter;
+            EnemyKilled = KillsCounter;
+        }
+        else
+        {
+            Kills += KillsCounter;
+            EnemyKilled += KillsCounter;
+        }
+        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.KILL, EnemyKilled);
     }
 
-    public void IncreaseSuperUse()
+    public void SetPlayerGotHitCounter(bool value)
     {
-        SuperUsed++;
-        Events.OnSuperUseValueChanged?.Invoke(SuperUsed);
+        GotHitInGame = value;
+        PlayedGame = value;
     }
-
     public void SetCurrentSelectShip(int select)
     {
         CurrrentSelectedShip = select;
@@ -128,22 +142,15 @@ public class PlayerData
         Events.PowerUpLevelValueChanged?.Invoke(PowerUpLevel);
     }
 
-    public void SetSurvivalUnlockedLock(bool value)
-    {
-        if (SurvivalUnlocked)
-        {
-            return;
-        }
-        SurvivalUnlocked = value;
-    }
-
     public void SetScore(float score)
     {
-      if (score > Score)
-            {
-                HighScore = score;
-            }
-            Score = score;
+        Score += score;
+        if (Score > HighScore)
+        {
+            HighScore = score;
+        }
+        Events.OnScoreValueChanged?.Invoke((int)Score);
+        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.SCORE, (int)Score);
     }
     public float GetHighScore()
     {
@@ -151,7 +158,7 @@ public class PlayerData
     }
     public float GetScore()
     {
-       return Score;
+        return Score;
     }
 
     public ObjectiveData GetOnGoingObjectiveById(ObjectiveTypeEnum objectiveType)
@@ -166,35 +173,62 @@ public class PlayerData
         return null;
     }
 
-    public void SetMoneySpend(int ammount)
+    public void AbstractCoins(int ammount)
     {
-        CoinSpend = ammount;
+        Coins -= ammount;
+        CoinSpend += ammount;
+        if (Coins < 0)
+        {
+            Coins = 0;
+        }
+        Events.OnCoinValueChanged?.Invoke(Coins);
+        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.SPEND, CoinSpend);
     }
 
-    public void SetWaveSurvived(int value)
+    public void AddCoin(int ammount)
     {
-        WaveSurvived = value;
-    }
-
-    public void SetHitInGame(bool value)
-    {
-        GotHitInGame = value;
-        PlayedGame = value;
-    }
-
-    public void SetTotalSuperUsed(int ammount)
-    {
-        SuperUsed = 0;
-    }
-
-    public void AddCoin(int Ammount)
-    {
-        Coins += Ammount;
+        CoinPicked += ammount;
+        Coins += ammount;
         if (Coins > 9999999)
         {
             Coins = 9999999;
         }
         Events.OnCoinValueChanged?.Invoke(Coins);
+        Events.OnCoinValueChanged?.Invoke(CoinPicked);
+    }
+
+    public void SetWaveSurvivedCount(int value)
+    {
+        if (value == 0)
+        {
+            WaveSurvived = value;
+        }
+        else
+        {
+            WaveSurvived += value;
+        }
+
+        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.SURVIVE, WaveSurvived);
+    }
+
+    public void SetUsedSuperCount(int ammount)
+    {
+        if (ammount == 0)
+        {
+            SuperUsed = ammount;
+        }
+        else
+        {
+            SuperUsed += ammount;
+        }
+        Events.OnSuperUseValueChanged?.Invoke(SuperUsed);
+        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.USE, SuperUsed);
+    }
+
+    public void SetBossKilledCount(int BossIdKilled)
+    {
+        BossBountyKilledId = BossIdKilled;
+        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.BOUNTY, BossBountyKilledId);
     }
 
     public PlayerShipData GetCurrentPlayerShipData()
@@ -254,6 +288,5 @@ public class PlayerData
     {
         PowerPackCollected = 0;
     }
-
 }
 

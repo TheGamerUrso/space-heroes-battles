@@ -10,40 +10,26 @@ public class RapidFireSpecialAttack : BaseSpecialAttack
     protected float playerFireRate;
     private bool RapidFireModeOn;
 
-    public override void ActivateSpecial()
+    public override void OnActivateSpecial()
     {
-        if (SpecialActive == false)
+        playerFireRate = playerWeapons[0].FireRate;
+
+        weaponCurrentType = ship.CurrentWeapnType;
+
+        ship.SwitchWeapon(4);
+
+        for (int i = 0; i < playerWeapons.Length; i++)
         {
-            source.PlayOneShot(weaponData.ShootSFX);
-
-            playerData.IncreaseSuperUse();        
-
-            playerFireRate = playerWeapons[0].FireRate;
-
-            weaponCurrentType = ship.CurrentWeapnType;
-
-            ship.SwitchWeapon(4);
-
-            for (int i = 0; i < playerWeapons.Length; i++)
-            {
-                playerWeapons[i].FireRate = .2f;
-            }
-
-            SpecialActive = true;
+            playerWeapons[i].FireRate = .2f;
         }
     }
-    public override void DeactivateSpecial()
+    public override void OnDeactivateSpecial()
     {
-        if (SpecialActive)
+        for (int i = 0; i < playerWeapons.Length; i++)
         {
-            for (int i = 0; i < playerWeapons.Length; i++)
-            {
-                playerWeapons[i].FireRate = playerFireRate;
-            }
-
-            ship.SwitchWeapon(weaponCurrentType);
-
-            base.DeactivateSpecial();
+            playerWeapons[i].FireRate = playerFireRate;
         }
+
+        ship.SwitchWeapon(weaponCurrentType);
     }
 }

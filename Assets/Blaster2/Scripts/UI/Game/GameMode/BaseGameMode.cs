@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 [Serializable]
 public class EnemyElement
@@ -59,11 +60,11 @@ public class BaseGameMode : MonoBehaviour
         gameInfo.availableEnemies = level_SO.availableEnemies;
         gameInfo.TotalEnemies = level_SO.numberOfEnemiesEachWave * level_SO.waves;
         gameInfo.CurrentTotalEnemies = gameInfo.TotalEnemies;
-        Game.EnemySpawnInTotal = gameInfo.TotalEnemies;
+        GameController.Instance.EnemySpawnInTotal = gameInfo.TotalEnemies;
     }
 
     private void OnDestroy()
-    { 
+    {
         Events.EnemyDied -= OnEnemyDiedHandled;
         Events.BossDied -= OnEnemyDiedHandled;
         Events.EnemyGotHit -= OnEnemyHitHandled;
@@ -72,7 +73,7 @@ public class BaseGameMode : MonoBehaviour
     }
 
     public virtual void Awake()
-    {        
+    {
 
         Events.EnemyDied += OnEnemyDiedHandled;
         Events.BossDied += OnEnemyDiedHandled;
@@ -126,20 +127,13 @@ public class BaseGameMode : MonoBehaviour
     {
         StartCoroutine(DelayGameOver());
     }
-      IEnumerator DelayGameOver()
-    {  
-       
+    IEnumerator DelayGameOver()
+    {
         Time.timeScale = 1.0f;
         var playerData = PersistantData.GetPlayerData();
         playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-    
         playerData.PlayedGame = true;
-        playerData.SetScore(Game.Score);
-        playerData.Coins += Game.CoinPicked;
-
- 
-        QuestSystem.Instance.UpdateQuestProgress();
-        
+        playerData.ScoreLastGame = playerData.Score;
         SaveSystem.SaveGame();
 
         AudioManager.PlayMusic("GameOver", false);
@@ -151,7 +145,7 @@ public class BaseGameMode : MonoBehaviour
 
     public void Win()
     {
-             StartCoroutine(DelayWinScreen());
+        StartCoroutine(DelayWinScreen());
     }
 
     IEnumerator DelayWinScreen()
@@ -159,8 +153,6 @@ public class BaseGameMode : MonoBehaviour
         Time.timeScale = 1.0f;
 
         PersistantData.GetPlayerData().GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-
-        QuestSystem.Instance.UpdateQuestProgress();
 
         SaveSystem.SaveGame();
 
@@ -188,33 +180,34 @@ public class BaseGameMode : MonoBehaviour
                 Debug.Log("You Killed an Enemy");
             }
 
-            EnemiesCount--;      
-     
-            var playerData = PersistantData.GetPlayerData();       
+            EnemiesCount--;
+
+            var playerData = PersistantData.GetPlayerData();
             int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
             int EnemyLevel = baseEnemy.Level;
             int levelDiffrence = PlayerLevel / EnemyLevel;
-            if (levelDiffrence == 0)levelDiffrence = 1;
+            if (levelDiffrence == 0) levelDiffrence = 1;
             float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
-            
-          
+
+
             int score = baseEnemy.EnemyData.EnemyValue;
             playerData.EarnXP(XPEarned);
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
-            score = Game.Multiplier * baseEnemy.EnemyData.EnemyValue;
-            var ultiplierTextToShow = Game.Multiplier > 1 ? $"{score} + (x {Game.Multiplier} )" :  $"{score}";
+            score = GameController.Instance.Multiplier * baseEnemy.EnemyData.EnemyValue;
+            var ultiplierTextToShow = GameController.Instance.Multiplier > 1 ? $"{score} + (x {GameController.Instance.Multiplier} )" : $"{score}";
             GuiManager.SetScoreMultipler(ultiplierTextToShow);
-            Game.NumberOfEnemies--;
-            Game.EnemyKilled++;
-            Game.SetScore(score);
-            Game.IncreaseMultiplier();
-            
+            GameController.Instance.NumberOfEnemies--;
+            GameController.Instance.IncreaseMultiplier();
+
             GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
-            
-            if(baseEnemy.GetComponent<BossEnemy>() == null)return;
-            Game.BossBountyKilledId = id[id.Length - 1];  
+
+            playerData.SetPlayerKillsCounter(1);
+            playerData.SetScore(score);
+
+            if (baseEnemy.GetComponent<BossEnemy>() == null) return;
+            playerData.BossBountyKilledId = id[id.Length - 1];
             gameInfo.BossBattleInitiated = false;
-       
+
         }
     }
 
@@ -223,18 +216,19 @@ public class BaseGameMode : MonoBehaviour
         if (baseEnemy.Id.Equals(id))
         {
             EnemiesCount--;
-            if(baseEnemy.GetComponent<BossEnemy>())return;
-            Game.EnemyEscaped++;
+            if (baseEnemy.GetComponent<BossEnemy>()) return;
+            var playerData = PersistantData.GetPlayerData();
+            playerData.EnemyEscaped++;
         }
     }
 
     public void OnEnemyHitHandled(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
-        {    
+        {
             var playerData = PersistantData.GetPlayerData();
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
         }
-    } 
+    }
 }
 //=================================================================================  

@@ -40,8 +40,6 @@ public class ObjectivesElement : MonoBehaviour
             Complete();
         });
 
-
-
         playerData = PersistantData.GetPlayerData();
         currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
 
@@ -49,31 +47,31 @@ public class ObjectivesElement : MonoBehaviour
         {
             case ObjectiveTypeEnum.KILL:
                 xpToEarn = 50 * currentPlayerLevel;
-                coinToEarn = 250;
+                coinToEarn = 100 * currentPlayerLevel;
                 break;
             case ObjectiveTypeEnum.USE:
                 xpToEarn = 20 * currentPlayerLevel;
-                coinToEarn = 200;
+                coinToEarn = 40 * currentPlayerLevel;
                 break;
             case ObjectiveTypeEnum.UNHARMED:
                 xpToEarn = 75 * currentPlayerLevel;
-                coinToEarn = 275;
+                coinToEarn = 150 * currentPlayerLevel;
                 break;
             case ObjectiveTypeEnum.SURVIVE:
                 xpToEarn = 25 * currentPlayerLevel;
-                coinToEarn = 225;
+                coinToEarn = 50 * currentPlayerLevel;
                 break;
             case ObjectiveTypeEnum.SPEND:
                 xpToEarn = 15 * currentPlayerLevel;
-                coinToEarn = objectiveData.progress / 3;
+                coinToEarn = objectiveData.progress / 3 * currentPlayerLevel;
                 break;
             case ObjectiveTypeEnum.BOUNTY:
                 xpToEarn = 100 * currentPlayerLevel;
-                coinToEarn = 300;
+                coinToEarn = 200 * currentPlayerLevel;
                 break;
             case ObjectiveTypeEnum.SCORE:
                 xpToEarn = 80 * currentPlayerLevel;
-                coinToEarn = 280;
+                coinToEarn = 100 * currentPlayerLevel;
                 break;
             default:
                 break;
@@ -103,17 +101,25 @@ public class ObjectivesElement : MonoBehaviour
 
             switch ((ObjectiveTypeEnum)objectiveData.objectiveType)
             {
+                case ObjectiveTypeEnum.KILL:
+                    playerData.SetPlayerKillsCounter(0);
+                    break;
                 case ObjectiveTypeEnum.USE:
-                    playerData.SetTotalSuperUsed(0);
+                    playerData.SetUsedSuperCount(0);
                     break;
                 case ObjectiveTypeEnum.UNHARMED:
-                    playerData.SetHitInGame(false);
+                    playerData.SetPlayerGotHitCounter(false);
                     break;
                 case ObjectiveTypeEnum.SURVIVE:
-                    playerData.SetWaveSurvived(0);
+                    playerData.SetWaveSurvivedCount(0);
                     break;
                 case ObjectiveTypeEnum.SPEND:
-                    playerData.SetMoneySpend(0);
+                    playerData.CoinSpend = 0;
+                    break;
+                case ObjectiveTypeEnum.BOUNTY:
+                    playerData.BossBountyKilledId = -1;
+                    break;
+                case ObjectiveTypeEnum.SCORE: 
                     break;
             }
 

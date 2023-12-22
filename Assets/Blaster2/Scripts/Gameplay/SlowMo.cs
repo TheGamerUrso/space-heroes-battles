@@ -15,7 +15,7 @@ public class SlowMo : MonoBehaviour
 
     public bool SlowMoAvailable()
     {
-        return !Game.IsGameOver && !Game.IsPaused && Game.UseSlowMo;
+        return !GameController.Instance.IsGameOver && !GameManager.Instance.IsPaused && GameController.Instance.UseSlowMo;
     }
 
     public void DoSlowMo()
@@ -29,20 +29,20 @@ public class SlowMo : MonoBehaviour
 
                 if (Input.touchCount > 0 || Input.GetMouseButton(0))
                 {
-                    Game.SlowMo = false;
+                    GameController.Instance.SlowMo = false;
                 }
                 else
                 {
-                    Game.SlowMo = true;
+                    GameController.Instance.SlowMo = true;
                 }
 
                 if (SlowMoAvailable())
                 {
-                    if (Game.SlowMo)
+                    if (GameController.Instance.SlowMo)
                     {
                         SlowTime();
                     }
-                    else if (!Game.SlowMo && Time.timeScale < 1)
+                    else if (!GameController.Instance.SlowMo && Time.timeScale < 1)
                     {
                         ResetTime();
                     }

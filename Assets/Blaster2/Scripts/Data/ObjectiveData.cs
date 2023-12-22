@@ -52,26 +52,18 @@ public class ObjectiveData
         if (!completed)
         {
             this.progress += progress;
-
+            this.progress = Mathf.Clamp(this.progress, 0, requirment);
             if (this.progress >= requirment)
             {
                 completed = true;
-                progress = 0;
-
                 Notification notification = new Notification();
                 notification.Name = Id;
-                notification.Description = Description;
-
+                this.Description = Description.Replace("%",""+ requirment);    
+                notification.Description = Description.Replace(" X ", "" + progress);
                 NotificationSystem.Instance.Add(notification);
-
-
-                AnalyticsResult analyticsResults = Analytics.CustomEvent(
-                   Id + " Challenge Completed");
-
-                Debug.Log("analyticsResults:" + analyticsResults);
+                progress = 0;         
             }
         }
-
-        progress = Mathf.Clamp(progress, 0, requirment);
+    
     }
 }

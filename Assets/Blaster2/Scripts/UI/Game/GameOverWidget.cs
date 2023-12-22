@@ -18,8 +18,8 @@ public class GameOverWidget : MonoBehaviour
     public void ShowGameResult()
     {
         Scene scene = SceneManager.GetActiveScene();
-
-        float score = Game.Score;
+        var playerData = PersistantData.GetPlayerData();
+        float score = playerData.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
 
@@ -36,8 +36,9 @@ public class GameOverWidget : MonoBehaviour
     }
 
     private IEnumerator ScoreCoroutine()
-    {
-        float score = Game.Score;
+    {    
+        var playerData = PersistantData.GetPlayerData();
+        float score = playerData.Score;
         float tempScore = 0;
         string scoreText;
 

@@ -8,7 +8,7 @@ public class EnemySpawner : MonoBehaviour
     public int LevelDifficulty;
     public GameObject SpawnEnemyElement(int availableEnemies)
     {
-        Game.NumberOfEnemies++;
+        GameController.Instance.NumberOfEnemies++;
 
         if (availableEnemies > enemyElements.Count)
         {
@@ -51,7 +51,7 @@ public class EnemySpawner : MonoBehaviour
 
     public GameObject SpawnEnemyElement()
     {
-        Game.NumberOfEnemies++;
+        GameController.Instance.NumberOfEnemies++;
 
         var spawnPos = transform.position;
         var randEnemyIndex = Random.Range(0, enemyElements.Count);

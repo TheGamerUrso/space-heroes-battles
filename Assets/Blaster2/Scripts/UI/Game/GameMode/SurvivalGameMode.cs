@@ -58,7 +58,7 @@ public class SurvivalGameMode : BaseGameMode
 
         yield return shortWait;
 
-        while (!Game.IsGameOver)
+        while (!GameController.Instance.IsGameOver)
         {
             NewWave();
 
@@ -69,7 +69,7 @@ public class SurvivalGameMode : BaseGameMode
 
             yield return shortWait;
 
-            Game.UseSlowMo = true;
+            GameController.Instance.UseSlowMo = true;
 
             if (gameInfo.pause)
             {

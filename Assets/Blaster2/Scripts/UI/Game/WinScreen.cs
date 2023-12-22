@@ -35,7 +35,8 @@ public class WinScreen : MonoBehaviour
 
     private IEnumerator ShowGameResults()
     {
-        float score = Game.Score;
+        var playerData = PersistantData.GetPlayerData();
+        float score = playerData.Score;
         float tempScore = 0;
         yield return new WaitForSeconds(2);
 

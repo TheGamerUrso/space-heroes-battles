@@ -58,9 +58,4 @@ public class LaserSpecialAttack : BaseSpecialAttack
 
         lineRenderer.widthMultiplier = laserSize;
     }
-
-    public override void Shoot()
-    {
-        base.Shoot();
-    }
 }

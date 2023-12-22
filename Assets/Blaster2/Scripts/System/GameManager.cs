@@ -74,7 +74,7 @@ public class GameManager : MonoSingleton<GameManager>
     public Sprite[] sprites;
 
     public float sceneLoadProgress;
-
+    public bool IsPaused;
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.F1))
@@ -134,8 +134,8 @@ public class GameManager : MonoSingleton<GameManager>
         CurrentGameState = nextGameState;
 
         if (nextGameState == GameStateEnum.GAME)
-        {    
-       
+        {
+
             Events.OnLoadDataCompleted?.Invoke();
         }
     }
@@ -287,24 +287,25 @@ public class GameManager : MonoSingleton<GameManager>
         Hide();
 
         yield return new WaitForSeconds(2.0f);
-        LoadingScreen.SetActive(false);
+        LoadingScreen.GetComponent<Canvas>().enabled = false;
     }
 
     private IEnumerator ShowLoadingScreen(LevelEnum level, bool showLoadingScreen = true)
     {
         if (showLoadingScreen)
         {
+            LoadingScreen.GetComponent<Canvas>().enabled = true;
+
+            yield return new WaitForSeconds(.5f);
             Show();
         }
         yield return shortWait;
+        Content.SetActive(true);
         StartCoroutine(LoadSceneAsync(level));
     }
 
     private void Show()
     {
-        LoadingScreen.SetActive(true);
-        Content.SetActive(true);
-
         for (int i = 0; i < Gates.Length; i++)
         {
             GateControl gate = Gates[i];
@@ -325,22 +326,22 @@ public class GameManager : MonoSingleton<GameManager>
 
     public void PauseTheGame(bool value)
     {
-        Game.IsPaused = value;
+        IsPaused = value;
 
-        Events.OnPauseGame?.Invoke(Game.IsPaused);
+        Events.OnPauseGame?.Invoke(IsPaused);
 
-        if (Game.IsPaused)
+        if (IsPaused)
         {
             Time.timeScale = 0;
             Time.fixedDeltaTime = 0;
-            Game.IsPaused = true;
+            IsPaused = true;
 
         }
         else
         {
             Time.timeScale = 1;
             Time.fixedDeltaTime = DefaultTimeDeltaScale;
-            Game.IsPaused = false;
+            IsPaused = false;
         }
     }
 

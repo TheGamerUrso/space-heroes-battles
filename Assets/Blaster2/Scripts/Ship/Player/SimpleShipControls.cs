@@ -134,7 +134,7 @@ public class SimpleShipControls : MonoBehaviour
                 }
             }
 
-            if (!Game.IsPaused)
+            if (!GameManager.Instance.IsPaused)
             {
                 Rotate();
             }

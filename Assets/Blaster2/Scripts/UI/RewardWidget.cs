@@ -48,7 +48,7 @@ public class RewardWidget : MonoBehaviour
         GetNewRewards();
 
         Time.timeScale = 1.0f;
-        Game.UseSlowMo = false;
+        GameController.Instance.UseSlowMo = false;
     }
 
     private void Start()
@@ -135,7 +135,7 @@ public class RewardWidget : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         widgetPanel.SetActive(false);
         RewardClaimed();
-        Game.UseSlowMo = true;
+        GameController.Instance.UseSlowMo = true;
     }
 
 }

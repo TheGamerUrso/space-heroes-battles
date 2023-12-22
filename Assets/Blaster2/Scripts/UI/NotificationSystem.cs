@@ -16,15 +16,6 @@ public class NotificationSystem : MonoSingleton<NotificationSystem>
     [SerializeField] private Transform content;
     [SerializeField] private GameObject NotificationElementPrefab;
  
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.N))
-        {
-            int num = Random.Range(0, 100);
-            Add(new Notification() { Index = notifications.Count + 1, Name = "Notification " + notifications.Count + 1, Description = num.ToString() });
-        }
-    }
-
     public void Add(Notification notification)
     {
         var notificationGO = Instantiate(NotificationElementPrefab, content, false);

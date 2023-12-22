@@ -117,12 +117,12 @@ public class GuiManager : MonoSingleton<GuiManager>
     {
         if (value)
         {
-            Game.SlowMo = false;
+            GameController.Instance.SlowMo = false;
             PauseScreen.Show();
         }
         else if (!value)
         {
-            Game.SlowMo = true;
+            GameController.Instance.SlowMo = true;
             PauseScreen.Hide();
         }
     }
@@ -152,7 +152,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     public void LoadMainMenu()
     {
-        Game.IsGameOver = true; 
+        GameController.Instance.IsGameOver = true; 
 
         GameManager.Instance.LoadMainenu();
 

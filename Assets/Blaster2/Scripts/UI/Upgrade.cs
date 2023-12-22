@@ -67,7 +67,7 @@ public class Upgrade
 
         playerShipData.SetUpgradeByType(upgradeData.upgradeType, Level);
 
-        playerData.RemoveCoin(Cost);
+        playerData.AbstractCoins(Cost);
 
         if (upgradeData.CostPerLevel.Length > 0)
         {
@@ -77,16 +77,6 @@ public class Upgrade
         {
             Cost = upgradeData.Cost;
         }
-
-        AnalyticsResult analyticsResults = Analytics.CustomEvent(
-            " Upgrade Bought",
-                new Dictionary<string, object>()
-                {
-                {upgradeData.upgradeType.ToString(),Level }
-                }
-            );
-
-        Debug.Log("analyticsResults:" + analyticsResults);
     }
 
     public void SetPlayerShipData()

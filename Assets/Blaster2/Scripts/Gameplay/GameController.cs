@@ -50,7 +50,41 @@ public class GameController : MonoBehaviour
     private Ship playerShip;
     private PlayerData playerData;
     private BaseGameMode baseGameMode;
+    public int NumberOfEnemies = 0;
+    public int MaxLevelUnlocked = 5;
+    public bool IsFirstRun;
 
+    public bool IsGameOver;
+    public bool IsHightScore = false;
+    public bool IsTransmiting;
+    public bool UseSlowMo;
+    public bool SlowMo;
+    public int TotalCoinsInGame;
+    public int Multiplier = 1;
+    public int EnemySpawnInTotal;
+
+    public void NewGame()
+    {
+        IsGameOver = false;      
+        Multiplier = 1;
+        NumberOfEnemies = 0;
+    }
+
+    public void ResetMultiplier()
+    {
+        Multiplier = 1;
+        Events.OnMultiplierChanged?.Invoke();
+    }
+
+    public void IncreaseMultiplier()
+    {
+        Multiplier++;
+        if (Multiplier >= 5)
+        {
+            Multiplier = 5;
+        }
+        Events.OnMultiplierChanged?.Invoke();
+    }
 
     private void OnApplicationFocus(bool focus)
     {
@@ -58,7 +92,7 @@ public class GameController : MonoBehaviour
         {
             if (!focus)
             {
-                if (Game.IsGameOver == false)
+                if (IsGameOver == false)
                 {
                     GameManager.Instance.PauseTheGame(true);
                 }
@@ -72,7 +106,7 @@ public class GameController : MonoBehaviour
         {
             if (Paused)
             {
-                if (Game.IsGameOver == false)
+                if (IsGameOver == false)
                 {
                     GameManager.Instance.PauseTheGame(true);
                 }
@@ -93,7 +127,7 @@ public class GameController : MonoBehaviour
         Events.PlayerLost += GameOver;
         Events.GameEnded += Win;
 
-        Game.UseSlowMo = false;
+        UseSlowMo = false;
         Application.targetFrameRate = 60;
 
         baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
@@ -113,7 +147,7 @@ public class GameController : MonoBehaviour
     IEnumerator StartGameDelay()
     {        
         GameManager.Instance.ChangeGameState(GameStateEnum.GAME);
-        Game.NewGame();
+        NewGame();
         yield return new WaitForSeconds(1.0f);
 
         if (PlayerManager.GetPlayer() == null)
@@ -140,16 +174,16 @@ public class GameController : MonoBehaviour
 
                 break;
             case GameState.GAMEOVER:
-                if (Game.IsGameOver == false)
+                if (IsGameOver == false)
                 {
-                    Game.IsGameOver = true;
+                    IsGameOver = true;
                     baseGameMode.GameOver();
                 }
                 break;
             case GameState.WIN:
-                if (!Game.IsGameOver)
+                if (!IsGameOver)
                 {
-                    Game.IsGameOver = true;
+                    IsGameOver = true;
                     baseGameMode.Win();
                 }
                 break;

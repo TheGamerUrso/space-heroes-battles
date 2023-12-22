@@ -169,7 +169,7 @@ public class DropItem : MonoBehaviour
                 GameObject extraDrop = PoolManager.Instance.GetObjectFromPool(ListOfDropItems[0].DropItemsType);
                 extraDrop.transform.position = transform.position;
                 extraDrop.transform.rotation = Quaternion.identity;
-                Game.TotalCoinsInGame++;
+                GameController.Instance.TotalCoinsInGame++;
                 extraDrop.SetActive(true);
             }
             return;

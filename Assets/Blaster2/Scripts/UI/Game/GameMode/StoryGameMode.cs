@@ -52,7 +52,7 @@ public class StoryGameMode : BaseGameMode
 
         yield return shortWait;
 
-        Game.UseSlowMo = true;
+        GameController.Instance.UseSlowMo = true;
 
         while (gameInfo.CurrentTotalEnemies > 0)
         {
@@ -94,10 +94,10 @@ public class StoryGameMode : BaseGameMode
 
             yield return longWait;
 
-            if (!Game.IsGameOver)
+            if (!GameController.Instance.IsGameOver)
             {
                 Events.GameEnded?.Invoke();
-                Game.UseSlowMo = false;
+                GameController.Instance.UseSlowMo = false;
             }
         }
     }
