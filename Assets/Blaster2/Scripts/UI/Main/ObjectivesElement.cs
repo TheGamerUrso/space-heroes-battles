@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class ObjectivesElement : MonoBehaviour
 {
 
-    [HideInInspector] public ObjectiveData objectiveData;
+     public ObjectiveData objectiveData;
 
     [SerializeField] private TextMeshProUGUI rewardText;
     [SerializeField] private TextMeshProUGUI CoinReward;
@@ -123,12 +123,11 @@ public class ObjectivesElement : MonoBehaviour
                     break;
             }
 
-            completed = true;
             objectiveData.claimed = true;
             Button.interactable = false;
+ 
+            QuestSystem.Instance.CompleteQuest(objectiveData);
             RefreshQuests();
-
-            Events.OnObjectiveChange?.Invoke(objectiveData);
         }
     }
     public void SetRewardInfo()

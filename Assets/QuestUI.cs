@@ -12,16 +12,16 @@ public class QuestUI : MonoBehaviour
         RefreshObjectives();
     }
 
-    void Awake(){
+    void Awake()
+    {
         QuestSystem.Instance.LoadingNewQuests += LoadingNewObjectives;
         QuestSystem.Instance.OnNewQuestGenerated += InitializeObjectives;
-        QuestSystem.Instance.OnQuestValueChanged+= RefreshObjectives;
+        QuestSystem.Instance.OnQuestValueChanged += RefreshObjectives;
     }
 
     private void Start()
     {
         InitializeObjectives();
-        RefreshObjectives();
     }
 
     public void LoadingNewObjectives()
@@ -36,8 +36,9 @@ public class QuestUI : MonoBehaviour
 
     public void RefreshObjectives()
     {
+
         GameObject objectiveGO;
-        for (int i = 0; i < ObjectiveLocations.Length; i++)
+        for (int i = 0; i < QuestSystem.Instance.ListOfActiveQuest.Count; i++)
         {
             objectiveGO = ObjectiveLocations[i];
             objectiveGO.GetComponent<ObjectivesElement>().RefreshQuests();
@@ -47,15 +48,14 @@ public class QuestUI : MonoBehaviour
     public void InitializeObjectives()
     {
         var objectiveIndex = 0;
-        GameObject objectiveGO;
-        ObjectivesElement objectivesElement;
         foreach (ObjectiveData item in PersistantData.GetPlayerData().ListOfOnGoingObjectives.ToList())
         {
-            objectiveGO = ObjectiveLocations[objectiveIndex];
-            objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
+            var objectiveGO = ObjectiveLocations[objectiveIndex];
+            var objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
             objectivesElement.InitializeObjective(item);
             objectiveIndex++;
         }
+        RefreshObjectives();
     }
 
     public void PlayButton()

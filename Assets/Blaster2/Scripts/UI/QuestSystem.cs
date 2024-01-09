@@ -10,33 +10,36 @@ public class QuestSystem : MonoSingleton<QuestSystem>
     public Action OnQuestValueChanged;
     [SerializeField] private Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
     //[SerializeField] private GameObject[] ObjectiveLocations;
-    private List<ObjectiveTypeEnum> ListOfAvailableObjectiveTypes;
+    [SerializeField] private List<ObjectiveTypeEnum> ListOfAvailableObjectiveTypes;
     private float ResetTimer = 2f;
     private bool allObjectivesCompleted = false;
 
     private PlayerData playerData;
     public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
-
+    public List<ObjectiveData> ListOfActiveQuest{get{return ListOfOnGoingObjectives;}}
     private void OnEnable()
     {
-        RefreshObjectives();
-    }
-
-    private void OnDestroy()
-    {
-        Events.OnObjectiveChange -= CheckObjective;
+        OnQuestValueChanged?.Invoke();
     }
 
     private void Start()
     {
-        Events.OnObjectiveChange += CheckObjective;
-
         playerData = PersistantData.GetPlayerData();
-
-        InitializeObjectives();
-        RefreshObjectives();
-
         ListOfOnGoingObjectives = playerData.ListOfOnGoingObjectives;
+        InitializeObjectives();
+    }
+
+    public void InitializeObjectives()
+    {
+        PlayerData playerData = PersistantData.GetPlayerData();
+        if (playerData.ListOfOnGoingObjectives.Count > 0)
+        {
+            OnNewQuestGenerated?.Invoke();
+        }
+        else
+        {
+            CreateNewObjective();
+        }
     }
 
     public void CreateNewObjective()
@@ -64,7 +67,7 @@ public class QuestSystem : MonoSingleton<QuestSystem>
                     objectiveData = new ObjectiveData(i, "UNHARMED", UnityEngine.Random.Range(10000, 50000), 0, (int)objectiveType, "Achieve <color=orange> % </color> Score Without Getting Hit");
                     break;
                 case ObjectiveTypeEnum.SURVIVE:
-                    objectiveData = new ObjectiveData(i, "SURVIVE", UnityEngine.Random.Range(8, 25), 0, (int)objectiveType, "Survive <color=orange> % </color> Waves" );
+                    objectiveData = new ObjectiveData(i, "SURVIVE", UnityEngine.Random.Range(8, 25), 0, (int)objectiveType, "Survive <color=orange> % </color> Waves");
                     break;
                 case ObjectiveTypeEnum.SPEND:
                     objectiveData = new ObjectiveData(i, "SPEND", UnityEngine.Random.Range(100, 250), 0, (int)objectiveType, "Spend <color=orange> X / % </color> coins");
@@ -94,10 +97,10 @@ public class QuestSystem : MonoSingleton<QuestSystem>
             }
         }
 
-        RefreshObjectives();
+        OnNewQuestGenerated?.Invoke();
     }
-
-    public void CheckObjective(ObjectiveData objectiveData)
+    
+    public void CompleteQuest(ObjectiveData objectiveData)
     {
         ListOfObjectives.Remove(objectiveData.Id);
 
@@ -139,31 +142,9 @@ public class QuestSystem : MonoSingleton<QuestSystem>
         {
             playerData.ListOfOnGoingObjectives.Remove(item);
             InitializeObjectives();
-            RefreshObjectives();
         }
     }
 
-    public void RefreshObjectives()
-    {
-        OnQuestValueChanged?.Invoke();
-    }
-
-    public void InitializeObjectives()
-    {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        if (playerData.ListOfOnGoingObjectives.Count > 0)
-        {
-           OnNewQuestGenerated?.Invoke();
-        }
-        else { CreateNewObjective(); }
-    }
-
-    public void PlayButton()
-    {
-        // LevelEnum[] levels ={LevelEnum.Level0,LevelEnum.Level1,LevelEnum.Level2,LevelEnum.Level3,LevelEnum.Level4,LevelEnum.Level5,LevelEnum.Level6,LevelEnum.Level7,LevelEnum.Level8,LevelEnum.Level9};
-        LevelEnum[] levels = { LevelEnum.Level0 };
-        GameManager.Instance.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
-    }
 
     [ContextMenu("Generate New Challenges")]
     public void GeneratedQuest()
@@ -182,6 +163,7 @@ public class QuestSystem : MonoSingleton<QuestSystem>
             }
             objectiveData.UpdateProgress(progress);
         }
+        OnQuestValueChanged?.Invoke();
     }
 
     [ContextMenu("Finish Quests")]
@@ -192,5 +174,6 @@ public class QuestSystem : MonoSingleton<QuestSystem>
             ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
             objective.UpdateProgress(objective.requirment);
         }
+        OnQuestValueChanged?.Invoke();
     }
 }
