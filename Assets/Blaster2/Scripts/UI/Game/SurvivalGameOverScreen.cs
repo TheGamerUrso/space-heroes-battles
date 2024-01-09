@@ -15,7 +15,7 @@ public class SurvivalGameOverScreen : MonoBehaviour
     public void ShowResults()
     {
          var playerData = PersistantData.GetPlayerData();
-        float score = playerData.Score;
+        float score = GameController.Instance.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
 
@@ -35,7 +35,7 @@ public class SurvivalGameOverScreen : MonoBehaviour
     private IEnumerator ScoreCoroutine()
     {
         var playerData = PersistantData.GetPlayerData();
-        float score = playerData.Score;
+        float score = GameController.Instance.Score;
         float tempScore = 0;
         string scoreText;
 

@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Analytics;
 
-public enum ObjectiveTypeEnum
+public enum QuestTypeEnum
 {
     KILL = 0, USE = 1, UNHARMED = 2, SURVIVE = 3, SPEND = 4, BOUNTY = 5, SCORE = 6
 }
 
 [Serializable]
-public class ObjectiveData
+public class QuestData
 {
     public bool claimed;
     public bool completed;
@@ -17,10 +17,10 @@ public class ObjectiveData
     public string Id;
     public int progress;
     public int requirment;
-    public int objectiveType;
+    public int questType;
     public string Description;
 
-    public ObjectiveData(int pos,
+    public QuestData(int pos,
         string Id,
         int requirment,
         int progress,
@@ -31,7 +31,7 @@ public class ObjectiveData
         this.Id = Id;
         this.requirment = requirment;
         this.progress = progress;
-        this.objectiveType = objectiveType;
+        this.questType = objectiveType;
         string newText = "" + requirment;
 
         string newString = description.Replace("%", newText);

@@ -7,7 +7,6 @@ using UnityEngine;
 public class PlayerData
 {
     public float Score;
-    public float ScoreLastGame;
     public float HighScore;
 
 
@@ -47,7 +46,7 @@ public class PlayerData
     public int ControlScene;
     [Range(0, 20)]
     public int MaxLevel;
-    public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
+    public List<QuestData> ListOfPlayerActiveQuest = new List<QuestData>();
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
@@ -82,14 +81,10 @@ public class PlayerData
 
     public void NewGame()
     {
-        EnemyKilled = 0;
-        EnemyEscaped = 0;
-        Score = 0;
-        CoinPicked = 0;
-        BossBountyKilledId = -1;
         SetSuperMeter(0);
         SetPowerPackCollected(0);
     }
+
     public void SetPlayerKillsCounter(int KillsCounter)
     {
         if (KillsCounter == 0)
@@ -102,7 +97,7 @@ public class PlayerData
             Kills += KillsCounter;
             EnemyKilled += KillsCounter;
         }
-        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.KILL, EnemyKilled);
+        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.KILL, EnemyKilled);
     }
 
     public void SetPlayerGotHitCounter(bool value)
@@ -150,7 +145,7 @@ public class PlayerData
             HighScore = score;
         }
         Events.OnScoreValueChanged?.Invoke((int)Score);
-        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.SCORE, (int)Score);
+        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SCORE, (int)Score);
     }
     public float GetHighScore()
     {
@@ -161,13 +156,13 @@ public class PlayerData
         return Score;
     }
 
-    public ObjectiveData GetOnGoingObjectiveById(ObjectiveTypeEnum objectiveType)
+    public QuestData GetOnGoingObjectiveById(QuestTypeEnum objectiveType)
     {
-        for (int i = 0; i < ListOfOnGoingObjectives.Count; i++)
+        for (int i = 0; i < ListOfPlayerActiveQuest.Count; i++)
         {
-            if ((ObjectiveTypeEnum)ListOfOnGoingObjectives[i].objectiveType == objectiveType)
+            if ((QuestTypeEnum)ListOfPlayerActiveQuest[i].questType == objectiveType)
             {
-                return ListOfOnGoingObjectives[i];
+                return ListOfPlayerActiveQuest[i];
             }
         }
         return null;
@@ -182,7 +177,7 @@ public class PlayerData
             Coins = 0;
         }
         Events.OnCoinValueChanged?.Invoke(Coins);
-        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.SPEND, CoinSpend);
+        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SPEND, CoinSpend);
     }
 
     public void AddCoin(int ammount)
@@ -208,7 +203,7 @@ public class PlayerData
             WaveSurvived += value;
         }
 
-        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.SURVIVE, WaveSurvived);
+        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SURVIVE, WaveSurvived);
     }
 
     public void SetUsedSuperCount(int ammount)
@@ -222,13 +217,14 @@ public class PlayerData
             SuperUsed += ammount;
         }
         Events.OnSuperUseValueChanged?.Invoke(SuperUsed);
-        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.USE, SuperUsed);
+        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.USE, SuperUsed);
     }
 
-    public void SetBossKilledCount(int BossIdKilled)
+    public void SetBossKilledCount()
     {
-        BossBountyKilledId = BossIdKilled;
-        QuestSystem.Instance.SetQuestProgressByType(ObjectiveTypeEnum.BOUNTY, BossBountyKilledId);
+        if(BossBountyKilledId==1)return;
+        BossBountyKilledId = 1;
+        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.BOUNTY, BossBountyKilledId);
     }
 
     public PlayerShipData GetCurrentPlayerShipData()

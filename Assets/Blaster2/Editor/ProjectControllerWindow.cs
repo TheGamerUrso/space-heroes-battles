@@ -239,11 +239,11 @@ public class ProjectControllerWindow : EditorWindow
     public void CompleteObjective(int index)
     {
         PlayerData playerData = PersistantData.GetPlayerData();
-        if ((ObjectiveTypeEnum)playerData.ListOfOnGoingObjectives[index].objectiveType == ObjectiveTypeEnum.UNHARMED)
+        if ((QuestTypeEnum)playerData.ListOfPlayerActiveQuest[index].questType == QuestTypeEnum.UNHARMED)
         {
-            playerData.ListOfOnGoingObjectives[index].UpdateProgress(1);
+            playerData.ListOfPlayerActiveQuest[index].UpdateProgress(1);
         }
-        else { playerData.ListOfOnGoingObjectives[index].UpdateProgress(playerData.ListOfOnGoingObjectives[index].requirment); }
+        else { playerData.ListOfPlayerActiveQuest[index].UpdateProgress(playerData.ListOfPlayerActiveQuest[index].requirment); }
 
     }
 }

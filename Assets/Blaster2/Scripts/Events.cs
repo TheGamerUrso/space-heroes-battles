@@ -94,15 +94,15 @@ public class Events
      */
     public static Action<string, bool> OnScreenChanged;
 
-    public static Action<ObjectiveData> OnObjectiveChange;
-    public static Action<ObjectivesElement> OnClickEvent = delegate { };
+    public static Action<QuestData> OnObjectiveChange;
+    public static Action<QuestUIElement> OnClickEvent = delegate { };
 
 
     public class ObjectiveEventArgs : EventArgs
     {
-        public ObjectiveData objectiveData { get; set; }
+        public QuestData objectiveData { get; set; }
 
-        public ObjectiveEventArgs(ObjectiveData objectiveData)
+        public ObjectiveEventArgs(QuestData objectiveData)
         {
             this.objectiveData = objectiveData;
         }

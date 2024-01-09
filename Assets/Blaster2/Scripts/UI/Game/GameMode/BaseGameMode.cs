@@ -133,7 +133,7 @@ public class BaseGameMode : MonoBehaviour
         var playerData = PersistantData.GetPlayerData();
         playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
         playerData.PlayedGame = true;
-        playerData.ScoreLastGame = playerData.Score;
+        playerData.SetScore(GameController.Instance.Score);
         SaveSystem.SaveGame();
 
         AudioManager.PlayMusic("GameOver", false);
@@ -205,7 +205,7 @@ public class BaseGameMode : MonoBehaviour
             playerData.SetScore(score);
 
             if (baseEnemy.GetComponent<BossEnemy>() == null) return;
-            playerData.BossBountyKilledId = id[id.Length - 1];
+            playerData.SetBossKilledCount();
             gameInfo.BossBattleInitiated = false;
 
         }

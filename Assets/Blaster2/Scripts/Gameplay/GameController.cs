@@ -45,15 +45,12 @@ public class GameController : MonoBehaviour
 
     [Header("Config")]
     public bool HasAsteroids;
-
-
     private Ship playerShip;
     private PlayerData playerData;
     private BaseGameMode baseGameMode;
     public int NumberOfEnemies = 0;
     public int MaxLevelUnlocked = 5;
     public bool IsFirstRun;
-
     public bool IsGameOver;
     public bool IsHightScore = false;
     public bool IsTransmiting;
@@ -63,11 +60,20 @@ public class GameController : MonoBehaviour
     public int Multiplier = 1;
     public int EnemySpawnInTotal;
 
+    public int EnemyKilled = 0;
+    public int EnemyEscaped = 0;
+    public int Score = 0;
+    public int CoinPicked = 0;
+
     public void NewGame()
     {
-        IsGameOver = false;      
+        IsGameOver = false;
         Multiplier = 1;
         NumberOfEnemies = 0;
+        EnemyKilled = 0;
+        EnemyEscaped = 0;
+        Score = 0;
+        CoinPicked = 0;
     }
 
     public void ResetMultiplier()

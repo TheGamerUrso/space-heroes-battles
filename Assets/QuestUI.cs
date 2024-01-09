@@ -5,16 +5,23 @@ using UnityEngine;
 
 public class QuestUI : MonoBehaviour
 {
-    [SerializeField] private GameObject[] ObjectiveLocations;
+    [SerializeField] private GameObject[] questLocation;
 
     private void OnEnable()
     {
         RefreshObjectives();
     }
+    
+    private void OnDestroy()
+    {
+        QuestSystem.Instance.LoadingNewQuests -= LoadingNewQuests;
+        QuestSystem.Instance.OnNewQuestGenerated -= InitializeObjectives;
+        QuestSystem.Instance.OnQuestValueChanged -= RefreshObjectives;
+    }
 
     void Awake()
     {
-        QuestSystem.Instance.LoadingNewQuests += LoadingNewObjectives;
+        QuestSystem.Instance.LoadingNewQuests += LoadingNewQuests;
         QuestSystem.Instance.OnNewQuestGenerated += InitializeObjectives;
         QuestSystem.Instance.OnQuestValueChanged += RefreshObjectives;
     }
@@ -24,36 +31,35 @@ public class QuestUI : MonoBehaviour
         InitializeObjectives();
     }
 
-    public void LoadingNewObjectives()
+    public void LoadingNewQuests()
     {
-        GameObject objectiveGO;
-        for (int i = 0; i < ObjectiveLocations.Length; i++)
+        GameObject questGO;
+        for (int i = 0; i < questLocation.Length; i++)
         {
-            objectiveGO = ObjectiveLocations[i];
-            objectiveGO.GetComponent<ObjectivesElement>().LoadingIndicator();
+            questGO = questLocation[i];
+            questGO.GetComponent<QuestUIElement>().LoadingIndicator();
         }
     }
 
     public void RefreshObjectives()
     {
-
-        GameObject objectiveGO;
+        GameObject questGO;
         for (int i = 0; i < QuestSystem.Instance.ListOfActiveQuest.Count; i++)
         {
-            objectiveGO = ObjectiveLocations[i];
-            objectiveGO.GetComponent<ObjectivesElement>().RefreshQuests();
+            questGO = questLocation[i];
+            questGO.GetComponent<QuestUIElement>().RefreshQuests();
         }
     }
 
     public void InitializeObjectives()
     {
-        var objectiveIndex = 0;
-        foreach (ObjectiveData item in PersistantData.GetPlayerData().ListOfOnGoingObjectives.ToList())
+        var questIndex = 0;
+        foreach (QuestData item in PersistantData.GetPlayerData().ListOfPlayerActiveQuest.ToList())
         {
-            var objectiveGO = ObjectiveLocations[objectiveIndex];
-            var objectivesElement = objectiveGO.GetComponent<ObjectivesElement>();
-            objectivesElement.InitializeObjective(item);
-            objectiveIndex++;
+            var questLocation = this.questLocation[questIndex];
+            var questUIElement = questLocation.GetComponent<QuestUIElement>();
+            questUIElement.InitializeObjective(item);
+            questIndex++;
         }
         RefreshObjectives();
     }

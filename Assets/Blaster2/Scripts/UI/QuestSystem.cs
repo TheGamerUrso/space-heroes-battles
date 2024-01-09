@@ -8,15 +8,15 @@ public class QuestSystem : MonoSingleton<QuestSystem>
     public Action LoadingNewQuests;
     public Action OnNewQuestGenerated;
     public Action OnQuestValueChanged;
-    [SerializeField] private Dictionary<string, ObjectiveData> ListOfObjectives = new Dictionary<string, ObjectiveData>();
+    [SerializeField] private Dictionary<string, QuestData> DictOfActiveQuests = new Dictionary<string, QuestData>();
     //[SerializeField] private GameObject[] ObjectiveLocations;
-    [SerializeField] private List<ObjectiveTypeEnum> ListOfAvailableObjectiveTypes;
+    [SerializeField] private List<QuestTypeEnum> ListOfAvailableQuestType;
     private float ResetTimer = 2f;
-    private bool allObjectivesCompleted = false;
+    private bool AllQuestsCompleted = false;
 
     private PlayerData playerData;
-    public List<ObjectiveData> ListOfOnGoingObjectives = new List<ObjectiveData>();
-    public List<ObjectiveData> ListOfActiveQuest{get{return ListOfOnGoingObjectives;}}
+    public List<QuestData> ActiveQuests = new List<QuestData>();
+    public List<QuestData> ListOfActiveQuest{get{return ActiveQuests;}}
     private void OnEnable()
     {
         OnQuestValueChanged?.Invoke();
@@ -25,74 +25,74 @@ public class QuestSystem : MonoSingleton<QuestSystem>
     private void Start()
     {
         playerData = PersistantData.GetPlayerData();
-        ListOfOnGoingObjectives = playerData.ListOfOnGoingObjectives;
-        InitializeObjectives();
+        ActiveQuests = playerData.ListOfPlayerActiveQuest;
+        InitializeQuests();
     }
 
-    public void InitializeObjectives()
+    public void InitializeQuests()
     {
         PlayerData playerData = PersistantData.GetPlayerData();
-        if (playerData.ListOfOnGoingObjectives.Count > 0)
+        if (playerData.ListOfPlayerActiveQuest.Count > 0)
         {
             OnNewQuestGenerated?.Invoke();
         }
         else
         {
-            CreateNewObjective();
+            CreateNewQuests();
         }
     }
 
-    public void CreateNewObjective()
+    public void CreateNewQuests()
     {
-        ListOfAvailableObjectiveTypes = Enum.GetValues(typeof(ObjectiveTypeEnum)).Cast<ObjectiveTypeEnum>().ToList();
+        ListOfAvailableQuestType = Enum.GetValues(typeof(QuestTypeEnum)).Cast<QuestTypeEnum>().ToList();
 
-        ObjectiveTypeEnum objectiveType;
-        ObjectiveData objectiveData = null;
+        QuestTypeEnum questType;
+        QuestData questData = null;
 
         for (int i = 0; i < 3; i++)
         {
-            int randoNumber = UnityEngine.Random.Range(0, ListOfAvailableObjectiveTypes.Count);
+            int randoNumber = UnityEngine.Random.Range(0, ListOfAvailableQuestType.Count);
 
-            objectiveType = ListOfAvailableObjectiveTypes[randoNumber];
+            questType = ListOfAvailableQuestType[randoNumber];
 
-            switch (objectiveType)
+            switch (questType)
             {
-                case ObjectiveTypeEnum.KILL:
-                    objectiveData = new ObjectiveData(i, "DEFEAT ENEMIES", UnityEngine.Random.Range(128, 256), 0, (int)objectiveType, "Kill <color=orange> X / % </color>   enemies");
+                case QuestTypeEnum.KILL:
+                    questData = new QuestData(i, "DEFEAT ENEMIES", UnityEngine.Random.Range(200, 500), 0, (int)questType, "Kill <color=orange> X / % </color>   enemies");
                     break;
-                case ObjectiveTypeEnum.USE:
-                    objectiveData = new ObjectiveData(i, "SPECIAL ATTACK USED", UnityEngine.Random.Range(3, 10), 0, (int)objectiveType, "Use super <color=orange> X / % </color>  times");
+                case QuestTypeEnum.USE:
+                    questData = new QuestData(i, "SPECIAL ATTACK USED", UnityEngine.Random.Range(3, 10), 0, (int)questType, "Use super <color=orange> X / % </color>  times");
                     break;
-                case ObjectiveTypeEnum.UNHARMED:
-                    objectiveData = new ObjectiveData(i, "UNHARMED", UnityEngine.Random.Range(10000, 50000), 0, (int)objectiveType, "Achieve <color=orange> % </color> Score Without Getting Hit");
+                case QuestTypeEnum.UNHARMED:
+                    questData = new QuestData(i, "UNHARMED", UnityEngine.Random.Range(10000, 50000), 0, (int)questType, "Achieve <color=orange> % </color> Score Without Getting Hit");
                     break;
-                case ObjectiveTypeEnum.SURVIVE:
-                    objectiveData = new ObjectiveData(i, "SURVIVE", UnityEngine.Random.Range(8, 25), 0, (int)objectiveType, "Survive <color=orange> % </color> Waves");
+                case QuestTypeEnum.SURVIVE:
+                    questData = new QuestData(i, "SURVIVE", UnityEngine.Random.Range(10, 50), 0, (int)questType, "Survive <color=orange> % </color> Waves");
                     break;
-                case ObjectiveTypeEnum.SPEND:
-                    objectiveData = new ObjectiveData(i, "SPEND", UnityEngine.Random.Range(100, 250), 0, (int)objectiveType, "Spend <color=orange> X / % </color> coins");
+                case QuestTypeEnum.SPEND:
+                    questData = new QuestData(i, "SPEND",UnityEngine.Random.Range(500 ,1000), 0, (int)questType, "Spend <color=orange> X / % </color> coins");
                     break;
-                case ObjectiveTypeEnum.BOUNTY:
-                    objectiveData = new ObjectiveData(i, "BOUNTY", UnityEngine.Random.Range(0, 4), 0, (int)objectiveType, "Kill  <color=orange> % </color> BOSS");
+                case QuestTypeEnum.BOUNTY:
+                    questData = new QuestData(i, "BOUNTY",1, 0, (int)questType, "Defeat a strong Enemy");
                     break;
-                case ObjectiveTypeEnum.SCORE:
-                    objectiveData = new ObjectiveData(i, "SCORE", UnityEngine.Random.Range(10000, 50000), 0, (int)objectiveType, "Achieve <color=orange> % </color> Total Score");
+                case QuestTypeEnum.SCORE:
+                    questData = new QuestData(i, "SCORE", UnityEngine.Random.Range(10000, 50000), 0, (int)questType, "Achieve <color=orange> % </color> Total Score");
                     break;
             }
 
-            ListOfAvailableObjectiveTypes.Remove(objectiveType);
+            ListOfAvailableQuestType.Remove(questType);
 
-            ListOfObjectives.Add(objectiveData.Id, objectiveData);
+            DictOfActiveQuests.Add(questData.Id, questData);
         }
 
 
         var objectiveIndex = 0;
 
-        foreach (ObjectiveData item in ListOfObjectives.Values)
+        foreach (QuestData item in DictOfActiveQuests.Values)
         {
             if (item != null)
             {
-                playerData.ListOfOnGoingObjectives.Add(item);
+                playerData.ListOfPlayerActiveQuest.Add(item);
                 objectiveIndex++;
             }
         }
@@ -100,13 +100,13 @@ public class QuestSystem : MonoSingleton<QuestSystem>
         OnNewQuestGenerated?.Invoke();
     }
     
-    public void CompleteQuest(ObjectiveData objectiveData)
+    public void CompleteQuest(QuestData questData)
     {
-        ListOfObjectives.Remove(objectiveData.Id);
+        DictOfActiveQuests.Remove(questData.Id);
 
         int numberOfCompletdQuest = 0;
 
-        foreach (var item in playerData.ListOfOnGoingObjectives.ToList())
+        foreach (var item in playerData.ListOfPlayerActiveQuest.ToList())
         {
             if (item.claimed)
             {
@@ -117,19 +117,19 @@ public class QuestSystem : MonoSingleton<QuestSystem>
         if (numberOfCompletdQuest == 3)
         {
             LoadingNewQuests?.Invoke();
-            allObjectivesCompleted = true;
+            AllQuestsCompleted = true;
         }
     }
 
     private void Update()
     {
-        if (ResetTimer > 0 && allObjectivesCompleted)
+        if (ResetTimer > 0 && AllQuestsCompleted)
         {
             ResetTimer -= Time.deltaTime;
         }
-        else if (ResetTimer <= 0 && allObjectivesCompleted)
+        else if (ResetTimer <= 0 && AllQuestsCompleted)
         {
-            allObjectivesCompleted = false;
+            AllQuestsCompleted = false;
             ResetTimer = 2f;
             GenerateNewObjectives();
         }
@@ -138,10 +138,10 @@ public class QuestSystem : MonoSingleton<QuestSystem>
 
     public void GenerateNewObjectives()
     {
-        foreach (var item in playerData.ListOfOnGoingObjectives.ToList())
+        foreach (var item in playerData.ListOfPlayerActiveQuest.ToList())
         {
-            playerData.ListOfOnGoingObjectives.Remove(item);
-            InitializeObjectives();
+            playerData.ListOfPlayerActiveQuest.Remove(item);
+            InitializeQuests();
         }
     }
 
@@ -152,12 +152,12 @@ public class QuestSystem : MonoSingleton<QuestSystem>
         GenerateNewObjectives();
     }
 
-    public void SetQuestProgressByType(ObjectiveTypeEnum type, int progress)
+    public void SetQuestProgressByType(QuestTypeEnum type, int progress)
     {
-        ObjectiveData objectiveData = playerData.GetOnGoingObjectiveById(type);
+        QuestData objectiveData = playerData.GetOnGoingObjectiveById(type);
         if (objectiveData != null)
         {
-            if (type == ObjectiveTypeEnum.SURVIVE)
+            if (type == QuestTypeEnum.SURVIVE)
             {
                 if (playerData.GotHitInGame) return;
             }
@@ -169,9 +169,9 @@ public class QuestSystem : MonoSingleton<QuestSystem>
     [ContextMenu("Finish Quests")]
     public void FinishQuest()
     {
-        for (int i = 0; i < playerData.ListOfOnGoingObjectives.Count; i++)
+        for (int i = 0; i < playerData.ListOfPlayerActiveQuest.Count; i++)
         {
-            ObjectiveData objective = playerData.ListOfOnGoingObjectives[i];
+            QuestData objective = playerData.ListOfPlayerActiveQuest[i];
             objective.UpdateProgress(objective.requirment);
         }
         OnQuestValueChanged?.Invoke();

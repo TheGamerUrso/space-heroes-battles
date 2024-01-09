@@ -5,18 +5,18 @@ using UnityEngine.UI;
 
 
 
-public class ObjectivesElement : MonoBehaviour
+public class QuestUIElement : MonoBehaviour
 {
 
-     public ObjectiveData objectiveData;
+     public QuestData questData;
 
     [SerializeField] private TextMeshProUGUI rewardText;
     [SerializeField] private TextMeshProUGUI CoinReward;
-    [SerializeField] private TextMeshProUGUI ObjectiveDescriptionText = null;
+    [SerializeField] private TextMeshProUGUI questDescription = null;
     [SerializeField] private Button Button;
     [SerializeField] private Image ButtonImage;
     [SerializeField] private AudioClip ClickSoundEffect;
-    [SerializeField] private GameObject CompletedGameObject = null;
+    [SerializeField] private GameObject completedQuestGameObject = null;
 
 
     private bool completed;
@@ -29,11 +29,11 @@ public class ObjectivesElement : MonoBehaviour
     private int coinToEarn;
 
 
-    public void InitializeObjective(ObjectiveData objectiveData)
+    public void InitializeObjective(QuestData objectiveData)
     {
         Button.interactable = false;
         completed = objectiveData.completed;
-        this.objectiveData = objectiveData;
+        this.questData = objectiveData;
 
         Button.onClick.AddListener(() =>
         {
@@ -43,33 +43,33 @@ public class ObjectivesElement : MonoBehaviour
         playerData = PersistantData.GetPlayerData();
         currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
 
-        switch ((ObjectiveTypeEnum)objectiveData.objectiveType)
+        switch ((QuestTypeEnum)objectiveData.questType)
         {
-            case ObjectiveTypeEnum.KILL:
+            case QuestTypeEnum.KILL:
                 xpToEarn = 50 * currentPlayerLevel;
                 coinToEarn = 100 * currentPlayerLevel;
                 break;
-            case ObjectiveTypeEnum.USE:
+            case QuestTypeEnum.USE:
                 xpToEarn = 20 * currentPlayerLevel;
                 coinToEarn = 40 * currentPlayerLevel;
                 break;
-            case ObjectiveTypeEnum.UNHARMED:
+            case QuestTypeEnum.UNHARMED:
                 xpToEarn = 75 * currentPlayerLevel;
                 coinToEarn = 150 * currentPlayerLevel;
                 break;
-            case ObjectiveTypeEnum.SURVIVE:
+            case QuestTypeEnum.SURVIVE:
                 xpToEarn = 25 * currentPlayerLevel;
                 coinToEarn = 50 * currentPlayerLevel;
                 break;
-            case ObjectiveTypeEnum.SPEND:
+            case QuestTypeEnum.SPEND:
                 xpToEarn = 15 * currentPlayerLevel;
                 coinToEarn = objectiveData.progress / 3 * currentPlayerLevel;
                 break;
-            case ObjectiveTypeEnum.BOUNTY:
+            case QuestTypeEnum.BOUNTY:
                 xpToEarn = 100 * currentPlayerLevel;
                 coinToEarn = 200 * currentPlayerLevel;
                 break;
-            case ObjectiveTypeEnum.SCORE:
+            case QuestTypeEnum.SCORE:
                 xpToEarn = 80 * currentPlayerLevel;
                 coinToEarn = 100 * currentPlayerLevel;
                 break;
@@ -83,7 +83,7 @@ public class ObjectivesElement : MonoBehaviour
     public void LoadingIndicator()
     {
         completed = false;
-        ObjectiveDescriptionText.text = " Getting new Objective ";
+        questDescription.text = " Getting new Objective ";
         Button.interactable = false;
     }
 
@@ -94,39 +94,39 @@ public class ObjectivesElement : MonoBehaviour
 
     public void Complete()
     {
-        if (!objectiveData.claimed && objectiveData.completed)
+        if (!questData.claimed && questData.completed)
         {
             playerData.AddCoin(coinToEarn);
             playerData.EarnXP(xpToEarn);
 
-            switch ((ObjectiveTypeEnum)objectiveData.objectiveType)
+            switch ((QuestTypeEnum)questData.questType)
             {
-                case ObjectiveTypeEnum.KILL:
+                case QuestTypeEnum.KILL:
                     playerData.SetPlayerKillsCounter(0);
                     break;
-                case ObjectiveTypeEnum.USE:
+                case QuestTypeEnum.USE:
                     playerData.SetUsedSuperCount(0);
                     break;
-                case ObjectiveTypeEnum.UNHARMED:
+                case QuestTypeEnum.UNHARMED:
                     playerData.SetPlayerGotHitCounter(false);
                     break;
-                case ObjectiveTypeEnum.SURVIVE:
+                case QuestTypeEnum.SURVIVE:
                     playerData.SetWaveSurvivedCount(0);
                     break;
-                case ObjectiveTypeEnum.SPEND:
+                case QuestTypeEnum.SPEND:
                     playerData.CoinSpend = 0;
                     break;
-                case ObjectiveTypeEnum.BOUNTY:
-                    playerData.BossBountyKilledId = -1;
+                case QuestTypeEnum.BOUNTY:
+                    playerData.BossBountyKilledId = 0;
                     break;
-                case ObjectiveTypeEnum.SCORE: 
+                case QuestTypeEnum.SCORE: 
                     break;
             }
 
-            objectiveData.claimed = true;
+            questData.claimed = true;
             Button.interactable = false;
  
-            QuestSystem.Instance.CompleteQuest(objectiveData);
+            QuestSystem.Instance.CompleteQuest(questData);
             RefreshQuests();
         }
     }
@@ -141,22 +141,22 @@ public class ObjectivesElement : MonoBehaviour
 
     public void RefreshQuests()
     {
-        CompletedGameObject.SetActive(objectiveData.claimed);
+        completedQuestGameObject.SetActive(questData.claimed);
 
-        if ((ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.UNHARMED)
+        if ((QuestTypeEnum)questData.questType == QuestTypeEnum.UNHARMED)
         {
-            ObjectiveDescriptionText.text = objectiveData.Description;
+            questDescription.text = questData.Description;
         }
-        else if ((ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.BOUNTY || (ObjectiveTypeEnum)objectiveData.objectiveType == ObjectiveTypeEnum.SURVIVE)
+        else if ((QuestTypeEnum)questData.questType == QuestTypeEnum.BOUNTY || (QuestTypeEnum)questData.questType == QuestTypeEnum.SURVIVE)
         {
-            ObjectiveDescriptionText.text = objectiveData.Description.Replace(" X ", "" + objectiveData.requirment);
+            questDescription.text = questData.Description.Replace(" X ", "" + questData.requirment);
         }
         else
         {
-            ObjectiveDescriptionText.text = objectiveData.Description.Replace(" X ", "" + objectiveData.progress);
+            questDescription.text = questData.Description.Replace(" X ", "" + questData.progress);
         }
 
-        if (objectiveData.completed && !objectiveData.claimed)
+        if (questData.completed && !questData.claimed)
         {
             Button.interactable = true;
         }

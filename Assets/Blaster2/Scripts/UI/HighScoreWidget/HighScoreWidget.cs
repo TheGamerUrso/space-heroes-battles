@@ -14,7 +14,7 @@ public class HighScoreWidget : MonoBehaviour
     void Start () {
         PlayerData playerData = PersistantData.GetPlayerData();
         string highscore = string.Format("{0:0000000000}", playerData.HighScore);
-        string score = string.Format("{0:0000000000}", playerData.Score);
+        string score = string.Format("{0:0000000000}", GameController.Instance.Score);
 
         m_HighScore.text = highscore;
         m_PreviousScore.text = score;
