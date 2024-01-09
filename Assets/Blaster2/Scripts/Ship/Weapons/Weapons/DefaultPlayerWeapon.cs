@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters;
 using UnityEngine;
 
 public class DefaultPlayerWeapon : BaseWeapon
@@ -58,10 +59,23 @@ public class DefaultPlayerWeapon : BaseWeapon
 
         }
 
+        var shouldShoot = false;
+        if (PlayerController.Instance.controlSceme == PlayerController.ControlSceme.CONTROL3)
+        {
+            holdFire = false;
+            shouldShoot = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space);
+            if (!holdFire && shouldShoot)
+            {
+                Shoot();
+            }
+        }
+        else
+        {
 
-        holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
+            holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
+            shouldShoot = Input.GetMouseButton(0);
+        }
 
-        var shouldShoot = Input.GetMouseButton(0);
 
         if (!holdFire && shouldShoot)
         {

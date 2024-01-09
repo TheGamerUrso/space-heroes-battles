@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerShip : Ship, IDamagable
 {
     [Space()]
-    private SimpleShipControls shipController;
+    private PlayerController shipController;
     [SerializeField] private ParticleSystem ItemCollectedEffect;
     [Space()]
     [SerializeField] private Player_SO playerStats;
@@ -36,7 +36,7 @@ public class PlayerShip : Ship, IDamagable
     public override void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-        shipController = GetComponent<SimpleShipControls>();
+        shipController = GetComponent<PlayerController>();
     }
 
     public override void Start()
@@ -91,44 +91,46 @@ public class PlayerShip : Ship, IDamagable
         }
 
         var playerPowerUp = playerData.GetPowerUpLevelPresentage();
-
-        if (Time.timeScale == 0)
+        if (PlayerController.Instance.controlSceme != PlayerController.ControlSceme.CONTROL3)
         {
-            clicked = false;
-            clicktimer = 1;
-            clicktimes = 0;
-            return;
-        }
-
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            clicktimes = touch.tapCount;
-        }
-
-#if UNITY_EDITOR
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (!clicked)
-            {
-                clicked = true;
-                clicktimer = clickDelay;
-            }
-            clicktimes++;
-        }
-
-
-        if (clicked)
-        {
-            clicktimer -= Time.deltaTime;
-
-            if (clicktimer <= 0)
+            if (Time.timeScale == 0)
             {
                 clicked = false;
+                clicktimer = 1;
                 clicktimes = 0;
+                return;
+            }
+
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                clicktimes = touch.tapCount;
             }
         }
-#endif
+        else
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                if (!clicked)
+                {
+                    clicked = true;
+                    clicktimer = clickDelay;
+                }
+                clicktimes++;
+            }
+
+
+            if (clicked)
+            {
+                clicktimer -= Time.deltaTime;
+
+                if (clicktimer <= 0)
+                {
+                    clicked = false;
+                    clicktimes = 0;
+                }
+            }
+        }
 
         if (clicktimes > 1)
         {
@@ -157,15 +159,6 @@ public class PlayerShip : Ship, IDamagable
     {
         base.InstallShieldModule();
         ShieldEffect.SetActive(HasShield);
-
-        if (!PlayerPrefs.HasKey("ShieldTut"))
-        {
-            if (Tutorial.Instance)
-            {
-                Tutorial.Instance.ShowTutorial(3);
-            }
-            PlayerPrefs.SetInt("ShieldTut", 1);
-        }
     }
 
     public override void Death()
@@ -190,15 +183,6 @@ public class PlayerShip : Ship, IDamagable
         }
 
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-
-        if (!PlayerPrefs.HasKey("HealTut"))
-        {
-            if (Tutorial.Instance)
-            {
-                Tutorial.Instance.ShowTutorial(1);
-            }
-            PlayerPrefs.SetInt("HealTut", 1);
-        }
     }
 
     public override void TakeDamage(float dmg)
@@ -222,7 +206,7 @@ public class PlayerShip : Ship, IDamagable
             if (invisibilityTimer <= 0)
             {
                 invisibilityTimer = .25f;
-            
+
                 var health = CurrentHealth - dmg;
 
                 SetHealth(health);
@@ -233,9 +217,9 @@ public class PlayerShip : Ship, IDamagable
                 {
                     DownGradeWeapon();
                 }
-                playerData.GotHitInGame =true;
+                playerData.GotHitInGame = true;
 
-                Events.ShakeCamera?.Invoke(.5f);       
+                Events.ShakeCamera?.Invoke(.5f);
 
                 if (GetHealthPresentage() < .5f)
                 {
@@ -333,12 +317,6 @@ public class PlayerShip : Ship, IDamagable
 
     public void UpgradeWeapon()
     {
-        if (!PlayerPrefs.HasKey("UpgradeTut"))
-        {
-            Tutorial.Instance.ShowTutorial(5);
-            PlayerPrefs.SetInt("UpgradeTut", 1);
-        }
-
         if (CurrentWeapnType < 4)
         {
             if (playerStats.CanUsePowerUpItem)
@@ -383,15 +361,6 @@ public class PlayerShip : Ship, IDamagable
             playerData.SetPowerPackCollected(2);
             TempFireRateBuff(0.01f * playerData.PowerPackCollected);
         }
-
-        if (!PlayerPrefs.HasKey("PowerTut"))
-        {
-            if (Tutorial.Instance)
-            {
-                Tutorial.Instance.ShowTutorial(2);
-            }
-            PlayerPrefs.SetInt("PowerTut", 1);
-        }
     }
 
     public void ResetWeaponUpgrade()
@@ -401,7 +370,7 @@ public class PlayerShip : Ship, IDamagable
     }
 
     public void ActivateSpecial()
-    {      
+    {
         playerData.SuperUsed++;
         specialAttack.ActivateSpecial();
     }
@@ -460,14 +429,7 @@ public class PlayerShip : Ship, IDamagable
     {
         playerData.AddCoin(coin);
         GuiManager.CreateFloatingText("<color=" + "yellow" + "> $ </color>", transform.localPosition);
-
-        if (!PlayerPrefs.HasKey("CoinTut"))
         {
-            if (Tutorial.Instance)
-            {
-                Tutorial.Instance.ShowTutorial(0);
-            }
-
             PlayerPrefs.SetInt("CoinTut", 1);
         }
     }

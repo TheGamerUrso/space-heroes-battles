@@ -2,11 +2,15 @@
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class SimpleShipControls : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance
+    {
+        get; private set;
+    }
     public enum ControlSceme
     {
-        CONTROL1 = 1, CONTROL2 = 2
+        CONTROL1 = 1, CONTROL2 = 2, CONTROL3, CONTROL4
     }
     public ControlSceme controlSceme;
 
@@ -52,6 +56,7 @@ public class SimpleShipControls : MonoBehaviour
     private void Awake()
     {
         _cam = Camera.main;
+        Instance = this;
     }
 
     public void Start()
@@ -60,6 +65,8 @@ public class SimpleShipControls : MonoBehaviour
         plane = new Plane(Vector3.up, transform.position);
         Events.OnControlScemeChange = UpdateOffset;
         LoadPlayerData();
+
+        controlSceme = ControlSceme.CONTROL3;
     }
 
     public void SetTargetPosition(Vector2 screenPos)
@@ -132,12 +139,17 @@ public class SimpleShipControls : MonoBehaviour
                         MoveToTarget();
                     }
                 }
+                if (!GameManager.Instance.IsPaused)
+                {
+                    Rotate();
+                }
+            }
+            else if (controlSceme == ControlSceme.CONTROL3)
+            {
+                GamepadControls();
             }
 
-            if (!GameManager.Instance.IsPaused)
-            {
-                Rotate();
-            }
+
 
             ClampTransform();
         }
@@ -150,6 +162,17 @@ public class SimpleShipControls : MonoBehaviour
         {
             OnDragMove();
         }
+    }
+
+    public void GamepadControls()
+    {
+        var newPosition = transform.localPosition + new Vector3((Input.GetAxis("Horizontal") * (Speed/2) * Time.deltaTime), 0, (Input.GetAxis("Vertical") * (Speed/2) * Time.deltaTime));
+        rotationSpeed = -Input.GetAxis("Horizontal") * tilt;
+        rotationSpeed = Mathf.Clamp(rotationSpeed, -35, 35);
+        targetRotation = new Vector3(0, 0, rotationSpeed);
+        transform.SetPositionAndRotation(newPosition, transform.transform.rotation);
+        ShipModel.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(targetRotation));
+        Debug.Log(newPosition);
     }
 
     public void Rotate()
@@ -165,7 +188,7 @@ public class SimpleShipControls : MonoBehaviour
         }
 
         targetRotation = ShipModel.transform.localEulerAngles;
-        targetRotation = new Vector3(targetRotation.x, targetRotation.y, Mathf.LerpAngle(targetRotation.z, rotationSpeed, .1f));
+        targetRotation = new Vector3(rotationSpeed, 0, 0);
         ShipModel.transform.localEulerAngles = targetRotation;
     }
 
@@ -173,7 +196,7 @@ public class SimpleShipControls : MonoBehaviour
     public static bool IsMouseOverUI() => EventSystem.current.IsPointerOverGameObject();
     public void UpdateOffset() => controlSceme = (ControlSceme)playerData.ControlScene;
     public bool ShouldRoate() => (Input.touchCount > 0 || Input.GetMouseButton(0));
-    public void ClampTransform()=> transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax),0, Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
-    
+    public void ClampTransform() => transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax), 0, Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
+
 
 }

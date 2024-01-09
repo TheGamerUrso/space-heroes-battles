@@ -6,10 +6,12 @@ public class SlowMo : MonoBehaviour
 {
     private float delayTheSlowMoEffectTimer = .3f;
     private float delay = 4;
-
+    private PlayerController.ControlSceme currentControlSceme;
     void Update()
     {
-
+        if (PlayerController.Instance == null) return;
+        currentControlSceme = PlayerController.Instance.controlSceme;
+        if (currentControlSceme == PlayerController.ControlSceme.CONTROL3) return;
         DoSlowMo();
     }
 

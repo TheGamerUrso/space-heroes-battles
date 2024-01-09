@@ -69,12 +69,6 @@ public class PlayerPowerCircleWidget : MonoBehaviour
     {
         if (playerPowerUp >= 1)
         {
-            if (!PlayerPrefs.HasKey("SuperTut"))
-            {
-                Tutorial.Instance.ShowTutorial(4);
-
-                PlayerPrefs.SetInt("SuperTut", 1);
-            }
             PowerBut.interactable = true;
             PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
         }

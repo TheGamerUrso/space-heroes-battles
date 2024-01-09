@@ -58,6 +58,7 @@ MonoBehaviour:
   - {fileID: 339087773908703702}
   playerData:
     Score: 0
+    ScoreLastGame: 0
     HighScore: 0
     LevelUnlocked: 0
     SurvivalUnlocked: 0
@@ -67,8 +68,12 @@ MonoBehaviour:
     CoinSpend: 0
     SuperUsed: 0
     WaveSurvived: 0
-    GotHitInGame: 0
+    CoinPicked: 0
     PlayedGame: 0
+    GotHitInGame: 0
+    BossBountyKilledId: 0
+    EnemyKilled: 0
+    EnemyEscaped: 0
     PowerUpLevel: 0
     PowerPackCollected: 0
     CurrrentSelectedShip: 0
@@ -2485,8 +2490,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioSource: {fileID: 1680336074825548984}
-  HealthBar: {fileID: 2666062475459992035}
+  Id: 
   ShieldEffect: {fileID: 1854617358157983949}
+  Level: 0
+  Damage: 0
+  FireRate: 0
+  Speed: 0
+  MaxHealth: 0
+  CurrentHealth: 0
   ItemCollectedEffect: {fileID: 4101952318568694582}
   playerStats: {fileID: 11400000, guid: bc2eaccde9a6f754d8978c255160a044, type: 2}
   Weapons:
@@ -2508,7 +2519,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f68c27ff0e9c0d246914ebb3a314c1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlSceme: 1
+  controlSceme: 3
   tilt: 25
   ShipModel: {fileID: 7928019160215083928}
   Speed: 0
@@ -5300,18 +5311,6 @@ PrefabInstance:
       objectReference: {fileID: 8571979849814880766}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 510a7ad3c37497948bdb132e2e743b15, type: 3}
---- !u!114 &2666062475459992035 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5532662932232076422, guid: 510a7ad3c37497948bdb132e2e743b15,
-    type: 3}
-  m_PrefabInstance: {fileID: 7509811947947386213}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ab78a39848df8d14ab78024d393585dd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &6273049004739610460 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 4554950088815551033, guid: 510a7ad3c37497948bdb132e2e743b15,
