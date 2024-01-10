@@ -3,20 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossDestroyablePart : Ship, IDamagable,ITargetable
+public class BossDestroyablePart : Ship, IDamagable, ITargetable
 {
     protected Action<bool> Attacked;
     public Ship shipOwner;
     public Enemy_SO EnemyData;
-    public GameObject target=>gameObject;
-    public bool Targetable=>IsAlive;
+    public GameObject target => gameObject;
+    public bool Targetable => IsAlive;
 
     protected EnemyHealthWidget healthBar;
     [SerializeField] protected BossEnemy baseBossEnemy;
     [SerializeField] protected GameObject fireEffect;
     [SerializeField] protected GameObject prepareToAttack;
     [SerializeField] protected BoxCollider boxCollider;
-
+    public AudioClip hitSFX;
     [Range(.1f, 1)]
     protected float takeDamageDelay;
     public override void Awake()
@@ -29,11 +29,11 @@ public class BossDestroyablePart : Ship, IDamagable,ITargetable
     {
         IsAlive = true;
 
-        SetStats(shipOwner.Level/4);
-    
+        SetStats(shipOwner.Level / 4);
+
         fireEffect.SetActive(false);
 
-        if (healthBar != null)healthBar.GetComponent<BaseHealthWidget>();
+        if (healthBar != null) healthBar.GetComponent<BaseHealthWidget>();
 
         if (EnemyData.HealthBarSettings != null)
         {
@@ -46,7 +46,7 @@ public class BossDestroyablePart : Ship, IDamagable,ITargetable
     }
 
     public override void Update()
-     {
+    {
         if (takeDamageDelay > 0)
         {
             takeDamageDelay -= Time.deltaTime;
@@ -75,10 +75,10 @@ public class BossDestroyablePart : Ship, IDamagable,ITargetable
 
     public override void TakeDamage(float dmg)
     {
-        if (IsAlive == false)return;
+        if (IsAlive == false) return;
 
         AudioManager.PlaySound(EnemyData.hitSFX);
-        
+
         if (takeDamageDelay <= 0)
         {
             takeDamageDelay = .1f;
@@ -118,6 +118,11 @@ public class BossDestroyablePart : Ship, IDamagable,ITargetable
         {
             var destroyable = other.GetComponent<IDamagable>();
             destroyable.TakeDamage(shipOwner.GetComponent<BossEnemy>().Damage);
+            animator.SetTrigger("Hit");
+            var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
+            explostion.transform.position = other.transform.position;
+            Events.ShakeCamera?.Invoke(.5f);
+            audioSource.PlayOneShot(hitSFX);
         }
     }
 
@@ -129,18 +134,18 @@ public class BossDestroyablePart : Ship, IDamagable,ITargetable
 
     public override void SwitchWeapon(int id, bool solo = false)
     {
-      
+
     }
 
     public override void EnterLevel()
     {
-       
+
     }
 
     public override void ExitLevel()
     {
-    
-    }    
+
+    }
     public override void SetStats(int level)
     {
         Level = level;

@@ -73,6 +73,11 @@ public class GuiManager : MonoSingleton<GuiManager>
                 timer = 1;
                 pauseButton.SetActive(true);
             }
+
+            if(Input.GetKeyDown(KeyCode.Escape)){
+                PauseButton();
+            }
+
         }
     }
 

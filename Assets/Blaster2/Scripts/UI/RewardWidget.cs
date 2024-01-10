@@ -72,15 +72,14 @@ public class RewardWidget : MonoBehaviour
         }
     }
 
-    public bool RewardClaimed()
+    public bool 
+    RewardClaimed()
     {
         return false;
     }
 
     IEnumerator ClaimRewarded()
     {
-        yield return new WaitForSeconds(1.0f);
-        rewardBoxes[RewardBoxSelected].CloseChest();
         yield return new WaitForSeconds(1.0f);
 
         PlayerData playerData = PersistantData.GetPlayerData();
@@ -133,6 +132,7 @@ public class RewardWidget : MonoBehaviour
 
 
         yield return new WaitForSeconds(1.0f);
+        rewardBoxes[RewardBoxSelected].CloseChest();
         widgetPanel.SetActive(false);
         RewardClaimed();
         GameController.Instance.UseSlowMo = true;

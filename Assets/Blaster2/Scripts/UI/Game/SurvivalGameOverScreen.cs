@@ -11,10 +11,10 @@ public class SurvivalGameOverScreen : MonoBehaviour
 
     private bool skip;
     private int retried = 0;
-  
+
     public void ShowResults()
     {
-         var playerData = PersistantData.GetPlayerData();
+        var playerData = PersistantData.GetPlayerData();
         float score = GameController.Instance.Score;
         string scoreText = string.Format("{00:0000000000}", score);
         m_Text.text = scoreText;
@@ -66,10 +66,12 @@ public class SurvivalGameOverScreen : MonoBehaviour
     public void QuitButton()
     {
         GameManager.Instance.LoadMainenu();
+        gameObject.SetActive(false);
     }
 
     public void ReplayButton()
     {
-         GameManager.Instance.ResetLevel();
+        GameManager.Instance.ResetLevel();
+        gameObject.SetActive(false);
     }
 }
