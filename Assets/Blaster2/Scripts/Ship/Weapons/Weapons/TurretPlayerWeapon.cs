@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class TurretWeapon : WeaponScript
+public class TurretPlayerWeapon : BaseWeapon
 {
     protected GameObject foundPlayer;
     protected PlayerData playerData;
@@ -115,8 +115,8 @@ public class TurretWeapon : WeaponScript
 
             InstansiatedProjectile.transform.position = Cannons[i].position;
 
-            Projectile projectile = InstansiatedProjectile.GetComponent<Projectile>();
-            projectile.Setup(this);
+            BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
+            projectile.SetOwner(this);
             projectile.SetShootDir(shootDir);
         }
     }

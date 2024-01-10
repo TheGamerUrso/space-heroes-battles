@@ -196,7 +196,7 @@ public class PlayerController : MonoBehaviour
     public static bool IsMouseOverUI() => EventSystem.current.IsPointerOverGameObject();
     public void UpdateOffset() => controlSceme = (ControlSceme)playerData.ControlScene;
     public bool ShouldRoate() => (Input.touchCount > 0 || Input.GetMouseButton(0));
-    public void ClampTransform() => transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax), 0, Mathf.Clamp(transform.position.z, Constants.m_ZMin, Constants.m_ZMax));
+    public void ClampTransform() => transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax), 0, Mathf.Clamp(transform.position.z,0, 120));
 
 
 }

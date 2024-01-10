@@ -179,6 +179,7 @@ public class Enemy : Ship, IDamagable, ITargetable
         {
             var ship = other.GetComponent<Ship>();
             ship.TakeDamage(ship.MaxHealth / 2);
+            TakeDamage(ship.MaxHealth);
         }
     }
 

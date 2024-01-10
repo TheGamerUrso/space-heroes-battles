@@ -7,13 +7,14 @@ using static GameController;
 public class GuiManager : MonoSingleton<GuiManager>
 {
     [Header("Menu")]
-    [SerializeField] private GameObject[] UIPrefabs;
-
-    private UIView GameOverScreen;
-    private UIView WinScreen = null;
-    private UIView PauseScreen;
-
-    private RewardWidget rewardWidgetPanel;
+    
+    [SerializeField] private UIView GameOverScreen;
+    
+    [SerializeField] private UIView WinScreen = null;
+    
+    [SerializeField] private UIView PauseScreen;
+    
+    [SerializeField] private RewardWidget rewardWidgetPanel;
 
     [SerializeField] private GameObject pauseButton;
 
@@ -51,21 +52,6 @@ public class GuiManager : MonoSingleton<GuiManager>
         Events.OnPauseGame += ShowPauseMenu;
 
         timer = 1;
-        var panelPause = Instantiate(UIPrefabs[1], transform, false);
-        var panelGameOver = Instantiate(UIPrefabs[2], transform, false);
-        var panelWin = Instantiate(UIPrefabs[3], transform, false);
-        var rewardWidget = Instantiate(UIPrefabs[4], transform, false);
-
-        panelGameOver.name = UIPrefabs[2].name;
-        panelWin.name = UIPrefabs[3].name;
-        panelPause.name = UIPrefabs[1].name;
-        rewardWidget.name = UIPrefabs[4].name;
-
-        GameOverScreen = panelGameOver.GetComponent<UIView>();
-        WinScreen = panelWin.GetComponent<UIView>();
-        PauseScreen = panelPause.GetComponent<UIView>();
-
-        rewardWidgetPanel = rewardWidget.GetComponent<RewardWidget>();
 
         UpdateScore(0);
     }
