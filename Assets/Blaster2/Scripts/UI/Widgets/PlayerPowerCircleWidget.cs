@@ -36,10 +36,15 @@ public class PlayerPowerCircleWidget : MonoBehaviour
     private void OnDestroy()
     {
         if (player != null)
-        {
             Events.PowerUpLevelValueChanged -= PowerUpLevelChanged;
-            Events.OnPowerPackCollected -= PowerPackCollected;
-        }
+        Events.OnPowerPackCollected -= PowerPackCollected;
+    }
+
+    void Awake()
+    {
+        if (player != null)
+            Events.PowerUpLevelValueChanged += PowerUpLevelChanged;
+            Events.OnPowerPackCollected += PowerPackCollected;
     }
     private void Start()
     {
@@ -52,8 +57,7 @@ public class PlayerPowerCircleWidget : MonoBehaviour
 
         });
 
-        Events.PowerUpLevelValueChanged += PowerUpLevelChanged;
-        Events.OnPowerPackCollected += PowerPackCollected;
+
 
         PowerUpLevelChanged(0);
         PowerPackCollected(0);
@@ -70,15 +74,18 @@ public class PlayerPowerCircleWidget : MonoBehaviour
         if (playerPowerUp >= 1)
         {
             PowerBut.interactable = true;
-            PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+            if (PowerUIActiveAnimator != null)
+                PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
         }
         else
         {
             PowerBut.interactable = false;
-            PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
+            if (PowerUIActiveAnimator != null)
+                PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
         }
 
-        m_PowerUps.fillAmount = playerPowerUp;
+        if (m_PowerUps != null)
+            m_PowerUps.fillAmount = playerPowerUp;
 
         RefreshWeaponIndicatorSprite();
     }
@@ -92,20 +99,23 @@ public class PlayerPowerCircleWidget : MonoBehaviour
         var sprite = WeaponIndicatorSpritesNotActivated[0];
         var collecterUpgrade = playerData.PowerPackCollected;
 
-        if (m_PowerUps.fillAmount == 1)
+        if (m_PowerUps != null)
         {
-            sprite = WeaponIndicatorSpritesActivated[playerData.PowerPackCollected];
+            if (m_PowerUps.fillAmount == 1)
+            {
+                sprite = WeaponIndicatorSpritesActivated[playerData.PowerPackCollected];
+            }
+            else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
+            {
+                sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
+            }
+            else
+            {
+                sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
+            }
         }
-        else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
-        {
-            sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
-        }
-        else
-        {
-            sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
-        }
-
-        WeaponIndicatorImage.sprite = sprite;
+        if (WeaponIndicatorImage != null)
+            WeaponIndicatorImage.sprite = sprite;
     }
 
 }

@@ -19,15 +19,11 @@ public class QuestUI : MonoBehaviour
         QuestSystem.Instance.OnQuestValueChanged -= RefreshObjectives;
     }
 
-    void Awake()
-    {
+    private void Start()
+    {       
         QuestSystem.Instance.LoadingNewQuests += LoadingNewQuests;
         QuestSystem.Instance.OnNewQuestGenerated += InitializeObjectives;
         QuestSystem.Instance.OnQuestValueChanged += RefreshObjectives;
-    }
-
-    private void Start()
-    {
         InitializeObjectives();
     }
 

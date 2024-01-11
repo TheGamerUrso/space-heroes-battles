@@ -133,6 +133,7 @@ public class RewardWidget : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
         rewardBoxes[RewardBoxSelected].CloseChest();
+        yield return new WaitForSeconds(1.0f);
         widgetPanel.SetActive(false);
         RewardClaimed();
         GameController.Instance.UseSlowMo = true;

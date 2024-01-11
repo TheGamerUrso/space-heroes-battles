@@ -63,7 +63,7 @@ public class DefaultPlayerWeapon : BaseWeapon
         if (PlayerController.Instance.controlSceme == PlayerController.ControlSceme.CONTROL3)
         {
             holdFire = false;
-            shouldShoot = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space);
+            shouldShoot = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1");
             if (!holdFire && shouldShoot)
             {
                 Shoot();

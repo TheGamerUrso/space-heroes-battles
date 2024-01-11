@@ -166,13 +166,12 @@ public class PlayerController : MonoBehaviour
 
     public void GamepadControls()
     {
-        var newPosition = transform.localPosition + new Vector3((Input.GetAxis("Horizontal") * (Speed/2) * Time.deltaTime), 0, (Input.GetAxis("Vertical") * (Speed/2) * Time.deltaTime));
+        var newPosition = transform.localPosition + new Vector3((Input.GetAxis("Horizontal") * (Speed/1.25f) * Time.deltaTime), 0, (Input.GetAxis("Vertical") * (Speed/1.25f) * Time.deltaTime));
         rotationSpeed = -Input.GetAxis("Horizontal") * tilt;
         rotationSpeed = Mathf.Clamp(rotationSpeed, -35, 35);
         targetRotation = new Vector3(0, 0, rotationSpeed);
         transform.SetPositionAndRotation(newPosition, transform.transform.rotation);
         ShipModel.transform.SetPositionAndRotation(Vector3.zero, Quaternion.Euler(targetRotation));
-        Debug.Log(newPosition);
     }
 
     public void Rotate()

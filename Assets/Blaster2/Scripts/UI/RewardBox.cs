@@ -63,12 +63,14 @@ public class RewardBox : MonoBehaviour
     }
 
     public void OpenChest()
-    {
+    {    
+        Box.ResetTrigger("Close");
         Box.SetTrigger("Open");
     }
 
     public void CloseChest()
     {
+        Box.ResetTrigger("Open");
         Box.SetTrigger("Close");
     }
 

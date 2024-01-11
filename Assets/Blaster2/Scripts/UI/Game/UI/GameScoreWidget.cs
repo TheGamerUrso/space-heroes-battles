@@ -12,22 +12,16 @@ public class GameScoreWidget : MonoBehaviour
 
     private void OnDestroy()
     {
-        Events.OnScoreValueChanged -= (x) =>
-        { 
-            var playerData = PersistantData.GetPlayerData();
-            score = (int)playerData.GetScore();
-        };
+        Events.OnScoreValueChanged -= OnScoreValueChanged;
     }
 
     void Start()
     {
-        Events.OnScoreValueChanged += (x) =>
-        { 
-            var playerData = PersistantData.GetPlayerData();
-            score = (int)playerData.GetScore();
-        };
+        Events.OnScoreValueChanged += OnScoreValueChanged;
     }
-
+    private void OnScoreValueChanged(int Score){
+         score = (int)Score;
+    }
     private void Update()
     {     
         scoreToShow = Mathf.Lerp(scoreToShow, (float)score, speed);

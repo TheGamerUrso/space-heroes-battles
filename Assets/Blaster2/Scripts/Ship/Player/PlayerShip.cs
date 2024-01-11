@@ -109,7 +109,7 @@ public class PlayerShip : Ship, IDamagable
         }
         else
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3"))
             {
                 if (!clicked)
                 {

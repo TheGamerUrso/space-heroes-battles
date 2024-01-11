@@ -43,7 +43,7 @@ public class SurvivalGameMode : BaseGameMode
 
         }
 
-        if (gameInfo.waves > 0)
+     if (gameInfo.waves > 0 && gameInfo.waves % 8 == 0)
         {
             BossWave = true;
         }

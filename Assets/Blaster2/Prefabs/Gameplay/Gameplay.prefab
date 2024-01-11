@@ -170,12 +170,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   EnemyWaypoints: {fileID: 7859075690984216277, guid: dd2227e119981fd40845868477c95a8b,
     type: 3}
-  HasAsteroids: 1
   AsteroidBackgroundSpawner: {fileID: 1943903115844349262, guid: 449c524e7b88dcb47b1f5d202f96a48d,
     type: 3}
   Tutorial: {fileID: 1155719464663044819, guid: c5ce5fa73aae0ce41bcf16033947875b,
     type: 3}
   GUI: {fileID: 0}
+  HasAsteroids: 1
+  NumberOfEnemies: 0
+  MaxLevelUnlocked: 5
+  IsFirstRun: 0
+  IsGameOver: 0
+  IsHightScore: 0
+  IsTransmiting: 0
+  UseSlowMo: 0
+  SlowMo: 0
+  TotalCoinsInGame: 0
+  Multiplier: 1
+  EnemySpawnInTotal: 0
+  EnemyKilled: 0
+  EnemyEscaped: 0
+  Score: 0
+  CoinPicked: 0
 --- !u!114 &3053976104701384398
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,7 +444,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19013e319f47b9448be9e91738a86aee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxNumberOfEnemies: 2
   level_SO: {fileID: 11400000, guid: 83dfae91c74111b48b330fd923eba354, type: 2}
   gameInfo:
     pause: 0
@@ -459,7 +473,6 @@ MonoBehaviour:
   - {fileID: 4979412132350392599, guid: bb5648a89b983794dbc1fd5d7d7cd6ab, type: 3}
   - {fileID: 8919108208540936584, guid: 97d03cb49affd9e4d84892d793f36452, type: 3}
   - {fileID: 5395480417425742984, guid: a138b01249525a640bdf26961be3e494, type: 3}
-  cooldown: 1.3
   SpawnPoints:
   - {fileID: 7851282065946098398}
   - {fileID: 5545588255797305243}
@@ -471,7 +484,7 @@ MonoBehaviour:
   - {fileID: 6907193765215264175}
   - {fileID: 6907193765043372579}
   - {fileID: 6907193765688586419}
-  EnemiesCount: 0
+  cooldown: 1.3
 --- !u!1 &2906557672150015075
 GameObject:
   m_ObjectHideFlags: 0

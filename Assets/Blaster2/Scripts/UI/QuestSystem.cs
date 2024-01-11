@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class QuestSystem : MonoSingleton<QuestSystem>
+public class QuestSystem : MonoBehaviour
 {
+    public static QuestSystem Instance{get;private set;}
     public Action LoadingNewQuests;
     public Action OnNewQuestGenerated;
     public Action OnQuestValueChanged;
@@ -17,6 +18,9 @@ public class QuestSystem : MonoSingleton<QuestSystem>
     private PlayerData playerData;
     public List<QuestData> ActiveQuests = new List<QuestData>();
     public List<QuestData> ListOfActiveQuest{get{return ActiveQuests;}}
+    void Awake(){
+        if(Instance==null)Instance=this;
+    }
     private void OnEnable()
     {
         OnQuestValueChanged?.Invoke();

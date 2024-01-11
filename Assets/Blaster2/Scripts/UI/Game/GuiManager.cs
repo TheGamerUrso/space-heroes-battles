@@ -24,38 +24,33 @@ public class GuiManager : MonoSingleton<GuiManager>
     [SerializeField]private TransmitionWidget transmittionWidget;
     private float timer;
 
-    public GameObject WarningSign;
-
-
+//=================================================================================
     protected override void OnCleanup()
     {
         base.OnCleanup();
 
         Events.OnGameOver -= GameOver;
-        Events.OnWin -= Win;
-
         Events.OnPauseGame -= ShowPauseMenu;
         Events.OnScoreValueChanged -= UpdateScore;
     }
-
+//=================================================================================
     protected override void Awake()
     {
         base.Awake();
         transmittionWidget = FindObjectOfType<TransmitionWidget>();
     }
-
+//=================================================================================
     private void Start()
     {
         Events.OnScoreValueChanged += UpdateScore;
         Events.OnGameOver += GameOver;
-        Events.OnWin += Win;
         Events.OnPauseGame += ShowPauseMenu;
 
         timer = 1;
 
         UpdateScore(0);
     }
-
+//=================================================================================
     private void Update()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
@@ -80,30 +75,30 @@ public class GuiManager : MonoSingleton<GuiManager>
 
         }
     }
-
+//=================================================================================
     public void ShowRewardScreen()
     {
         rewardWidgetPanel.gameObject.SetActive(true);
         rewardWidgetPanel.GetNewRewards();
     }
-
+//=================================================================================
     public void ReplayButton()
     {
         GameManager.Instance.ResetLevel();
     }
-
+//=================================================================================
     public void ResumeButton()
     {
         Events.ToggleSlowMo?.Invoke(true);
         GameManager.Instance.PauseTheGame(false);
     }
-
+//=================================================================================
     public void PauseButton()
     {
         Events.ToggleSlowMo?.Invoke(false);
         GameManager.Instance.PauseTheGame(true);
     }
-
+//=================================================================================
     public void ShowPauseMenu(bool value)
     {
         if (value)
@@ -117,17 +112,18 @@ public class GuiManager : MonoSingleton<GuiManager>
             PauseScreen.Hide();
         }
     }
-
+//=================================================================================
     public void UpdateScore(int score)
     {
         string scoreText = string.Format("{00:00000000}", score);
         ScoreText.text = scoreText;
     }
-
+//=================================================================================
     public static void SetScoreMultipler(string text)
     {
         Instance.scoreMultplierWidget.SetText(text);
     }
+//=================================================================================
     public static void CreateFloatingText(string text, Vector3 pos)
     {
         GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
@@ -135,17 +131,17 @@ public class GuiManager : MonoSingleton<GuiManager>
 
         m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(text, pos);
     }
-
+//=================================================================================
     public void QuitGameButton()
     {
         LoadMainMenu();
     }
-
+    //=================================================================================
     public void LoadMainMenu()
     {
-        GameController.Instance.IsGameOver = true; 
+        GameController.Instance.IsGameOver = true;
 
-        GameManager.Instance.LoadMainenu();
+
 
         UIView activeMenuGO = null;
 
@@ -157,42 +153,45 @@ public class GuiManager : MonoSingleton<GuiManager>
         {
             activeMenuGO = GameOverScreen;
         }
+        else if (PauseScreen.IsActive())
+        {
+            activeMenuGO = PauseScreen;
+        }
 
         Events.ToggleSlowMo?.Invoke(false);
         GameManager.Instance.PauseTheGame(false);
 
-        //else if (PauseScreen.IsActive())
-        //{
-        //    activeMenuGO = PauseScreen;   
-        //}
-
         if (activeMenuGO != null)
             StartCoroutine(DelayCloseMenu(activeMenuGO, 1));
+
+
+        GameManager.Instance.LoadMainenu();
     }
 
+    //=================================================================================
     IEnumerator DelayCloseMenu(UIView Menu, float time)
     {
         WaitForSeconds delay = new WaitForSeconds(time);
         yield return delay;
         Menu.Hide();
     }
-
+//=================================================================================
     public static void PlayTrasmition(string[] transmitions)
     {
         Instance.ShowTrasmition(transmitions);
     }
-
+//=================================================================================
     public void BossWarning()
     {
         transmittionWidget.BossWarning();
     }
-
+//=================================================================================
     public void ShowTrasmition(string[] transmitions)
     {
         if (transmittionWidget)
             transmittionWidget.RecieveTransmition(transmitions);
     }
-
+//=================================================================================
     public bool IsTrasnmiting()
     {
         if (transmittionWidget != null)
@@ -205,15 +204,20 @@ public class GuiManager : MonoSingleton<GuiManager>
         }
     }
 
-    public void Win(BaseGameMode baseGameMode)
+    //=================================================================================
+    public void GameOver(BaseGameMode baseGameMode, bool IsPlayerAlive = false)
     {
-        WinScreen.Show();
-        WinScreen.GetComponent
-            <WinScreen>().ShowGameResult();
-    }
-    public void GameOver(BaseGameMode baseGameMode)
-    {
-        GameOverScreen.Show();
+        if (IsPlayerAlive)
+        {
+            WinScreen.Show();
+            WinScreen.GetComponent
+                <WinScreen>().ShowGameResult();
+        }
+        else
+        {
+            GameOverScreen.Show();
+        }
+
     }
 
 }

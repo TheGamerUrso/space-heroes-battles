@@ -65,7 +65,7 @@ public class TurretPlayerWeapon : BaseWeapon
 
         holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
 
-        var shouldShoot = Input.GetMouseButton(0) || Input.GetButton("XboxAButton");
+        var shouldShoot = Input.GetMouseButton(0) || Input.GetButton("Fire1");
 
         if (!holdFire && shouldShoot)
         {

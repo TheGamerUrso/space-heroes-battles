@@ -235,7 +235,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 5.48999, y: 0}
+  m_AnchoredPosition: {x: -2160, y: 0}
   m_SizeDelta: {x: 1080, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!95 &3240500931756260265
@@ -308,7 +308,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 2160, y: 0}
   m_SizeDelta: {x: 1080, y: 0}
   m_Pivot: {x: 1, y: 0.5}
 --- !u!95 &8616975593088799658
@@ -358,6 +358,7 @@ GameObject:
   - component: {fileID: 7750451458050231462}
   - component: {fileID: 1368961782361354534}
   - component: {fileID: 6793978884611170704}
+  - component: {fileID: 4584220051469959138}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -488,8 +489,7 @@ MonoBehaviour:
   playerData:
     Score: 0
     HighScore: 0
-    LevelUnlocked: 0
-    SurvivalUnlocked: 0
+    Username: 
     UnlockedHeroes: 
     Coins: 0
     Kills: 0
@@ -528,6 +528,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ListOfAvailableQuestType: 
   ActiveQuests: []
+--- !u!114 &4584220051469959138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2406176206008801007}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cdc65eee264103d43b0706af38738ac0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  leaderboardLoadingPanel: {fileID: 0}
+  Username: Garfang
+  entries: []
+  _timePeriodDropdown: {fileID: 0}
 --- !u!1 &2447033531847806924
 GameObject:
   m_ObjectHideFlags: 0

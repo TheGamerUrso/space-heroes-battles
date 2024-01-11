@@ -28,7 +28,7 @@ public class QuestUIElement : MonoBehaviour
     private float xpToEarn;
     private int coinToEarn;
 
-
+//=================================================================================
     public void InitializeObjective(QuestData objectiveData)
     {
         Button.interactable = false;
@@ -79,19 +79,19 @@ public class QuestUIElement : MonoBehaviour
 
         RefreshQuests();
     }
-
+//=================================================================================
     public void LoadingIndicator()
     {
         completed = false;
         questDescription.text = " Getting new Objective ";
         Button.interactable = false;
     }
-
+//=================================================================================
     public void ResetStatus()
     {
         completed = false;
     }
-
+//=================================================================================
     public void Complete()
     {
         if (!questData.claimed && questData.completed)
@@ -117,7 +117,7 @@ public class QuestUIElement : MonoBehaviour
                     playerData.CoinSpend = 0;
                     break;
                 case QuestTypeEnum.BOUNTY:
-                    playerData.BossBountyKilledId = 0;
+                    playerData.BountyKilled = 0;
                     break;
                 case QuestTypeEnum.SCORE: 
                     break;
@@ -130,6 +130,7 @@ public class QuestUIElement : MonoBehaviour
             RefreshQuests();
         }
     }
+    //=================================================================================
     public void SetRewardInfo()
     {
         playerData = PersistantData.GetPlayerData();
@@ -138,7 +139,7 @@ public class QuestUIElement : MonoBehaviour
         rewardText.text = xpToEarn + "xp";
         CoinReward.text = coinToEarn + "$";
     }
-
+//=================================================================================
     public void RefreshQuests()
     {
         completedQuestGameObject.SetActive(questData.claimed);
