@@ -75,7 +75,7 @@ public class ShipSelectElement : MonoBehaviour
         {
             if (playerData.Coins >= shipSelectData.Cost)
             {
-                //Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
+                Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
                 playerData.Coins -= shipSelectData.Cost;
                 playerData.UnlockedHeroes[ID] = 1;
                 SelectShip(ID);
@@ -89,13 +89,10 @@ public class ShipSelectElement : MonoBehaviour
                         num++;
                     }
                 }
-
-                AchievementSystem.instance.Report(12, num);
-
             }
             else
             {
-                //Popup.Show(Popup.popupType.message, Constants.CannotAffordIt, true);
+                Popup.Show(Popup.popupType.message, Constants.CannotAffordIt, true);
             }
         }
     }

@@ -46,8 +46,6 @@ public class PlayerData
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
-    public List<Achievement> Achievements;
-
     public PlayerData() { }
 
     public PlayerData(Player_SO[] players)
@@ -248,8 +246,6 @@ public class PlayerData
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
 
                 Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
-
-                AchievementSystem.instance.Report(13, Level);
             }
         }
         else

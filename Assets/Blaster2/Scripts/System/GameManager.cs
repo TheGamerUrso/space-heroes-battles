@@ -121,9 +121,6 @@ public class GameManager : MonoSingleton<GameManager>
         PersistantData.LoadData();
 
         PlayerManager pm = new PlayerManager(this, this);
-
-        new AchievementSystem(PersistantData.Instance.Achievements.ListOfAchievelemtnts);
-
         pm.LoadPlayerSettings();
     }
 

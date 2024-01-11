@@ -36,7 +36,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     }
 
     private void Start()
-    {      
+    {
         GameManager.Instance.PauseTheGame(false);
         AudioManager.PlayMusic("Menu");
         Application.targetFrameRate = 30;
@@ -60,13 +60,22 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
     public void QuitButtonEvent()
     {
+#if UNITY_EDITOR_64
+        Debug.Log("Quit Game");
+        return;
+#endif
+
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
         Application.Quit();
     }
 
     public void PlayGame()
     {
-        LevelEnum[] levels = { LevelEnum.Level0, LevelEnum.Level1, LevelEnum.Level2, LevelEnum.Level3, LevelEnum.Level4, LevelEnum.Level5, LevelEnum.Level6, LevelEnum.Level7, LevelEnum.Level8, LevelEnum.Level9 };
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        // LevelEnum[] levels ={LevelEnum.Level0,LevelEnum.Level1,LevelEnum.Level2,LevelEnum.Level3,LevelEnum.Level4,LevelEnum.Level5,LevelEnum.Level6,LevelEnum.Level7,LevelEnum.Level8,LevelEnum.Level9};
+        LevelEnum[] levels = { LevelEnum.Level0 };
         GameManager.Instance.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
+
     }
 
     public GameObject GetUIScreen(string name)

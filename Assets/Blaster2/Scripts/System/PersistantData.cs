@@ -6,7 +6,6 @@ using UnityEngine;
 public class PersistantData : MonoSingleton<PersistantData>
 {
     public Player_SO[] Players;
-    public AchievementList Achievements;
     public Sprite[] achievementIcons;
 
     public PlayerData playerData;
@@ -20,12 +19,6 @@ public class PersistantData : MonoSingleton<PersistantData>
     public static void ReplacePlayerData(PlayerData playerData)
     {
         Instance.playerData = playerData;
-
-        if (playerData.Achievements == null)
-        {
-            playerData.Achievements = Instance.Achievements.ListOfAchievelemtnts;
-        }
-
     }
 
     public static void Load()
