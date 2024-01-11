@@ -46,8 +46,6 @@ public class BaseGameMode : MonoBehaviour
     protected float delay = 0.5f;
     protected WaitForSeconds shortDelay;
     protected WaitForSeconds CooldownTimer;
-
-    protected int EnemiesCount;
     protected WaitForSeconds shortWait = new WaitForSeconds(1);
     protected WaitForSeconds longWait = new WaitForSeconds(2);
     protected WaitForSeconds RewardWait = new WaitForSeconds(5);
@@ -91,7 +89,7 @@ public class BaseGameMode : MonoBehaviour
     public void LateUpdate()
     {
         gameInfo.pause = false;
-        if (EnemiesCount >= 8)
+        if (Enemy.EnemiesCount >= 8)
         {
             gameInfo.pause = true;
         }
@@ -132,7 +130,6 @@ public class BaseGameMode : MonoBehaviour
         Time.timeScale = 1.0f;
         var playerData = PersistantData.GetPlayerData();
         playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-        playerData.PlayedGame = true;
         playerData.SetScore(GameController.Instance.Score);
         SaveSystem.SaveGame();
 
@@ -140,7 +137,7 @@ public class BaseGameMode : MonoBehaviour
 
         yield return new WaitForSeconds(2.0f);
 
-        Events.OnGameOver?.Invoke(this);
+        Events.OnGameOver?.Invoke(this,false);
     }
 
     public void Win()
@@ -163,7 +160,7 @@ public class BaseGameMode : MonoBehaviour
         PlayerManager.GetPlayer()?.ExitLevel();
 
         yield return new WaitForSeconds(2.0f);
-        Events.OnWin?.Invoke(this);
+        Events.OnGameOver?.Invoke(this,true);
     }
 
     //=================================================================================
@@ -180,8 +177,6 @@ public class BaseGameMode : MonoBehaviour
                 Debug.Log("You Killed an Enemy");
             }
 
-            EnemiesCount--;
-
             var playerData = PersistantData.GetPlayerData();
             int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
             int EnemyLevel = baseEnemy.Level;
@@ -189,11 +184,9 @@ public class BaseGameMode : MonoBehaviour
             if (levelDiffrence == 0) levelDiffrence = 1;
             float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
 
-
-            int score = baseEnemy.EnemyData.EnemyValue;
             playerData.EarnXP(XPEarned);
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
-            score = GameController.Instance.Multiplier * baseEnemy.EnemyData.EnemyValue;
+            var score = GameController.Instance.Multiplier * baseEnemy.EnemyData.EnemyValue;
             var ultiplierTextToShow = GameController.Instance.Multiplier > 1 ? $"{score} + (x {GameController.Instance.Multiplier} )" : $"{score}";
             GuiManager.SetScoreMultipler(ultiplierTextToShow);
             GameController.Instance.NumberOfEnemies--;
@@ -215,10 +208,8 @@ public class BaseGameMode : MonoBehaviour
     {
         if (baseEnemy.Id.Equals(id))
         {
-            EnemiesCount--;
             if (baseEnemy.GetComponent<BossEnemy>()) return;
-            var playerData = PersistantData.GetPlayerData();
-            playerData.EnemyEscaped++;
+            GameController.Instance.EnemyEscaped++;
         }
     }
 

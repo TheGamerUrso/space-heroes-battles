@@ -1,22 +1,9 @@
-﻿using TMPro;
-using UnityEngine;
-using Dan.Main;
-using Dan.Models;
-using System.Linq;
-using Dan.Enums;
-using UnityEngine.Diagnostics;
+﻿using UnityEngine;
 using System.Collections;
+using static Leaderboards;
 
 public class LeaderboardScreen : MonoBehaviour
 {
-
-    public struct LeaderboardSearchQuery
-    {
-        public int Skip { get; set; } //amount of entries to skip
-        public int Take { get; set; } //amount of entries to take
-        public string Username { get; set; }
-        public TimePeriodType TimePeriod { get; set; }
-    }
     public GameObject LeaderboardEntry;
     public GameObject PlayerLeaderboardEntry;
     public Transform content;
@@ -25,7 +12,7 @@ public class LeaderboardScreen : MonoBehaviour
     {
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("-");
-        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Leaderboards.Instance.Username);
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(playerData.Username);
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(playerData.HighScore.ToString());
         UpdateScore();
     }
@@ -39,11 +26,6 @@ public class LeaderboardScreen : MonoBehaviour
 
         foreach (Entry entry in Leaderboards.Instance.GetEntries())
         {
-            if (entry.IsMine())
-            {
-                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().SetEntry(entry);
-            }
-
             GameObject leaderboardGO = Instantiate(LeaderboardEntry, content);
             leaderboardGO.GetComponent<LeaderBoardEntry>().SetEntry(entry);
             yield return new WaitForSeconds(.1f);

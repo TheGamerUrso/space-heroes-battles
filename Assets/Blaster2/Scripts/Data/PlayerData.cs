@@ -6,14 +6,10 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
+    public string Username;
     public float Score;
     public float HighScore;
 
-
-    [Header("Progression")]
-    [Range(1, 10)]
-    public int LevelUnlocked;
-    public bool SurvivalUnlocked;
     public int[] UnlockedHeroes;
 
     [Header("Statistics")]
@@ -25,7 +21,7 @@ public class PlayerData
     public int CoinPicked;
     public bool PlayedGame;
     public bool GotHitInGame;
-    public int BossBountyKilledId;
+    public int BountyKilled;
     public int EnemyKilled;
     public int EnemyEscaped;
 
@@ -222,9 +218,9 @@ public class PlayerData
 
     public void SetBossKilledCount()
     {
-        if(BossBountyKilledId==1)return;
-        BossBountyKilledId = 1;
-        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.BOUNTY, BossBountyKilledId);
+        if(BountyKilled==1)return;
+        BountyKilled = 1;
+        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.BOUNTY, BountyKilled);
     }
 
     public PlayerShipData GetCurrentPlayerShipData()

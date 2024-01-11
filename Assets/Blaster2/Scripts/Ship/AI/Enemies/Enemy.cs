@@ -3,7 +3,8 @@ using System.Collections;
 using UnityEngine;
 
 public class Enemy : Ship, IDamagable, ITargetable
-{
+{    
+    public static int EnemiesCount;
     public Action OnEnemyAttack;
     public Action<int, int> OnEnemyHit;
 
@@ -151,7 +152,8 @@ public class Enemy : Ship, IDamagable, ITargetable
     public override void Death()
     {
         if (IsAlive)
-        {
+        {      
+            EnemiesCount--;
             IsAlive = false;
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
@@ -298,6 +300,7 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     public override void ExitLevel()
     {
+        EnemiesCount--;
         Events.EnemyEscaped?.Invoke(Id, this);
     }
 }

@@ -69,13 +69,8 @@ public class Events
     /**
      *GameController
      */
-    public static Action<BaseGameMode> OnGameOver;
-    public static Action<BaseGameMode> OnWin;
-
-
-
-
-    /**
+    public static Action<BaseGameMode,bool> OnGameOver;
+        /**
      * PlayerData Events
      */
     public static Action<int, float, float> OnXpValueChanged;

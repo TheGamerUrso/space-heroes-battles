@@ -89,18 +89,18 @@ public class SurvivalGameMode : BaseGameMode
                 CooldownTimer = new WaitForSeconds(cooldown);
             }
 
-            if (EnemiesCount > 0)
+            if (Enemy.EnemiesCount > 0)
             {
-                yield return new WaitUntil(() => EnemiesCount <= 0);
+                yield return new WaitUntil(() => Enemy.EnemiesCount <= 0);
             }
 
             yield return shortWait;
 
             if (PlayerManager.GetPlayer().CurrentHealth > 0)
             {
-                if (EnemiesCount > 0)
+                if (Enemy.EnemiesCount > 0)
                 {
-                    yield return new WaitUntil(() => EnemiesCount <= 0);
+                    yield return new WaitUntil(() => Enemy.EnemiesCount <= 0);
                 }
 
                 if (BossWave)
@@ -150,8 +150,7 @@ public class SurvivalGameMode : BaseGameMode
 
         var random = Random.Range(0, SpawnPoints.Count);
         enemGO = SpawnPoints[random].SpawnEnemyElement(gameInfo.availableEnemies);
-        EnemiesCount++;
-        //Enemies.Add(enemGO);
+        Enemy.EnemiesCount++;
     }
 
     public override void SpawnBoss()
@@ -162,8 +161,7 @@ public class SurvivalGameMode : BaseGameMode
 
             currentBoss = BossFights[Random.Range(0, BossFights.Length)];
             SpawnBoss(currentBoss, gameInfo.LevelDifficulty);
-            EnemiesCount++;
-            //Enemies.Add(currentBoss.gameObject);
+            Enemy.EnemiesCount++;
         }
     }
 }

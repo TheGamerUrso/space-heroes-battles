@@ -59,7 +59,6 @@ public class GameController : MonoBehaviour
     public int TotalCoinsInGame;
     public int Multiplier = 1;
     public int EnemySpawnInTotal;
-
     public int EnemyKilled = 0;
     public int EnemyEscaped = 0;
     public int Score = 0;
@@ -196,19 +195,23 @@ public class GameController : MonoBehaviour
         }
         currentGameState = gameState;
     }
-
+//======================================================================================================================================================
     public void Win()
     {
         SetGameState(GameState.WIN);
     }
-
+//======================================================================================================================================================
     public void GameOver()
     {
         SetGameState(GameState.GAMEOVER);
     }
-
+//======================================================================================================================================================
     public static BaseGameMode GetGameMode()
     {
         return Instance.baseGameMode;
+    }
+
+    void OnGUI(){
+        GUILayout.Label("Enemy Count " + Enemy.EnemiesCount);
     }
 }
