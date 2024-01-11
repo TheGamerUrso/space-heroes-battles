@@ -74,7 +74,7 @@ public class PlayerShipData
         MagnetDistance = 0;
         Upgrades = new int[Enum.GetValues(typeof(UpgradeTypeEnum)).Length];
     }
-    public void NewGame(out bool HasShieldRef)
+    public void NewGame(ref bool HasShieldRef)
     {
         HasShieldRef = HasShield;
     }

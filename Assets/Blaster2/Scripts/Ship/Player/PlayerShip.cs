@@ -32,13 +32,13 @@ public class PlayerShip : Ship, IDamagable
     {
         Events.OnLevelValueChanged -= OnLevelValueChanged;
     }
-
+//=================================================================================
     public override void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         shipController = GetComponent<PlayerController>();
     }
-
+//=================================================================================
     public override void Start()
     {
         Events.OnLevelValueChanged += OnLevelValueChanged;
@@ -49,7 +49,7 @@ public class PlayerShip : Ship, IDamagable
         playerShipData = playerData.GetCurrentPlayerShipData();
         shipController.SetSpeed(playerShipData.Speed);
 
-        playerShipData.NewGame(out HasShield);
+        playerShipData.NewGame(ref HasShield);
         ShieldEffect.SetActive(HasShield);
 
         SetStats(playerShipData.level);
@@ -62,12 +62,12 @@ public class PlayerShip : Ship, IDamagable
 
         IsAlive = true;
     }
-
+//=================================================================================
     public void OnLevelValueChanged(int Level)
     {
         SetStats(Level);
     }
-
+//=================================================================================
     public override void Update()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
@@ -82,7 +82,7 @@ public class PlayerShip : Ship, IDamagable
             }
         }
     }
-
+//=================================================================================
     public void WeaponSystem()
     {
         if (GetAnimationState("Enter") || GetAnimationState("Exit"))
@@ -146,7 +146,7 @@ public class PlayerShip : Ship, IDamagable
             UpgradeWeapon();
         }
     }
-
+//=================================================================================
     public void UpdateWeaponStats(float fireRate, float damage = 0)
     {
         var currenActivetWeapon = GetCurrentActiveWeapon().GetComponent<BaseWeapon>();
@@ -154,13 +154,13 @@ public class PlayerShip : Ship, IDamagable
         if (damage > 0)
             currenActivetWeapon.Damage = damage;
     }
-
+//=================================================================================
     public override void InstallShield()
     {
-        base.InstallShieldModule();
+        base.InstallShield();
         ShieldEffect.SetActive(HasShield);
     }
-
+//=================================================================================
     public override void Death()
     {
         GameController.Instance.UseSlowMo = false;
@@ -172,7 +172,7 @@ public class PlayerShip : Ship, IDamagable
         Events.PlayerLost?.Invoke();
         gameObject.SetActive(false);
     }
-
+//=================================================================================
     public override void Heal(float ammount)
     {
         CurrentHealth += ammount;
@@ -184,7 +184,7 @@ public class PlayerShip : Ship, IDamagable
 
         OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
     }
-
+//=================================================================================
     public override void TakeDamage(float dmg)
     {
         if (!IsAlive) return;
@@ -233,7 +233,7 @@ public class PlayerShip : Ship, IDamagable
             }
         }
     }
-
+//=================================================================================
     public void OnTriggerEnter(Collider other)
     {
         IPickable items = other.GetComponent<IPickable>();
@@ -244,12 +244,12 @@ public class PlayerShip : Ship, IDamagable
                 ItemCollectedEffect.Play();
         }
     }
-
+//=================================================================================
     public void tempGodMode()
     {
         invisibilityTimer = 1;
     }
-
+//=================================================================================
 
     public bool GetAnimationState(string id)
     {
@@ -259,7 +259,7 @@ public class PlayerShip : Ship, IDamagable
         }
         return animator.GetCurrentAnimatorStateInfo(0).IsName(id);
     }
-
+//=================================================================================
     public override void OnEnable()
     {
         if (animator == null)
@@ -268,7 +268,7 @@ public class PlayerShip : Ship, IDamagable
         }
         animator.SetTrigger(Constants.PLAYERENTERSTRINGKEY);
     }
-
+//=================================================================================
     public override void ExitLevel()
     {
         if (animator == null)
@@ -277,7 +277,7 @@ public class PlayerShip : Ship, IDamagable
         }
         animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
     }
-
+//=================================================================================
     #region TempfireRateBuff
 
     public void TempFireRateBuff(float fireRate = 0.0f, bool temporary = false)
@@ -292,12 +292,13 @@ public class PlayerShip : Ship, IDamagable
 
         UpdateWeaponStats(playerShipData.FireRate - fireRate);
     }
+    //=================================================================================
 
     public void GiveTemporaryFireRateBuff()
     {
         StartCoroutine(TemporaryFireRateUpgrade());
     }
-
+//=================================================================================
     public IEnumerator TemporaryFireRateUpgrade()
     {
         var fireRateTemp = playerShipData.FireRate;
@@ -314,7 +315,7 @@ public class PlayerShip : Ship, IDamagable
 
     #endregion
 
-
+//=================================================================================
     public void UpgradeWeapon()
     {
         if (CurrentWeapnType < 4)
@@ -339,7 +340,7 @@ public class PlayerShip : Ship, IDamagable
             SwitchWeapon(CurrentWeapnType);
         }
     }
-
+//=================================================================================
     public void DownGradeWeapon()
     {
         if (playerShipData.HasArmorUpgrade)
@@ -353,7 +354,7 @@ public class PlayerShip : Ship, IDamagable
             SwitchWeapon(CurrentWeapnType);
         }
     }
-
+//=================================================================================
     public void PowerUpCollected()
     {
         if (playerData.PowerPackCollected <= 5 && CurrentWeapnType < 4)
@@ -362,29 +363,29 @@ public class PlayerShip : Ship, IDamagable
             TempFireRateBuff(0.01f * playerData.PowerPackCollected);
         }
     }
-
+//=================================================================================
     public void ResetWeaponUpgrade()
     {
         CurrentWeapnType = 0;
         SwitchWeapon(CurrentWeapnType);
     }
-
+//=================================================================================
     public void ActivateSpecial()
     {
         playerData.SuperUsed++;
         specialAttack.ActivateSpecial();
     }
-
+//=================================================================================
     public void DeactivateSpecial()
     {
         specialAttack.DeactivateSpecial();
     }
-
+//=================================================================================
     public GameObject GetCurrentActiveWeapon()
     {
         return Weapons[CurrentWeapnType].gameObject;
     }
-
+//=================================================================================
     public override void SwitchWeapon(int Id, bool Solo = false)
     {
         for (int i = 0; i < Weapons.Length; i++)
@@ -395,12 +396,12 @@ public class PlayerShip : Ship, IDamagable
         Weapons[Id].gameObject.SetActive(true);
         Weapons[Id].SetStats(playerShipData, Id);
     }
-
+//=================================================================================
     public BaseSpecialAttack GetSpecialAttack()
     {
         return specialAttack;
     }
-
+//=================================================================================
     public override void SetStats(int level)
     {
         MaxHealth = playerShipData.level * playerStats.baseHealth;
@@ -424,7 +425,7 @@ public class PlayerShip : Ship, IDamagable
 
         specialAttack.SetStats(playerShipData);
     }
-
+//=================================================================================
     public void SetWallet(int coin)
     {
         playerData.AddCoin(coin);
@@ -433,7 +434,7 @@ public class PlayerShip : Ship, IDamagable
             PlayerPrefs.SetInt("CoinTut", 1);
         }
     }
-
+//=================================================================================
     public override void EnterLevel()
     {
 

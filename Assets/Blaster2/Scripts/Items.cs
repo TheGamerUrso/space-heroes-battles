@@ -86,7 +86,7 @@ public class Items : MonoBehaviour, IPickable
                 player.SetWallet(itemData.ammount);
                 break;
             case ItemEnum.SHIELD:
-                player.InstallShieldModule();
+                player.InstallShield();
                 break;
             case ItemEnum.POWERUP:
                 player.PowerUpCollected();

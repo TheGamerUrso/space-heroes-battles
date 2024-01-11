@@ -43,15 +43,6 @@ public abstract class Ship : MonoBehaviour
     public virtual void Update() { }
     public virtual void SetStats(int level) { }
 
-    public virtual void InstallShieldModule()
-    {
-        if (HasShield)
-        {
-            return;
-        }
-
-        HasShield = true;
-    }
     public virtual float GetHealthPresentage()
     {
         return (CurrentHealth / MaxHealth);
@@ -83,7 +74,15 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void Death() { }
 
-    public virtual void InstallShield() { }
+    public virtual void InstallShield()
+    {
+        if (HasShield)
+        {
+            return;
+        }
+
+        HasShield = true;
+    }
 
     public virtual void TakeDamage(float dmg) { }
 

@@ -133,10 +133,10 @@ public class BaseGameMode : MonoBehaviour
         SaveSystem.SaveGame();
 
         AudioManager.PlayMusic("GameOver", false);
-
+        StopAllCoroutines();
         yield return new WaitForSeconds(2.0f);
 
-        Events.OnGameOver?.Invoke(this,false);
+        Events.OnGameOver?.Invoke(this, false);
     }
 
     public void Win()
@@ -159,7 +159,7 @@ public class BaseGameMode : MonoBehaviour
         PlayerManager.GetPlayer()?.ExitLevel();
 
         yield return new WaitForSeconds(2.0f);
-        Events.OnGameOver?.Invoke(this,true);
+        Events.OnGameOver?.Invoke(this, true);
     }
 
     //=================================================================================
@@ -167,15 +167,6 @@ public class BaseGameMode : MonoBehaviour
     {
         if (baseEnemy.Id.Equals(baseEnemy.Id))
         {
-            if (baseEnemy.GetComponent<BossEnemy>())
-            {
-                Debug.Log("You Killed A Boss");
-            }
-            else
-            {
-                Debug.Log("You Killed an Enemy");
-            }
-
             var playerData = PersistantData.GetPlayerData();
             int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
             int EnemyLevel = baseEnemy.Level;
@@ -183,35 +174,32 @@ public class BaseGameMode : MonoBehaviour
             if (levelDiffrence == 0) levelDiffrence = 1;
             float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
 
-            playerData.EarnXP(XPEarned);
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
-            var score = GameController.Instance.Multiplier * baseEnemy.EnemyData.EnemyValue;
-            var ultiplierTextToShow = GameController.Instance.Multiplier > 1 ? $"{score} + (x {GameController.Instance.Multiplier} )" : $"{score}";
-            GuiManager.SetScoreMultipler(ultiplierTextToShow);
-  
+
+            GameController.SetPlayerXP(XPEarned);
+            GameController.SetScore(baseEnemy.EnemyData.EnemyValue);
             GameController.Instance.IncreaseMultiplier();
 
             GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
 
-            playerData.SetPlayerKillsCounter(1);
-            playerData.SetScore(score);
+            playerData.SetPlayerKillsCounter(1);    
 
             if (baseEnemy.GetComponent<BossEnemy>() == null) return;
             playerData.SetBossKilledCount();
             gameInfo.BossBattleInitiated = false;
-
         }
     }
-
+//=================================================================================
     public void OnEnemyEscapedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
         {
             if (baseEnemy.GetComponent<BossEnemy>()) return;
             GameController.Instance.EnemyEscaped++;
+            GameController.Instance.DecreaseMultipler();
         }
     }
-
+//=================================================================================
     public void OnEnemyHitHandled(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
@@ -220,5 +208,4 @@ public class BaseGameMode : MonoBehaviour
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
         }
     }
-}
-//=================================================================================  
+}  

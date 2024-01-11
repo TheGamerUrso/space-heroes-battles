@@ -24,16 +24,9 @@ public class SurvivalGameOverScreen : MonoBehaviour
         highscore.SetActive(false);
     }
 
-    public void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            skip = true;
-        }
-    }
-
     private IEnumerator ScoreCoroutine()
     {
+        GetComponent<CanvasGroup>().interactable = false;
         var playerData = PersistantData.GetPlayerData();
         float score = GameController.Instance.Score;
         float tempScore = 0;
@@ -61,17 +54,18 @@ public class SurvivalGameOverScreen : MonoBehaviour
         }
 
         GameController.Instance.IsHightScore = false;
+        GetComponent<CanvasGroup>().interactable = true;
     }
 
     public void QuitButton()
     {
         GameManager.Instance.LoadMainenu();
-        gameObject.SetActive(false);
+        GetComponent<CanvasGroup>().interactable = false;
     }
 
     public void ReplayButton()
     {
         GameManager.Instance.ResetLevel();
-        gameObject.SetActive(false);
+        GetComponent<CanvasGroup>().interactable = false;
     }
 }

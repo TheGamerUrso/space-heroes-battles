@@ -107,7 +107,7 @@ public class RewardWidget : MonoBehaviour
                 break;
             case RewardTypeEnum.SHIELD:
                 textToShow = rewardText[(int)RewardTypeEnum.SHIELD];
-                playerShip.InstallShieldModule();
+                playerShip.InstallShield();
                 break;
             case RewardTypeEnum.POWERUP:
                 textToShow = rewardText[(int)RewardTypeEnum.POWERUP];

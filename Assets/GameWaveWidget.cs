@@ -6,13 +6,20 @@ using UnityEngine;
 public class GameWaveWidget : MonoBehaviour
 {
     public TextMeshProUGUI WaveText;
+    public TextMeshProUGUI EnemiesRemaining;
     public BaseGameMode survivalMode;
-    void Start(){
-       survivalMode = GameController.GetGameMode();
+    public CanvasGroup canvasGroup;
+    void Start()
+    {
+        survivalMode = GameController.GetGameMode();
     }
     void Update()
     {
-        if(survivalMode==null)return;
-        WaveText.text = "" + survivalMode.gameInfo.CurrentTotalEnemies + " / " + survivalMode.gameInfo.TotalEnemies;
+        if (survivalMode == null) return;
+
+        canvasGroup.alpha = survivalMode.gameInfo.BossBattleInitiated ? 1 : 0;
+
+        WaveText.text = survivalMode.gameInfo.CurrentTotalEnemies + " / " + survivalMode.gameInfo.TotalEnemies;
+        EnemiesRemaining.text = "" + survivalMode.gameInfo.waves;
     }
 }

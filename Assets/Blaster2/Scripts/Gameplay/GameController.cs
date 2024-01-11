@@ -71,13 +71,13 @@ public class GameController : MonoBehaviour
         Score = 0;
         CoinPicked = 0;
     }
-
+//=================================================================================
     public void ResetMultiplier()
     {
         Multiplier = 1;
         Events.OnMultiplierChanged?.Invoke();
     }
-
+//=================================================================================
     public void IncreaseMultiplier()
     {
         Multiplier++;
@@ -86,8 +86,18 @@ public class GameController : MonoBehaviour
             Multiplier = 5;
         }
         Events.OnMultiplierChanged?.Invoke();
+    }    
+    //=================================================================================
+    public void DecreaseMultipler()
+    {
+        Multiplier--;
+        if (Multiplier < 0)
+        {
+            Multiplier = 0;
+        }
+        Events.OnMultiplierChanged?.Invoke();
     }
-
+//=================================================================================
     private void OnApplicationFocus(bool focus)
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -101,7 +111,7 @@ public class GameController : MonoBehaviour
             }
         }
     }
-
+//=================================================================================
     private void OnApplicationPause(bool Paused)
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -115,17 +125,18 @@ public class GameController : MonoBehaviour
             }
         }
     }
+    //=================================================================================
     public void OnDestroy()
-    {       
+    {
         Events.PlayerLost -= GameOver;
         Events.GameEnded -= Win;
 
         DOTween.Clear(true);
         DOTween.ClearCachedTweens();
     }
-
+//=================================================================================
     protected void Awake()
-    {      
+    {
         Events.PlayerLost += GameOver;
         Events.GameEnded += Win;
 
@@ -137,17 +148,17 @@ public class GameController : MonoBehaviour
         if (AsteroidBackgroundSpawner != null && HasAsteroids) Instantiate(AsteroidBackgroundSpawner, transform, false);
         if (Tutorial != null) Instantiate(Tutorial, transform, false);
     }
-
+//=================================================================================
     void Start()
-    {     
+    {
         playerData = PersistantData.GetPlayerData();
         playerData.SetSuperMeter(0);
         playerData.ResetWeaponPowerUPCollected();
         SetGameState(GameState.START);
     }
-    
+//=================================================================================
     IEnumerator StartGameDelay()
-    {        
+    {
         GameManager.Instance.ChangeGameState(GameStateEnum.GAME);
         NewGame();
         yield return new WaitForSeconds(1.0f);
@@ -164,7 +175,7 @@ public class GameController : MonoBehaviour
         playerShip.EnableFire();
         SetGameState(GameState.GAME);
     }
-
+//=================================================================================
     public void SetGameState(GameState gameState)
     {
         switch (gameState)
@@ -192,23 +203,41 @@ public class GameController : MonoBehaviour
         }
         currentGameState = gameState;
     }
-//======================================================================================================================================================
+    //======================================================================================================================================================
     public void Win()
     {
         SetGameState(GameState.WIN);
     }
-//======================================================================================================================================================
+    //======================================================================================================================================================
     public void GameOver()
     {
         SetGameState(GameState.GAMEOVER);
     }
-//======================================================================================================================================================
+    //======================================================================================================================================================
     public static BaseGameMode GetGameMode()
     {
         return Instance.baseGameMode;
     }
+    //======================================================================================================================================================
+    public static void SetScore(int Score)
+    {
+        var score = Instance.Multiplier * Score;
+        Instance.Score = score;
+        var ultiplierTextToShow = Instance.Multiplier > 1 ? $"{score} + (x {Instance.Multiplier} )" : $"{score}";
+        GuiManager.SetScoreMultipler(ultiplierTextToShow);
 
-    void OnGUI(){
+    }
+    //=====================================================================================================================================================
+    public static void SetPlayerXP(float xp)
+    {
+        var playerData = PersistantData.GetPlayerData();
+        playerData.EarnXP(xp);
+        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+    }
+    //======================================================================================================================================================
+    void OnGUI()
+    {
         GUILayout.Label("Enemy Count " + Enemy.EnemiesCount);
     }
+    //======================================================================================================================================================
 }
