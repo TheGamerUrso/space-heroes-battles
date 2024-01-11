@@ -33,8 +33,8 @@ public class WarningSignWidget : MonoBehaviour
         colliders = Physics.OverlapSphere(followTarget.transform.position, 40, enemies);
         if (colliders.Length > 0)
         {
-            Enemy baseEnemy = colliders[0].GetComponent<Enemy>();
-            if (baseEnemy != null && baseEnemy.enemyElement.gameObjectType == PoolGameObjectType.Enemy3)
+            var Asteroid = colliders[0].GetComponent<AsteroidCollider>();
+            if (Asteroid != null)
             {
                 if (colliders[0].gameObject != null)
                 {

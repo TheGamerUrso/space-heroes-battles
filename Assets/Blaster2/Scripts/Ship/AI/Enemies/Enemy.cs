@@ -53,7 +53,6 @@ public class Enemy : Ship, IDamagable, ITargetable
     public override void OnEnable()
     {
         IsAlive = true;
-        GameController.Instance.NumberOfEnemies++;
         currentWeaponActive = 1;
     }
 

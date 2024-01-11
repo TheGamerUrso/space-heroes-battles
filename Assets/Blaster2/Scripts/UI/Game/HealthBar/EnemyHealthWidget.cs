@@ -47,6 +47,7 @@ public class EnemyHealthWidget : BaseHealthWidget
             }
         }
 
+        if(GameController.Instance == null)return;
         if (GameController.Instance.IsGameOver)
         {
             gameObject.SetActive(false);

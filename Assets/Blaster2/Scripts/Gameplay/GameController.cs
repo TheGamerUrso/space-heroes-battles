@@ -48,8 +48,6 @@ public class GameController : MonoBehaviour
     private Ship playerShip;
     private PlayerData playerData;
     private BaseGameMode baseGameMode;
-    public int NumberOfEnemies = 0;
-    public int MaxLevelUnlocked = 5;
     public bool IsFirstRun;
     public bool IsGameOver;
     public bool IsHightScore = false;
@@ -68,7 +66,6 @@ public class GameController : MonoBehaviour
     {
         IsGameOver = false;
         Multiplier = 1;
-        NumberOfEnemies = 0;
         EnemyKilled = 0;
         EnemyEscaped = 0;
         Score = 0;

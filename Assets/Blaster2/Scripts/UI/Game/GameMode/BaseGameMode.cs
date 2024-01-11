@@ -72,7 +72,6 @@ public class BaseGameMode : MonoBehaviour
 
     public virtual void Awake()
     {
-
         Events.EnemyDied += OnEnemyDiedHandled;
         Events.BossDied += OnEnemyDiedHandled;
         Events.EnemyGotHit += OnEnemyHitHandled;
@@ -189,7 +188,7 @@ public class BaseGameMode : MonoBehaviour
             var score = GameController.Instance.Multiplier * baseEnemy.EnemyData.EnemyValue;
             var ultiplierTextToShow = GameController.Instance.Multiplier > 1 ? $"{score} + (x {GameController.Instance.Multiplier} )" : $"{score}";
             GuiManager.SetScoreMultipler(ultiplierTextToShow);
-            GameController.Instance.NumberOfEnemies--;
+  
             GameController.Instance.IncreaseMultiplier();
 
             GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
