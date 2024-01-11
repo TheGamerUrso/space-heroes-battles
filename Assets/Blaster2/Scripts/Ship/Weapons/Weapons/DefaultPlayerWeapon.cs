@@ -60,27 +60,22 @@ public class DefaultPlayerWeapon : BaseWeapon
         }
 
         var shouldShoot = false;
-        if (PlayerController.Instance.controlSceme == PlayerController.ControlSceme.CONTROL3)
-        {
-            holdFire = false;
-            shouldShoot = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1");
-            if (!holdFire && shouldShoot)
-            {
-                Shoot();
-            }
-        }
-        else
-        {
 
-            holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
-            shouldShoot = Input.GetMouseButton(0);
-        }
-
-
+#if UNITY_STANDALONE || UNITY_EDITOR
+        holdFire = false;
+        shouldShoot = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1");
         if (!holdFire && shouldShoot)
         {
             Shoot();
         }
+#elif UNITY_ANDROID
+            holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
+            shouldShoot = Input.GetMouseButton(0);
+              if (!holdFire && shouldShoot)
+        {
+            Shoot();
+        }
+#endif
     }
 
 

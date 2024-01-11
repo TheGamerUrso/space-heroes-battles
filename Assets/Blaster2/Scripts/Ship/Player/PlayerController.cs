@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     }
     public enum ControlSceme
     {
-        CONTROL1 = 1, CONTROL2 = 2, CONTROL3, CONTROL4
+        CONTROL1 = 1, CONTROL2 = 2
     }
     public ControlSceme controlSceme;
 
@@ -25,7 +25,6 @@ public class PlayerController : MonoBehaviour
     private Plane plane;
     private Ray ray;
     private float offset = 8;
-
 
     [SerializeField] private float Speed = 50;
 
@@ -66,7 +65,7 @@ public class PlayerController : MonoBehaviour
         Events.OnControlScemeChange = UpdateOffset;
         LoadPlayerData();
 
-        controlSceme = ControlSceme.CONTROL3;
+        controlSceme = ControlSceme.CONTROL1;
     }
 
     public void SetTargetPosition(Vector2 screenPos)
@@ -81,9 +80,7 @@ public class PlayerController : MonoBehaviour
 
     public void OnDragMove()
     {
-
-        if (Application.isEditor)
-        {
+        #if UNITY_EDITOR
             if (Input.GetMouseButton(0))
             {
                 currentPos = Input.mousePosition;
@@ -96,10 +93,8 @@ public class PlayerController : MonoBehaviour
 
                 previousPos = currentPos;
             }
-        }
-        else
-        {
-            if (Input.touchCount > 0 && !IsMouseOverUI())
+        #elif UNITY_ANDROID
+         if (Input.touchCount > 0 && !IsMouseOverUI())
             {
                 if (Input.GetTouch(0).phase == TouchPhase.Moved)
                 {
@@ -114,59 +109,53 @@ public class PlayerController : MonoBehaviour
                     previousPos = currentPos;
                 }
             }
-        }
+            #endif
     }
     private void Update()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
+ #if UNITY_EDITOR_64
+             if (Input.GetMouseButton(0) && !IsMouseOverUI())
+             {
+                 SetTargetPosition(Input.mousePosition);
+                MoveToTarget();
+            }
+ #elif UNITY_ANDROID || UNITY_EDITOR_64
             if (controlSceme == ControlSceme.CONTROL1)
             {
-                if (Application.isEditor)
+                if (Input.touchCount > 0 && !IsMouseOverUI())
                 {
-                    if (Input.GetMouseButton(0) && !IsMouseOverUI())
-                    {
-                        SetTargetPosition(Input.mousePosition);
-                        MoveToTarget();
-                    }
-                }
-                else
-                {
-                    if (Input.touchCount > 0 && !IsMouseOverUI())
-                    {
-                        Touch firstTouch = Input.GetTouch(0);
-                        SetTargetPosition(firstTouch.position);
-                        MoveToTarget();
-                    }
+                    Touch firstTouch = Input.GetTouch(0);
+                    SetTargetPosition(firstTouch.position);
+                    MoveToTarget();
                 }
                 if (!GameManager.Instance.IsPaused)
                 {
                     Rotate();
                 }
             }
-            else if (controlSceme == ControlSceme.CONTROL3)
-            {
-                GamepadControls();
-            }
 
-
-
+#elif UNITY_STANDALONE
+            GamepadControls();
+#endif
             ClampTransform();
         }
     }
 
-
     private void FixedUpdate()
     {
+#if UNITY_ANDROID
         if (controlSceme == ControlSceme.CONTROL2)
         {
             OnDragMove();
         }
+#endif
     }
 
     public void GamepadControls()
     {
-        var newPosition = transform.localPosition + new Vector3((Input.GetAxis("Horizontal") * (Speed/1.25f) * Time.deltaTime), 0, (Input.GetAxis("Vertical") * (Speed/1.25f) * Time.deltaTime));
+        var newPosition = transform.localPosition + new Vector3((Input.GetAxis("Horizontal") * (Speed / 1.25f) * Time.deltaTime), 0, (Input.GetAxis("Vertical") * (Speed / 1.25f) * Time.deltaTime));
         rotationSpeed = -Input.GetAxis("Horizontal") * tilt;
         rotationSpeed = Mathf.Clamp(rotationSpeed, -35, 35);
         targetRotation = new Vector3(0, 0, rotationSpeed);
@@ -192,10 +181,12 @@ public class PlayerController : MonoBehaviour
     }
 
     private void MoveToTarget() => transform.position = Vector3.MoveTowards(transform.position, targetPos + new Vector3(0, 0, offset), Speed * Time.deltaTime);
-    public static bool IsMouseOverUI() => EventSystem.current.IsPointerOverGameObject();
+    public static bool IsMouseOverUI()
+    {
+        return EventSystem.current.IsPointerOverGameObject();
+    }
     public void UpdateOffset() => controlSceme = (ControlSceme)playerData.ControlScene;
     public bool ShouldRoate() => (Input.touchCount > 0 || Input.GetMouseButton(0));
-    public void ClampTransform() => transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax), 0, Mathf.Clamp(transform.position.z,0, 120));
-
+    public void ClampTransform() => transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax), 0, Mathf.Clamp(transform.position.z, 0, 120));
 
 }

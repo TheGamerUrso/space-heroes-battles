@@ -200,7 +200,8 @@ public class EnemyMove : MonoBehaviour
     }
 
     public void Leave()
-    {
+    {        
+        Enemy.EnemiesCount--;
         enemy.ExitLevel();
         gameObject.SetActive(false);
     }

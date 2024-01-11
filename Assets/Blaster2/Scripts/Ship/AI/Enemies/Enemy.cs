@@ -282,8 +282,6 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     public virtual IEnumerator DelayStart()
     {
-        Debug.Log("Enemy-> DelayStart");
-        //HealthBar.Show();
         yield return new WaitForSeconds(2);
         EnableColliders(true);
         if (Weapons.Length != 0)
@@ -299,7 +297,6 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     public override void ExitLevel()
     {
-        EnemiesCount--;
         Events.EnemyEscaped?.Invoke(Id, this);
     }
 }

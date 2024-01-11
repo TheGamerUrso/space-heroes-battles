@@ -53,6 +53,7 @@ public class BaseEnemyMovement : MonoBehaviour
 
     public void ExitLevel()
     {
+        Enemy.EnemiesCount--;
         shipOwner.ExitLevel();
         gameObject.SetActive(false);
     }

@@ -50,6 +50,7 @@ public class BaseGameMode : MonoBehaviour
     protected WaitForSeconds longWait = new WaitForSeconds(2);
     protected WaitForSeconds RewardWait = new WaitForSeconds(5);
 
+
     public virtual void SetGameMode()
     {
         shortDelay = new WaitForSeconds(delay);
@@ -133,7 +134,7 @@ public class BaseGameMode : MonoBehaviour
         SaveSystem.SaveGame();
 
         AudioManager.PlayMusic("GameOver", false);
-        StopAllCoroutines();
+        StopCoroutine(UpdateGameMode());
         yield return new WaitForSeconds(2.0f);
 
         Events.OnGameOver?.Invoke(this, false);
@@ -182,14 +183,14 @@ public class BaseGameMode : MonoBehaviour
 
             GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
 
-            playerData.SetPlayerKillsCounter(1);    
+            playerData.SetPlayerKillsCounter(1);
 
             if (baseEnemy.GetComponent<BossEnemy>() == null) return;
             playerData.SetBossKilledCount();
             gameInfo.BossBattleInitiated = false;
         }
     }
-//=================================================================================
+    //=================================================================================
     public void OnEnemyEscapedCallback(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
@@ -199,7 +200,7 @@ public class BaseGameMode : MonoBehaviour
             GameController.Instance.DecreaseMultipler();
         }
     }
-//=================================================================================
+    //=================================================================================
     public void OnEnemyHitHandled(string id, Enemy baseEnemy)
     {
         if (baseEnemy.Id.Equals(id))
@@ -208,4 +209,4 @@ public class BaseGameMode : MonoBehaviour
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
         }
     }
-}  
+}

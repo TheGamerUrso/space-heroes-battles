@@ -71,13 +71,13 @@ public class GameController : MonoBehaviour
         Score = 0;
         CoinPicked = 0;
     }
-//=================================================================================
+    //=================================================================================
     public void ResetMultiplier()
     {
         Multiplier = 1;
         Events.OnMultiplierChanged?.Invoke();
     }
-//=================================================================================
+    //=================================================================================
     public void IncreaseMultiplier()
     {
         Multiplier++;
@@ -86,7 +86,7 @@ public class GameController : MonoBehaviour
             Multiplier = 5;
         }
         Events.OnMultiplierChanged?.Invoke();
-    }    
+    }
     //=================================================================================
     public void DecreaseMultipler()
     {
@@ -97,7 +97,7 @@ public class GameController : MonoBehaviour
         }
         Events.OnMultiplierChanged?.Invoke();
     }
-//=================================================================================
+    //=================================================================================
     private void OnApplicationFocus(bool focus)
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -111,7 +111,7 @@ public class GameController : MonoBehaviour
             }
         }
     }
-//=================================================================================
+    //=================================================================================
     private void OnApplicationPause(bool Paused)
     {
         if (Application.platform == RuntimePlatform.Android)
@@ -134,7 +134,7 @@ public class GameController : MonoBehaviour
         DOTween.Clear(true);
         DOTween.ClearCachedTweens();
     }
-//=================================================================================
+    //=================================================================================
     protected void Awake()
     {
         Events.PlayerLost += GameOver;
@@ -148,7 +148,7 @@ public class GameController : MonoBehaviour
         if (AsteroidBackgroundSpawner != null && HasAsteroids) Instantiate(AsteroidBackgroundSpawner, transform, false);
         if (Tutorial != null) Instantiate(Tutorial, transform, false);
     }
-//=================================================================================
+    //=================================================================================
     void Start()
     {
         playerData = PersistantData.GetPlayerData();
@@ -156,7 +156,7 @@ public class GameController : MonoBehaviour
         playerData.ResetWeaponPowerUPCollected();
         SetGameState(GameState.START);
     }
-//=================================================================================
+    //=================================================================================
     IEnumerator StartGameDelay()
     {
         GameManager.Instance.ChangeGameState(GameStateEnum.GAME);
@@ -175,7 +175,7 @@ public class GameController : MonoBehaviour
         playerShip.EnableFire();
         SetGameState(GameState.GAME);
     }
-//=================================================================================
+    //=================================================================================
     public void SetGameState(GameState gameState)
     {
         switch (gameState)
@@ -225,7 +225,7 @@ public class GameController : MonoBehaviour
         Instance.Score = score;
         var ultiplierTextToShow = Instance.Multiplier > 1 ? $"{score} + (x {Instance.Multiplier} )" : $"{score}";
         GuiManager.SetScoreMultipler(ultiplierTextToShow);
-
+        Events.OnScoreValueChanged?.Invoke(score);
     }
     //=====================================================================================================================================================
     public static void SetPlayerXP(float xp)

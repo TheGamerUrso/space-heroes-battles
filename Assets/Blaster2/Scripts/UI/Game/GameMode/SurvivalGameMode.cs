@@ -83,6 +83,7 @@ public class SurvivalGameMode : BaseGameMode
                     yield return shortWait;
                 }
 
+                if(GameController.Instance.IsGameOver) yield break;
                 Spawn();
 
                 yield return CooldownTimer;

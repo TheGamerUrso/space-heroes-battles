@@ -141,8 +141,6 @@ public class GuiManager : MonoSingleton<GuiManager>
     {
         GameController.Instance.IsGameOver = true;
 
-
-
         UIView activeMenuGO = null;
 
         if (WinScreen.IsActive())
@@ -206,7 +204,8 @@ public class GuiManager : MonoSingleton<GuiManager>
 
     //=================================================================================
     public void GameOver(BaseGameMode baseGameMode, bool IsPlayerAlive = false)
-    {
+    {            
+        ShowPauseMenu(false);
         if (IsPlayerAlive)
         {
             WinScreen.Show();
