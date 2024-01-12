@@ -27,7 +27,6 @@ public class RewardWidget : MonoBehaviour
 
     private RewardTypeEnum rewardType;
 
-
     public string[] rewardText = { "% gold earned", "% xp earned", "ship repaired", "Shield Installed", "power up", "Decrease super cooldown" };
     public GameObject rewardResultPanel;
     public TextMeshProUGUI RewardText;
@@ -43,7 +42,7 @@ public class RewardWidget : MonoBehaviour
         Events.ClaimReward = ClaimReward;
         Events.ClaimedReward = RewardClaimed;
         rewards = new RewardTypeEnum[3];
-                rewardPanel.SetActive(false);
+        rewardPanel.SetActive(false);
         rewardResultPanel.SetActive(false);
     }
 
@@ -71,7 +70,7 @@ public class RewardWidget : MonoBehaviour
     }
 
     public void Show()
-    {        
+    {
         GameController.Instance.UseSlowMo = false;
         rewardPanel.SetActive(true);
         StartCoroutine(ShowWaveReward());
@@ -90,7 +89,7 @@ public class RewardWidget : MonoBehaviour
 
     IEnumerator ClaimRewarded()
     {
-     
+
         yield return new WaitForSeconds(1.0f);
 
         PlayerData playerData = PersistantData.GetPlayerData();
@@ -145,8 +144,7 @@ public class RewardWidget : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         rewardBoxes[RewardBoxSelected].CloseChest();
         yield return new WaitForSeconds(1.0f);
-
-        widgetPanel.SetActive(false);
+        rewardResultPanel.SetActive(false);
         RewardClaimed();
 
         IsWaitingInput = false;

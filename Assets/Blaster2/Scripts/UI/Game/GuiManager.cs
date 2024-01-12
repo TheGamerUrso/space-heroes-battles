@@ -55,7 +55,7 @@ public class GuiManager : MonoSingleton<GuiManager>
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
-            if (Time.timeScale == 1)
+            if (!GameController.Instance.SlowMo)
             {
                 timer -= Time.deltaTime;
                 if (timer <= 0)
@@ -65,14 +65,14 @@ public class GuiManager : MonoSingleton<GuiManager>
             }
             else
             {
-                timer = 1;
+                timer = .25f;
                 pauseButton.SetActive(true);
             }
-
+#if UNITY_EDITOR || UNITY_STANDALONE
             if(Input.GetKeyDown(KeyCode.Escape)){
                 PauseButton();
             }
-
+#endif
         }
     }
 //=================================================================================
