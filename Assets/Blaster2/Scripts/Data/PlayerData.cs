@@ -138,6 +138,7 @@ public class PlayerData
         if (Score > HighScore)
         {
             HighScore = score;
+            TheGamerUrso.Leaderboards.Instance.AddScore((long)HighScore);
         }
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SCORE, (int)Score);
     }

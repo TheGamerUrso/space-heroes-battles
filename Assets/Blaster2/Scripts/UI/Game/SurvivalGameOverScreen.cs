@@ -55,6 +55,8 @@ public class SurvivalGameOverScreen : MonoBehaviour
 
         GameController.Instance.IsHightScore = false;
         GetComponent<CanvasGroup>().interactable = true;
+
+        TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
     }
 
     public void QuitButton()
