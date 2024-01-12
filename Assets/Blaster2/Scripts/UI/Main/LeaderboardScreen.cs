@@ -16,15 +16,16 @@ public class LeaderboardScreen : MonoBehaviour
             TheGamerUrso.Leaderboards.Instance.OnLeaderboardValueChanged -= OnLeaderboardLoaded;
     }
 
+    //======================================================================================================================================================
     void Start()
     {
         TheGamerUrso.Leaderboards.Instance.OnLeaderboardValueChanged += OnLeaderboardLoaded;
         Username = PersistantData.GetPlayerData().GetUsername();
-  
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("-");
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(playerData.Username);
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(playerData.HighScore.ToString());
+        TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
     }
 
     //======================================================================================================================================================

@@ -83,7 +83,7 @@ namespace TheGamerUrso
         }
 
         //======================================================================================================================================================
-        public void AddScore(long Score)
+        public void AddScore(int Score)
         {
             var username = PersistantData.GetPlayerData().Username;
             if (LeaderboardContainsEntry(username))
@@ -150,6 +150,8 @@ namespace TheGamerUrso
         public void SaveLeaderboard()
         {
             //JsonSystem.SaveLeaderboard(leaderboard);
+            PlayerData playerData = PersistantData.GetPlayerData();
+            Instance.AddScore((int)playerData.HighScore);
         }
         //======================================================================================================================================================
         [ContextMenu("Add")]

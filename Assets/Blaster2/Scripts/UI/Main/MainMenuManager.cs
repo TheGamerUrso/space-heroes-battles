@@ -162,6 +162,10 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
                 {
 
                     item.m_UIElement.Show();
+                    if (item.Name.Equals("HighScore"))
+                    {
+                       TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
+                    }
                     Events.OnScreenChanged?.Invoke(item.Name, true);
                     if (IsScrene(previousScreen, "Upgrades"))
                     {

@@ -20,15 +20,15 @@ public class SurvivalGameOverScreen : MonoBehaviour
         m_Text.text = scoreText;
 
         StartCoroutine(ScoreCoroutine());
-
+        
         highscore.SetActive(false);
     }
 
     private IEnumerator ScoreCoroutine()
-    {
+    {            
         GetComponent<CanvasGroup>().interactable = false;
         var playerData = PersistantData.GetPlayerData();
-        float score = GameController.Instance.Score;
+        int score = GameController.Instance.Score;
         float tempScore = 0;
         string scoreText;
 
