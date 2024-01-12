@@ -31,29 +31,20 @@ public class RewardWidget : MonoBehaviour
     public string[] rewardText = { "% gold earned", "% xp earned", "ship repaired", "Shield Installed", "power up", "Decrease super cooldown" };
     public GameObject rewardResultPanel;
     public TextMeshProUGUI RewardText;
-
+    private bool IsWaitingInput;
     private void OnDestroy()
     {
-        Events.ClaimReward -= ClaimReward;
-        Events.ClaimedReward -= RewardClaimed;
-    }
-
-    private void OnEnable()
-    {
-        Events.ClaimReward = ClaimReward;
-        Events.ClaimedReward = RewardClaimed;
-
-        rewardPanel.SetActive(true);
-        rewardResultPanel.SetActive(false);
-        GetNewRewards();
-
-        Time.timeScale = 1.0f;
-        GameController.Instance.UseSlowMo = false;
+        Events.ClaimReward = null;
+        Events.ClaimedReward = null;
     }
 
     private void Start()
     {
+        Events.ClaimReward = ClaimReward;
+        Events.ClaimedReward = RewardClaimed;
         rewards = new RewardTypeEnum[3];
+                rewardPanel.SetActive(false);
+        rewardResultPanel.SetActive(false);
     }
 
     public void ClaimReward(int Id, RewardTypeEnum rewardTypeEnum)
@@ -69,17 +60,37 @@ public class RewardWidget : MonoBehaviour
         {
             rewards[i] = (RewardTypeEnum)Random.Range(0, Enum.GetValues(typeof(RewardTypeEnum)).Length);
             rewardBoxes[i].SetReward(rewards[i]);
+            rewardBoxes[i].CloseChest();
         }
     }
 
-    public bool 
+    public bool
     RewardClaimed()
     {
         return false;
     }
 
+    public void Show()
+    {        
+        GameController.Instance.UseSlowMo = false;
+        rewardPanel.SetActive(true);
+        StartCoroutine(ShowWaveReward());
+    }
+
+    IEnumerator ShowWaveReward()
+    {
+        GetNewRewards();
+        Time.timeScale = 0.0f;
+        while (IsWaitingInput)
+        {
+            yield return new WaitForSeconds(1.0f);
+        }
+        Time.timeScale = 1.0f;
+    }
+
     IEnumerator ClaimRewarded()
     {
+     
         yield return new WaitForSeconds(1.0f);
 
         PlayerData playerData = PersistantData.GetPlayerData();
@@ -134,8 +145,11 @@ public class RewardWidget : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         rewardBoxes[RewardBoxSelected].CloseChest();
         yield return new WaitForSeconds(1.0f);
+
         widgetPanel.SetActive(false);
         RewardClaimed();
+
+        IsWaitingInput = false;
         GameController.Instance.UseSlowMo = true;
     }
 

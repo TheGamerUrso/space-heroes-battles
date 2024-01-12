@@ -133,12 +133,11 @@ public class PlayerData
 
     public void SetScore(float score)
     {
-        Score += score;
+        Score = score;
         if (Score > HighScore)
         {
             HighScore = score;
         }
-        Events.OnScoreValueChanged?.Invoke((int)Score);
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SCORE, (int)Score);
     }
     public float GetHighScore()

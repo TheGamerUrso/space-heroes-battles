@@ -222,10 +222,10 @@ public class GameController : MonoBehaviour
     public static void SetScore(int Score)
     {
         var score = Instance.Multiplier * Score;
-        Instance.Score = score;
+        Instance.Score += score;
         var ultiplierTextToShow = Instance.Multiplier > 1 ? $"{score} + (x {Instance.Multiplier} )" : $"{score}";
         GuiManager.SetScoreMultipler(ultiplierTextToShow);
-        Events.OnScoreValueChanged?.Invoke(score);
+        Events.OnScoreValueChanged?.Invoke(Instance.Score);
     }
     //=====================================================================================================================================================
     public static void SetPlayerXP(float xp)

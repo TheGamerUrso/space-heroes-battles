@@ -78,8 +78,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 //=================================================================================
     public void ShowRewardScreen()
     {
-        rewardWidgetPanel.gameObject.SetActive(true);
-        rewardWidgetPanel.GetNewRewards();
+        rewardWidgetPanel.Show();
     }
 //=================================================================================
     public void ReplayButton()

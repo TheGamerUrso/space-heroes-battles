@@ -10,7 +10,7 @@ public class BossEnemy : Enemy
     [SerializeField] protected List<BossDestroyablePart> DestroyableParts = new List<BossDestroyablePart>();
     #endregion
 
-    public bool StartBattle{get;protected set;}
+    public bool StartBattle { get; protected set; }
     [SerializeField] private int Phase;
 
     public override void OnEnable()
@@ -155,6 +155,7 @@ public class BossEnemy : Enemy
 
         if (IsAlive)
         {
+            EnemiesCount--;
             IsAlive = false;
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
@@ -234,7 +235,7 @@ public class BossEnemy : Enemy
     }
 
     public override IEnumerator DelayStart()
-    {     
+    {
         HealthBar.Show();
         yield return new WaitForSeconds(4);
         EnableAllWeapon();
@@ -260,6 +261,6 @@ public class BossEnemy : Enemy
 
     public virtual void OnBossPhaseChangedHandled(int Phase)
     {
-       SetFireRate(0.2f);
+        SetFireRate(0.2f);
     }
 }
