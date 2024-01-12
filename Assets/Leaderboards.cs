@@ -1,17 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Dan.Main;
+using Dan.Models;
 using TMPro;
 using UnityEngine;
-using static JsonSystem;
 
-public class Leaderboards : MonoSingleton<Leaderboards>
+namespace TheGamerUrso
 {
     [Serializable]
     public class Leaderboard
     {
-        public List<Entry> entries = new List<Entry>();
-        public Entry GetLeaderboard(int index)
+        public List<TheGamerUrso.Models.Entry> entries = new List<TheGamerUrso.Models.Entry>();
+        public TheGamerUrso.Models.Entry GetLeaderboard(int index)
         {
             return entries[index];
         }
@@ -25,7 +26,7 @@ public class Leaderboards : MonoSingleton<Leaderboards>
             }
             return result;
         }
-        public Entry GetLeaderboardEntry(string username)
+        public TheGamerUrso.Models.Entry GetLeaderboardEntry(string username)
         {
             foreach (var entry in entries)
             {
@@ -36,9 +37,9 @@ public class Leaderboards : MonoSingleton<Leaderboards>
             }
             return null;
         }
-        public void Add(Entry newEntry)
+        public void Add(TheGamerUrso.Models.Entry newEntry)
         {
-            Entry foundEntry = GetLeaderboardEntry(newEntry.Username);
+            TheGamerUrso.Models.Entry foundEntry = GetLeaderboardEntry(newEntry.Username);
             if (foundEntry == null)
             {
                 entries.Add(newEntry);
@@ -58,89 +59,161 @@ public class Leaderboards : MonoSingleton<Leaderboards>
             JsonSystem.SaveLeaderboard(this);
         }
     }
-    //======================================================================================================================================================
-    [SerializeField] private Leaderboard leaderboard;
-    public Entry newEntry;
-    //======================================================================================================================================================
-    public void Start()
-    {
-        LoadLeaderboard();
-        if (leaderboard == null)
-        {
-            leaderboard = new Leaderboard();
-        }
-    }
 
-    //======================================================================================================================================================
-    public void AddScore(long Score)
+    public class Leaderboards : MonoSingleton<Leaderboards>
     {
-        var username = PersistantData.GetPlayerData().Username;
-        if (LeaderboardContainsEntry(username))
-        {
-            var entry = GetLeaderboardEntry(username);
-            entry.Score = Score;
-        }
-        leaderboard.Add(new Entry(0, username, Score));
+        public Action<Entry[]> OnLeaderboardValueChanged;
 
-    }
-    //======================================================================================================================================================
-    public Entry GetLeaderboardEntry(string username)
-    {
-        foreach (var entry in leaderboard.entries)
+        //======================================================================================================================================================
+        public static LeaderboardReference myLeaderbosard = new LeaderboardReference("85f0d99eba9f18f6538dc149ed9d3ee68bcb3215a97a38e075f16ad6e054ef9c");
+
+        [SerializeField] private Leaderboard leaderboard;
+        public long Score;
+
+        [SerializeField] private int _defaultPageNumber = 1, _defaultEntriesToTake = 100;
+        //======================================================================================================================================================
+        public void Start()
         {
-            if (entry.Username.Equals(username))
+            if (leaderboard == null)
             {
-                return entry;
+                leaderboard = new Leaderboard();
+            }
+
+            LoadLeaderboard();
+        }
+
+        //======================================================================================================================================================
+        public void AddScore(long Score)
+        {
+            var username = PersistantData.GetPlayerData().Username;
+            if (LeaderboardContainsEntry(username))
+            {
+                var entry = GetLeaderboardEntry(username);
+                entry.Score = Score;
+            }
+            leaderboard.Add(new TheGamerUrso.Models.Entry(0, username, Score));
+
+        }
+        //======================================================================================================================================================
+        public TheGamerUrso.Models.Entry GetLeaderboardEntry(string username)
+        {
+            foreach (var entry in leaderboard.entries)
+            {
+                if (entry.Username.Equals(username))
+                {
+                    return entry;
+                }
+            }
+            return null;
+        }
+
+        public bool LeaderboardContainsEntry(string username)
+        {
+            foreach (var entry in leaderboard.entries)
+            {
+                if (entry.Username.Equals(username))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        //======================================================================================================================================================
+        public List<TheGamerUrso.Models.Entry> GetEntries()
+        {
+            return leaderboard.entries;
+        }
+        //======================================================================================================================================================
+        [ContextMenu("Load")]
+        public void LoadLeaderboard()
+        {
+            var timePeriod = Dan.Enums.TimePeriodType.ThisMonth;
+
+            var pageNumber = _defaultPageNumber;
+            pageNumber = Mathf.Max(1, pageNumber);
+
+            var take = _defaultEntriesToTake;
+            take = Mathf.Clamp(take, 1, 100);
+
+            var searchQuery = new Dan.Models.LeaderboardSearchQuery
+            {
+                Skip = (pageNumber - 1) * take,
+                Take = take,
+                TimePeriod = timePeriod
+            };
+
+            myLeaderbosard.GetEntries(searchQuery, OnLeaderboardLoaded, ErrorCallback);
+            //leaderboard = JsonSystem.LoadLeaderboard();
+        }
+        //======================================================================================================================================================
+        [ContextMenu("Save")]
+        public void SaveLeaderboard()
+        {
+            //JsonSystem.SaveLeaderboard(leaderboard);
+        }
+        //======================================================================================================================================================
+        [ContextMenu("Add")]
+        public void AddScore()
+        {
+            Submit();
+
+            // if (string.IsNullOrEmpty(newEntry.Username) || newEntry.Score <= 0) return;
+
+            //leaderboard.Add(new TheGamerUrso.Models.Entry(newEntry.Rank, newEntry.Username, newEntry.Score));
+        }
+        //======================================================================================================================================================
+        [ContextMenu("Order By Score")]
+        public void OrderByRank()
+        {
+            var sortedList = leaderboard.entries.OrderByDescending(x => x.Score).ToList();
+            leaderboard.entries = sortedList;
+            for (int i = 0; i < leaderboard.entries.Count; i++)
+            {
+                leaderboard.entries[i].Rank = i + 1;
             }
         }
-        return null;
-    }
 
-    public bool LeaderboardContainsEntry(string username)
-    {
-        foreach (var entry in leaderboard.entries)
+        //======================================================================================================================================================
+        private void OnLeaderboardLoaded(Dan.Models.Entry[] entries)
         {
-            if (entry.Username.Equals(username))
-            {
-                return true;
-            }
+            OnLeaderboardValueChanged?.Invoke(entries);
         }
-        return false;
-    }
-    //======================================================================================================================================================
-    public List<Entry> GetEntries()
-    {
-        return leaderboard.entries;
-    }
-    //======================================================================================================================================================
-    [ContextMenu("Load")]
-    public void LoadLeaderboard()
-    {
-        leaderboard = JsonSystem.LoadLeaderboard();
-    }
-    //======================================================================================================================================================
-    [ContextMenu("Save")]
-    public void SaveLeaderboard()
-    {
-        JsonSystem.SaveLeaderboard(leaderboard);
-    }
-    //======================================================================================================================================================
-    [ContextMenu("Add")]
-    public void AddScore()
-    {
-        if (string.IsNullOrEmpty(newEntry.Username) || newEntry.Score <= 0) return;
-
-        leaderboard.Add(new Entry(newEntry.Rank, newEntry.Username, newEntry.Score));
-    }
-    //======================================================================================================================================================
-    [ContextMenu("Order By Score")]
-    public void OrderByRank()
-    {
-        var sortedList = leaderboard.entries.OrderByDescending(x => x.Score).ToList();
-        leaderboard.entries = sortedList;
-        for (int i = 0; i < leaderboard.entries.Count; i++)
+        //======================================================================================================================================================
+        public void Submit()
         {
-            leaderboard.entries[i].Rank = i + 1;
+            PlayerData playerData = PersistantData.GetPlayerData();
+            myLeaderbosard.UploadNewEntry(playerData.GetUsername(), (int)playerData.HighScore, Callback, ErrorCallback);
+        }
+        //======================================================================================================================================================
+        public void DeleteEntry()
+        {
+            myLeaderbosard.DeleteEntry(Callback, ErrorCallback);
+        }
+        //======================================================================================================================================================
+        public void ResetPlayer()
+        {
+            LeaderboardCreator.ResetPlayer();
+        }
+        //======================================================================================================================================================
+        public void GetPersonalEntry()
+        {
+            myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded, ErrorCallback);
+        }
+        //======================================================================================================================================================
+        private void OnPersonalEntryLoaded(Dan.Models.Entry entry)
+        {
+            //_personalEntryText.text = $"{entry.RankSuffix()}. {entry.Username} : {entry.Score}";
+        }
+        //======================================================================================================================================================
+        private void Callback(bool success)
+        {
+            if (success)
+                LoadLeaderboard();
+        }
+        //======================================================================================================================================================
+        private void ErrorCallback(string error)
+        {
+            Debug.LogError(error);
         }
     }
 }

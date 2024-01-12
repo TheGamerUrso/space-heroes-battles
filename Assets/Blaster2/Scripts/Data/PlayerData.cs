@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Dan.Main;
 using UnityEngine;
 
 
@@ -274,6 +275,23 @@ public class PlayerData
     public void ResetWeaponPowerUPCollected()
     {
         PowerPackCollected = 0;
+    }
+
+    public void SetUsername(string newUsername)
+    {
+        Username = newUsername;
+    }
+
+    public string GetUsername()
+    {
+        if(string.IsNullOrEmpty(Username))
+        {
+            string uniqueNumber = Guid.NewGuid().ToString();
+            var newString = uniqueNumber.Substring(0,4);
+            Username = $"Player#{newString}";
+            SaveSystem.SaveGame();
+        }
+        return Username;
     }
 }
 

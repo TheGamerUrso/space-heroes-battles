@@ -1,8 +1,6 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static JsonSystem;
-using static Leaderboards;
 
 public class LeaderBoardEntry : MonoBehaviour
 {
@@ -10,7 +8,7 @@ public class LeaderBoardEntry : MonoBehaviour
     public TextMeshProUGUI UserNameText;
     public TextMeshProUGUI ScoreText;
 
-    public void SetEntry(Entry entry)
+    public void SetEntry(Dan.Models.Entry entry)
     {
         RankText.text = ""+entry.Rank;
         UserNameText.text = entry.Username;

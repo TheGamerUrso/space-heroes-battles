@@ -1,59 +1,72 @@
 ﻿using UnityEngine;
 using System.Collections;
-using static Leaderboards;
-using static JsonSystem;
 
 public class LeaderboardScreen : MonoBehaviour
 {
+    [SerializeField] private CanvasGroup _leaderboardLoadingPanel;
+
     public GameObject LeaderboardEntry;
     public GameObject PlayerLeaderboardEntry;
     public Transform content;
     public string Username;
+
+    void OnDestroy()
+    {
+        if (TheGamerUrso.Leaderboards.Instance != null)
+            TheGamerUrso.Leaderboards.Instance.OnLeaderboardValueChanged -= OnLeaderboardLoaded;
+    }
+
     void Start()
     {
-        PersistantData.GetPlayerData().Username = Username;
+        TheGamerUrso.Leaderboards.Instance.OnLeaderboardValueChanged += OnLeaderboardLoaded;
+        Username = PersistantData.GetPlayerData().GetUsername();
+  
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("-");
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(playerData.Username);
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(playerData.HighScore.ToString());
-        UpdateScore();
     }
 
-    IEnumerator UpdateLeaderboard()
+    //======================================================================================================================================================
+    private void OnLeaderboardLoaded(Dan.Models.Entry[] entries)
     {
         foreach (Transform t in content)
             Destroy(t.gameObject);
 
-        yield return new WaitForSeconds(1.0f);
+        foreach (var t in entries)
+            CreateEntryDisplay(t);
 
-        foreach (Entry entry in Leaderboards.Instance.GetEntries())
+        ToggleLoadingPanel(false);
+    }
+    //======================================================================================================================================================
+    private void CreateEntryDisplay(Dan.Models.Entry entry)
+    {
+        GameObject leaderboardGO = Instantiate(LeaderboardEntry, content);
+        leaderboardGO.GetComponent<LeaderBoardEntry>().SetEntry(entry);
+        if (entry.IsMine())
         {
-            GameObject leaderboardGO = Instantiate(LeaderboardEntry, content);
-            leaderboardGO.GetComponent<LeaderBoardEntry>().SetEntry(entry);
-            if (entry.IsMine())
-            {  
-                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText(""+entry.Rank);
-                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
-                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(""+entry.Score);
-            }
-            yield return new WaitForSeconds(.1f);
+            PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("" + entry.Rank);
+            PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
+            PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText("" + entry.Score);
         }
     }
-    public void UpdateScore()
+    //======================================================================================================================================================
+    private void ToggleLoadingPanel(bool isOn)
     {
-        StartCoroutine(UpdateLeaderboard());
+        _leaderboardLoadingPanel.alpha = isOn ? 1f : 0f;
+        _leaderboardLoadingPanel.interactable = isOn;
+        _leaderboardLoadingPanel.blocksRaycasts = isOn;
+    }
+
+    //======================================================================================================================================================
+    private void OnPersonalEntryLoaded(Dan.Models.Entry entry)
+    {
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("" + entry.Rank);
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText("" + entry.Score);
     }
 }
 
 
-public static class GameObjectExtensions
-{
-    public static void DestroyAllChildren(this GameObject go)
-    {
-        foreach (Transform transform in go.transform)
-        {
-            UnityEngine.Object.Destroy(transform.gameObject);
-        }
-    }
-}
+
 

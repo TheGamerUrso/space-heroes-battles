@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using static Leaderboards;
 
-public static class JsonSystem
+namespace TheGamerUrso.Models
 {
     [Serializable]
     public class Entry
@@ -18,7 +17,7 @@ public static class JsonSystem
             this.Username = Username;
             this.Score = Score;
         }
-           public bool IsMine()
+        public bool IsMine()
         {
             if (Username == PersistantData.GetPlayerData().Username)
             {
@@ -27,39 +26,43 @@ public static class JsonSystem
             return false;
         }
     }
-
-
-    [ContextMenu("Load Missions")]
-    public static Leaderboard LoadLeaderboard()
+}
+namespace TheGamerUrso
+{
+    public static class JsonSystem
     {
-        var jsonTextFile = Resources.Load<TextAsset>("Data/LeaderboardData");
-
-        try
+        [ContextMenu("Load Missions")]
+        public static Leaderboard LoadLeaderboard()
         {
-            return JsonUtility.FromJson<Leaderboard>(jsonTextFile.text);
-        }
-        catch (ArgumentException e)
-        {
-            Debug.LogError("Can't read File" + e.Message);
-        }
+            var jsonTextFile = Resources.Load<TextAsset>("Data/LeaderboardData");
 
-        return null;
-    }
-
-    public static void SaveLeaderboard(Leaderboard leaderboard)
-    {
-        var LeaderboardPath = Application.dataPath + "/Resources/Data/leaderboardData.json";
-        try
-        {
-            using (StreamWriter stream = new StreamWriter(LeaderboardPath))
+            try
             {
-                string json = JsonUtility.ToJson(leaderboard);
-                stream.Write(json);
+                return JsonUtility.FromJson<Leaderboard>(jsonTextFile.text);
             }
+            catch (ArgumentException e)
+            {
+                Debug.LogError("Can't read File" + e.Message);
+            }
+
+            return null;
         }
-        catch (ArgumentException e)
+
+        public static void SaveLeaderboard(Leaderboard leaderboard)
         {
-            Debug.LogError("Can't read File" + e.Message);
+            var LeaderboardPath = Application.dataPath + "/Resources/Data/leaderboardData.json";
+            try
+            {
+                using (StreamWriter stream = new StreamWriter(LeaderboardPath))
+                {
+                    string json = JsonUtility.ToJson(leaderboard);
+                    stream.Write(json);
+                }
+            }
+            catch (ArgumentException e)
+            {
+                Debug.LogError("Can't read File" + e.Message);
+            }
         }
     }
 }
