@@ -1,15 +1,17 @@
 ﻿using UnityEngine;
 using System.Collections;
 using static Leaderboards;
+using static JsonSystem;
 
 public class LeaderboardScreen : MonoBehaviour
 {
     public GameObject LeaderboardEntry;
     public GameObject PlayerLeaderboardEntry;
     public Transform content;
-
+    public string Username;
     void Start()
     {
+        PersistantData.GetPlayerData().Username = Username;
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("-");
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(playerData.Username);
@@ -28,6 +30,12 @@ public class LeaderboardScreen : MonoBehaviour
         {
             GameObject leaderboardGO = Instantiate(LeaderboardEntry, content);
             leaderboardGO.GetComponent<LeaderBoardEntry>().SetEntry(entry);
+            if (entry.IsMine())
+            {  
+                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText(""+entry.Rank);
+                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
+                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(""+entry.Score);
+            }
             yield return new WaitForSeconds(.1f);
         }
     }

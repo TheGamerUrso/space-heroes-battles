@@ -358,7 +358,6 @@ GameObject:
   - component: {fileID: 7750451458050231462}
   - component: {fileID: 1368961782361354534}
   - component: {fileID: 6793978884611170704}
-  - component: {fileID: 4584220051469959138}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -470,7 +469,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: bc2eaccde9a6f754d8978c255160a044, type: 2}
   - {fileID: 11400000, guid: a61232b41a212b549a5e00e07be2900b, type: 2}
   - {fileID: 11400000, guid: 484e3f95cb234a545abc09e5da8f6663, type: 2}
-  Achievements: {fileID: 11400000, guid: 8829d43ef88a8b8408475a10d00086a8, type: 2}
   achievementIcons:
   - {fileID: 21300000, guid: e0edf7b299d0f8940b7ace56a7dd2e1c, type: 3}
   - {fileID: 21300000, guid: 8d31998eebae2f84aa48199569f214b2, type: 3}
@@ -487,9 +485,9 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 9f816b21b8c4320498ae9d98bd918f41, type: 3}
   - {fileID: 21300000, guid: dde85f26a7e3b984b881f57502229056, type: 3}
   playerData:
+    Username: 
     Score: 0
     HighScore: 0
-    Username: 
     UnlockedHeroes: 
     Coins: 0
     Kills: 0
@@ -499,7 +497,7 @@ MonoBehaviour:
     CoinPicked: 0
     PlayedGame: 0
     GotHitInGame: 0
-    BossBountyKilledId: 0
+    BountyKilled: 0
     EnemyKilled: 0
     EnemyEscaped: 0
     PowerUpLevel: 0
@@ -513,7 +511,6 @@ MonoBehaviour:
     MaxLevel: 0
     ListOfPlayerActiveQuest: []
     playerShipData: []
-    Achievements: []
 --- !u!114 &6793978884611170704
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -528,22 +525,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ListOfAvailableQuestType: 
   ActiveQuests: []
---- !u!114 &4584220051469959138
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2406176206008801007}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: cdc65eee264103d43b0706af38738ac0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  leaderboardLoadingPanel: {fileID: 0}
-  Username: Garfang
-  entries: []
-  _timePeriodDropdown: {fileID: 0}
 --- !u!1 &2447033531847806924
 GameObject:
   m_ObjectHideFlags: 0

@@ -116,6 +116,7 @@ public class SurvivalGameMode : BaseGameMode
                     {
                         yield return new WaitUntil(() => !gameInfo.BossBattleInitiated);
 
+                        if (!PlayerManager.GetPlayer().IsAlive) yield break;
 
                         yield return RewardWait;
 
@@ -129,6 +130,7 @@ public class SurvivalGameMode : BaseGameMode
                         }
 
                         yield return RewardWait;
+
                     }
 
                     active = true;

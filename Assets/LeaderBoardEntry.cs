@@ -1,6 +1,7 @@
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using static JsonSystem;
 using static Leaderboards;
 
 public class LeaderBoardEntry : MonoBehaviour
@@ -14,6 +15,6 @@ public class LeaderBoardEntry : MonoBehaviour
         RankText.text = ""+entry.Rank;
         UserNameText.text = entry.Username;
         ScoreText.text = string.Format("{00:00000000}", entry.Score.ToString());
-        GetComponent<Image>().color = entry.IsMine() ? Color.yellow : Color.white;
+        GetComponent<Image>().color = entry.IsMine() ? Color.yellow : Color.black;
     }
 }
