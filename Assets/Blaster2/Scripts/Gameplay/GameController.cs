@@ -61,6 +61,7 @@ public class GameController : MonoBehaviour
     public int EnemyEscaped = 0;
     public int Score = 0;
     public int CoinPicked = 0;
+    public float difficulty;
 
     public void NewGame()
     {
@@ -70,6 +71,7 @@ public class GameController : MonoBehaviour
         EnemyEscaped = 0;
         Score = 0;
         CoinPicked = 0;
+        difficulty = 1;
     }
     //=================================================================================
     public void ResetMultiplier()
@@ -221,8 +223,13 @@ public class GameController : MonoBehaviour
     //======================================================================================================================================================
     public static void SetScore(int Score)
     {
+    
         var score = Instance.Multiplier * Score;
         Instance.Score += score;
+        if (Instance.Score >= int.MaxValue)
+        {
+            Score = int.MaxValue;
+        }
         var ultiplierTextToShow = Instance.Multiplier > 1 ? $"{score} + (x {Instance.Multiplier} )" : $"{score}";
         GuiManager.SetScoreMultipler(ultiplierTextToShow);
         Events.OnScoreValueChanged?.Invoke(Instance.Score);

@@ -59,7 +59,6 @@ public class PersistantData : MonoSingleton<PersistantData>
         else if (firstRunIndex == 0)
         {
             PlayerPrefs.SetInt("FirstRun", 1);
-            PlayerPrefs.SetInt("SurvivalMode", 0);
             SaveSystem.SaveGame();
         }
     }

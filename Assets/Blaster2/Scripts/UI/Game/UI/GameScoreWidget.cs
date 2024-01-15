@@ -30,6 +30,6 @@ public class GameScoreWidget : MonoBehaviour
 
     public void SetScore(float score)
     {
-        ScoreText.text = string.Format("{0:0000000000}", score); ;
+        ScoreText.text = string.Format("{0:00000000}", score); ;
     }
 }

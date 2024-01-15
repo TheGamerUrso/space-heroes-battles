@@ -15,7 +15,7 @@ public class TransmitionWidget : MonoBehaviour
 
 
 
-    public void RecieveTransmition(string[] transmitions)
+    public void RecieveTransmition(string[] transmitions,bool PlayIntro = true)
     {
         TransmitionText.text = "Transmition Incoming";
 
@@ -24,7 +24,7 @@ public class TransmitionWidget : MonoBehaviour
         {
             audioSource.PlayOneShot(TransmitionSFX);
             if (!GameController.Instance.IsGameOver)
-                StartCoroutine(TranmisionEvent());
+                StartCoroutine(TranmisionEvent(PlayIntro));
         }
     }
 
@@ -50,26 +50,29 @@ public class TransmitionWidget : MonoBehaviour
         IncomingTransmition = false;
     }
 
-    private IEnumerator TranmisionEvent()
+    private IEnumerator TranmisionEvent(bool playIntro = true)
     {
         WaitForSeconds delay = new WaitForSeconds(.25f);
         WaitForSeconds SecondDelay = new WaitForSeconds(.5f);
         WaitForSeconds ThirdDelay = new WaitForSeconds(2.5f);
 
         IncomingTransmition = true;
-        TransmitionWidgetPrefab.SetActive(true);
-        for (int i = 0; i < 3; i++)
+        if (playIntro)
         {
-            TransmitionWidgetPrefab.SetActive(false);
-            yield return delay;
             TransmitionWidgetPrefab.SetActive(true);
-            yield return delay;
+            for (int i = 0; i < 3; i++)
+            {
+                TransmitionWidgetPrefab.SetActive(false);
+                yield return delay;
+                TransmitionWidgetPrefab.SetActive(true);
+                yield return delay;
+            }
+
+            TransmitionWidgetPrefab.SetActive(false);
+            yield return SecondDelay;
+
+            TransmitionWidgetPrefab.SetActive(true);
         }
-
-        TransmitionWidgetPrefab.SetActive(false);
-        yield return SecondDelay;
-
-        TransmitionWidgetPrefab.SetActive(true);
         for (int i = 0; i < transmitions.Length; i++)
         {
             TransmitionWidgetPrefab.SetActive(true);

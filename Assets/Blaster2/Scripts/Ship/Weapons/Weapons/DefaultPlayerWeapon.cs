@@ -129,7 +129,7 @@ public class DefaultPlayerWeapon : BaseWeapon
 
     public virtual void SetStats(PlayerShipData playerShipData, int weaponType = 1)
     {
-        Damage = playerShipData.Damage;
+        Damage = playerShipData.Damage / Cannons.Length;
         FireRate = playerShipData.FireRate;
     }
 

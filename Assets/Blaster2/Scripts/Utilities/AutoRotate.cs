@@ -32,5 +32,6 @@ public class AutoRotate : MonoBehaviour
         {
             transform.Rotate(new Vector3(m_Rotation.x, m_Rotation.y, m_Rotation.z));
         }
+       
     }
 }

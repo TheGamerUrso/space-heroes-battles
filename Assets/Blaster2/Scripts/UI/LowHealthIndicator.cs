@@ -31,11 +31,12 @@ public class LowHealthIndicator : MonoBehaviour
 
     void Update()
     {
+
         if (playerShip.GetHealthPresentage() > .5f)
         {
             Active = false;
             count = 0;
-            timer = 0; 
+            timer = 0;
         }
         else if (playerShip.GetHealthPresentage() <= .5f)
         {
@@ -50,6 +51,7 @@ public class LowHealthIndicator : MonoBehaviour
             Color c = image.color;
             c.a = Mathf.Lerp(c.a, animationCurve.Evaluate(Time.time), 1);
             image.color = c;
+            if (!playerShip.IsAlive) return;
             if (!audioSource.isPlaying)
             {
                 audioSource.Play();
@@ -57,6 +59,7 @@ public class LowHealthIndicator : MonoBehaviour
         }
         else
         {
+            if (!playerShip.IsAlive) return;
             if (audioSource.isPlaying)
             {
                 audioSource.Stop();

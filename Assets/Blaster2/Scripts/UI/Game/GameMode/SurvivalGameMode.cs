@@ -30,12 +30,12 @@ public class SurvivalGameMode : BaseGameMode
         gameInfo.waves++;
 
         string[] transmitions = { "Wave:\n" + gameInfo.waves };
-        GuiManager.PlayTrasmition(transmitions);
+        GuiManager.PlayTrasmition(transmitions,false);
 
         if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
         {
             gameInfo.availableEnemies++;
-
+            GameController.Instance.difficulty += .1f;
             if (gameInfo.availableEnemies > gameInfo.enemyElements.Count)
             {
                 gameInfo.availableEnemies = gameInfo.enemyElements.Count;

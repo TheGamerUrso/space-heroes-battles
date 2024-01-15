@@ -44,7 +44,7 @@ public class WinScreen : MonoBehaviour
         {
 
             tempScore = Mathf.Lerp(tempScore, score, .5f);
-            scoreText = string.Format("{00:0000000000}", tempScore);
+            scoreText = string.Format("{00:00000000}", tempScore);
             Score.text = scoreText;
             if (skip)
             {

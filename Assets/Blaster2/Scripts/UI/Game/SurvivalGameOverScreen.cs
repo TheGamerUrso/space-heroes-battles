@@ -16,7 +16,7 @@ public class SurvivalGameOverScreen : MonoBehaviour
     {
         var playerData = PersistantData.GetPlayerData();
         float score = GameController.Instance.Score;
-        string scoreText = string.Format("{00:0000000000}", score);
+        string scoreText = string.Format("{00:00000000}", score);
         m_Text.text = scoreText;
 
         StartCoroutine(ScoreCoroutine());
@@ -37,7 +37,7 @@ public class SurvivalGameOverScreen : MonoBehaviour
         while (tempScore < score)
         {
             tempScore = Mathf.Lerp(tempScore, score, .5f);
-            scoreText = string.Format("{00:0000000000}", tempScore);
+            scoreText = string.Format("{00:00000000}", tempScore);
             m_Text.text = scoreText;
             if (skip)
             {

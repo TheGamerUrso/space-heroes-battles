@@ -173,9 +173,9 @@ public class GuiManager : MonoSingleton<GuiManager>
         Menu.Hide();
     }
 //=================================================================================
-    public static void PlayTrasmition(string[] transmitions)
+    public static void PlayTrasmition(string[] transmitions,bool playIntro = true)
     {
-        Instance.ShowTrasmition(transmitions);
+        Instance.ShowTrasmition(transmitions,playIntro);
     }
 //=================================================================================
     public void BossWarning()
@@ -183,10 +183,10 @@ public class GuiManager : MonoSingleton<GuiManager>
         transmittionWidget.BossWarning();
     }
 //=================================================================================
-    public void ShowTrasmition(string[] transmitions)
+    public void ShowTrasmition(string[] transmitions,bool playIntro = true)
     {
         if (transmittionWidget)
-            transmittionWidget.RecieveTransmition(transmitions);
+            transmittionWidget.RecieveTransmition(transmitions,playIntro);
     }
 //=================================================================================
     public bool IsTrasnmiting()

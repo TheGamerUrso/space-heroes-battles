@@ -74,7 +74,9 @@ public class Enemy : Ship, IDamagable, ITargetable
         HasShield = false;
         ShieldEffect.SetActive(HasShield);
    
-        baseEnemyMovement.Speed = Speed;
+        float difficultyMutiplier = (.1f * GameController.Instance.difficulty);
+        difficultyMutiplier = Mathf.Max(0.1f,10f);
+        baseEnemyMovement.Speed = Speed + difficultyMutiplier;
         currentWeaponActive = 0;
 
         DisableAllWeapons();
@@ -180,7 +182,7 @@ public class Enemy : Ship, IDamagable, ITargetable
         {
             var ship = other.GetComponent<Ship>();
             ship.TakeDamage(ship.MaxHealth / 2);
-            TakeDamage(ship.MaxHealth);
+            TakeDamage(MaxHealth);
         }
     }
 

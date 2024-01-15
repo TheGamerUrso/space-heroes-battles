@@ -63,6 +63,8 @@ namespace TheGamerUrso
     public class Leaderboards : MonoSingleton<Leaderboards>
     {
         public Action<Entry[]> OnLeaderboardValueChanged;
+        public Action<bool> OnLoadingLeadeboard;
+        public Action<string> OnErrorLoading;
 
         //======================================================================================================================================================
         public static LeaderboardReference myLeaderbosard = new LeaderboardReference("85f0d99eba9f18f6538dc149ed9d3ee68bcb3215a97a38e075f16ad6e054ef9c");
@@ -127,6 +129,7 @@ namespace TheGamerUrso
         [ContextMenu("Load")]
         public void LoadLeaderboard()
         {
+            OnLoadingLeadeboard?.Invoke(true);
             var timePeriod = Dan.Enums.TimePeriodType.ThisMonth;
 
             var pageNumber = _defaultPageNumber;
@@ -144,6 +147,7 @@ namespace TheGamerUrso
 
             myLeaderbosard.GetEntries(searchQuery, OnLeaderboardLoaded, ErrorCallback);
             //leaderboard = JsonSystem.LoadLeaderboard();
+            //OnLoadingLeadeboard?.Invoke(false);
         }
         //======================================================================================================================================================
         [ContextMenu("Save")]
@@ -179,43 +183,51 @@ namespace TheGamerUrso
         private void OnLeaderboardLoaded(Dan.Models.Entry[] entries)
         {
             OnLeaderboardValueChanged?.Invoke(entries);
+            OnLoadingLeadeboard?.Invoke(false);
         }
         //======================================================================================================================================================
         public void Submit()
-        {
+        {     
+            OnLoadingLeadeboard?.Invoke(true);
             PlayerData playerData = PersistantData.GetPlayerData();
             myLeaderbosard.UploadNewEntry(playerData.GetUsername(), (int)playerData.HighScore, Callback, ErrorCallback);
         }
         //======================================================================================================================================================
         public void DeleteEntry()
         {
+            OnLoadingLeadeboard?.Invoke(true);
             myLeaderbosard.DeleteEntry(Callback, ErrorCallback);
         }
         //======================================================================================================================================================
         public void ResetPlayer()
-        {
+        {    
             LeaderboardCreator.ResetPlayer();
         }
         //======================================================================================================================================================
-        public void GetPersonalEntry()
-        {
+        public void GetPersonalEntry(Action<Dan.Models.Entry> OnPersonalEntryLoaded)
+        {       
+            OnLoadingLeadeboard?.Invoke(true);
             myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded, ErrorCallback);
         }
-        //======================================================================================================================================================
-        private void OnPersonalEntryLoaded(Dan.Models.Entry entry)
-        {
-            //_personalEntryText.text = $"{entry.RankSuffix()}. {entry.Username} : {entry.Score}";
-        }
+
         //======================================================================================================================================================
         private void Callback(bool success)
         {
             if (success)
+            {
                 LoadLeaderboard();
+            }
+            else
+            {
+                OnErrorLoading?.Invoke("");
+            }
         }
         //======================================================================================================================================================
         private void ErrorCallback(string error)
         {
             Debug.LogError(error);
+            OnLoadingLeadeboard?.Invoke(false);
+            OnErrorLoading?.Invoke(error);
         }
     }
 }
