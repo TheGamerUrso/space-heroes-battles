@@ -10,12 +10,12 @@ public class DeactivateOnPlatform : MonoBehaviour
     //--------------------------------------------------------------------------------------------------------------
     void Awake()
     {
-#if UNITY_ANDROID
+#if UNITY_ANDROID 
         if (m_deactivateOnAndroid)
         {
             gameObject.SetActive(false);
         }
-#elif UNITY_STANDALONE
+#elif UNITY_STANDALONE || UNITY_WEBGL
             if (m_deactivateOnStandalone)
             {
                 gameObject.SetActive(false);

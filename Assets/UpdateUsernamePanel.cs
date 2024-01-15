@@ -27,8 +27,7 @@ public class UpdateUsernamePanel : MonoBehaviour
     {     
         errorMessage.gameObject.SetActive(false);
         LoadingPanel.SetActive(true);
-        TheGamerUrso.Leaderboards.myLeaderbosard.UpdateEntryUsername(
-           usernameInput.text, OnEntryUsernameUpdated, ErrorCallback);
+        TheGamerUrso.Leaderboards.Instance.SetUsername(usernameInput.text,OnEntryUsernameUpdated);
         yield return null;
     }
 
@@ -36,7 +35,6 @@ public class UpdateUsernamePanel : MonoBehaviour
     {
         if (sucess)
         {
-            TheGamerUrso.Leaderboards.Instance.SetUsername(usernameInput.text);
             gameObject.SetActive(false);
         }
         LoadingPanel.SetActive(false);

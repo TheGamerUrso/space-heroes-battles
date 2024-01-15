@@ -74,6 +74,11 @@ namespace TheGamerUrso
         public long Score;
 
         [SerializeField] private int _defaultPageNumber = 1, _defaultEntriesToTake = 100;
+        public float requestTimer;
+
+        public List<Dan.Models.Entry> Entries = new List<Entry>();
+
+        public bool DebugMode;
         //======================================================================================================================================================
         public void Start()
         {
@@ -82,7 +87,15 @@ namespace TheGamerUrso
                 leaderboard = new Leaderboard();
             }
 
-           // LoadLeaderboard();
+            LoadLeaderboard();
+        }
+        void Update()
+        {
+            requestTimer -= Time.deltaTime;
+            if (requestTimer <= 0)
+            {
+                requestTimer = 0;
+            }
         }
 
         //======================================================================================================================================================
@@ -145,10 +158,20 @@ namespace TheGamerUrso
                 TimePeriod = timePeriod
             };
 
-            myLeaderbosard.GetEntries(searchQuery, OnLeaderboardLoaded, ErrorCallback);
+            if (requestTimer > 0) return;
+            requestTimer = 30;
 
 
-            TheGamerUrso.Leaderboards.myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded);
+            if (DebugMode)
+            {
+                OnLeaderboardLoaded(Entries.ToArray());
+            }
+            else
+            {
+                myLeaderbosard.GetEntries(searchQuery, OnLeaderboardLoaded, ErrorCallback);
+                TheGamerUrso.Leaderboards.myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded);
+            }
+
             //leaderboard = JsonSystem.LoadLeaderboard();
             //OnLoadingLeadeboard?.Invoke(false);
         }
@@ -185,36 +208,75 @@ namespace TheGamerUrso
         //======================================================================================================================================================
         private void OnLeaderboardLoaded(Dan.Models.Entry[] entries)
         {
+            Entries = entries.ToList();
             OnLeaderboardValueChanged?.Invoke(entries);
             OnLoadingLeadeboard?.Invoke(false);
         }
         //======================================================================================================================================================
         public void Submit()
-        {     
+        {
+            bool shouldUpload = true;
             OnLoadingLeadeboard?.Invoke(true);
             PlayerData playerData = PersistantData.GetPlayerData();
-            myLeaderbosard.UploadNewEntry(UserName, (int)playerData.HighScore, Callback, ErrorCallback);
+
+            for (int i = 0; Entries.Count < 0; i++)
+            {
+                Dan.Models.Entry foundEntry = Entries[i];
+                if (Entries[i].Username == UserName)
+                {
+                    if ((int)playerData.HighScore > Entries[i].Score)
+                    {
+                        foundEntry.Score = (int)playerData.HighScore;
+                    }
+                    shouldUpload = false;
+                    break;
+                }
+            }
+
+            if (!shouldUpload)return;
+
+            if (DebugMode)
+            {
+                Callback(true);
+            }
+            else
+            {
+                    myLeaderbosard.UploadNewEntry(UserName, (int)playerData.HighScore, Callback, ErrorCallback);
+            }
         }
         //======================================================================================================================================================
         public void DeleteEntry()
         {
+            if (requestTimer > 0) return;
+            requestTimer = 30;
             OnLoadingLeadeboard?.Invoke(true);
-            myLeaderbosard.DeleteEntry(Callback, ErrorCallback);
+            if (DebugMode)
+            {
+                Callback(true);
+            }
+            else
+            {
+                myLeaderbosard.DeleteEntry(Callback, ErrorCallback);
+            }
         }
         //======================================================================================================================================================
         public void ResetPlayer()
-        {    
+        {
+            if (requestTimer > 0) return;
+            requestTimer = 30;
+
+            if (DebugMode) return;
             LeaderboardCreator.ResetPlayer();
         }
 
         //======================================================================================================================================================
-  
+
         public void GetPersonalEntry(Action<Dan.Models.Entry> OnPersonalEntryLoaded)
-        {       
+        {
             OnLoadingLeadeboard?.Invoke(true);
             myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded, ErrorCallback);
         }
-        
+
         [ContextMenu("Get Personal Entry")]
         public void GetPersonalEntry()
         {
@@ -224,7 +286,7 @@ namespace TheGamerUrso
         public void OnPersonalEntryLoaded(Dan.Models.Entry entry)
         {
             OnLoadingLeadeboard?.Invoke(true);
-            if(entry.Username != "Unknown")
+            if (entry.Username != "Unknown")
                 UserName = entry.Username;
         }
 
@@ -248,21 +310,32 @@ namespace TheGamerUrso
             OnErrorLoading?.Invoke(error);
         }
 
-        
-    public void SetUsername(string newUsername)
-    {
-        UserName = newUsername;
-    }
-
-    public string GetUsername()
-    {
-        if(string.IsNullOrEmpty(UserName))
+        public void SetUsername(string newUsername,Action<bool> OnUsernameUpdated)
         {
-            string uniqueNumber = Guid.NewGuid().ToString();
-            var newString = uniqueNumber.Substring(0,4);
-            UserName = $"Player#{newString}";
+            UserName = newUsername;
+
+            if (DebugMode)
+            {
+                Callback(true);
+                OnUsernameUpdated(true);
+            }
+            else
+            {        
+                if (requestTimer > 0) return;
+                requestTimer = 30;
+                myLeaderbosard.UpdateEntryUsername(newUsername, OnUsernameUpdated, ErrorCallback);
+            }
         }
-        return UserName;
-    }
+
+        public string GetUsername()
+        {
+            if (string.IsNullOrEmpty(UserName))
+            {
+                string uniqueNumber = Guid.NewGuid().ToString();
+                var newString = uniqueNumber.Substring(0, 4);
+                UserName = $"Player#{newString}";
+            }
+            return UserName;
+        }
     }
 }

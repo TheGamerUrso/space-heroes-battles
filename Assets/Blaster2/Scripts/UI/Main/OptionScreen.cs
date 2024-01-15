@@ -35,8 +35,6 @@ public class OptionScreen : GooglePlayOptions
     {
         if (sucess)
         {
-            var playerData = PersistantData.GetPlayerData();
-            TheGamerUrso.Leaderboards.Instance.SetUsername(usernameInput.text);
             username.text = TheGamerUrso.Leaderboards.Instance.GetUsername();
             usernameChangeInputPanel.SetActive(false);
         }
