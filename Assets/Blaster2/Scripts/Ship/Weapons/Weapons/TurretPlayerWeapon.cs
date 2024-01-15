@@ -14,7 +14,9 @@ public class TurretPlayerWeapon : BaseWeapon
 
     public override void Start()
     {
+        if(source==null)
         source = GetComponent<AudioSource>();
+        
         Cannons = transform.Cast<Transform>().ToArray();  
 
         foundPlayer = GameObject.FindGameObjectWithTag("Player");

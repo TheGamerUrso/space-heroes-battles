@@ -23,16 +23,12 @@ public class Turret : Ship, IDamagable
 
     public override void TakeDamage(float dmg)
     {
-        CurrentHealth -= dmg;
-        if (CurrentHealth < 0)
-        {
-            Death();
-        }
+        
     }
 
     public override void Heal(float ammount) { }
 
-    public override void Death() => Destroy(gameObject);
+    public override void Death(){}
 
     public override float GetHealthPresentage()
     {
