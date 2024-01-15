@@ -27,52 +27,28 @@ public class DefaultPlayerWeapon : BaseWeapon
 
     public override void Update()
     {
-        if (ship != null)
+        if (playerShip != null)
         {
-            PlayerShip playerShip = ship.GetComponent<PlayerShip>();
-
-
-            if (playerShip != null)
+            if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
             {
-                if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
-                {
-                    return;
-                }
+                return;
             }
-        }
-
-
-        if (Input.touchCount > 0)
-        {
-            if (Input.touchCount > 1)
-            {
-                holdFire = true;
-            }
-            else
-            {
-                holdFire = false;
-            }
-
-
-
-            Shoot();
-
         }
 
         var shouldShoot = false;
 
-#if UNITY_STANDALONE || UNITY_EDITOR
-        holdFire = false;
+#if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
         shouldShoot = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1");
-        if (!holdFire && shouldShoot)
+        if (shouldShoot)
         {
             Shoot();
         }
 #elif UNITY_ANDROID
-            holdFire = Input.GetMouseButton(1) && Input.GetMouseButton(0);
-            shouldShoot = Input.GetMouseButton(0);
-              if (!holdFire && shouldShoot)
-        {
+        
+        shouldShoot = Input.GetMouseButton(0) || Input.touchCount > 0;
+        holdFire = Input.touchCount > 1 || (Input.GetMouseButton(1) && Input.GetMouseButton(0)) ? true : false;      
+        if (shouldShoot && !holdFire)
+        {  
             Shoot();
         }
 #endif

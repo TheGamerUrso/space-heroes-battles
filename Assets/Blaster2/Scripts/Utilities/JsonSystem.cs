@@ -19,7 +19,7 @@ namespace TheGamerUrso.Models
         }
         public bool IsMine()
         {
-            if (Username == PersistantData.GetPlayerData().Username)
+            if (Username == TheGamerUrso.Leaderboards.UserName)
             {
                 return true;
             }

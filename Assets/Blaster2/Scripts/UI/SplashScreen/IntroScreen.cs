@@ -41,7 +41,6 @@ public class IntroScreen : MonoBehaviour
 
     IEnumerator Fade()
     {
-
         yield return new WaitForSeconds(1.0f);
         if (GameManager.Instance)
             GameManager.Instance.LoadMainenu();

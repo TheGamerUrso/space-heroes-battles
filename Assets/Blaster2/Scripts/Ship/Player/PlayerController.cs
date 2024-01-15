@@ -136,7 +136,7 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-#elif UNITY_STANDALONE
+#elif UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR_64
             GamepadControls();
 #endif
             ClampTransform();

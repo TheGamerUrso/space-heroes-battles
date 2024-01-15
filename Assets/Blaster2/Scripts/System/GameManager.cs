@@ -284,17 +284,22 @@ public class GameManager : MonoSingleton<GameManager>
         Hide();
 
         yield return new WaitForSeconds(2.0f);
-        LoadingScreen.GetComponent<Canvas>().enabled = false;
+        //LoadingScreen.GetComponent<Canvas>().enabled = false;
+    }
+
+
+    public void ToggleLoadingScreenCanvas(bool show)
+    {
+        LoadingScreen.GetComponent<Canvas>().enabled = show;
     }
 
     private IEnumerator ShowLoadingScreen(LevelEnum level, bool showLoadingScreen = true)
     {
         if (showLoadingScreen)
         {
-            LoadingScreen.GetComponent<Canvas>().enabled = true;
-
-            yield return new WaitForSeconds(.5f);
+            //LoadingScreen.GetComponent<Canvas>().enabled = true;
             Show();
+            yield return new WaitForSeconds(.5f);
         }
         yield return shortWait;
         Content.SetActive(true);

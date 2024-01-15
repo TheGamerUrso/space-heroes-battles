@@ -1,20 +1,20 @@
-﻿using System.Collections;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using Dan.Main;
-using TMPro;
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.UI;
 
-public class OptionScreen : GooglePlayOptions
+public class UpdateUsernamePanel : MonoBehaviour
 {
-    public GameObject usernameChangeInputPanel;
-    public TextMeshProUGUI username;
-    public TMP_InputField usernameInput;
+    public TMPro.TMP_InputField usernameInput;
     public GameObject LoadingPanel;
-    public override void Start()
+    public TMPro.TextMeshProUGUI errorMessage;
+    void Start()
     {
-        base.Start();
-        username.SetText(TheGamerUrso.Leaderboards.Instance.GetUsername());
+        if (!String.IsNullOrEmpty(TheGamerUrso.Leaderboards.UserName))
+        {
+            gameObject.SetActive(false);
+        }
     }
 
     public void SetUsername()
@@ -24,7 +24,8 @@ public class OptionScreen : GooglePlayOptions
     }
 
     IEnumerator ChangeUsernameCoroutine()
-    {
+    {     
+        errorMessage.gameObject.SetActive(false);
         LoadingPanel.SetActive(true);
         TheGamerUrso.Leaderboards.myLeaderbosard.UpdateEntryUsername(
            usernameInput.text, OnEntryUsernameUpdated, ErrorCallback);
@@ -35,10 +36,8 @@ public class OptionScreen : GooglePlayOptions
     {
         if (sucess)
         {
-            var playerData = PersistantData.GetPlayerData();
             TheGamerUrso.Leaderboards.Instance.SetUsername(usernameInput.text);
-            username.text = TheGamerUrso.Leaderboards.Instance.GetUsername();
-            usernameChangeInputPanel.SetActive(false);
+            gameObject.SetActive(false);
         }
         LoadingPanel.SetActive(false);
     }
@@ -47,12 +46,7 @@ public class OptionScreen : GooglePlayOptions
     {
         LoadingPanel.SetActive(false);
         Debug.LogError(error);
+        errorMessage.gameObject.SetActive(true);
+        errorMessage.SetText("Username already taken");
     }
-
-    public override void ExitAndSave()
-    {
-        base.ExitAndSave();
-        MainMenuManager.Instance.Close();
-    }
-
 }

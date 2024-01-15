@@ -29,10 +29,9 @@ public class LeaderboardScreen : MonoBehaviour
         TheGamerUrso.Leaderboards.Instance.OnErrorLoading += OnErrorLoadingCallback;
         TheGamerUrso.Leaderboards.Instance.OnLoadingLeadeboard += ToggleLoadingPanel;
 
-        Username = PersistantData.GetPlayerData().GetUsername();
         PlayerData playerData = PersistantData.GetPlayerData();
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("-");
-        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(playerData.Username);
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(playerData.HighScore.ToString());
         TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
     }

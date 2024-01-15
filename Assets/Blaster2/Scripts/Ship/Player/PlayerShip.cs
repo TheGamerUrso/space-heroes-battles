@@ -105,7 +105,7 @@ public class PlayerShip : Ship, IDamagable
             Touch touch = Input.GetTouch(0);
             clicktimes = touch.tapCount;
         }
-#elif UNITY_STANDALONE || UNITY_EDITOR_64
+#elif UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR_64
             if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3"))
             {
                 if (!clicked)

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,7 +18,7 @@ public class LowHealthIndicator : MonoBehaviour
 
     [SerializeField] private AudioClip alarmSFX;
     [SerializeField] private AudioSource audioSource;
-
+    
     private float count;
     private float timer;
 

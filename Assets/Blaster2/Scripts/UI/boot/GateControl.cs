@@ -15,4 +15,11 @@ public class GateControl : MonoBehaviour
     {
         animator.SetBool("IsOpen",false);
     }
+
+    public void Show()
+    {
+GameManager.Instance.ToggleLoadingScreenCanvas(true);   
+    }
+
+    public void Hide(){GameManager.Instance.ToggleLoadingScreenCanvas(false);   }
 }

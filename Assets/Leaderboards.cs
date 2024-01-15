@@ -65,6 +65,7 @@ namespace TheGamerUrso
         public Action<Entry[]> OnLeaderboardValueChanged;
         public Action<bool> OnLoadingLeadeboard;
         public Action<string> OnErrorLoading;
+        public static string UserName;
 
         //======================================================================================================================================================
         public static LeaderboardReference myLeaderbosard = new LeaderboardReference("85f0d99eba9f18f6538dc149ed9d3ee68bcb3215a97a38e075f16ad6e054ef9c");
@@ -87,13 +88,12 @@ namespace TheGamerUrso
         //======================================================================================================================================================
         public void AddScore(int Score)
         {
-            var username = PersistantData.GetPlayerData().Username;
-            if (LeaderboardContainsEntry(username))
+            if (LeaderboardContainsEntry(TheGamerUrso.Leaderboards.UserName))
             {
-                var entry = GetLeaderboardEntry(username);
+                var entry = GetLeaderboardEntry(TheGamerUrso.Leaderboards.UserName);
                 entry.Score = Score;
             }
-            leaderboard.Add(new TheGamerUrso.Models.Entry(0, username, Score));
+            leaderboard.Add(new TheGamerUrso.Models.Entry(0, TheGamerUrso.Leaderboards.UserName, Score));
 
         }
         //======================================================================================================================================================
@@ -146,6 +146,9 @@ namespace TheGamerUrso
             };
 
             myLeaderbosard.GetEntries(searchQuery, OnLeaderboardLoaded, ErrorCallback);
+
+
+            TheGamerUrso.Leaderboards.myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded);
             //leaderboard = JsonSystem.LoadLeaderboard();
             //OnLoadingLeadeboard?.Invoke(false);
         }
@@ -190,7 +193,7 @@ namespace TheGamerUrso
         {     
             OnLoadingLeadeboard?.Invoke(true);
             PlayerData playerData = PersistantData.GetPlayerData();
-            myLeaderbosard.UploadNewEntry(playerData.GetUsername(), (int)playerData.HighScore, Callback, ErrorCallback);
+            myLeaderbosard.UploadNewEntry(UserName, (int)playerData.HighScore, Callback, ErrorCallback);
         }
         //======================================================================================================================================================
         public void DeleteEntry()
@@ -203,11 +206,26 @@ namespace TheGamerUrso
         {    
             LeaderboardCreator.ResetPlayer();
         }
+
         //======================================================================================================================================================
+  
         public void GetPersonalEntry(Action<Dan.Models.Entry> OnPersonalEntryLoaded)
         {       
             OnLoadingLeadeboard?.Invoke(true);
             myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded, ErrorCallback);
+        }
+        
+        [ContextMenu("Get Personal Entry")]
+        public void GetPersonalEntry()
+        {
+            myLeaderbosard.GetPersonalEntry(OnPersonalEntryLoaded, ErrorCallback);
+        }
+
+        public void OnPersonalEntryLoaded(Dan.Models.Entry entry)
+        {
+            OnLoadingLeadeboard?.Invoke(true);
+            if(entry.Username != "Unknown")
+                UserName = entry.Username;
         }
 
         //======================================================================================================================================================
@@ -229,5 +247,22 @@ namespace TheGamerUrso
             OnLoadingLeadeboard?.Invoke(false);
             OnErrorLoading?.Invoke(error);
         }
+
+        
+    public void SetUsername(string newUsername)
+    {
+        UserName = newUsername;
+    }
+
+    public string GetUsername()
+    {
+        if(string.IsNullOrEmpty(UserName))
+        {
+            string uniqueNumber = Guid.NewGuid().ToString();
+            var newString = uniqueNumber.Substring(0,4);
+            UserName = $"Player#{newString}";
+        }
+        return UserName;
+    }
     }
 }
