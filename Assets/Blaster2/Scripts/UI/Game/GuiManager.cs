@@ -7,13 +7,13 @@ using static GameController;
 public class GuiManager : MonoSingleton<GuiManager>
 {
     [Header("Menu")]
-    
+
     [SerializeField] private UIView GameOverScreen;
-    
+
     [SerializeField] private UIView WinScreen = null;
-    
+
     [SerializeField] private UIView PauseScreen;
-    
+
     [SerializeField] private RewardWidget rewardWidgetPanel;
 
     [SerializeField] private GameObject pauseButton;
@@ -21,10 +21,10 @@ public class GuiManager : MonoSingleton<GuiManager>
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private ScoreMultplierWidget scoreMultplierWidget;
 
-    [SerializeField]private TransmitionWidget transmittionWidget;
+    [SerializeField] private TransmitionWidget transmittionWidget;
     private float timer;
 
-//=================================================================================
+    //=================================================================================
     protected override void OnCleanup()
     {
         base.OnCleanup();
@@ -33,28 +33,29 @@ public class GuiManager : MonoSingleton<GuiManager>
         Events.OnPauseGame -= ShowPauseMenu;
         Events.OnScoreValueChanged -= UpdateScore;
     }
-//=================================================================================
+
+    //=================================================================================
     protected override void Awake()
     {
         base.Awake();
         transmittionWidget = FindObjectOfType<TransmitionWidget>();
     }
-//=================================================================================
+    //=================================================================================
     private void Start()
     {
         Events.OnScoreValueChanged += UpdateScore;
         Events.OnGameOver += GameOver;
         Events.OnPauseGame += ShowPauseMenu;
-
         timer = 1;
 
         UpdateScore(0);
     }
-//=================================================================================
+    //=================================================================================
     private void Update()
     {
         if (GameController.CurrentGameState == GameController.GameState.GAME)
         {
+#if UNITY_ANDROID
             if (!GameController.Instance.SlowMo)
             {
                 timer -= Time.deltaTime;
@@ -68,36 +69,39 @@ public class GuiManager : MonoSingleton<GuiManager>
                 timer = .25f;
                 pauseButton.SetActive(true);
             }
-#if UNITY_EDITOR || UNITY_STANDALONE
-            if(Input.GetKeyDown(KeyCode.Escape)){
+#endif
+#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
+            pauseButton.SetActive(true);
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
                 PauseButton();
             }
 #endif
         }
     }
-//=================================================================================
+    //=================================================================================
     public void ShowRewardScreen()
     {
         rewardWidgetPanel.Show();
     }
-//=================================================================================
+    //=================================================================================
     public void ReplayButton()
     {
         GameManager.Instance.ResetLevel();
     }
-//=================================================================================
+    //=================================================================================
     public void ResumeButton()
     {
         Events.ToggleSlowMo?.Invoke(true);
         GameManager.Instance.PauseTheGame(false);
     }
-//=================================================================================
+    //=================================================================================
     public void PauseButton()
     {
         Events.ToggleSlowMo?.Invoke(false);
         GameManager.Instance.PauseTheGame(true);
     }
-//=================================================================================
+    //=================================================================================
     public void ShowPauseMenu(bool value)
     {
         if (value)
@@ -111,18 +115,18 @@ public class GuiManager : MonoSingleton<GuiManager>
             PauseScreen.Hide();
         }
     }
-//=================================================================================
+    //=================================================================================
     public void UpdateScore(int score)
     {
         string scoreText = string.Format("{00:00000000}", score);
         ScoreText.text = scoreText;
     }
-//=================================================================================
+    //=================================================================================
     public static void SetScoreMultipler(string text)
     {
         Instance.scoreMultplierWidget.SetText(text);
     }
-//=================================================================================
+    //=================================================================================
     public static void CreateFloatingText(string text, Vector3 pos)
     {
         GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
@@ -130,7 +134,7 @@ public class GuiManager : MonoSingleton<GuiManager>
 
         m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(text, pos);
     }
-//=================================================================================
+    //=================================================================================
     public void QuitGameButton()
     {
         LoadMainMenu();
@@ -172,23 +176,23 @@ public class GuiManager : MonoSingleton<GuiManager>
         yield return delay;
         Menu.Hide();
     }
-//=================================================================================
-    public static void PlayTrasmition(string[] transmitions,bool playIntro = true)
+    //=================================================================================
+    public static void PlayTrasmition(string[] transmitions, bool playIntro = true)
     {
-        Instance.ShowTrasmition(transmitions,playIntro);
+        Instance.ShowTrasmition(transmitions, playIntro);
     }
-//=================================================================================
+    //=================================================================================
     public void BossWarning()
     {
         transmittionWidget.BossWarning();
     }
-//=================================================================================
-    public void ShowTrasmition(string[] transmitions,bool playIntro = true)
+    //=================================================================================
+    public void ShowTrasmition(string[] transmitions, bool playIntro = true)
     {
         if (transmittionWidget)
-            transmittionWidget.RecieveTransmition(transmitions,playIntro);
+            transmittionWidget.RecieveTransmition(transmitions, playIntro);
     }
-//=================================================================================
+    //=================================================================================
     public bool IsTrasnmiting()
     {
         if (transmittionWidget != null)
@@ -202,20 +206,19 @@ public class GuiManager : MonoSingleton<GuiManager>
     }
 
     //=================================================================================
-    public void GameOver(BaseGameMode baseGameMode, bool IsPlayerAlive = false)
-    {            
+    public void GameOver(bool IsPlayerAlive = false)
+    {
         ShowPauseMenu(false);
         if (IsPlayerAlive)
         {
             WinScreen.Show();
-            WinScreen.GetComponent
-                <WinScreen>().ShowGameResult();
+            WinScreen.GetComponent<WinScreen>().ShowGameResult();
         }
         else
         {
-            GameOverScreen.Show();
+            GameOverScreen.Show();      
+            GameOverScreen.GetComponent<SurvivalGameOverScreen>().UpdateLeaderboards();
         }
-
     }
 
 }

@@ -6,12 +6,20 @@ using UnityEngine;
 
 public class UpdateUsernamePanel : MonoBehaviour
 {
+    public Action<string> OnUsernameChanged;
     public TMPro.TMP_InputField usernameInput;
     public GameObject LoadingPanel;
     public TMPro.TextMeshProUGUI errorMessage;
+    void OnDestroy()
+    {
+        if( TheGamerUrso.Leaderboards.Instance!=null)
+        TheGamerUrso.Leaderboards.Instance.OnUsernameUpdated -= OnEntryUsernameUpdated;
+    }
     void Start()
     {
-        if (!String.IsNullOrEmpty(TheGamerUrso.Leaderboards.UserName))
+        TheGamerUrso.Leaderboards.Instance.OnUsernameUpdated += OnEntryUsernameUpdated;
+        PlayerData playerData = PersistantData.GetPlayerData();
+        if (!String.IsNullOrEmpty(playerData.GetUsername()))
         {
             gameObject.SetActive(false);
         }
@@ -27,14 +35,17 @@ public class UpdateUsernamePanel : MonoBehaviour
     {     
         errorMessage.gameObject.SetActive(false);
         LoadingPanel.SetActive(true);
-        TheGamerUrso.Leaderboards.Instance.SetUsername(usernameInput.text,OnEntryUsernameUpdated);
+        TheGamerUrso.Leaderboards.Instance.SetUsername(usernameInput.text);
         yield return null;
     }
 
     public void OnEntryUsernameUpdated(bool sucess)
     {
         if (sucess)
-        {
+        {        
+            PlayerData playerData = PersistantData.GetPlayerData();   
+            playerData.SetUsername(usernameInput.text);
+            OnUsernameChanged?.Invoke(usernameInput.text);
             gameObject.SetActive(false);
         }
         LoadingPanel.SetActive(false);

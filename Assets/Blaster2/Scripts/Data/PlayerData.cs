@@ -73,13 +73,13 @@ public class PlayerData
             playerShipData[i] = new PlayerShipData(players[i]);
         }
     }
-
+//======================================================================================================================================================
     public void NewGame()
     {
         SetSuperMeter(0);
         SetPowerPackCollected(0);
     }
-
+//======================================================================================================================================================
     public void SetPlayerKillsCounter(int KillsCounter)
     {
         if (KillsCounter == 0)
@@ -94,24 +94,25 @@ public class PlayerData
         }
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.KILL, EnemyKilled);
     }
-
+//======================================================================================================================================================
     public void SetPlayerGotHitCounter(bool value)
     {
         GotHitInGame = value;
         PlayedGame = value;
     }
+    //======================================================================================================================================================
     public void SetCurrentSelectShip(int select)
     {
         CurrrentSelectedShip = select;
         Events.OnShipSelectValueChanged?.Invoke(CurrrentSelectedShip);
     }
-
+//======================================================================================================================================================
     public void SetControlSceme(int option)
     {
         ControlScene = option;
         Events.OnControlScemeChange?.Invoke();
     }
-
+//======================================================================================================================================================
     public void SetPowerPackCollected(int ammount)
     {
         PowerPackCollected += ammount;
@@ -121,7 +122,7 @@ public class PlayerData
         }
         Events.OnPowerPackCollected?.Invoke(PowerPackCollected);
     }
-
+//======================================================================================================================================================
     public void SetSuperMeter(float ammount)
     {
         PowerUpLevel = ammount;
@@ -131,26 +132,21 @@ public class PlayerData
         }
         Events.PowerUpLevelValueChanged?.Invoke(PowerUpLevel);
     }
-
-    public void SetScore(float score)
+//======================================================================================================================================================
+    public void SetScore(int score)
     {
         Score = score;
-        if (Score > HighScore)
-        {
-            HighScore = score;
-            TheGamerUrso.Leaderboards.Instance.Submit();
-        }
+        Score = Mathf.Clamp(Score, 0, 999999999);  
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SCORE, (int)Score);
     }
-    public float GetHighScore()
+    //======================================================================================================================================================
+    public void SetHighscore(int highscore)
     {
-        return HighScore;
-    }
-    public float GetScore()
-    {
-        return Score;
+        HighScore = highscore;
+        HighScore = Mathf.Clamp(HighScore, 0, 999999999);
     }
 
+//======================================================================================================================================================
     public QuestData GetOnGoingObjectiveById(QuestTypeEnum objectiveType)
     {
         for (int i = 0; i < ListOfPlayerActiveQuest.Count; i++)
@@ -162,7 +158,7 @@ public class PlayerData
         }
         return null;
     }
-
+//======================================================================================================================================================
     public void AbstractCoins(int ammount)
     {
         Coins -= ammount;
@@ -174,7 +170,7 @@ public class PlayerData
         Events.OnCoinValueChanged?.Invoke(Coins);
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SPEND, CoinSpend);
     }
-
+//======================================================================================================================================================
     public void AddCoin(int ammount)
     {
         CoinPicked += ammount;
@@ -186,7 +182,7 @@ public class PlayerData
         Events.OnCoinValueChanged?.Invoke(Coins);
         Events.OnCoinValueChanged?.Invoke(CoinPicked);
     }
-
+//======================================================================================================================================================
     public void SetWaveSurvivedCount(int value)
     {
         if (value == 0)
@@ -200,7 +196,7 @@ public class PlayerData
 
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SURVIVE, WaveSurvived);
     }
-
+//======================================================================================================================================================
     public void SetUsedSuperCount(int ammount)
     {
         if (ammount == 0)
@@ -214,19 +210,19 @@ public class PlayerData
         Events.OnSuperUseValueChanged?.Invoke(SuperUsed);
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.USE, SuperUsed);
     }
-
+//======================================================================================================================================================
     public void SetBossKilledCount()
     {
         if(BountyKilled==1)return;
         BountyKilled = 1;
         QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.BOUNTY, BountyKilled);
     }
-
+//======================================================================================================================================================
     public PlayerShipData GetCurrentPlayerShipData()
     {
         return playerShipData[CurrrentSelectedShip];
     }
-
+//======================================================================================================================================================
     public void EarnXP(float ammount)
     {
         PlayerShipData currentPlayerShipSelected = GetCurrentPlayerShipData();
@@ -261,28 +257,29 @@ public class PlayerData
 
         Events.OnXpValueChanged?.Invoke(currentPlayerShipSelected.level, currentPlayerShipSelected.xp, xpToLevel);
     }
-
+//======================================================================================================================================================
     public void SetUpgrade(int upgrade, int value)
     {
         PlayerShipData currentPlayerShipSelected = playerShipData[CurrrentSelectedShip];
         currentPlayerShipSelected.Upgrades[upgrade] = value;
         SaveSystem.SaveGame();
     }
-
+//======================================================================================================================================================
     public float GetPowerUpLevelPresentage()
     {
         return PowerUpLevel / 1;
     }
+    //======================================================================================================================================================
     public void ResetWeaponPowerUPCollected()
     {
         PowerPackCollected = 0;
     }
-
+//======================================================================================================================================================
     public void SetUsername(string newUsername)
     {
         Username = newUsername;
     }
-
+//======================================================================================================================================================
     public string GetUsername()
     {
         if(string.IsNullOrEmpty(Username))

@@ -10,7 +10,7 @@ public class LevelDetailSurvival : MonoBehaviour
     private void OnEnable()
     {
         PlayerData playerData = PersistantData.GetPlayerData();
-        score.text = "Highscore \n" + playerData.GetHighScore();
+        score.text = "Highscore \n" + playerData.HighScore;
     }
 
 }

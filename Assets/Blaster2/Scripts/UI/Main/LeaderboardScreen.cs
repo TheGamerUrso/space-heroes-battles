@@ -1,39 +1,45 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 using Dan.Main;
+using System;
+using Dan.Models;
 
 public class LeaderboardScreen : MonoBehaviour
 {
     [SerializeField] private CanvasGroup _leaderboardLoadingPanel;
 
-    public GameObject LeaderboardEntry;
-    public GameObject PlayerLeaderboardEntry;
-    public Transform content;
-    public string Username;
-    public GameObject errorMessage;
-
-    void OnDestroy()
-    {
-        if (TheGamerUrso.Leaderboards.Instance != null)
-        {
-            TheGamerUrso.Leaderboards.Instance.OnLeaderboardValueChanged -= OnLeaderboardLoaded;
-            TheGamerUrso.Leaderboards.Instance.OnErrorLoading -= OnErrorLoadingCallback;
-               TheGamerUrso.Leaderboards.Instance.OnLoadingLeadeboard -= ToggleLoadingPanel;
-        }
-    }
+     [SerializeField] private GameObject LeaderboardEntry;
+     [SerializeField] private GameObject PlayerLeaderboardEntry;
+     [SerializeField] private Transform content;
+     [SerializeField] private GameObject errorMessage;
 
     //======================================================================================================================================================
     void Start()
     {
-        TheGamerUrso.Leaderboards.Instance.OnLeaderboardValueChanged += OnLeaderboardLoaded;
-        TheGamerUrso.Leaderboards.Instance.OnErrorLoading += OnErrorLoadingCallback;
-        TheGamerUrso.Leaderboards.Instance.OnLoadingLeadeboard += ToggleLoadingPanel;
-
         PlayerData playerData = PersistantData.GetPlayerData();
-        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("-");
-        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(playerData.GetUsername());
         PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(playerData.HighScore.ToString());
-        TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
+    }
+
+    //======================================================================================================================================================
+    public void LoadLeaderboard()
+    {
+        PlayerData playerData = PersistantData.GetPlayerData();
+        ToggleLoadingPanel(true);
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("-");
+        for (int i = 0; i < TheGamerUrso.Leaderboards.Instance.LeaderboardEntries.Length; i++)
+        {
+            Entry entry = TheGamerUrso.Leaderboards.Instance.LeaderboardEntries[i];
+            if (entry.IsMine())
+            {
+                PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText(entry.RankSuffix());
+                break;
+            }
+
+        }
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(playerData.GetUsername());
+        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText(playerData.HighScore.ToString());
+        OnLeaderboardLoaded(TheGamerUrso.Leaderboards.Instance.LeaderboardEntries);
     }
 
     //======================================================================================================================================================
@@ -46,8 +52,6 @@ public class LeaderboardScreen : MonoBehaviour
         foreach (var t in entries)
             CreateEntryDisplay(t);
 
-
-        TheGamerUrso.Leaderboards.Instance.GetPersonalEntry(OnPersonalEntryLoaded);
         ToggleLoadingPanel(false);
     }
     //======================================================================================================================================================
@@ -55,12 +59,6 @@ public class LeaderboardScreen : MonoBehaviour
     {
         GameObject leaderboardGO = Instantiate(LeaderboardEntry, content);
         leaderboardGO.GetComponent<LeaderBoardEntry>().SetEntry(entry);
-        if (entry.IsMine())
-        {
-            PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText(entry.RankSuffix());
-            PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
-            PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText("" + entry.Score);
-        }
     }
     //======================================================================================================================================================
     private void ToggleLoadingPanel(bool isOn)
@@ -68,14 +66,6 @@ public class LeaderboardScreen : MonoBehaviour
         _leaderboardLoadingPanel.alpha = isOn ? 1f : 0f;
         _leaderboardLoadingPanel.interactable = isOn;
         _leaderboardLoadingPanel.blocksRaycasts = isOn;
-    }
-
-    //======================================================================================================================================================
-    private void OnPersonalEntryLoaded(Dan.Models.Entry entry)
-    {
-        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().RankText.SetText("" + entry.Rank);
-        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().UserNameText.SetText(Username);
-        PlayerLeaderboardEntry.GetComponent<LeaderBoardEntry>().ScoreText.SetText("" + entry.Score);
     }
 
     private void OnErrorLoadingCallback(string error)

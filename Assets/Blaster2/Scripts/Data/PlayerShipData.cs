@@ -110,7 +110,7 @@ public class PlayerShipData
         var HasArmorUpgrade = Upgrades[(int)UpgradeTypeEnum.ArmorUpgrade];
 
         var SpeedMultiplier = 0.25f * SpeedUpgrade;
-        var DamageMultiplier = 1f * DamageUpgrade;
+        var DamageMultiplier = .1f * DamageUpgrade;
         var FireRateMultiplier = 0.01f * FireRateUpgrade;
         var MagnetPowerMultiplier = 3 * MagnetPowerUpgrade;
         var MagnetDistanceMultiplier = 2 * MagnetDistanceUpgrade;
@@ -122,7 +122,7 @@ public class PlayerShipData
             SpeedMultiplier,
             FireRateMultiplier,
             DamageMultiplier,
-            MagnetDistanceMultiplier,
+            MagnetPowerMultiplier,
             SpeedMultiplier,
             MagnetDistanceMultiplier,
             superCooldown,

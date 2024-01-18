@@ -22,7 +22,6 @@ public class TransmitionWidget : MonoBehaviour
         this.transmitions = transmitions;
         if (IncomingTransmition == false)
         {
-            audioSource.PlayOneShot(TransmitionSFX);
             if (!GameController.Instance.IsGameOver)
                 StartCoroutine(TranmisionEvent(PlayIntro));
         }
@@ -58,7 +57,8 @@ public class TransmitionWidget : MonoBehaviour
 
         IncomingTransmition = true;
         if (playIntro)
-        {
+        {            
+            audioSource.PlayOneShot(TransmitionSFX);
             TransmitionWidgetPrefab.SetActive(true);
             for (int i = 0; i < 3; i++)
             {

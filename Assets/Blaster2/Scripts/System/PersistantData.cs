@@ -67,4 +67,16 @@ public class PersistantData : MonoSingleton<PersistantData>
     {
         return Instance.playerData;
     }
+
+    [ContextMenu("Add Coins")]
+    public void AddCoin()
+    {
+        playerData.AddCoin(999);
+    }
+
+    [ContextMenu("Increase Super Power")]
+    public void IncreaseSuperPower()
+    {
+      playerData.SetSuperMeter(playerData.PowerUpLevel + 1);
+    }
 }

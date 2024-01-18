@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PlayerShip : Ship, IDamagable
 {
+    public Action<int> OnItemPickedUp;
     [Space()]
     private PlayerController shipController;
     [SerializeField] private ParticleSystem ItemCollectedEffect;
@@ -156,6 +157,7 @@ public class PlayerShip : Ship, IDamagable
     {
         base.InstallShield();
         ShieldEffect.SetActive(HasShield);
+        OnItemPickedUp?.Invoke(0);
     }
     //=================================================================================
     public override void Death()
@@ -359,6 +361,7 @@ public class PlayerShip : Ship, IDamagable
             playerData.SetPowerPackCollected(2);
             TempFireRateBuff(0.01f * playerData.PowerPackCollected);
         }
+             OnItemPickedUp?.Invoke(1);
     }
     //=================================================================================
     public void ResetWeaponUpgrade()

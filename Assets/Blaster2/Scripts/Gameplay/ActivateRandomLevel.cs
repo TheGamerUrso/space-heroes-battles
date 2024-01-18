@@ -125,12 +125,7 @@ public class ActivateRandomLevel : MonoBehaviour
         WrapTunnelFX.SetActive(true);
 
         yield return new WaitForSeconds(1.0f);
-
-        AsteroidMove[] asteroids = GameObject.FindObjectsOfType<AsteroidMove>();
-        for (int i = 0; i < asteroids.Length; i++)
-        {
-            asteroids[i].gameObject.SetActive(false);
-        }
+        GameController.Instance.DeactivateAsteroid();
 
         ChooseNewLevel();
 
@@ -138,6 +133,7 @@ public class ActivateRandomLevel : MonoBehaviour
         audioSource.PlayOneShot(ending);
         cameraMain.cullingMask = defaultLayer;
         WrapTunnelFX.SetActive(false);
+        GameController.Instance.EnableAsteroids();
         active = false;
         AudioManager.PlayRandomMusic(true);
     }

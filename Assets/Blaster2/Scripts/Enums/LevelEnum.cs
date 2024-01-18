@@ -3,7 +3,7 @@
     boot = 0,
     Intro = 1,
     Main = 2,
-    Level0 = 3,
+    Game = 3,
     Level1 = 4,
     Level2= 5, 
     Level3 = 6,

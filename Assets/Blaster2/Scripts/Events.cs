@@ -69,7 +69,7 @@ public class Events
     /**
      *GameController
      */
-    public static Action<BaseGameMode,bool> OnGameOver;
+    public static Action<bool> OnGameOver;
         /**
      * PlayerData Events
      */

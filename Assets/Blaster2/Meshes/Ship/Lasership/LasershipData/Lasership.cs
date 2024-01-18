@@ -2,29 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Lasership : MonoBehaviour
+public class Lasership : Enemy
 {
     float hatchetOpenTime = 1f, hatchetCloseTime = 2f, rocketTime;
     bool hatchetOpen = false;
     string openSwitch = "rocketOpen";
 
-    Animator rocketeerAnimator;
-    // Start is called before the first frame update
-    void Start()
+    public Animator rocketeerAnimator;
+
+    public override void Start()
     {
-        rocketeerAnimator =  GetComponent<Animator>();
+        base.Start();
         rocketTime = Time.time;
+        hatchetOpen = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void Update()
     {
+        base.Update();
         if(!hatchetOpen)
         {
             if (rocketTime+hatchetOpenTime < Time.time)
             {
                 rocketeerAnimator.SetBool(openSwitch, true);
-                hatchetOpen = true;
+                //hatchetOpen = true;
                 rocketTime += hatchetOpenTime;
             }                
         }
@@ -33,7 +34,7 @@ public class Lasership : MonoBehaviour
             if (rocketTime + hatchetCloseTime < Time.time )
             {
                 rocketeerAnimator.SetBool(openSwitch, false);
-                hatchetOpen = false;
+                //hatchetOpen = false;
                 rocketTime += hatchetCloseTime;
             }
         }

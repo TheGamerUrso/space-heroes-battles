@@ -64,6 +64,8 @@ public class BaseGameMode : MonoBehaviour
 
     private void OnDestroy()
     {
+        Events.PlayerLost -= GameOver;
+        Events.GameEnded -= Win;
         Events.EnemyDied -= OnEnemyDiedHandled;
         Events.BossDied -= OnEnemyDiedHandled;
         Events.EnemyGotHit -= OnEnemyHitHandled;
@@ -72,7 +74,9 @@ public class BaseGameMode : MonoBehaviour
     }
 
     public virtual void Awake()
-    {
+    {    
+        Events.PlayerLost += GameOver;
+        Events.GameEnded += Win;
         Events.EnemyDied += OnEnemyDiedHandled;
         Events.BossDied += OnEnemyDiedHandled;
         Events.EnemyGotHit += OnEnemyHitHandled;
@@ -120,47 +124,16 @@ public class BaseGameMode : MonoBehaviour
 
         return enemy;
     }
-
+    //=================================================================================
     public void GameOver()
     {
-        StartCoroutine(DelayGameOver());
-    }
-    IEnumerator DelayGameOver()
-    {
-        Time.timeScale = 1.0f;
-        var playerData = PersistantData.GetPlayerData();
-        playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-        playerData.SetScore(GameController.Instance.Score);
-        SaveSystem.SaveGame();
-
-        AudioManager.PlayMusic("GameOver", false);
         StopCoroutine(UpdateGameMode());
-        yield return new WaitForSeconds(2.0f);
-
-        Events.OnGameOver?.Invoke(this, false);
+     
     }
-
+    //=================================================================================
     public void Win()
     {
-        StartCoroutine(DelayWinScreen());
-    }
-
-    IEnumerator DelayWinScreen()
-    {
-        Time.timeScale = 1.0f;
-
-        PersistantData.GetPlayerData().GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-
-        SaveSystem.SaveGame();
-
-        yield return new WaitForSeconds(2.0f);
-
-        AudioManager.PlayMusic("Victory", false);
-
-        PlayerManager.GetPlayer()?.ExitLevel();
-
-        yield return new WaitForSeconds(2.0f);
-        Events.OnGameOver?.Invoke(this, true);
+        
     }
 
     //=================================================================================

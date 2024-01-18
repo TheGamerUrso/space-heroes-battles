@@ -17,9 +17,9 @@ public class GameWaveWidget : MonoBehaviour
     {
         if (survivalMode == null) return;
 
-        canvasGroup.alpha = survivalMode.gameInfo.BossBattleInitiated ? 1 : 0;
+        canvasGroup.alpha = survivalMode.gameInfo.BossBattleInitiated ? 0 : 1;
 
-        WaveText.text = survivalMode.gameInfo.CurrentTotalEnemies + " / " + survivalMode.gameInfo.TotalEnemies;
+        WaveText.text = survivalMode.gameInfo.CurrentTotalEnemies + "/" + survivalMode.gameInfo.TotalEnemies;
         EnemiesRemaining.text = "" + survivalMode.gameInfo.waves;
     }
 }

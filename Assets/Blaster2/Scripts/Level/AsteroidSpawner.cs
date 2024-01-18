@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class AsteroidSpawner : MonoBehaviour
@@ -8,10 +9,21 @@ public class AsteroidSpawner : MonoBehaviour
     private Coroutine AsteroidSpawnCoroutine;
     private WaitForSeconds waitForSeconds = new WaitForSeconds(4);
 
-    IEnumerator Start()
+    public void EnableAsteroids()
     {
-        yield return waitForSeconds;
-        AsteroidSpawnCoroutine = StartCoroutine(SpawnerCoroutine());
+         AsteroidSpawnCoroutine = StartCoroutine(SpawnerCoroutine());
+    }
+
+    public void DeactivateAsteroid(){
+        if (AsteroidSpawnCoroutine != null)
+        {
+            AsteroidMove[] asteroids = GameObject.FindObjectsOfType<AsteroidMove>();
+            for (int i = 0; i < asteroids.Length; i++)
+            {
+                asteroids[i].gameObject.SetActive(false);
+            }
+            StopCoroutine(AsteroidSpawnCoroutine);
+        }
     }
 
     private IEnumerator SpawnerCoroutine()
@@ -34,7 +46,7 @@ public class AsteroidSpawner : MonoBehaviour
 
     public PoolGameObjectType ChooseRandomAsteroids() => AsteroidType[Random.Range(0, AsteroidType.Length)];
 
-    public Vector3 ChooseRandomSpawnLocation() => spawnPos[Random.Range(0, spawnPos.Length)].position;
+    public Vector3 ChooseRandomSpawnLocation() => new Vector3(Random.Range(-70f,71f),0,135);
 
-    public void ChooseRandomWaitTimer() => waitForSeconds = new WaitForSeconds(Random.Range(8, 16));
+    public void ChooseRandomWaitTimer() => waitForSeconds = new WaitForSeconds(Random.Range(4, 8));
 }

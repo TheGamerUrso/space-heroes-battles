@@ -55,6 +55,8 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         playerData.PlayedGame = false;
 
         shipSelect.SetShipTexture(playerData.CurrrentSelectedShip);
+
+        TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
     }
 
 
@@ -73,7 +75,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     {
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         // LevelEnum[] levels ={LevelEnum.Level0,LevelEnum.Level1,LevelEnum.Level2,LevelEnum.Level3,LevelEnum.Level4,LevelEnum.Level5,LevelEnum.Level6,LevelEnum.Level7,LevelEnum.Level8,LevelEnum.Level9};
-        LevelEnum[] levels = { LevelEnum.Level0 };
+        LevelEnum[] levels = { LevelEnum.Game };
         GameManager.Instance.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
 
     }
@@ -162,10 +164,6 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
                 {
 
                     item.m_UIElement.Show();
-                    if (item.Name.Equals("HighScore"))
-                    {
-                       TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
-                    }
                     Events.OnScreenChanged?.Invoke(item.Name, true);
                     if (IsScrene(previousScreen, "Upgrades"))
                     {
@@ -216,6 +214,11 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
             if (item.Name.Equals(Id))
             {
                 item.m_UIElement.Show();
+                if (item.Name.Equals("HighScore"))
+                {
+                    TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
+                    item.m_UIElement.GetComponent<HighscoreScreen>().LoadLeaderboard();
+                }
                 Events.OnScreenChanged?.Invoke(item.Name, true);
             }
             else
@@ -225,6 +228,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
                     if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
                         previousScreen = item.Name;
                 }
+
 
                 if (item.Name.Equals("ShipSelect") && item.m_UIElement.IsVisible)
                 {

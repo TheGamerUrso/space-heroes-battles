@@ -5,46 +5,30 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-public class OptionScreen : GooglePlayOptions
+public class OptionScreen : BaseOptions
 {
     public GameObject usernameChangeInputPanel;
     public TextMeshProUGUI username;
-    public TMP_InputField usernameInput;
-    public GameObject LoadingPanel;
+    void OnDestroy(){
+         usernameChangeInputPanel.GetComponent<UpdateUsernamePanel>().OnUsernameChanged-=OnUsernameChanged;
+   
+    }
     public override void Start()
     {
-        base.Start();
-        username.SetText(TheGamerUrso.Leaderboards.Instance.GetUsername());
+        usernameChangeInputPanel.GetComponent<UpdateUsernamePanel>().OnUsernameChanged+=OnUsernameChanged;
     }
-
-    public void SetUsername()
+    void Update()
     {
-        if (string.IsNullOrEmpty(usernameInput.text)) return;
-        StartCoroutine(ChangeUsernameCoroutine());
+        PlayerData playerData = PersistantData.GetPlayerData();
+        username.SetText(playerData.GetUsername());
     }
-
-    IEnumerator ChangeUsernameCoroutine()
+    public void OnUsernameChanged(string username)
     {
-        LoadingPanel.SetActive(true);
-        TheGamerUrso.Leaderboards.myLeaderbosard.UpdateEntryUsername(
-           usernameInput.text, OnEntryUsernameUpdated, ErrorCallback);
-        yield return null;
+            this.username.SetText(username);
     }
-
-    public void OnEntryUsernameUpdated(bool sucess)
+    public void ChangeUsername()
     {
-        if (sucess)
-        {
-            username.text = TheGamerUrso.Leaderboards.Instance.GetUsername();
-            usernameChangeInputPanel.SetActive(false);
-        }
-        LoadingPanel.SetActive(false);
-    }
-
-    public void ErrorCallback(string error)
-    {
-        LoadingPanel.SetActive(false);
-        Debug.LogError(error);
+        usernameChangeInputPanel.gameObject.SetActive(true);
     }
 
     public override void ExitAndSave()

@@ -32,7 +32,7 @@ public class SurvivalGameMode : BaseGameMode
         string[] transmitions = { "Wave:\n" + gameInfo.waves };
         GuiManager.PlayTrasmition(transmitions,false);
 
-        if (gameInfo.waves > 0 && gameInfo.waves % 2 == 0)
+        if (gameInfo.waves > 0 && gameInfo.waves % 4 == 0)
         {
             gameInfo.availableEnemies++;
             GameController.Instance.difficulty += .1f;
@@ -92,7 +92,16 @@ public class SurvivalGameMode : BaseGameMode
 
             if (Enemy.EnemiesCount > 0)
             {
-                yield return new WaitUntil(() => Enemy.EnemiesCount <= 0);
+                while (Enemy.EnemiesCount > 0)
+                {
+                    yield return null;
+                    var numberOfEnemies = GameObject.FindObjectsOfType<Enemy>();
+                    if (numberOfEnemies.Length == 0)
+                    {
+                        yield return new WaitForSeconds(2.0f);
+                        Enemy.EnemiesCount = 0;
+                    }
+                }
             }
 
             yield return shortWait;

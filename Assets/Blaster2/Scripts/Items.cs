@@ -11,11 +11,6 @@ public class Items : MonoBehaviour, IPickable
 
     [SerializeField] private Item_SO itemData;
     [SerializeField] private LayerMask playerLayer;
-
-    protected static string CollectKey = "Collect";
-    protected static string ResetKey = "Reset";
-    [SerializeField] protected Animator animator;
-
     public BoxCollider boxCollider;
 
     protected float m_XVel;
@@ -44,7 +39,6 @@ public class Items : MonoBehaviour, IPickable
 
     private void OnEnable()
     {
-        animator.SetTrigger(ResetKey);
         boxCollider.enabled = true;
         picked = false;
     }
@@ -78,21 +72,23 @@ public class Items : MonoBehaviour, IPickable
             boxCollider.enabled = false;
         }
 
-        animator.SetTrigger(CollectKey);
-
         switch (itemData.itemType)
         {
             case ItemEnum.COIN:
+                GameController.Instance.SetCoinPicked(itemData.ammount);
                 player.SetWallet(itemData.ammount);
                 break;
             case ItemEnum.SHIELD:
                 player.InstallShield();
+                player.OnItemPickedUp?.Invoke(0);
                 break;
             case ItemEnum.POWERUP:
                 player.PowerUpCollected();
+                player.OnItemPickedUp?.Invoke(1);
                 break;
             case ItemEnum.HEALTH:
                 player.Heal(itemData.ammount * playerShipData.level);
+                player.OnItemPickedUp?.Invoke(2);
                 break;
             case ItemEnum.EMPTY:
                 break;

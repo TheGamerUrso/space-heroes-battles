@@ -101,16 +101,19 @@ public class UpgradeElement : MonoBehaviour
 
     public void BuyButton()
     {
-        upgradeScreen.RefreshUpgrades();
-
-        if (upgrade.ProgressPresentage == 1)
-        {
-            return;
-        }
-
         if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgrade.GetLevelRequirment())
         {
-            upgrade.Buy();
+            if (upgrade.ProgressPresentage == 1)
+            {
+                return;
+            }
+
+            if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgrade.GetLevelRequirment())
+            {
+                upgrade.Buy();
+            }
+
+            upgradeScreen.RefreshUpgrades();
         }
     }
 

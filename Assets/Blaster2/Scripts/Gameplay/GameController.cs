@@ -9,7 +9,7 @@ public class GameController : MonoBehaviour
     {
         START, GAME, GAMEOVER, WIN
     }
-
+    public Action<int> OnGameCoinsPickedValueChanged;
     private GameState currentGameState = GameState.START;
 
     public static GameState CurrentGameState
@@ -132,6 +132,7 @@ public class GameController : MonoBehaviour
     {
         Events.PlayerLost -= GameOver;
         Events.GameEnded -= Win;
+        TheGamerUrso.Leaderboards.Instance.OnNewEntryUploaded -= OnNewEntryUploadedHandled;
 
         DOTween.Clear(true);
         DOTween.ClearCachedTweens();
@@ -147,12 +148,15 @@ public class GameController : MonoBehaviour
 
         baseGameMode = GameObject.FindObjectOfType<BaseGameMode>();
         if (EnemyWaypoints != null) Instantiate(EnemyWaypoints, transform, false);
-        if (AsteroidBackgroundSpawner != null && HasAsteroids) Instantiate(AsteroidBackgroundSpawner, transform, false);
+        if (AsteroidBackgroundSpawner != null) Instantiate(AsteroidBackgroundSpawner, transform, false);
+        AsteroidBackgroundSpawner.SetActive(true);
         if (Tutorial != null) Instantiate(Tutorial, transform, false);
     }
     //=================================================================================
     void Start()
     {
+        TheGamerUrso.Leaderboards.Instance.OnNewEntryUploaded += OnNewEntryUploadedHandled;
+
         playerData = PersistantData.GetPlayerData();
         playerData.SetSuperMeter(0);
         playerData.ResetWeaponPowerUPCollected();
@@ -189,17 +193,15 @@ public class GameController : MonoBehaviour
 
                 break;
             case GameState.GAMEOVER:
-                if (IsGameOver == false)
+                if (!IsGameOver)
                 {
                     IsGameOver = true;
-                    baseGameMode.GameOver();
                 }
                 break;
             case GameState.WIN:
                 if (!IsGameOver)
                 {
                     IsGameOver = true;
-                    baseGameMode.Win();
                 }
                 break;
         }
@@ -209,11 +211,47 @@ public class GameController : MonoBehaviour
     public void Win()
     {
         SetGameState(GameState.WIN);
+        StartCoroutine(DelayWinScreen());
     }
     //======================================================================================================================================================
     public void GameOver()
     {
+        Time.timeScale = 1.0f;
+        var playerData = PersistantData.GetPlayerData();
+
+        playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
+        playerData.SetScore(GameController.Instance.Score);
+        playerData.AddCoin(CoinPicked);
+
+        TheGamerUrso.Leaderboards.Instance.UploadNewEntry(GameController.Instance.Score);
+
         SetGameState(GameState.GAMEOVER);
+    }
+    //======================================================================================================================================================
+    IEnumerator DelayGameOver()
+    {      
+        SaveSystem.SaveGame();
+        AudioManager.PlayMusic("GameOver", false);
+        yield return new WaitForSeconds(2.0f);
+        Events.OnGameOver?.Invoke(false);
+    }
+    //======================================================================================================================================================
+    IEnumerator DelayWinScreen()
+    {
+        Time.timeScale = 1.0f;
+
+        PersistantData.GetPlayerData().GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
+
+        SaveSystem.SaveGame();
+
+        yield return new WaitForSeconds(2.0f);
+
+        AudioManager.PlayMusic("Victory", false);
+
+        PlayerManager.GetPlayer()?.ExitLevel();
+
+        yield return new WaitForSeconds(2.0f);
+        Events.OnGameOver?.Invoke(true);
     }
     //======================================================================================================================================================
     public static BaseGameMode GetGameMode()
@@ -223,7 +261,6 @@ public class GameController : MonoBehaviour
     //======================================================================================================================================================
     public static void SetScore(int Score)
     {
-    
         var score = Instance.Multiplier * Score;
         Instance.Score += score;
         if (Instance.Score >= int.MaxValue)
@@ -240,5 +277,27 @@ public class GameController : MonoBehaviour
         var playerData = PersistantData.GetPlayerData();
         playerData.EarnXP(xp);
         playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+    }
+//=====================================================================================================================================================
+    public void SetCoinPicked(int coinPicked)
+    {
+        CoinPicked += coinPicked;
+        OnGameCoinsPickedValueChanged?.Invoke(CoinPicked);
+    }
+//=====================================================================================================================================================
+    public void EnableAsteroids()
+    {
+        AsteroidBackgroundSpawner.GetComponent<AsteroidSpawner>().EnableAsteroids();
+    }
+//=====================================================================================================================================================
+    public void DeactivateAsteroid()
+    {
+        AsteroidBackgroundSpawner.GetComponent<AsteroidSpawner>().DeactivateAsteroid();
+    }
+//=====================================================================================================================================================
+    public void OnNewEntryUploadedHandled(bool success)
+    {
+        TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
+        StartCoroutine(DelayGameOver());
     }
 }

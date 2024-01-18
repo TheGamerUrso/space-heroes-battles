@@ -7,12 +7,12 @@ public class RocketProjectile : BaseProjectile
 
     protected override void OnEnable()
     {
-        m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity, enemyLayer);
-        if (m_Target != null)
+        var acceptedTarget = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity, enemyLayer);
+        if (acceptedTarget!=null && !acceptedTarget.GetComponent<AsteroidCollider>())
         {
-   
+            m_Target = acceptedTarget;
         }
-        else if (m_Target == null)
+        if (m_Target == null)
         {
             shootDir = Vector3.forward;
         }
@@ -31,10 +31,18 @@ public class RocketProjectile : BaseProjectile
 
             if (!m_Target.activeInHierarchy)
             {
-                m_Target = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity, enemyLayer);
+                var acceptedTarget = HelperUtils.GetClosest(Constants.ENEMYTAG, transform.position, Mathf.Infinity, enemyLayer);
+                if (acceptedTarget != null && !acceptedTarget.GetComponent<AsteroidCollider>())
+                {
+                    m_Target = acceptedTarget;
+                }
+                else
+                {
+                    m_Target = null;
+                    shootDir = Vector3.forward;
+                }
             }
         }
-
 
         if (m_Target == null)
         {
