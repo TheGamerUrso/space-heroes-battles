@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  version: 5
+  version: 10
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -22,9 +22,12 @@ Material:
   m_PrefabAsset: {fileID: 0}
   m_Name: FX_EnemySimpleForceField
   m_Shader: {fileID: 4800000, guid: 650dd9526735d5b46b79224bc6e94025, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _SURFACE_TYPE_TRANSPARENT
-  m_InvalidKeywords: []
+  m_InvalidKeywords:
+  - _EMISSION
   m_LightmapFlags: 6
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
@@ -35,6 +38,8 @@ Material:
   - ALWAYS
   - SHADOWCASTER
   - DepthOnly
+  - MOTIONVECTORS
+  m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
@@ -60,7 +65,9 @@ Material:
     - Vector1_78A95FF3: 2.5
     - Vector1_F567669: 0.6
     - Vector1_FAD89A8C: 0.05
+    - _AddPrecomputedVelocity: 0
     - _AlphaClip: 0
+    - _AlphaToMask: 0
     - _Blend: 2
     - _BlendOp: 0
     - _BumpScale: 1
@@ -75,6 +82,7 @@ Material:
     - _DistortionStrength: 1
     - _DistortionStrengthScaled: 0
     - _DstBlend: 1
+    - _DstBlendAlpha: 1
     - _EmissionEnabled: 0
     - _FlipbookBlending: 0
     - _FlipbookMode: 0
@@ -87,7 +95,9 @@ Material:
     - _SoftParticlesFarFadeDistance: 1
     - _SoftParticlesNearFadeDistance: 0
     - _SrcBlend: 5
+    - _SrcBlendAlpha: 1
     - _Surface: 1
+    - _XRMotionVectorsPass: 1
     - _ZWrite: 0
     m_Colors:
     - Color_35C44D70: {r: 0, g: 1, b: 0.055555582, a: 1}
@@ -100,3 +110,4 @@ Material:
     - _SoftParticleFadeParams: {r: 0, g: 0, b: 0, a: 0}
     - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
   m_BuildTextureStacks: []
+  m_AllowLocking: 1

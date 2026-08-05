@@ -6,7 +6,6 @@ using UnityEngine.UI;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.SceneManagement;
 using UnityEngine.Advertisements;
-using Doozy.Engine.UI;
 
 [Serializable]
 public class UIScreens

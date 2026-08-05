@@ -1,7 +1,6 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using Doozy.Engine.UI;
 using static GameController;
 
 public class GuiManager : MonoSingleton<GuiManager>

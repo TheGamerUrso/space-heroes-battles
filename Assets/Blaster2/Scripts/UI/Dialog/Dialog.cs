@@ -5,7 +5,7 @@ using UnityEngine;
 public class Dialog<T> : MonoBehaviour
 {
     public TextMeshProUGUI WidgetText;
-    public Doozy.Engine.UI.UIView uiView;
+    public UIView uiView;
 
     public void Enabled(bool value = true)
     {

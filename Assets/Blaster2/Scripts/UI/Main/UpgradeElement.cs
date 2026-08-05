@@ -3,14 +3,13 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using Doozy.Engine.UI;
 
 public class UpgradeElement : MonoBehaviour
 {
     private PlayerData playerData;
     private PlayerShipData playerShipData;
 
-    [SerializeField] private UIButton buyButton;
+    [SerializeField] private Button buyButton;
     [SerializeField] private Image progressbar;
     [SerializeField] private TextMeshProUGUI Name;
     [SerializeField] private TextMeshProUGUI Price;
@@ -67,11 +66,11 @@ public class UpgradeElement : MonoBehaviour
         MessageText.gameObject.SetActive(false);
         NotAvailable.SetActive(false);
         Price.color = TextdefaultColor;
-        buyButton.EnableButton();
+        buyButton.interactable = true;
 
         if (upgrade.ProgressPresentage == 1)
         {
-            buyButton.DisableButton();
+            buyButton.interactable = false;
             if (upgrade.upgradeData.MaxLevel > 1)
             {
                 Warn(Constants.UpgradeMaxedOut);
@@ -87,14 +86,14 @@ public class UpgradeElement : MonoBehaviour
         if (playerData.Coins < upgrade.Cost)
         {
             Price.color = Color.red;
-            buyButton.DisableButton();
+            buyButton.interactable = false;
         }
 
         if (playerShipData.level < upgrade.GetLevelRequirment())
         {
             NotAvailable.SetActive(true);
             Warn(Constants.UnlockedAtLvl + upgrade.GetLevelRequirment());
-            buyButton.DisableButton();
+            buyButton.interactable = false;
         }
     }
 

@@ -1,5 +1,4 @@
-﻿using Doozy.Engine.UI;
-using UnityEngine;
+﻿using UnityEngine;
 
 [System.Serializable]
 public struct TutorialItem

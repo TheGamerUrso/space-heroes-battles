@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using Doozy.Engine.UI.Animation;
 using UnityEngine;
 
 public class EnemyLaserWeapon : MonoBehaviour
