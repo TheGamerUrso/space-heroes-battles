@@ -10,15 +10,6 @@ public class GameScoreWidget : MonoBehaviour
     private float speed = 0.5f;
     private float scoreToShow = 0;
 
-    private void OnDestroy()
-    {
-        Events.OnScoreValueChanged -= OnScoreValueChanged;
-    }
-
-    void Start()
-    {
-        Events.OnScoreValueChanged += OnScoreValueChanged;
-    }
     private void OnScoreValueChanged(int Score){
          score = (int)Score;
     }

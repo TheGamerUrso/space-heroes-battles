@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using TheGamerUrso.Core;
 using UnityEngine;
@@ -7,31 +5,21 @@ using UnityEngine;
 public class QuestUI : UIView
 {
     [SerializeField] private GameObject[] questLocation;
-    protected IDataService dataService;
-    protected IQuestService questService;
-    private void OnEnable()
-    {
-        RefreshObjectives();
-    }
-    public virtual void Awake()
-    {
-        dataService = GameContext.Get<IDataService>();
-
-        questService = GameContext.Get<IQuestService>();
-        questService.LoadingNewQuests += LoadingNewQuests;
-        questService.OnNewQuestGenerated += InitializeObjectives;
-        questService.OnQuestValueChanged += RefreshObjectives;
-    }
+    [SerializeField] protected QuestSystem questManager;
 
     private void OnDestroy()
     {
-        questService.LoadingNewQuests -= LoadingNewQuests;
-        questService.OnNewQuestGenerated -= InitializeObjectives;
-        questService.OnQuestValueChanged -= RefreshObjectives;
+        questManager.LoadingNewQuests -= LoadingNewQuests;
+        questManager.OnNewQuestGenerated -= InitializeObjectives;
+        questManager.OnQuestValueChanged -= RefreshObjectives;
     }
 
     private void Start()
-    {    
+    {
+        questManager.LoadingNewQuests += LoadingNewQuests;
+        questManager.OnNewQuestGenerated += InitializeObjectives;
+        questManager.OnQuestValueChanged += RefreshObjectives;
+
         InitializeObjectives();
     }
 
@@ -48,7 +36,7 @@ public class QuestUI : UIView
     public void RefreshObjectives()
     {
         GameObject questGO;
-        for (int i = 0; i < questService.ListOfActiveQuest.Count; i++)
+        for (int i = 0; i < questManager.ListOfActiveQuest.Count; i++)
         {
             questGO = questLocation[i];
             questGO.GetComponent<QuestUIElement>().RefreshQuests();
@@ -58,7 +46,7 @@ public class QuestUI : UIView
     public void InitializeObjectives()
     {
         var questIndex = 0;
-        foreach (QuestData item in dataService.GetPlayerData().ListOfPlayerActiveQuest.ToList())
+        foreach (QuestData item in questManager.ActiveQuests.ToList())
         {
             var questLocation = this.questLocation[questIndex];
             var questUIElement = questLocation.GetComponent<QuestUIElement>();

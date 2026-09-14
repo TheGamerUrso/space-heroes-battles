@@ -51,9 +51,9 @@ public class Items : MonoBehaviour, IPickable
         dataService = GameContext.Get<IDataService>();
         audioService = GameContext.Get<IAudioService>();
 
-
+        var playerService = GameContext.Get<PlayerManager>();
         PlayerData playerData = dataService.GetPlayerData();
-        player = PlayerManager.GetPlayer();
+        player = playerService.GetPlayer();
     }
 
 
@@ -85,7 +85,6 @@ public class Items : MonoBehaviour, IPickable
         switch (itemData.itemType)
         {
             case ItemEnum.COIN:
-                GameController.Instance.SetCoinPicked(itemData.ammount);
                 player.SetWallet(itemData.ammount);
                 break;
             case ItemEnum.SHIELD:

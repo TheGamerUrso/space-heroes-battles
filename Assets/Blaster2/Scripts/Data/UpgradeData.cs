@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Create New Upgrade")]
-public class UpgradeData : ScriptableObject {
+public class UpgradeData : ScriptableObject 
+{
     public UpgradeTypeEnum upgradeType;
     public Sprite sprite;
     public int Cost;

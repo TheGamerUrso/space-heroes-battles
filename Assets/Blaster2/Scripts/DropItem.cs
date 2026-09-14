@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 [Serializable]
@@ -59,14 +60,15 @@ public class DropItem : MonoBehaviour
     public void PickRandomEnemyToSpawn(Transform transform)
     {
 
+        var playerService = GameContext.Get<PlayerManager>();
         if (ListOfDropItems.Count > 0)
         {
-            if (PlayerManager.GetPlayer() == null)
+            if (playerService.GetPlayer() == null)
             {
                 return;
             }
 
-            playerShip = PlayerManager.GetPlayer();
+            playerShip = playerService.GetPlayer();
 
 
             bool hasShield = playerShip.HasShieldModule();
@@ -169,7 +171,7 @@ public class DropItem : MonoBehaviour
                 GameObject extraDrop = PoolManager.Instance.GetObjectFromPool(ListOfDropItems[0].DropItemsType);
                 extraDrop.transform.position = transform.position;
                 extraDrop.transform.rotation = Quaternion.identity;
-                GameController.Instance.TotalCoinsInGame++;
+               
                 extraDrop.SetActive(true);
             }
             return;

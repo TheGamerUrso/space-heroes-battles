@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class LoadingController : ServiceComponent<ILoadingService>, ILoadingService
 {
-
-    #region Loading Screen
     [Header("LoadingScreen")]
     [SerializeField] private GameObject LoadingScreen;
     [SerializeField] private Image progressBar;
@@ -16,25 +14,14 @@ public class LoadingController : ServiceComponent<ILoadingService>, ILoadingServ
     [SerializeField] private GameObject Content;
     [SerializeField] private GateControl[] Gates;
 
-    WaitForSeconds shortWait = new WaitForSeconds(2.0f);
+    [SerializeField] private SceneLoader sceneLoader;
 
-    #endregion
-    public void ToggleLoadingScreenCanvas(bool show)
+    private void Start()
     {
-        LoadingScreen.GetComponent<Canvas>().enabled = show;
-    }
+        sceneLoader.OnSceneLoadStarted += Show;
+        sceneLoader.OnSceneLoadEnded += Hide;
 
-    private IEnumerator ShowLoadingScreen(LevelEnum level, bool showLoadingScreen = true)
-    {
-        if (showLoadingScreen)
-        {
-            //LoadingScreen.GetComponent<Canvas>().enabled = true;
-            Show();
-            yield return new WaitForSeconds(.5f);
-        }
-        yield return shortWait;
-        Content.SetActive(true);
-       //StartCoroutine(LoadSceneAsync(level));
+        Hide();
     }
 
     private void Show()
@@ -49,12 +36,11 @@ public class LoadingController : ServiceComponent<ILoadingService>, ILoadingServ
     private void Hide()
     {
         Content.SetActive(false);
-        //BlockRaycast.blocksRaycasts = false;
+        BlockRaycast.blocksRaycasts = false;
         for (int i = 0; i < Gates.Length; i++)
         {
             GateControl gate = Gates[i];
             gate.OpenGate();
         }
     }
-
 }

@@ -121,7 +121,7 @@ public class BossDestroyablePart : Ship, IDamagable, ITargetable
             animator.SetTrigger("Hit");
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = other.transform.position;
-            Events.ShakeCamera?.Invoke(.5f);
+           //TODO SHAKE CAMERA
             audioSource.PlayOneShot(hitSFX);
         }
     }

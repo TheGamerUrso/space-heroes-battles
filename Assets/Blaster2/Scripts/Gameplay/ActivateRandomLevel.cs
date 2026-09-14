@@ -49,7 +49,6 @@ public class ActivateRandomLevel : MonoBehaviour
 
         cameraMain = Camera.main;
         survivalMode = gameService.GetGameMode();
-        Events.HyperspaceEnded = ActivateHyperdrive;
         defaultLayer = cameraMain.cullingMask;
 
 
@@ -132,7 +131,7 @@ public class ActivateRandomLevel : MonoBehaviour
         WrapTunnelFX.SetActive(true);
 
         yield return new WaitForSeconds(1.0f);
-        GameController.Instance.DeactivateAsteroid();
+
 
         ChooseNewLevel();
 
@@ -140,7 +139,7 @@ public class ActivateRandomLevel : MonoBehaviour
         audioSource.PlayOneShot(ending);
         cameraMain.cullingMask = defaultLayer;
         WrapTunnelFX.SetActive(false);
-        GameController.Instance.EnableAsteroids();
+
         active = false;
         audioService.PlayRandomMusic(true);
     }

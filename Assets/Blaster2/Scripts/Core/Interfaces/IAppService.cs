@@ -8,5 +8,6 @@ namespace TheGamerUrso.Core
         void LoadMainMenu();
         void ResetLevel();
         void PauseTheGame(bool value);
+        void SetGameState(GameStateEnum nextGameState);
     }
 }

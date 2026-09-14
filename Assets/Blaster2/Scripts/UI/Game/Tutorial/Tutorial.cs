@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TheGamerUrso.Core;
+using UnityEngine;
 
 [System.Serializable]
 public struct TutorialItem
@@ -27,7 +28,8 @@ public class Tutorial : MonoSingleton<Tutorial>
     {
         if (!GameController.Instance.IsGameOver)
         {
-            //GameManager.Instance.IsPaused = true;
+            var appService = GameContext.Get<IAppService>();
+            appService.PauseTheGame(true);
             TutorialView.Show();
             for (int i = 0; i < TutorailItemsToShow.Length; i++)
             {
@@ -45,10 +47,12 @@ public class Tutorial : MonoSingleton<Tutorial>
 
     public void Close()
     {
+        var playerService = GameContext.Get<PlayerManager>();
+        var appService = GameContext.Get<IAppService>();
         TutorialView.Hide();
-       //GameManager.Instance.IsPaused = false;
+        appService.PauseTheGame(false);
         Time.timeScale = 1;
-        PlayerManager.GetPlayer().tempGodMode();
+        playerService.GetPlayer().tempGodMode();
     }
 
 }

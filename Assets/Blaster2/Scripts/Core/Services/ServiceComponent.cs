@@ -5,6 +5,8 @@ namespace TheGamerUrso.Core
     /// <summary>
     /// Abstract MonoBehaviour backing component that auto-registers implementing interfaces into GameContext.
     /// </summary>
+    /// 
+    [DefaultExecutionOrder(1000)]
     public abstract class ServiceComponent<T> : MonoBehaviour where T : class
     {
         //====================================================================================================

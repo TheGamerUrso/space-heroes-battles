@@ -6,6 +6,7 @@ using System.Collections.Generic;
 public class BossEnemy : Enemy
 {
     public Action<int> OnBossPhaseChanged;
+    public event Action<BossEnemy,int> OnBossAttacked;
     #region Components
     [SerializeField] protected List<BossDestroyablePart> DestroyableParts = new List<BossDestroyablePart>();
     #endregion
@@ -68,7 +69,7 @@ public class BossEnemy : Enemy
 
     public override void TakeDamage(float dmg)
     {
-        //if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0) return;
+        if (GameController.Instance.CurrentGameState == GameController.GameState.TRANSMISSION || delayAttak > 0) return;
         if (IsAlive == false) return;
 
         ShieldEffect.SetActive(IsProtected());
@@ -117,7 +118,6 @@ public class BossEnemy : Enemy
     public override void Death()
     {
         animator.SetBool("Death", true);
-        Events.BossDied?.Invoke(Id, this);
         StartCoroutine(DeathSequence());
     }
 
@@ -129,7 +129,7 @@ public class BossEnemy : Enemy
         }
         else
         {
-            OnEnemyAttack?.Invoke();
+            OnBossAttacked?.Invoke(this,hitIndex);
         }
     }
 
@@ -163,7 +163,7 @@ public class BossEnemy : Enemy
             explostion.transform.position = transform.position;
             explostion.SetActive(true);
             HealthBar.Hide();
-            Events.ShakeCamera?.Invoke(.5f);
+            //TODO SHAKE CAMERA .5f
             DropItem.Instance.PickRandomDropItem(transform);
             Destroy(transform.parent.gameObject);
         }
@@ -178,21 +178,6 @@ public class BossEnemy : Enemy
             {
                 item.gameObject.SetActive(false);
             }
-        }
-    }
-
-    public override void OnEnemyHitHandled(int hitIndex, int numberOfHits)
-    {
-        //if (GuiManager.Instance.IsTrasnmiting())
-        //{
-        //    return;
-        //}
-
-        PlayerData playerData = dataService.GetPlayerData();
-
-        if (playerData != null)
-        {
-            playerData.SetSuperMeter(playerData.PowerUpLevel + 0.05f);
         }
     }
 

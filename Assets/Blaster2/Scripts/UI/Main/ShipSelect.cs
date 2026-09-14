@@ -3,13 +3,6 @@ using System.Collections;
 using TheGamerUrso.Core;
 using UnityEngine;
 
-[System.Serializable]
-public class ShipEventArgs : System.EventArgs
-{
-    public ShipSelectElement selectElement { get; set; }
-    public ShipSelectData shipSelectData { get; set; }
-}
-
 public class ShipSelect : UIView
 {
     public event Action OnShipSelected;
@@ -38,9 +31,6 @@ public class ShipSelect : UIView
     protected void Start()
     {
         currentShipSelected = playerData.CurrrentSelectedShip;
-
-        Events.OnShipSelect += SelectShip;
-
         RefreshShipTexture();
     }
 

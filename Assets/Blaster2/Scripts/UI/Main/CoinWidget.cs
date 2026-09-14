@@ -13,15 +13,10 @@ public class CoinWidget : MonoBehaviour
     {
         dataService = GameContext.Get<IDataService>();
     }
-    private void OnDestroy()
-    {
-        Events.OnCoinValueChanged -= UpdateCoins;
-    }
 
     private void Start()
     {
         playerData = dataService.GetPlayerData();
-        Events.OnCoinValueChanged += UpdateCoins;
         UpdateCoins(playerData.Coins);
     }
 

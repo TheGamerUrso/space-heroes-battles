@@ -39,16 +39,9 @@ public class RewardWidget : MonoBehaviour
         dataService = GameContext.Get<IDataService>();
 
     }
-    private void OnDestroy()
-    {
-        Events.ClaimReward = null;
-        Events.ClaimedReward = null;
-    }
 
     private void Start()
     {
-        Events.ClaimReward = ClaimReward;
-        Events.ClaimedReward = RewardClaimed;
         rewards = new RewardTypeEnum[3];
         rewardPanel.SetActive(false);
         rewardResultPanel.SetActive(false);
@@ -99,10 +92,10 @@ public class RewardWidget : MonoBehaviour
     {
 
         yield return new WaitForSeconds(1.0f);
-
+        var playerService = GameContext.Get<PlayerManager>();
         PlayerData playerData = dataService.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-        PlayerShip playerShip = PlayerManager.GetPlayer();
+        PlayerShip playerShip = playerService.GetPlayer();
         string textToShow = "No Reward";
 
         switch (rewardType)

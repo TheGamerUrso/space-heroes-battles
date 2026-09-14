@@ -23,12 +23,12 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private TransmitionWidget transmittionWidget;
     private float timer;
 
+    public GameController gameController;
+
     //=================================================================================
     protected void OnDestroy()
     {
-        Events.OnGameOver -= GameOver;
-        Events.OnPauseGame -= ShowPauseMenu;
-        Events.OnScoreValueChanged -= UpdateScore;
+        
     }
 
     //=================================================================================
@@ -39,9 +39,6 @@ public class GuiManager : MonoBehaviour
     //=================================================================================
     private void Start()
     {
-        Events.OnScoreValueChanged += UpdateScore;
-        Events.OnGameOver += GameOver;
-        Events.OnPauseGame += ShowPauseMenu;
         timer = 1;
 
         UpdateScore(0);
@@ -49,7 +46,7 @@ public class GuiManager : MonoBehaviour
     //=================================================================================
     private void Update()
     {
-        if (GameController.CurrentGameState == GameController.GameState.GAME)
+        if (gameController.CurrentGameState == GameController.GameState.GAME)
         {
 #if UNITY_ANDROID
             if (!GameController.Instance.SlowMo)
@@ -83,19 +80,17 @@ public class GuiManager : MonoBehaviour
     //=================================================================================
     public void ReplayButton()
     {
-        //GameManager.Instance.ResetLevel();
+     
     }
     //=================================================================================
     public void ResumeButton()
     {
-        Events.ToggleSlowMo?.Invoke(true);
-       // GameManager.Instance.PauseTheGame(false);
+
     }
     //=================================================================================
     public void PauseButton()
     {
-        Events.ToggleSlowMo?.Invoke(false);
-       // GameManager.Instance.PauseTheGame(true);
+     
     }
     //=================================================================================
     public void ShowPauseMenu(bool value)
@@ -155,14 +150,8 @@ public class GuiManager : MonoBehaviour
             activeMenuGO = PauseScreen;
         }
 
-        Events.ToggleSlowMo?.Invoke(false);
-        //GameManager.Instance.PauseTheGame(false);
-
         if (activeMenuGO != null)
             StartCoroutine(DelayCloseMenu(activeMenuGO, 1));
-
-
-        //GameManager.Instance.LoadMainenu();
     }
 
     //=================================================================================

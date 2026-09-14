@@ -47,8 +47,6 @@ public class PlayerData
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
-    public PlayerData() { }
-
     public PlayerData(Player_SO[] players)
     {
         Score = 0;
@@ -106,13 +104,11 @@ public class PlayerData
     public void SetCurrentSelectShip(int select)
     {
         CurrrentSelectedShip = select;
-        Events.OnShipSelectValueChanged?.Invoke(CurrrentSelectedShip);
     }
 //======================================================================================================================================================
     public void SetControlSceme(int option)
     {
         ControlScene = option;
-        Events.OnControlScemeChange?.Invoke();
     }
 //======================================================================================================================================================
     public void SetPowerPackCollected(int ammount)
@@ -122,7 +118,6 @@ public class PlayerData
         {
             PowerPackCollected = 5;
         }
-        Events.OnPowerPackCollected?.Invoke(PowerPackCollected);
     }
 //======================================================================================================================================================
     public void SetSuperMeter(float ammount)
@@ -132,7 +127,6 @@ public class PlayerData
         {
             PowerUpLevel = 1;
         }
-        Events.PowerUpLevelValueChanged?.Invoke(PowerUpLevel);
     }
 //======================================================================================================================================================
     public void SetScore(int score)
@@ -149,18 +143,7 @@ public class PlayerData
         HighScore = Mathf.Clamp(HighScore, 0, 999999999);
     }
 
-//======================================================================================================================================================
-    public QuestData GetOnGoingObjectiveById(QuestTypeEnum objectiveType)
-    {
-        for (int i = 0; i < ListOfPlayerActiveQuest.Count; i++)
-        {
-            if ((QuestTypeEnum)ListOfPlayerActiveQuest[i].questType == objectiveType)
-            {
-                return ListOfPlayerActiveQuest[i];
-            }
-        }
-        return null;
-    }
+
 //======================================================================================================================================================
     public void AbstractCoins(int ammount)
     {
@@ -170,7 +153,6 @@ public class PlayerData
         {
             Coins = 0;
         }
-        Events.OnCoinValueChanged?.Invoke(Coins); 
         var questService = GameContext.Get<IQuestService>();
         questService.SetQuestProgressByType(QuestTypeEnum.SPEND, CoinSpend);
     }
@@ -183,8 +165,6 @@ public class PlayerData
         {
             Coins = 9999999;
         }
-        Events.OnCoinValueChanged?.Invoke(Coins);
-        Events.OnCoinValueChanged?.Invoke(CoinPicked);
     }
 //======================================================================================================================================================
     public void SetWaveSurvivedCount(int value)
@@ -212,7 +192,6 @@ public class PlayerData
         {
             SuperUsed += ammount;
         }
-        Events.OnSuperUseValueChanged?.Invoke(SuperUsed);
         var questService = GameContext.Get<IQuestService>();
         questService.SetQuestProgressByType(QuestTypeEnum.USE, SuperUsed);
     }
@@ -248,8 +227,6 @@ public class PlayerData
                 XP = 0;
 
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
-
-               // Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
             }
         }
         else
@@ -261,8 +238,6 @@ public class PlayerData
         currentPlayerShipSelected.level = Level;
         currentPlayerShipSelected.xp = XP;
         currentPlayerShipSelected.xpToLevel = xpToLevel;
-
-        Events.OnXpValueChanged?.Invoke(currentPlayerShipSelected.level, currentPlayerShipSelected.xp, xpToLevel);
     }
 //======================================================================================================================================================
     public void SetUpgrade(int upgrade, int value)

@@ -26,19 +26,9 @@ public class PlayerXPWidget : MonoBehaviour
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        Events.OnXpValueChanged += UpdateXP;
-
         UpdateXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
-
     }
 
-    private void OnDestroy()
-    {
-        if (player != null)
-        {
-            Events.OnXpValueChanged -= UpdateXP;
-        }
-    }
     public void UpdateXP(int lvl, float xp, float xpToLevel)
     {
         XPBar.maxValue = xpToLevel;

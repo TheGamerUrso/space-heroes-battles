@@ -66,25 +66,10 @@ public class BaseGameMode : MonoBehaviour
 
     private void OnDestroy()
     {
-        Events.PlayerLost -= GameOver;
-        Events.GameEnded -= Win;
-        Events.EnemyDied -= OnEnemyDiedHandled;
-        Events.BossDied -= OnEnemyDiedHandled;
-        Events.EnemyGotHit -= OnEnemyHitHandled;
-        Events.BossHit -= OnEnemyHitHandled;
-        Events.EnemyEscaped -= OnEnemyEscapedCallback;
     }
 
     public virtual void Awake()
-    {    
-        Events.PlayerLost += GameOver;
-        Events.GameEnded += Win;
-        Events.EnemyDied += OnEnemyDiedHandled;
-        Events.BossDied += OnEnemyDiedHandled;
-        Events.EnemyGotHit += OnEnemyHitHandled;
-        Events.BossHit += OnEnemyHitHandled;
-        Events.EnemyEscaped += OnEnemyEscapedCallback;
-
+    {
         dataService = GameContext.Get<IDataService>();
         audioService = GameContext.Get<IAudioService>();
         gameService = GameContext.Get<IGameService>();

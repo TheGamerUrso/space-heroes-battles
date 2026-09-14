@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class SurvivalGameMode : BaseGameMode
@@ -8,7 +9,10 @@ public class SurvivalGameMode : BaseGameMode
 
     bool active = false;
     bool rewardToClaim = false;
-    
+
+    public GameController gameController;
+
+
     public override void SetGameMode()
     {
         base.SetGameMode();
@@ -51,9 +55,9 @@ public class SurvivalGameMode : BaseGameMode
 
     public override IEnumerator UpdateGameMode()
     {
-        if (GameController.CurrentGameState == GameController.GameState.START)
+        if (gameController.CurrentGameState == GameController.GameState.START)
         {
-            yield return new WaitUntil(() => (GameController.CurrentGameState == GameController.GameState.GAME));
+            yield return new WaitUntil(() => (gameController.CurrentGameState == GameController.GameState.GAME));
         }
 
         yield return shortWait;
@@ -62,10 +66,10 @@ public class SurvivalGameMode : BaseGameMode
         {
             NewWave();
 
-            //if (GuiManager.Instance.IsTrasnmiting() || GameController.CurrentGameState == GameController.GameState.GAME)
-            //{
-            //    yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
-            //}
+            if (gameController.IsTrasnmiting() || gameController.CurrentGameState == GameController.GameState.GAME)
+            {
+                yield return new WaitUntil(() => !gameController.IsTrasnmiting());
+            }
 
             yield return shortWait;
 
@@ -106,7 +110,8 @@ public class SurvivalGameMode : BaseGameMode
 
             yield return shortWait;
 
-            if (PlayerManager.GetPlayer().CurrentHealth > 0)
+            var playerService = GameContext.Get<PlayerManager>();
+            if (playerService.GetPlayer().CurrentHealth > 0)
             {
                 if (Enemy.EnemiesCount > 0)
                 {
@@ -125,7 +130,7 @@ public class SurvivalGameMode : BaseGameMode
                     {
                         yield return new WaitUntil(() => !gameInfo.BossBattleInitiated);
 
-                        if (!PlayerManager.GetPlayer().IsAlive) yield break;
+                        if (!playerService.GetPlayer().IsAlive) yield break;
 
                         yield return RewardWait;
 
@@ -134,7 +139,7 @@ public class SurvivalGameMode : BaseGameMode
 
                         while (rewardToClaim)
                         {
-                            rewardToClaim = Events.ClaimedReward();
+                            rewardToClaim = true;
                             yield return longWait;
                         }
 
@@ -147,7 +152,7 @@ public class SurvivalGameMode : BaseGameMode
 
                 while (active)
                 {
-                    active = Events.HyperspaceEnded();
+                    active = gameController.HyperspaceEnded();
                     yield return null;
                 }
 

@@ -1,65 +1,43 @@
 ﻿using System;
 using UnityEngine;
-
-public class PlayerManager
+[Serializable]
+public struct PlayerShipElement
 {
-    private static PlayerManager instance;
-    private static PlayerManager Instance
-    {
-        get
-        {
-            return instance;
-        }
-    }
-
-    private static GameObject currentPlayer;
-    private static PlayerShipElement[] listOfPlayerShips;
+    public string name;
+    public GameObject prefab;
+}
 
 
-    //public PlayerManager(GameManager gm, GameManager dc)
-    //{
-    //    if (instance == null)
-    //    {
-    //        this.gm = gm;
-    //        this.dc = dc;
-    //        instance = this;
-    //    }
+public class PlayerManager : MonoBehaviour
+{
+    private GameObject currentPlayer;
+    [SerializeField] private PlayerShipElement[] PlayerShips;
 
-    //}
-
-    //private GameManager gm;
-    //private GameManager dc;
-
-    public static GameObject CreatePlayer(int id)
+    public GameObject CreatePlayer(int id)
     {
         return CreatePlayerById(id);
     }
 
-    public static GameObject CreatePlayerById(int id)
+    public GameObject CreatePlayerById(int id)
     {
-        if (id >= listOfPlayerShips.Length)
+        if (id >= PlayerShips.Length)
         {
             id = 0;
         }
 
-        currentPlayer = GameObject.Instantiate(listOfPlayerShips[id].prefab.gameObject);
+        currentPlayer = GameObject.Instantiate(PlayerShips[id].prefab.gameObject);
 
         currentPlayer.SetActive(true);
 
         return currentPlayer;
     }
 
-    public static PlayerShipElement GetPlayerByID(int id)
+    public PlayerShipElement GetPlayerByID(int id)
     {
-        return listOfPlayerShips[id];
+        return PlayerShips[id];
     }
 
-    public void LoadPlayerSettings()
-    {
-        //listOfPlayerShips = gm.ListOfPlayerShips();
-    }
-
-    public static PlayerShip GetPlayer()
+    public PlayerShip GetPlayer()
     {
         if (currentPlayer == null)
         {

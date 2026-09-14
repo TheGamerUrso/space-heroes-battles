@@ -1,22 +1,37 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
+using UnityEngine.UIElements;
+
 
 
 public class UpgradeScreen : UIView
 {
     [SerializeField] private List<UpgradeElement> upgradeElements = new List<UpgradeElement>();
-    private List<UpgradesDBEntry> UpgradeDatabase;
-    protected UpgradeManager upgradeManager;
+    [SerializeField] private UpgradeManager upgradeManager;
+
+    private IDataService dataService;
 
     private void Start()
     {
-        UpgradeDatabase = upgradeManager.GetUpgradeDatabase();
+        dataService = GameContext.Get<IDataService>();
+
+        upgradeManager.OnUpgradeValueChanged += UpgradeManager_OnUpgradeValueChanged;
         for (int i = 0; i < upgradeElements.Count; i++)
         {
-            upgradeElements[i].SetUpgradeElement(UpgradeDatabase[i].Upgrade,this);
+            upgradeElements[i].SetUpgradeElement(upgradeManager, dataService.GetPlayerData());
         }
-  
+    }
+
+    private void OnDestroy()
+    {
+        upgradeManager.OnUpgradeValueChanged -= UpgradeManager_OnUpgradeValueChanged;
+    }
+
+    private void UpgradeManager_OnUpgradeValueChanged(Upgrade upgrade)
+    {
+        RefreshUpgrades();
     }
 
     public void RefreshUpgrades()
@@ -26,5 +41,10 @@ public class UpgradeScreen : UIView
             upgradeElements[i].Refresh();
         }
     }
-        
+
+    public void BuyUpgrade(UpgradeTypeEnum upgradeType)
+    {      
+       
+    }
+
 }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TheGamerUrso.Core;
+using UnityEngine;
 
 public class ArtilleryProjectile : EnemyProjectile
 {
@@ -51,7 +52,8 @@ public class ArtilleryProjectile : EnemyProjectile
 
         if (!fall)
         {
-            playerShip = PlayerManager.GetPlayer();
+            var playerService = GameContext.Get<PlayerManager>();
+            playerShip = playerService.GetPlayer();
 
             if (playerShip != null)
             {

@@ -34,9 +34,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private UIScreens[] MainMenuScreens;
 
     private ScreenType previousScreen;
-    private IDataService dataService;
-    private IAudioService audioService;
-    private IAppService appService;
+
 
     [ContextMenu("Get Safe Area")]
     public void GetSafeArea()
@@ -59,7 +57,6 @@ public class MainMenuManager : MonoBehaviour
                 }
                 else
                 {
-                    PlayerData playerData = dataService.GetPlayerData();
                     shipSelect.SelectShip(playerData.CurrrentSelectedShip);
 
                     Close();
@@ -68,17 +65,8 @@ public class MainMenuManager : MonoBehaviour
         }
     }
 
-    protected void Awake()
-    {
-        dataService = GameContext.Get<IDataService>();
-        audioService = GameContext.Get<IAudioService>();
-        appService = GameContext.Get<IAppService>();
-    }
-
     protected void Start()
     {
-        appService.PauseTheGame(false);
-        audioService.PlayMusic("Menu");
         Application.targetFrameRate = 30;
 
         foreach (UIScreens item in MainMenuScreens)
@@ -90,6 +78,7 @@ public class MainMenuManager : MonoBehaviour
             }
         }
 
+        var dataService = GameContext.Get<IDataService>();
         playerData = dataService.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
@@ -200,7 +189,6 @@ public class MainMenuManager : MonoBehaviour
                 {
                     if (item.ScreenType == ScreenType.ShipSelect && item.m_UIElement.IsVisible)
                     {
-                        PlayerData playerData = dataService.GetPlayerData();
                         shipSelect.SelectShip(playerData.CurrrentSelectedShip);
                     }
 
@@ -249,7 +237,6 @@ public class MainMenuManager : MonoBehaviour
 
                 if (item.ScreenType != ScreenType.ShipSelect && item.m_UIElement.IsVisible)
                 {
-                    PlayerData playerData = dataService.GetPlayerData();
                     shipSelect.SelectShip(playerData.CurrrentSelectedShip);
                 }
 

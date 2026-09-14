@@ -20,15 +20,9 @@ public class ComboKillIndicator : MonoBehaviour
     private Ease ease = Ease.InOutQuart;
     private Vector3 size = new Vector3(.25f, .25f, .25f);
 
-    private void OnDestroy()
-    {
-        Events.OnMultiplierChanged -= OnMultiplierChanged;
-    }
-
     private void Start()
     {
         HideText();
-        Events.OnMultiplierChanged += OnMultiplierChanged;
     }
 
     public void ShowText()

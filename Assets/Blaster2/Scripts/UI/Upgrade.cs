@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using TheGamerUrso.Core;
 using UnityEngine;
-using UnityEngine.Analytics;
+
 
 [Serializable]
 public class Upgrade
 {
-    private PlayerData playerData;
-    private PlayerShipData playerShipData;
-
     public UpgradeData upgradeData;
-
-    public int Level;
+    public int Level; 
     public int Cost;
 
     public float ProgressPresentage
@@ -22,56 +17,10 @@ public class Upgrade
             return (float)Level / (float)upgradeData.MaxLevel;
         }
     }
-    protected IDataService dataService;
-
-    ~Upgrade()
-    {
-        Events.OnShipSelectValueChanged -= (x) => { SetPlayerShipData(); };
-    }
-
-    public Upgrade(UpgradeData upgradeData)
-    {
-        this.upgradeData = upgradeData;
-
-        Level = 0;
-
-        Events.OnShipSelectValueChanged += (x) => { SetPlayerShipData(); };
-        dataService = GameContext.Get<IDataService>();
-
-        playerData = dataService.GetPlayerData();
-        SetPlayerShipData();
-
-
-        if (upgradeData.CostPerLevel.Length > 0)
-        {
-            Cost = upgradeData.CostPerLevel[Level];
-        }
-        else
-        {
-            Cost = upgradeData.Cost;
-        }
-    }
-
-    public int GetLevelRequirment()
-    {
-        if (upgradeData.LevelRequirementPerLevel.Length > 0)
-        {
-            return upgradeData.LevelRequirementPerLevel[Level];
-        }
-        else
-        {
-            return 1;
-        }
-    }
-
-    public void Buy()
+    public void LevelUp()
     {
         Level++;
 
-        playerShipData.SetUpgradeByType(upgradeData.upgradeType, Level);
-
-        playerData.AbstractCoins(Cost);
-
         if (upgradeData.CostPerLevel.Length > 0)
         {
             Cost = upgradeData.CostPerLevel[Level];
@@ -82,24 +31,17 @@ public class Upgrade
         }
     }
 
-    public void SetPlayerShipData()
+    public void SetUpgrade(int level)
     {
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        Level = playerShipData.Upgrades[(int)upgradeData.upgradeType];
+        Level = level;
+        if (upgradeData.CostPerLevel.Length > 0)
+        {
+            Cost = upgradeData.CostPerLevel[Level];
+        }
+        else
+        {
+            Cost = upgradeData.Cost;
+        }
     }
-
-    public string GetCost()
-    {
-        return $"{Cost.ToString()}";
-    }
-
-    public string GetLevelRequirmentToString()
-    {
-        return $"{Constants.UnlockedAtLvl} {upgradeData.LevelRequirementPerLevel[Level].ToString()} Required";
-    }
-
-    public string GetUpgradeName()
-    {
-        return $"{upgradeData.upgradeType.ToString()}";
-    }
+ 
 }

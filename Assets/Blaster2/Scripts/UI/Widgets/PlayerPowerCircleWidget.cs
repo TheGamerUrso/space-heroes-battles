@@ -34,22 +34,11 @@ public class PlayerPowerCircleWidget : MonoBehaviour
     [SerializeField] private Sprite[] WeaponIndicatorSpritesNotActivated;
     protected IDataService dataService;
 
-
-    private void OnDestroy()
-    {
-        if (player != null)
-            Events.PowerUpLevelValueChanged -= PowerUpLevelChanged;
-        Events.OnPowerPackCollected -= PowerPackCollected;
-    }
-
     void Awake()
     {
-        if (player != null)
-            Events.PowerUpLevelValueChanged += PowerUpLevelChanged;
-            Events.OnPowerPackCollected += PowerPackCollected;
-
         dataService = GameContext.Get<IDataService>();
     }
+
     private void Start()
     {
         playerData = dataService.GetPlayerData();

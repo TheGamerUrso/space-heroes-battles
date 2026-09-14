@@ -38,10 +38,9 @@ namespace TheGamerUrso.Core
             GameObject gameInstance = Object.Instantiate(gamePrefab);
             gameInstance.name = GAME_PREFAB_RESOURCE_PATH;
             Object.DontDestroyOnLoad(gameInstance);
-            
+
             //REGISTER ANY SERVICES HERE
-
-
+        
             isInitialized = true;
             Debug.Log($"[{nameof(GameBootstrapper)}] Persistent '{GAME_PREFAB_RESOURCE_PATH}' successfully booted.");
         }

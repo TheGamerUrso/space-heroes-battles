@@ -7,9 +7,6 @@ using UnityEngine.UI;
 
 public class UpgradeElement : MonoBehaviour
 {
-    private PlayerData playerData;
-    private PlayerShipData playerShipData;
-
     [SerializeField] private Button buyButton;
     [SerializeField] private Image progressbar;
     [SerializeField] private TextMeshProUGUI Name;
@@ -18,53 +15,51 @@ public class UpgradeElement : MonoBehaviour
     [SerializeField] private Image Icon;
 
     [SerializeField] private GameObject NotAvailable;
-
-
-    private Upgrade upgrade;
-    private UpgradeScreen upgradeScreen;
+    private UpgradeManager upgradeManager;
 
     private Color TextdefaultColor;
-    private IDataService dataService;
-    private void OnEnable()
-    {
-        Events.RefreshUpdateData?.Invoke();
-    }
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
+    [SerializeField] private UpgradeData upgradeData;
+    private Upgrade upgrade;
 
-    private void OnDestroy()
+    public void SetUpgradeElement(UpgradeManager upgradeManager,PlayerData playerData)
     {
-        Events.RefreshUpdateData -= Refresh;
-    }
-    private void Awake()
-    {
-        dataService = GameContext.Get<IDataService>();
-    }
-    private void Start()
-    {
-        Events.RefreshUpdateData += Refresh;
-    }
-
-    public void SetUpgradeElement(Upgrade upgrade, UpgradeScreen upgradeScreen)
-    {
-        this.upgrade = upgrade;
-        Name.text = upgrade.GetUpgradeName();
-        Price.text = upgrade.GetCost();
+        this.upgradeManager = upgradeManager;
+        this.playerData = playerData;
+        this.playerShipData = playerData.GetCurrentPlayerShipData();
+        upgrade = upgradeManager.GetUpgrade(upgradeData.upgradeType);
+        upgradeManager.OnUpgradeValueChanged += Upgrade_OnUpdateValueChanged;
+        upgradeManager.OnUpgradeErrorOccured += UpgradeManager_OnUpgradeErrorOccured;
+        Name.text = upgradeManager.GetUpgradeName(upgrade.upgradeData.upgradeType);
         Icon.sprite = upgrade.upgradeData.sprite;
-        this.upgradeScreen = upgradeScreen;
-        playerData = dataService.GetPlayerData();
-
         TextdefaultColor = Price.color;
 
         Refresh();
     }
 
+    private void UpgradeManager_OnUpgradeErrorOccured(string message)
+    {
+        Warn(message); 
+    }
+
+    private void Upgrade_OnUpdateValueChanged(Upgrade obj)
+    {
+        Refresh();
+    }
+
+    private void Update()
+    {
+        Price.color = playerData.Coins < upgrade.Cost ? Color.red : Color.green;
+        buyButton.interactable = playerData.Coins < upgrade.Cost ? false : true;
+    }
+
     public void Refresh()
     {
-        if (playerData == null)
-        {
-            return;
-        }
+     
+        Price.text = upgradeManager.GetCost(upgrade.upgradeData.upgradeType);
 
-        playerShipData = playerData.GetCurrentPlayerShipData();
+
         progressbar.fillAmount = upgrade.ProgressPresentage;
 
         MessageText.gameObject.SetActive(false);
@@ -93,10 +88,10 @@ public class UpgradeElement : MonoBehaviour
             buyButton.interactable = false;
         }
 
-        if (playerShipData.level < upgrade.GetLevelRequirment())
+        if (playerShipData.level < upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
         {
             NotAvailable.SetActive(true);
-            Warn(Constants.UnlockedAtLvl + upgrade.GetLevelRequirment());
+            Warn(Constants.UnlockedAtLvl + upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType));
             buyButton.interactable = false;
         }
     }
@@ -104,20 +99,35 @@ public class UpgradeElement : MonoBehaviour
 
     public void BuyButton()
     {
-        if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgrade.GetLevelRequirment())
+        if (upgrade.ProgressPresentage == 1)
+        {
+            buyButton.interactable = false;
+            if (upgrade.upgradeData.MaxLevel > 1)
+            {
+                Warn(Constants.UpgradeMaxedOut);
+            }
+            else if (upgrade.upgradeData.MaxLevel == 1)
+            {
+                Warn(Constants.OutOfStock);
+            }
+            return;
+        }
+
+        if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
         {
             if (upgrade.ProgressPresentage == 1)
             {
                 return;
             }
 
-            if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgrade.GetLevelRequirment())
+            if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
             {
-                upgrade.Buy();
+                upgrade.LevelUp();
             }
-
-            upgradeScreen.RefreshUpgrades();
         }
+
+
+        upgradeManager.BuyUpgrade(upgradeData.upgradeType);
     }
 
     public void Warn(string message)

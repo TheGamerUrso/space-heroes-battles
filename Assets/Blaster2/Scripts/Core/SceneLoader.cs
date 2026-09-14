@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.MPE;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,9 @@ namespace TheGamerUrso.Core
     [DisallowMultipleComponent]
     public class SceneLoader : MonoSingleton<SceneLoader>
     {
+        public event Action OnSceneLoadStarted;
+        public event Action OnSceneLoadEnded;
+
         //====================================================================================================
         // Fields & Configuration
         //====================================================================================================
@@ -94,18 +98,14 @@ namespace TheGamerUrso.Core
         //====================================================================================================
         // Coroutines & Internal Async Flow
         //====================================================================================================
-        private IEnumerator LoadLevelCoroutine(int level, bool showLoading)
+        private IEnumerator LoadLevelCoroutine(int level, bool showLoading = true, float wait = 1)
         {
             Time.timeScale = 1.0f;
 
-            // Optional Additive Loading Screen
             if (showLoading)
             {
-               // AsyncOperation loadingAO = SceneManager.LoadSceneAsync((int)LevelEnum.LOADING, LoadSceneMode.Additive);
-               // while (!loadingAO.isDone)
-               // {
-                   yield return longWait;
-               // }
+                OnSceneLoadStarted?.Invoke();
+                yield return new WaitForSeconds(wait);
             }
 
             // Unload previously active scene layers without generating garbage allocations
@@ -138,7 +138,7 @@ namespace TheGamerUrso.Core
             if (showLoading)
             {
                 yield return shortWait;
-               // SceneManager.UnloadSceneAsync((int)LevelEnum.LOADING);
+                OnSceneLoadEnded?.Invoke();
             }
 
             CurrentLevelName = ((LevelEnum)level).ToString();
@@ -178,12 +178,10 @@ namespace TheGamerUrso.Core
                     SceneManager.SetActiveScene(targetScene);
                 }
 
-                UpdateProgress(1f);
+                PublishLoadingProgress(1f);
 
                 SceneManager.SetActiveScene(SceneManager.GetSceneByName(CurrentLevelName));
-
-                Events.OnSceneLoadFinished?.Invoke(CurrentLevelName);
-
+                eventService.Publish(new FinishedSceneLoadEvent(CurrentLevelName));
             }
         }
         //====================================================================================================
@@ -198,14 +196,8 @@ namespace TheGamerUrso.Core
         {
             if (eventService == null) return;
 
-            //LoadingProgressEvent progressEvent = new LoadingProgressEvent(progressNormalized);
-            //eventService.Publish(progressEvent);
-        }
-        //====================================================================================================
-        protected void UpdateProgress(float progress)
-        {
-            Events.OnSceneLoadProgress?.Invoke(progress);
-            //GameManager.Instance.sceneLoadProgress = progress;
+            LoadingProgressEvent progressEvent = new LoadingProgressEvent(progressNormalized);
+            eventService.Publish(progressEvent);
         }
     }
 }

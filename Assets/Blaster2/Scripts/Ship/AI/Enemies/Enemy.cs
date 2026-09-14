@@ -1,13 +1,17 @@
 using System;
 using System.Collections;
 using TheGamerUrso.Core;
+using UnityEditor.MPE;
 using UnityEngine;
 
 public class Enemy : Ship, IDamagable, ITargetable
 {    
     public static int EnemiesCount;
-    public Action OnEnemyAttack;
-    public Action<int, int> OnEnemyHit;
+    public event Action<Enemy> OnEnemyDied;
+    public event Action<Enemy,int,int> OnEnemyHit;
+    public event Action<Enemy> OnEnemyAttack;
+    public event Action<Enemy> OnEnemyEscaped;
+    public event Action<Enemy> OnEnemyEntered;
 
     #region Components
     protected BaseEnemyMovement baseEnemyMovement;
@@ -51,7 +55,7 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     [HideInInspector] public EnemyElement enemyElement;
     protected IDataService dataService;
-    protected IAudioService audioService;
+    protected IEventService eventService;
 
     public override void OnEnable()
     {
@@ -62,7 +66,6 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     public override void Awake()
     {
-        OnEnemyHit = OnEnemyHitHandled;
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
         baseEnemyMovement = GetComponent<BaseEnemyMovement>();
@@ -72,6 +75,8 @@ public class Enemy : Ship, IDamagable, ITargetable
         playerData = dataService.GetPlayerData();
         var playerShipData = playerData.GetCurrentPlayerShipData();
         SetStats(playerShipData.level);
+
+        eventService = GameContext.Get<IEventService>();
     }
 
     public override void Start()
@@ -153,8 +158,6 @@ public class Enemy : Ship, IDamagable, ITargetable
     public override void Hit()
     {
         hitIndex++;
-        Events.EnemyGotHit?.Invoke(Id, this);
-        OnEnemyHit?.Invoke(hitIndex, numberOfHits);
     }
 
     public override void Death()
@@ -166,11 +169,13 @@ public class Enemy : Ship, IDamagable, ITargetable
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
             explostion.SetActive(true);
-            Events.EnemyDied?.Invoke(Id, this);
+
+            OnEnemyDied?.Invoke(this);
+
             HealthBar.Hide();
             gameObject.SetActive(false);
 
-            Events.ShakeCamera?.Invoke(.5f);
+            eventService.Publish(new ShakeCameraEvent());
 
             DropItem.Instance.PickRandomDropItem(transform);
         }
@@ -279,11 +284,6 @@ public class Enemy : Ship, IDamagable, ITargetable
         }
     }
 
-    public virtual void OnEnemyHitHandled(int hitIndex, int numberOfHits)
-    {
-
-    }
-
     protected virtual void DestroyOwnedProjectiles()
     {
 
@@ -301,11 +301,11 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     public override void EnterLevel()
     {
-
+        OnEnemyEntered?.Invoke(this);
     }
 
     public override void ExitLevel()
     {
-        Events.EnemyEscaped?.Invoke(Id, this);
+        OnEnemyEscaped?.Invoke(this);
     }
 }

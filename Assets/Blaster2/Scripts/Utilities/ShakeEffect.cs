@@ -16,16 +16,8 @@ public class ShakeEffect : MonoBehaviour
     public float decreaseFactor = 1.0f;
 
     Vector3 originalPos;
-
-    private void OnDestroy()
-    {
-        Events.ShakeCamera -= StartEffect;
-
-    }
-
     void OnEnable()
     {
-        Events.ShakeCamera += StartEffect;
         originalPos = camTransform.localPosition;
     }
 

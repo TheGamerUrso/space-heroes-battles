@@ -4,40 +4,15 @@ using System.Collections;
 using TheGamerUrso.Core;
 using UnityEngine;
 
-public class GameController : ServiceComponent<IGameService>, IGameService
+public class GameController : MonoSingleton<GameController>
 {
     public enum GameState
     {
-        START, GAME, GAMEOVER, WIN
+        START, TRANSMISSION,GAME, GAMEOVER, WIN
     }
     public Action<int> OnGameCoinsPickedValueChanged;
-    private GameState currentGameState = GameState.START;
+    public GameState CurrentGameState { get; set; } = GameState.START;
 
-    public static GameState CurrentGameState
-    {
-        get
-        {
-            var gameControllerFound = GameObject.FindObjectOfType<GameController>();
-            if (gameControllerFound == null)
-            {
-                return GameState.GAME;
-            }
-            return gameControllerFound.currentGameState;
-        }
-    }
-
-    public static GameController Instance
-    {
-        get
-        {
-            var gameControllerFound = GameObject.FindObjectOfType<GameController>();
-            if (gameControllerFound == null)
-            {
-                return null;
-            }
-            return gameControllerFound;
-        }
-    }
     [Header("Components")]
     [SerializeField] private GameObject EnemyWaypoints;
     public GameObject AsteroidBackgroundSpawner;
@@ -81,7 +56,6 @@ public class GameController : ServiceComponent<IGameService>, IGameService
     public void ResetMultiplier()
     {
         Multiplier = 1;
-        Events.OnMultiplierChanged?.Invoke();
     }
     //=================================================================================
     public void IncreaseMultiplier()
@@ -91,7 +65,6 @@ public class GameController : ServiceComponent<IGameService>, IGameService
         {
             Multiplier = 5;
         }
-        Events.OnMultiplierChanged?.Invoke();
     }
     //=================================================================================
     public void DecreaseMultipler()
@@ -101,7 +74,6 @@ public class GameController : ServiceComponent<IGameService>, IGameService
         {
             Multiplier = 0;
         }
-        Events.OnMultiplierChanged?.Invoke();
     }
     //=================================================================================
     private void OnApplicationFocus(bool focus)
@@ -112,7 +84,7 @@ public class GameController : ServiceComponent<IGameService>, IGameService
             {
                 if (IsGameOver == false)
                 {
-                    //GameManager.Instance.PauseTheGame(true);
+                    //TODO Pause Game
                 }
             }
         }
@@ -126,7 +98,7 @@ public class GameController : ServiceComponent<IGameService>, IGameService
             {
                 if (IsGameOver == false)
                 {
-                   // GameManager.Instance.PauseTheGame(true);
+                  //TODO Pause Game
                 }
             }
         }
@@ -134,9 +106,6 @@ public class GameController : ServiceComponent<IGameService>, IGameService
     //=================================================================================
     public void OnDestroy()
     {
-        Events.PlayerLost -= GameOver;
-        Events.GameEnded -= Win;
-
         DOTween.Clear(true);
         DOTween.ClearCachedTweens();
     }
@@ -152,10 +121,6 @@ public class GameController : ServiceComponent<IGameService>, IGameService
         playerData = dataService.GetPlayerData();
         playerData.SetSuperMeter(0);
         playerData.ResetWeaponPowerUPCollected();
-
-
-        Events.PlayerLost += GameOver;
-        Events.GameEnded += Win;
 
         UseSlowMo = false;
         Application.targetFrameRate = 60;
@@ -174,14 +139,16 @@ public class GameController : ServiceComponent<IGameService>, IGameService
     //=================================================================================
     IEnumerator StartGameDelay()
     {
-        //GameManager.Instance.ChangeGameState(GameStateEnum.GAME);
+        var appService = GameContext.Get<IAppService>();
+       // appService.SetGameState(GameStateEnum.GAME);
         NewGame();
         yield return new WaitForSeconds(1.0f);
 
-        if (PlayerManager.GetPlayer() == null)
+        var playerService = GameContext.Get<PlayerManager>();
+        if (playerService.GetPlayer() == null)
         {
             int shipSelected = playerData.CurrrentSelectedShip;
-            var player = PlayerManager.CreatePlayer(shipSelected);
+            var player = playerService.CreatePlayer(shipSelected);
             playerShip = player.GetComponentInChildren<PlayerShip>();
         }
 
@@ -214,7 +181,7 @@ public class GameController : ServiceComponent<IGameService>, IGameService
                 }
                 break;
         }
-        currentGameState = gameState;
+        CurrentGameState = gameState;
     }
     //======================================================================================================================================================
     public void Win()
@@ -227,7 +194,7 @@ public class GameController : ServiceComponent<IGameService>, IGameService
     {
         Time.timeScale = 1.0f;
         playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-        playerData.SetScore(GameController.Instance.Score);
+        playerData.SetScore(Score);
         playerData.AddCoin(CoinPicked);        
 
         SetGameState(GameState.GAMEOVER);
@@ -238,7 +205,7 @@ public class GameController : ServiceComponent<IGameService>, IGameService
         SaveSystem.SaveGame();
         audioService.PlayMusic("GameOver", false);
         yield return new WaitForSeconds(2.0f);
-        Events.OnGameOver?.Invoke(false);
+       //TODO GAME OVER
     }
     //======================================================================================================================================================
     IEnumerator DelayWinScreen()
@@ -253,28 +220,24 @@ public class GameController : ServiceComponent<IGameService>, IGameService
 
         audioService.PlayMusic("Victory", false);
 
-        PlayerManager.GetPlayer()?.ExitLevel();
+        var playerService = GameContext.Get<PlayerManager>();
+        playerService.GetPlayer()?.ExitLevel();
 
         yield return new WaitForSeconds(2.0f);
-        Events.OnGameOver?.Invoke(true);
-    }
-    //======================================================================================================================================================
-    public BaseGameMode GetGameMode()
-    {
-        return Instance.baseGameMode;
+        //TODO GAME OVER
     }
     //======================================================================================================================================================
     public void SetScore(int Score)
     {
-        var score = Instance.Multiplier * Score;
-        Instance.Score += score;
-        if (Instance.Score >= int.MaxValue)
+        var score = Multiplier * Score;
+        Score += score;
+        if (Score >= int.MaxValue)
         {
             Score = int.MaxValue;
         }
-        var ultiplierTextToShow = Instance.Multiplier > 1 ? $"{score} + (x {Instance.Multiplier} )" : $"{score}";
+        var ultiplierTextToShow = Multiplier > 1 ? $"{score} + (x {Multiplier} )" : $"{score}";
         GuiManager.SetScoreMultipler(ultiplierTextToShow);
-        Events.OnScoreValueChanged?.Invoke(Instance.Score);
+        //TODO SCORE VALUE CHANGED
     }
     //=====================================================================================================================================================
     public void SetPlayerXP(float xp)
@@ -303,5 +266,15 @@ public class GameController : ServiceComponent<IGameService>, IGameService
     public void OnNewEntryUploadedHandled(bool success)
     {      
         StartCoroutine(DelayGameOver());
+    }
+
+    internal bool IsTrasnmiting()
+    {
+        throw new NotImplementedException();
+    }
+
+    internal bool HyperspaceEnded()
+    {
+        throw new NotImplementedException();
     }
 }

@@ -42,10 +42,7 @@ public class PlayerShip : Ship, IDamagable
     }
     //=================================================================================
     public override void Start()
-    {
-       // Events.OnLevelValueChanged += OnLevelValueChanged;
-
-       
+    {       
         playerData.NewGame();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
@@ -64,10 +61,6 @@ public class PlayerShip : Ship, IDamagable
 
         IsAlive = true;
     }
-    public override void OnDestroy()
-    {
-        //Events.OnLevelValueChanged -= OnLevelValueChanged;
-    }
 
     //=================================================================================
     public void OnLevelValueChanged(int Level)
@@ -77,16 +70,13 @@ public class PlayerShip : Ship, IDamagable
     //=================================================================================
     public override void Update()
     {
-        if (GameController.CurrentGameState == GameController.GameState.GAME)
+        if (Time.frameCount % 1 == 0)
         {
-            if (Time.frameCount % 1 == 0)
+            if (invisibilityTimer >= 0)
             {
-                if (invisibilityTimer >= 0)
-                {
-                    invisibilityTimer -= Time.deltaTime;
-                }
-                WeaponSystem();
+                invisibilityTimer -= Time.deltaTime;
             }
+            WeaponSystem();
         }
     }
     //=================================================================================
@@ -168,13 +158,10 @@ public class PlayerShip : Ship, IDamagable
     //=================================================================================
     public override void Death()
     {
-        GameController.Instance.UseSlowMo = false;
-
         GameObject explostion = PoolManager.Instance.GetObjectFromPool(playerStats.ExplostionEffect);
         explostion.transform.position = transform.position;
         explostion.SetActive(true);
 
-        Events.PlayerLost?.Invoke();
         gameObject.SetActive(false);
     }
     //=================================================================================
@@ -216,15 +203,11 @@ public class PlayerShip : Ship, IDamagable
 
                 SetHealth(health);
 
-                GameController.Instance.ResetMultiplier();
-
                 if (!HasArmorUprade)
                 {
                     DownGradeWeapon();
                 }
                 playerData.GotHitInGame = true;
-
-                Events.ShakeCamera?.Invoke(.5f);
 
                 if (GetHealthPresentage() < .5f)
                 {

@@ -5,33 +5,19 @@ using UnityEngine;
 
 public class SlowMo : MonoBehaviour
 {
+    private bool IsActive { get; set; }
     private float delayTheSlowMoEffectTimer = .3f;
-    private float delay = 4;
-    private IPlayerService playerService;
     private IAudioService audioService;
+    private GameController gameController;
 
     private void Awake()
     {
-        playerService = GameContext.Get<IPlayerService>();
         audioService = GameContext.Get<IAudioService>();
     }
 
-    void Update()
-    {
-        if (playerService.gameObject == null) return;
-        #if UNITY_ANDROID
-        DoSlowMo();
-        #endif
-    }
-
-    //public bool SlowMoAvailable()
-    //{
-    //    return !GameController.Instance.IsGameOver && !GameManager.Instance.IsPaused && GameController.Instance.UseSlowMo;
-    //}
-
     public void DoSlowMo()
     {
-        switch (GameController.CurrentGameState)
+        switch (gameController.CurrentGameState)
         {
             case GameController.GameState.START:
                 ResetTime();
@@ -40,24 +26,22 @@ public class SlowMo : MonoBehaviour
 
                 if (Input.touchCount > 0 || Input.GetMouseButton(0))
                 {
-                    GameController.Instance.SlowMo = false;
+                    IsActive = false;
                 }
                 else
                 {
-                    GameController.Instance.SlowMo = true;
+                    IsActive = true;
                 }
 
-                //if (SlowMoAvailable())
-                //{
-                //    if (GameController.Instance.SlowMo)
-                //    {
-                //        SlowTime();
-                //    }
-                //    else if (!GameController.Instance.SlowMo && Time.timeScale < 1)
-                //    {
-                //        ResetTime();
-                //    }
-                //}
+                if (IsActive)
+                {
+                    SlowTime();
+                }
+                else if (!IsActive && Time.timeScale < 1)
+                {
+                    ResetTime();
+                }
+
                 break;
             case GameController.GameState.GAMEOVER:
                 ResetTime();

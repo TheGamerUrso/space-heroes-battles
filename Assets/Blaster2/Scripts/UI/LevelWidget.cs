@@ -23,19 +23,10 @@ public class LevelWidget : MonoBehaviour
 
     private void Start()
     {
-       // Events.OnLevelValueChanged += SetPlayerLevelText;
-        Events.OnShipSelectValueChanged += NewShipSelected;
-
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         SetPlayerLevelText(playerShipData.level);
-    }
-
-    private void OnDestroy()
-    {
-        //Events.OnLevelValueChanged -= SetPlayerLevelText;
-        Events.OnShipSelectValueChanged -= NewShipSelected;
     }
 
     private void Update()

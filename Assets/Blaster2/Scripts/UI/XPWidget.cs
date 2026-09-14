@@ -23,16 +23,9 @@ public class XPWidget : MonoBehaviour
     {
         dataService = GameContext.Get<IDataService>();
     }
-    private void OnDestroy()
-    {
-        Events.OnXpValueChanged -= SetPlayerXP;
-        Events.OnShipSelectValueChanged -= NewShipSelected;
-    }
 
     private void Start()
     {
-        Events.OnXpValueChanged += SetPlayerXP;
-        Events.OnShipSelectValueChanged += NewShipSelected;
 
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();

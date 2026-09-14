@@ -3,7 +3,7 @@ using System.Collections;
 using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class PlayerController : ServiceComponent<IPlayerService>,IPlayerService
+public class PlayerController : MonoBehaviour
 {
     public enum ControlSceme
     {
@@ -64,7 +64,7 @@ public class PlayerController : ServiceComponent<IPlayerService>,IPlayerService
     {
         targetPos = transform.position;
         plane = new Plane(Vector3.up, transform.position);
-        Events.OnControlScemeChange = UpdateOffset;
+
         LoadPlayerData();
 
         controlSceme = ControlSceme.CONTROL1;
@@ -115,15 +115,14 @@ public class PlayerController : ServiceComponent<IPlayerService>,IPlayerService
     }
     private void Update()
     {
-        if (GameController.CurrentGameState == GameController.GameState.GAME)
+
+#if UNITY_EDITOR_64
+        if (Input.GetMouseButton(0) && !IsMouseOverUI())
         {
- #if UNITY_EDITOR_64
-             if (Input.GetMouseButton(0) && !IsMouseOverUI())
-             {
-                 SetTargetPosition(Input.mousePosition);
-                MoveToTarget();
-            }
- #elif UNITY_ANDROID || UNITY_EDITOR_64
+            SetTargetPosition(Input.mousePosition);
+            MoveToTarget();
+        }
+#elif UNITY_ANDROID || UNITY_EDITOR_64
             if (controlSceme == ControlSceme.CONTROL1)
             {
                 if (Input.touchCount > 0 && !IsMouseOverUI())
@@ -141,9 +140,9 @@ public class PlayerController : ServiceComponent<IPlayerService>,IPlayerService
 #elif UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR_64
             GamepadControls();
 #endif
-            ClampTransform();
-        }
+        ClampTransform();
     }
+    
 
     private void FixedUpdate()
     {

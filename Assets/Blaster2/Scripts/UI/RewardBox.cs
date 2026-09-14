@@ -23,10 +23,6 @@ public class RewardBox : MonoBehaviour
         this.rewardTypeEnum = rewardTypeEnum;
     }
 
-    private void OnDestroy()
-    {
-        Events.ClaimReward -= ClaimReward;
-    }
     private void OnEnable()
     {
         Box.ResetTrigger("Open");
@@ -35,7 +31,6 @@ public class RewardBox : MonoBehaviour
     void Start()
     {
         CameraReview.targetTexture = renderTexture;
-        Events.ClaimReward += ClaimReward;
     }
 
     private void Update()
@@ -45,8 +40,7 @@ public class RewardBox : MonoBehaviour
             timer -= Time.deltaTime;
             if (timer < 0 && !opened)
             {
-                opened = true;
-                Events.ClaimReward?.Invoke(ID, rewardTypeEnum);
+                opened = true;            
             }
         }
     }
@@ -58,7 +52,6 @@ public class RewardBox : MonoBehaviour
         {
             claimed = true;
             OpenChest();
-            Events.ClaimReward?.Invoke(ID, rewardTypeEnum);
         }
     }
 
