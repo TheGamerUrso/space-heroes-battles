@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,8 +28,12 @@ public class QuestUIElement : MonoBehaviour
 
     private float xpToEarn;
     private int coinToEarn;
-
-//=================================================================================
+    private IDataService dataService;
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
+    //=================================================================================
     public void InitializeObjective(QuestData objectiveData)
     {
         Button.interactable = false;
@@ -40,7 +45,7 @@ public class QuestUIElement : MonoBehaviour
             Complete();
         });
 
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
 
         switch ((QuestTypeEnum)objectiveData.questType)
@@ -125,15 +130,16 @@ public class QuestUIElement : MonoBehaviour
 
             questData.claimed = true;
             Button.interactable = false;
- 
-            QuestSystem.Instance.CompleteQuest(questData);
+
+            var questService = GameContext.Get<IQuestService>();
+            questService.CompleteQuest(questData);
             RefreshQuests();
         }
     }
     //=================================================================================
     public void SetRewardInfo()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
 
         rewardText.text = xpToEarn + "xp";

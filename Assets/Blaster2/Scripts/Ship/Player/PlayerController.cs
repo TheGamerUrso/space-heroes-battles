@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
-public class PlayerController : MonoBehaviour
+public class PlayerController : ServiceComponent<IPlayerService>,IPlayerService
 {
-    public static PlayerController Instance
-    {
-        get; private set;
-    }
     public enum ControlSceme
     {
         CONTROL1 = 1, CONTROL2 = 2
@@ -39,6 +36,7 @@ public class PlayerController : MonoBehaviour
 
     private float deltaX;
     private float deltaY;
+    private IDataService dataService;
 
     public void SetSpeed(float speed)
     {
@@ -47,7 +45,7 @@ public class PlayerController : MonoBehaviour
 
     void LoadPlayerData()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         controlSceme = (ControlSceme)playerData.ControlScene;
         Speed = playerShipData.Speed;
@@ -55,7 +53,11 @@ public class PlayerController : MonoBehaviour
     private void Awake()
     {
         _cam = Camera.main;
-        Instance = this;
+        dataService = GameContext.Get<IDataService>();
+        playerData = dataService.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        controlSceme = (ControlSceme)playerData.ControlScene;
+        Speed = playerShipData.Speed;
     }
 
     public void Start()

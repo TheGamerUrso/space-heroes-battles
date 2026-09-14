@@ -1,26 +1,26 @@
 ﻿using System.Collections;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class SurvivalGameOverScreen : MonoBehaviour
 {
-    [SerializeField] private LeaderboardScreen leaderboardScreen;
+    private IAppService appService;
 
-    public void UpdateLeaderboards()
+    private void Awake()
     {
-       leaderboardScreen.LoadLeaderboard();
+        appService = GameContext.Get<IAppService>();
     }
-
     public void QuitButton()
     {
-        GameManager.Instance.LoadMainenu();
+        appService.LoadMainMenu();
         GetComponent<CanvasGroup>().interactable = false;
     }
 
     public void ReplayButton()
     {
-        GameManager.Instance.ResetLevel();
+        appService.ResetLevel();
         GetComponent<CanvasGroup>().interactable = false;
     }
 }

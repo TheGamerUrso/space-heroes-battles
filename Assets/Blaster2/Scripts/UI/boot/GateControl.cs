@@ -18,8 +18,10 @@ public class GateControl : MonoBehaviour
 
     public void Show()
     {
-GameManager.Instance.ToggleLoadingScreenCanvas(true);   
+        //GameManager.Instance.ToggleLoadingScreenCanvas(true);   
     }
 
-    public void Hide(){GameManager.Instance.ToggleLoadingScreenCanvas(false);   }
+    public void Hide(){
+        //GameManager.Instance.ToggleLoadingScreenCanvas(false);
+        }
 }

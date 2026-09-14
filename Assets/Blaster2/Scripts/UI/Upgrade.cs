@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.Analytics;
 
@@ -21,6 +22,7 @@ public class Upgrade
             return (float)Level / (float)upgradeData.MaxLevel;
         }
     }
+    protected IDataService dataService;
 
     ~Upgrade()
     {
@@ -34,8 +36,9 @@ public class Upgrade
         Level = 0;
 
         Events.OnShipSelectValueChanged += (x) => { SetPlayerShipData(); };
+        dataService = GameContext.Get<IDataService>();
 
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         SetPlayerShipData();
 
 

@@ -1,3 +1,4 @@
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public enum ItemEnum
@@ -32,23 +33,32 @@ public class Items : MonoBehaviour, IPickable
 
     [SerializeField] protected AudioSource audioSource;
     private Collider[] colliders;
+    private IAudioService audioService;
+
     public string ID
     {
         get { return itemData.ID; }
     }
+    private IDataService dataService;
 
     private void OnEnable()
     {
         boxCollider.enabled = true;
         picked = false;
     }
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+        audioService = GameContext.Get<IAudioService>();
+
+
+        PlayerData playerData = dataService.GetPlayerData();
+        player = PlayerManager.GetPlayer();
+    }
+
 
     private void Start()
     {
-        playerData = PersistantData.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        player = PlayerManager.GetPlayer();
-
         if (itemData.itemType == ItemEnum.COIN)
         {
             if (playerShipData.MagnetPower > 0)
@@ -96,7 +106,7 @@ public class Items : MonoBehaviour, IPickable
                 break;
         }
 
-        AudioManager.PlaySound(itemData.CollectedSoundSFX);
+        audioService.PlaySound(itemData.CollectedSoundSFX);
 
         picked = true;
     }

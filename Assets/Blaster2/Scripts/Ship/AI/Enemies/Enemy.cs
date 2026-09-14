@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class Enemy : Ship, IDamagable, ITargetable
@@ -49,6 +50,8 @@ public class Enemy : Ship, IDamagable, ITargetable
     }
 
     [HideInInspector] public EnemyElement enemyElement;
+    protected IDataService dataService;
+    protected IAudioService audioService;
 
     public override void OnEnable()
     {
@@ -63,13 +66,17 @@ public class Enemy : Ship, IDamagable, ITargetable
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
         baseEnemyMovement = GetComponent<BaseEnemyMovement>();
+
+        audioService = GameContext.Get<IAudioService>();
+        dataService = GameContext.Get<IDataService>();
+        playerData = dataService.GetPlayerData();
+        var playerShipData = playerData.GetCurrentPlayerShipData();
+        SetStats(playerShipData.level);
     }
 
     public override void Start()
     {     
-        playerData = PersistantData.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-        SetStats(playerShipData.level);
+  
 
         HasShield = false;
         ShieldEffect.SetActive(HasShield);
@@ -116,7 +123,7 @@ public class Enemy : Ship, IDamagable, ITargetable
             return;
         }
 
-        AudioManager.PlaySound(EnemyData.hitSFX);
+        audioService.PlaySound(EnemyData.hitSFX);
 
         if (takeDamageDelay <= 0)
         {

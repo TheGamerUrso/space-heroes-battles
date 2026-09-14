@@ -13,6 +13,7 @@ public class DefaultPlayerWeapon : BaseWeapon
 
     public override void Awake()
     {
+        base.Awake();
         foundPlayer = GameObject.FindGameObjectWithTag("Player");
         ship = foundPlayer.GetComponent<Ship>();
     }
@@ -20,7 +21,7 @@ public class DefaultPlayerWeapon : BaseWeapon
     public override void Start()
     {
         base.Start();
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerShip = ship.GetComponent<PlayerShip>();
     }

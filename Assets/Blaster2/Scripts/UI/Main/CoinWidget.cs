@@ -1,10 +1,18 @@
-﻿using TMPro;
+﻿using TheGamerUrso.Core;
+using TMPro;
 using UnityEngine;
 
 public class CoinWidget : MonoBehaviour
 {
     private PlayerData playerData;
     [SerializeField] private TextMeshProUGUI PlayerCoinText;
+
+        private IDataService dataService;
+
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
     private void OnDestroy()
     {
         Events.OnCoinValueChanged -= UpdateCoins;
@@ -12,7 +20,7 @@ public class CoinWidget : MonoBehaviour
 
     private void Start()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         Events.OnCoinValueChanged += UpdateCoins;
         UpdateCoins(playerData.Coins);
     }

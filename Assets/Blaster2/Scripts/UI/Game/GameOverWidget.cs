@@ -1,4 +1,5 @@
 using System.Collections;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,6 +11,8 @@ public class GameOverWidget : MonoBehaviour
     private bool skip;
     private int retried = 0;
 
+    protected IDataService dataService;
+
     private void OnEnable()
     {
         ShowGameResult();
@@ -18,7 +21,7 @@ public class GameOverWidget : MonoBehaviour
     public void ShowGameResult()
     {
         Scene scene = SceneManager.GetActiveScene();
-        var playerData = PersistantData.GetPlayerData();
+        var playerData = dataService.GetPlayerData();
         float score = GameController.Instance.Score;
         string scoreText = string.Format("{00:00000000}", score);
         m_Text.text = scoreText;
@@ -26,6 +29,11 @@ public class GameOverWidget : MonoBehaviour
         StartCoroutine(ScoreCoroutine());
 
 
+    }
+
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
     }
     public void Update()
     {
@@ -37,7 +45,7 @@ public class GameOverWidget : MonoBehaviour
 
     private IEnumerator ScoreCoroutine()
     {    
-        var playerData = PersistantData.GetPlayerData();
+        var playerData = dataService.GetPlayerData();
         float score = GameController.Instance.Score;
         float tempScore = 0;
         string scoreText;
@@ -66,12 +74,12 @@ public class GameOverWidget : MonoBehaviour
             retried++;
         }
 
-          GameManager.Instance.ResetLevel();
+          //GameManager.Instance.ResetLevel();
   
     }
 
     public void LoadMainMenu()
     {
-        GuiManager.Instance.LoadMainMenu();
+        //GuiManager.Instance.LoadMainMenu();
     }
 }

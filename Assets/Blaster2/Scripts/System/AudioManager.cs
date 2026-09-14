@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -12,7 +13,7 @@ public class AudioTrack
     public AudioClip audioClip;
 }
 
-public class AudioManager : MonoSingleton<AudioManager>
+public class AudioManager : ServiceComponent<IAudioService>,IAudioService
 {
     // public static AudioManager instance;
     [HideInInspector] public List<AudioTrack> SoundClips = new List<AudioTrack>();
@@ -38,6 +39,7 @@ public class AudioManager : MonoSingleton<AudioManager>
     [HideInInspector] public bool crossfade = false;
     [HideInInspector] public float targetVolume;
 
+    private IDataService dataService;
 
     private List<GameObject> SoundSFX;
 
@@ -55,17 +57,22 @@ public class AudioManager : MonoSingleton<AudioManager>
         return musicVolume;
     }
 
-    public static void SetSoundVolume(float value)
+    public void SetSoundVolume(float value)
     {
         soundVolume = value;
-        Instance.SFXMixerGroup.audioMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);
+        SFXMixerGroup.audioMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20);
     }
-    public static void SetMusicVolume(float value)
+    public void SetMusicVolume(float value)
     {
         musicVolume = value;
-        Instance.MusicMixerGroup.audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
+        MusicMixerGroup.audioMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20);
     }
 
+    protected override void Awake()
+    {
+        base.Awake();
+        dataService = GameContext.Get<IDataService>();
+    }
 
     private void Start()
     {
@@ -94,7 +101,7 @@ public class AudioManager : MonoSingleton<AudioManager>
         }
 
 
-        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerData playerData = dataService.GetPlayerData();
 
         if (playerData == null)
         {
@@ -119,22 +126,19 @@ public class AudioManager : MonoSingleton<AudioManager>
         return false;
     }
 
-    public static void PlayRandomMusic(bool force = false)
+    public void PlayRandomMusic(bool force = false)
     {
-        if (Instance)
-            AudioManager.Instance.PlayRandomSong(force);
+            PlayRandomSong(force);
     }
 
-    public static void PlayMusic(string IdTrack, bool loop = true)
+    public void PlayMusic(string IdTrack, bool loop = true)
     {
-        if (Instance)
-            AudioManager.Instance.PlayMusicById(IdTrack, loop);
+        PlayMusicById(IdTrack, loop);
     }
 
-    public static void PlaySound(AudioClip clip, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
+    public void PlaySound(AudioClip clip, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f)
     {
-        if (Instance)
-            AudioManager.Instance.PlaySoundByClip(clip, usePitch, minRange, maxRange);
+        PlaySoundByClip(clip, usePitch, minRange, maxRange);
     }
 
     public void PlayMusicById(string IdTrack, bool loop = true)

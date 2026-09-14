@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections;
-using UnityEngine.UI;
+using TheGamerUrso.Core;
 using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class HighScoreWidget : MonoBehaviour
 {
@@ -10,23 +11,30 @@ public class HighScoreWidget : MonoBehaviour
 
    // private AudioManager audioManager;
     public GameObject Window;
+    private IDataService dataService;
+    private IAudioService audioService;
+
+
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+        audioService = GameContext.Get<IAudioService>();
+    }
 
     void Start () {
-        PlayerData playerData = PersistantData.GetPlayerData();
+        var playerData = dataService.GetPlayerData();
         string highscore = string.Format("{0:00000000}", playerData.HighScore);
         string score = string.Format("{0:00000000}", GameController.Instance.Score);
 
         m_HighScore.text = highscore;
         m_PreviousScore.text = score;
-       // audioManager = AudioManager.instance;
+      
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            //if (audioManager)
-            //  audioManager.PlaySoundSFX(Camera.main,"close");
             CloseWindow();
         }
 

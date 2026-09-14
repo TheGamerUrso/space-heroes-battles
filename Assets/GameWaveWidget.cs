@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 
@@ -9,9 +10,15 @@ public class GameWaveWidget : MonoBehaviour
     public TextMeshProUGUI EnemiesRemaining;
     public BaseGameMode survivalMode;
     public CanvasGroup canvasGroup;
+
+    protected IGameService gameService;
+    public virtual void Awake()
+    {
+        gameService = GameContext.Get<IGameService>();
+    }
     void Start()
     {
-        survivalMode = GameController.GetGameMode();
+        survivalMode = gameService.GetGameMode();
     }
     void Update()
     {

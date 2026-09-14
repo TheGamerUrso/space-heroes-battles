@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,13 +15,18 @@ public class ShipSelectElement : MonoBehaviour
     [SerializeField] private Image LockImage;
     [SerializeField] private TextMeshProUGUI CostText;
     private PlayerData playerData;
+    private IDataService dataService;
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
 
     private void Start()
     {
         Icon.sprite = shipSelectData.Icon;
         CostText.text = shipSelectData.Cost.ToString();
 
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
 
         if (playerData.UnlockedHeroes[ID] == 0)
         {
@@ -70,7 +76,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void Purchase()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerData playerData = dataService.GetPlayerData();
         if (Locked)
         {
             if (playerData.Coins >= shipSelectData.Cost)
@@ -99,6 +105,6 @@ public class ShipSelectElement : MonoBehaviour
 
     public void SelectShip(int shipID)
     {
-        ShipSelect.Instance.SelectShip(shipID);
+        shipSelect.SelectShip(shipID);
     }
 }

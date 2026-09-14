@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Dan.Main;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 
@@ -92,7 +92,9 @@ public class PlayerData
             Kills += KillsCounter;
             EnemyKilled += KillsCounter;
         }
-        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.KILL, EnemyKilled);
+       
+        var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.KILL, EnemyKilled);
     }
 //======================================================================================================================================================
     public void SetPlayerGotHitCounter(bool value)
@@ -137,7 +139,8 @@ public class PlayerData
     {
         Score = score;
         Score = Mathf.Clamp(Score, 0, 999999999);  
-        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SCORE, (int)Score);
+       var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.SCORE, (int)Score);
     }
     //======================================================================================================================================================
     public void SetHighscore(int highscore)
@@ -167,8 +170,9 @@ public class PlayerData
         {
             Coins = 0;
         }
-        Events.OnCoinValueChanged?.Invoke(Coins);
-        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SPEND, CoinSpend);
+        Events.OnCoinValueChanged?.Invoke(Coins); 
+        var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.SPEND, CoinSpend);
     }
 //======================================================================================================================================================
     public void AddCoin(int ammount)
@@ -194,7 +198,8 @@ public class PlayerData
             WaveSurvived += value;
         }
 
-        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.SURVIVE, WaveSurvived);
+        var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.SURVIVE, WaveSurvived);
     }
 //======================================================================================================================================================
     public void SetUsedSuperCount(int ammount)
@@ -208,14 +213,16 @@ public class PlayerData
             SuperUsed += ammount;
         }
         Events.OnSuperUseValueChanged?.Invoke(SuperUsed);
-        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.USE, SuperUsed);
+        var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.USE, SuperUsed);
     }
 //======================================================================================================================================================
     public void SetBossKilledCount()
     {
         if(BountyKilled==1)return;
         BountyKilled = 1;
-        QuestSystem.Instance.SetQuestProgressByType(QuestTypeEnum.BOUNTY, BountyKilled);
+        var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.BOUNTY, BountyKilled);
     }
 //======================================================================================================================================================
     public PlayerShipData GetCurrentPlayerShipData()
@@ -242,7 +249,7 @@ public class PlayerData
 
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
 
-                Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
+               // Events.OnLevelValueChanged?.Invoke(GetCurrentPlayerShipData().level);
             }
         }
         else

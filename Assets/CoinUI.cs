@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 
@@ -9,15 +10,21 @@ public class CoinUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI PlayerCoinText;
     public GameObject panel;
     public float ttl;
+
+    protected IDataService dataService;
+
     private void OnDestroy()
     {
         if(GameController.Instance!=null)
         GameController.Instance.OnGameCoinsPickedValueChanged  -= UpdateCoins;
     }
-
+    public void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
     private void Start()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         GameController.Instance.OnGameCoinsPickedValueChanged += UpdateCoins;
         UpdateCoins(GameController.Instance.CoinPicked);
     }

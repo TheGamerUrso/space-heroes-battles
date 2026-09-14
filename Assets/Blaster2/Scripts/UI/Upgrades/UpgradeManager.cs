@@ -1,23 +1,30 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+
+[Serializable]
+public class UpgradesDBEntry
+{
+    public UpgradeData upgradeData;
+    public Upgrade Upgrade;
+}
 
 public class UpgradeManager : MonoSingleton<UpgradeManager>
 {
-    public List<UpgradeData> ListOfUpgrade = new List<UpgradeData>();
-    public List<Upgrade> UpgradeDatabase = new List<Upgrade>();
+    public List<UpgradesDBEntry> ListOfUpgrades = new List<UpgradesDBEntry>();
 
-    public void Start()
+    protected override void Init()
     {
-        for (int i = 0; i < ListOfUpgrade.Count; i++)
+        base.Init();
+        for (int i = 0; i < ListOfUpgrades.Count; i++)
         {
-            Upgrade upgrade = new Upgrade(ListOfUpgrade[i]);
-            UpgradeDatabase.Add(upgrade);
+            ListOfUpgrades[i].Upgrade = new Upgrade(ListOfUpgrades[i].upgradeData);
         }
     }
 
-    public List<Upgrade> GetUpgradeDatabase()
+    public List<UpgradesDBEntry> GetUpgradeDatabase()
     {
-        return UpgradeDatabase;
+        return ListOfUpgrades;
     }
 
 }

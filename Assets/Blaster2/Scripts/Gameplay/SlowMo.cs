@@ -1,23 +1,33 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class SlowMo : MonoBehaviour
 {
     private float delayTheSlowMoEffectTimer = .3f;
     private float delay = 4;
+    private IPlayerService playerService;
+    private IAudioService audioService;
+
+    private void Awake()
+    {
+        playerService = GameContext.Get<IPlayerService>();
+        audioService = GameContext.Get<IAudioService>();
+    }
+
     void Update()
     {
-        if (PlayerController.Instance == null) return;
+        if (playerService.gameObject == null) return;
         #if UNITY_ANDROID
         DoSlowMo();
         #endif
     }
 
-    public bool SlowMoAvailable()
-    {
-        return !GameController.Instance.IsGameOver && !GameManager.Instance.IsPaused && GameController.Instance.UseSlowMo;
-    }
+    //public bool SlowMoAvailable()
+    //{
+    //    return !GameController.Instance.IsGameOver && !GameManager.Instance.IsPaused && GameController.Instance.UseSlowMo;
+    //}
 
     public void DoSlowMo()
     {
@@ -37,17 +47,17 @@ public class SlowMo : MonoBehaviour
                     GameController.Instance.SlowMo = true;
                 }
 
-                if (SlowMoAvailable())
-                {
-                    if (GameController.Instance.SlowMo)
-                    {
-                        SlowTime();
-                    }
-                    else if (!GameController.Instance.SlowMo && Time.timeScale < 1)
-                    {
-                        ResetTime();
-                    }
-                }
+                //if (SlowMoAvailable())
+                //{
+                //    if (GameController.Instance.SlowMo)
+                //    {
+                //        SlowTime();
+                //    }
+                //    else if (!GameController.Instance.SlowMo && Time.timeScale < 1)
+                //    {
+                //        ResetTime();
+                //    }
+                //}
                 break;
             case GameController.GameState.GAMEOVER:
                 ResetTime();
@@ -63,12 +73,12 @@ public class SlowMo : MonoBehaviour
     public void ResetTime()
     {
         Time.timeScale = 1.0f;
-        AudioManager.Instance.SetPitch(1.0f);
+        audioService.SetPitch(1.0f);
     }
     public void SlowTime()
     {
         Time.timeScale = delayTheSlowMoEffectTimer;
-        AudioManager.Instance.SetPitch(.8f);
+        audioService.SetPitch(.8f);
     }
 
 }

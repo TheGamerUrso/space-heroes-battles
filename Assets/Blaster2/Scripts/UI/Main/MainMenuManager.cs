@@ -1,22 +1,30 @@
 ﻿using System;
 using System.Collections;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using UnityEngine.SocialPlatforms;
-using UnityEngine.SceneManagement;
-using UnityEngine.Advertisements;
+
+public enum ScreenType
+{
+    None = 0,
+    Challenges = 1,
+    Upgrades = 2,
+    ShipSelect = 3,
+    Options = 4
+}
 
 [Serializable]
 public class UIScreens
 {
-    public string Name;
+    public ScreenType ScreenType;
     public UIView m_UIElement;
     public int test;
 }
 
-public class MainMenuManager : MonoSingleton<MainMenuManager>
+public class MainMenuManager : MonoBehaviour
 {
+    public static Action<ScreenType, bool> OnScreenChanged;
+
     [SerializeField] private TextMeshProUGUI PlayerLevelText;
     [SerializeField] private ShipSelect shipSelect;
 
@@ -25,8 +33,10 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
 
     [SerializeField] private UIScreens[] MainMenuScreens;
 
-    private string previousScreen;
-
+    private ScreenType previousScreen;
+    private IDataService dataService;
+    private IAudioService audioService;
+    private IAppService appService;
 
     [ContextMenu("Get Safe Area")]
     public void GetSafeArea()
@@ -34,30 +44,65 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         Debug.Log(Screen.safeArea);
     }
 
-    private void Start()
+
+    private void Update()
     {
-        GameManager.Instance.PauseTheGame(false);
-        AudioManager.PlayMusic("Menu");
+        // Make sure user is on Android platform
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            // Check if Back was pressed this frame
+            if (Input.GetKeyDown(KeyCode.Escape))
+            {
+                if (previousScreen == ScreenType.None)
+                {
+                    Application.Quit();
+                }
+                else
+                {
+                    PlayerData playerData = dataService.GetPlayerData();
+                    shipSelect.SelectShip(playerData.CurrrentSelectedShip);
+
+                    Close();
+                }
+            }
+        }
+    }
+
+    protected void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+        audioService = GameContext.Get<IAudioService>();
+        appService = GameContext.Get<IAppService>();
+    }
+
+    protected void Start()
+    {
+        appService.PauseTheGame(false);
+        audioService.PlayMusic("Menu");
         Application.targetFrameRate = 30;
 
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.Name.Equals("Upgrades"))
+            if (item.ScreenType.Equals(ScreenType.ShipSelect))
             {
                 item.m_UIElement.gameObject.SetActive(false);
-                Events.OnScreenChanged?.Invoke(item.Name, false);
+                OnScreenChanged?.Invoke(item.ScreenType, false);
             }
         }
 
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerData.GotHitInGame = false;
         playerData.PlayedGame = false;
 
         shipSelect.SetShipTexture(playerData.CurrrentSelectedShip);
 
-        TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
+        shipSelect.OnShipSelected += ShipSelect_OnShipSelected;
     }
 
+    private void ShipSelect_OnShipSelected()
+    {
+        Close();
+    }
 
     public void QuitButtonEvent()
     {
@@ -75,42 +120,20 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         GetComponent<CanvasGroup>().blocksRaycasts = false;
         // LevelEnum[] levels ={LevelEnum.Level0,LevelEnum.Level1,LevelEnum.Level2,LevelEnum.Level3,LevelEnum.Level4,LevelEnum.Level5,LevelEnum.Level6,LevelEnum.Level7,LevelEnum.Level8,LevelEnum.Level9};
         LevelEnum[] levels = { LevelEnum.Game };
-        GameManager.Instance.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
+       SceneLoader.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
 
     }
 
-    public GameObject GetUIScreen(string name)
+    public GameObject GetUIScreen(ScreenType screenType)
     {
         for (int i = 0; i < MainMenuScreens.Length; i++)
         {
-            if (MainMenuScreens[i].Name.Equals("name"))
+            if (MainMenuScreens[i].ScreenType == screenType)
             {
                 return MainMenuScreens[i].m_UIElement.gameObject;
             }
         }
         return null;
-    }
-    private void Update()
-    {
-        // Make sure user is on Android platform
-        if (Application.platform == RuntimePlatform.Android)
-        {
-            // Check if Back was pressed this frame
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                if (String.IsNullOrEmpty(previousScreen))
-                {
-                    Application.Quit();
-                }
-                else
-                {
-                    PlayerData playerData = PersistantData.GetPlayerData();
-                    ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
-
-                    Close();
-                }
-            }
-        }
     }
 
     public void OpenMenu()
@@ -123,9 +146,9 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         StartCoroutine(MenuSwitcher(false));
     }
 
-    public bool IsScrene(string target, string id)
+    public bool IsScrene(ScreenType screenType, ScreenType id)
     {
-        if (target.Equals(id))
+        if (screenType == id)
         {
             return true;
         }
@@ -136,7 +159,7 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
     {
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.m_UIElement.IsVisible && item.Name.Equals("Options") || item.Name.Equals("HighScore"))
+            if (item.m_UIElement.IsVisible && item.ScreenType == ScreenType.Options)
             {
                 return true;
             }
@@ -144,14 +167,14 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         return false;
     }
 
-    public void Open(string Id)
+    public void Open(ScreenType Id)
     {
         StartCoroutine(SwitchScreen(Id));
     }
 
     public void Close()
     {
-        if (string.IsNullOrEmpty(previousScreen) || !OptionsOrHighscoreOpen())
+        if (!OptionsOrHighscoreOpen())
         {
             CloseMenu();
         }
@@ -159,30 +182,30 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         {
             foreach (UIScreens item in MainMenuScreens)
             {
-                if (item.Name.Equals(previousScreen))
+                if (item.ScreenType == previousScreen)
                 {
 
                     item.m_UIElement.Show();
-                    Events.OnScreenChanged?.Invoke(item.Name, true);
-                    if (IsScrene(previousScreen, "Upgrades"))
+                    OnScreenChanged?.Invoke(item.ScreenType, true);
+                    if (IsScrene(previousScreen, ScreenType.Upgrades))
                     {
-                        previousScreen = "Quest";
+                        previousScreen = ScreenType.Challenges;
                     }
                     else
                     {
-                        previousScreen = "";
+                        previousScreen = ScreenType.None;
                     }
                 }
                 else
                 {
-                    if (item.Name.Equals("ShipSelect") && item.m_UIElement.IsVisible)
+                    if (item.ScreenType == ScreenType.ShipSelect && item.m_UIElement.IsVisible)
                     {
-                        PlayerData playerData = PersistantData.GetPlayerData();
-                        ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
+                        PlayerData playerData = dataService.GetPlayerData();
+                        shipSelect.SelectShip(playerData.CurrrentSelectedShip);
                     }
 
                     item.m_UIElement.Hide();
-                    Events.OnScreenChanged?.Invoke(item.Name, false);
+                    OnScreenChanged?.Invoke(item.ScreenType, false);
 
                 }
             }
@@ -195,48 +218,43 @@ public class MainMenuManager : MonoSingleton<MainMenuManager>
         {
             if (item.m_UIElement.IsVisible)
             {
-                previousScreen = item.Name;
+                previousScreen = item.ScreenType;
             }
 
             if (OptionsOrHighscoreOpen())
             {
-                previousScreen = "Quest";
+                previousScreen = ScreenType.Challenges;
             }
         }
         yield return null;
     }
 
-    IEnumerator SwitchScreen(string Id)
+    IEnumerator SwitchScreen(ScreenType Id)
     {
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.Name.Equals(Id))
+            if (item.ScreenType == Id)
             {
                 item.m_UIElement.Show();
-                if (item.Name.Equals("HighScore"))
-                {
-                    TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
-                    item.m_UIElement.GetComponent<HighscoreScreen>().LoadLeaderboard();
-                }
-                Events.OnScreenChanged?.Invoke(item.Name, true);
+                OnScreenChanged?.Invoke(item.ScreenType, true);
             }
             else
             {
                 if (item.m_UIElement.IsVisible)
                 {
-                    if (!item.Name.Equals("Menu") && !item.Name.Equals("Options") && !item.Name.Equals("HighScore"))
-                        previousScreen = item.Name;
+                    if (item.ScreenType != ScreenType.None && item.ScreenType != ScreenType.Options)
+                        previousScreen = item.ScreenType;
                 }
 
 
-                if (item.Name.Equals("ShipSelect") && item.m_UIElement.IsVisible)
+                if (item.ScreenType != ScreenType.ShipSelect && item.m_UIElement.IsVisible)
                 {
-                    PlayerData playerData = PersistantData.GetPlayerData();
-                    ShipSelect.Instance.SelectShip(playerData.CurrrentSelectedShip);
+                    PlayerData playerData = dataService.GetPlayerData();
+                    shipSelect.SelectShip(playerData.CurrrentSelectedShip);
                 }
 
                 item.m_UIElement.Hide();
-                Events.OnScreenChanged?.Invoke(item.Name, false);
+                OnScreenChanged?.Invoke(item.ScreenType, false);
             }
         }
         yield return null;

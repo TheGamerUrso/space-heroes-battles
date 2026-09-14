@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+using TheGamerUrso.Core;
 using TMPro;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class WinScreen : MonoBehaviour
@@ -17,6 +18,14 @@ public class WinScreen : MonoBehaviour
 
     public bool skip;
     private string scoreText;
+    private IDataService dataService;
+    private IAppService appService;
+
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+        appService = GameContext.Get<IAppService>();
+    }
 
     public void Update()
     {
@@ -35,7 +44,7 @@ public class WinScreen : MonoBehaviour
 
     private IEnumerator ShowGameResults()
     {
-        var playerData = PersistantData.GetPlayerData();
+        var playerData = dataService.GetPlayerData();
         float score = GameController.Instance.Score;
         float tempScore = 0;
         yield return new WaitForSeconds(2);
@@ -65,16 +74,16 @@ public class WinScreen : MonoBehaviour
 
     public void NextLevelButton()
     {
-        GameManager.Instance.LoadMainenu();
+        appService.LoadMainMenu();
     }
 
     public void ReplayButton()
     {
-        GameManager.Instance.ResetLevel();
+        appService.ResetLevel();
     }
 
     public void LoadMainMenu()
     {
-        GuiManager.Instance.LoadMainMenu();
+        appService.LoadMainMenu();
     }
 }

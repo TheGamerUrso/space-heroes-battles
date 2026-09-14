@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -31,6 +32,13 @@ public class RewardWidget : MonoBehaviour
     public GameObject rewardResultPanel;
     public TextMeshProUGUI RewardText;
     private bool IsWaitingInput;
+    protected IDataService dataService;
+
+    public virtual void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+
+    }
     private void OnDestroy()
     {
         Events.ClaimReward = null;
@@ -92,7 +100,7 @@ public class RewardWidget : MonoBehaviour
 
         yield return new WaitForSeconds(1.0f);
 
-        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerData playerData = dataService.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
         PlayerShip playerShip = PlayerManager.GetPlayer();
         string textToShow = "No Reward";

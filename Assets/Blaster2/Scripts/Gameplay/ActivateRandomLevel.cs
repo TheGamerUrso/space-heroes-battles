@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -38,10 +39,16 @@ public class ActivateRandomLevel : MonoBehaviour
     public AudioClip traveling;
     public AudioClip ending;
 
+    private IAudioService audioService;
+    protected IGameService gameService;
+
     private void Awake()
     {
+        audioService = GameContext.Get<IAudioService>();
+        gameService = GameContext.Get<IGameService>();
+
         cameraMain = Camera.main;
-        survivalMode = GameController.GetGameMode();
+        survivalMode = gameService.GetGameMode();
         Events.HyperspaceEnded = ActivateHyperdrive;
         defaultLayer = cameraMain.cullingMask;
 
@@ -56,7 +63,7 @@ public class ActivateRandomLevel : MonoBehaviour
 
     private void Start()
     {
-        AudioManager.PlayRandomMusic(true);
+        audioService.PlayRandomMusic(true);
         ChooseNewLevel();
     }
 
@@ -135,7 +142,7 @@ public class ActivateRandomLevel : MonoBehaviour
         WrapTunnelFX.SetActive(false);
         GameController.Instance.EnableAsteroids();
         active = false;
-        AudioManager.PlayRandomMusic(true);
+        audioService.PlayRandomMusic(true);
     }
 
     public void ChooseNewLevel()

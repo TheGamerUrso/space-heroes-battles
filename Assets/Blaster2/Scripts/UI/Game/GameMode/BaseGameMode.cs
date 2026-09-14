@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
@@ -49,8 +50,9 @@ public class BaseGameMode : MonoBehaviour
     protected WaitForSeconds shortWait = new WaitForSeconds(1);
     protected WaitForSeconds longWait = new WaitForSeconds(2);
     protected WaitForSeconds RewardWait = new WaitForSeconds(5);
-
-
+    protected IDataService dataService;
+    private IAudioService audioService;
+    protected IGameService gameService;
     public virtual void SetGameMode()
     {
         shortDelay = new WaitForSeconds(delay);
@@ -82,6 +84,10 @@ public class BaseGameMode : MonoBehaviour
         Events.EnemyGotHit += OnEnemyHitHandled;
         Events.BossHit += OnEnemyHitHandled;
         Events.EnemyEscaped += OnEnemyEscapedCallback;
+
+        dataService = GameContext.Get<IDataService>();
+        audioService = GameContext.Get<IAudioService>();
+        gameService = GameContext.Get<IGameService>();
     }
 
     public virtual void Start()
@@ -112,9 +118,9 @@ public class BaseGameMode : MonoBehaviour
         yield return null;
     }
 
-    public static BossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
+    public BossEnemy SpawnBoss(GameObject BossPrefab, int LevelDifficulty = 1)
     {
-        AudioManager.Instance.PlayMusicById("Boss", true);
+        audioService.PlayMusicById("Boss", true);
         GameObject currentBoss = GameObject.Instantiate(BossPrefab);
         currentBoss.name = BossPrefab.name;
 
@@ -141,7 +147,7 @@ public class BaseGameMode : MonoBehaviour
     {
         if (baseEnemy.Id.Equals(baseEnemy.Id))
         {
-            var playerData = PersistantData.GetPlayerData();
+            var playerData = dataService.GetPlayerData();
             int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
             int EnemyLevel = baseEnemy.Level;
             int levelDiffrence = PlayerLevel / EnemyLevel;
@@ -150,9 +156,9 @@ public class BaseGameMode : MonoBehaviour
 
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
 
-            GameController.SetPlayerXP(XPEarned);
-            GameController.SetScore(baseEnemy.EnemyData.EnemyValue);
-            GameController.Instance.IncreaseMultiplier();
+            gameService.SetPlayerXP(XPEarned);
+            gameService.SetScore(baseEnemy.EnemyData.EnemyValue);
+            gameService.IncreaseMultiplier();
 
             GuiManager.CreateFloatingText("<color=" + "yellow" + ">" + XPEarned + "</color>" + "<color=" + "orange" + "> XP </color>", baseEnemy.transform.localPosition);
 
@@ -178,7 +184,7 @@ public class BaseGameMode : MonoBehaviour
     {
         if (baseEnemy.Id.Equals(id))
         {
-            var playerData = PersistantData.GetPlayerData();
+            var playerData = dataService.GetPlayerData();
             playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
         }
     }

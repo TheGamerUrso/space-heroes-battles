@@ -13,6 +13,8 @@ public class BossEnemy : Enemy
     public bool StartBattle { get; protected set; }
     [SerializeField] private int Phase;
 
+
+
     public override void OnEnable()
     {
         base.OnEnable();
@@ -66,12 +68,12 @@ public class BossEnemy : Enemy
 
     public override void TakeDamage(float dmg)
     {
-        if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0) return;
+        //if (GuiManager.Instance.IsTrasnmiting() || delayAttak > 0) return;
         if (IsAlive == false) return;
 
         ShieldEffect.SetActive(IsProtected());
 
-        AudioManager.PlaySound(EnemyData.hitSFX);
+        audioService.PlaySound(EnemyData.hitSFX);
 
         if (takeDamageDelay <= 0)
         {
@@ -181,12 +183,12 @@ public class BossEnemy : Enemy
 
     public override void OnEnemyHitHandled(int hitIndex, int numberOfHits)
     {
-        if (GuiManager.Instance.IsTrasnmiting())
-        {
-            return;
-        }
+        //if (GuiManager.Instance.IsTrasnmiting())
+        //{
+        //    return;
+        //}
 
-        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerData playerData = dataService.GetPlayerData();
 
         if (playerData != null)
         {

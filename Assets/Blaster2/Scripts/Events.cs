@@ -74,7 +74,7 @@ public class Events
      * PlayerData Events
      */
     public static Action<int, float, float> OnXpValueChanged;
-    public static Action<int> OnLevelValueChanged;
+
     public static Action OnControlScemeChange;
     public static Action<float> OnSuperUseValueChanged;
     public static Action<int> CoinValueChanged;
@@ -87,7 +87,7 @@ public class Events
     /**
      * Screen Manager
      */
-    public static Action<string, bool> OnScreenChanged;
+
 
     public static Action<QuestData> OnObjectiveChange;
     public static Action<QuestUIElement> OnClickEvent = delegate { };

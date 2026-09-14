@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -11,11 +12,17 @@ public class IntroScreen : MonoBehaviour
     private bool clicked;
     public GameObject pressToContinue;
     public AudioSource sfx;
-
+    private IDataService dataService;
+    private IAudioService audioService;
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+        audioService = GameContext.Get<IAudioService>();
+    }
 
     void Start()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerData playerData = dataService.GetPlayerData();
 
         for (int i = 0; i < Ships.Length; i++)
         {
@@ -24,7 +31,7 @@ public class IntroScreen : MonoBehaviour
 
         Ships[playerData.CurrrentSelectedShip].SetActive(true);
 
-        AudioManager.PlayMusic("Intro");
+        audioService.PlayMusic("Intro");
     }
 
     void Update()
@@ -42,7 +49,7 @@ public class IntroScreen : MonoBehaviour
     IEnumerator Fade()
     {
         yield return new WaitForSeconds(1.0f);
-        if (GameManager.Instance)
-            GameManager.Instance.LoadMainenu();
+        //if (GameManager.Instance)
+        //    GameManager.Instance.LoadMainenu();
     }
 }

@@ -1,9 +1,10 @@
 ﻿using DG.Tweening;
 using System;
 using System.Collections;
+using TheGamerUrso.Core;
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class GameController : ServiceComponent<IGameService>, IGameService
 {
     public enum GameState
     {
@@ -62,6 +63,9 @@ public class GameController : MonoBehaviour
     public int Score = 0;
     public int CoinPicked = 0;
     public float difficulty;
+    private IDataService dataService;
+    private IAudioService audioService;
+
 
     public void NewGame()
     {
@@ -108,7 +112,7 @@ public class GameController : MonoBehaviour
             {
                 if (IsGameOver == false)
                 {
-                    GameManager.Instance.PauseTheGame(true);
+                    //GameManager.Instance.PauseTheGame(true);
                 }
             }
         }
@@ -122,7 +126,7 @@ public class GameController : MonoBehaviour
             {
                 if (IsGameOver == false)
                 {
-                    GameManager.Instance.PauseTheGame(true);
+                   // GameManager.Instance.PauseTheGame(true);
                 }
             }
         }
@@ -132,7 +136,6 @@ public class GameController : MonoBehaviour
     {
         Events.PlayerLost -= GameOver;
         Events.GameEnded -= Win;
-        TheGamerUrso.Leaderboards.Instance.OnNewEntryUploaded -= OnNewEntryUploadedHandled;
 
         DOTween.Clear(true);
         DOTween.ClearCachedTweens();
@@ -140,6 +143,17 @@ public class GameController : MonoBehaviour
     //=================================================================================
     protected void Awake()
     {
+        dataService = GameContext.Get<IDataService>();
+        audioService = GameContext.Get<IAudioService>();
+
+
+
+
+        playerData = dataService.GetPlayerData();
+        playerData.SetSuperMeter(0);
+        playerData.ResetWeaponPowerUPCollected();
+
+
         Events.PlayerLost += GameOver;
         Events.GameEnded += Win;
 
@@ -154,18 +168,13 @@ public class GameController : MonoBehaviour
     }
     //=================================================================================
     void Start()
-    {
-        TheGamerUrso.Leaderboards.Instance.OnNewEntryUploaded += OnNewEntryUploadedHandled;
-
-        playerData = PersistantData.GetPlayerData();
-        playerData.SetSuperMeter(0);
-        playerData.ResetWeaponPowerUPCollected();
+    {     
         SetGameState(GameState.START);
     }
     //=================================================================================
     IEnumerator StartGameDelay()
     {
-        GameManager.Instance.ChangeGameState(GameStateEnum.GAME);
+        //GameManager.Instance.ChangeGameState(GameStateEnum.GAME);
         NewGame();
         yield return new WaitForSeconds(1.0f);
 
@@ -217,13 +226,9 @@ public class GameController : MonoBehaviour
     public void GameOver()
     {
         Time.timeScale = 1.0f;
-        var playerData = PersistantData.GetPlayerData();
-
         playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
         playerData.SetScore(GameController.Instance.Score);
-        playerData.AddCoin(CoinPicked);
-
-        TheGamerUrso.Leaderboards.Instance.UploadNewEntry(GameController.Instance.Score);
+        playerData.AddCoin(CoinPicked);        
 
         SetGameState(GameState.GAMEOVER);
     }
@@ -231,7 +236,7 @@ public class GameController : MonoBehaviour
     IEnumerator DelayGameOver()
     {      
         SaveSystem.SaveGame();
-        AudioManager.PlayMusic("GameOver", false);
+        audioService.PlayMusic("GameOver", false);
         yield return new WaitForSeconds(2.0f);
         Events.OnGameOver?.Invoke(false);
     }
@@ -240,13 +245,13 @@ public class GameController : MonoBehaviour
     {
         Time.timeScale = 1.0f;
 
-        PersistantData.GetPlayerData().GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
+        dataService.GetPlayerData().GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
 
         SaveSystem.SaveGame();
 
         yield return new WaitForSeconds(2.0f);
 
-        AudioManager.PlayMusic("Victory", false);
+        audioService.PlayMusic("Victory", false);
 
         PlayerManager.GetPlayer()?.ExitLevel();
 
@@ -254,12 +259,12 @@ public class GameController : MonoBehaviour
         Events.OnGameOver?.Invoke(true);
     }
     //======================================================================================================================================================
-    public static BaseGameMode GetGameMode()
+    public BaseGameMode GetGameMode()
     {
         return Instance.baseGameMode;
     }
     //======================================================================================================================================================
-    public static void SetScore(int Score)
+    public void SetScore(int Score)
     {
         var score = Instance.Multiplier * Score;
         Instance.Score += score;
@@ -272,9 +277,9 @@ public class GameController : MonoBehaviour
         Events.OnScoreValueChanged?.Invoke(Instance.Score);
     }
     //=====================================================================================================================================================
-    public static void SetPlayerXP(float xp)
+    public void SetPlayerXP(float xp)
     {
-        var playerData = PersistantData.GetPlayerData();
+        var playerData = dataService.GetPlayerData();
         playerData.EarnXP(xp);
         playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
     }
@@ -296,8 +301,7 @@ public class GameController : MonoBehaviour
     }
 //=====================================================================================================================================================
     public void OnNewEntryUploadedHandled(bool success)
-    {
-        TheGamerUrso.Leaderboards.Instance.LoadLeaderboard();
+    {      
         StartCoroutine(DelayGameOver());
     }
 }

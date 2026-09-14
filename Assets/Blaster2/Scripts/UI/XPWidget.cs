@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 
@@ -17,7 +18,11 @@ public class XPWidget : MonoBehaviour
 
     private float ActualXpToShow;
     private float ActualXpToLevelToShow;
-
+    protected IDataService dataService;
+    public virtual void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
     private void OnDestroy()
     {
         Events.OnXpValueChanged -= SetPlayerXP;
@@ -29,7 +34,7 @@ public class XPWidget : MonoBehaviour
         Events.OnXpValueChanged += SetPlayerXP;
         Events.OnShipSelectValueChanged += NewShipSelected;
 
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         SetPlayerXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);

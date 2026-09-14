@@ -6,6 +6,7 @@ using System.Linq;
 using Malee.List;
 using System.Collections.Generic;
 using UnityEngine.UIElements;
+using TheGamerUrso.Core;
 
 public class DataPreviewWindow : EditorWindow
 {
@@ -17,6 +18,7 @@ public class DataPreviewWindow : EditorWindow
     public MonoScript mScript;
 
     PlayerData playerData;
+    protected IDataService dataService;
 
     [MenuItem("ProjectBlaster2/DataPreviewWindow")]
     public static void ShowWindow()
@@ -30,8 +32,11 @@ public class DataPreviewWindow : EditorWindow
     {
         EditorGUILayout.LabelField("PlayerData", EditorStyles.boldLabel);
         EditorGUIUtility.labelWidth = 75;
-
-        PlayerData p = PersistantData.GetPlayerData();
+        dataService = GameContext.Get<IDataService>();
+        if (dataService != null)
+        {
+            playerData = dataService.GetPlayerData();
+        }
         EditorGUIUtility.fieldWidth = (position.width) - 150;
     }
 

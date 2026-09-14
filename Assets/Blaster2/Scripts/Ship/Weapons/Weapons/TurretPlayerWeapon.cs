@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class TurretPlayerWeapon : BaseWeapon
@@ -14,15 +15,12 @@ public class TurretPlayerWeapon : BaseWeapon
 
     public override void Start()
     {
-        if(source==null)
-        source = GetComponent<AudioSource>();
-        
-        Cannons = transform.Cast<Transform>().ToArray();  
+        base.Start();
 
         foundPlayer = GameObject.FindGameObjectWithTag("Player");
         ship = foundPlayer.GetComponent<Ship>();
 
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerShip = ship.GetComponent<PlayerShip>();
 

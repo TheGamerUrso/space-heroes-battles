@@ -13,7 +13,7 @@ public class SurvivalGameMode : BaseGameMode
     {
         base.SetGameMode();
         gameInfo.waves = 0;
-        gameInfo.LevelDifficulty =  PersistantData.GetPlayerData().GetCurrentPlayerShipData().level;
+        gameInfo.LevelDifficulty =  dataService.GetPlayerData().GetCurrentPlayerShipData().level;
         for (int i = 0; i < SpawnPoints.Count; i++)
         {
             SpawnPoints[i].enemyElements = gameInfo.enemyElements;
@@ -62,10 +62,10 @@ public class SurvivalGameMode : BaseGameMode
         {
             NewWave();
 
-            if (GuiManager.Instance.IsTrasnmiting() || GameController.CurrentGameState == GameController.GameState.GAME)
-            {
-                yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
-            }
+            //if (GuiManager.Instance.IsTrasnmiting() || GameController.CurrentGameState == GameController.GameState.GAME)
+            //{
+            //    yield return new WaitUntil(() => !GuiManager.Instance.IsTrasnmiting());
+            //}
 
             yield return shortWait;
 
@@ -115,7 +115,7 @@ public class SurvivalGameMode : BaseGameMode
 
                 if (BossWave)
                 {
-                    GuiManager.Instance.BossWarning();
+                    //GuiManager.Instance.BossWarning();
 
                     yield return longWait;
 
@@ -129,7 +129,7 @@ public class SurvivalGameMode : BaseGameMode
 
                         yield return RewardWait;
 
-                        GuiManager.Instance.ShowRewardScreen();
+                        //GuiManager.Instance.ShowRewardScreen();
                         rewardToClaim = true;
 
                         while (rewardToClaim)

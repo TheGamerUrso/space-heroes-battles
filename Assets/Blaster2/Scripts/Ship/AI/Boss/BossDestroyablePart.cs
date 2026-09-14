@@ -77,7 +77,7 @@ public class BossDestroyablePart : Ship, IDamagable, ITargetable
     {
         if (IsAlive == false) return;
 
-        AudioManager.PlaySound(EnemyData.hitSFX);
+        audioService.PlaySound(EnemyData.hitSFX);
 
         if (takeDamageDelay <= 0)
         {

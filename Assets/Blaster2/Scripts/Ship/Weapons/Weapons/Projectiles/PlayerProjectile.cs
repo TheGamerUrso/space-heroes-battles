@@ -9,10 +9,10 @@ public class PlayerProjectile : BaseProjectile
         this.baseWeapon = baseWeapon;
     }
 
-    protected override void OnAwake()
+    protected override void Awake()
     {
-        base.OnAwake();
-        PlayerData playerData = PersistantData.GetPlayerData();
+        base.Awake();
+        PlayerData playerData = dataService.GetPlayerData();
         meshRenderer.material = playerMaterials[playerData.CurrrentSelectedShip];
     }
 

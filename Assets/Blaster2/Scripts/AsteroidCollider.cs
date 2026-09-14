@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
@@ -42,17 +43,28 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
     private Rigidbody rigid;
     private float force = 2500;
 
-
+    private IDataService dataService;
 
     private void Awake()
     {
+        dataService = GameContext.Get<IDataService>();
+
+
         rigid = GetComponentInParent<Rigidbody>();
+
+        PlayerData playerData = dataService.GetPlayerData();
+        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
+        SetMaxHealth(playerShipData.level);
+
     }
     private void Start()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-        maxHealth = maxHealth * playerShipData.level;
+        
+    }
+
+    private void SetMaxHealth(float level)
+    {
+        maxHealth = maxHealth * level;
         currentHealth = maxHealth;
     }
 

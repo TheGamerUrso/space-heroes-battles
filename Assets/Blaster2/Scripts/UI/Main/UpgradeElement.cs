@@ -1,8 +1,9 @@
 ﻿using System;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 public class UpgradeElement : MonoBehaviour
 {
@@ -23,7 +24,7 @@ public class UpgradeElement : MonoBehaviour
     private UpgradeScreen upgradeScreen;
 
     private Color TextdefaultColor;
-
+    private IDataService dataService;
     private void OnEnable()
     {
         Events.RefreshUpdateData?.Invoke();
@@ -33,7 +34,10 @@ public class UpgradeElement : MonoBehaviour
     {
         Events.RefreshUpdateData -= Refresh;
     }
-
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
     private void Start()
     {
         Events.RefreshUpdateData += Refresh;
@@ -46,7 +50,7 @@ public class UpgradeElement : MonoBehaviour
         Price.text = upgrade.GetCost();
         Icon.sprite = upgrade.upgradeData.sprite;
         this.upgradeScreen = upgradeScreen;
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
 
         TextdefaultColor = Price.color;
 

@@ -28,26 +28,27 @@ public class PlayerShip : Ship, IDamagable
 
     private bool TempFireRateUpgrade;
     private bool HasArmorUprade;
+    private IDataService dataService;
 
-    public override void OnDestroy()
-    {
-        Events.OnLevelValueChanged -= OnLevelValueChanged;
-    }
+ 
     //=================================================================================
     public override void Awake()
     {
         animator = GetComponentInChildren<Animator>();
         shipController = GetComponent<PlayerController>();
+
+        playerData = dataService.GetPlayerData();
+    
     }
     //=================================================================================
     public override void Start()
     {
-        Events.OnLevelValueChanged += OnLevelValueChanged;
+       // Events.OnLevelValueChanged += OnLevelValueChanged;
 
-        playerData = PersistantData.GetPlayerData();
+       
         playerData.NewGame();
-
         playerShipData = playerData.GetCurrentPlayerShipData();
+
         shipController.SetSpeed(playerShipData.Speed);
 
         playerShipData.NewGame(ref HasShield);
@@ -63,6 +64,11 @@ public class PlayerShip : Ship, IDamagable
 
         IsAlive = true;
     }
+    public override void OnDestroy()
+    {
+        //Events.OnLevelValueChanged -= OnLevelValueChanged;
+    }
+
     //=================================================================================
     public void OnLevelValueChanged(int Level)
     {

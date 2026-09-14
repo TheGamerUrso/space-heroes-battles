@@ -16,19 +16,19 @@ public class PlayerManager
     private static PlayerShipElement[] listOfPlayerShips;
 
 
-    public PlayerManager(GameManager gm, GameManager dc)
-    {
-        if (instance == null)
-        {
-            this.gm = gm;
-            this.dc = dc;
-            instance = this;
-        }
+    //public PlayerManager(GameManager gm, GameManager dc)
+    //{
+    //    if (instance == null)
+    //    {
+    //        this.gm = gm;
+    //        this.dc = dc;
+    //        instance = this;
+    //    }
 
-    }
+    //}
 
-    private GameManager gm;
-    private GameManager dc;
+    //private GameManager gm;
+    //private GameManager dc;
 
     public static GameObject CreatePlayer(int id)
     {
@@ -56,7 +56,7 @@ public class PlayerManager
 
     public void LoadPlayerSettings()
     {
-        listOfPlayerShips = gm.ListOfPlayerShips();
+        //listOfPlayerShips = gm.ListOfPlayerShips();
     }
 
     public static PlayerShip GetPlayer()

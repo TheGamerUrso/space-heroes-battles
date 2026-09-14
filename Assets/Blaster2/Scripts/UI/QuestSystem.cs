@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TheGamerUrso.Core;
 using UnityEngine;
 
-public class QuestSystem : MonoBehaviour
+public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
 {
-    public static QuestSystem Instance{get;private set;}
-    public Action LoadingNewQuests;
-    public Action OnNewQuestGenerated;
-    public Action OnQuestValueChanged;
+    public event Action LoadingNewQuests;
+    public event Action OnNewQuestGenerated;
+    public event Action OnQuestValueChanged;
     [SerializeField] private Dictionary<string, QuestData> DictOfActiveQuests = new Dictionary<string, QuestData>();
     //[SerializeField] private GameObject[] ObjectiveLocations;
     [SerializeField] private List<QuestTypeEnum> ListOfAvailableQuestType;
@@ -18,8 +18,12 @@ public class QuestSystem : MonoBehaviour
     private PlayerData playerData;
     public List<QuestData> ActiveQuests = new List<QuestData>();
     public List<QuestData> ListOfActiveQuest{get{return ActiveQuests;}}
-    void Awake(){
-        if(Instance==null)Instance=this;
+    private IDataService dataService;
+
+    protected override void Awake()
+    {
+        base.Awake(); 
+        dataService = GameContext.Get<IDataService>();
     }
     private void OnEnable()
     {
@@ -28,14 +32,14 @@ public class QuestSystem : MonoBehaviour
 
     private void Start()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         ActiveQuests = playerData.ListOfPlayerActiveQuest;
         InitializeQuests();
     }
 
     public void InitializeQuests()
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerData playerData = dataService.GetPlayerData();
         if (playerData.ListOfPlayerActiveQuest.Count > 0)
         {
             OnNewQuestGenerated?.Invoke();

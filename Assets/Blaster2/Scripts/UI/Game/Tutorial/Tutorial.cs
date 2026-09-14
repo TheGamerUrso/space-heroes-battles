@@ -27,7 +27,7 @@ public class Tutorial : MonoSingleton<Tutorial>
     {
         if (!GameController.Instance.IsGameOver)
         {
-            GameManager.Instance.IsPaused = true;
+            //GameManager.Instance.IsPaused = true;
             TutorialView.Show();
             for (int i = 0; i < TutorailItemsToShow.Length; i++)
             {
@@ -46,7 +46,7 @@ public class Tutorial : MonoSingleton<Tutorial>
     public void Close()
     {
         TutorialView.Hide();
-        GameManager.Instance.IsPaused = false;
+       //GameManager.Instance.IsPaused = false;
         Time.timeScale = 1;
         PlayerManager.GetPlayer().tempGodMode();
     }

@@ -12,7 +12,7 @@ public class BaseSpecialAttack : BaseWeapon
 
     public override void Start()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
     }
 

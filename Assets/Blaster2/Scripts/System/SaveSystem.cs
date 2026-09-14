@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public static class SaveSystem
@@ -22,8 +23,9 @@ public static class SaveSystem
 
     public static void SaveGame()
     {
+        var dataService = GameContext.Get<IDataService>();
         FileStream file = new FileStream(playerDataPath, FileMode.OpenOrCreate);
-        PlayerData playerData = PersistantData.GetPlayerData();
+        PlayerData playerData = dataService.GetPlayerData();
 
         if (playerData != null)
         {
@@ -45,6 +47,7 @@ public static class SaveSystem
 
     public static void LoadGame()
     {
+        var dataService = GameContext.Get<IDataService>();
         PlayerData playerData;
 
         FileStream file = new FileStream(playerDataPath, FileMode.Open);
@@ -53,7 +56,7 @@ public static class SaveSystem
         {
             BinaryFormatter formatter = new BinaryFormatter();
             playerData = (PlayerData)formatter.Deserialize(file);
-            PersistantData.ReplacePlayerData(playerData);
+            dataService.ReplacePlayerData(playerData);
         }
         catch (SerializationException e)
         {

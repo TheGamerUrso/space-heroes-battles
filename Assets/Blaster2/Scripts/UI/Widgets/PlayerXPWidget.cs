@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,18 +14,16 @@ public class PlayerXPWidget : MonoBehaviour
 
     [SerializeField] private Slider XPBar = null;
     [SerializeField] private TextMeshProUGUI XPStatus;
+    private IDataService dataService;
 
-    private void OnDestroy()
+    private void Awake()
     {
-        if (player != null)
-        {
-            Events.OnXpValueChanged -= UpdateXP;
-        }
+        dataService = GameContext.Get<IDataService>();
     }
 
     private void Start()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         Events.OnXpValueChanged += UpdateXP;
@@ -33,6 +32,13 @@ public class PlayerXPWidget : MonoBehaviour
 
     }
 
+    private void OnDestroy()
+    {
+        if (player != null)
+        {
+            Events.OnXpValueChanged -= UpdateXP;
+        }
+    }
     public void UpdateXP(int lvl, float xp, float xpToLevel)
     {
         XPBar.maxValue = xpToLevel;

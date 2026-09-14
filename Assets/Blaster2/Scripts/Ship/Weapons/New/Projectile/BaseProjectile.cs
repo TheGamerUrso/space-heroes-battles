@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public abstract class BaseProjectile : MonoBehaviour
@@ -20,25 +21,23 @@ public abstract class BaseProjectile : MonoBehaviour
     protected GameObject explosion;
     protected Transform EffectsHolder;
     protected TrailRenderer trailRenderer;
-
+    protected PlayerData playerData;
+    protected IDataService dataService;
     protected virtual void OnEnable() { }
    protected virtual void OnDisable()
     {
         if (trailRenderer)
             trailRenderer.Clear();
     }
-    
-    protected virtual void OnAwake()
-    {
 
-    }
-
-    private void Awake()
+    protected virtual void Awake()
     {
         rigid = GetComponent<Rigidbody>();
         trailRenderer = GetComponent<TrailRenderer>();
         meshRenderer = GetComponentInChildren<MeshRenderer>();
-        OnAwake();
+
+        dataService = GameContext.Get<IDataService>();
+        playerData = dataService.GetPlayerData();
     }
 
     private void Start() => OnStart();

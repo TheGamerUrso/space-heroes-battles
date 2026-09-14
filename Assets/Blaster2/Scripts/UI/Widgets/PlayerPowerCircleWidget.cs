@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -31,6 +32,7 @@ public class PlayerPowerCircleWidget : MonoBehaviour
     [SerializeField] private Sprite[] WeaponIndicatorSpritesActivated = null;
 
     [SerializeField] private Sprite[] WeaponIndicatorSpritesNotActivated;
+    protected IDataService dataService;
 
 
     private void OnDestroy()
@@ -45,10 +47,12 @@ public class PlayerPowerCircleWidget : MonoBehaviour
         if (player != null)
             Events.PowerUpLevelValueChanged += PowerUpLevelChanged;
             Events.OnPowerPackCollected += PowerPackCollected;
+
+        dataService = GameContext.Get<IDataService>();
     }
     private void Start()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         PowerBut.onClick.AddListener(() =>

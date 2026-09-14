@@ -1,11 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
+
+using TheGamerUrso.Core;
 using UnityEngine;
 
+
 [Serializable]
-public class PersistantData : MonoSingleton<PersistantData>
+public class PersistantData : ServiceComponent<IDataService>, IDataService
 {
-    public Player_SO[] Players;
+
+public Player_SO[] Players;
     public Sprite[] achievementIcons;
 
     public PlayerData playerData;
@@ -16,25 +19,14 @@ public class PersistantData : MonoSingleton<PersistantData>
         return achievementIcons[id];
     }
     
-    public static void ReplacePlayerData(PlayerData playerData)
+    public void ReplacePlayerData(PlayerData playerData)
     {
-        Instance.playerData = playerData;
+        this.playerData = playerData;
     }
 
-    public static void Load()
+    public void Load()
     {
-        SaveSystem.LoadGame();
-
-    }
-
-    public static void Save()
-    {
-        SaveSystem.SaveGame();
-    }
-
-    public static void LoadData()
-    {
-        Instance.playerData = new PlayerData(Instance.Players);
+        playerData = new PlayerData(Players);
 
         int firstRunIndex = 0;
 
@@ -49,11 +41,11 @@ public class PersistantData : MonoSingleton<PersistantData>
             SaveSystem.LoadGame();
 
             new GameSettings(
-                  Instance.playerData.SFXVolume,
-                  Instance.playerData.MusicVolume,
-                  Instance.playerData.AutoAttack,
-                  Instance.playerData.mute,
-                  Instance.playerData.ControlScene);
+                  playerData.SFXVolume,
+                  playerData.MusicVolume,
+                  playerData.AutoAttack,
+                  playerData.mute,
+                  playerData.ControlScene);
 
         }
         else if (firstRunIndex == 0)
@@ -63,9 +55,14 @@ public class PersistantData : MonoSingleton<PersistantData>
         }
     }
 
-    public static PlayerData GetPlayerData()
+    public void Save()
     {
-        return Instance.playerData;
+        SaveSystem.SaveGame();
+    }
+
+    public PlayerData GetPlayerData()
+    {
+        return playerData;
     }
 
     [ContextMenu("Add Coins")]

@@ -9,6 +9,6 @@ public class SceneProgress : MonoBehaviour
 
     void Update()
     {
-        progress.fillAmount = GameManager.Instance.sceneLoadProgress;
+        //progress.fillAmount = GameManager.Instance.sceneLoadProgress;
     }
 }

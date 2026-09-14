@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine;
 using static GameController;
 
-public class GuiManager : MonoSingleton<GuiManager>
+public class GuiManager : MonoBehaviour
 {
     [Header("Menu")]
 
@@ -24,19 +24,16 @@ public class GuiManager : MonoSingleton<GuiManager>
     private float timer;
 
     //=================================================================================
-    protected override void OnCleanup()
+    protected void OnDestroy()
     {
-        base.OnCleanup();
-
         Events.OnGameOver -= GameOver;
         Events.OnPauseGame -= ShowPauseMenu;
         Events.OnScoreValueChanged -= UpdateScore;
     }
 
     //=================================================================================
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
         transmittionWidget = FindObjectOfType<TransmitionWidget>();
     }
     //=================================================================================
@@ -86,19 +83,19 @@ public class GuiManager : MonoSingleton<GuiManager>
     //=================================================================================
     public void ReplayButton()
     {
-        GameManager.Instance.ResetLevel();
+        //GameManager.Instance.ResetLevel();
     }
     //=================================================================================
     public void ResumeButton()
     {
         Events.ToggleSlowMo?.Invoke(true);
-        GameManager.Instance.PauseTheGame(false);
+       // GameManager.Instance.PauseTheGame(false);
     }
     //=================================================================================
     public void PauseButton()
     {
         Events.ToggleSlowMo?.Invoke(false);
-        GameManager.Instance.PauseTheGame(true);
+       // GameManager.Instance.PauseTheGame(true);
     }
     //=================================================================================
     public void ShowPauseMenu(bool value)
@@ -123,7 +120,7 @@ public class GuiManager : MonoSingleton<GuiManager>
     //=================================================================================
     public static void SetScoreMultipler(string text)
     {
-        Instance.scoreMultplierWidget.SetText(text);
+      //  Instance.scoreMultplierWidget.SetText(text);
     }
     //=================================================================================
     public static void CreateFloatingText(string text, Vector3 pos)
@@ -159,13 +156,13 @@ public class GuiManager : MonoSingleton<GuiManager>
         }
 
         Events.ToggleSlowMo?.Invoke(false);
-        GameManager.Instance.PauseTheGame(false);
+        //GameManager.Instance.PauseTheGame(false);
 
         if (activeMenuGO != null)
             StartCoroutine(DelayCloseMenu(activeMenuGO, 1));
 
 
-        GameManager.Instance.LoadMainenu();
+        //GameManager.Instance.LoadMainenu();
     }
 
     //=================================================================================
@@ -178,7 +175,7 @@ public class GuiManager : MonoSingleton<GuiManager>
     //=================================================================================
     public static void PlayTrasmition(string[] transmitions, bool playIntro = true)
     {
-        Instance.ShowTrasmition(transmitions, playIntro);
+       // Instance.ShowTrasmition(transmitions, playIntro);
     }
     //=================================================================================
     public void BossWarning()
@@ -216,7 +213,6 @@ public class GuiManager : MonoSingleton<GuiManager>
         else
         {
             GameOverScreen.Show();      
-            GameOverScreen.GetComponent<SurvivalGameOverScreen>().UpdateLeaderboards();
         }
     }
 

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
@@ -14,9 +15,9 @@ public class AudioSettings : MonoBehaviour
 
     private PlayerData playerData;
     public AudioMixerGroup MixerGroup;
-    public Slider volumeSlider;
+    public Slider volumeSlider; 
 
-    private void OnEnable()
+    void OnEnable()
     {
         UpdateAudioVolume();
     }
@@ -33,7 +34,8 @@ public class AudioSettings : MonoBehaviour
 
     public void UpdateAudioVolume()
     {
-        playerData = PersistantData.GetPlayerData();
+        var dataService = GameContext.Get<IDataService>();
+        playerData = dataService.GetPlayerData();
         if (playerData != null)
         {
             switch (audioType)
@@ -52,17 +54,18 @@ public class AudioSettings : MonoBehaviour
 
     public void SetVolume(float value)
     {
-        PlayerData playerData = PersistantData.GetPlayerData();
-
+        var dataService = GameContext.Get<IDataService>();
+        PlayerData playerData = dataService.GetPlayerData();
+        var audioService = GameContext.Get<IAudioService>();
         switch (audioType)
         {
             case AudioType.Music:
                 playerData.MusicVolume = value;
-                AudioManager.SetMusicVolume(value);
+                audioService.SetMusicVolume(value);
                 break;
             case AudioType.SFX:
                 playerData.SFXVolume = value;
-                AudioManager.SetSoundVolume(value);
+                audioService.SetSoundVolume(value);
                 break;
             default:
                 break;

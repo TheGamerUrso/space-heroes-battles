@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 
@@ -12,22 +13,29 @@ public class LevelWidget : MonoBehaviour
     private bool updateText;
     private int level;
     private float ActualLevelToShow;
+    private IDataService dataService;
 
-    private void OnDestroy()
+    private void Awake()
     {
-        Events.OnLevelValueChanged -= SetPlayerLevelText;
-        Events.OnShipSelectValueChanged -= NewShipSelected;
+        dataService = GameContext.Get<IDataService>();
     }
+
 
     private void Start()
     {
-        Events.OnLevelValueChanged += SetPlayerLevelText;
+       // Events.OnLevelValueChanged += SetPlayerLevelText;
         Events.OnShipSelectValueChanged += NewShipSelected;
 
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         SetPlayerLevelText(playerShipData.level);
+    }
+
+    private void OnDestroy()
+    {
+        //Events.OnLevelValueChanged -= SetPlayerLevelText;
+        Events.OnShipSelectValueChanged -= NewShipSelected;
     }
 
     private void Update()

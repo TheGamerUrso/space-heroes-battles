@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public abstract class BaseWeapon : MonoBehaviour
@@ -34,11 +35,18 @@ public abstract class BaseWeapon : MonoBehaviour
 
     public AudioClip SoundSFX { get { return weaponData.ShootSFX; } }
     public PoolGameObjectType ProjectilePrefab { get { return weaponData.m_Projectile; } }
+    protected IDataService dataService;
 
-    public virtual void Awake() { }
+    public virtual void Awake() 
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
+
     public virtual void Start()
     {
-        source = GetComponent<AudioSource>();
+        if (source == null)
+            source = GetComponent<AudioSource>();
+
         Cannons = transform.Cast<Transform>().ToArray();
         Initialize();
     }

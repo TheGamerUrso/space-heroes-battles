@@ -1,4 +1,5 @@
 using System;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public abstract class Ship : MonoBehaviour
@@ -9,6 +10,10 @@ public abstract class Ship : MonoBehaviour
     [SerializeField] protected AudioSource audioSource;
 
     public string Id;
+
+
+    protected IAudioService audioService;
+
     #region Health
 
     public bool IsAlive { get; protected set; }
@@ -34,11 +39,14 @@ public abstract class Ship : MonoBehaviour
     public float CurrentHealth;
     #endregion
 
-    #region Methods
+
     public virtual void OnDestroy() { }
     public virtual void OnDisable() { }
     public virtual void OnEnable() { }
-    public virtual void Awake() { }
+    public virtual void Awake() 
+    {
+        audioService = GameContext.Get<IAudioService>();
+    }
     public virtual void Start() { }
     public virtual void Update() { }
     public virtual void SetStats(int level) { }
@@ -87,5 +95,4 @@ public abstract class Ship : MonoBehaviour
     public virtual void TakeDamage(float dmg) { }
 
     public virtual void Hit() { }
-    #endregion
 }

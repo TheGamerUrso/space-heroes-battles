@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,10 +11,17 @@ public class GameplaySettings : MonoBehaviour
     public Color DefaultColor;
 
     public Image[] Icons;
+    private IDataService dataService;
+
+
+    private void Awake()
+    {
+        dataService = GameContext.Get<IDataService>();
+    }
 
     void Start()
     {
-        playerData = PersistantData.GetPlayerData();
+        playerData = dataService.GetPlayerData();
 
         for (int i = 0; i < Icons.Length; i++)
         {

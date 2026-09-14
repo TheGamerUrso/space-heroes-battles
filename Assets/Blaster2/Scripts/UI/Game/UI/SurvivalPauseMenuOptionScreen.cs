@@ -10,13 +10,13 @@ public class SurvivalPauseMenuOptionScreen : BaseOptions
     public override void ExitAndSave()
     {
         base.ExitAndSave();
-        GuiManager.Instance.ResumeButton();
+       // GuiManager.Instance.ResumeButton();
     }
 
     public void Quit()
     {
         base.ExitAndSave();
         Time.fixedDeltaTime = 0.02f;
-        GuiManager.Instance.LoadMainMenu();
+        //GuiManager.Instance.LoadMainMenu();
     }
 }

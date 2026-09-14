@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 [System.Serializable]
@@ -8,9 +10,9 @@ public class ShipEventArgs : System.EventArgs
     public ShipSelectData shipSelectData { get; set; }
 }
 
-public class ShipSelect : MonoSingleton<ShipSelect>
+public class ShipSelect : UIView
 {
-
+    public event Action OnShipSelected;
     [SerializeField] private Camera shipCameraPreview;
     [SerializeField] private GameObject[] Ships;
 
@@ -25,10 +27,16 @@ public class ShipSelect : MonoSingleton<ShipSelect>
 
     private PlayerData playerData;
     private int currentShipSelected;
+    private IDataService dataService;
 
-    private void Start()
+    protected void Awake()
     {
-        playerData = PersistantData.GetPlayerData();
+        dataService = GameContext.Get<IDataService>();
+        playerData = dataService.GetPlayerData();
+    }
+
+    protected void Start()
+    {
         currentShipSelected = playerData.CurrrentSelectedShip;
 
         Events.OnShipSelect += SelectShip;
@@ -113,6 +121,6 @@ public class ShipSelect : MonoSingleton<ShipSelect>
 
     public void DoneSelect()
     {
-        MainMenuManager.Instance.Close();
+        OnShipSelected?.Invoke();
     }
 }
