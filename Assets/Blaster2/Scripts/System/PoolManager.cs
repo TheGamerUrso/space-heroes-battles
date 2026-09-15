@@ -63,8 +63,9 @@ public class PoolManager : MonoSingleton<PoolManager>
     private GameObject tempGameObjectPrefab;
     private GameObject holder
         ;
-    private void Start()
+    protected override void Setup()
     {
+        base.Setup();
         if (PoolElements.Count > 0)
         {
             StartCoroutine(CreatePool());

@@ -69,7 +69,7 @@ public class BossEnemy : Enemy
 
     public override void TakeDamage(float dmg)
     {
-        if (GameController.Instance.CurrentGameState == GameController.GameState.TRANSMISSION || delayAttak > 0) return;
+        if (GameController.Instance.CurrentGameState == GameState.TRANSMISSION || delayAttak > 0) return;
         if (IsAlive == false) return;
 
         ShieldEffect.SetActive(IsProtected());

@@ -5,18 +5,15 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class GameOverWidget : MonoBehaviour
+public class GameOverWidget : UIView
 {
     [SerializeField] private TextMeshProUGUI m_Text;
     private bool skip;
     private int retried = 0;
 
     protected IDataService dataService;
+    private IAppService appService;
 
-    private void OnEnable()
-    {
-        ShowGameResult();
-    }
 
     public void ShowGameResult()
     {
@@ -27,13 +24,17 @@ public class GameOverWidget : MonoBehaviour
         m_Text.text = scoreText;
 
         StartCoroutine(ScoreCoroutine());
-
-
     }
 
     private void Awake()
     {
+      
+    }
+
+    private void Start()
+    {
         dataService = GameContext.Get<IDataService>();
+        appService = GameContext.Get<IAppService>();
     }
     public void Update()
     {
@@ -74,12 +75,13 @@ public class GameOverWidget : MonoBehaviour
             retried++;
         }
 
-          //GameManager.Instance.ResetLevel();
-  
-    }
+        appService.ResetLevel();
+        GetComponent<CanvasGroup>().interactable = false;
 
-    public void LoadMainMenu()
+    }
+    public void QuitButton()
     {
-        //GuiManager.Instance.LoadMainMenu();
+        appService.LoadMainMenu();
+        GetComponent<CanvasGroup>().interactable = false;
     }
 }

@@ -46,7 +46,8 @@ public class Items : MonoBehaviour, IPickable
         boxCollider.enabled = true;
         picked = false;
     }
-    private void Awake()
+
+    private void Start()
     {
         dataService = GameContext.Get<IDataService>();
         audioService = GameContext.Get<IAudioService>();
@@ -54,11 +55,7 @@ public class Items : MonoBehaviour, IPickable
         var playerService = GameContext.Get<PlayerManager>();
         PlayerData playerData = dataService.GetPlayerData();
         player = playerService.GetPlayer();
-    }
 
-
-    private void Start()
-    {
         if (itemData.itemType == ItemEnum.COIN)
         {
             if (playerShipData.MagnetPower > 0)

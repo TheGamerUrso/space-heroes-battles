@@ -11,7 +11,7 @@ public struct TutorialItem
 
 public class Tutorial : MonoSingleton<Tutorial>
 {
-    public UIView TutorialView;
+    public GameObject TutorialView;
 
     public TMPro.TextMeshProUGUI Title;
     public TMPro.TextMeshProUGUI Description;
@@ -19,9 +19,10 @@ public class Tutorial : MonoSingleton<Tutorial>
     public TutorialItem[] TutorailItemsToShow;
 
 
-    private void Start()
+    protected override void Setup()
     {
-        TutorialView.Hide();
+        base.Setup();
+        TutorialView.gameObject.SetActive(false);
     }
 
     public void ShowTutorial(int itemToShowIndex)
@@ -30,7 +31,7 @@ public class Tutorial : MonoSingleton<Tutorial>
         {
             var appService = GameContext.Get<IAppService>();
             appService.PauseTheGame(true);
-            TutorialView.Show();
+            TutorialView.gameObject.SetActive(true);
             for (int i = 0; i < TutorailItemsToShow.Length; i++)
             {
                 TutorailItemsToShow[i].prefabItem.SetActive(false);
@@ -49,7 +50,7 @@ public class Tutorial : MonoSingleton<Tutorial>
     {
         var playerService = GameContext.Get<PlayerManager>();
         var appService = GameContext.Get<IAppService>();
-        TutorialView.Hide();
+        TutorialView.gameObject.SetActive(false);
         appService.PauseTheGame(false);
         Time.timeScale = 1;
         playerService.GetPlayer().tempGodMode();

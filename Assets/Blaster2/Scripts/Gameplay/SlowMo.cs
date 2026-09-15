@@ -19,10 +19,10 @@ public class SlowMo : MonoBehaviour
     {
         switch (gameController.CurrentGameState)
         {
-            case GameController.GameState.START:
+            case GameState.START:
                 ResetTime();
                 break;
-            case GameController.GameState.GAME:
+            case GameState.GAME:
 
                 if (Input.touchCount > 0 || Input.GetMouseButton(0))
                 {
@@ -43,10 +43,10 @@ public class SlowMo : MonoBehaviour
                 }
 
                 break;
-            case GameController.GameState.GAMEOVER:
+            case GameState.GAMEOVER:
                 ResetTime();
                 break;
-            case GameController.GameState.WIN:
+            case GameState.WIN:
                 ResetTime();
                 break;
             default:

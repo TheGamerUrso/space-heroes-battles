@@ -12,7 +12,7 @@ public enum RewardTypeEnum
     Gold = 0, XP = 1, HEALTH = 2, SHIELD = 3, POWERUP = 4, SUPER = 5
 }
 
-public class RewardWidget : MonoBehaviour
+public class RewardWidget : UIView
 {
     private int RewardBoxSelected;
 
@@ -72,7 +72,7 @@ public class RewardWidget : MonoBehaviour
 
     public void Show()
     {
-        GameController.Instance.UseSlowMo = false;
+        GameController.Instance.IsSlowMo = false;
         rewardPanel.SetActive(true);
         StartCoroutine(ShowWaveReward());
     }
@@ -149,7 +149,7 @@ public class RewardWidget : MonoBehaviour
         RewardClaimed();
 
         IsWaitingInput = false;
-        GameController.Instance.UseSlowMo = true;
+        GameController.Instance.IsSlowMo = true;
     }
 
 }

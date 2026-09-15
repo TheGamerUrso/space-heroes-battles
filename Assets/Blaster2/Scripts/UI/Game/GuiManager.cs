@@ -46,7 +46,7 @@ public class GuiManager : MonoBehaviour
     //=================================================================================
     private void Update()
     {
-        if (gameController.CurrentGameState == GameController.GameState.GAME)
+        if (gameController.CurrentGameState == GameState.GAME)
         {
 #if UNITY_ANDROID
             if (!GameController.Instance.SlowMo)
@@ -97,12 +97,12 @@ public class GuiManager : MonoBehaviour
     {
         if (value)
         {
-            GameController.Instance.SlowMo = false;
+            GameController.Instance.IsSlowMo = false;
             PauseScreen.Show();
         }
         else if (!value)
         {
-            GameController.Instance.SlowMo = true;
+            GameController.Instance.IsSlowMo = true;
             PauseScreen.Hide();
         }
     }

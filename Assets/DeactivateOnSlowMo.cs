@@ -10,11 +10,11 @@ public class DeactivateOnSlowMo : MonoBehaviour
     {
         if (m_deactivateOnSlow)
         {
-            panel.SetActive(!GameController.Instance.SlowMo);
+            panel.SetActive(!GameController.Instance.IsSlowMo);
         }
         else
         {
-           panel.SetActive(GameController.Instance.SlowMo);
+           panel.SetActive(GameController.Instance.IsSlowMo);
         }
     }
 }

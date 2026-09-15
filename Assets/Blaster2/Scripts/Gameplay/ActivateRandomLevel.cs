@@ -21,8 +21,6 @@ public class ActivateRandomLevel : MonoBehaviour
     private bool fadeOut;
 
     private Color c;
-
-    BaseGameMode survivalMode;
     private bool active;
     private bool firstTime = true;
     [SerializeField] private float speed = 0.5f;
@@ -40,15 +38,12 @@ public class ActivateRandomLevel : MonoBehaviour
     public AudioClip ending;
 
     private IAudioService audioService;
-    protected IGameService gameService;
+    protected GameController gameController;
 
     private void Awake()
     {
-        audioService = GameContext.Get<IAudioService>();
-        gameService = GameContext.Get<IGameService>();
-
         cameraMain = Camera.main;
-        survivalMode = gameService.GetGameMode();
+
         defaultLayer = cameraMain.cullingMask;
 
 
@@ -62,6 +57,7 @@ public class ActivateRandomLevel : MonoBehaviour
 
     private void Start()
     {
+        audioService = GameContext.Get<IAudioService>();
         audioService.PlayRandomMusic(true);
         ChooseNewLevel();
     }

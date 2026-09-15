@@ -1,4 +1,5 @@
 ﻿using System;
+using TheGamerUrso.Core;
 using UnityEngine;
 [Serializable]
 public struct PlayerShipElement
@@ -8,7 +9,7 @@ public struct PlayerShipElement
 }
 
 
-public class PlayerManager : MonoBehaviour
+public class PlayerManager : ServiceComponent<PlayerManager>
 {
     private GameObject currentPlayer;
     [SerializeField] private PlayerShipElement[] PlayerShips;

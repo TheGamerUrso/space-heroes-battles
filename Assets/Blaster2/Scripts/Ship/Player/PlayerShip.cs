@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class PlayerShip : Ship, IDamagable
@@ -36,13 +37,15 @@ public class PlayerShip : Ship, IDamagable
     {
         animator = GetComponentInChildren<Animator>();
         shipController = GetComponent<PlayerController>();
-
-        playerData = dataService.GetPlayerData();
-    
     }
     //=================================================================================
     public override void Start()
-    {       
+    {
+        dataService = GameContext.Get<IDataService>();
+
+        playerData = dataService.GetPlayerData();
+
+
         playerData.NewGame();
         playerShipData = playerData.GetCurrentPlayerShipData();
 

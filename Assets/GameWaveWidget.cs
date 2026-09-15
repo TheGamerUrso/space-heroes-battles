@@ -8,25 +8,18 @@ public class GameWaveWidget : MonoBehaviour
 {
     public TextMeshProUGUI WaveText;
     public TextMeshProUGUI EnemiesRemaining;
-    public BaseGameMode survivalMode;
     public CanvasGroup canvasGroup;
+    [SerializeField] protected GameController gameController;
 
-    protected IGameService gameService;
-    public virtual void Awake()
-    {
-        gameService = GameContext.Get<IGameService>();
-    }
-    void Start()
-    {
-        survivalMode = gameService.GetGameMode();
-    }
+
     void Update()
     {
-        if (survivalMode == null) return;
+        if (gameController == null) return;
 
-        canvasGroup.alpha = survivalMode.gameInfo.BossBattleInitiated ? 0 : 1;
+        canvasGroup.alpha = gameController.BossBattleInitiated ? 0 : 1;
 
-        WaveText.text = survivalMode.gameInfo.CurrentTotalEnemies + "/" + survivalMode.gameInfo.TotalEnemies;
-        EnemiesRemaining.text = "" + survivalMode.gameInfo.waves;
+        WaveText.text = gameController.CurrentTotalEnemies + "/" + gameController.TotalEnemies;
+        EnemiesRemaining.text = "" + gameController.waves;
     }
 }
+    
