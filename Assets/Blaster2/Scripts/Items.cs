@@ -8,7 +8,7 @@ public enum ItemEnum
 
 public class Items : MonoBehaviour, IPickable
 {
-    private PlayerShip player;
+    private PlayerController player;
 
     [SerializeField] private Item_SO itemData;
     [SerializeField] private LayerMask playerLayer;
@@ -30,16 +30,17 @@ public class Items : MonoBehaviour, IPickable
 
     PlayerData playerData;
     PlayerShipData playerShipData;
-
+    [SerializeField] protected GameController gameController;
     [SerializeField] protected AudioSource audioSource;
     private Collider[] colliders;
-    private IAudioService audioService;
 
     public string ID
     {
         get { return itemData.ID; }
     }
+    private IAudioService audioService;
     private IDataService dataService;
+    private IEventService eventService;
 
     private void OnEnable()
     {
@@ -51,11 +52,10 @@ public class Items : MonoBehaviour, IPickable
     {
         dataService = GameContext.Get<IDataService>();
         audioService = GameContext.Get<IAudioService>();
+        eventService = GameContext.Get<IEventService>();
 
-        var playerService = GameContext.Get<PlayerManager>();
-        PlayerData playerData = dataService.GetPlayerData();
-        player = playerService.GetPlayer();
-
+        playerData = dataService.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
         if (itemData.itemType == ItemEnum.COIN)
         {
             if (playerShipData.MagnetPower > 0)
@@ -78,30 +78,7 @@ public class Items : MonoBehaviour, IPickable
         {
             boxCollider.enabled = false;
         }
-
-        switch (itemData.itemType)
-        {
-            case ItemEnum.COIN:
-                player.SetWallet(itemData.ammount);
-                break;
-            case ItemEnum.SHIELD:
-                player.InstallShield();
-                player.OnItemPickedUp?.Invoke(0);
-                break;
-            case ItemEnum.POWERUP:
-                player.PowerUpCollected();
-                player.OnItemPickedUp?.Invoke(1);
-                break;
-            case ItemEnum.HEALTH:
-                player.Heal(itemData.ammount * playerShipData.level);
-                player.OnItemPickedUp?.Invoke(2);
-                break;
-            case ItemEnum.EMPTY:
-                break;
-            default:
-                break;
-        }
-
+        eventService.Publish(new ItemPickedUpEvent(itemData.itemType,itemData.ammount));
         audioService.PlaySound(itemData.CollectedSoundSFX);
 
         picked = true;

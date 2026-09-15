@@ -10,6 +10,8 @@ public class ArtilleryProjectile : EnemyProjectile
     public GameObject warningPrefab;
     private SizeByDistance warning;
     public float distance;
+    [SerializeField] protected GameController gameController;
+
     public override void OnStart()
     {
         base.OnStart();
@@ -52,8 +54,7 @@ public class ArtilleryProjectile : EnemyProjectile
 
         if (!fall)
         {
-            var playerService = GameContext.Get<PlayerManager>();
-            playerShip = playerService.GetPlayer();
+            playerShip = gameController.GetPlayer();
 
             if (playerShip != null)
             {

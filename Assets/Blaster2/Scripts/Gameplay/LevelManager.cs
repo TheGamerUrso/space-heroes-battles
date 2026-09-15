@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ActivateRandomLevel : MonoBehaviour
+public class LevelManager : MonoBehaviour
 {
     [SerializeField] private Camera cameraMain;
     [SerializeField] private GameObject WrapTunnelFX;
@@ -26,7 +26,6 @@ public class ActivateRandomLevel : MonoBehaviour
     [SerializeField] private float speed = 0.5f;
     [SerializeField] private int previousLevelLoaded;
 
-    [SerializeField] private LightMapSwitcher lightMapSwitcher;
     [SerializeField] private LayerMask defaultLayer;
     [SerializeField] private LayerMask hyperspaceLayer;
 
@@ -179,9 +178,6 @@ public class ActivateRandomLevel : MonoBehaviour
         levelToLoad.SetActive(true);
 
         previousLevel = levelToLoad;
-
-        lightMapSwitcher.SetLevelLightmap(ListOfLevels[randLevel].name);
-
     }
 
 }

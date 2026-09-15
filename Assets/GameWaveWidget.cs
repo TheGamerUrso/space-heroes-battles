@@ -9,17 +9,17 @@ public class GameWaveWidget : MonoBehaviour
     public TextMeshProUGUI WaveText;
     public TextMeshProUGUI EnemiesRemaining;
     public CanvasGroup canvasGroup;
-    [SerializeField] protected GameController gameController;
+    [SerializeField] protected GameMode gameMode;
 
 
     void Update()
     {
-        if (gameController == null) return;
+        if (gameMode == null) return;
 
-        canvasGroup.alpha = gameController.BossBattleInitiated ? 0 : 1;
+        canvasGroup.alpha = gameMode.BossBattleInitiated ? 0 : 1;
 
-        WaveText.text = gameController.CurrentTotalEnemies + "/" + gameController.TotalEnemies;
-        EnemiesRemaining.text = "" + gameController.waves;
+        WaveText.text = gameMode.CurrentTotalEnemies + "/" + gameMode.TotalEnemies;
+        EnemiesRemaining.text = "" + gameMode.waves;
     }
 }
     

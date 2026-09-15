@@ -20,7 +20,7 @@ public abstract class Ship : MonoBehaviour
     public virtual BaseHealthWidget HealthBar { get; set; }
     #endregion
     #region Shield
-    protected bool HasShield;
+    public bool HasShield { get; set; }
     [SerializeField] protected GameObject ShieldEffect;
 
     #endregion
@@ -57,12 +57,7 @@ public abstract class Ship : MonoBehaviour
     }
 
     public abstract void Heal(float ammount);
-    public bool HasShieldModule()
-    {
-        return HasShield;
-    }
     public abstract void SwitchWeapon(int id, bool solo = false);
-
     public virtual void SetHealth(float health)
     {
         CurrentHealth = health;
@@ -82,7 +77,7 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void Death() { }
 
-    public virtual void InstallShield()
+    public virtual void ActiveShield()
     {
         if (HasShield)
         {
@@ -91,8 +86,16 @@ public abstract class Ship : MonoBehaviour
 
         HasShield = true;
     }
-
+    public virtual void DeactivateShield()
+    {
+        if (!HasShield) return;
+        HasShield = false;
+    }
     public virtual void TakeDamage(float dmg) { }
 
     public virtual void Hit() { }
+    public void SetSpeed(float speed)
+    {
+        Speed = speed;
+    }
 }

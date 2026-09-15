@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.Core;
 using TMPro;
+using UnityEditor.MPE;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -33,15 +34,14 @@ public class RewardWidget : UIView
     public TextMeshProUGUI RewardText;
     private bool IsWaitingInput;
     protected IDataService dataService;
+    protected IEventService eventService;
 
-    public virtual void Awake()
-    {
-        dataService = GameContext.Get<IDataService>();
-
-    }
-
+   [SerializeField] protected GameController gameController;
     private void Start()
     {
+        dataService = GameContext.Get<IDataService>();
+        eventService = GameContext.Get<IEventService>();
+
         rewards = new RewardTypeEnum[3];
         rewardPanel.SetActive(false);
         rewardResultPanel.SetActive(false);
@@ -64,15 +64,15 @@ public class RewardWidget : UIView
         }
     }
 
-    public bool
-    RewardClaimed()
+    public bool RewardClaimed()
     {
         return false;
     }
 
-    public void Show()
+    public override void Show()
     {
-        GameController.Instance.IsSlowMo = false;
+        base.Show();
+        gameController.IsSlowMo = false;
         rewardPanel.SetActive(true);
         StartCoroutine(ShowWaveReward());
     }
@@ -90,47 +90,39 @@ public class RewardWidget : UIView
 
     IEnumerator ClaimRewarded()
     {
-
         yield return new WaitForSeconds(1.0f);
-        var playerService = GameContext.Get<PlayerManager>();
-        PlayerData playerData = dataService.GetPlayerData();
-        PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-        PlayerShip playerShip = playerService.GetPlayer();
         string textToShow = "No Reward";
 
         switch (rewardType)
         {
             case RewardTypeEnum.Gold:
                 int rewardCoin = Random.Range(50, 300);
+                eventService.Publish(new RewardItemEvent(rewardType, rewardCoin));
                 textToShow = rewardText[(int)RewardTypeEnum.Gold].Replace("%", rewardCoin.ToString());
-                playerData.AddCoin(rewardCoin);
-                RewardText.text = textToShow;
                 break;
             case RewardTypeEnum.XP:
                 float xpReward = Random.Range(50, 200);
+                eventService.Publish(new RewardItemEvent(rewardType, xpReward));
                 textToShow = rewardText[(int)RewardTypeEnum.XP].Replace("%", xpReward.ToString());
-                xpReward = Mathf.Clamp(xpReward, 1, playerShipData.xpToLevel);
-                playerData.EarnXP(xpReward);
                 break;
             case RewardTypeEnum.HEALTH:
                 textToShow = rewardText[(int)RewardTypeEnum.HEALTH];
-                playerShip.Heal(playerShip.MaxHealth / 2);
+                eventService.Publish(new RewardItemEvent(rewardType, 0));
                 break;
             case RewardTypeEnum.SHIELD:
                 textToShow = rewardText[(int)RewardTypeEnum.SHIELD];
-                playerShip.InstallShield();
+                eventService.Publish(new RewardItemEvent(rewardType, 0));
                 break;
             case RewardTypeEnum.POWERUP:
                 textToShow = rewardText[(int)RewardTypeEnum.POWERUP];
-                playerShip.PowerUpCollected();
+                eventService.Publish(new RewardItemEvent(rewardType, 0));
                 break;
             case RewardTypeEnum.SUPER:
                 textToShow = rewardText[(int)RewardTypeEnum.SUPER];
-                float power = playerData.PowerUpLevel + .5f;
-                playerData.SetSuperMeter(power);
+                eventService.Publish(new RewardItemEvent(rewardType,0));
                 break;
         }
-
+ 
         RewardText.text = textToShow;
         rewardResultPanel.SetActive(true);
         rewardPanel.SetActive(false);

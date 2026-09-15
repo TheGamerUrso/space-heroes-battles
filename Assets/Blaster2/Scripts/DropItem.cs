@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.Core;
+using UnityEditor.MPE;
 using UnityEngine;
 
 [Serializable]
@@ -14,8 +15,6 @@ public class DropProbabilities
 
 public class DropItem : MonoBehaviour
 {
-    public static DropItem Instance { get { return instance; } }
-    private static DropItem instance;
     [SerializeField] private List<DropProbabilities> ListOfDropItems = new List<DropProbabilities>();
 
     [SerializeField] private bool DropShield;
@@ -24,16 +23,18 @@ public class DropItem : MonoBehaviour
     [SerializeField] private float shieldDropCooldown = 4;
     [SerializeField] private float healthDropCooldown = 3;
     [SerializeField] private float powerDropCooldown = 1;
+  [SerializeField]private GameController gameController;
 
     private PoolGameObjectType itemTypeToSpawn;
     private PlayerShip playerShip;
-    void Awake()
+    private IEventService eventService;
+
+    private void Start()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
+        eventService = GameContext.Get<IEventService>();
+        eventService.Subscribe<DropRandomItemEvent>(PickRandomDropItem);
     }
+
     private void Update()
     {
         if (powerDropCooldown > 0)
@@ -52,26 +53,19 @@ public class DropItem : MonoBehaviour
         }
     }
 
-    public void PickRandomDropItem(Transform transform)
+    private void PickRandomDropItem(DropRandomItemEvent payload)
     {
-        PickRandomEnemyToSpawn(transform);
+        PickRandomEnemyToSpawn(payload.SpawnPosition);
     }
 
-    public void PickRandomEnemyToSpawn(Transform transform)
+    private void PickRandomEnemyToSpawn(Transform transform)
     {
+        if(playerShip==null)
+            playerShip = gameController.GetPlayer();
 
-        var playerService = GameContext.Get<PlayerManager>();
         if (ListOfDropItems.Count > 0)
         {
-            if (playerService.GetPlayer() == null)
-            {
-                return;
-            }
-
-            playerShip = playerService.GetPlayer();
-
-
-            bool hasShield = playerShip.HasShieldModule();
+            bool hasShield = playerShip.HasShield;
             bool fullHealth = playerShip.GetHealthPresentage() == 1;
             bool dropExtra = false;
 

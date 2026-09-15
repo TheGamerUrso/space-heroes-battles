@@ -1,7 +1,8 @@
 using System;
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.MPE;
+using UnityEngine;
 
 public class BossEnemy : Enemy
 {
@@ -152,19 +153,18 @@ public class BossEnemy : Enemy
 
         for (int i = 0; i < 4; i++)
         {
-            DropItem.Instance.PickRandomDropItem(transform);
+            eventService?.Publish(new DropRandomItemEvent() { SpawnPosition = transform });
         }
 
         if (IsAlive)
         {
-            EnemiesCount--;
             IsAlive = false;
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
             explostion.SetActive(true);
             HealthBar.Hide();
-            //TODO SHAKE CAMERA .5f
-            DropItem.Instance.PickRandomDropItem(transform);
+            eventService?.Publish(new ShakeCameraEvent() { duration = .5f});
+            eventService?.Publish(new DropRandomItemEvent() { SpawnPosition = transform });
             Destroy(transform.parent.gameObject);
         }
     }

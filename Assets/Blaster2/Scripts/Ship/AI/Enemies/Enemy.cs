@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class Enemy : Ship, IDamagable, ITargetable
 {    
-    public static int EnemiesCount;
     public event Action<Enemy> OnEnemyDied;
     public event Action<Enemy,int,int> OnEnemyHit;
     public event Action<Enemy> OnEnemyAttack;
@@ -49,7 +48,7 @@ public class Enemy : Ship, IDamagable, ITargetable
     {
         get
         {
-            return HasShieldModule() || IsAlive;
+            return HasShield || IsAlive;
         }
     }
 
@@ -69,27 +68,27 @@ public class Enemy : Ship, IDamagable, ITargetable
         boxCollider = GetComponent<BoxCollider>();
         animator = GetComponentInChildren<Animator>();
         baseEnemyMovement = GetComponent<BaseEnemyMovement>();
-
-        audioService = GameContext.Get<IAudioService>();
-        dataService = GameContext.Get<IDataService>();
-        playerData = dataService.GetPlayerData();
-        var playerShipData = playerData.GetCurrentPlayerShipData();
-        SetStats(playerShipData.level);
-
-        eventService = GameContext.Get<IEventService>();
     }
 
     public override void Start()
-    {     
-  
+    {
+        eventService = GameContext.Get<IEventService>();
+        audioService = GameContext.Get<IAudioService>();
+        dataService = GameContext.Get<IDataService>();
+        playerData = dataService.GetPlayerData();
 
         HasShield = false;
         ShieldEffect.SetActive(HasShield);
-   
-        float difficultyMutiplier = (.1f * GameController.Instance.difficulty);
-        difficultyMutiplier = Mathf.Max(0.1f,10f);
-        baseEnemyMovement.Speed = Speed + difficultyMutiplier;
+
+        float difficultyMultiplier = 0.1f * GameController.Instance.difficulty;
+        difficultyMultiplier = Mathf.Max(0.1f, difficultyMultiplier); // Correctly checks the variable
+       
+        baseEnemyMovement.Speed = Speed + difficultyMultiplier;
+        difficultyMultiplier = Mathf.Max(0.1f, difficultyMultiplier); // Correctly checks the variable
+
+
         currentWeaponActive = 0;
+
 
         DisableAllWeapons();
 
@@ -164,7 +163,6 @@ public class Enemy : Ship, IDamagable, ITargetable
     {
         if (IsAlive)
         {      
-            EnemiesCount--;
             IsAlive = false;
             var explostion = PoolManager.Instance.GetObjectFromPool(EnemyData.ExplostionEffect);
             explostion.transform.position = transform.position;
@@ -176,8 +174,7 @@ public class Enemy : Ship, IDamagable, ITargetable
             gameObject.SetActive(false);
 
             eventService.Publish(new ShakeCameraEvent());
-
-            DropItem.Instance.PickRandomDropItem(transform);
+            eventService.Publish(new DropRandomItemEvent() { SpawnPosition = transform });
         }
     }
 
@@ -219,16 +216,18 @@ public class Enemy : Ship, IDamagable, ITargetable
 
     public override void SetStats(int level)
     {
-        Level = level;
+        Level = Mathf.Clamp(level, 1, 10);
 
-        MaxHealth = Level * EnemyData.baseHealth;
+        // Using a 25% health increase and 15% damage increase per level
+        float healthGrowthRate = 0.25f;
+        float damageGrowthRate = 0.18f;
 
+        MaxHealth = EnemyData.baseHealth * (1f + (healthGrowthRate * (Level - 1)));
         CurrentHealth = MaxHealth;
 
-        Speed = EnemyData.baseSpeed;
+        Speed = EnemyData.baseSpeed; // Keep speed consistent per archetype
 
-        Damage = Level * EnemyData.baseDamage;
-
+        Damage = EnemyData.baseDamage * (1f + (damageGrowthRate * (Level - 1)));
         FireRate = EnemyData.baseFireRate;
 
         HasShield = false;
@@ -238,7 +237,6 @@ public class Enemy : Ship, IDamagable, ITargetable
             Weapons[weaponIndex].Damage = Damage;
             Weapons[weaponIndex].FireRate = FireRate;
         }
-
     }
 
     public override float GetHealthPresentage()

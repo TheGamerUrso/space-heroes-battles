@@ -17,7 +17,7 @@ public class Tutorial : MonoSingleton<Tutorial>
     public TMPro.TextMeshProUGUI Description;
 
     public TutorialItem[] TutorailItemsToShow;
-
+    [SerializeField] protected GameController gameController;
 
     protected override void Setup()
     {
@@ -27,7 +27,7 @@ public class Tutorial : MonoSingleton<Tutorial>
 
     public void ShowTutorial(int itemToShowIndex)
     {
-        if (!GameController.Instance.IsGameOver)
+        if (!gameController.IsGameOver)
         {
             var appService = GameContext.Get<IAppService>();
             appService.PauseTheGame(true);
@@ -48,12 +48,11 @@ public class Tutorial : MonoSingleton<Tutorial>
 
     public void Close()
     {
-        var playerService = GameContext.Get<PlayerManager>();
         var appService = GameContext.Get<IAppService>();
         TutorialView.gameObject.SetActive(false);
         appService.PauseTheGame(false);
         Time.timeScale = 1;
-        playerService.GetPlayer().tempGodMode();
+        gameController.GetPlayer().tempGodMode();
     }
 
 }

@@ -6,8 +6,7 @@ using UnityEngine;
 public class PlayerShip : Ship, IDamagable
 {
     public Action<int> OnItemPickedUp;
-    [Space()]
-    private PlayerController shipController;
+
     [SerializeField] private ParticleSystem ItemCollectedEffect;
     [Space()]
     [SerializeField] private Player_SO playerStats;
@@ -31,12 +30,10 @@ public class PlayerShip : Ship, IDamagable
     private bool HasArmorUprade;
     private IDataService dataService;
 
- 
     //=================================================================================
     public override void Awake()
     {
         animator = GetComponentInChildren<Animator>();
-        shipController = GetComponent<PlayerController>();
     }
     //=================================================================================
     public override void Start()
@@ -44,15 +41,9 @@ public class PlayerShip : Ship, IDamagable
         dataService = GameContext.Get<IDataService>();
 
         playerData = dataService.GetPlayerData();
-
-
-        playerData.NewGame();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        shipController.SetSpeed(playerShipData.Speed);
-
-        playerShipData.NewGame(ref HasShield);
-        ShieldEffect.SetActive(HasShield);
+        HasShield = playerShipData.HasShield;
 
         SetStats(playerShipData.level);
 
@@ -64,23 +55,14 @@ public class PlayerShip : Ship, IDamagable
 
         IsAlive = true;
     }
-
-    //=================================================================================
-    public void OnLevelValueChanged(int Level)
-    {
-        SetStats(Level);
-    }
     //=================================================================================
     public override void Update()
     {
-        if (Time.frameCount % 1 == 0)
-        {
             if (invisibilityTimer >= 0)
             {
                 invisibilityTimer -= Time.deltaTime;
             }
             WeaponSystem();
-        }
     }
     //=================================================================================
     public void WeaponSystem()
@@ -152,9 +134,16 @@ public class PlayerShip : Ship, IDamagable
             currenActivetWeapon.Damage = damage;
     }
     //=================================================================================
-    public override void InstallShield()
+    public override void ActiveShield()
     {
-        base.InstallShield();
+        base.ActiveShield();
+        ShieldEffect.SetActive(HasShield);
+        OnItemPickedUp?.Invoke(0);
+    }
+    //=================================================================================
+    public override void DeactivateShield()
+    {
+        base.DeactivateShield();
         ShieldEffect.SetActive(HasShield);
         OnItemPickedUp?.Invoke(0);
     }
@@ -269,44 +258,6 @@ public class PlayerShip : Ship, IDamagable
         animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
     }
     //=================================================================================
-    #region TempfireRateBuff
-
-    public void TempFireRateBuff(float fireRate = 0.0f, bool temporary = false)
-    {
-
-        if (!TempFireRateUpgrade)
-        {
-            TempFireRateUpgrade = true;
-            GiveTemporaryFireRateBuff();
-        }
-
-
-        UpdateWeaponStats(playerShipData.FireRate - fireRate);
-    }
-    //=================================================================================
-
-    public void GiveTemporaryFireRateBuff()
-    {
-        StartCoroutine(TemporaryFireRateUpgrade());
-    }
-    //=================================================================================
-    public IEnumerator TemporaryFireRateUpgrade()
-    {
-        var fireRateTemp = playerShipData.FireRate;
-        var DamageTemp = playerShipData.Damage;
-
-        while (TempFireRateUpgrade)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        playerShipData.FireRate = fireRateTemp;
-        UpdateWeaponStats(playerShipData.FireRate, DamageTemp);
-    }
-
-    #endregion
-
-    //=================================================================================
     public void UpgradeWeapon()
     {
         if (CurrentWeapnType < 4)
@@ -396,7 +347,8 @@ public class PlayerShip : Ship, IDamagable
     //=================================================================================
     public override void SetStats(int level)
     {
-        MaxHealth = playerShipData.level * playerStats.baseHealth;
+        MaxHealth = level * playerStats.baseHealth;
+
         SetHealth(MaxHealth);
 
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
@@ -412,23 +364,50 @@ public class PlayerShip : Ship, IDamagable
 
         for (int i = 0; i < Weapons.Length; i++)
         {
-            Weapons[i].SetStats(playerShipData, CurrentWeapnType);
+            Weapons[i].SetStats(playerShipData, i);
         }
 
         specialAttack.SetStats(playerShipData);
     }
     //=================================================================================
-    public void SetWallet(int coin)
-    {
-        playerData.AddCoin(coin);
-        GuiManager.CreateFloatingText("<color=" + "yellow" + "> $ </color>", transform.localPosition);
-        {
-            PlayerPrefs.SetInt("CoinTut", 1);
-        }
-    }
-    //=================================================================================
     public override void EnterLevel()
     {
 
+    }    //=================================================================================
+    #region TempfireRateBuff
+
+    public void TempFireRateBuff(float fireRate = 0.0f, bool temporary = false)
+    {
+
+        if (!TempFireRateUpgrade)
+        {
+            TempFireRateUpgrade = true;
+            GiveTemporaryFireRateBuff();
+        }
+
+
+        UpdateWeaponStats(playerShipData.FireRate - fireRate);
     }
+    //=================================================================================
+
+    public void GiveTemporaryFireRateBuff()
+    {
+        StartCoroutine(TemporaryFireRateUpgrade());
+    }
+    //=================================================================================
+    public IEnumerator TemporaryFireRateUpgrade()
+    {
+        var fireRateTemp = playerShipData.FireRate;
+        var DamageTemp = playerShipData.Damage;
+
+        while (TempFireRateUpgrade)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        playerShipData.FireRate = fireRateTemp;
+        UpdateWeaponStats(playerShipData.FireRate, DamageTemp);
+    }
+
+    #endregion
 }

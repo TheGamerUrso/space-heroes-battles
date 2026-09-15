@@ -11,7 +11,7 @@ namespace TheGamerUrso.Core
     }
 
     [DisallowMultipleComponent]
-    public class GameManager : MonoBehaviour
+    public class GameManager : ServiceComponent<IAppService> , IAppService
     {
         private static float DefaultTimeDeltaScale;   
         private bool autoKillMode;
@@ -21,8 +21,9 @@ namespace TheGamerUrso.Core
         public GameStateEnum CurrentGameState { get; private set; } = GameStateEnum.PRELOAD;
         public bool IsPaused { get; set; }
 
-        protected void Awake()
+        protected override void Awake()
         {
+            base.Awake();
             DefaultTimeDeltaScale = Time.fixedDeltaTime;
             DOTween.Init(autoKillMode, useSafeMode, logBehaviour);                 
         }      
@@ -50,6 +51,16 @@ namespace TheGamerUrso.Core
                 Time.fixedDeltaTime = DefaultTimeDeltaScale;
                 IsPaused = false;
             }
+        }
+
+        public void LoadMainMenu()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void ResetLevel()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

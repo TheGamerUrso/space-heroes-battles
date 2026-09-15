@@ -1,75 +1,93 @@
-﻿using System;
-using System.Collections;
-using TheGamerUrso.Core;
+﻿using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.EventSystems;
+
+public enum ControlScemeEnum
+{
+    CONTROL1 = 1, CONTROL2 = 2
+}
+
 public class PlayerController : MonoBehaviour
 {
-    public enum ControlSceme
-    {
-        CONTROL1 = 1, CONTROL2 = 2
-    }
-    public ControlSceme controlSceme;
-
-    private Camera _cam;
-
-    private PlayerShipData playerShipData;
-    private PlayerData playerData;
+    public ControlScemeEnum controlScemeEnum { get; set; }
 
     [SerializeField] private float tilt;
+    [SerializeField] private PlayerShip playerShip;
     [SerializeField] private GameObject ShipModel;
-    private Vector3 targetPos;
-    private Plane plane;
-    private Ray ray;
-    private float offset = 8;
-
-    [SerializeField] private float Speed = 50;
-
-    private float rotationSpeed;
-
-    private Vector3 targetRotation;
-
-    private float hitPoint;
 
     private Vector2 currentPos;
     private Vector2 previousPos;
+    private Vector3 targetPos;
+    private Vector3 targetRotation;
+    private Plane plane;
+    private Ray ray;
 
+    private float Speed = 50;
+    private float rotationSpeed;
+    private float hitPoint;
     private float deltaX;
     private float deltaY;
+    private float offset = 8;
+
+    private Camera _cam;
+    private PlayerShipData playerShipData;
+    private PlayerData playerData;
+
+
     private IDataService dataService;
+    private IEventService eventService;
 
-    public void SetSpeed(float speed)
-    {
-        Speed = speed;
-    }
-
-    void LoadPlayerData()
-    {
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        controlSceme = (ControlSceme)playerData.ControlScene;
-        Speed = playerShipData.Speed;
-    }
     private void Awake()
     {
         _cam = Camera.main;
-        dataService = GameContext.Get<IDataService>();
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        controlSceme = (ControlSceme)playerData.ControlScene;
-        Speed = playerShipData.Speed;
+        targetPos = transform.position;
+        plane = new Plane(Vector3.up, transform.position);
     }
 
     public void Start()
     {
-        targetPos = transform.position;
-        plane = new Plane(Vector3.up, transform.position);
+        dataService = GameContext.Get<IDataService>();
+        eventService = GameContext.Get<IEventService>();
 
-        LoadPlayerData();
+        eventService.Subscribe<ItemPickedUpEvent>(OnItemPickedUpHandled);
+        eventService.Subscribe<RewardItemEvent>(OnRewardItemHandled);
 
-        controlSceme = ControlSceme.CONTROL1;
+        playerData = dataService.GetPlayerData();
+
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        Speed = playerShipData.Speed;
+
+
+        controlScemeEnum = (ControlScemeEnum)playerData.ControlScene;
+        playerData.SetSuperMeter(0);
+        playerData.SetPowerPackCollected(0);
+
     }
-
+    public void OnItemPickedUpHandled(ItemPickedUpEvent payload)
+    {
+        switch (payload.ItemType)
+        {
+            case ItemEnum.COIN:
+                SetWallet((int)payload.Ammount);
+                break;
+            case ItemEnum.SHIELD:
+                playerShip.ActiveShield();
+                playerShip.OnItemPickedUp?.Invoke(0);
+                break;
+            case ItemEnum.POWERUP:
+                playerShip.PowerUpCollected();
+                playerShip.OnItemPickedUp?.Invoke(1);
+                break;
+            case ItemEnum.HEALTH:
+                playerShip.Heal((float)payload.Ammount * playerShipData.level);
+                playerShip.OnItemPickedUp?.Invoke(2);
+                break;
+            case ItemEnum.EMPTY:
+                break;
+            default:
+                break;
+        }
+    }
     public void SetTargetPosition(Vector2 screenPos)
     {
         ray = _cam.ScreenPointToRay(screenPos);
@@ -186,8 +204,50 @@ public class PlayerController : MonoBehaviour
     {
         return EventSystem.current.IsPointerOverGameObject();
     }
-    public void UpdateOffset() => controlSceme = (ControlSceme)playerData.ControlScene;
+    public void UpdateOffset() => controlScemeEnum = (ControlScemeEnum)playerData.ControlScene;
     public bool ShouldRoate() => (Input.touchCount > 0 || Input.GetMouseButton(0));
     public void ClampTransform() => transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax), 0, Mathf.Clamp(transform.position.z, 0, 120));
 
+    //=================================================================================
+    public void SetWallet(int coin)
+    {
+        playerData.AddCoin(coin);
+        GuiManager.CreateFloatingText("<color=" + "yellow" + "> $ </color>", transform.localPosition);
+        {
+            PlayerPrefs.SetInt("CoinTut", 1);
+        }
+    }
+
+    public void OnRewardItemHandled(RewardItemEvent payload)
+    {
+        switch (payload.rewardType)
+        {
+            case RewardTypeEnum.Gold:
+                playerData.AddCoin((int)payload.reward);
+                break;
+            case RewardTypeEnum.XP:
+                var xpReward = Mathf.Clamp((float)payload.reward, 1, playerShipData.xpToLevel);
+                playerData.EarnXP(xpReward);
+                break;
+            case RewardTypeEnum.HEALTH:
+                playerShip.Heal(playerShip.MaxHealth / 2);
+                break;
+            case RewardTypeEnum.SHIELD:
+                playerShip.ActivateSpecial();
+                break;
+            case RewardTypeEnum.POWERUP:
+                playerShip.PowerUpCollected();
+                break;
+            case RewardTypeEnum.SUPER:
+                float power = playerData.PowerUpLevel + .5f;
+                playerData.SetSuperMeter(power);
+                break;
+        }
+    }
+
+    //=================================================================================
+    public void OnLevelValueChanged(int Level)
+    {
+        playerShip.SetStats(Level);
+    }
 }

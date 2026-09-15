@@ -1,7 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using static GameController;
+
 
 public class GuiManager : MonoBehaviour
 {
@@ -24,24 +24,27 @@ public class GuiManager : MonoBehaviour
     private float timer;
 
     public GameController gameController;
+    public GameMode gameMode;
 
-    //=================================================================================
-    protected void OnDestroy()
-    {
-        
-    }
 
-    //=================================================================================
-    protected void Awake()
-    {
-        transmittionWidget = FindObjectOfType<TransmitionWidget>();
-    }
     //=================================================================================
     private void Start()
     {
         timer = 1;
 
         UpdateScore(0);
+    }
+    public void GameOver()
+    {
+        ShowPauseMenu(false);
+        GameOverScreen.Show();
+    }
+    //=================================================================================
+    public void Win()
+    {
+        ShowPauseMenu(false);
+        WinScreen.Show();
+        WinScreen.GetComponent<WinScreen>().ShowGameResult();
     }
     //=================================================================================
     private void Update()
@@ -113,9 +116,9 @@ public class GuiManager : MonoBehaviour
         ScoreText.text = scoreText;
     }
     //=================================================================================
-    public static void SetScoreMultipler(string text)
+    public void SetScoreMultipler(string text)
     {
-      //  Instance.scoreMultplierWidget.SetText(text);
+      scoreMultplierWidget.SetText(text);
     }
     //=================================================================================
     public static void CreateFloatingText(string text, Vector3 pos)
@@ -162,9 +165,9 @@ public class GuiManager : MonoBehaviour
         Menu.Hide();
     }
     //=================================================================================
-    public static void PlayTrasmition(string[] transmitions, bool playIntro = true)
+    public void PlayTrasmition(string[] transmitions, bool playIntro = true)
     {
-       // Instance.ShowTrasmition(transmitions, playIntro);
+        ShowTrasmition(transmitions, playIntro);
     }
     //=================================================================================
     public void BossWarning()
@@ -177,32 +180,4 @@ public class GuiManager : MonoBehaviour
         if (transmittionWidget)
             transmittionWidget.RecieveTransmition(transmitions, playIntro);
     }
-    //=================================================================================
-    public bool IsTrasnmiting()
-    {
-        if (transmittionWidget != null)
-        {
-            return transmittionWidget.IncomingTransmition;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    //=================================================================================
-    public void GameOver(bool IsPlayerAlive = false)
-    {
-        ShowPauseMenu(false);
-        if (IsPlayerAlive)
-        {
-            WinScreen.Show();
-            WinScreen.GetComponent<WinScreen>().ShowGameResult();
-        }
-        else
-        {
-            GameOverScreen.Show();      
-        }
-    }
-
 }
