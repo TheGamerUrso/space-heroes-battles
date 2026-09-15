@@ -1,21 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class LoadGame : MonoBehaviour {
-    public string nextScene;
-	void Start () {
-        StartCoroutine(LoadYourAsyncScene());
-    }
-
-
-    IEnumerator LoadYourAsyncScene()
+    public LevelEnum nextScene;
+	void Start () 
     {
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(nextScene);
-        while (!asyncLoad.isDone)
-        {
-            yield return null;
-        }
+        SceneLoader.LoadScene(nextScene);
     }
 }

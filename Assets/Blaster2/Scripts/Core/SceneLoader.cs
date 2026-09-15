@@ -49,17 +49,6 @@ namespace TheGamerUrso.Core
 
             activeScenes.Clear();
             loadOperations.Clear();
-
-            // Register initial scene state on game boot
-            int sceneCount = SceneManager.sceneCount;
-            for (int i = 0; i < sceneCount; i++)
-            {
-                Scene scene = SceneManager.GetSceneAt(i);
-                if (scene.buildIndex >= 0)
-                {
-                    activeScenes.Add(((LevelEnum)scene.buildIndex).ToString());
-                }
-            }
         }
         //====================================================================================================
         // Public API Methods
@@ -108,19 +97,9 @@ namespace TheGamerUrso.Core
                 yield return new WaitForSeconds(wait);
             }
 
-            // Unload previously active scene layers without generating garbage allocations
-            if (activeScenes.Count > 0)
-            {
-                for (int i = activeScenes.Count - 1; i >= 0; i--)
-                {
-                    UnloadLevel(activeScenes[i]);
-                }
-                activeScenes.Clear();
-            }
-
             currentLevelLoad = (LevelEnum)level;
 
-            AsyncOperation targetLoadAO = SceneManager.LoadSceneAsync(level, LoadSceneMode.Additive);
+            AsyncOperation targetLoadAO = SceneManager.LoadSceneAsync(level, LoadSceneMode.Single);
             if (targetLoadAO != null)
             {
                 targetLoadAO.completed += OnLoadOperationComplete;
@@ -179,8 +158,6 @@ namespace TheGamerUrso.Core
                 }
 
                 PublishLoadingProgress(1f);
-
-                SceneManager.SetActiveScene(SceneManager.GetSceneByName(CurrentLevelName));
                 eventService.Publish(new FinishedSceneLoadEvent(CurrentLevelName));
             }
         }

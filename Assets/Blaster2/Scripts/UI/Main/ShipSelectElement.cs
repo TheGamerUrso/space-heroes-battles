@@ -77,34 +77,38 @@ public class ShipSelectElement : MonoBehaviour
     public void Purchase()
     {
         PlayerData playerData = dataService.GetPlayerData();
-        if (Locked)
+        if (playerData.Coins >= shipSelectData.Cost)
         {
-            if (playerData.Coins >= shipSelectData.Cost)
-            {
-                Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
-                playerData.Coins -= shipSelectData.Cost;
-                playerData.UnlockedHeroes[ID] = 1;
-                SelectShip(ID);
-                Unlock();
+            Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
+            playerData.Coins -= shipSelectData.Cost;
+            playerData.UnlockedHeroes[ID] = 1;
+            shipSelect.SelectShip(ID);
+            Unlock();
 
-                int num = 0;
-                for (int i = 0; i < playerData.UnlockedHeroes.Length; i++)
+            int num = 0;
+            for (int i = 0; i < playerData.UnlockedHeroes.Length; i++)
+            {
+                if (playerData.UnlockedHeroes[i] == 1)
                 {
-                    if (playerData.UnlockedHeroes[i] == 1)
-                    {
-                        num++;
-                    }
+                    num++;
                 }
             }
-            else
-            {
-                Popup.Show(Popup.popupType.message, Constants.CannotAffordIt, true);
-            }
+        }
+        else
+        {
+            Popup.Show(Popup.popupType.message, Constants.CannotAffordIt, true);
         }
     }
 
-    public void SelectShip(int shipID)
+    public void SelectShip()
     {
-        shipSelect.SelectShip(shipID);
+        if (Locked)
+        {
+            Purchase();
+        }
+        else
+        {
+            shipSelect.SelectShip(ID);
+        }
     }
 }

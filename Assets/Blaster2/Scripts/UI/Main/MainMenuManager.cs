@@ -34,7 +34,7 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private UIScreens[] MainMenuScreens;
 
     private ScreenType previousScreen;
-
+    private IAudioService audioService;
 
     [ContextMenu("Get Safe Area")]
     public void GetSafeArea()
@@ -67,6 +67,9 @@ public class MainMenuManager : MonoBehaviour
 
     protected void Start()
     {
+        audioService = GameContext.Get<IAudioService>();
+        audioService.PlayMusic("Main");
+
         Application.targetFrameRate = 30;
 
         foreach (UIScreens item in MainMenuScreens)
@@ -86,6 +89,9 @@ public class MainMenuManager : MonoBehaviour
         shipSelect.SetShipTexture(playerData.CurrrentSelectedShip);
 
         shipSelect.OnShipSelected += ShipSelect_OnShipSelected;
+
+
+
     }
 
     private void ShipSelect_OnShipSelected()
@@ -93,7 +99,7 @@ public class MainMenuManager : MonoBehaviour
         Close();
     }
 
-    public void QuitButtonEvent()
+    public void QuitGame()
     {
 #if UNITY_EDITOR_64
         Debug.Log("Quit Game");
@@ -156,9 +162,9 @@ public class MainMenuManager : MonoBehaviour
         return false;
     }
 
-    public void Open(ScreenType Id)
+    public void Open(int Id)
     {
-        StartCoroutine(SwitchScreen(Id));
+        StartCoroutine(SwitchScreen((ScreenType)Id));
     }
 
     public void Close()
