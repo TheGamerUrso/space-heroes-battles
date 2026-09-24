@@ -53,6 +53,8 @@ public class UpgradeManager : MonoBehaviour
 
         playerData.AbstractCoins(upgradeFound.Cost);
 
+        var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.SPEND, upgradeFound.Cost);
 
         if (upgrade.ProgressPresentage == 1)
         {

@@ -1,10 +1,12 @@
 ﻿using System;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 
 [System.Serializable]
 public class PlayerShipData
 {
+    public Action<int, float, float> OnXPValueChanged;
     public int level;
     public float xp;
     public float xpToLevel;
@@ -74,14 +76,35 @@ public class PlayerShipData
         MagnetDistance = 0;
         Upgrades = new int[Enum.GetValues(typeof(UpgradeTypeEnum)).Length];
     }
-    
+    public void EarnXP(float ammount)
+    {
+        if (level < 20)
+        {
+            xp += ammount;
+
+            if (xp >= xpToLevel)
+            {
+                level++;
+                xp = 0;
+
+                xpToLevel = (level / 10 + level % 10) * 100 * Mathf.Pow(10, level / 10);
+            }
+        }
+        else
+        {
+            xp = 0;
+            xpToLevel = 0;
+        }
+        OnXPValueChanged?.Invoke(level, xp, xpToLevel);
+    }
     public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Speed]; }
     public float GetDamageUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Damage]; }
     public float GetFireRateUpgrade() { return Upgrades[(int)UpgradeTypeEnum.FireRate]; }
 
-    public void SetUpgrades(int[] Upgrades)
+    public void SetUpgrades(int upgrade, int value)
     {
-        this.Upgrades = Upgrades;
+        Upgrades[upgrade] = value;
+        SaveSystem.SaveGame();
     }
 
     public int[] GetUpgrades()

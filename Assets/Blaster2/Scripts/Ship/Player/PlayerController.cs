@@ -79,7 +79,7 @@ public class PlayerController : MonoBehaviour
                 playerShip.OnItemPickedUp?.Invoke(1);
                 break;
             case ItemEnum.HEALTH:
-                playerShip.Heal((float)payload.Ammount * playerShipData.level);
+                playerShip.Heal(((float)payload.Ammount) * playerShipData.level);
                 playerShip.OnItemPickedUp?.Invoke(2);
                 break;
             case ItemEnum.EMPTY:
@@ -227,7 +227,7 @@ public class PlayerController : MonoBehaviour
                 break;
             case RewardTypeEnum.XP:
                 var xpReward = Mathf.Clamp((float)payload.reward, 1, playerShipData.xpToLevel);
-                playerData.EarnXP(xpReward);
+                playerData.GetCurrentPlayerShipData().EarnXP(xpReward);
                 break;
             case RewardTypeEnum.HEALTH:
                 playerShip.Heal(playerShip.MaxHealth / 2);

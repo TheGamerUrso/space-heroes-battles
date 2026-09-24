@@ -102,7 +102,7 @@ public class QuestUIElement : MonoBehaviour
         if (!questData.claimed && questData.completed)
         {
             playerData.AddCoin(coinToEarn);
-            playerData.EarnXP(xpToEarn);
+            playerData.GetCurrentPlayerShipData().EarnXP(xpToEarn);
 
             switch ((QuestTypeEnum)questData.questType)
             {

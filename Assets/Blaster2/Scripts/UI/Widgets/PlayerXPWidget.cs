@@ -7,11 +7,7 @@ using UnityEngine.UI;
 
 public class PlayerXPWidget : MonoBehaviour
 {
-    [SerializeField] private PlayerShip player;
-    private PlayerData playerData;
     private PlayerShipData playerShipData;
-
-
     [SerializeField] private Slider XPBar = null;
     [SerializeField] private TextMeshProUGUI XPStatus;
     private IDataService dataService;
@@ -20,13 +16,20 @@ public class PlayerXPWidget : MonoBehaviour
     {
         dataService = GameContext.Get<IDataService>();
     }
-
+    
     private void Start()
     {
-        playerData = dataService.GetPlayerData();
+        var playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         UpdateXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+
+        playerShipData.OnXPValueChanged += UpdateXP;
+    }
+
+    private void OnDestroy()
+    {
+        playerShipData.OnXPValueChanged -= UpdateXP;
     }
 
     public void UpdateXP(int lvl, float xp, float xpToLevel)

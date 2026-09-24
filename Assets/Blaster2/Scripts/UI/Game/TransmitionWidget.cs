@@ -1,10 +1,11 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class TransmitionWidget : MonoBehaviour
 {
-    public bool IncomingTransmition;
-
+    private event Action OnTransmisionEnded;
     public GameObject TransmitionWidgetPrefab;
     public TMPro.TextMeshProUGUI TransmitionText;
     public Animator BossStageWarning;
@@ -12,23 +13,26 @@ public class TransmitionWidget : MonoBehaviour
 
     public AudioClip TransmitionSFX;
     public AudioSource audioSource;
+    private Coroutine transmitionCoroutine;
 
-
-
-    public void RecieveTransmition(string[] transmitions,bool PlayIntro = true)
+    public void RecieveTransmition(string[] transmitions,bool PlayIntro = true,Action callback = null)
     {
+        OnTransmisionEnded = callback;
         TransmitionText.text = "Transmition Incoming";
-
         this.transmitions = transmitions;
-        if (IncomingTransmition == false)
+
+        if (transmitionCoroutine != null)
         {
-            if (!GameController.Instance.IsGameOver)
-                StartCoroutine(TranmisionEvent(PlayIntro));
+            StopCoroutine(transmitionCoroutine);
         }
+
+        if (!GameController.Instance.IsGameOver)
+            transmitionCoroutine = StartCoroutine(TranmisionEvent(PlayIntro));
     }
 
-    public void BossWarning()
+    public void BossWarning(Action callback = null)
     {
+        OnTransmisionEnded = callback;
         if (!GameController.Instance.IsGameOver)
             StartCoroutine(WarningBossIncomingEvent());
     }
@@ -39,14 +43,12 @@ public class TransmitionWidget : MonoBehaviour
         float length = animatorClipInfo[0].length;
         WaitForSeconds delay = new WaitForSeconds(length);
 
-        IncomingTransmition = true;
-
         BossStageWarning.gameObject.SetActive(true);
 
         yield return delay;
 
         BossStageWarning.gameObject.SetActive(false);
-        IncomingTransmition = false;
+        OnTransmisionEnded?.Invoke();
     }
 
     private IEnumerator TranmisionEvent(bool playIntro = true)
@@ -55,7 +57,6 @@ public class TransmitionWidget : MonoBehaviour
         WaitForSeconds SecondDelay = new WaitForSeconds(.5f);
         WaitForSeconds ThirdDelay = new WaitForSeconds(2.5f);
 
-        IncomingTransmition = true;
         if (playIntro)
         {            
             audioSource.PlayOneShot(TransmitionSFX);
@@ -84,6 +85,6 @@ public class TransmitionWidget : MonoBehaviour
 
         yield return SecondDelay;
         TransmitionWidgetPrefab.SetActive(false);
-        IncomingTransmition = false;
+        OnTransmisionEnded?.Invoke();
     }
 }

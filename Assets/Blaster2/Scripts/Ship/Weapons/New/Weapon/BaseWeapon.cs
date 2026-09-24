@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using TheGamerUrso.Core;
+using UnityEditor.MPE;
 using UnityEngine;
 
 public abstract class BaseWeapon : MonoBehaviour
@@ -36,19 +37,20 @@ public abstract class BaseWeapon : MonoBehaviour
     public AudioClip SoundSFX { get { return weaponData.ShootSFX; } }
     public PoolGameObjectType ProjectilePrefab { get { return weaponData.m_Projectile; } }
     protected IDataService dataService;
+    protected IEventService eventService;
 
-    public virtual void Awake() 
-    {
-        dataService = GameContext.Get<IDataService>();
-    }
-
-    public virtual void Start()
+    public virtual void Awake()
     {
         if (source == null)
             source = GetComponent<AudioSource>();
 
         Cannons = transform.Cast<Transform>().ToArray();
-        Initialize();
+    }
+
+    public virtual void Start()
+    {
+        eventService = GameContext.Get<IEventService>();
+        dataService = GameContext.Get<IDataService>();
     }
 
     public void SetOwner(Ship ship)
@@ -76,8 +78,6 @@ public abstract class BaseWeapon : MonoBehaviour
             Shoot();
         }
     }
-
-    public virtual void Initialize() { }
 
     public abstract void Shoot();
 

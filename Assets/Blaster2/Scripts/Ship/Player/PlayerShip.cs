@@ -220,7 +220,7 @@ public class PlayerShip : Ship, IDamagable
         if (items != null)
         {
             items.PickUp();
-            if (items.ID.Equals("PowerUP"))
+            if (items.ID == ItemEnum.POWERUP)
                 ItemCollectedEffect.Play();
         }
     }

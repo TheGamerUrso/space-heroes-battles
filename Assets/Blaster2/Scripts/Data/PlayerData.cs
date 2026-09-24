@@ -10,7 +10,6 @@ public class PlayerData
     public string Username;
     public float Score;
     public float HighScore;
-
     public int[] UnlockedHeroes;
 
     [Header("Statistics")]
@@ -84,9 +83,6 @@ public class PlayerData
             Kills += KillsCounter;
             EnemyKilled += KillsCounter;
         }
-       
-        var questService = GameContext.Get<IQuestService>();
-        questService.SetQuestProgressByType(QuestTypeEnum.KILL, EnemyKilled);
     }
 //======================================================================================================================================================
     public void SetPlayerGotHitCounter(bool value)
@@ -126,9 +122,7 @@ public class PlayerData
     public void SetScore(int score)
     {
         Score = score;
-        Score = Mathf.Clamp(Score, 0, 999999999);  
-       var questService = GameContext.Get<IQuestService>();
-        questService.SetQuestProgressByType(QuestTypeEnum.SCORE, (int)Score);
+        Score = Mathf.Clamp(Score, 0, 999999999); 
     }
     //======================================================================================================================================================
     public void SetHighscore(int highscore)
@@ -136,8 +130,6 @@ public class PlayerData
         HighScore = highscore;
         HighScore = Mathf.Clamp(HighScore, 0, 999999999);
     }
-
-
 //======================================================================================================================================================
     public void AbstractCoins(int ammount)
     {
@@ -147,8 +139,6 @@ public class PlayerData
         {
             Coins = 0;
         }
-        var questService = GameContext.Get<IQuestService>();
-        questService.SetQuestProgressByType(QuestTypeEnum.SPEND, CoinSpend);
     }
 //======================================================================================================================================================
     public void AddCoin(int ammount)
@@ -171,9 +161,6 @@ public class PlayerData
         {
             WaveSurvived += value;
         }
-
-        var questService = GameContext.Get<IQuestService>();
-        questService.SetQuestProgressByType(QuestTypeEnum.SURVIVE, WaveSurvived);
     }
 //======================================================================================================================================================
     public void SetUsedSuperCount(int ammount)
@@ -186,61 +173,19 @@ public class PlayerData
         {
             SuperUsed += ammount;
         }
-        var questService = GameContext.Get<IQuestService>();
-        questService.SetQuestProgressByType(QuestTypeEnum.USE, SuperUsed);
     }
 //======================================================================================================================================================
     public void SetBossKilledCount()
     {
         if(BountyKilled==1)return;
         BountyKilled = 1;
-        var questService = GameContext.Get<IQuestService>();
-        questService.SetQuestProgressByType(QuestTypeEnum.BOUNTY, BountyKilled);
     }
 //======================================================================================================================================================
     public PlayerShipData GetCurrentPlayerShipData()
     {
         return playerShipData[CurrrentSelectedShip];
     }
-//======================================================================================================================================================
-    public void EarnXP(float ammount)
-    {
-        PlayerShipData currentPlayerShipSelected = GetCurrentPlayerShipData();
-
-        var Level = currentPlayerShipSelected.level;
-        var XP = currentPlayerShipSelected.xp;
-        var xpToLevel = currentPlayerShipSelected.xpToLevel;
-
-        if (Level < 20)
-        {
-            XP += ammount;
-
-            if (XP >= xpToLevel)
-            {
-                Level++;
-                XP = 0;
-
-                xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
-            }
-        }
-        else
-        {
-            XP = 0;
-            xpToLevel = 0;
-        }
-
-        currentPlayerShipSelected.level = Level;
-        currentPlayerShipSelected.xp = XP;
-        currentPlayerShipSelected.xpToLevel = xpToLevel;
-    }
-//======================================================================================================================================================
-    public void SetUpgrade(int upgrade, int value)
-    {
-        PlayerShipData currentPlayerShipSelected = playerShipData[CurrrentSelectedShip];
-        currentPlayerShipSelected.Upgrades[upgrade] = value;
-        SaveSystem.SaveGame();
-    }
-//======================================================================================================================================================
+    //======================================================================================================================================================
     public float GetPowerUpLevelPresentage()
     {
         return PowerUpLevel / 1;
@@ -249,23 +194,6 @@ public class PlayerData
     public void ResetWeaponPowerUPCollected()
     {
         PowerPackCollected = 0;
-    }
-//======================================================================================================================================================
-    public void SetUsername(string newUsername)
-    {
-        Username = newUsername;
-    }
-//======================================================================================================================================================
-    public string GetUsername()
-    {
-        if(string.IsNullOrEmpty(Username))
-        {
-            string uniqueNumber = Guid.NewGuid().ToString();
-            var newString = uniqueNumber.Substring(0,4);
-            Username = $"Player#{newString}";
-            SaveSystem.SaveGame();
-        }
-        return Username;
     }
 }
 

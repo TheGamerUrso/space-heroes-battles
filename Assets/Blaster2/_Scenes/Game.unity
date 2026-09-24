@@ -1920,6 +1920,50 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1943903116084015584}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1694194864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1694194865}
+  - component: {fileID: 1694194866}
+  m_Layer: 0
+  m_Name: QuestProgressTracker
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1694194865
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694194864}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6907193765168681625}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1694194866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1694194864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a6a1ee96a4ad854b9e2cbe99da36605, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
 --- !u!1 &1756604535
 GameObject:
   m_ObjectHideFlags: 0
@@ -2021,10 +2065,10 @@ MonoBehaviour:
   waves: 1
   difficulty: 1
   TotalEnemies: 10
-  CurrentTotalEnemies: 0
-  availableEnemies: 2
-  HasBoss: 0
+  TotalAliveEnemies: 0
   numberOfEnemiesEachWave: 8
+  availableEnemies: 1
+  HasBoss: 0
   BossPrefab: {fileID: 0}
   enemyElements:
   - Name: 
@@ -2040,7 +2084,6 @@ MonoBehaviour:
   - Name: 
     gameObjectType: 18
   cooldown: 1
-  EnemySpawnInTotal: 0
   gameController: {fileID: 2233804167081751954}
   guiManager: {fileID: 7282720494834282834}
 --- !u!224 &1992084362 stripped
@@ -3809,10 +3852,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 366574382217573740}
     m_Modifications:
-    - target: {fileID: 2904350572385617200, guid: 219be14d1a337e64195564e2daae403b, type: 3}
-      propertyPath: transmitions.Array.size
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 2904350572385617214, guid: 219be14d1a337e64195564e2daae403b, type: 3}
       propertyPath: m_Name
       value: Transmition
@@ -4565,7 +4604,7 @@ Transform:
   m_GameObject: {fileID: 5275619434745041151}
   serializedVersion: 2
   m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: -6, y: 80, z: -6}
+  m_LocalPosition: {x: 19.00001, y: 154.18764, z: 43.77114}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -15276,6 +15315,7 @@ Transform:
   - {fileID: 2560227629615338185}
   - {fileID: 1975111052}
   - {fileID: 1995756731}
+  - {fileID: 1694194865}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6907193765281970024
@@ -18355,7 +18395,7 @@ Transform:
   m_GameObject: {fileID: 7859075692133305605}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 696.11676, y: -0.00002, z: -1887.258}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

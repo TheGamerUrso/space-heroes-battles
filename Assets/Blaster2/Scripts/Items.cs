@@ -10,6 +10,7 @@ public class Items : MonoBehaviour, IPickable
 {
     private PlayerController player;
 
+    public ItemEnum ID => itemData.itemType;
     [SerializeField] private Item_SO itemData;
     [SerializeField] private LayerMask playerLayer;
     public BoxCollider boxCollider;
@@ -21,23 +22,17 @@ public class Items : MonoBehaviour, IPickable
     [SerializeField] protected Vector2 m_RandomXVelValues = new Vector2();
     [SerializeField] protected Vector2 m_RandomZVelValues = new Vector2();
 
-
     protected float magnetPower;
     protected float magnetDistance = 25;
 
-    private bool picked;
-    private float TTL = .2f;
-
-    PlayerData playerData;
-    PlayerShipData playerShipData;
+    protected bool picked;
+    protected float TTL = .2f;
+    protected PlayerData playerData;
+    protected PlayerShipData playerShipData;
     [SerializeField] protected GameController gameController;
     [SerializeField] protected AudioSource audioSource;
     private Collider[] colliders;
 
-    public string ID
-    {
-        get { return itemData.ID; }
-    }
     private IAudioService audioService;
     private IDataService dataService;
     private IEventService eventService;
@@ -78,7 +73,16 @@ public class Items : MonoBehaviour, IPickable
         {
             boxCollider.enabled = false;
         }
-        eventService.Publish(new ItemPickedUpEvent(itemData.itemType,itemData.ammount));
+
+        if (itemData.itemType == ItemEnum.HEALTH)
+        {
+            eventService.Publish(new ItemPickedUpEvent(itemData.itemType, (float)itemData.ammount));
+        }
+        else
+        {
+            eventService.Publish(new ItemPickedUpEvent(itemData.itemType, itemData.ammount));
+        }
+
         audioService.PlaySound(itemData.CollectedSoundSFX);
 
         picked = true;

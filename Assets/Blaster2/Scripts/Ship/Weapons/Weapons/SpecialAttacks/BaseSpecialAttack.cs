@@ -1,4 +1,6 @@
 ﻿using System;
+using TheGamerUrso.Core;
+using UnityEditor.MPE;
 using UnityEngine;
 
 [Serializable]
@@ -12,6 +14,7 @@ public class BaseSpecialAttack : BaseWeapon
 
     public override void Start()
     {
+        base.Start();
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
     }
@@ -55,17 +58,13 @@ public class BaseSpecialAttack : BaseWeapon
         }
     }
 
-    public virtual void OnUpdate()
-    {
-
-    }
-
     public virtual void ActivateSpecial()
     {
         if (SpecialActive == false)
         {
             SpecialActive = true;
             playerData.SetUsedSuperCount(1);
+            eventService?.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.USE, value = playerData.SuperUsed });
             source.PlayOneShot(weaponData.ShootSFX);
             OnActivateSpecial();
         }

@@ -1,10 +1,15 @@
+using System;
 using System.Collections;
+using TheGamerUrso.Core;
 using TMPro;
+using UnityEditor.MPE;
 using UnityEngine;
 
 
 public class GuiManager : MonoBehaviour
 {
+    public bool IncomingTransmition { get; set; }
+
     [Header("Menu")]
 
     [SerializeField] private UIView GameOverScreen;
@@ -25,11 +30,12 @@ public class GuiManager : MonoBehaviour
 
     public GameController gameController;
     public GameMode gameMode;
-
+    private IEventService eventService;
 
     //=================================================================================
     private void Start()
     {
+        eventService = GameContext.Get<IEventService>();
         timer = 1;
 
         UpdateScore(0);
@@ -165,19 +171,23 @@ public class GuiManager : MonoBehaviour
         Menu.Hide();
     }
     //=================================================================================
-    public void PlayTrasmition(string[] transmitions, bool playIntro = true)
+    public void RecieveTransmition(string[] transmitions, 
+        bool playIntro = true)
     {
-        ShowTrasmition(transmitions, playIntro);
+        IncomingTransmition = true;
+        if (transmittionWidget)
+            transmittionWidget.RecieveTransmition(transmitions, playIntro, OnIncomingTranmsionEnded);
+        eventService?.Publish(new IncomingTransmitionEvent());
     }
     //=================================================================================
     public void BossWarning()
     {
-        transmittionWidget.BossWarning();
+        IncomingTransmition = true;
+        transmittionWidget.BossWarning(OnIncomingTranmsionEnded);
     }
     //=================================================================================
-    public void ShowTrasmition(string[] transmitions, bool playIntro = true)
+    public void OnIncomingTranmsionEnded()
     {
-        if (transmittionWidget)
-            transmittionWidget.RecieveTransmition(transmitions, playIntro);
+        IncomingTransmition = false;
     }
 }
