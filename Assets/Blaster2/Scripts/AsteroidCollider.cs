@@ -7,7 +7,6 @@ using UnityEngine;
 public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
 {
     public event Action<float, float> OnHealthChanged;
-    private bool Destroyed = false;
     [SerializeField] private float currentHealth;
     [SerializeField] private float maxHealth;
 
@@ -23,22 +22,15 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
         set { currentHealth = value; }
     }
 
-    public GameObject target
-    {
-        get
-        {
-            return gameObject;
-        }
-    }
-
     public bool Targetable
     {
         get
         {
-            return !Destroyed;
+            return !IsAlive;
         }
     }
 
+    public bool IsAlive { get; set; } = false;
 
     private Rigidbody rigid;
     private float force = 2500;
@@ -70,7 +62,7 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
 
     public void TakeDamage(float dmg)
     {
-        if (Destroyed == true)
+        if (IsAlive == true)
         {
             return;
         }
@@ -84,22 +76,12 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
 
     public void Death()
     {
-        Destroyed = true;
+        IsAlive = true;
 
         var explostion = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.ShipExplosion);
         explostion.transform.position = transform.position;
         explostion.SetActive(true);
 
         gameObject.SetActive(false);
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.tag.Equals(Constants.PLAYTERTAG))
-        {
-            var ship = other.gameObject.GetComponent<Ship>();
-            ship.TakeDamage(ship.MaxHealth / 2);
-            TakeDamage(ship.MaxHealth);
-        }
     }
 }

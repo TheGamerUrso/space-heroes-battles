@@ -65,8 +65,8 @@ public class DropItem : MonoBehaviour
 
         if (ListOfDropItems.Count > 0)
         {
-            bool hasShield = playerShip.HasShield;
-            bool fullHealth = playerShip.GetHealthPresentage() == 1;
+            bool hasShield = playerShip.GetComponent<HealthComponent>().HasShield;
+            bool fullHealth = playerShip.GetComponent<HealthComponent>().GetHealthPresentage() == 1;
             bool dropExtra = false;
 
             itemTypeToSpawn = ListOfDropItems[0].DropItemsType;

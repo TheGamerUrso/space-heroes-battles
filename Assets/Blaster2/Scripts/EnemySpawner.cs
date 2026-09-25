@@ -19,9 +19,9 @@ public class EnemySpawner : MonoBehaviour
         var enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
         var enemy = enemGO.GetComponent<Enemy>();
 
-        enemy.SetStats(LevelDifficulty);
-        enemy.Id = enemyElement.Name;
-
+        var enemyData = enemy.EnemyData;
+        enemy.SetStats(LevelDifficulty, enemyData.baseHealth, enemyData.baseSpeed, enemyData.baseDamage, enemyData.baseFireRate);
+ 
         BaseEnemyMovement enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
         enemGO.transform.position = spawnPos;
         enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
@@ -55,8 +55,9 @@ public class EnemySpawner : MonoBehaviour
         var enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
         var enemy = enemGO.GetComponent<Enemy>();
 
-        enemy.SetStats(LevelDifficulty);
-        enemy.Id = enemyElement.Name;
+        var enemyData = enemy.EnemyData;
+        enemy.SetStats(LevelDifficulty, enemyData.baseHealth, enemyData.baseSpeed, enemyData.baseDamage, enemyData.baseFireRate);
+
 
         enemGO.transform.position = spawnPos;
         enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);

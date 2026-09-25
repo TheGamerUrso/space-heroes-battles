@@ -4,98 +4,35 @@ using UnityEngine;
 
 public abstract class Ship : MonoBehaviour
 {
-
-    public Action<float, float> OnHealthChanged;
-    protected Animator animator;
+    [SerializeField] protected Animator animator;
     [SerializeField] protected AudioSource audioSource;
+    public HealthComponent healthComponent;
+    public WeaponController weaponController;
+    public BaseMovementController movementController;
 
-    public string Id;
-
-
-    protected IAudioService audioService;
-
-    #region Health
-
-    public bool IsAlive { get; protected set; }
-    public virtual BaseHealthWidget HealthBar { get; set; }
-    #endregion
-    #region Shield
-    public bool HasShield { get; set; }
-    [SerializeField] protected GameObject ShieldEffect;
-
-    #endregion
-    #region Weapons
-    public int CurrentWeapnType { get; set; }
-    public bool CanFire { get; protected set; }
-    #endregion Weapons
-
-    #region Stats
     [Header("STATS")]
     public int Level;
     public float Damage;
     public float FireRate;
     public float Speed;
-    public float MaxHealth;
-    public float CurrentHealth;
-    #endregion
+    public float Health;
 
-
-    public virtual void OnDestroy() { }
-    public virtual void OnDisable() { }
-    public virtual void OnEnable() { }
-    public virtual void Awake() 
+    public virtual void SetStats(int level, float baseHealth, float baseSpeed, float baseDamage, float baseFireRate)
     {
-        audioService = GameContext.Get<IAudioService>();
-    }
-    public virtual void Start() { }
-    public virtual void Update() { }
-    public virtual void SetStats(int level) { }
+        Level = Mathf.Clamp(level, 1, 10);
 
-    public virtual float GetHealthPresentage()
-    {
-        return (CurrentHealth / MaxHealth);
-    }
+        float healthGrowthRate = 0.25f;
+        float damageGrowthRate = 0.18f;
 
-    public abstract void Heal(float ammount);
-    public abstract void SwitchWeapon(int id, bool solo = false);
-    public virtual void SetHealth(float health)
-    {
-        CurrentHealth = health;
-        this.OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-    }
+        Health = baseHealth * (1f + (healthGrowthRate * (Level - 1)));
 
-    public virtual void EnableFire()
-    {
-        CanFire = true;
-    }
-    public virtual void DisableFire()
-    {
-        CanFire = false;
-    }
-    public abstract void EnterLevel();
-    public abstract void ExitLevel();
+        Speed = baseSpeed;
 
-    public virtual void Death() { }
+        Damage = baseDamage * (1f + (damageGrowthRate * (Level - 1)));
+        FireRate = baseFireRate;
 
-    public virtual void ActiveShield()
-    {
-        if (HasShield)
-        {
-            return;
-        }
-
-        HasShield = true;
-    }
-    public virtual void DeactivateShield()
-    {
-        if (!HasShield) return;
-        HasShield = false;
-    }
-    public virtual void TakeDamage(float dmg) { }
-
-    public virtual void Hit() { }
-    public void SetSpeed(float speed)
-    {
-        Speed = speed;
+        healthComponent.Setup(Health, false);
+        weaponController.Initialize(this,Damage, FireRate);
+        movementController.SetSpeed(Speed);
     }
 }

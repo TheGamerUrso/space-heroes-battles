@@ -6,9 +6,8 @@ public class LaserEnemyMovement : BaseEnemyMovement
 {
     public int direction;
     public bool left;
-    public override void Start()
+    public void Start()
     {
-        base.Start();
         var randXPos = 20;
         var yRot = 90;
         var randNum = UnityEngine.Random.Range(1,101);
@@ -27,7 +26,7 @@ public class LaserEnemyMovement : BaseEnemyMovement
         transform.position = new Vector3(randXPos,0,140);
         transform.SetPositionAndRotation(new Vector3(randXPos,0,140),Quaternion.Euler(0,yRot,0));
     }
-    public override void Movement()
+    public override void Move()
     {
         direction = left ? 1 : -1;
         movement = transform.right * (direction) * (Speed / 2);

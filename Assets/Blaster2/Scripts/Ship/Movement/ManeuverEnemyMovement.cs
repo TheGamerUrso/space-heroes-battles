@@ -9,7 +9,7 @@ public class ManeuverEnemyMovement : BaseEnemyMovement
     protected bool directionChanged;
     float maneuverTimer = 2;
     
-    public override void Movement()
+    public override void Move()
     {
         maneuverTimer -= Time.deltaTime;
 

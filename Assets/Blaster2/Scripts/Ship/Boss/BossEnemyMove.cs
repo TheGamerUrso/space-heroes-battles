@@ -23,7 +23,6 @@ public class BossEnemyMove : EnemyMove
 
     #region Boxer
     [Header("Boxer Settings")]
-    public Punch[] punches;
     public bool attacking;
     public GameObject ShipPivot;
     private float cooldown;

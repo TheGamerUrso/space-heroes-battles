@@ -9,7 +9,7 @@ public class CrawlerEnemyMovement : BaseBossEnemyMovement
     public float angle = 0;
     public float radius = 5;
 
-    public override void OnEnable()
+    public void OnEnable()
     {
         int changeNum = Random.Range(0, 100);
         if (changeNum >= 50)
@@ -18,20 +18,15 @@ public class CrawlerEnemyMovement : BaseBossEnemyMovement
         }
     }
 
-    public override void Start()
+    public void Start()
     {
-        base.Start();
         speed = (2 * Mathf.PI) / 2; //2*PI in degress is 360, so you get 5 seconds to complete a circle
     }
 
-    public override void Movement()
+    public override void Move()
     {
         if(CurclularMove)
             CircularMovement();
-    }
-    public override void EnableMovement()
-    {
-        CurclularMove = true;
     }
 
     public void CircularMovement()

@@ -1,48 +1,23 @@
 ﻿using System;
 using UnityEngine;
 
-public class Turret : Ship, IDamagable
+public class Turret : Ship
 {
-    private PlayerShipData playerShipData;
-    private PlayerData playerData;
     [SerializeField] private BaseWeapon baseWeapon;
 
-    public override void ExitLevel() => Destroy(gameObject);
+    public void ExitLevel() => Destroy(gameObject);
+
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Constants.ENEMYTAG))
         {
-            TakeDamage(1);
+            healthComponent.TakeDamage(1);
         }
         if (other.tag.Equals(Constants.ENEMYPROJECTILETAG))
         {
-            TakeDamage(1);
+            healthComponent.TakeDamage(1);
         }
-    }
-
-    public override void TakeDamage(float dmg)
-    {
-        
-    }
-
-    public override void Heal(float ammount) { }
-
-    public override void Death(){}
-
-    public override float GetHealthPresentage()
-    {
-        return (CurrentHealth / MaxHealth);
-    }
-
-    public override void SwitchWeapon(int Id,bool Solo = false)
-    {
-       // No Other Weapons
-    }
-
-    public override void EnterLevel()
-    {
-       
     }
 
 }

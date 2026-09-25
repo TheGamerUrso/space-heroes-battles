@@ -13,7 +13,7 @@ public class LaserSpecialAttack : BaseSpecialAttack
 
     public override void OnActivateSpecial()
     {
-        ship.DisableFire();
+        //ship.DisableFire();
         laserSize = 0;
         laiser.ActiveLaser();
         lineRenderer.widthMultiplier = laserSize;
@@ -21,7 +21,7 @@ public class LaserSpecialAttack : BaseSpecialAttack
     public override void OnDeactivateSpecial()
     {
         laiser.fullCharge = false;
-        ship.EnableFire();
+        //ship.EnableFire();
         laserSize = 0;
         laiser.DeactiveLaser();
         lineRenderer.widthMultiplier = laserSize;

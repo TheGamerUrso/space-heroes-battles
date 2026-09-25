@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerHealthWidget : BaseHealthWidget
+public class PlayerHealthUI : BaseHealthUI
 {
     [SerializeField] private TextMeshProUGUI HealthText = null;
 

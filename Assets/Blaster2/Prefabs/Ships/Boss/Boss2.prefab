@@ -946,6 +946,8 @@ GameObject:
   - component: {fileID: 5970227681493298721}
   - component: {fileID: 4638824606187594180}
   - component: {fileID: 6730904363972671985}
+  - component: {fileID: 9222596880422286310}
+  - component: {fileID: 9191643537414187221}
   m_Layer: 0
   m_Name: Boss2
   m_TagString: Untagged
@@ -967,6 +969,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 9147990725833561419}
+  - {fileID: 5559244682424375722}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &8909950005821785220
@@ -1155,23 +1158,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2141b119b04bb4b41ac14fb8d558948f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 926606771876494003}
   audioSource: {fileID: 5970227681493298721}
-  Id: 11
-  ShieldEffect: {fileID: 1871532367425724637}
+  healthComponent: {fileID: 9222596880422286310}
+  weaponController: {fileID: 9191643537414187221}
+  movementController: {fileID: 6730904363972671985}
   Level: 1
   Damage: 0
   FireRate: 0
   Speed: 0
-  MaxHealth: 0
-  CurrentHealth: 0
+  Health: 0
+  enemyState: 0
   EnemyData: {fileID: 11400000, guid: cc247d111b89fbf4288843d24d83f343, type: 2}
-  Weapons:
-  - {fileID: 5439231046966938804}
-  delayAttak: 3
   enemyElement:
     Name: 
     gameObjectType: 0
-  DestroyableParts: []
   Phase: 0
 --- !u!114 &6730904363972671985
 MonoBehaviour:
@@ -1197,6 +1198,42 @@ MonoBehaviour:
   CurclularMove: 0
   angle: 0
   radius: 20
+--- !u!114 &9222596880422286310
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4979412132350392599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0d29075bf51a945b8057f28e046215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealthComponent
+  ship: {fileID: 4638824606187594180}
+  healthUI: {fileID: 5559244682424375723}
+  currentHealth: 0
+  maxHealth: 0
+  ShieldEffect: {fileID: 1871532367425724637}
+  audioSource: {fileID: 5970227681493298721}
+  hitSFX: {fileID: 8300000, guid: ec94d567e75cef945b3159eba24780c3, type: 3}
+  boxCollider: {fileID: 7085417589331760622}
+  explostionEffect: 7
+--- !u!114 &9191643537414187221
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4979412132350392599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8de0f56e63524d4586401df7102bb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossWeaponController
+  Weapons:
+  - {fileID: 5439231046966938804}
+  delayAttak: 3
 --- !u!1 &5301004939285901030
 GameObject:
   m_ObjectHideFlags: 0
@@ -3043,7 +3080,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5971c9f8272ca4fbfe3e5eec420ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 7d9e38a6896440242a1fe408eff79197, type: 2}
   FireRate: 0
   Damage: 0
@@ -3495,6 +3531,79 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 536415a8dbe428d4285ddb4634202dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1001 &2973676276362148813
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 7647967356371916362}
+    m_Modifications:
+    - target: {fileID: 7233618025502483040, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_Name
+      value: BossEnemyHealthBar (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -63.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+--- !u!4 &5559244682424375722 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+  m_PrefabInstance: {fileID: 2973676276362148813}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5559244682424375723 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7233618025502483046, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+  m_PrefabInstance: {fileID: 2973676276362148813}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf49cc4b7c2fa74dafb0efaaeb1c5b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &3010507476518073935

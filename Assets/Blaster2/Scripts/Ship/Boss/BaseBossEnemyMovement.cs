@@ -7,24 +7,20 @@ public class BaseBossEnemyMovement : BaseEnemyMovement
     [Header("Movement")]
     [SerializeField] protected Vector3[] Positions;
     [SerializeField] protected int currentPos;
-
     [SerializeField] protected float changePositionTimer;
-
     protected Vector3 targetPosition;
-    public BossDestroyablePart[] bossDestroyableParts;
     protected bool RandomMovement;
     
-    public override void OnDestroy()
+    public void OnDestroy()
     {
-        base.OnDestroy();
-        shipOwner.GetComponent<BossEnemy>().OnBossPhaseChanged-=OnBossPhaseChangedHandled;
+        enemy.GetComponent<BossEnemy>().OnBossPhaseChanged-=OnBossPhaseChangedHandled;
     }
 
     public override void Awake()
     {
         base.Awake();
         targetPosition = transform.position;
-        shipOwner.GetComponent<BossEnemy>().OnBossPhaseChanged+=OnBossPhaseChangedHandled;
+        enemy.GetComponent<BossEnemy>().OnBossPhaseChanged+=OnBossPhaseChangedHandled;
 
     }
     
@@ -32,20 +28,10 @@ public class BaseBossEnemyMovement : BaseEnemyMovement
     {
         transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
     }
-    
-    public override void LateUpdate()
-    {
-        base.LateUpdate();
-    }
 
-    public override void Movement()
+    public override void Move()
     {
-        base.Movement();
-    }
-
-    public override void EnableMovement()
-    {
-
+        base.Move();
     }
 
     public virtual void OnBossPhaseChangedHandled(int Phase){}

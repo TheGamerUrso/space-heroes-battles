@@ -50,7 +50,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffd4473b6da51a149a043f71bc728ccb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShip: {fileID: 0}
   animationCurve:
     serializedVersion: 2
     m_Curve:
@@ -88,7 +87,7 @@ MonoBehaviour:
   defaultColor: {r: 0, g: 0, b: 0, a: 0}
   HealedColor: {r: 0, g: 0, b: 0, a: 0}
   alarmSFX: {fileID: 8300000, guid: d0888bf451bd66b48951e9488b462d44, type: 3}
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 3266755046690711312}
 --- !u!82 &3266755046690711312
 AudioSource:
   m_ObjectHideFlags: 0
@@ -460,8 +459,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 459c5ead65da28946bceae6eb3ae2a0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followTarget: {fileID: 0}
-  Target: {fileID: 0}
   WarningSign: {fileID: 2897267967853160611}
   TTL: 4
   angle: 270
@@ -1408,7 +1405,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab78a39848df8d14ab78024d393585dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
   fullHealthColor: {r: 0.1254902, g: 0.76470596, b: 0.1254902, a: 0.8039216}
   zeroHealthColor: {r: 0.6784314, g: 0.19607845, b: 0.19607845, a: 0.8039216}
   HealthbarCanvas: {fileID: 7739524953659326503}
@@ -1672,7 +1668,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec485ab25bbb5e24abcb3b4c40d28a65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   XPBar: {fileID: 4597321061833220568}
   XPStatus: {fileID: 4597321061407062522}
 --- !u!1 &4597321062051805430
@@ -1846,7 +1841,6 @@ GameObject:
   m_Component:
   - component: {fileID: 909554246440078073}
   - component: {fileID: 8598104195972674720}
-  - component: {fileID: 3231051802373962044}
   - component: {fileID: 5590358860985580870}
   m_Layer: 0
   m_Name: Canvas
@@ -1901,29 +1895,6 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
---- !u!114 &3231051802373962044
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7739524953659326503}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_UiScaleMode: 1
-  m_ReferencePixelsPerUnit: 100
-  m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
-  m_ScreenMatchMode: 2
-  m_MatchWidthOrHeight: 0.5
-  m_PhysicalUnit: 3
-  m_FallbackScreenDPI: 96
-  m_DefaultSpriteDPI: 96
-  m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
 --- !u!114 &5590358860985580870
 MonoBehaviour:
   m_ObjectHideFlags: 0

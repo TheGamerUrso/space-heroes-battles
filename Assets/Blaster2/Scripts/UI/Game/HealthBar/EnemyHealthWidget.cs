@@ -1,19 +1,34 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using DG.Tweening;
-public class EnemyHealthWidget : BaseHealthWidget
+﻿using UnityEngine;
+
+public class EnemyHealthWidget : BaseHealthUI
 {
+    public Enemy enemy;
     private float timer;
     public float duration;
     public bool Static;
     public bool AutoHide;
 
-    public override void Awake() => Hide();
+    protected virtual void Awake() => Hide();
+
+    protected virtual void Start()
+    {
+        enemy.healthComponent.OnDeath += HealthComponent_OnDeath;
+        enemy.healthComponent.OnHealthChanged += HealthComponent_OnHealthChangedHandled;
+    }
+
+    private void HealthComponent_OnHealthChangedHandled(float currentHealth, float MaxHealth)
+    {
+        UpdateHealthBar(currentHealth, MaxHealth);
+    }
+
+    private void HealthComponent_OnDeath()
+    {
+        Hide();
+    }
 
     protected override void UpdateHealthBar(float currentHealth, float maxHealth)
     {
-        if (ship == null) return;
+        if (healthComponent == null) return;
         Show();
         timer = duration;
         base.UpdateHealthBar(currentHealth, maxHealth);
@@ -28,8 +43,8 @@ public class EnemyHealthWidget : BaseHealthWidget
     public void LateUpdate()
     {
         if (Static) return;
-        if (ship == null) return;
-        HealthBarTransform.transform.position = Camera.main.WorldToScreenPoint(ship.transform.position) + offset;
+        if (healthComponent == null) return;
+        HealthBarTransform.transform.position = Camera.main.WorldToScreenPoint(healthComponent.transform.position) + offset;
     }
 
     public override void Update()

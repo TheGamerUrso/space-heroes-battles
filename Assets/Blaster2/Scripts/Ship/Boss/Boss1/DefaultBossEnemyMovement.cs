@@ -8,7 +8,7 @@ public class DefaultBossEnemyMovement : BaseBossEnemyMovement
     public override void Update()
     {
         base.Update();
-        if(!shipOwner.GetComponent<BossEnemy>().StartBattle)return;
+        if(!enemy.GetComponent<BossEnemy>().StartBattle)return;
         changePositionTimer-=Time.deltaTime;
         if(changePositionTimer<0)
         {
@@ -38,7 +38,7 @@ public class DefaultBossEnemyMovement : BaseBossEnemyMovement
             targetPosition = Positions[currentPos];
         }
     }
-    public override void Movement()
+    public override void Move()
     {
         transform.position = Vector3.Lerp(transform.position, Positions[currentPos], speed * Time.deltaTime);      
     }

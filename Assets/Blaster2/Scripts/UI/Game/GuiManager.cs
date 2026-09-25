@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Runtime.CompilerServices;
 using TheGamerUrso.Core;
 using TMPro;
 using UnityEditor.MPE;
@@ -30,6 +31,13 @@ public class GuiManager : MonoBehaviour
 
     public GameController gameController;
     public GameMode gameMode;
+
+    [SerializeField] private PlayerXPUI playerXP;
+    [SerializeField] private PlayerPowerCircleUI powerCircleUI;
+    [SerializeField] private PlayerHealthUI playerHealthUI;
+    [SerializeField] private LowHealthIndicator lowHealthIndicator;
+    [SerializeField] private WarningSignUI warningSignUI;
+
     private IEventService eventService;
 
     //=================================================================================
@@ -40,6 +48,16 @@ public class GuiManager : MonoBehaviour
 
         UpdateScore(0);
     }
+
+    public void Setup(PlayerShip ship,PlayerData playerData)
+    {
+        playerXP.Setup(playerData.GetCurrentPlayerShipData());
+        playerHealthUI.Setup(ship.GetComponent<IDamagable>());
+        powerCircleUI.Setup(playerData, playerData.GetCurrentPlayerShipData());
+        lowHealthIndicator.Setup(ship);
+        warningSignUI.Setup(ship.gameObject);
+    }
+
     public void GameOver()
     {
         ShowPauseMenu(false);

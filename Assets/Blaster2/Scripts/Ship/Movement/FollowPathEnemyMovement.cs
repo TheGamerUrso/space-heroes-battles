@@ -25,7 +25,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
     private GameObject path;
     protected float pathMagnitude;
 
-    public override void OnEnable()
+    public void OnEnable()
     {
         currentPointToFollowIndex = 0;
 
@@ -49,7 +49,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
         }
     }
 
-    public override void Start()
+    public void Start()
     {
         startingPosition = transform.position;
 
@@ -59,7 +59,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
         }
     }
 
-    public override void Movement()
+    public override void Move()
     {
         if (Path.Length > 0)
         {
@@ -80,7 +80,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
                     }
                     else if (!Reset && !PingPong)
                     {
-                        ExitLevel();
+                        enemy.SetState(EnemyState.Escape);
                     }
                 }
                 else if (currentPointToFollowIndex == 0)

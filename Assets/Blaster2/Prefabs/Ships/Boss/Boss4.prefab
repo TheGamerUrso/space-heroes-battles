@@ -236,6 +236,8 @@ GameObject:
   - component: {fileID: 5578870287707445732}
   - component: {fileID: 8415356265192544766}
   - component: {fileID: 7056915443157467476}
+  - component: {fileID: 6430322997629563060}
+  - component: {fileID: 7326111327353958477}
   m_Layer: 0
   m_Name: Boss4
   m_TagString: Untagged
@@ -257,6 +259,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 147042603363512465}
+  - {fileID: 8573628426670280874}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &3542374733899739983
@@ -465,23 +468,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2141b119b04bb4b41ac14fb8d558948f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  animator: {fileID: 384325370834830403}
   audioSource: {fileID: 5578870287707445732}
-  Id: 13
-  ShieldEffect: {fileID: 1814809603173044376}
+  healthComponent: {fileID: 6430322997629563060}
+  weaponController: {fileID: 7326111327353958477}
+  movementController: {fileID: 7056915443157467476}
   Level: 1
   Damage: 0
   FireRate: 0
   Speed: 0
-  MaxHealth: 0
-  CurrentHealth: 0
+  Health: 0
+  enemyState: 0
   EnemyData: {fileID: 11400000, guid: b436933dc86d2ee40a94f0145558a772, type: 2}
-  Weapons:
-  - {fileID: 7313706618808958915}
-  delayAttak: 3
   enemyElement:
     Name: 
     gameObjectType: 0
-  DestroyableParts: []
   Phase: 0
 --- !u!114 &7056915443157467476
 MonoBehaviour:
@@ -503,8 +504,44 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 80}
   currentPos: 0
   changePositionTimer: 0
-  bossDestroyableParts: []
   speedByPhase: 0.8
+--- !u!114 &6430322997629563060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5395480417425742984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b0d29075bf51a945b8057f28e046215, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossHealthComponent
+  ship: {fileID: 8415356265192544766}
+  healthUI: {fileID: 8573628426670280875}
+  currentHealth: 0
+  maxHealth: 0
+  ShieldEffect: {fileID: 1814809603173044376}
+  audioSource: {fileID: 5578870287707445732}
+  hitSFX: {fileID: 8300000, guid: ec94d567e75cef945b3159eba24780c3, type: 3}
+  boxCollider: {fileID: 2010813923288617861}
+  explostionEffect: 7
+  DestroyableParts: []
+--- !u!114 &7326111327353958477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5395480417425742984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8de0f56e63524d4586401df7102bb48, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BossWeaponController
+  Weapons:
+  - {fileID: 7313706618808958915}
+  delayAttak: 3
 --- !u!1 &6095356859239022644
 GameObject:
   m_ObjectHideFlags: 0
@@ -718,7 +755,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e19527fa7bf0e4d4bad8352f14bef76e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ship: {fileID: 0}
   weaponData: {fileID: 11400000, guid: 3abe3156ae1ac80488b6ae5633accdb3, type: 2}
   FireRate: 0
   Damage: 0
@@ -1040,6 +1076,79 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4604023365360802, guid: 41eac07628561874e8fd3c1649c10b47, type: 3}
   m_PrefabInstance: {fileID: 743564051339798720}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1340204506313372365
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 8708230148599612763}
+    m_Modifications:
+    - target: {fileID: 7233618025502483040, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_Name
+      value: BossEnemyHealthBar (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 87.31975
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 73.23981
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+--- !u!4 &8573628426670280874 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+  m_PrefabInstance: {fileID: 1340204506313372365}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &8573628426670280875 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7233618025502483046, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+  m_PrefabInstance: {fileID: 1340204506313372365}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3cf49cc4b7c2fa74dafb0efaaeb1c5b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2374675209450186353
 PrefabInstance:
   m_ObjectHideFlags: 0

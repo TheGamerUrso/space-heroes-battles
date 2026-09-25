@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.Core;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using UnityEngine.UI;
 
-public class PlayerPowerCircleWidget : MonoBehaviour
+public class PlayerPowerCircleUI : MonoBehaviour
 {
     [SerializeField] private PlayerShip player;
     private PlayerData playerData;
@@ -23,7 +24,7 @@ public class PlayerPowerCircleWidget : MonoBehaviour
     [Space(2)]
     [Range(1, 4)] private int CurrentWeapnType = 0;
 
-    // private int WeaponUpgradeCollected = 0;
+    private int WeaponUpgradeCollected = 0;
 
     [Space(2)]
     [SerializeField] private Animator PowerUIActiveAnimator = null;
@@ -32,28 +33,22 @@ public class PlayerPowerCircleWidget : MonoBehaviour
     [SerializeField] private Sprite[] WeaponIndicatorSpritesActivated = null;
 
     [SerializeField] private Sprite[] WeaponIndicatorSpritesNotActivated;
-    protected IDataService dataService;
 
-    void Awake()
-    {
-        dataService = GameContext.Get<IDataService>();
-    }
 
     private void Start()
     {
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-
         PowerBut.onClick.AddListener(() =>
         {
             ActivateSpecial();
 
         });
-
-
-
         PowerUpLevelChanged(0);
         PowerPackCollected(0);
+    }
+    public void Setup(PlayerData playerData,PlayerShipData playerShipData)
+    {
+        this.playerData = playerData;
+        this.playerShipData = playerShipData;
     }
 
     public void ActivateSpecial()
@@ -89,6 +84,8 @@ public class PlayerPowerCircleWidget : MonoBehaviour
 
     public void RefreshWeaponIndicatorSprite()
     {
+        if (playerData == null) return;
+
         var sprite = WeaponIndicatorSpritesNotActivated[0];
         var collecterUpgrade = playerData.PowerPackCollected;
 

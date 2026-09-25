@@ -1,16 +1,12 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using TheGamerUrso.Core;
-using UnityEditor.MPE;
 using UnityEngine;
 
 public abstract class BaseWeapon : MonoBehaviour
 {
+    protected Ship ship;
     public Action<bool> AboutToShoot;
-
-    [SerializeField] protected Ship ship;
     public Weapon_SO weaponData;
 
     public float FireRate;
@@ -32,30 +28,14 @@ public abstract class BaseWeapon : MonoBehaviour
     protected float timer;
     protected bool IsShooting;
     public bool AutoAttack { get; set; }
-
-
-    public AudioClip SoundSFX { get { return weaponData.ShootSFX; } }
     public PoolGameObjectType ProjectilePrefab { get { return weaponData.m_Projectile; } }
-    protected IDataService dataService;
-    protected IEventService eventService;
 
-    public virtual void Awake()
-    {
-        if (source == null)
-            source = GetComponent<AudioSource>();
 
-        Cannons = transform.Cast<Transform>().ToArray();
-    }
-
-    public virtual void Start()
-    {
-        eventService = GameContext.Get<IEventService>();
-        dataService = GameContext.Get<IDataService>();
-    }
-
-    public void SetOwner(Ship ship)
+    public virtual void Initialize(Ship ship, float damage, float fireRate)
     {
         this.ship = ship;
+        Cannons = transform.Cast<Transform>().ToArray();
+        SetStats(damage, fireRate);
     }
 
     public virtual void Update()
@@ -88,6 +68,11 @@ public abstract class BaseWeapon : MonoBehaviour
             float prevPitch = source.pitch;
             source.pitch = UnityEngine.Random.Range(minRange, maxRange);
         }
-        source.PlayOneShot(SoundSFX);
+        source.PlayOneShot(weaponData.ShootSFX);
+    }
+    public virtual void SetStats(float damage,float fireRate)
+    {
+        Damage = damage / Cannons.Length;
+        FireRate = fireRate;
     }
 }

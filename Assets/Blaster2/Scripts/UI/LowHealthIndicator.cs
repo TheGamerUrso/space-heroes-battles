@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class LowHealthIndicator : MonoBehaviour
 {
-    [SerializeField] private PlayerShip playerShip;
+    private PlayerShip playerShip;
     private bool Active;
 
     [SerializeField] private AnimationCurve animationCurve;
@@ -29,16 +29,25 @@ public class LowHealthIndicator : MonoBehaviour
         defaultColor = image.color;
     }
 
+    public void Setup(PlayerShip ship)
+    {
+        this.playerShip = ship;
+    }
+
     void Update()
     {
+        if (playerShip == null) return;
 
-        if (playerShip.GetHealthPresentage() > .5f)
+        var health = playerShip.healthComponent.GetHealthPresentage();
+        var IsAlive = playerShip.healthComponent.IsAlive;
+
+        if (health > .5f)
         {
             Active = false;
             count = 0;
             timer = 0;
         }
-        else if (playerShip.GetHealthPresentage() <= .5f)
+        else if (health <= .5f)
         {
             Active = true;
             image.color = defaultColor;
@@ -51,7 +60,7 @@ public class LowHealthIndicator : MonoBehaviour
             Color c = image.color;
             c.a = Mathf.Lerp(c.a, animationCurve.Evaluate(Time.time), 1);
             image.color = c;
-            if (!playerShip.IsAlive) return;
+            if (!IsAlive) return;
             if (!audioSource.isPlaying)
             {
                 audioSource.Play();
@@ -59,7 +68,7 @@ public class LowHealthIndicator : MonoBehaviour
         }
         else
         {
-            if (!playerShip.IsAlive) return;
+            if (!IsAlive) return;
             if (audioSource.isPlaying)
             {
                 audioSource.Stop();

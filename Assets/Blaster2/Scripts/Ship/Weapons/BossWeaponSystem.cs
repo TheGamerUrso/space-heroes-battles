@@ -7,15 +7,14 @@ public class BossWeaponSystem : WeaponScript
 {   
     public void Phases()
     {
-        float m_CurHealth = GetComponent<Ship>().CurrentHealth;
-        float m_MaxHealth = GetComponent<Ship>().MaxHealth;
+        float m_CurHealth = GetComponent<HealthComponent>().GetHealthPresentage();
 
-        if (m_CurHealth <= (0.6 * m_MaxHealth))
+        if (m_CurHealth <= 0.6)
         {
             FireRate = 2;
 
         }
-        else if (m_CurHealth <= (0.4 * m_MaxHealth))
+        else if (m_CurHealth <= 0.4)
         {
             FireRate = 3;
         }

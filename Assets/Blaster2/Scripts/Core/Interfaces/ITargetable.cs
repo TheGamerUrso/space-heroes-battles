@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface ITargetable
 {
-    GameObject target { get; }
+    GameObject gameObject { get; }
     bool Targetable { get; }
 }

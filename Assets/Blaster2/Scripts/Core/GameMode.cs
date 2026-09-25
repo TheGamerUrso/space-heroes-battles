@@ -34,12 +34,13 @@ public class GameMode : MonoBehaviour
     [SerializeField] protected GameObject[] BossFights;
     [SerializeField] protected List<EnemySpawner> SpawnPoints = new List<EnemySpawner>();
 
+    [Header("Config")]
+    public bool HasAsteroids { get; set; }
 
+    public int difficulty { get; set; }
 
     public bool BossBattleInitiated;
     public int waves;
-    public int difficulty;
-
     public int TotalEnemies;
     public int TotalAliveEnemies;
     public int numberOfEnemiesEachWave;
@@ -129,9 +130,9 @@ public class GameMode : MonoBehaviour
                         enemGO = SpawnPoints[random].SpawnEnemyElement(availableEnemies);
                         TotalAliveEnemies++;
 
-                        enemGO.GetComponent<Enemy>().OnEnemyDied += OnEnemyDiedHandled;
-                        enemGO.GetComponent<Enemy>().OnEnemyEscaped += OnEnemyEscapedCallback;
-                        enemGO.GetComponent<Enemy>().OnEnemyHit += OnEnemyHitHandled;
+                        //enemGO.GetComponent<Enemy>().OnEnemyDied += OnEnemyDiedHandled;
+                       // enemGO.GetComponent<Enemy>().OnEnemyEscaped += OnEnemyEscapedCallback;
+                       // enemGO.GetComponent<Enemy>().OnEnemyHit += OnEnemyHitHandled;
 
                         spawnCooldownTimer = cooldown;
                     }
@@ -164,7 +165,7 @@ public class GameMode : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer <= 0f)
                 {
-                    if (gameController.GetPlayer().CurrentHealth > 0)
+                    if (gameController.GetPlayer().Health > 0)
                     {
                         if (BossWave)
                         {
@@ -191,12 +192,12 @@ public class GameMode : MonoBehaviour
             case GameplayLoopState.BossBattleActive:
                 if (!BossBattleInitiated)
                 {
-                    if (!gameController.GetPlayer().IsAlive)
-                    {
-                        gameController.GameOver();
-                        currentLoopState = GameplayLoopState.Ended;
-                        return;
-                    }
+                    //if (!gameController.GetPlayer().IsAlive)
+                  //  {
+                   //     gameController.GameOver();
+                  //      currentLoopState = GameplayLoopState.Ended;
+                  //      return;
+                  //  }
 
                     timer = 1.0f; // RewardWait replacement
                     currentLoopState = GameplayLoopState.RewardScreenActive;
@@ -253,13 +254,12 @@ public class GameMode : MonoBehaviour
         currentBoss.name = BossPrefab.name;
 
         BossEnemy enemy = currentBoss.GetComponentInChildren<BossEnemy>();
-        enemy.Id = currentBoss.name;
-        enemy.SetStats(difficulty);
+        //enemy.SetStats(difficulty);
 
 
-        enemy.OnEnemyDied += OnEnemyDiedHandled;
-        enemy.OnEnemyEscaped += OnEnemyEscapedCallback;
-        enemy.OnEnemyHit += OnEnemyHitHandled;
+        //enemy.OnEnemyDied += OnEnemyDiedHandled;
+       // enemy.OnEnemyEscaped += OnEnemyEscapedCallback;
+       // enemy.OnEnemyHit += OnEnemyHitHandled;
 
         return enemy;
     }
@@ -282,9 +282,9 @@ public class GameMode : MonoBehaviour
     //=================================================================================
     public virtual void OnEnemyDiedHandled(Enemy baseEnemy)
     {
-        baseEnemy.OnEnemyDied -= OnEnemyDiedHandled;
-        baseEnemy.OnEnemyEscaped -= OnEnemyEscapedCallback;
-        baseEnemy.OnEnemyHit -= OnEnemyHitHandled;
+        //baseEnemy.OnEnemyDied -= OnEnemyDiedHandled;
+       // baseEnemy.OnEnemyEscaped -= OnEnemyEscapedCallback;
+       // baseEnemy.OnEnemyHit -= OnEnemyHitHandled;
 
         TotalAliveEnemies--;
 
@@ -316,9 +316,9 @@ public class GameMode : MonoBehaviour
     //=================================================================================
     public void OnEnemyEscapedCallback(Enemy baseEnemy)
     {
-        baseEnemy.OnEnemyDied -= OnEnemyDiedHandled;
-        baseEnemy.OnEnemyEscaped -= OnEnemyEscapedCallback;
-        baseEnemy.OnEnemyHit -= OnEnemyHitHandled;
+        //baseEnemy.OnEnemyDied -= OnEnemyDiedHandled;
+       // baseEnemy.OnEnemyEscaped -= OnEnemyEscapedCallback;
+        //baseEnemy.OnEnemyHit -= OnEnemyHitHandled;
 
         TotalAliveEnemies--;
 
@@ -329,9 +329,9 @@ public class GameMode : MonoBehaviour
     //=================================================================================
     public void OnEnemyHitHandled(Enemy baseEnemy,int value,int times)
     {
-        baseEnemy.OnEnemyDied -= OnEnemyDiedHandled;
-        baseEnemy.OnEnemyEscaped -= OnEnemyEscapedCallback;
-        baseEnemy.OnEnemyHit -= OnEnemyHitHandled;
+        //baseEnemy.OnEnemyDied -= OnEnemyDiedHandled;
+       // baseEnemy.OnEnemyEscaped -= OnEnemyEscapedCallback;
+        //baseEnemy.OnEnemyHit -= OnEnemyHitHandled;
 
         playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
     }

@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 public class BossHealthWidget : EnemyHealthWidget
 {
-    public override void Awake()
+    protected override void Awake()
     {
         base.Awake();
         HealthBarTransform.transform.localScale = new Vector3(0, 1, 1);

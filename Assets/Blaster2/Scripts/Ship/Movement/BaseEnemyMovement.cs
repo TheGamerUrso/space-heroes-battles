@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BaseEnemyMovement : MonoBehaviour
+public class BaseEnemyMovement : BaseMovementController
 {
-    protected Ship shipOwner;
-    protected Animator animator;
-
+    protected Enemy enemy;
     protected bool Loop;
     protected Coroutine EnterCoroutine;
 
@@ -18,54 +16,24 @@ public class BaseEnemyMovement : MonoBehaviour
     protected float delay = .5f;
     protected Vector3 movement;
 
-    [SerializeField] protected float speed;
-    public float Speed { get { return speed; } set { speed = value; } }
-
-    public virtual void OnDestroy() { }
-    public virtual void OnEnable()
-    {
-
-    }
-
     public virtual void Awake()
     {
-        shipOwner = GetComponent<Ship>();
-        animator = GetComponentInChildren<Animator>();
+        enemy = GetComponent<Enemy>();
     }
 
-    public virtual void Start()
+    public virtual void Update()
     {
-
-    }
-
-    public virtual void Update() { }
-
-    public virtual void LateUpdate()
-    {
-        if (shipOwner.IsAlive == false) return;
-        Movement();
-    }
-
-    public virtual void Movement()
-    {
-
-    }
-
-    public void ExitLevel()
-    {
-        shipOwner.ExitLevel();
-        gameObject.SetActive(false);
-    }
+        if (enemy.enemyState == EnemyState.Combat)
+        {
+            Move();
+        }
+    }  
 
     public void CheckOutOfSight()
     {
         if (transform.position.z < Constants.m_ZMin)
         {
-            ExitLevel();
+            gameObject.SetActive(false);
         }
-    }
-    public virtual void EnableMovement()
-    {
-
     }
 }

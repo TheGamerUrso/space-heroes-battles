@@ -52,7 +52,7 @@ public class Tutorial : MonoSingleton<Tutorial>
         TutorialView.gameObject.SetActive(false);
         appService.PauseTheGame(false);
         Time.timeScale = 1;
-        gameController.GetPlayer().tempGodMode();
+       // gameController.GetPlayer().tempGodMode();
     }
 
 }

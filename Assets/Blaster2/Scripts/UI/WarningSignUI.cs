@@ -6,13 +6,18 @@ using UnityEngine.UI;
 using CodeMonkey;
 using CodeMonkey.Utils;
 
-public class WarningSignWidget : MonoBehaviour
+public class WarningSignUI : MonoBehaviour
 {
-
-    public GameObject followTarget;
-    public GameObject Target;
+    private GameObject playerTarget;
+    private GameObject Target;
     public GameObject WarningSign;
     public float TTL = 4;
+
+
+    public void Setup(GameObject playerTarget)
+    {
+        this.playerTarget = playerTarget;
+    }
 
     private void Start()
     {
@@ -30,7 +35,9 @@ public class WarningSignWidget : MonoBehaviour
 
     private void FixedUpdate()
     {
-        colliders = Physics.OverlapSphere(followTarget.transform.position, 40, enemies);
+        if (playerTarget == null) return;
+
+        colliders = Physics.OverlapSphere(playerTarget.transform.position, 40, enemies);
         if (colliders.Length > 0)
         {
             var Asteroid = colliders[0].GetComponent<AsteroidCollider>();
@@ -46,7 +53,9 @@ public class WarningSignWidget : MonoBehaviour
 
     void LateUpdate()
     {
-        Vector3 targetPositionScreenPoint = Camera.main.WorldToScreenPoint(followTarget.transform.position);
+        if (playerTarget == null) return;
+
+        Vector3 targetPositionScreenPoint = Camera.main.WorldToScreenPoint(playerTarget.transform.position);
         transform.position = targetPositionScreenPoint;
 
         if (Target != null)

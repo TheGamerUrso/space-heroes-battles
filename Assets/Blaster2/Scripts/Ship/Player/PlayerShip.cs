@@ -3,9 +3,16 @@ using System.Collections;
 using TheGamerUrso.Core;
 using UnityEngine;
 
-public class PlayerShip : Ship, IDamagable
+public enum PlayerStateEnum
+{
+    None,Enter,Combat,Death,Exit
+}
+public class PlayerShip : Ship
 {
     public Action<int> OnItemPickedUp;
+
+
+    public PlayerStateEnum currentPlayerState = PlayerStateEnum.None;
 
     [SerializeField] private ParticleSystem ItemCollectedEffect;
     [Space()]
@@ -13,206 +20,90 @@ public class PlayerShip : Ship, IDamagable
 
     private PlayerData playerData;
     private PlayerShipData playerShipData;
-
-    [Space()]
-    #region Weapons
-    [Header("Weapons")]
-    [SerializeField] private DefaultPlayerWeapon[] Weapons;
-    [SerializeField] private BaseSpecialAttack specialAttack;
-    private float invisibilityTimer;
-    private int clicktimes;
-    private float clicktimer;
-    private bool clicked;
-    float clickDelay = .25f;
-    #endregion Weapons
-
-    private bool TempFireRateUpgrade;
-    private bool HasArmorUprade;
+    public bool HasArmorUprade { get; private set; }
+    public bool CanUsePowerUpItem { get; private set; }
     private IDataService dataService;
 
+    float waitEntry = 2;
+    float waitExit = 2;
+
+
     //=================================================================================
-    public override void Awake()
-    {
-        animator = GetComponentInChildren<Animator>();
-    }
-    //=================================================================================
-    public override void Start()
+    public void Start()
     {
         dataService = GameContext.Get<IDataService>();
 
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        HasShield = playerShipData.HasShield;
+        SetStats(playerShipData.level,playerShipData.Health,playerShipData.Speed,playerShipData.Damage,playerShipData.FireRate);
 
-        SetStats(playerShipData.level);
 
-        SwitchWeapon(0);
-        specialAttack.SetOwner(this);
 
-        HealthBar = GameObject.FindAnyObjectByType<PlayerHealthWidget>();
-        HealthBar.Setup(this);
+        healthComponent.Setup(100, playerShipData.HasShield);
 
-        IsAlive = true;
+        healthComponent.OnHealthChanged += OnHealthValueChanged;
+        ((PlayerWeaponController)weaponController).Initialize(this, Damage, FireRate);
     }
-    //=================================================================================
-    public override void Update()
-    {
-            if (invisibilityTimer >= 0)
-            {
-                invisibilityTimer -= Time.deltaTime;
-            }
-            WeaponSystem();
-    }
-    //=================================================================================
-    public void WeaponSystem()
-    {
-        if (GetAnimationState("Enter") || GetAnimationState("Exit"))
-        {
-            return;
-        }
 
-        var playerPowerUp = playerData.GetPowerUpLevelPresentage();
-#if UNITY_ANDROID
-        if (Time.timeScale == 0)
+    //=================================================================================
+    public void Update()
+    {
+        switch (currentPlayerState)
         {
-            clicked = false;
-            clicktimer = 1;
-            clicktimes = 0;
-            return;
-        }
-
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            clicktimes = touch.tapCount;
-        }
-#elif UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR_64
-            if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3"))
-            {
-                if (!clicked)
+            case PlayerStateEnum.None:
+               
+                currentPlayerState = PlayerStateEnum.Enter;
+                break;
+            case PlayerStateEnum.Enter:
+                animator.SetTrigger(Constants.PLAYERENTERSTRINGKEY);
+                waitEntry -= Time.deltaTime;
+                if (waitEntry <= 0)
                 {
-                    clicked = true;
-                    clicktimer = clickDelay;
+                    currentPlayerState = PlayerStateEnum.Combat;
                 }
-                clicktimes++;
-            }
+                break;
+            case PlayerStateEnum.Combat:
 
+                
+               
+                break;
+            case PlayerStateEnum.Death:
 
-            if (clicked)
-            {
-                clicktimer -= Time.deltaTime;
-
-                if (clicktimer <= 0)
-                {
-                    clicked = false;
-                    clicktimes = 0;
-                }
-            }
-#endif
-
-        if (clicktimes > 1)
-        {
-            if (playerPowerUp >= 1)
-            {
-                ActivateSpecial();
-            }
-        }
-
-        if (playerData.PowerPackCollected >= 5)
-        {
-            playerData.PowerPackCollected = 0;
-            UpgradeWeapon();
+                break;
+            case PlayerStateEnum.Exit:
+                animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
+                break;
+            default:
+                break;
         }
     }
-    //=================================================================================
-    public void UpdateWeaponStats(float fireRate, float damage = 0)
+    public void ActiveSpecial()
     {
-        var currenActivetWeapon = GetCurrentActiveWeapon().GetComponent<BaseWeapon>();
-        currenActivetWeapon.FireRate = fireRate;
-        if (damage > 0)
-            currenActivetWeapon.Damage = damage;
+        ((PlayerWeaponController)weaponController).ActivateSpecial();
     }
-    //=================================================================================
-    public override void ActiveShield()
-    {
-        base.ActiveShield();
-        ShieldEffect.SetActive(HasShield);
-        OnItemPickedUp?.Invoke(0);
-    }
-    //=================================================================================
-    public override void DeactivateShield()
-    {
-        base.DeactivateShield();
-        ShieldEffect.SetActive(HasShield);
-        OnItemPickedUp?.Invoke(0);
-    }
-    //=================================================================================
-    public override void Death()
-    {
-        GameObject explostion = PoolManager.Instance.GetObjectFromPool(playerStats.ExplostionEffect);
-        explostion.transform.position = transform.position;
-        explostion.SetActive(true);
 
-        gameObject.SetActive(false);
+    public void UpgradeWeapon()
+    {
+        ((PlayerWeaponController)weaponController).UpgradeWeapon();
     }
     //=================================================================================
-    public override void Heal(float ammount)
+    private void OnHealthValueChanged(float currentHealth, float maxHealth)
     {
-        CurrentHealth += ammount;
-
-        if (CurrentHealth > MaxHealth)
+        var healthPresentage = currentHealth / maxHealth;
+        if (!HasArmorUprade)
         {
-            CurrentHealth = MaxHealth;
+            ((PlayerWeaponController)weaponController).DowngradeWeapon();
         }
 
-        OnHealthChanged?.Invoke(CurrentHealth, MaxHealth);
-    }
-    //=================================================================================
-    public override void TakeDamage(float dmg)
-    {
-        if (!IsAlive) return;
+        playerData.GotHitInGame = true;
 
-        audioSource.PlayOneShot(playerStats.hitSFX);
-
-        if (dmg >= MaxHealth)
+        if (healthPresentage < .5f)
         {
-            dmg = MaxHealth - 1;
-        }
-
-        if (HasShield == true)
-        {
-            HasShield = false;
-            ShieldEffect.SetActive(HasShield);
-        }
-        else if (HasShield == false)
-        {
-            if (invisibilityTimer <= 0)
-            {
-                invisibilityTimer = .25f;
-
-                var health = CurrentHealth - dmg;
-
-                SetHealth(health);
-
-                if (!HasArmorUprade)
-                {
-                    DownGradeWeapon();
-                }
-                playerData.GotHitInGame = true;
-
-                if (GetHealthPresentage() < .5f)
-                {
-                    audioSource.PlayOneShot(playerStats.alarmSFX);
-                }
-
-                if (CurrentHealth < 1)
-                {
-                    Death();
-                }
-            }
+            audioSource.PlayOneShot(playerStats.alarmSFX);
         }
     }
+
     //=================================================================================
     public void OnTriggerEnter(Collider other)
     {
@@ -223,11 +114,13 @@ public class PlayerShip : Ship, IDamagable
             if (items.ID == ItemEnum.POWERUP)
                 ItemCollectedEffect.Play();
         }
-    }
-    //=================================================================================
-    public void tempGodMode()
-    {
-        invisibilityTimer = 1;
+
+        if (other.gameObject.tag.Equals(Constants.ENEMYTAG))
+        {
+            var damagable = other.gameObject.GetComponent<IDamagable>();
+            damagable.TakeDamage(damagable.CurrentHealth);
+           healthComponent.TakeDamage(damagable.CurrentHealth);
+        }
     }
     //=================================================================================
 
@@ -238,120 +131,16 @@ public class PlayerShip : Ship, IDamagable
             animator = GetComponent<Animator>();
         }
         return animator.GetCurrentAnimatorStateInfo(0).IsName(id);
-    }
+    } 
     //=================================================================================
-    public override void OnEnable()
+    public override void SetStats(int level, float baseHealth, float baseSpeed, float baseDamage, float baseFireRate)
     {
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
-        animator.SetTrigger(Constants.PLAYERENTERSTRINGKEY);
-    }
-    //=================================================================================
-    public override void ExitLevel()
-    {
-        if (animator == null)
-        {
-            animator = GetComponent<Animator>();
-        }
-        animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
-    }
-    //=================================================================================
-    public void UpgradeWeapon()
-    {
-        if (CurrentWeapnType < 4)
-        {
-            if (playerStats.CanUsePowerUpItem)
-            {
-                audioSource.PlayOneShot(playerStats.powerSFX);
+        Level = Mathf.Clamp(level, 1, 10);
+        
 
-                CurrentWeapnType++;
-
-                if (CurrentWeapnType > 4)
-                {
-                    CurrentWeapnType = 4;
-                }
-            }
-            else
-            {
-                playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
-            }
-
-            TempFireRateUpgrade = false;
-            SwitchWeapon(CurrentWeapnType);
-        }
-    }
-    //=================================================================================
-    public void DownGradeWeapon()
-    {
-        if (playerShipData.HasArmorUpgrade)
-        {
-            return;
-        }
-
-        if (CurrentWeapnType > 0)
-        {
-            CurrentWeapnType--;
-            SwitchWeapon(CurrentWeapnType);
-        }
-    }
-    //=================================================================================
-    public void PowerUpCollected()
-    {
-        if (playerData.PowerPackCollected <= 5 && CurrentWeapnType < 4)
-        {
-            playerData.SetPowerPackCollected(2);
-            TempFireRateBuff(0.01f * playerData.PowerPackCollected);
-        }
-             OnItemPickedUp?.Invoke(1);
-    }
-    //=================================================================================
-    public void ResetWeaponUpgrade()
-    {
-        CurrentWeapnType = 0;
-        SwitchWeapon(CurrentWeapnType);
-    }
-    //=================================================================================
-    public void ActivateSpecial()
-    {
-        playerData.SuperUsed++;
-        specialAttack.ActivateSpecial();
-    }
-    //=================================================================================
-    public void DeactivateSpecial()
-    {
-        specialAttack.DeactivateSpecial();
-    }
-    //=================================================================================
-    public GameObject GetCurrentActiveWeapon()
-    {
-        return Weapons[CurrentWeapnType].gameObject;
-    }
-    //=================================================================================
-    public override void SwitchWeapon(int Id, bool Solo = false)
-    {
-        for (int i = 0; i < Weapons.Length; i++)
-        {
-            Weapons[i].gameObject.SetActive(false);
-        }
-
-        Weapons[Id].gameObject.SetActive(true);
-        Weapons[Id].SetStats(playerShipData, Id);
-    }
-    //=================================================================================
-    public BaseSpecialAttack GetSpecialAttack()
-    {
-        return specialAttack;
-    }
-    //=================================================================================
-    public override void SetStats(int level)
-    {
-        MaxHealth = level * playerStats.baseHealth;
-
-        SetHealth(MaxHealth);
-
+        var health = level * playerStats.baseHealth;
         float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
+        playerShipData.Health = level * playerStats.baseHealth;
         playerShipData.Speed = playerStats.baseSpeed + UpgradeStats[(int)UpgradeTypeEnum.Speed];
         playerShipData.Damage = (level * playerStats.baseDamage) + UpgradeStats[(int)UpgradeTypeEnum.Damage];
         playerShipData.FireRate = playerStats.baseFireRate - UpgradeStats[(int)UpgradeTypeEnum.FireRate];
@@ -361,53 +150,24 @@ public class PlayerShip : Ship, IDamagable
         playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
         HasArmorUprade = UpgradeStats[(int)UpgradeTypeEnum.ArmorUpgrade] == 1 ? true : false;
 
+        Health = playerShipData.Health;
+        Speed = playerShipData.Speed;
+        Damage = playerShipData.Damage;
+        FireRate = playerShipData.FireRate;
 
-        for (int i = 0; i < Weapons.Length; i++)
-        {
-            Weapons[i].SetStats(playerShipData, i);
-        }
-
-        specialAttack.SetStats(playerShipData);
+       
+        healthComponent.Setup(Health, false);
+        weaponController.Initialize(this,Damage, FireRate);
+        movementController.SetSpeed(Speed);
     }
     //=================================================================================
-    public override void EnterLevel()
+    public void PowerUpCollected()
     {
-
-    }    //=================================================================================
-    #region TempfireRateBuff
-
-    public void TempFireRateBuff(float fireRate = 0.0f, bool temporary = false)
-    {
-
-        if (!TempFireRateUpgrade)
+        if (playerData.PowerPackCollected <= 5 && weaponController.CurrentWeapnType < 4)
         {
-            TempFireRateUpgrade = true;
-            GiveTemporaryFireRateBuff();
+            playerData.SetPowerPackCollected(2);
+            ((PlayerWeaponController)weaponController).TempFireRateBuff(0.01f * playerData.PowerPackCollected);
         }
-
-
-        UpdateWeaponStats(playerShipData.FireRate - fireRate);
+        OnItemPickedUp?.Invoke(1);
     }
-    //=================================================================================
-
-    public void GiveTemporaryFireRateBuff()
-    {
-        StartCoroutine(TemporaryFireRateUpgrade());
-    }
-    //=================================================================================
-    public IEnumerator TemporaryFireRateUpgrade()
-    {
-        var fireRateTemp = playerShipData.FireRate;
-        var DamageTemp = playerShipData.Damage;
-
-        while (TempFireRateUpgrade)
-        {
-            yield return new WaitForEndOfFrame();
-        }
-
-        playerShipData.FireRate = fireRateTemp;
-        UpdateWeaponStats(playerShipData.FireRate, DamageTemp);
-    }
-
-    #endregion
 }

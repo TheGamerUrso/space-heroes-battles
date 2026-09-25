@@ -42,18 +42,18 @@ public static class HelperUtils
             {
                 if (targetable.Targetable)
                 {
-                    float dist = Vector3.Distance(position, targetable.target.transform.position);
+                    float dist = Vector3.Distance(position, targetable.gameObject.transform.position);
                     if (dist <= maxRange)
                     {
                         if (enemyTarget == null)
                         {
-                            enemyTarget = targetable.target;
+                            enemyTarget = targetable.gameObject;
                         }
                         else
                         {
-                            if (Vector3.Distance(position, targetable.target.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
+                            if (Vector3.Distance(position, targetable.gameObject.transform.position) < Vector3.Distance(position, enemyTarget.transform.position))
                             {
-                                enemyTarget = targetable.target;
+                                enemyTarget = targetable.gameObject;
                             }
                         }
                     }

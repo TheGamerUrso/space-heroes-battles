@@ -7,7 +7,7 @@ public enum ControlScemeEnum
     CONTROL1 = 1, CONTROL2 = 2
 }
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : BaseMovementController
 {
     public ControlScemeEnum controlScemeEnum { get; set; }
 
@@ -21,8 +21,6 @@ public class PlayerController : MonoBehaviour
     private Vector3 targetRotation;
     private Plane plane;
     private Ray ray;
-
-    private float Speed = 50;
     private float rotationSpeed;
     private float hitPoint;
     private float deltaX;
@@ -33,6 +31,10 @@ public class PlayerController : MonoBehaviour
     private PlayerShipData playerShipData;
     private PlayerData playerData;
 
+    private int clicktimes;
+    private float clicktimer;
+    private bool clicked;
+    float clickDelay = .25f;
 
     private IDataService dataService;
     private IEventService eventService;
@@ -63,6 +65,7 @@ public class PlayerController : MonoBehaviour
         playerData.SetPowerPackCollected(0);
 
     }
+
     public void OnItemPickedUpHandled(ItemPickedUpEvent payload)
     {
         switch (payload.ItemType)
@@ -71,7 +74,7 @@ public class PlayerController : MonoBehaviour
                 SetWallet((int)payload.Ammount);
                 break;
             case ItemEnum.SHIELD:
-                playerShip.ActiveShield();
+                //playerShip.ActiveShield();
                 playerShip.OnItemPickedUp?.Invoke(0);
                 break;
             case ItemEnum.POWERUP:
@@ -79,7 +82,7 @@ public class PlayerController : MonoBehaviour
                 playerShip.OnItemPickedUp?.Invoke(1);
                 break;
             case ItemEnum.HEALTH:
-                playerShip.Heal(((float)payload.Ammount) * playerShipData.level);
+                //playerShip.Heal(((float)payload.Ammount) * playerShipData.level);
                 playerShip.OnItemPickedUp?.Invoke(2);
                 break;
             case ItemEnum.EMPTY:
@@ -133,6 +136,10 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
+        if (playerShip.currentPlayerState == PlayerStateEnum.Enter || playerShip.currentPlayerState == PlayerStateEnum.Exit)
+        {
+            return;
+        }
 
 #if UNITY_EDITOR_64
         if (Input.GetMouseButton(0) && !IsMouseOverUI())
@@ -159,6 +166,60 @@ public class PlayerController : MonoBehaviour
             GamepadControls();
 #endif
         ClampTransform();
+#if UNITY_ANDROID
+        if (Time.timeScale == 0)
+        {
+            clicked = false;
+            clicktimer = 1;
+            clicktimes = 0;
+            return;
+        }
+
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            clicktimes = touch.tapCount;
+        }
+#elif UNITY_STANDALONE || UNITY_WEBGL || UNITY_EDITOR_64
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3"))
+        {
+            if (!clicked)
+            {
+                clicked = true;
+                clicktimer = clickDelay;
+            }
+            clicktimes++;
+        }
+
+
+        if (clicked)
+        {
+            clicktimer -= Time.deltaTime;
+
+            if (clicktimer <= 0)
+            {
+                clicked = false;
+                clicktimes = 0;
+            }
+        }
+#endif
+
+        if (clicktimes > 1)
+        {
+            var playerPowerUp = playerData.GetPowerUpLevelPresentage();
+            if (playerPowerUp >= 1)
+            {
+                playerShip.ActiveSpecial();
+            }
+        }
+
+
+
+        if (playerData.PowerPackCollected >= 5)
+        {
+            playerData.PowerPackCollected = 0;
+            playerShip.UpgradeWeapon();
+        }
     }
     
 
@@ -230,10 +291,11 @@ public class PlayerController : MonoBehaviour
                 playerData.GetCurrentPlayerShipData().EarnXP(xpReward);
                 break;
             case RewardTypeEnum.HEALTH:
-                playerShip.Heal(playerShip.MaxHealth / 2);
+                var damagable = playerShip.GetComponent<IDamagable>();
+                damagable.Heal(playerShipData.Health / 2);
                 break;
             case RewardTypeEnum.SHIELD:
-                playerShip.ActivateSpecial();
+                playerShip.ActiveSpecial();
                 break;
             case RewardTypeEnum.POWERUP:
                 playerShip.PowerUpCollected();
@@ -248,6 +310,6 @@ public class PlayerController : MonoBehaviour
     //=================================================================================
     public void OnLevelValueChanged(int Level)
     {
-        playerShip.SetStats(Level);
+        playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate);
     }
 }

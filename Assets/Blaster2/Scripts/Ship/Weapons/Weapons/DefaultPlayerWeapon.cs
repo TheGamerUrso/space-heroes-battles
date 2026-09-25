@@ -1,36 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Runtime.Serialization.Formatters;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class DefaultPlayerWeapon : BaseWeapon
 {
-    protected GameObject foundPlayer;
     protected PlayerData playerData;
     protected PlayerShipData playerShipData;
-    protected PlayerShip playerShip;
     protected bool holdFire;
     protected bool usePitch;
-
-    public override void Awake()
-    {
-        base.Awake();
-        foundPlayer = GameObject.FindGameObjectWithTag("Player");
-        ship = foundPlayer.GetComponent<Ship>();
-    }
-
-    public override void Start()
-    {
-        base.Start();
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        playerShip = ship.GetComponent<PlayerShip>();
-    }
+    protected bool CanFire;
 
     public override void Update()
     {
-        if (playerShip != null)
+        if (((PlayerShip)ship) != null)
         {
-            if (playerShip.GetAnimationState("Enter") || playerShip.GetAnimationState("Exit"))
+            if (((PlayerShip)ship).GetAnimationState("Enter") || ((PlayerShip)ship).GetAnimationState("Exit"))
             {
                 return;
             }
@@ -58,7 +40,7 @@ public class DefaultPlayerWeapon : BaseWeapon
 
     public override void Shoot()
     {
-        if (holdFire || !playerShip.CanFire)
+        if (holdFire || !CanFire)
         {
             return;
         }
@@ -102,13 +84,4 @@ public class DefaultPlayerWeapon : BaseWeapon
             projectile.SetShootDir(shootDir);
         }
     }
-
-
-    public virtual void SetStats(PlayerShipData playerShipData, int weaponType = 1)
-    {
-        Damage = playerShipData.Damage / Cannons.Length;
-        FireRate = playerShipData.FireRate;
-    }
-
-
 }

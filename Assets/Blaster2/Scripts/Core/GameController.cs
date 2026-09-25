@@ -22,7 +22,7 @@ public struct PlayerShipElement
 
 public enum GameState
 {
-    IDLE,INITIALIZING,START,TRANSMISSION, GAME, GAMEOVER, WIN
+    IDLE,SPAWN_PLAYER,INITIALIZING,START,TRANSMISSION, GAME, GAMEOVER, WIN
 }
 
 public class GameController : MonoSingleton<GameController>
@@ -32,12 +32,10 @@ public class GameController : MonoSingleton<GameController>
     public GameState CurrentGameState { get; set; } = GameState.START;
 
     [Header("Config")]
-    public bool HasAsteroids { get; set; }
     public bool IsFirstRun { get; set; }
     public bool IsGameOver { get; set; }
     public bool IsTransmiting { get; set; }
     public bool IsSlowMo { get; set; }
-    public float difficulty { get; set; }
 
     [Header("Gameplay Configuration")]
     public bool pause;
@@ -59,13 +57,14 @@ public class GameController : MonoSingleton<GameController>
     private GameObject currentPlayer;
     [SerializeField] private PlayerShipElement[] PlayerShips;
 
-    protected Ship playerShip;
+    protected PlayerShip playerShip;
     protected PlayerData playerData;
-
+    [SerializeField] protected CameraManager cameraManager;
     [SerializeField] protected GameMode gameMode;
     [SerializeField] protected AsteroidSpawner asteroidSpawner;
     [SerializeField] protected GuiManager guiManager;
     private float timer = 1;
+
     //=================================================================================
     protected override void CleanUp()
     {
@@ -96,20 +95,19 @@ public class GameController : MonoSingleton<GameController>
         gameMode.SetLevel(
             dataService.GetPlayerData().GetCurrentPlayerShipData().level);
 
-        SetGameState(GameState.INITIALIZING);
+        SetGameState(GameState.SPAWN_PLAYER);
+
+     
     }
     //=================================================================================
     private void Update()
     {
         switch (CurrentGameState)
         {
-            case GameState.IDLE:
-                break;
-            case GameState.INITIALIZING:
-      
+            case GameState.SPAWN_PLAYER:
+
                 appService.SetGameState(TheGamerUrso.Core.GameStateEnum.GAME);
                 NewGame();
-
                 timer -= Time.deltaTime;
                 if (timer <= 0)
                 {
@@ -118,9 +116,19 @@ public class GameController : MonoSingleton<GameController>
                         int shipSelected = playerData.CurrrentSelectedShip;
                         var player = CreatePlayer(shipSelected);
                         playerShip = player.GetComponentInChildren<PlayerShip>();
-                        playerShip.DisableFire();
+                        playerShip.weaponController.DisableFire();
+                        var followPlayer = GameObject.FindAnyObjectByType<PlayerFollow>();
+                        cameraManager.SetTarget(followPlayer != null ? followPlayer.gameObject : null);
                     }
-                    timer = 2;             
+                    timer = 2;
+                    SetGameState(GameState.INITIALIZING);
+                }
+            break;
+            case GameState.INITIALIZING:
+                timer -= Time.deltaTime;
+                if (timer <= 0)
+                {
+                    guiManager.Setup((PlayerShip)playerShip, playerData);
                     SetGameState(GameState.START);
                 }
                 break;
@@ -128,8 +136,7 @@ public class GameController : MonoSingleton<GameController>
                 timer -= Time.deltaTime;
                 if (timer <= 0)
                 {
-                    playerShip.EnableFire();
-                    SetGameState(GameState.TRANSMISSION);
+                    //SetGameState(GameState.TRANSMISSION);
                     timer = 5;
                 }
                 break;
@@ -137,7 +144,7 @@ public class GameController : MonoSingleton<GameController>
                 timer -= Time.deltaTime;
                 if (timer <= 0)
                 {
-                    playerShip.EnableFire();
+                    playerShip.weaponController.EnableFire();
                     SetGameState(GameState.GAME);
                 }
                 break;
@@ -191,7 +198,7 @@ public class GameController : MonoSingleton<GameController>
         EnemyEscaped = 0;
         Score = 0;
         CoinPicked = 0;
-        difficulty = 1;
+        gameMode.difficulty = 1;
     }
     //=================================================================================
     public void ResetMultiplier()
@@ -269,7 +276,7 @@ public class GameController : MonoSingleton<GameController>
 
         audioService.PlayMusic("Victory", false);
 
-        GetPlayer()?.ExitLevel();
+        //GetPlayer()?.ExitLevel();
 
         yield return new WaitForSeconds(2.0f);
         //TODO GAME OVER

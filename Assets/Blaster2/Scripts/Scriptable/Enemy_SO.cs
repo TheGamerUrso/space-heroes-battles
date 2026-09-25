@@ -6,16 +6,8 @@ using UnityEngine;
 public class Enemy_SO : ScriptableObject
 {
     public float baseHealth;
-
     public float baseSpeed;
     public float baseFireRate;
     public float baseDamage;
-
     public int EnemyValue;
-
-    public HealthBarSettings HealthBarSettings;
-
-    public AudioClip hitSFX;
-
-    public PoolGameObjectType ExplostionEffect;
 }

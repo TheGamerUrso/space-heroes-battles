@@ -6,35 +6,11 @@ using UnityEngine;
 public class BoxerEnemyMovement : BaseBossEnemyMovement
 {
     [Header("Movement")]
-    public bool attacking;
     public GameObject ShipPivot;
-    private float cooldown;
 
-    public override void Movement()
+    public override void Move()
     {
-        if(!shipOwner.GetComponent<BossEnemy>().StartBattle)return;
-        if (!attacking && cooldown > 0)
-        {
-            cooldown -= Time.deltaTime;
-        }
-
-        if (cooldown <= 0)
-        {
-            if (bossDestroyableParts.Length > 0)
-            {
-                List<BossDestroyablePart> newList = bossDestroyableParts.Where(x => x.CurrentHealth > 0).ToList();
-                int rand = UnityEngine.Random.Range(0, newList.Count);
-                if (newList.Count > 0)
-                {
-                    cooldown = UnityEngine.Random.Range(4, 8);
-                    newList[rand].Attack((x) =>
-                    {
-                        attacking = x;
-                    });
-                }
-            }
-        }
-
+        if(!enemy.GetComponent<BossEnemy>().StartBattle)return;
         transform.position = Vector3.Lerp(transform.position, Positions[currentPos], speed * Time.deltaTime);
     }
 }

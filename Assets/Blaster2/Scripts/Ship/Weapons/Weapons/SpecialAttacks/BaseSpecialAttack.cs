@@ -6,17 +6,16 @@ using UnityEngine;
 [Serializable]
 public class BaseSpecialAttack : BaseWeapon
 {
-    [SerializeField] protected PlayerData playerData;
-    [SerializeField] protected PlayerShipData playerShipData;
+    protected PlayerData playerData;
+    protected PlayerShipData playerShipData;
     public bool SpecialActive { get; protected set; } = false;
 
     protected CountDownTimer m_CountDownTimer;
 
-    public override void Start()
+    public void Initialize(Ship ship, PlayerData playerData, PlayerShipData playerShipData)
     {
-        base.Start();
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
+        this.playerData = playerData;
+        this.playerShipData = playerShipData;
     }
 
     public override void Update()
@@ -35,10 +34,8 @@ public class BaseSpecialAttack : BaseWeapon
 
                 }
 
-                if (ship.GetHealthPresentage() <= .5f)
-                {
-                    ship.Heal(.1f);
-                }
+                var damagable = ship.GetComponent<IDamagable>();
+                damagable.Heal(.1f);
 
                 Shoot();
             }
@@ -64,7 +61,7 @@ public class BaseSpecialAttack : BaseWeapon
         {
             SpecialActive = true;
             playerData.SetUsedSuperCount(1);
-            eventService?.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.USE, value = playerData.SuperUsed });
+    
             source.PlayOneShot(weaponData.ShootSFX);
             OnActivateSpecial();
         }
