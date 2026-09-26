@@ -67,10 +67,10 @@ public class PlayerShipData
         level = 1;
         xp = 0;
         xpToLevel = 100;
-
+        Health = player.baseHealth;
         Speed = player.baseSpeed;
-        Damage = player.baseDamage;
         FireRate = player.baseFireRate;
+        Damage = player.baseDamage;
         SuperDamage = (level * player.baseSuperDamage);
         SuperChargeTime = player.baseSpecialCountdown;
         MagnetPower = 0;

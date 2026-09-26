@@ -28,10 +28,13 @@ public class WaveData
     public float Delay = 0.5f;
     public float timer;
     public float spawnCooldownTimer;
-    public int TotalEnemies;
+
+    public int numberOfEnemiesEachWave = 5; // Default baseline
+    public int enemiesSpawnedThisWave;     // Tracks how many have been spawned
+    public int TotalAliveEnemies;           // Tracks active enemies via events
+
     public int availableEnemies;
     public bool HasAsteroids { get; set; }
-    public int numberOfEnemiesEachWave;
     public GameObject UpcomingBossPrefab;
     public GameObject[] BossFights;
     public List<PoolGameObjectType> enemyElements;
@@ -67,9 +70,7 @@ public class WaveManager : MonoBehaviour
         shortDelay = new WaitForSeconds(waveData.Delay);
         CooldownTimer = new WaitForSeconds(waveData.Cooldown);
 
-        waveData.numberOfEnemiesEachWave = waveData.numberOfEnemiesEachWave * waveData.Wave;
         waveData.Wave = 0;
-
 
         eventService.Subscribe<EnemyDiedEvent>(OnEnemyDiedHandled);
         eventService.Subscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
@@ -115,23 +116,25 @@ public class WaveManager : MonoBehaviour
                 waveData.timer -= Time.deltaTime;
                 if (waveData.timer <= 0f)
                 {
-                    if (waveData.TotalEnemies >  waveData.numberOfEnemiesEachWave)
+                    if (waveData.enemiesSpawnedThisWave >= waveData.numberOfEnemiesEachWave)
                     {
-                        //currentLoopState = GameplayLoopState.WaitingForEnemiesToClear;
+                        currentLoopState = GameplayLoopState.WaitingForEnemiesToClear;
                         return;
                     }
 
                     var random = UnityEngine.Random.Range(0, SpawnPoints.Count);
                     enemGO = SpawnPoints[random].SpawnEnemyElement(waveData.availableEnemies);
-                    waveData.TotalEnemies++;
+
+                    waveData.enemiesSpawnedThisWave++;
+                    waveData.TotalAliveEnemies++; // Track active count for clearance
                     waveData.timer = waveData.Cooldown;
                 }
                 break;
             case GameplayLoopState.WaitingForEnemiesToClear:
-                if (waveData.TotalEnemies <= 0)
+                if (waveData.TotalAliveEnemies <= 0)
                 {
-                    waveData.TotalEnemies = 0;
-                    waveData.timer = waveData.Cooldown; 
+                    waveData.TotalAliveEnemies = 0;
+                    waveData.timer = waveData.Cooldown;
                     if (waveData.Wave >= 10)
                     {
                         guiManager.BossWarning();
@@ -148,7 +151,7 @@ public class WaveManager : MonoBehaviour
                 waveData.timer -= Time.deltaTime;
                 if (waveData.timer <= 0f)
                 {
-                    if (gameController.GetPlayer().Health > 0)
+                    if (gameController.GetPlayer().stats.Health > 0)
                     {
                         if (waveData.HasBoss)
                         {
@@ -156,7 +159,7 @@ public class WaveManager : MonoBehaviour
 
                             currentBoss = waveData.BossFights[UnityEngine.Random.Range(0, waveData.BossFights.Length)];
                             SpawnBoss(currentBoss, waveData.Difficulty);
-                            waveData.TotalEnemies = 1;
+                            waveData.enemiesSpawnedThisWave = 1;
 
                             currentLoopState = GameplayLoopState.BossBattleActive;
                         }
@@ -210,8 +213,10 @@ public class WaveManager : MonoBehaviour
     public void NewWave()
     {
         waveData.HasBoss = false;
-        waveData.TotalEnemies = 0;
+        waveData.enemiesSpawnedThisWave = 0; // Reset spawn counter per wave
+        waveData.TotalAliveEnemies = 0;
         waveData.Wave++;
+
         if (waveData.Wave > 0 && waveData.Wave % 4 == 0)
         {
             waveData.availableEnemies++;
@@ -220,13 +225,13 @@ public class WaveManager : MonoBehaviour
             {
                 waveData.availableEnemies = waveData.enemyElements.Count;
             }
-
         }
 
         if (waveData.Wave > 0 && waveData.Wave % 2 == 0)
         {
             waveData.HasBoss = true;
         }
+        eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.SURVIVE, value = waveData.Wave });
     }
     //=================================================================================
     public BossEnemy SpawnBoss(GameObject BossPrefab, int difficulty = 1)
@@ -256,11 +261,21 @@ public class WaveManager : MonoBehaviour
     //=================================================================================
     public virtual void OnEnemyDiedHandled(EnemyDiedEvent enemyDied)
     {
-        waveData.TotalEnemies--;
+        waveData.TotalAliveEnemies--;
+        playerData.EnemyKilled++;
+        if (enemyDied.WasBoss)
+        {
+            eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.KILL, value = playerData.EnemyKilled });
+        }
+        else
+        {
+            eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.BOUNTY, value = 1 });
+        }
     }
     //=================================================================================
     public void OnEnemyEscapedCallback(EnemyEscapedEvent enemyEscaped)
     {
-        waveData.TotalEnemies--;
+        playerData.EnemyEscaped++;
+        waveData.TotalAliveEnemies--;
     }
 }

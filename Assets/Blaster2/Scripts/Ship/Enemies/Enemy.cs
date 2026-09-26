@@ -1,12 +1,12 @@
 using System;
-using System.Collections;
+
 using TheGamerUrso.Core;
-using UnityEditor.MPE;
 using UnityEngine;
+
 
 public enum EnemyState
 {
-    None,Idle,Enter,Combat,Hit,Escape,Death
+    None, Idle, Enter, Combat, Escape, Death
 }
 
 public class Enemy : Ship, ITargetable
@@ -30,7 +30,8 @@ public class Enemy : Ship, ITargetable
     public PoolGameObjectType GameObjectType { get; set; }
     protected IDataService dataService;
     protected IEventService eventService;
-    private float delaytEntry = 2;
+    private float delaytEntry = 1f;
+    [SerializeField] protected PoolGameObjectType explostionEffect;
 
     public virtual void Awake()
     {
@@ -56,7 +57,7 @@ public class Enemy : Ship, ITargetable
                 OnEnemyEntered?.Invoke(this);
                 enemyState = EnemyState.Enter;
                 break;
-            case EnemyState.Enter:              
+            case EnemyState.Enter:
                 delaytEntry -= Time.deltaTime;
                 if (delaytEntry <= 0)
                 {
@@ -68,14 +69,11 @@ public class Enemy : Ship, ITargetable
                 break;
             case EnemyState.Combat:
                 break;
-            case EnemyState.Hit:
-                break;
             case EnemyState.Escape:
-                OnEnemyEscaped?.Invoke(this);
-                gameObject.SetActive(false);
+                SetState(EnemyState.Idle);
                 break;
             case EnemyState.Death:
-                gameObject.SetActive(false);
+                SetState(EnemyState.Idle);
                 break;
         }
     }
@@ -84,19 +82,62 @@ public class Enemy : Ship, ITargetable
     {
         this.enemyState = enemyState;
     }
-    
+
     public void OnTriggerEnter(Collider other)
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             var ship = other.GetComponent<IDamagable>();
-            ship.TakeDamage(Health / 2);
-            healthComponent.TakeDamage(Health / 2);
+            ship.TakeDamage(stats.Health / 2);
+            healthComponent.TakeDamage(stats.Health / 2);
         }
     }
 
     public void SetStats(int level)
     {
         base.SetStats(level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
+    }
+
+    public override void Exit()
+    {
+    
+        eventService.Publish(new EnemyEscapedEvent()
+        {
+            enemy = this,
+            times = 1,
+            value = EnemyData.EnemyValue
+        });
+
+        SetState(EnemyState.Escape);
+        gameObject.SetActive(false);
+    }
+    public override void Death()
+    {
+        SetState(EnemyState.Death);
+
+        eventService.Publish(new EnemyDiedEvent()
+        {
+            enemy = this,
+            Level = stats.Level,
+            Value = EnemyData.EnemyValue,
+            WasBoss = false
+        });
+
+        var explostion = PoolManager.Instance.GetObjectFromPool(explostionEffect);
+        explostion.transform.position = transform.position;
+        explostion.SetActive(true);
+
+        eventService.Publish(new ShakeCameraEvent());
+
+        gameObject.SetActive(false);
+    }
+
+    public override void Hit()
+    {
+        eventService.Publish(new EnemyHitEvent()
+        {
+            enemy = this,
+            Hits = 1
+        });
     }
 }

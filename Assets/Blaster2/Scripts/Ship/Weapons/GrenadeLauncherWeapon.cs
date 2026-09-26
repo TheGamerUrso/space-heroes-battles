@@ -16,7 +16,7 @@ public class GrenadeLauncherWeapon : BaseWeapon
         InstansiatedProjectile.SetActive(true);
 
         BaseProjectile enemyProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-        enemyProjectile.SetOwner(this);
+        enemyProjectile.SetDamage(Damage);
         enemyProjectile.SetShootDir(shootDir);
     }
 }

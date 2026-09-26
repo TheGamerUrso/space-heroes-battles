@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TheGamerUrso.Core;
 using UnityEngine;
 
 public class ShakeEffect : MonoBehaviour
@@ -16,6 +17,9 @@ public class ShakeEffect : MonoBehaviour
     public float decreaseFactor = 1.0f;
 
     Vector3 originalPos;
+
+    private IEventService eventService;
+
     void OnEnable()
     {
         originalPos = camTransform.localPosition;
@@ -28,14 +32,24 @@ public class ShakeEffect : MonoBehaviour
             camTransform = GetComponent(typeof(Transform)) as Transform;
         }
     }
-
-    public void StartEffect()
+    private void Start()
     {
-        shakeDuration = .5f;
+        eventService = GameContext.Get<IEventService>();
+        eventService.Subscribe<ShakeCameraEvent>(ShakeCameraEventHandled);
     }
-    public void StartEffect(float duration)
+
+    private void OnDestroy()
+    {     
+        eventService.Unsubscribe<ShakeCameraEvent>(ShakeCameraEventHandled);
+    }
+    public void Shake(float duration = .5f)
     {
         shakeDuration = duration;
+    }
+
+    public void ShakeCameraEventHandled(ShakeCameraEvent payload)
+    {
+        Shake(payload.duration);
     }
 
 

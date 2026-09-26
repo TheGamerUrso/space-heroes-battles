@@ -12,8 +12,12 @@ public class EnemyHealthWidget : BaseHealthUI
 
     protected virtual void Start()
     {
-        enemy.healthComponent.OnDeath += HealthComponent_OnDeath;
         enemy.healthComponent.OnHealthChanged += HealthComponent_OnHealthChangedHandled;
+    }
+
+    private void OnDestroy()
+    {
+        enemy.healthComponent.OnHealthChanged -= HealthComponent_OnHealthChangedHandled;
     }
 
     private void HealthComponent_OnHealthChangedHandled(float currentHealth, float MaxHealth)
@@ -21,14 +25,10 @@ public class EnemyHealthWidget : BaseHealthUI
         UpdateHealthBar(currentHealth, MaxHealth);
     }
 
-    private void HealthComponent_OnDeath()
-    {
-        Hide();
-    }
-
     protected override void UpdateHealthBar(float currentHealth, float maxHealth)
     {
         if (healthComponent == null) return;
+        if (currentHealth <= 1) return;
         Show();
         timer = duration;
         base.UpdateHealthBar(currentHealth, maxHealth);

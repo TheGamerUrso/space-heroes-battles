@@ -15,7 +15,7 @@ public class GameWaveWidget : MonoBehaviour
 
         canvasGroup.alpha = waveManager.waveData.BossBattleInitiated ? 0 : 1;
 
-        WaveText.text = waveManager.waveData.TotalEnemies + "/" + waveManager.waveData.numberOfEnemiesEachWave;
+        WaveText.text = waveManager.waveData.enemiesSpawnedThisWave + "/" + waveManager.waveData.numberOfEnemiesEachWave;
         EnemiesRemaining.text = "" + waveManager.waveData.Wave;
     }
 }

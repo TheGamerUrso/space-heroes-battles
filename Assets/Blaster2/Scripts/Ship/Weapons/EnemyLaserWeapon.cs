@@ -91,7 +91,7 @@ public class EnemyLaserWeapon : MonoBehaviour
                             hitSomething = true;
                             hitEffect.transform.position = hit.point;
                             xHit = hit.point.x;       
-                            damagable.TakeDamage(user.Damage);
+                            damagable.TakeDamage(user.stats.Damage);
                         }
                         hitSomething = false; 
                     }

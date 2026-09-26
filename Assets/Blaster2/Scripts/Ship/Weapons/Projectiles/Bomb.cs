@@ -22,7 +22,7 @@ public class Bomb : EnemyProjectile
         {
             newBullet = Instantiate(m_Prefab, transform.position,Quaternion.Euler(new Vector3(0, Angle * num, 0))) as GameObject;
             newBullet.SetActive(false);
-            newBullet.GetComponent<BaseProjectile>().SetOwner(baseWeapon);
+            newBullet.GetComponent<BaseProjectile>().SetDamage(Damage);
             listOfBullets.Add(newBullet);
             newBullet.name = "#" + Angle * num;
       

@@ -43,7 +43,7 @@ public class ArtilleryWeapon : BaseWeapon
             InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(shootDir);
 
             BaseProjectile baseProjectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-            baseProjectile.SetOwner(this);
+            baseProjectile.SetDamage(Damage);
             baseProjectile.SetShootDir(shootDir);
         }
 

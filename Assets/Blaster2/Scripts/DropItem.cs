@@ -23,7 +23,7 @@ public class DropItem : MonoBehaviour
     [SerializeField] private float shieldDropCooldown = 4;
     [SerializeField] private float healthDropCooldown = 3;
     [SerializeField] private float powerDropCooldown = 1;
-  [SerializeField]private GameController gameController;
+    [SerializeField] private GameController gameController;
 
     private PoolGameObjectType itemTypeToSpawn;
     private PlayerShip playerShip;
@@ -32,7 +32,11 @@ public class DropItem : MonoBehaviour
     private void Start()
     {
         eventService = GameContext.Get<IEventService>();
-        eventService.Subscribe<DropRandomItemEvent>(PickRandomDropItem);
+        eventService.Subscribe<EnemyDiedEvent>(EnemyDiedEventHanded);
+    }
+    private void OnDestroy()
+    {
+        eventService.Unsubscribe<EnemyDiedEvent>(EnemyDiedEventHanded);
     }
 
     private void Update()
@@ -52,15 +56,9 @@ public class DropItem : MonoBehaviour
             healthDropCooldown -= Time.deltaTime;
         }
     }
-
-    private void PickRandomDropItem(DropRandomItemEvent payload)
-    {
-        PickRandomEnemyToSpawn(payload.SpawnPosition);
-    }
-
     private void PickRandomEnemyToSpawn(Transform transform)
     {
-        if(playerShip==null)
+        if (playerShip == null)
             playerShip = gameController.GetPlayer();
 
         if (ListOfDropItems.Count > 0)
@@ -165,11 +163,15 @@ public class DropItem : MonoBehaviour
                 GameObject extraDrop = PoolManager.Instance.GetObjectFromPool(ListOfDropItems[0].DropItemsType);
                 extraDrop.transform.position = transform.position;
                 extraDrop.transform.rotation = Quaternion.identity;
-               
+
                 extraDrop.SetActive(true);
             }
             return;
         }
 
+    }
+    private void EnemyDiedEventHanded(EnemyDiedEvent payload)
+    {
+        PickRandomEnemyToSpawn(payload.enemy.transform);
     }
 }

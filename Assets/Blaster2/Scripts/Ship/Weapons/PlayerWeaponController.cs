@@ -70,10 +70,6 @@ public class PlayerWeaponController : WeaponController
     //=================================================================================
     public void DowngradeWeapon()
     {
-        if (playerShipData.HasArmorUpgrade)
-        {
-            return;
-        }
         CurrentWeapnType--;
         if (CurrentWeapnType <= 0)
         {

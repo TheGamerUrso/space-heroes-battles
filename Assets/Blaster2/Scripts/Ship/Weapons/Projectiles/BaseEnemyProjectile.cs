@@ -4,11 +4,6 @@ using UnityEngine;
 
 public class BaseEnemyProjectile : BaseProjectile
 {
-    public override void SetOwner(BaseWeapon baseWeapon)
-    {
-        this.baseWeapon = baseWeapon;
-    }
-
     public override void Movement()
     {
         Vector3 newPos = transform.position;

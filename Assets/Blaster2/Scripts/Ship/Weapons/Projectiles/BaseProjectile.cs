@@ -5,15 +5,9 @@ using UnityEngine;
 
 public abstract class BaseProjectile : MonoBehaviour
 {
-    protected BaseWeapon baseWeapon;
     protected Rigidbody rigid;
     protected Vector3 shootDir;
-
-    public float Damage
-    {
-        get { return baseWeapon.Damage; }
-    }
-
+    public float Damage;
     [SerializeField] protected float speed;
     [SerializeField] protected PoolGameObjectType ExplosionPrefab;
 
@@ -41,11 +35,11 @@ public abstract class BaseProjectile : MonoBehaviour
     }
 
     private void Start() => OnStart();
-
-    public virtual void SetOwner(BaseWeapon baseWeapon)
+    public virtual void SetDamage(float dmg)
     {
-        this.baseWeapon = baseWeapon;
+        this.Damage = dmg;
     }
+
     public virtual void OnStart() { }
     private void LateUpdate() => Movement();
 

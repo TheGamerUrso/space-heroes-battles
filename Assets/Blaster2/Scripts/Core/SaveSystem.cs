@@ -45,7 +45,7 @@ public static class SaveSystem
         }
     }
 
-    public static void LoadGame()
+    public static PlayerData LoadGame()
     {
         var dataService = GameContext.Get<IDataService>();
         PlayerData playerData;
@@ -56,11 +56,12 @@ public static class SaveSystem
         {
             BinaryFormatter formatter = new BinaryFormatter();
             playerData = (PlayerData)formatter.Deserialize(file);
-            dataService.ReplacePlayerData(playerData);
+            return playerData;
         }
         catch (SerializationException e)
         {
             Debug.LogError("There was an issue serializing this data:  " + e.Message);
+            return null;
         }
         finally
         {

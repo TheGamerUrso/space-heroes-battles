@@ -6,5 +6,4 @@ public class EnemyDiedEvent
     public int Level;
     public int Value;
     public bool WasBoss;
-    public int EnemyKilled;
 }

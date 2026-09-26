@@ -42,7 +42,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2646400951740711296}
   - component: {fileID: 8132643417449901915}
-  - component: {fileID: 842377148}
+  - component: {fileID: 2410849341381721651}
   m_Layer: 0
   m_Name: DefaultBossWeapon
   m_TagString: Untagged
@@ -167,7 +167,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &842377148
+--- !u!114 &2410849341381721651
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,22 +176,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2644192601680030190}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 124afc7764702d14389b1fd294845f1f, type: 3}
+  m_Script: {fileID: 11500000, guid: cf5971c9f8272ca4fbfe3e5eec420ffb, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyBossWeapon
   weaponData: {fileID: 11400000, guid: 7d9e38a6896440242a1fe408eff79197, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 8132643417449901915}
-  particleSFX:
-  - {fileID: 3384862960698801086}
-  Cannons:
-  - {fileID: 4430734665262430505}
-  - {fileID: 5106325535838727852}
-  - {fileID: 5833817262073858129}
-  - {fileID: 1955023607633960443}
-  - {fileID: 7731028025891013345}
+  Cannons: []
+  particleSFX: []
 --- !u!1 &2644199366097884140
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,16 +472,18 @@ MonoBehaviour:
   healthComponent: {fileID: 6844363414370466783}
   weaponController: {fileID: 9038540809281327723}
   movementController: {fileID: 117258650432476582}
-  Level: 1
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  Health: 0
+  stats:
+    Level: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    Health: 0
+  HasShield: 0
+  ShieldEffect: {fileID: 0}
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
-  enemyElement:
-    Name: 
-    gameObjectType: 0
+  explostionEffect: 0
+  DestroyableParts: []
   Phase: 0
 --- !u!114 &117258650432476582
 MonoBehaviour:
@@ -512,7 +505,6 @@ MonoBehaviour:
   - {x: 0, y: 0, z: 80}
   currentPos: 0
   changePositionTimer: 0
-  bossDestroyableParts: []
   speedByPhase: 2
 --- !u!114 &6844363414370466783
 MonoBehaviour:
@@ -527,14 +519,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   ship: {fileID: 270614816652615922}
-  healthUI: {fileID: 1193926553089221940}
   currentHealth: 0
   maxHealth: 0
   ShieldEffect: {fileID: 8019238402802615437}
   audioSource: {fileID: 4762092534207713788}
   hitSFX: {fileID: 8300000, guid: ec94d567e75cef945b3159eba24780c3, type: 3}
   boxCollider: {fileID: 6694352324657633754}
-  explostionEffect: 0
 --- !u!114 &9038540809281327723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -548,7 +538,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: '::'
   Weapons:
-  - {fileID: 842377148}
+  - {fileID: 0}
   delayAttak: 3
 --- !u!1 &2651163239107571298
 GameObject:
@@ -1035,10 +1025,6 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
-      propertyPath: baseWeapon
-      value: 
-      objectReference: {fileID: 842377148}
-    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 1109897118374461629, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
@@ -1312,10 +1298,6 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
-      propertyPath: baseWeapon
-      value: 
-      objectReference: {fileID: 842377148}
-    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 1109897118374461629, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
@@ -1403,17 +1385,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6247942485104050282, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
   m_PrefabInstance: {fileID: 5166960347490343432}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &3384862960698801086 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7587942922396688822, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
-  m_PrefabInstance: {fileID: 5166960347490343432}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 536415a8dbe428d4285ddb4634202dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!199 &7643494567813977842 stripped
 ParticleSystemRenderer:
   m_CorrespondingSourceObject: {fileID: 3289772602664340730, guid: de8ced3c47dd2904eb769194018fa913, type: 3}
@@ -1561,10 +1532,6 @@ PrefabInstance:
       propertyPath: speed
       value: 1.5
       objectReference: {fileID: 0}
-    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
-      propertyPath: baseWeapon
-      value: 
-      objectReference: {fileID: 842377148}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: weaponScript
       value: 
@@ -1924,10 +1891,6 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
-      propertyPath: baseWeapon
-      value: 
-      objectReference: {fileID: 842377148}
-    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 1109897118374461629, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
@@ -2015,10 +1978,6 @@ PrefabInstance:
       value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
-      propertyPath: baseWeapon
-      value: 
-      objectReference: {fileID: 842377148}
-    - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: weaponScript
       value: 
       objectReference: {fileID: 1109897118374461629, guid: b1e86a46e28d68d4691941a3da9f0c49, type: 3}
@@ -2089,17 +2048,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
---- !u!114 &1193926553089221940 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7233618025502483046, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
-  m_PrefabInstance: {fileID: 8427172352541460306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3cf49cc4b7c2fa74dafb0efaaeb1c5b0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1193926553089221941 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}

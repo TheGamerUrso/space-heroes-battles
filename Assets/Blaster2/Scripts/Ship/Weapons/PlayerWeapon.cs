@@ -19,10 +19,8 @@ public class PlayerWeapon : BaseWeapon
             float prevPitch = source.pitch;
             source.pitch = UnityEngine.Random.Range(minRange, maxRange);
 
-            if (source.isPlaying == false)
-            {
-                source.Play();
-            }
+            source.clip = weaponData.ShootSFX;
+            source.Play();
 
             for (int i = 0; i < Cannons.Length; i++)
             {
@@ -34,7 +32,7 @@ public class PlayerWeapon : BaseWeapon
                 InstansiatedProjectile.transform.position = Cannons[i].position;
 
                 BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-                projectile.SetOwner(this);
+                projectile.SetDamage(Damage);
                 projectile.SetShootDir(shootDir);
             }         
 

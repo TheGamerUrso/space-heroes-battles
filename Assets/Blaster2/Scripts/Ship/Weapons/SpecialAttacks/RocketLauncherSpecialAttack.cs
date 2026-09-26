@@ -27,7 +27,7 @@ public class RocketLauncherSpecialAttack : BaseSpecialAttack
                 InstansiatedProjectile.SetActive(true);
 
                 BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-                projectile.SetOwner(this);
+                projectile.SetDamage(Damage);
                 projectile.SetShootDir(shootDir);
             }
         }

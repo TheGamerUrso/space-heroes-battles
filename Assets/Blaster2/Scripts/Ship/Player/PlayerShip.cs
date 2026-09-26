@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using TheGamerUrso.Core;
+using UnityEditor.Build.Reporting;
 using UnityEngine;
 
 public enum PlayerStateEnum
@@ -14,31 +15,27 @@ public class PlayerShip : Ship
     [SerializeField] private ParticleSystem ItemCollectedEffect;
     [Space()]
     public Player_SO playerStats;
-
-    private PlayerData playerData;
-    private PlayerShipData playerShipData;
     public bool HasArmorUprade { get; private set; }
     public bool CanUsePowerUpItem { get; private set; }
-    private IDataService dataService;
 
     float waitEntry = 2;
     float waitExit = 2;
 
+    [SerializeField] private float SuperChargeTime;
+    [SerializeField] private float SuperDamage;
+    [SerializeField] private float MagnetPower;
+    [SerializeField] private float MagnetDistance;
+
     //=================================================================================
     public void Start()
     {
-        dataService = GameContext.Get<IDataService>();
-
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-
-        SetStats(playerShipData.level,playerShipData.Health,playerShipData.Speed,playerShipData.Damage,playerShipData.FireRate);
-        healthComponent.Setup(100, playerShipData.HasShield);
-
         healthComponent.OnHealthChanged += OnHealthValueChanged;
-        ((PlayerWeaponController)weaponController).Setup(this, Damage, FireRate);
     }
-
+    //=================================================================================
+    private void OnDestroy()
+    {
+        healthComponent.OnHealthChanged -= OnHealthValueChanged;
+    }
     //=================================================================================
     public void Update()
     {
@@ -64,6 +61,23 @@ public class PlayerShip : Ship
                 break;
         }
     }
+    //=================================================================================
+    public void Setup(PlayerData playerData, PlayerShipData playerShipData)
+    {
+        SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate);
+        healthComponent.Setup(playerStats.baseHealth, playerShipData.HasShield);
+        ((PlayerWeaponController)weaponController).Setup(this, stats.Damage, stats.FireRate);
+        HasArmorUprade = playerShipData.HasArmorUpgrade;
+        SetStats(playerShipData.level,
+            playerShipData.Health,
+            playerShipData.Speed,
+            playerShipData.Damage,
+            playerShipData.FireRate,
+            playerShipData.GetCalculatedUpgradeStats(),
+            playerShipData.SuperDamage,
+            playerShipData.SuperChargeTime);
+    }
+    //=================================================================================
     public void ActiveSpecial()
     {
         ((PlayerWeaponController)weaponController).ActivateSpecial();
@@ -74,19 +88,9 @@ public class PlayerShip : Ship
         ((PlayerWeaponController)weaponController).UpgradeWeapon();
     }
     //=================================================================================
-    public void ActiveShield()
-    {
-        healthComponent.ActiveShield();
-    }
-    //=================================================================================
-    public void DeactivateShield()
-    {
-        healthComponent.DeactivateShield();
-    }
-    //=================================================================================
     public void Heal(float amount)
     {
-        healthComponent.Heal(amount * playerShipData.level);
+        healthComponent.Heal(amount * stats.Level);
     }
     //=================================================================================
     private void OnHealthValueChanged(float currentHealth, float maxHealth)
@@ -97,7 +101,7 @@ public class PlayerShip : Ship
             ((PlayerWeaponController)weaponController).DowngradeWeapon();
         }
 
-        playerData.GotHitInGame = true;
+        PlayerPrefs.SetInt("GOT_HIT", 1);
 
         if (healthPresentage < .5f)
         {
@@ -135,29 +139,39 @@ public class PlayerShip : Ship
     //=================================================================================
     public override void SetStats(int level, float baseHealth, float baseSpeed, float baseDamage, float baseFireRate)
     {
-        Level = Mathf.Clamp(level, 1, 10);
-        
+        stats.Level = Mathf.Clamp(level, 1, 10);     
 
-        var health = level * playerStats.baseHealth;
-        float[] UpgradeStats = playerShipData.GetCalculatedUpgradeStats();
-        playerShipData.Health = level * playerStats.baseHealth;
-        playerShipData.Speed = playerStats.baseSpeed + UpgradeStats[(int)UpgradeTypeEnum.Speed];
-        playerShipData.Damage = (level * playerStats.baseDamage) + UpgradeStats[(int)UpgradeTypeEnum.Damage];
-        playerShipData.FireRate = playerStats.baseFireRate - UpgradeStats[(int)UpgradeTypeEnum.FireRate];
-        playerShipData.SuperDamage = (level * playerStats.baseSuperDamage) + UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
-        playerShipData.SuperChargeTime = playerStats.baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
-        playerShipData.MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
-        playerShipData.MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
+        var health = level * baseHealth;
+        stats.Health = baseHealth;
+        stats.Speed = baseSpeed;
+        stats.Damage = baseDamage;
+        stats.FireRate = baseFireRate;
+          
+        healthComponent.Setup(stats.Health, false);
+        weaponController.Setup(this, stats.Damage, stats.FireRate);
+        movementController.SetSpeed(stats.Speed);
+    }
+    //=================================================================================
+    public void SetStats(int level, 
+        float baseHealth,
+        float baseSpeed,
+        float baseDamage,
+        float baseFireRate,
+        float[] UpgradeStats,
+        float baseSuperDamage,
+        float baseSpecialCountdown)
+    {
+      
+
+        var Health = level * baseHealth;
+        var Speed = baseSpeed + UpgradeStats[(int)UpgradeTypeEnum.Speed];
+        var Damage = (level * baseDamage) + UpgradeStats[(int)UpgradeTypeEnum.Damage];
+        var FireRate = baseFireRate - UpgradeStats[(int)UpgradeTypeEnum.FireRate];
+        SuperDamage = (level * baseSuperDamage) + UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
+        SuperChargeTime = baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
+        MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
+        MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
         HasArmorUprade = UpgradeStats[(int)UpgradeTypeEnum.ArmorUpgrade] == 1 ? true : false;
-
-        Health = playerShipData.Health;
-        Speed = playerShipData.Speed;
-        Damage = playerShipData.Damage;
-        FireRate = playerShipData.FireRate;
-
-       
-        healthComponent.Setup(Health, false);
-        weaponController.Setup(this,Damage, FireRate);
-        movementController.SetSpeed(Speed);
+        SetStats(level, Health, Speed, Damage, FireRate);
     }
 }

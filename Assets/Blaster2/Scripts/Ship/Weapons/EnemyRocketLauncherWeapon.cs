@@ -41,7 +41,7 @@ public class EnemyRocketLauncherWeapon : EnemyWeapon
                 InstansiatedProjectile.transform.rotation = Quaternion.LookRotation(weaponData.FollowTarget ? playerLastLocation : shootDir);
 
                 BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
-                projectile.SetOwner(this);
+                projectile.SetDamage(Damage);
                 projectile.SetShootDir(shootDir);
 
                 if (weaponData.FollowTarget)

@@ -83,6 +83,9 @@ public class GameController : MonoBehaviour
         eventService.Subscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
         eventService.Subscribe<EnemyHitEvent>(OnEnemyHitHandled);
 
+
+        audioService.PlayMusicById("Track1");
+
     }
     private void OnDestroy()
     {

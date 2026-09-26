@@ -48,7 +48,7 @@ public class PlayerController : BaseMovementController
         targetPos = transform.position;
         plane = new Plane(Vector3.up, transform.position);
     }
-
+    //=================================================================================
     public void Start()
     {
         dataService = GameContext.Get<IDataService>();
@@ -66,9 +66,10 @@ public class PlayerController : BaseMovementController
         controlScemeEnum = (ControlScemeEnum)playerData.ControlScene;
         playerData.SetSuperMeter(0);
         playerData.SetPowerPackCollected(0);
-
+        playerShip.Setup(playerData,playerShipData);
+        playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate, playerShipData.GetCalculatedUpgradeStats(), playerShipData.SuperDamage, playerShipData.SuperChargeTime);
     }
-
+    //=================================================================================
     public void OnItemPickedUpHandled(ItemPickedUpEvent payload)
     {
         switch (payload.ItemType)
@@ -356,6 +357,6 @@ public class PlayerController : BaseMovementController
     //=================================================================================
     public void OnLevelValueChanged(int Level)
     {
-        playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate);
+        playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate,playerShipData.GetCalculatedUpgradeStats(),playerShipData.SuperDamage,playerShipData.SuperChargeTime);
     }
 }

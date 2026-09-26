@@ -8,32 +8,19 @@ using UnityEngine;
 [DefaultExecutionOrder(-100)]
 public class PersistantData : ServiceComponent<IDataService>, IDataService
 {
-
     public Player_SO[] Players;
-    public Sprite[] achievementIcons;
-
     public PlayerData playerData;
-
     public GameSettings gameSettings;
 
-    private void Start()
+    protected override void Awake()
     {
+        base.Awake();
         Load();
     }
-    public Sprite GetAchievementIcon(int id)
-    {
-        return achievementIcons[id];
-    }
-    
-    public void ReplacePlayerData(PlayerData playerData)
-    {
-        this.playerData = playerData;
-    }
-
 
     public void Load()
     {
-        int firstRunIndex = 0;
+       int firstRunIndex = 0;
 
         if (PlayerPrefs.HasKey("FirstRun"))
         {
@@ -43,7 +30,7 @@ public class PersistantData : ServiceComponent<IDataService>, IDataService
 
         if (firstRunIndex == 1)
         {
-            SaveSystem.LoadGame();
+            playerData = SaveSystem.LoadGame();
 
             new GameSettings(
                   playerData.SFXVolume,

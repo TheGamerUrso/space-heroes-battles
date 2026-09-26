@@ -35,7 +35,7 @@ public abstract class BaseWeapon : MonoBehaviour
     protected Vector3 playerLastLocation;
     public bool AutoAttack { get; set; }
 
-    public virtual void Initialize(Ship ship, float damage, float fireRate)
+    public virtual void Setup(Ship ship, float damage, float fireRate)
     {
         this.ship = ship;
         Cannons = transform.Cast<Transform>().ToArray();

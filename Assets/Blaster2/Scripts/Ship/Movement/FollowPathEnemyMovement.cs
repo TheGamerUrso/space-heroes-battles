@@ -76,7 +76,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
                     }
                     else if (!Reset && !PingPong)
                     {
-                        enemy.SetState(EnemyState.Escape);
+                        enemy.Exit();
                     }
                 }
                 else if (currentPointToFollowIndex == 0)

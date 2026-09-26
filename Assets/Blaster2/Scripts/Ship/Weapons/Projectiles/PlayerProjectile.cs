@@ -4,11 +4,6 @@ public class PlayerProjectile : BaseProjectile
 {
     public Material[] playerMaterials;
 
-    public override void SetOwner(BaseWeapon baseWeapon)
-    {
-        this.baseWeapon = baseWeapon;
-    }
-
     protected override void Awake()
     {
         base.Awake();

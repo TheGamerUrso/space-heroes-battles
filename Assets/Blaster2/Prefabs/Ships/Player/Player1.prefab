@@ -775,7 +775,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  source: {fileID: 1760585662352354424}
+  source: {fileID: 8721001169955994888}
   Cannons:
   - {fileID: 8602735392828204070}
   - {fileID: 7190432885093309369}
@@ -1068,7 +1068,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  source: {fileID: 1760585662352354424}
+  source: {fileID: 3642806382240336595}
   Cannons:
   - {fileID: 8610231724633280806}
   - {fileID: 8602497275260377230}
@@ -1357,7 +1357,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  source: {fileID: 1760585662352354424}
+  source: {fileID: 8624555745301037173}
   Cannons:
   - {fileID: 8602618391404542842}
   - {fileID: 8610106466803293552}
@@ -1696,7 +1696,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  source: {fileID: 1760585662352354424}
+  source: {fileID: 819252803550393628}
   Cannons:
   - {fileID: 8602446000026330386}
   particleSFX:
@@ -1903,14 +1903,21 @@ MonoBehaviour:
   healthComponent: {fileID: 7004320360844401358}
   weaponController: {fileID: 4467026538369342586}
   movementController: {fileID: 8573234729310641582}
-  Level: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  Health: 0
+  stats:
+    Level: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    Health: 0
+  HasShield: 0
+  ShieldEffect: {fileID: 0}
   currentPlayerState: 0
   ItemCollectedEffect: {fileID: 4101952318568694582}
   playerStats: {fileID: 11400000, guid: bc2eaccde9a6f754d8978c255160a044, type: 2}
+  SuperChargeTime: 0
+  SuperDamage: 0
+  MagnetPower: 0
+  MagnetDistance: 0
 --- !u!114 &8573234729310641582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2045,7 +2052,6 @@ MonoBehaviour:
   audioSource: {fileID: 1680336074825548984}
   hitSFX: {fileID: 8300000, guid: c1aba18c60ca2104a962fa852700100e, type: 3}
   boxCollider: {fileID: 8612333302797745696}
-  explostionEffect: 7
 --- !u!114 &4467026538369342586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2066,7 +2072,6 @@ MonoBehaviour:
   - {fileID: 8573466836006806434}
   delayAttak: 3
   playerData:
-    Username: 
     Score: 0
     HighScore: 0
     UnlockedHeroes: 
@@ -2088,7 +2093,7 @@ MonoBehaviour:
     MusicVolume: 0
     AutoAttack: 0
     mute: 0
-    ControlScene: 0
+    ControlScene: 1
     MaxLevel: 0
     ListOfPlayerActiveQuest: []
     playerShipData: []

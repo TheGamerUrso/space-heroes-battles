@@ -7,13 +7,6 @@ public class EnemyProjectile : BaseProjectile
 
     public bool FollowTarget;
 
- 
-
-    public override void SetOwner(BaseWeapon baseWeapon)
-    {
-        this.baseWeapon = baseWeapon;
-    }
-
     public override void Movement()
     {
         Vector3 newPos = transform.position;
