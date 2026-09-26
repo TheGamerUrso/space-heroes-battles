@@ -14,16 +14,6 @@ public class ItemPickupEffect : MonoBehaviour
     public Sprite[] sprites;
     public float speed= 2;
 
-    void OnDestroy()
-    {
-        user.OnItemPickedUp -= Show;
-    }
-
-    void Start()
-    {
-        user.OnItemPickedUp += Show;
-    }
-
     public void Show(int ItemIndex)
    {
         iconImage.sprite = sprites[ItemIndex];

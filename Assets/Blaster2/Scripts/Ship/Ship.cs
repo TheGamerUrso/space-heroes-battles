@@ -32,7 +32,7 @@ public abstract class Ship : MonoBehaviour
         FireRate = baseFireRate;
 
         healthComponent.Setup(Health, false);
-        weaponController.Initialize(this,Damage, FireRate);
+        weaponController.Setup(this,Damage, FireRate);
         movementController.SetSpeed(Speed);
     }
 }

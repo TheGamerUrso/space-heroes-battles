@@ -83,6 +83,7 @@ GameObject:
   - component: {fileID: 7040328620464427082}
   - component: {fileID: 1933283670592502111}
   - component: {fileID: 4151433114667561841}
+  - component: {fileID: 1675226626586306495}
   m_Layer: 15
   m_Name: Enemy1
   m_TagString: Enemy
@@ -344,9 +345,6 @@ MonoBehaviour:
   Health: 0
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: dfc53e26d4cfa3e43bfc020c49e3e568, type: 2}
-  enemyElement:
-    Name: 
-    gameObjectType: 0
 --- !u!114 &7040328620464427082
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -359,7 +357,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e4687ecd9d34220419f712282eba66b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 0
+  speed: 40
   PathIndex: 0100000002000000030000000a0000000b000000i
   Path: []
   PingPong: 0
@@ -402,6 +400,19 @@ MonoBehaviour:
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1338249362927483178}
   explostionEffect: 7
+--- !u!114 &1675226626586306495
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332800252941561598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  healthComponent: {fileID: 4151433114667561841}
 --- !u!1 &1332990982962192780
 GameObject:
   m_ObjectHideFlags: 0

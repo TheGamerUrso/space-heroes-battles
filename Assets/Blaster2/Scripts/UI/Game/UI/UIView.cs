@@ -3,11 +3,12 @@ using UnityEngine;
 
 public class UIView : MonoBehaviour
 {
-    public bool IsVisible { get; private set; }
-    public bool IsActive() {  return IsVisible; }
-    public virtual void Toggle(bool value)
+    public bool IsActive=> panel.activeSelf;
+    [SerializeField] protected GameObject panel;
+
+    public void Toggle(bool value)
     {
-       
+        panel.SetActive(!panel.activeSelf);
     }
 
     public virtual void Show()

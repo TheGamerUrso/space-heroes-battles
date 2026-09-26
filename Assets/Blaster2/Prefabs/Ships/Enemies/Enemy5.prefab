@@ -1,37 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &-2837816846053758736
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5212803518075024719}
-  m_Layer: 0
-  m_Name: EnemyDebug (Missing Prefab)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5212803518075024719
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: -2837816846053758736}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 872509058095942895}
-  m_Father: {fileID: 5615653793628905892}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2567893285886833195
 GameObject:
   m_ObjectHideFlags: 0
@@ -229,41 +197,6 @@ Transform:
   - {fileID: 4583072492958035780}
   m_Father: {fileID: 5615653793628905892}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &6546923916990955624
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 872509058095942895}
-  m_Layer: 0
-  m_Name: Missing Prefab (Dummy)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &872509058095942895
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6546923916990955624}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5212803518075024719}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8081796180073696057
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +209,7 @@ GameObject:
   - component: {fileID: 8325284369811203090}
   - component: {fileID: 4334602396277418716}
   m_Layer: 0
-  m_Name: DoubleShotWeapon
+  m_Name: EnemyWeapon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -310,9 +243,9 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4565465319176861744, guid: 9425bb409cfc98f4a8e71adb82785c85, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 72852030f6044db4cabfb166c0fb5f04, type: 3}
   m_PlayOnAwake: 0
-  m_Volume: 0.7
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -405,18 +338,17 @@ MonoBehaviour:
   m_GameObject: {fileID: 8081796180073696057}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 92832a8a9c83ce643821969d9244417d, type: 3}
+  m_Script: {fileID: 11500000, guid: 89da5e5a2736ddc458ea5dce6adb9ea6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 58117d96f0b961f4285c9632c81231fb, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 8325284369811203090}
+  Cannons:
+  - {fileID: 7051194138027214152}
+  - {fileID: 2446985280527513302}
   particleSFX:
   - {fileID: 487801554469253284}
   - {fileID: 3475780518513040180}
-  Cannons: []
 --- !u!1 &8746143244605377970
 GameObject:
   m_ObjectHideFlags: 0
@@ -434,13 +366,14 @@ GameObject:
   - component: {fileID: 5565946973878039419}
   - component: {fileID: 578425766118879459}
   - component: {fileID: 2325562087495463868}
+  - component: {fileID: 3548144098805582048}
   m_Layer: 15
   m_Name: Enemy5
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &7727412285745401381
 Transform:
   m_ObjectHideFlags: 0
@@ -692,9 +625,6 @@ MonoBehaviour:
   Health: 0
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: 90626a35d5ac4214eb8661c3af477e1a, type: 2}
-  enemyElement:
-    Name: 
-    gameObjectType: 0
 --- !u!114 &5565946973878039419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -729,7 +659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponController
   Weapons:
-  - {fileID: 4334602396277418716}
+  - {fileID: 0}
   delayAttak: 3
 --- !u!114 &2325562087495463868
 MonoBehaviour:
@@ -744,7 +674,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
   ship: {fileID: 2864988915761891569}
-  healthUI: {fileID: 3012594947136423394}
   currentHealth: 0
   maxHealth: 0
   ShieldEffect: {fileID: 3847717439273420311}
@@ -752,6 +681,19 @@ MonoBehaviour:
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1139998693391308860}
   explostionEffect: 7
+--- !u!114 &3548144098805582048
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8746143244605377970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropHandler
+  healthComponent: {fileID: 2325562087495463868}
 --- !u!1 &8897704693328578823
 GameObject:
   m_ObjectHideFlags: 0
@@ -785,7 +727,6 @@ Transform:
   - {fileID: 7041952059570181617}
   - {fileID: 6585367741501296918}
   - {fileID: 352108930195360651}
-  - {fileID: 5212803518075024719}
   m_Father: {fileID: 7727412285745401381}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7447336180215722993
@@ -1045,17 +986,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}
---- !u!114 &3012594947136423394 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7527013535507765830, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}
-  m_PrefabInstance: {fileID: 4736574917997977508}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c39d38ac1fdf2841bf75aded29ed649, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &7004066948632079895 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2344334768231920051, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}
@@ -1358,7 +1288,7 @@ PrefabInstance:
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: baseWeapon
       value: 
-      objectReference: {fileID: 4334602396277418716}
+      objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: weaponScript
       value: 
@@ -1552,7 +1482,7 @@ PrefabInstance:
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: baseWeapon
       value: 
-      objectReference: {fileID: 4334602396277418716}
+      objectReference: {fileID: 0}
     - target: {fileID: 8856724923235355924, guid: d3fc50cdc4c12b049a6126285460a62b, type: 3}
       propertyPath: weaponScript
       value: 

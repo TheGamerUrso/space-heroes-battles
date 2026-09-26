@@ -4,70 +4,49 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public List<EnemyElement> enemyElements;
+    public List<PoolGameObjectType> gameObjectTypeList;
     public int LevelDifficulty;
     public GameObject SpawnEnemyElement(int availableEnemies)
     {
-        if (availableEnemies > enemyElements.Count)
+        if (availableEnemies > gameObjectTypeList.Count)
         {
-            availableEnemies = enemyElements.Count;
+            availableEnemies = gameObjectTypeList.Count;
         }
 
         var spawnPos = transform.position;
         var randEnemyIndex = Random.Range(0, availableEnemies);
-        var enemyElement = enemyElements[randEnemyIndex];
-        var enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
+        var gameObjectType = gameObjectTypeList[randEnemyIndex];
+        var enemGO = PoolManager.Instance.GetObjectFromPool(gameObjectType);
         var enemy = enemGO.GetComponent<Enemy>();
+        enemy.GameObjectType = gameObjectType;
 
         var enemyData = enemy.EnemyData;
         enemy.SetStats(LevelDifficulty, enemyData.baseHealth, enemyData.baseSpeed, enemyData.baseDamage, enemyData.baseFireRate);
  
-        BaseEnemyMovement enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
-        enemGO.transform.position = spawnPos;
-        enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
+        var enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
+        enemyMovement.Setup(spawnPos, Quaternion.LookRotation(Vector3.back));
 
         enemGO.SetActive(true);
-
-        FollowPathEnemyMovement followPathEnemyMovement = enemyMovement.GetComponent<FollowPathEnemyMovement>();
-        if (followPathEnemyMovement)
-        {
-            enemy.enemyElement = enemyElement;
-
-            int pathIndex = followPathEnemyMovement.GeneratePath();
-
-            if (enemyElement.gameObjectType == PoolGameObjectType.Enemy4)
-            {
-                followPathEnemyMovement.PingPong = false;
-                if (pathIndex == 0)
-                {
-                    followPathEnemyMovement.PingPong = true;
-                }
-            }
-        }
         return enemGO;
     }
 
     public GameObject SpawnEnemyElement()
     {
         var spawnPos = transform.position;
-        var randEnemyIndex = Random.Range(0, enemyElements.Count);
-        var enemyElement = enemyElements[randEnemyIndex];
-        var enemGO = PoolManager.Instance.GetObjectFromPool(enemyElement.gameObjectType);
+        var randEnemyIndex = Random.Range(0, gameObjectTypeList.Count);
+        var gameObjectType = gameObjectTypeList[randEnemyIndex];
+        var enemGO = PoolManager.Instance.GetObjectFromPool(gameObjectType);
         var enemy = enemGO.GetComponent<Enemy>();
+        enemy.GameObjectType = gameObjectType;
 
         var enemyData = enemy.EnemyData;
         enemy.SetStats(LevelDifficulty, enemyData.baseHealth, enemyData.baseSpeed, enemyData.baseDamage, enemyData.baseFireRate);
 
 
-        enemGO.transform.position = spawnPos;
-        enemGO.transform.rotation = Quaternion.LookRotation(Vector3.back);
-        enemGO.SetActive(true);
+        BaseEnemyMovement enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
+        enemyMovement.Setup(spawnPos, Quaternion.LookRotation(Vector3.back));
 
-        FollowPathEnemyMovement enemyMovement = enemGO.GetComponent<FollowPathEnemyMovement>();
-        if (enemyMovement)
-        {
-           enemyMovement.Initialize(enemyElement);
-        }
+        enemGO.SetActive(true);
         return enemGO;
     }
 }

@@ -27,7 +27,7 @@ public class Enemy : Ship, ITargetable
         }
     }
 
-    [HideInInspector] public EnemyElement enemyElement;
+    public PoolGameObjectType GameObjectType { get; set; }
     protected IDataService dataService;
     protected IEventService eventService;
     private float delaytEntry = 2;
@@ -42,7 +42,8 @@ public class Enemy : Ship, ITargetable
         eventService = GameContext.Get<IEventService>();
         dataService = GameContext.Get<IDataService>();
         playerData = dataService.GetPlayerData();
- 
+
+        SetState(EnemyState.Idle);
     }
 
     public virtual void Update()
@@ -92,5 +93,10 @@ public class Enemy : Ship, ITargetable
             ship.TakeDamage(Health / 2);
             healthComponent.TakeDamage(Health / 2);
         }
+    }
+
+    public void SetStats(int level)
+    {
+        base.SetStats(level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
     }
 }

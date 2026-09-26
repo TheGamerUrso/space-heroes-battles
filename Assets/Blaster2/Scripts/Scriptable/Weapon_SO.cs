@@ -4,9 +4,11 @@
 public class Weapon_SO : ScriptableObject
 {
     public string Name;
-    public PoolGameObjectType m_Projectile;
+    public PoolGameObjectType ProjectileType;
     public AudioClip ShootSFX;
     public int Radius;
     public int Angle;
-    public float delayBetweenShots;
+    public float DelayBetweenShots;
+    public int Repeat;
+    public bool FollowTarget;
 }

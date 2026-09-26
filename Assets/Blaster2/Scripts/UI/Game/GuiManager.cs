@@ -13,24 +13,25 @@ public class GuiManager : MonoBehaviour
 
     [Header("Menu")]
 
-    [SerializeField] private UIView GameOverScreen;
+    [SerializeField] private UIView GameOverScreenUI;
 
-    [SerializeField] private UIView WinScreen = null;
+    [SerializeField] private UIView WinScreenUI = null;
 
-    [SerializeField] private UIView PauseScreen;
+    [SerializeField] private UIView PauseScreenUI;
 
-    [SerializeField] private RewardWidget rewardWidgetPanel;
+    [SerializeField] private RewardUI rewardWidgetPanel;
 
     [SerializeField] private GameObject pauseButton;
 
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private ScoreMultplierWidget scoreMultplierWidget;
 
-    [SerializeField] private TransmitionWidget transmittionWidget;
+    [SerializeField] private BaseIncomingMessage incomingMessageUI;
+    [SerializeField] private BaseIncomingMessage IncomingBossUI;
     private float timer;
 
     public GameController gameController;
-    public GameMode gameMode;
+    public WaveManager waveManager;
 
     [SerializeField] private PlayerXPUI playerXP;
     [SerializeField] private PlayerPowerCircleUI powerCircleUI;
@@ -56,19 +57,27 @@ public class GuiManager : MonoBehaviour
         powerCircleUI.Setup(playerData, playerData.GetCurrentPlayerShipData());
         lowHealthIndicator.Setup(ship);
         warningSignUI.Setup(ship.gameObject);
+
+        eventService.Subscribe<EnemyDiedEvent>(EnemyDiedHandled);
+    }
+
+
+    public void EnemyDiedHandled(EnemyDiedEvent enemyDied)
+    {
+
     }
 
     public void GameOver()
     {
         ShowPauseMenu(false);
-        GameOverScreen.Show();
+        GameOverScreenUI.Show();
     }
     //=================================================================================
     public void Win()
     {
         ShowPauseMenu(false);
-        WinScreen.Show();
-        WinScreen.GetComponent<WinScreen>().ShowGameResult();
+        WinScreenUI.Show();
+        WinScreenUI.GetComponent<WinScreenUI>().ShowGameResult(gameController.Score);
     }
     //=================================================================================
     private void Update()
@@ -124,13 +133,13 @@ public class GuiManager : MonoBehaviour
     {
         if (value)
         {
-            GameController.Instance.IsSlowMo = false;
-            PauseScreen.Show();
+            gameController.IsSlowMo = false;
+            PauseScreenUI.Show();
         }
         else if (!value)
         {
-            GameController.Instance.IsSlowMo = true;
-            PauseScreen.Hide();
+            gameController.IsSlowMo = true;
+            PauseScreenUI.Hide();
         }
     }
     //=================================================================================
@@ -160,21 +169,19 @@ public class GuiManager : MonoBehaviour
     //=================================================================================
     public void LoadMainMenu()
     {
-        GameController.Instance.IsGameOver = true;
-
         UIView activeMenuGO = null;
 
-        if (WinScreen.IsActive())
+        if (WinScreenUI.IsActive)
         {
-            activeMenuGO = WinScreen;
+            activeMenuGO = WinScreenUI;
         }
-        else if (GameOverScreen.IsActive())
+        else if (GameOverScreenUI.IsActive)
         {
-            activeMenuGO = GameOverScreen;
+            activeMenuGO = GameOverScreenUI;
         }
-        else if (PauseScreen.IsActive())
+        else if (PauseScreenUI.IsActive)
         {
-            activeMenuGO = PauseScreen;
+            activeMenuGO = PauseScreenUI;
         }
 
         if (activeMenuGO != null)
@@ -193,15 +200,18 @@ public class GuiManager : MonoBehaviour
         bool playIntro = true)
     {
         IncomingTransmition = true;
-        if (transmittionWidget)
-            transmittionWidget.RecieveTransmition(transmitions, playIntro, OnIncomingTranmsionEnded);
+        if (incomingMessageUI)
+        {
+            ((IncomingMessageUI)incomingMessageUI).RecieveTransmition(transmitions,
+                playIntro, OnIncomingTranmsionEnded);
+        }
         eventService?.Publish(new IncomingTransmitionEvent());
     }
     //=================================================================================
     public void BossWarning()
     {
         IncomingTransmition = true;
-        transmittionWidget.BossWarning(OnIncomingTranmsionEnded);
+        IncomingBossUI.RecieveTransmition(OnIncomingTranmsionEnded);
     }
     //=================================================================================
     public void OnIncomingTranmsionEnded()

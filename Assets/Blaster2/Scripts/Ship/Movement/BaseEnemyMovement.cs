@@ -27,7 +27,13 @@ public class BaseEnemyMovement : BaseMovementController
         {
             Move();
         }
-    }  
+    }
+    public virtual void Setup(Vector3 spawnPos,Quaternion targetRotaiton)
+    {
+        startingPosition = spawnPos;
+        transform.position = spawnPos;
+        transform.rotation = targetRotaiton;
+    }
 
     public void CheckOutOfSight()
     {

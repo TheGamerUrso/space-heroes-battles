@@ -61,12 +61,6 @@ public class EnemyHealthWidget : BaseHealthUI
                 Hide();
             }
         }
-
-        if(GameController.Instance == null)return;
-        if (GameController.Instance.IsGameOver)
-        {
-            gameObject.SetActive(false);
-        }
     }
 
 }

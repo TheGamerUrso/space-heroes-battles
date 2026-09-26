@@ -112,8 +112,7 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
-        // LevelEnum[] levels ={LevelEnum.Level0,LevelEnum.Level1,LevelEnum.Level2,LevelEnum.Level3,LevelEnum.Level4,LevelEnum.Level5,LevelEnum.Level6,LevelEnum.Level7,LevelEnum.Level8,LevelEnum.Level9};
+        GetComponent<CanvasGroup>().blocksRaycasts = false;    
         LevelEnum[] levels = { LevelEnum.Game };
        SceneLoader.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
 
@@ -154,7 +153,7 @@ public class MainMenuManager : MonoBehaviour
     {
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.m_UIElement.IsVisible && item.ScreenType == ScreenType.Options)
+            if (item.m_UIElement.IsActive && item.ScreenType == ScreenType.Options)
             {
                 return true;
             }
@@ -193,7 +192,7 @@ public class MainMenuManager : MonoBehaviour
                 }
                 else
                 {
-                    if (item.ScreenType == ScreenType.ShipSelect && item.m_UIElement.IsVisible)
+                    if (item.ScreenType == ScreenType.ShipSelect && item.m_UIElement.IsActive)
                     {
                         shipSelect.SelectShip(playerData.CurrrentSelectedShip);
                     }
@@ -210,7 +209,7 @@ public class MainMenuManager : MonoBehaviour
     {
         foreach (UIScreens item in MainMenuScreens)
         {
-            if (item.m_UIElement.IsVisible)
+            if (item.m_UIElement.IsActive)
             {
                 previousScreen = item.ScreenType;
             }
@@ -234,14 +233,14 @@ public class MainMenuManager : MonoBehaviour
             }
             else
             {
-                if (item.m_UIElement.IsVisible)
+                if (item.m_UIElement.IsActive)
                 {
                     if (item.ScreenType != ScreenType.None && item.ScreenType != ScreenType.Options)
                         previousScreen = item.ScreenType;
                 }
 
 
-                if (item.ScreenType != ScreenType.ShipSelect && item.m_UIElement.IsVisible)
+                if (item.ScreenType != ScreenType.ShipSelect && item.m_UIElement.IsActive)
                 {
                     shipSelect.SelectShip(playerData.CurrrentSelectedShip);
                 }

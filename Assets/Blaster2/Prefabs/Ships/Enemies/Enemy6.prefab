@@ -724,6 +724,7 @@ GameObject:
   - component: {fileID: 1845622012966919964}
   - component: {fileID: 5988183306843965744}
   - component: {fileID: 6349163528851259336}
+  - component: {fileID: -6874640987316313369}
   m_Layer: 15
   m_Name: Enemy6
   m_TagString: Enemy
@@ -973,9 +974,6 @@ MonoBehaviour:
   Health: 0
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: b5034ea580a850b42aec6c430cf26469, type: 2}
-  enemyElement:
-    Name: 
-    gameObjectType: 0
 --- !u!114 &1845622012966919964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1025,7 +1023,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
   ship: {fileID: 2453403282377496382}
-  healthUI: {fileID: 3016739282932935170}
   currentHealth: 0
   maxHealth: 0
   ShieldEffect: {fileID: 4283895241739180047}
@@ -1033,6 +1030,19 @@ MonoBehaviour:
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 7324131938950037138}
   explostionEffect: 0
+--- !u!114 &-6874640987316313369
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8246661451200889219}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropHandler
+  healthComponent: {fileID: 6349163528851259336}
 --- !u!1 &8246661451201790819
 GameObject:
   m_ObjectHideFlags: 0
@@ -1079,7 +1089,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 4565465319176861744, guid: 9425bb409cfc98f4a8e71adb82785c85, type: 2}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 0}
+  m_Resource: {fileID: 8300000, guid: 7b6220111bb457c4581edaf6aed462a7, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1178,14 +1188,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: ec35bfd892a602e4abbdc82d0c561d25, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 7682426475027747092}
+  Cannons:
+  - {fileID: 5517608433164193164}
+  - {fileID: 4061578131677947137}
   particleSFX:
   - {fileID: 1684985085546303762}
   - {fileID: 1576112374745010777}
-  Cannons: []
 --- !u!1 &8992550464686980048
 GameObject:
   m_ObjectHideFlags: 0
@@ -1555,17 +1564,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}
---- !u!114 &3016739282932935170 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7527013535507765830, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}
-  m_PrefabInstance: {fileID: 4731258503745794116}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c39d38ac1fdf2841bf75aded29ed649, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &6998609797127848439 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2344334768231920051, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}

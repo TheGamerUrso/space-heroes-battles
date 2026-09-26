@@ -6,27 +6,24 @@ using UnityEngine;
 
 public class CoinUI : MonoBehaviour
 {
-  private PlayerData playerData;
+    [SerializeField] private GameController gameController;
     [SerializeField] private TextMeshProUGUI PlayerCoinText;
     public GameObject panel;
     public float ttl;
 
-    protected IDataService dataService;
 
     private void OnDestroy()
     {
-        if(GameController.Instance!=null)
-        GameController.Instance.OnGameCoinsPickedValueChanged  -= UpdateCoins;
+        if(gameController != null)
+            gameController.OnGameCoinsPickedValueChanged  -= UpdateCoins;
     }
-    public void Awake()
-    {
-        dataService = GameContext.Get<IDataService>();
-    }
+
     private void Start()
     {
-        playerData = dataService.GetPlayerData();
-        GameController.Instance.OnGameCoinsPickedValueChanged += UpdateCoins;
-        UpdateCoins(GameController.Instance.CoinPicked);
+        if (gameController != null)
+            gameController.OnGameCoinsPickedValueChanged += UpdateCoins;
+
+        UpdateCoins(0);
     }
 
     void Update()

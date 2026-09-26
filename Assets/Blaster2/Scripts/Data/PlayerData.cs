@@ -7,7 +7,6 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
-    public string Username;
     public float Score;
     public float HighScore;
     public int[] UnlockedHeroes;

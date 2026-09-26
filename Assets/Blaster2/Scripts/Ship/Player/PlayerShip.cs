@@ -9,14 +9,11 @@ public enum PlayerStateEnum
 }
 public class PlayerShip : Ship
 {
-    public Action<int> OnItemPickedUp;
-
-
     public PlayerStateEnum currentPlayerState = PlayerStateEnum.None;
 
     [SerializeField] private ParticleSystem ItemCollectedEffect;
     [Space()]
-    [SerializeField] private Player_SO playerStats;
+    public Player_SO playerStats;
 
     private PlayerData playerData;
     private PlayerShipData playerShipData;
@@ -27,7 +24,6 @@ public class PlayerShip : Ship
     float waitEntry = 2;
     float waitExit = 2;
 
-
     //=================================================================================
     public void Start()
     {
@@ -37,13 +33,10 @@ public class PlayerShip : Ship
         playerShipData = playerData.GetCurrentPlayerShipData();
 
         SetStats(playerShipData.level,playerShipData.Health,playerShipData.Speed,playerShipData.Damage,playerShipData.FireRate);
-
-
-
         healthComponent.Setup(100, playerShipData.HasShield);
 
         healthComponent.OnHealthChanged += OnHealthValueChanged;
-        ((PlayerWeaponController)weaponController).Initialize(this, Damage, FireRate);
+        ((PlayerWeaponController)weaponController).Setup(this, Damage, FireRate);
     }
 
     //=================================================================================
@@ -51,8 +44,7 @@ public class PlayerShip : Ship
     {
         switch (currentPlayerState)
         {
-            case PlayerStateEnum.None:
-               
+            case PlayerStateEnum.None:               
                 currentPlayerState = PlayerStateEnum.Enter;
                 break;
             case PlayerStateEnum.Enter:
@@ -63,18 +55,12 @@ public class PlayerShip : Ship
                     currentPlayerState = PlayerStateEnum.Combat;
                 }
                 break;
-            case PlayerStateEnum.Combat:
-
-                
-               
+            case PlayerStateEnum.Combat:             
                 break;
-            case PlayerStateEnum.Death:
-
+            case PlayerStateEnum.Death:                
                 break;
             case PlayerStateEnum.Exit:
                 animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
-                break;
-            default:
                 break;
         }
     }
@@ -82,10 +68,25 @@ public class PlayerShip : Ship
     {
         ((PlayerWeaponController)weaponController).ActivateSpecial();
     }
-
+    //=================================================================================
     public void UpgradeWeapon()
     {
         ((PlayerWeaponController)weaponController).UpgradeWeapon();
+    }
+    //=================================================================================
+    public void ActiveShield()
+    {
+        healthComponent.ActiveShield();
+    }
+    //=================================================================================
+    public void DeactivateShield()
+    {
+        healthComponent.DeactivateShield();
+    }
+    //=================================================================================
+    public void Heal(float amount)
+    {
+        healthComponent.Heal(amount * playerShipData.level);
     }
     //=================================================================================
     private void OnHealthValueChanged(float currentHealth, float maxHealth)
@@ -103,7 +104,6 @@ public class PlayerShip : Ship
             audioSource.PlayOneShot(playerStats.alarmSFX);
         }
     }
-
     //=================================================================================
     public void OnTriggerEnter(Collider other)
     {
@@ -157,17 +157,7 @@ public class PlayerShip : Ship
 
        
         healthComponent.Setup(Health, false);
-        weaponController.Initialize(this,Damage, FireRate);
+        weaponController.Setup(this,Damage, FireRate);
         movementController.SetSpeed(Speed);
-    }
-    //=================================================================================
-    public void PowerUpCollected()
-    {
-        if (playerData.PowerPackCollected <= 5 && weaponController.CurrentWeapnType < 4)
-        {
-            playerData.SetPowerPackCollected(2);
-            ((PlayerWeaponController)weaponController).TempFireRateBuff(0.01f * playerData.PowerPackCollected);
-        }
-        OnItemPickedUp?.Invoke(1);
     }
 }

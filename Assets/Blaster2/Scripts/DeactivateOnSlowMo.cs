@@ -6,15 +6,16 @@ public class DeactivateOnSlowMo : MonoBehaviour
 {   
     [SerializeField] private bool m_deactivateOnSlow;
         [SerializeField]private GameObject panel;
+    public GameController gameController;
     void Update()
     {
         if (m_deactivateOnSlow)
         {
-            panel.SetActive(!GameController.Instance.IsSlowMo);
+            panel.SetActive(!gameController.IsSlowMo);
         }
         else
         {
-           panel.SetActive(GameController.Instance.IsSlowMo);
+           panel.SetActive(gameController.IsSlowMo);
         }
     }
 }

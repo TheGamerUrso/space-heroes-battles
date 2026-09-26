@@ -8,12 +8,7 @@ public class SlowMo : MonoBehaviour
     private bool IsActive { get; set; }
     private float delayTheSlowMoEffectTimer = .3f;
     private IAudioService audioService;
-    private GameController gameController;
-
-    private void Awake()
-    {
-        audioService = GameContext.Get<IAudioService>();
-    }
+    [SerializeField] private GameController gameController;
 
     public void DoSlowMo()
     {

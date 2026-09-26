@@ -31,14 +31,17 @@ public class PlayerController : BaseMovementController
     private PlayerShipData playerShipData;
     private PlayerData playerData;
 
+    //Mouse Click
     private int clicktimes;
     private float clicktimer;
     private bool clicked;
-    float clickDelay = .25f;
+    private float clickDelay = .25f;
 
     private IDataService dataService;
     private IEventService eventService;
 
+   [SerializeField]  private WeaponController weaponController;
+    [SerializeField] private ItemPickupEffect itemPickupEffect;
     private void Awake()
     {
         _cam = Camera.main;
@@ -74,16 +77,33 @@ public class PlayerController : BaseMovementController
                 SetWallet((int)payload.Ammount);
                 break;
             case ItemEnum.SHIELD:
-                //playerShip.ActiveShield();
-                playerShip.OnItemPickedUp?.Invoke(0);
+                playerShip.ActiveShield();
+                itemPickupEffect.Show(0);
                 break;
             case ItemEnum.POWERUP:
-                playerShip.PowerUpCollected();
-                playerShip.OnItemPickedUp?.Invoke(1);
+                bool canUseItem = playerShip.playerStats.CanUsePowerUpItem;
+                itemPickupEffect.Show(1);
+                if (canUseItem)
+                {
+                    playerShip.UpgradeWeapon();
+                    playerData.SetPowerPackCollected(2);
+                    if (playerData.PowerPackCollected <= 5 && weaponController.CurrentWeapnType < 4)
+                    {
+                        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+                    }
+                    else
+                    {
+                        playerShip.UpgradeWeapon();
+                    }
+                }
+                else if (!canUseItem)
+                {
+                    playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+                }
                 break;
             case ItemEnum.HEALTH:
-                //playerShip.Heal(((float)payload.Ammount) * playerShipData.level);
-                playerShip.OnItemPickedUp?.Invoke(2);
+                playerShip.healthComponent.Heal(((float)payload.Ammount) * playerShipData.level);
+                itemPickupEffect.Show(2);
                 break;
             case ItemEnum.EMPTY:
                 break;
@@ -115,6 +135,8 @@ public class PlayerController : BaseMovementController
                 transform.Translate(new Vector3((deltaX * Speed * Time.deltaTime), 0, (deltaY * Speed * Time.deltaTime)));
 
                 previousPos = currentPos;
+
+
             }
         #elif UNITY_ANDROID
          if (Input.touchCount > 0 && !IsMouseOverUI())
@@ -142,10 +164,34 @@ public class PlayerController : BaseMovementController
         }
 
 #if UNITY_EDITOR_64
+
+        weaponController.ShouldAttack = Input.GetMouseButton(0);
+
         if (Input.GetMouseButton(0) && !IsMouseOverUI())
         {
             SetTargetPosition(Input.mousePosition);
             MoveToTarget();
+
+            var shouldShoot = false;
+
+#if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
+            shouldShoot = Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1");
+            if (shouldShoot)
+            {
+                weaponController.GetCurrentWeapon().Shoot();
+            }
+#elif UNITY_ANDROID
+        
+        shouldShoot = Input.GetMouseButton(0) || Input.touchCount > 0;
+        holdFire = Input.touchCount > 1 || (Input.GetMouseButton(1) && Input.GetMouseButton(0)) ? true : false;      
+        if (shouldShoot && !holdFire)
+        {  
+                weaponController.GetCurrentWeapon().Shoot();
+        }
+#endif
+
+
+
         }
 #elif UNITY_ANDROID || UNITY_EDITOR_64
             if (controlSceme == ControlSceme.CONTROL1)
@@ -298,7 +344,7 @@ public class PlayerController : BaseMovementController
                 playerShip.ActiveSpecial();
                 break;
             case RewardTypeEnum.POWERUP:
-                playerShip.PowerUpCollected();
+                playerData.SetPowerPackCollected(2);
                 break;
             case RewardTypeEnum.SUPER:
                 float power = playerData.PowerUpLevel + .5f;

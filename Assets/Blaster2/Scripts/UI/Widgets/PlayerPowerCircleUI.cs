@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 public class PlayerPowerCircleUI : MonoBehaviour
 {
-    [SerializeField] private PlayerShip player;
+    private PlayerShip playerShip;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
 
@@ -45,6 +45,7 @@ public class PlayerPowerCircleUI : MonoBehaviour
         PowerUpLevelChanged(0);
         PowerPackCollected(0);
     }
+
     public void Setup(PlayerData playerData,PlayerShipData playerShipData)
     {
         this.playerData = playerData;
@@ -77,6 +78,7 @@ public class PlayerPowerCircleUI : MonoBehaviour
 
         RefreshWeaponIndicatorSprite();
     }
+
     public void PowerPackCollected(int collected)
     {
         RefreshWeaponIndicatorSprite();

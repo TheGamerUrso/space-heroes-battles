@@ -4,6 +4,8 @@ using DG.Tweening;
 
 public class ComboKillIndicator : MonoBehaviour
 {
+    [SerializeField] private GameController gameController;
+
     public readonly string[] congratulations = { "Not Bad", "Nice!", "Good!", "Great!", "Supser","Suberb!", "Perfect!", "Godlike!" };
 
     [SerializeField]private GameObject TextCanvas;
@@ -46,7 +48,7 @@ public class ComboKillIndicator : MonoBehaviour
     {
         perfect++;
 
-        if (GameController.Instance.Multiplier == 0)
+        if (gameController.Multiplier == 0)
         {
             perfect = 0;
         }

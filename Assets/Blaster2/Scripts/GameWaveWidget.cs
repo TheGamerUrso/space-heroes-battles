@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TheGamerUrso.Core;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 public class GameWaveWidget : MonoBehaviour
@@ -9,17 +6,16 @@ public class GameWaveWidget : MonoBehaviour
     public TextMeshProUGUI WaveText;
     public TextMeshProUGUI EnemiesRemaining;
     public CanvasGroup canvasGroup;
-    [SerializeField] protected GameMode gameMode;
+    [SerializeField] protected WaveManager waveManager;
 
 
     void Update()
     {
-        if (gameMode == null) return;
+        if (waveManager == null) return;
 
-        canvasGroup.alpha = gameMode.BossBattleInitiated ? 0 : 1;
+        canvasGroup.alpha = waveManager.waveData.BossBattleInitiated ? 0 : 1;
 
-        WaveText.text = gameMode.TotalAliveEnemies + "/" + gameMode.TotalEnemies;
-        EnemiesRemaining.text = "" + gameMode.waves;
+        WaveText.text = waveManager.waveData.TotalEnemies + "/" + waveManager.waveData.numberOfEnemiesEachWave;
+        EnemiesRemaining.text = "" + waveManager.waveData.Wave;
     }
 }
-    

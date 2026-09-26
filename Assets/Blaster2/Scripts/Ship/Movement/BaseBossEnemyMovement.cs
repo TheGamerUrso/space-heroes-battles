@@ -1,0 +1,33 @@
+using UnityEngine;
+
+public class BaseBossEnemyMovement : BaseEnemyMovement
+{
+    [Header("Movement")]
+    [SerializeField] protected Vector3[] Positions;
+    [SerializeField] protected int currentPos;
+    [SerializeField] protected float changePositionTimer;
+    protected Vector3 targetPosition;
+    protected bool RandomMovement;
+    
+    public void OnDestroy()
+    {
+        enemy.GetComponent<BossEnemy>().OnBossPhaseChanged-=OnBossPhaseChangedHandled;
+    }
+
+    public override void Awake()
+    {
+        base.Awake();
+        targetPosition = transform.position;
+        enemy.GetComponent<BossEnemy>().OnBossPhaseChanged+=OnBossPhaseChangedHandled;
+
+    }
+
+    public override void Move()
+    {
+        transform.position = Vector3.Lerp(transform.position, targetPosition, speed * Time.deltaTime);
+    }
+
+    public virtual void OnBossPhaseChangedHandled(int Phase){}
+}
+
+

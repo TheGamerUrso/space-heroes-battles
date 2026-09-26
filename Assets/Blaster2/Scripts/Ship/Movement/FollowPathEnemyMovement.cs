@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class FollowPathEnemyMovement : BaseEnemyMovement
@@ -31,15 +29,13 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
 
         if (Path.Length > 0)
             transform.position = Path[0].position;
-
     }
-    public void Initialize(EnemyElement newEnemyElement)
-    {
-        var enemyElement = newEnemyElement;
 
+    public override void Setup(Vector3 spawnPos,Quaternion targetRotation)
+    {
         int pathIndex = GeneratePath();
 
-        if (enemyElement.gameObjectType == PoolGameObjectType.Enemy4)
+        if (enemy.GameObjectType == PoolGameObjectType.Enemy4)
         {
             PingPong = false;
             if (pathIndex == 0)
@@ -130,7 +126,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
         }
     }
 
-    public void GeneratePathByIndex(int Index)
+    private void GeneratePathByIndex(int Index)
     {
         curPath = Index;
 
@@ -158,7 +154,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
         transform.position = Path[0].position;
     }
 
-    public int GeneratePath()
+    private int GeneratePath()
     {
         curPath = Random.Range(0, PathIndex.Length);
 
@@ -180,7 +176,8 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
         transform.position = Path[0].position;
         return curPath;
     }
-    public void GeneratePath(Transform[] newPath)
+
+    private void GeneratePath(Transform[] newPath)
     {
         Path = newPath;
     }
