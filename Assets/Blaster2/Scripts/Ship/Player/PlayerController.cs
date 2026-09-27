@@ -40,7 +40,7 @@ public class PlayerController : BaseMovementController
     private IDataService dataService;
     private IEventService eventService;
 
-   [SerializeField]  private WeaponController weaponController;
+    [SerializeField] private WeaponController weaponController;
     [SerializeField] private ItemPickupEffect itemPickupEffect;
     private void Awake()
     {
@@ -65,8 +65,8 @@ public class PlayerController : BaseMovementController
 
         controlScemeEnum = (ControlScemeEnum)playerData.ControlScene;
         playerData.SetSuperMeter(0);
-        playerData.SetPowerPackCollected(0);
-        playerShip.Setup(playerData,playerShipData);
+        playerData.PowerUp(0);
+        playerShip.Setup(playerData, playerShipData);
         playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate, playerShipData.GetCalculatedUpgradeStats(), playerShipData.SuperDamage, playerShipData.SuperChargeTime);
     }
     //=================================================================================
@@ -86,16 +86,15 @@ public class PlayerController : BaseMovementController
                 itemPickupEffect.Show(1);
                 if (canUseItem)
                 {
-                    playerShip.UpgradeWeapon();
-                    playerData.SetPowerPackCollected(2);
-                    if (playerData.PowerPackCollected <= 5 && weaponController.CurrentWeapnType < 4)
+                    if (weaponController.CurrentWeaponIndex < 4)
                     {
-                        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+                        playerData.PowerUp(2);
                     }
                     else
                     {
-                        playerShip.UpgradeWeapon();
+                        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
                     }
+
                 }
                 else if (!canUseItem)
                 {
@@ -124,22 +123,22 @@ public class PlayerController : BaseMovementController
 
     public void OnDragMove()
     {
-        #if UNITY_EDITOR
-            if (Input.GetMouseButton(0))
-            {
-                currentPos = Input.mousePosition;
-                var normlised = (currentPos - previousPos).normalized;
+#if UNITY_EDITOR
+        if (Input.GetMouseButton(0))
+        {
+            currentPos = Input.mousePosition;
+            var normlised = (currentPos - previousPos).normalized;
 
-                deltaX = normlised.x;
-                deltaY = normlised.y;
+            deltaX = normlised.x;
+            deltaY = normlised.y;
 
-                transform.Translate(new Vector3((deltaX * Speed * Time.deltaTime), 0, (deltaY * Speed * Time.deltaTime)));
+            transform.Translate(new Vector3((deltaX * Speed * Time.deltaTime), 0, (deltaY * Speed * Time.deltaTime)));
 
-                previousPos = currentPos;
+            previousPos = currentPos;
 
 
-            }
-        #elif UNITY_ANDROID
+        }
+#elif UNITY_ANDROID
          if (Input.touchCount > 0 && !IsMouseOverUI())
             {
                 if (Input.GetTouch(0).phase == TouchPhase.Moved)
@@ -155,7 +154,7 @@ public class PlayerController : BaseMovementController
                     previousPos = currentPos;
                 }
             }
-            #endif
+#endif
     }
     private void Update()
     {
@@ -268,7 +267,7 @@ public class PlayerController : BaseMovementController
             playerShip.UpgradeWeapon();
         }
     }
-    
+
 
     private void FixedUpdate()
     {
@@ -320,10 +319,8 @@ public class PlayerController : BaseMovementController
     public void SetWallet(int coin)
     {
         playerData.AddCoin(coin);
-        GuiManager.CreateFloatingText("<color=" + "yellow" + "> $ </color>", transform.localPosition);
-        {
-            PlayerPrefs.SetInt("CoinTut", 1);
-        }
+        PlayerPrefs.SetInt("CoinTut", 1);
+        eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {coin} $ </color>", targetPos = transform.localPosition });
     }
 
     public void OnRewardItemHandled(RewardItemEvent payload)
@@ -332,10 +329,12 @@ public class PlayerController : BaseMovementController
         {
             case RewardTypeEnum.Gold:
                 playerData.AddCoin((int)payload.reward);
+                eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {payload.reward} Coin </color>", targetPos = transform.localPosition });
                 break;
             case RewardTypeEnum.XP:
                 var xpReward = Mathf.Clamp((float)payload.reward, 1, playerShipData.xpToLevel);
                 playerData.GetCurrentPlayerShipData().EarnXP(xpReward);
+                eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {xpReward} XP </color>", targetPos = transform.localPosition });
                 break;
             case RewardTypeEnum.HEALTH:
                 var damagable = playerShip.GetComponent<IDamagable>();
@@ -345,7 +344,7 @@ public class PlayerController : BaseMovementController
                 playerShip.ActiveSpecial();
                 break;
             case RewardTypeEnum.POWERUP:
-                playerData.SetPowerPackCollected(2);
+                playerData.PowerUp(2);
                 break;
             case RewardTypeEnum.SUPER:
                 float power = playerData.PowerUpLevel + .5f;
@@ -357,6 +356,6 @@ public class PlayerController : BaseMovementController
     //=================================================================================
     public void OnLevelValueChanged(int Level)
     {
-        playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate,playerShipData.GetCalculatedUpgradeStats(),playerShipData.SuperDamage,playerShipData.SuperChargeTime);
+        playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate, playerShipData.GetCalculatedUpgradeStats(), playerShipData.SuperDamage, playerShipData.SuperChargeTime);
     }
 }

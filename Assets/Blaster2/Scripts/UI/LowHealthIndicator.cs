@@ -21,12 +21,12 @@ public class LowHealthIndicator : MonoBehaviour
     
     private float count;
     private float timer;
-
+    private bool IsCritical;
     private void Start()
     {
         image.gameObject.SetActive(Active);
-
         defaultColor = image.color;
+
     }
 
     public void Setup(PlayerShip ship)
@@ -41,38 +41,38 @@ public class LowHealthIndicator : MonoBehaviour
         var health = playerShip.healthComponent.GetHealthPresentage();
         var IsAlive = playerShip.healthComponent.IsAlive;
 
-        if (health > .5f)
+        IsCritical = health <= .5f;
+
+        if (IsCritical)
         {
-            Active = false;
-            count = 0;
-            timer = 0;
-        }
-        else if (health <= .5f)
-        {
-            Active = true;
             image.color = defaultColor;
             count = 0;
             image.gameObject.SetActive(true);
-        }
 
-        if (Active)
-        {
             Color c = image.color;
             c.a = Mathf.Lerp(c.a, animationCurve.Evaluate(Time.time), 1);
             image.color = c;
-            if (!IsAlive) return;
-            if (!audioSource.isPlaying)
-            {
-                audioSource.Play();
-            }
         }
         else
         {
-            if (!IsAlive) return;
-            if (audioSource.isPlaying)
+            count = 0;
+            timer = 0;
+        }
+
+        if (IsAlive)
+        {
+            if (IsCritical && !audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
+            else if (!IsCritical && audioSource.isPlaying)
             {
                 audioSource.Stop();
             }
+        }
+        else if (!IsAlive)
+        {
+                audioSource.Stop();
         }
     }
 }

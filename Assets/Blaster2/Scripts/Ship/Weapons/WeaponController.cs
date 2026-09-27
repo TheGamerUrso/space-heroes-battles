@@ -8,25 +8,23 @@ public class WeaponController : MonoBehaviour
     [SerializeField] protected float delayAttak = 3;
     protected bool AutoEnableWeapon;
     protected bool CanAttack;
-    protected int currentWeaponActive;
-
-    public int CurrentWeapnType { get; set; }
+    public int CurrentWeaponIndex { get; set; }
     public bool ShouldAttack { get; set; }
 
     public void OnEnable()
     {
-        currentWeaponActive = 1;
+        CurrentWeaponIndex = 1;
     }
 
     protected virtual void Start()
     {
-        currentWeaponActive = 0;
+        CurrentWeaponIndex = 0;
         DisableAllWeapons();
     }
 
     public BaseWeapon GetCurrentWeapon()
     {
-        return Weapons[currentWeaponActive];
+        return Weapons[CurrentWeaponIndex];
     }
     public virtual void Setup(Ship ship, float damage, float fireRate)
     {

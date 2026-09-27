@@ -217,7 +217,7 @@ public class WaveManager : MonoBehaviour
         waveData.TotalAliveEnemies = 0;
         waveData.Wave++;
 
-        if (waveData.Wave > 0 && waveData.Wave % 4 == 0)
+        if (waveData.Wave > 0 && waveData.Wave % 2 == 0)
         {
             waveData.availableEnemies++;
             waveData.Difficulty += 1;

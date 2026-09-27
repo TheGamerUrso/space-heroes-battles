@@ -21,6 +21,7 @@ public enum GameState
 public class GameController : MonoBehaviour
 {
     public event Action<GameState> OnGameStateValueChanged;
+    public event Action<int> OnPlayerKillingStreakValueChanged;
     public Action<int> OnGameCoinsPickedValueChanged;
     public Action<int> OnGameScoreValueChanged;
     public GameState CurrentGameState { get; set; } = GameState.START;
@@ -73,7 +74,6 @@ public class GameController : MonoBehaviour
 
         playerData = dataService.GetPlayerData();
         playerData.SetSuperMeter(0);
-        playerData.ResetWeaponPowerUPCollected();
 
         waveManager.SetLevel(dataService.GetPlayerData().GetCurrentPlayerShipData().level);
 
@@ -83,15 +83,22 @@ public class GameController : MonoBehaviour
         eventService.Subscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
         eventService.Subscribe<EnemyHitEvent>(OnEnemyHitHandled);
 
-
         audioService.PlayMusicById("Track1");
 
     }
+    public void OnPlayerHealthValueChanGed(float currentHealth, float MaxHealth)
+    {
+        Multiplier = 0;
+    }
+
     private void OnDestroy()
     {
-        eventService.Subscribe<EnemyDiedEvent>(OnEnemyDiedHandled);
-        eventService.Subscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
-        eventService.Subscribe<EnemyHitEvent>(OnEnemyHitHandled);
+        eventService.Unsubscribe<EnemyDiedEvent>(OnEnemyDiedHandled);
+        eventService.Unsubscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
+        eventService.Unsubscribe<EnemyHitEvent>(OnEnemyHitHandled);
+
+        if(playerShip!=null)
+            playerShip.healthComponent.OnHealthChanged -= OnPlayerHealthValueChanGed;
 
 
         DOTween.Clear(true);
@@ -117,6 +124,7 @@ public class GameController : MonoBehaviour
                         playerShip = player.GetComponentInChildren<PlayerShip>();
                         playerShip.weaponController.DisableFire();
                         var followPlayer = GameObject.FindAnyObjectByType<PlayerFollow>();
+                        playerShip.healthComponent.OnHealthChanged += OnPlayerHealthValueChanGed;
                         cameraManager.SetTarget(followPlayer != null ? followPlayer.gameObject : null);
                     }
                     timer = 2;
@@ -148,7 +156,6 @@ public class GameController : MonoBehaviour
                 }
                 break;
             case GameState.GAME:
-
                 if(playerShip.healthComponent.CurrentHealth <= 0)
                 {
                     GameOver();
@@ -183,6 +190,7 @@ public class GameController : MonoBehaviour
     //======================================================================================================================================================
     public void GameOver()
     {
+        audioService.PlayMusicById("GameOver");
         SetGameState(GameState.GAMEOVER);
 
         Time.timeScale = 1.0f;
@@ -228,16 +236,16 @@ public class GameController : MonoBehaviour
         }
     }
     //======================================================================================================================================================
-    public void SetScore(int Score)
+    public void SetScore(int enemyValue)
     {
-        var score = Multiplier * Score;
-        Score += score;
+        Score += enemyValue * Multiplier; 
         if (Score >= int.MaxValue)
         {
             Score = int.MaxValue;
         }
-        var ultiplierTextToShow = Multiplier > 1 ? $"{score} + (x {Multiplier} )" : $"{score}";
-        guiManager.SetScoreMultipler(ultiplierTextToShow);
+        var ultiplierTextToShow = Multiplier > 1 ? $"{enemyValue} + (x {Multiplier} )" : $"{enemyValue * Multiplier}";
+        eventService.Publish(new FloatingTextEvent(){Message = ultiplierTextToShow ,targetPos = playerShip.transform.localPosition});
+        OnGameScoreValueChanged?.Invoke(Score);
     }
     //=====================================================================================================================================================
     public void SetCoinPicked(int coinPicked)
@@ -318,6 +326,8 @@ public class GameController : MonoBehaviour
         if (levelDiffrence == 0) levelDiffrence = 1;
         float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
 
+        eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {XPEarned} XP </color>", targetPos = transform.localPosition });
+
         playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
 
         playerData.GetCurrentPlayerShipData().EarnXP(XPEarned);
@@ -327,9 +337,12 @@ public class GameController : MonoBehaviour
         IncreaseMultiplier();
 
         playerData.SetPlayerKillsCounter(1);
+        IncreaseMultiplier();
+        OnPlayerKillingStreakValueChanged?.Invoke(Multiplier);
 
         if (!enemyDied.WasBoss) return;
         playerData.SetBossKilledCount();
+
     }
     //=================================================================================
     public void OnEnemyEscapedCallback(EnemyEscapedEvent enemyEscaped)

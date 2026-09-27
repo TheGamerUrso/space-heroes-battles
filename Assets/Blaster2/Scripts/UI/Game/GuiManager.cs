@@ -5,6 +5,7 @@ using TheGamerUrso.Core;
 using TMPro;
 using UnityEditor.MPE;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 
 public class GuiManager : MonoBehaviour
@@ -40,14 +41,19 @@ public class GuiManager : MonoBehaviour
     [SerializeField] private WarningSignUI warningSignUI;
 
     private IEventService eventService;
+    private IAppService appService;
 
     //=================================================================================
     private void Start()
     {
+        appService = GameContext.Get<IAppService>();
         eventService = GameContext.Get<IEventService>();
         timer = 1;
-
-        UpdateScore(0);
+        eventService.Subscribe<FloatingTextEvent>(CreateFloatingText);
+    }
+    private void OnDestroy()
+    {
+        eventService.Unsubscribe<FloatingTextEvent>(CreateFloatingText);
     }
 
     public void Setup(PlayerShip ship,PlayerData playerData)
@@ -57,25 +63,15 @@ public class GuiManager : MonoBehaviour
         powerCircleUI.Setup(playerData, playerData.GetCurrentPlayerShipData());
         lowHealthIndicator.Setup(ship);
         warningSignUI.Setup(ship.gameObject);
-
-        eventService.Subscribe<EnemyDiedEvent>(EnemyDiedHandled);
-    }
-
-
-    public void EnemyDiedHandled(EnemyDiedEvent enemyDied)
-    {
-
     }
 
     public void GameOver()
     {
-        ShowPauseMenu(false);
         GameOverScreenUI.Show();
     }
     //=================================================================================
     public void Win()
     {
-        ShowPauseMenu(false);
         WinScreenUI.Show();
         WinScreenUI.GetComponent<WinScreenUI>().ShowGameResult(gameController.Score);
     }
@@ -114,52 +110,28 @@ public class GuiManager : MonoBehaviour
         rewardWidgetPanel.Show();
     }
     //=================================================================================
-    public void ReplayButton()
-    {
-     
-    }
-    //=================================================================================
-    public void ResumeButton()
-    {
-
-    }
-    //=================================================================================
     public void PauseButton()
     {
-     
-    }
-    //=================================================================================
-    public void ShowPauseMenu(bool value)
-    {
-        if (value)
+        if (appService.CurrentGameState == TheGamerUrso.Core.GameStateEnum.PAUSED)
         {
+            appService.Unpause();
             gameController.IsSlowMo = false;
             PauseScreenUI.Show();
         }
-        else if (!value)
+        else if (appService.CurrentGameState == TheGamerUrso.Core.GameStateEnum.GAME)
         {
+            appService.Pause();
             gameController.IsSlowMo = true;
             PauseScreenUI.Hide();
         }
     }
     //=================================================================================
-    public void UpdateScore(int score)
-    {
-        string scoreText = string.Format("{00:00000000}", score);
-        ScoreText.text = scoreText;
-    }
-    //=================================================================================
-    public void SetScoreMultipler(string text)
-    {
-      scoreMultplierWidget.SetText(text);
-    }
-    //=================================================================================
-    public static void CreateFloatingText(string text, Vector3 pos)
+    public void CreateFloatingText(FloatingTextEvent payload)
     {
         GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
         m_floatingTextScript.SetActive(true);
 
-        m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(text, pos);
+        m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(payload.Message, payload.targetPos);
     }
     //=================================================================================
     public void QuitGameButton()

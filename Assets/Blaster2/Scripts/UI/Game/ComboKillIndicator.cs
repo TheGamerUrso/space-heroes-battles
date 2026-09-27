@@ -25,6 +25,27 @@ public class ComboKillIndicator : MonoBehaviour
     private void Start()
     {
         HideText();
+        gameController.OnPlayerKillingStreakValueChanged += GameController_OnPlayerKillingStreakValueChanged;
+    }
+
+    private void OnDestroy()
+    {
+        gameController.OnPlayerKillingStreakValueChanged -= GameController_OnPlayerKillingStreakValueChanged;
+    }
+    private void GameController_OnPlayerKillingStreakValueChanged(int multiplier)
+    {
+        perfect++;
+
+        if (multiplier == 0)
+        {
+            perfect = 0;
+        }
+
+        if (timerCooldown <= 0 && TextCanvas.activeInHierarchy == false)
+        {
+            ShowText();
+            GenerateText();
+        }
     }
 
     public void ShowText()
@@ -42,22 +63,6 @@ public class ComboKillIndicator : MonoBehaviour
     public void Animate()
     {
         confratulationText.transform.DOPunchScale(size, duration, vibriate, elasticity).SetEase(ease);
-    }
-
-    public void OnMultiplierChanged()
-    {
-        perfect++;
-
-        if (gameController.Multiplier == 0)
-        {
-            perfect = 0;
-        }
-
-        if (timerCooldown <= 0 && TextCanvas.activeInHierarchy == false)
-        {
-            ShowText();
-            GenerateText();
-        }
     }
 
     public void Update()

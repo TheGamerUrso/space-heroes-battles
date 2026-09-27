@@ -87,9 +87,8 @@ public class Enemy : Ship, ITargetable
     {
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
-            var ship = other.GetComponent<IDamagable>();
-            ship.TakeDamage(stats.Health / 2);
-            healthComponent.TakeDamage(stats.Health / 2);
+            other?.GetComponent<IDamagable>()?.TakeDamage(healthComponent.CurrentHealth);
+            healthComponent?.TakeDamage(healthComponent.CurrentHealth);
         }
     }
 
@@ -100,7 +99,6 @@ public class Enemy : Ship, ITargetable
 
     public override void Exit()
     {
-    
         eventService.Publish(new EnemyEscapedEvent()
         {
             enemy = this,
@@ -128,8 +126,8 @@ public class Enemy : Ship, ITargetable
         explostion.SetActive(true);
 
         eventService.Publish(new ShakeCameraEvent());
-
         gameObject.SetActive(false);
+
     }
 
     public override void Hit()

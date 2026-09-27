@@ -7,7 +7,7 @@ namespace TheGamerUrso.Core
 {
     public enum GameStateEnum
     {
-        PRELOAD, GAME, GAMEOVER, QUITING
+        PRELOAD, GAME, PAUSED, QUITING
     }
 
     [DisallowMultipleComponent]
@@ -34,19 +34,31 @@ namespace TheGamerUrso.Core
             CurrentGameState = nextGameState;
         }
 
-        public void PauseTheGame(bool value)
+        public void Pause()
         {
-            IsPaused = value;
-
-            if (IsPaused)
+            if(CurrentGameState == GameStateEnum.PAUSED)
             {
+                return;
+            }
+
+            if (CurrentGameState == GameStateEnum.GAME)
+            {
+                SetGameState(GameStateEnum.PAUSED);
                 Time.timeScale = 0;
                 Time.fixedDeltaTime = 0;
                 IsPaused = true;
-
             }
-            else
+        }
+        public void Unpause()
+        {
+            if (CurrentGameState == GameStateEnum.GAME)
             {
+                return;
+            }
+
+            if (CurrentGameState == GameStateEnum.PAUSED)
+            {
+                SetGameState(GameStateEnum.GAME);
                 Time.timeScale = 1;
                 Time.fixedDeltaTime = DefaultTimeDeltaScale;
                 IsPaused = false;
@@ -55,12 +67,12 @@ namespace TheGamerUrso.Core
 
         public void LoadMainMenu()
         {
-            throw new System.NotImplementedException();
+            SceneLoader.LoadScene(LevelEnum.Main);
         }
 
         public void ResetLevel()
         {
-            throw new System.NotImplementedException();
+            SceneLoader.RestartLevel();
         }
     }
 }

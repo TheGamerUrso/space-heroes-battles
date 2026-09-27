@@ -11,8 +11,7 @@ public class EnemyMovement : BaseEnemyMovement
     
     public override void Move()
     {
-        movement = (transform.forward * Speed) + (transform.right * (Speed / 2));
-
+        movement = (transform.forward * Speed);
 
         if (UseManeuver)
         {
@@ -31,11 +30,16 @@ public class EnemyMovement : BaseEnemyMovement
             {
                 Direction = -1;
             }
-            movement.x *= Direction;
+            
+            movement += transform.right * (Speed / 2);
         }
 
         transform.position += movement * Time.deltaTime;
-        CheckOutOfSight();
+       
+        if (CheckOutOfSight())
+        {
+            enemy.Exit();
+        }
     }
 
     private void Maneuver()

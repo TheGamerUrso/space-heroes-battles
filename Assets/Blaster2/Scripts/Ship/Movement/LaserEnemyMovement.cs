@@ -31,6 +31,10 @@ public class LaserEnemyMovement : BaseEnemyMovement
         direction = left ? 1 : -1;
         movement = transform.right * (direction) * (Speed / 2);
         transform.position += movement * Time.deltaTime;
-        CheckOutOfSight();
+       
+        if (CheckOutOfSight())
+        {
+            enemy.Exit();
+        }
     }
 }

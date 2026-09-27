@@ -49,7 +49,6 @@ GameObject:
   - component: {fileID: 5419107286356001790}
   - component: {fileID: 4198404169524597015}
   - component: {fileID: 6888718693806367405}
-  - component: {fileID: -2084737601571633590}
   m_Layer: 15
   m_Name: Enemy2
   m_TagString: Enemy
@@ -301,13 +300,17 @@ MonoBehaviour:
   healthComponent: {fileID: 6888718693806367405}
   weaponController: {fileID: 4198404169524597015}
   movementController: {fileID: 5419107286356001790}
-  Level: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  Health: 0
+  stats:
+    Level: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    Health: 0
+  HasShield: 0
+  ShieldEffect: {fileID: 0}
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: 083802b9891d56740b1d537bff6f75a4, type: 2}
+  explostionEffect: 7
 --- !u!114 &5419107286356001790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -356,20 +359,6 @@ MonoBehaviour:
   audioSource: {fileID: -6424459942528458188}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 993}
-  explostionEffect: 0
---- !u!114 &-2084737601571633590
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropHandler
-  healthComponent: {fileID: 6888718693806367405}
 --- !u!1 &554
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,6 +1062,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7527013535507765830, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 5741593070882385480}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

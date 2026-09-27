@@ -26,7 +26,10 @@ public class GameOverUI : UIView
         m_Text.text = string.Format("{00:00000000}", 0); 
         StartCoroutine(ScoreCoroutine());
     }
-
+    private void Start()
+    {
+        appService = GameContext.Get<IAppService>();
+    }
     public void Update()
     {
         if (Input.GetMouseButtonDown(0))

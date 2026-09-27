@@ -63,14 +63,11 @@ public class HealthComponent : MonoBehaviour , IDamagable
         }
 
         audioSource.PlayOneShot(hitSFX);
-        if (dmg >= maxHealth)
-        {
-            dmg = maxHealth - 1;
-        }
 
         if (HasShield == true)
         {
             HasShield = false;
+            ship.DeactivateShield();
             ShieldEffect.SetActive(HasShield);
         }
         else if (HasShield == false)

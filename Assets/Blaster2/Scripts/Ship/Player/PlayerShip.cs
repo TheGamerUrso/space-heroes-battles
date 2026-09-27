@@ -118,13 +118,6 @@ public class PlayerShip : Ship
             if (items.ID == ItemEnum.POWERUP)
                 ItemCollectedEffect.Play();
         }
-
-        if (other.gameObject.tag.Equals(Constants.ENEMYTAG))
-        {
-            var damagable = other.gameObject.GetComponent<IDamagable>();
-            damagable.TakeDamage(damagable.CurrentHealth);
-           healthComponent.TakeDamage(damagable.CurrentHealth);
-        }
     }
     //=================================================================================
 

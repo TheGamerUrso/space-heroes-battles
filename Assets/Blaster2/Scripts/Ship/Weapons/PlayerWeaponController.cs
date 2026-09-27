@@ -38,11 +38,6 @@ public class PlayerWeaponController : WeaponController
         specialAttack.DeactivateSpecial();
     }
     //=================================================================================
-    public GameObject GetCurrentActiveWeapon()
-    {
-        return Weapons[CurrentWeapnType].gameObject;
-    }
-    //=================================================================================
     public BaseSpecialAttack GetSpecialAttack()
     {
         return specialAttack;
@@ -50,7 +45,7 @@ public class PlayerWeaponController : WeaponController
     //=================================================================================
     public void UpdateWeaponStats(float fireRate, float damage = 0)
     {
-        var currenActivetWeapon = GetCurrentActiveWeapon().GetComponent<BaseWeapon>();
+        var currenActivetWeapon = GetCurrentWeapon().GetComponent<BaseWeapon>();
         currenActivetWeapon.FireRate = fireRate;
         if (damage > 0)
             currenActivetWeapon.Damage = damage;
@@ -59,28 +54,28 @@ public class PlayerWeaponController : WeaponController
     public void UpgradeWeapon()
     {
         audioSource.PlayOneShot(powerSFX);
-        CurrentWeapnType++;
+        CurrentWeaponIndex++;
 
-        if (CurrentWeapnType > 4)
+        if (CurrentWeaponIndex > 4)
         {
-            CurrentWeapnType = 4;
+            CurrentWeaponIndex = 4;
         }
-        SwitchWeapon(CurrentWeapnType);
+        SwitchWeapon(CurrentWeaponIndex);
     }
     //=================================================================================
     public void DowngradeWeapon()
     {
-        CurrentWeapnType--;
-        if (CurrentWeapnType <= 0)
+        CurrentWeaponIndex--;
+        if (CurrentWeaponIndex <= 0)
         {
-            CurrentWeapnType = 0;
+            CurrentWeaponIndex = 0;
         }
-        SwitchWeapon(CurrentWeapnType);
+        SwitchWeapon(CurrentWeaponIndex);
     }
     //=================================================================================
     public void ResetWeaponUpgrade()
     {
-        CurrentWeapnType = 0;
-        SwitchWeapon(CurrentWeapnType);
+        CurrentWeaponIndex = 0;
+        SwitchWeapon(CurrentWeaponIndex);
     }
 }

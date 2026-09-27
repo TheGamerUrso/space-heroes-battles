@@ -1839,13 +1839,17 @@ MonoBehaviour:
   healthComponent: {fileID: 6705894964894173310}
   weaponController: {fileID: 7175738625765692132}
   movementController: {fileID: 5723268164745802028}
-  Level: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  Health: 0
+  stats:
+    Level: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    Health: 0
+  HasShield: 0
+  ShieldEffect: {fileID: 0}
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: 92e6cdc7192f9ae4881d59d7a1003463, type: 2}
+  explostionEffect: 7
   rocketeerAnimator: {fileID: 1004535202498848988}
 --- !u!114 &7175738625765692132
 MonoBehaviour:
@@ -1880,7 +1884,6 @@ MonoBehaviour:
   audioSource: {fileID: 5723268164745802030}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 5723268164745802032}
-  explostionEffect: 7
 --- !u!114 &7166766911870247667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1893,7 +1896,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyDropHandler
-  healthComponent: {fileID: 6705894964894173310}
 --- !u!1 &5723268165026355794
 GameObject:
   m_ObjectHideFlags: 0

@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class GameScoreWidget : MonoBehaviour
 {
+    public GameController gameController;
     public TextMeshProUGUI ScoreText;
     private int score = 0;
     private float speed = 0.5f;
@@ -13,6 +14,17 @@ public class GameScoreWidget : MonoBehaviour
     private void OnScoreValueChanged(int Score){
          score = (int)Score;
     }
+    private void Start()
+    {
+        gameController.OnGameScoreValueChanged += OnScoreValueChanged;
+        SetScore(0);
+    }
+
+    private void OnDestroy()
+    {
+        gameController.OnGameScoreValueChanged -= OnScoreValueChanged;
+    }
+
     private void Update()
     {     
         scoreToShow = Mathf.Lerp(scoreToShow, (float)score, speed);
@@ -21,6 +33,7 @@ public class GameScoreWidget : MonoBehaviour
 
     public void SetScore(float score)
     {
-        ScoreText.text = string.Format("{0:00000000}", score); ;
+        string scoreText = string.Format("{00:00000000}", score);
+        ScoreText.text = scoreText;
     }
 }

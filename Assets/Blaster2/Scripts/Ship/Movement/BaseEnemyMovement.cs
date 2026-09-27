@@ -35,11 +35,12 @@ public class BaseEnemyMovement : BaseMovementController
         transform.rotation = targetRotaiton;
     }
 
-    public void CheckOutOfSight()
+    public bool CheckOutOfSight()
     {
         if (transform.position.z < Constants.m_ZMin)
         {
-            gameObject.SetActive(false);
+            return true;
         }
+        return false;
     }
 }

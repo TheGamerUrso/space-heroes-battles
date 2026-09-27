@@ -30,7 +30,7 @@ public class Tutorial : MonoSingleton<Tutorial>
         if (!gameController.IsGameOver)
         {
             var appService = GameContext.Get<IAppService>();
-            appService.PauseTheGame(true);
+            appService.Pause();
             TutorialView.gameObject.SetActive(true);
             for (int i = 0; i < TutorailItemsToShow.Length; i++)
             {
@@ -50,9 +50,9 @@ public class Tutorial : MonoSingleton<Tutorial>
     {
         var appService = GameContext.Get<IAppService>();
         TutorialView.gameObject.SetActive(false);
-        appService.PauseTheGame(false);
+        appService.Unpause();
         Time.timeScale = 1;
-       // gameController.GetPlayer().tempGodMode();
+        gameController.GetPlayer().healthComponent.tempGodMode();
     }
 
 }

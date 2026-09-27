@@ -7,7 +7,8 @@ namespace TheGamerUrso.Core
         public bool IsPaused { get; }
         void LoadMainMenu();
         void ResetLevel();
-        void PauseTheGame(bool value);
+        void Pause();
+        void Unpause();
         void SetGameState(GameStateEnum nextGameState);
     }
 }

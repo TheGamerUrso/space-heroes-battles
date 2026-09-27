@@ -12,11 +12,13 @@ public class EnemyHealthWidget : BaseHealthUI
 
     protected virtual void Start()
     {
-        enemy.healthComponent.OnHealthChanged += HealthComponent_OnHealthChangedHandled;
+        if (enemy != null)
+            enemy.healthComponent.OnHealthChanged += HealthComponent_OnHealthChangedHandled;
     }
 
     private void OnDestroy()
     {
+        if(enemy!=null)
         enemy.healthComponent.OnHealthChanged -= HealthComponent_OnHealthChangedHandled;
     }
 

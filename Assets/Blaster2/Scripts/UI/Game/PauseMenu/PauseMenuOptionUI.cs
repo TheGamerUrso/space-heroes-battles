@@ -16,7 +16,7 @@ public class PauseMenuOptionUI : BaseOptions
     public override void ExitAndSave()
     {
         base.ExitAndSave();
-        appService.PauseTheGame(false);
+        appService.Unpause();
     }
 
     public void Quit()

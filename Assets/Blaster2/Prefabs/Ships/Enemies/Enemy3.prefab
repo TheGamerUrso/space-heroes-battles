@@ -115,7 +115,6 @@ GameObject:
   - component: {fileID: 8638822757699578507}
   - component: {fileID: 1982160887909070040}
   - component: {fileID: 2559236645085551126}
-  - component: {fileID: -1637343090800891074}
   m_Layer: 15
   m_Name: Enemy3
   m_TagString: Enemy
@@ -367,13 +366,17 @@ MonoBehaviour:
   healthComponent: {fileID: 2559236645085551126}
   weaponController: {fileID: 1982160887909070040}
   movementController: {fileID: 8638822757699578507}
-  Level: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  Health: 0
+  stats:
+    Level: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    Health: 0
+  HasShield: 0
+  ShieldEffect: {fileID: 5123420270638370231}
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: 1efe9ab896acc8144bd88510b795658d, type: 2}
+  explostionEffect: 7
 --- !u!114 &8638822757699578507
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -429,20 +432,6 @@ MonoBehaviour:
   audioSource: {fileID: 9150635060109897703}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1338249362927483178}
-  explostionEffect: 7
---- !u!114 &-1637343090800891074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332800252941561598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropHandler
-  healthComponent: {fileID: 2559236645085551126}
 --- !u!1 &2814254901604060151
 GameObject:
   m_ObjectHideFlags: 0
@@ -680,7 +669,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: dc2e9394ed6ca3046b6d28b7d76e384b, type: 2}
   source: {fileID: 3759783846819226875}
-  Cannons: []
+  Cannons:
+  - {fileID: 3793928964460399625}
+  - {fileID: 6254200487674624818}
+  - {fileID: 3058068474411548492}
   particleSFX:
   - {fileID: 3664621009983405295}
   - {fileID: 8291066298646143448}
@@ -837,6 +829,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7527013535507765830, guid: 03b8073a86c50e64983f903ed431f0e8, type: 3}
+      propertyPath: enemy
+      value: 
+      objectReference: {fileID: 5108569732464677299}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

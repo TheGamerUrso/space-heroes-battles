@@ -100,7 +100,7 @@ public class PlayerData
         ControlScene = option;
     }
 //======================================================================================================================================================
-    public void SetPowerPackCollected(int ammount)
+    public void PowerUp(int ammount)
     {
         PowerPackCollected += ammount;
         if (PowerPackCollected > 5)

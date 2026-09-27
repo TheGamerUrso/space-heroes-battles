@@ -366,7 +366,6 @@ GameObject:
   - component: {fileID: 5565946973878039419}
   - component: {fileID: 578425766118879459}
   - component: {fileID: 2325562087495463868}
-  - component: {fileID: 3548144098805582048}
   m_Layer: 15
   m_Name: Enemy5
   m_TagString: Enemy
@@ -618,13 +617,17 @@ MonoBehaviour:
   healthComponent: {fileID: 2325562087495463868}
   weaponController: {fileID: 578425766118879459}
   movementController: {fileID: 5565946973878039419}
-  Level: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  Health: 0
+  stats:
+    Level: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    Health: 0
+  HasShield: 0
+  ShieldEffect: {fileID: 3847717439273420311}
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: 90626a35d5ac4214eb8661c3af477e1a, type: 2}
+  explostionEffect: 7
 --- !u!114 &5565946973878039419
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -659,7 +662,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponController
   Weapons:
-  - {fileID: 0}
+  - {fileID: 4334602396277418716}
   delayAttak: 3
 --- !u!114 &2325562087495463868
 MonoBehaviour:
@@ -680,20 +683,6 @@ MonoBehaviour:
   audioSource: {fileID: 4182043450637214606}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1139998693391308860}
-  explostionEffect: 7
---- !u!114 &3548144098805582048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8746143244605377970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropHandler
-  healthComponent: {fileID: 2325562087495463868}
 --- !u!1 &8897704693328578823
 GameObject:
   m_ObjectHideFlags: 0
@@ -1541,7 +1530,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6401725587664185145, guid: f879758ca74f5d14db1362a409f19936, type: 3}
       propertyPath: m_Name
-      value: EnemyShieldFX
+      value: FX_EnemyShield
       objectReference: {fileID: 0}
     - target: {fileID: 6401725587664185145, guid: f879758ca74f5d14db1362a409f19936, type: 3}
       propertyPath: m_Layer
