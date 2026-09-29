@@ -88,13 +88,22 @@ public class Enemy : Ship, ITargetable
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             other?.GetComponent<IDamagable>()?.TakeDamage(healthComponent.CurrentHealth);
-            healthComponent?.TakeDamage(healthComponent.CurrentHealth);
+            healthComponent?.TakeDamage(healthComponent.CurrentHealth, true);
         }
     }
 
     public void SetStats(int level)
     {
         base.SetStats(level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
+        var rand = UnityEngine.Random.value;
+        if (rand < .2f)
+        {
+            ActiveShield();
+        }
+        else
+        {
+            DeactivateShield();
+        }
     }
 
     public override void Exit()
@@ -137,5 +146,25 @@ public class Enemy : Ship, ITargetable
             enemy = this,
             Hits = 1
         });
+
+        if (HasShield)
+        {
+            ActiveShield();
+        }
+        else
+        {
+            DeactivateShield();
+        }
+    }
+
+
+    [ContextMenu("Debug_Enemy")]
+    public void Debug_SpawnEnemyElement()
+    {
+        BaseEnemyMovement enemyMovement = GetComponent<BaseEnemyMovement>();
+        enemyMovement.Setup(new Vector3(0,0,150), Quaternion.Euler(new Vector3(0,180,0)));
+        SetState(EnemyState.Idle);
+        SetStats(stats.Level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
+        gameObject.SetActive(true);
     }
 }

@@ -18,9 +18,7 @@ public class PlayerWeapon : BaseWeapon
             float maxRange = 1.2f;
             float prevPitch = source.pitch;
             source.pitch = UnityEngine.Random.Range(minRange, maxRange);
-
-            source.clip = weaponData.ShootSFX;
-            source.Play();
+            source.PlayOneShot(weaponData.ShootSFX);
 
             for (int i = 0; i < Cannons.Length; i++)
             {

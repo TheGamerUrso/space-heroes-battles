@@ -15,13 +15,13 @@ public class PlayerController : BaseMovementController
     [SerializeField] private PlayerShip playerShip;
     [SerializeField] private GameObject ShipModel;
 
-    private Vector2 currentPos;
+    private Vector2 currentMousePosition;
     private Vector2 previousPos;
     private Vector3 targetPos;
     private Vector3 targetRotation;
     private Plane plane;
     private Ray ray;
-    private float rotationSpeed;
+   [SerializeField] private float rotationSpeed;
     private float hitPoint;
     private float deltaX;
     private float deltaY;
@@ -92,13 +92,13 @@ public class PlayerController : BaseMovementController
                     }
                     else
                     {
-                        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+                        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
                     }
 
                 }
                 else if (!canUseItem)
                 {
-                    playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+                    playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
                 }
                 break;
             case ItemEnum.HEALTH:
@@ -126,15 +126,15 @@ public class PlayerController : BaseMovementController
 #if UNITY_EDITOR
         if (Input.GetMouseButton(0))
         {
-            currentPos = Input.mousePosition;
-            var normlised = (currentPos - previousPos).normalized;
+            currentMousePosition = Input.mousePosition;
+            var normlised = (currentMousePosition - previousPos).normalized;
 
             deltaX = normlised.x;
             deltaY = normlised.y;
 
             transform.Translate(new Vector3((deltaX * Speed * Time.deltaTime), 0, (deltaY * Speed * Time.deltaTime)));
 
-            previousPos = currentPos;
+            previousPos = currentMousePosition;
 
 
         }
@@ -167,11 +167,22 @@ public class PlayerController : BaseMovementController
 
         weaponController.ShouldAttack = Input.GetMouseButton(0);
 
+        Rotate();
+
         if (Input.GetMouseButton(0) && !IsMouseOverUI())
         {
-            SetTargetPosition(Input.mousePosition);
-            MoveToTarget();
 
+            currentMousePosition = Input.mousePosition;
+            var normlised = (currentMousePosition - previousPos).normalized;
+
+            deltaX = normlised.x;
+            deltaY = normlised.y;
+
+            SetTargetPosition(currentMousePosition);
+            MoveToTarget();
+        
+
+            previousPos = currentMousePosition;
             var shouldShoot = false;
 
 #if UNITY_STANDALONE || UNITY_EDITOR || UNITY_WEBGL
@@ -291,19 +302,17 @@ public class PlayerController : BaseMovementController
 
     public void Rotate()
     {
-        if (ShouldRoate())
-        {
-            rotationSpeed = -deltaX * tilt;
-            rotationSpeed = Mathf.Clamp(rotationSpeed, -35, 35);
-        }
-        else
-        {
-            rotationSpeed = 0;
-        }
+        if (!ShouldRoate()) return;
 
-        targetRotation = ShipModel.transform.localEulerAngles;
-        targetRotation = new Vector3(rotationSpeed, 0, 0);
-        ShipModel.transform.localEulerAngles = targetRotation;
+        // 1. Create the target local rotation based on your tilt calculation
+        Quaternion targetRotation = Quaternion.Euler(0f, 0f, -deltaX * tilt);
+
+        // 2. Smoothly interpolate using localRotation and Quaternion.Slerp
+        ShipModel.transform.localRotation = Quaternion.Slerp(
+            ShipModel.transform.localRotation,
+            targetRotation,
+            rotationSpeed * Time.deltaTime
+        );
     }
 
     private void MoveToTarget() => transform.position = Vector3.MoveTowards(transform.position, targetPos + new Vector3(0, 0, offset), Speed * Time.deltaTime);
@@ -347,7 +356,7 @@ public class PlayerController : BaseMovementController
                 playerData.PowerUp(2);
                 break;
             case RewardTypeEnum.SUPER:
-                float power = playerData.PowerUpLevel + .5f;
+                float power = playerData.ChargePower + .5f;
                 playerData.SetSuperMeter(power);
                 break;
         }

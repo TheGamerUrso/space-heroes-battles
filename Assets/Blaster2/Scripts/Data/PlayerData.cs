@@ -7,6 +7,8 @@ using UnityEngine;
 [Serializable]
 public class PlayerData
 {
+    public Action<float> OnChargePowerValueChanged;
+    public Action<int> OnPowerUpValueChanged;
     public float Score;
     public float HighScore;
     public int[] UnlockedHeroes;
@@ -26,7 +28,7 @@ public class PlayerData
 
     [Header("Stats")]
     [Range(0, 1)]
-    public float PowerUpLevel = 0;
+    public float ChargePower = 0;
     [Range(0, 4)]
     public int PowerPackCollected = 0;
     [Range(0, 2)]
@@ -51,7 +53,7 @@ public class PlayerData
         HighScore = 0;
         Coins = 0;
         Kills = 0;
-        PowerUpLevel = 0;
+        ChargePower = 0;
         CoinSpend = 0;
         WaveSurvived = 0;
         SuperUsed = 0;
@@ -107,15 +109,17 @@ public class PlayerData
         {
             PowerPackCollected = 5;
         }
+        OnPowerUpValueChanged?.Invoke(PowerPackCollected);
     }
 //======================================================================================================================================================
     public void SetSuperMeter(float ammount)
     {
-        PowerUpLevel = ammount;
-        if (PowerUpLevel > 1)
+        ChargePower = ammount;
+        if (ChargePower > 1)
         {
-            PowerUpLevel = 1;
+            ChargePower = 1;
         }
+        OnChargePowerValueChanged?.Invoke(ChargePower);
     }
 //======================================================================================================================================================
     public void SetScore(int score)
@@ -187,7 +191,7 @@ public class PlayerData
     //======================================================================================================================================================
     public float GetPowerUpLevelPresentage()
     {
-        return PowerUpLevel / 1;
+        return ChargePower / 1;
     }
     //======================================================================================================================================================
     public void ResetWeaponPowerUPCollected()

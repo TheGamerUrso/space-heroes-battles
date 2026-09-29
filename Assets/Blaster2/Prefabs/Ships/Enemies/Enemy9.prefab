@@ -80,12 +80,12 @@ GameObject:
   - component: {fileID: 4027941564653448092}
   - component: {fileID: 2225013079835527159}
   - component: {fileID: 1435941801030838864}
-  - component: {fileID: 7040328620464427082}
+  - component: {fileID: 3511873867413036023}
   - component: {fileID: 1933283670592502111}
   - component: {fileID: 4151433114667561841}
   - component: {fileID: 1675226626586306495}
   m_Layer: 15
-  m_Name: Enemy1
+  m_Name: Enemy9
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,8 +99,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1332800252941561598}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -20, y: 0, z: 169.75}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 150}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -337,7 +337,7 @@ MonoBehaviour:
   audioSource: {fileID: 4027941564653448092}
   healthComponent: {fileID: 4151433114667561841}
   weaponController: {fileID: 1933283670592502111}
-  movementController: {fileID: 7040328620464427082}
+  movementController: {fileID: 3511873867413036023}
   stats:
     Level: 0
     Damage: 0
@@ -349,7 +349,7 @@ MonoBehaviour:
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: dfc53e26d4cfa3e43bfc020c49e3e568, type: 2}
   explostionEffect: 7
---- !u!114 &7040328620464427082
+--- !u!114 &3511873867413036023
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -358,36 +358,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1332800252941561598}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e4687ecd9d34220419f712282eba66b2, type: 3}
+  m_Script: {fileID: 11500000, guid: a79f216e93c35704d8a015208200746b, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 40
+  m_EditorClassIdentifier: '::'
+  speed: 0
   enemy: {fileID: 1435941801030838864}
   RotationSpeed: 2
   RotateTowardDir: 1
-  PathIndex: 0100000002000000030000000a0000000b000000i
-  Path:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  PingPong: 0
-  Reset: 0
-  reverse: 0
-  Auto: 1
+  UseManeuver: 0
+  diveSpeedMultiplier: 1.5
+  targetReachedThreshold: 0.5
 --- !u!114 &1933283670592502111
 MonoBehaviour:
   m_ObjectHideFlags: 0

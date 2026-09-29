@@ -52,7 +52,8 @@ public enum PoolGameObjectType
     Enemy7,
     Boss3Artilery,
     BossProjectile1,
-    Enemy8
+    Enemy8,
+    Enemy9
 }
 
 public class PoolManager : MonoSingleton<PoolManager>

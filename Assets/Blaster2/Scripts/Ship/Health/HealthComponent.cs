@@ -55,7 +55,7 @@ public class HealthComponent : MonoBehaviour , IDamagable
         else
             ship.DeactivateShield();
     }
-    public virtual void TakeDamage(float dmg)
+    public virtual void TakeDamage(float dmg,bool IgnoreShield = false)
     {
         if (IsAlive == false)
         {
@@ -64,13 +64,20 @@ public class HealthComponent : MonoBehaviour , IDamagable
 
         audioSource.PlayOneShot(hitSFX);
 
-        if (HasShield == true)
+        bool IsShieldActive = HasShield;
+
+        if (IgnoreShield)
+        {
+            IsShieldActive = false;
+        }
+
+        if (IsShieldActive)
         {
             HasShield = false;
             ship.DeactivateShield();
             ShieldEffect.SetActive(HasShield);
         }
-        else if (HasShield == false)
+        else if (!IsShieldActive)
         {
             if (invisibilityTimer <= 0)
             {

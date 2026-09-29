@@ -8,17 +8,13 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
     private int currentPointToFollowIndex;
     [Space()]
     [SerializeField] public bool PingPong = false;
-    [SerializeField] protected bool RotateTowardDir = false;
     [SerializeField] public bool Reset = false;
-    [SerializeField] protected float RotationSpeed;
-
-    protected Vector3 targetRotation;
+  
 
     [SerializeField] protected bool reverse;
     [SerializeField] protected bool Auto;
 
     private Vector3 newPos;
-    private float step;
     private int curPath;
     private GameObject path;
     protected float pathMagnitude;
@@ -57,73 +53,61 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
 
     public override void Move()
     {
-        if (Path.Length > 0)
+        if (Path == null || Path.Length == 0) return;
+
+        Vector3 targetPos = Path[currentPointToFollowIndex].position;
+        targetPos.y = 0; // Keep movement locked on the 2D plane if needed
+
+        pathMagnitude = Vector3.Distance(transform.position, targetPos);
+
+        if (pathMagnitude < 2f)
         {
-            pathMagnitude = (Path[currentPointToFollowIndex].position - transform.position).magnitude;
-            if (pathMagnitude < 2)
+            if (currentPointToFollowIndex >= Path.Length - 1)
             {
-                if (currentPointToFollowIndex == Path.Length - 1)
+                if (Reset && !PingPong)
                 {
-                    if (Reset && !PingPong)
-                    {
-                        Vector3 startDir = (startingPosition - transform.position).normalized;
-                        transform.position += startDir * speed * Time.deltaTime;
-                        currentPointToFollowIndex = 0;
-                    }
-                    else if (!Reset && PingPong)
-                    {
-                        reverse = true;
-                    }
-                    else if (!Reset && !PingPong)
-                    {
-                        enemy.Exit();
-                    }
+                    currentPointToFollowIndex = 0;
                 }
-                else if (currentPointToFollowIndex == 0)
+                else if (!Reset && PingPong)
                 {
-                    reverse = false;
+                    reverse = true;
                 }
-
-                if (Auto)
+                else if (!Reset && !PingPong)
                 {
-                    if (reverse)
-                    {
-                        currentPointToFollowIndex--;
-                    }
-                    else if (reverse == false)
-                    {
-                        currentPointToFollowIndex++;
-                    }
+                    enemy.Exit();
+                    return;
                 }
             }
-
-            if (currentPointToFollowIndex >= Path.Length)
+            else if (currentPointToFollowIndex <= 0)
             {
-                currentPointToFollowIndex = Path.Length - 1;
+                reverse = false;
             }
 
-            newPos = Path[currentPointToFollowIndex].position;
-
-            newPos.y = 0;
-
-            Path[currentPointToFollowIndex].position = newPos;
-
-
-            Vector3 direction = (newPos - transform.position).normalized;
-            float distance = Vector3.Distance(transform.position, newPos);
-
-            if (distance > 1)
+            if (Auto)
             {
-                transform.position += direction * speed * Time.deltaTime;
-            }
-
-            if (RotateTowardDir)
-            {
-                step = RotationSpeed * Time.deltaTime;
-                targetRotation = Vector3.Lerp(targetRotation, direction, step);
-                transform.rotation = Quaternion.LookRotation(targetRotation, Vector3.up);
+                currentPointToFollowIndex += reverse ? -1 : 1;
             }
         }
+
+        if (currentPointToFollowIndex >= Path.Length)
+        {
+            currentPointToFollowIndex = Path.Length - 1;
+        }
+
+        currentPointToFollowIndex = Mathf.Clamp(currentPointToFollowIndex, 0, Path.Length - 1);
+        targetPos = Path[currentPointToFollowIndex].position;
+        targetPos.y = 0;
+
+
+        Vector3 direction = (newPos - transform.position).normalized;
+        float distance = Vector3.Distance(transform.position, newPos);
+
+        if (distance > 1)
+        {
+            transform.position += direction * speed * Time.deltaTime;
+        }
+
+        RotateTowardDirection(newPos);
     }
 
     private void GeneratePathByIndex(int Index)

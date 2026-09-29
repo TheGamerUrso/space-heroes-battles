@@ -42,14 +42,28 @@ public class PlayerPowerCircleUI : MonoBehaviour
             ActivateSpecial();
 
         });
-        PowerUpLevelChanged(0);
-        PowerPackCollected(0);
+  
+        playerData.OnPowerUpValueChanged += PowerPackCollected;
+        playerData.OnChargePowerValueChanged += ChargePowerValueChangedHandled;
+
+    }
+
+    private void OnDestroy()
+    {
+        playerData.OnPowerUpValueChanged -= PowerPackCollected;
+        playerData.OnChargePowerValueChanged -= ChargePowerValueChangedHandled;
     }
 
     public void Setup(PlayerData playerData,PlayerShipData playerShipData)
     {
         this.playerData = playerData;
         this.playerShipData = playerShipData;
+
+        playerData.OnPowerUpValueChanged += PowerPackCollected;
+        playerData.OnChargePowerValueChanged += ChargePowerValueChangedHandled;
+
+        ChargePowerValueChangedHandled(playerData.ChargePower);
+        PowerPackCollected(playerData.PowerPackCollected);
     }
 
     public void ActivateSpecial()
@@ -58,7 +72,7 @@ public class PlayerPowerCircleUI : MonoBehaviour
         PowerUIActiveAnimator.SetBool(ReadyStringKey, PowerBut.interactable);
     }
 
-    public void PowerUpLevelChanged(float playerPowerUp)
+    public void ChargePowerValueChangedHandled(float playerPowerUp)
     {
         if (playerPowerUp >= 1)
         {

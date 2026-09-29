@@ -58,6 +58,8 @@ public class GameController : MonoBehaviour
     [SerializeField] protected GuiManager guiManager;
     private float timer = 1;
 
+    public bool Debug_Flag = false;
+
     //=================================================================================
     protected void Awake()
     {
@@ -143,15 +145,20 @@ public class GameController : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer <= 0)
                 {
+                    playerShip.weaponController.EnableFire();
                     SetGameState(GameState.TRANSMISSION);
                     timer = 5;
                 }
                 break;
             case GameState.TRANSMISSION:
+                if (Debug_Flag)
+                {
+                    return;
+                }
                 timer -= Time.deltaTime;
                 if (timer <= 0)
                 {
-                    playerShip.weaponController.EnableFire();
+                 
                     SetGameState(GameState.GAME);
                 }
                 break;
@@ -328,10 +335,10 @@ public class GameController : MonoBehaviour
 
         eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {XPEarned} XP </color>", targetPos = transform.localPosition });
 
-        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
 
         playerData.GetCurrentPlayerShipData().EarnXP(XPEarned);
-        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
 
         SetScore(enemyDied.Value);
         IncreaseMultiplier();
@@ -353,6 +360,6 @@ public class GameController : MonoBehaviour
     //=================================================================================
     public void OnEnemyHitHandled(EnemyHitEvent enemyEscaped)
     {
-        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.025f);
+        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
     }
 }

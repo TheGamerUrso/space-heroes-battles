@@ -5,7 +5,7 @@ using UnityEngine;
 public class BossHealthComponent : HealthComponent
 {
 
-    public override void TakeDamage(float dmg)
+    public override void TakeDamage(float dmg, bool IgnoreShield = false)
     {
         if(((BossEnemy)ship).IsProtected())
         if (IsAlive == false) return;

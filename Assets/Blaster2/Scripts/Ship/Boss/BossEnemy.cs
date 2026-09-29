@@ -73,7 +73,7 @@ public class BossEnemy : Enemy
     public override void Hit()
     {
         base.Hit();
-        playerData.SetSuperMeter(playerData.PowerUpLevel + 0.15f);
+        playerData.SetSuperMeter(playerData.ChargePower + 0.15f);
     }
 
     public override void Death()

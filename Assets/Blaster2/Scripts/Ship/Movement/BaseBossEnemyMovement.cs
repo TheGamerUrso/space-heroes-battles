@@ -14,12 +14,10 @@ public class BaseBossEnemyMovement : BaseEnemyMovement
         enemy.GetComponent<BossEnemy>().OnBossPhaseChanged-=OnBossPhaseChangedHandled;
     }
 
-    public override void Awake()
+    public void Awake()
     {
-        base.Awake();
         targetPosition = transform.position;
         enemy.GetComponent<BossEnemy>().OnBossPhaseChanged+=OnBossPhaseChangedHandled;
-
     }
 
     public override void Move()

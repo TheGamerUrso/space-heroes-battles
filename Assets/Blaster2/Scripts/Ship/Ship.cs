@@ -49,17 +49,11 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void ActiveShield()
     {
-        if (HasShield)
-            return;
-
         HasShield = true;
         if (ShieldEffect != null) ShieldEffect.SetActive(HasShield);
     }
     public virtual void DeactivateShield()
     {
-        if (!HasShield)
-            return;
-
         HasShield = false;
         if (ShieldEffect != null) ShieldEffect.SetActive(HasShield);
     }

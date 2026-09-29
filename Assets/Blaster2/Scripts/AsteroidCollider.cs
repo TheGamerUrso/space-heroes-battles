@@ -60,7 +60,7 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(float dmg)
+    public void TakeDamage(float dmg,bool IgnoreShield = false)
     {
         if (IsAlive == true)
         {
