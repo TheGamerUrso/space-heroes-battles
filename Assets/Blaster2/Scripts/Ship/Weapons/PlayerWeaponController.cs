@@ -5,20 +5,20 @@ using UnityEngine;
 
 public class PlayerWeaponController : WeaponController
 {
-
     [SerializeField] protected PlayerData playerData;
     [SerializeField] protected PlayerShipData playerShipData;
     [Header("Weapons")]
     [SerializeField] private BaseSpecialAttack specialAttack;
+    [SerializeField] private AudioSource audioSource;
+    [SerializeField] private AudioClip powerSFX;
     private IEventService eventService;
-    public AudioSource audioSource;
-    public AudioClip powerSFX;
 
     protected override void Start()
     {
         base.Start();
         eventService = GameContext.Get<IEventService>();
     }
+    //=================================================================================
     public override void Setup(Ship Ship,float damage,float fireRate)
     {
         base.Setup(ship, damage, fireRate);

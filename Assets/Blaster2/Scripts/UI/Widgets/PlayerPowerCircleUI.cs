@@ -42,10 +42,6 @@ public class PlayerPowerCircleUI : MonoBehaviour
             ActivateSpecial();
 
         });
-  
-        playerData.OnPowerUpValueChanged += PowerPackCollected;
-        playerData.OnChargePowerValueChanged += ChargePowerValueChangedHandled;
-
     }
 
     private void OnDestroy()

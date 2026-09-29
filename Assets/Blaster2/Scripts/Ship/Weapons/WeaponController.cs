@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 
 public class WeaponController : MonoBehaviour
@@ -8,13 +9,8 @@ public class WeaponController : MonoBehaviour
     [SerializeField] protected float delayAttak = 3;
     protected bool AutoEnableWeapon;
     protected bool CanAttack;
-    public int CurrentWeaponIndex { get; set; }
+    public int CurrentWeaponIndex { get; set; } = 0;
     public bool ShouldAttack { get; set; }
-
-    public void OnEnable()
-    {
-        CurrentWeaponIndex = 1;
-    }
 
     protected virtual void Start()
     {
@@ -24,6 +20,18 @@ public class WeaponController : MonoBehaviour
 
     public BaseWeapon GetCurrentWeapon()
     {
+        // Check if the list is null or completely empty
+        if (Weapons == null || Weapons.Length == 0)
+        {
+            return null;
+        }
+
+        // Clamp the index to the highest available element if it exceeds the bounds
+        if (CurrentWeaponIndex >= Weapons.Length)
+        {
+            CurrentWeaponIndex = Weapons.Length - 1;
+        }
+
         return Weapons[CurrentWeaponIndex];
     }
     public virtual void Setup(Ship ship, float damage, float fireRate)

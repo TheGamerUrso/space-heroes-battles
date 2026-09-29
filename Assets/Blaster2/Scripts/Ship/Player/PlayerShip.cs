@@ -64,10 +64,6 @@ public class PlayerShip : Ship
     //=================================================================================
     public void Setup(PlayerData playerData, PlayerShipData playerShipData)
     {
-        SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate);
-        healthComponent.Setup(playerStats.baseHealth, playerShipData.HasShield);
-        ((PlayerWeaponController)weaponController).Setup(this, stats.Damage, stats.FireRate);
-        HasArmorUprade = playerShipData.HasArmorUpgrade;
         SetStats(playerShipData.level,
             playerShipData.Health,
             playerShipData.Speed,
@@ -76,6 +72,9 @@ public class PlayerShip : Ship
             playerShipData.GetCalculatedUpgradeStats(),
             playerShipData.SuperDamage,
             playerShipData.SuperChargeTime);
+        HasArmorUprade = playerShipData.HasArmorUpgrade;
+        healthComponent.Setup(playerStats.baseHealth, playerShipData.HasShield);
+        ((PlayerWeaponController)weaponController).Setup(this, stats.Damage, stats.FireRate);
     }
     //=================================================================================
     public void ActiveSpecial()

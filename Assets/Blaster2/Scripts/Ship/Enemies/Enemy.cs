@@ -68,6 +68,12 @@ public class Enemy : Ship, ITargetable
                 }
                 break;
             case EnemyState.Combat:
+                weaponController.ShouldAttack = true;
+                var currentWeapon = weaponController.GetCurrentWeapon();
+                if (currentWeapon != null)
+                {
+                    currentWeapon.Shoot();
+                }
                 break;
             case EnemyState.Escape:
                 SetState(EnemyState.Idle);

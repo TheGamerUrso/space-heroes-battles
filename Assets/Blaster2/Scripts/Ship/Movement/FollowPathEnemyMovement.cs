@@ -13,8 +13,6 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
 
     [SerializeField] protected bool reverse;
     [SerializeField] protected bool Auto;
-
-    private Vector3 newPos;
     private int curPath;
     private GameObject path;
     protected float pathMagnitude;
@@ -55,8 +53,13 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
     {
         if (Path == null || Path.Length == 0) return;
 
+        if (currentPointToFollowIndex >= Path.Length)
+        {
+            currentPointToFollowIndex = Path.Length - 1;
+        }
+
         Vector3 targetPos = Path[currentPointToFollowIndex].position;
-        targetPos.y = 0; // Keep movement locked on the 2D plane if needed
+        Vector3 direction = (targetPos - transform.position).normalized;
 
         pathMagnitude = Vector3.Distance(transform.position, targetPos);
 
@@ -87,27 +90,14 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
             {
                 currentPointToFollowIndex += reverse ? -1 : 1;
             }
-        }
-
-        if (currentPointToFollowIndex >= Path.Length)
-        {
-            currentPointToFollowIndex = Path.Length - 1;
-        }
-
-        currentPointToFollowIndex = Mathf.Clamp(currentPointToFollowIndex, 0, Path.Length - 1);
-        targetPos = Path[currentPointToFollowIndex].position;
-        targetPos.y = 0;
-
-
-        Vector3 direction = (newPos - transform.position).normalized;
-        float distance = Vector3.Distance(transform.position, newPos);
-
-        if (distance > 1)
+        } 
+      
+        if (pathMagnitude > 1)
         {
             transform.position += direction * speed * Time.deltaTime;
         }
 
-        RotateTowardDirection(newPos);
+        RotateTowardDirection(targetPos);
     }
 
     private void GeneratePathByIndex(int Index)

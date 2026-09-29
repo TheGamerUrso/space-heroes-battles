@@ -9,11 +9,11 @@ public class BaseSpecialAttack : BaseWeapon
     protected PlayerData playerData;
     protected PlayerShipData playerShipData;
     public bool SpecialActive { get; protected set; } = false;
-
     protected CountDownTimer m_CountDownTimer;
 
     public void Setup(Ship ship, PlayerData playerData, PlayerShipData playerShipData)
     {
+        this.ship = ship;
         this.playerData = playerData;
         this.playerShipData = playerShipData;
     }

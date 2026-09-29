@@ -44,7 +44,7 @@ public class WaveManager : MonoBehaviour
 {
     public event Action<GameplayLoopState> OnGameplayLoopStateValueChanged;
     [SerializeField] private GameplayLoopState currentLoopState;
-    [SerializeField] protected List<EnemySpawner> SpawnPoints = new List<EnemySpawner>();
+    [SerializeField] protected EnemySpawner enemySpawner;
 
     protected GameObject enemGO = null;
     protected GameObject currentBoss;
@@ -122,8 +122,7 @@ public class WaveManager : MonoBehaviour
                         return;
                     }
 
-                    var random = UnityEngine.Random.Range(0, SpawnPoints.Count);
-                    enemGO = SpawnPoints[random].SpawnEnemyElement(waveData.availableEnemies);
+                    enemGO = enemySpawner.SpawnEnemyElement(waveData.availableEnemies);
 
                     waveData.enemiesSpawnedThisWave++;
                     waveData.TotalAliveEnemies++; // Track active count for clearance
@@ -247,11 +246,8 @@ public class WaveManager : MonoBehaviour
     public void SetLevel(int level)
     {
         waveData.Difficulty = level;
-        for (int i = 0; i < SpawnPoints.Count; i++)
-        {
-            SpawnPoints[i].gameObjectTypeList = waveData.enemyElements;
-            SpawnPoints[i].LevelDifficulty = waveData.Difficulty;
-        }
+        enemySpawner.gameObjectTypeList = waveData.enemyElements;
+        enemySpawner.LevelDifficulty = waveData.Difficulty;
     }
     //=================================================================================
     private void StartHyperspaceSequence()
