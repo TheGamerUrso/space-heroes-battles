@@ -30,6 +30,11 @@ public class EnemySpawner : MonoBehaviour
                 item.IsAvailable = true;
             }
         }
+
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            SpawnEnemyElement(availableEnemy);
+        }
     }
 
     public GameObject SpawnEnemyElement(int availableEnemies)

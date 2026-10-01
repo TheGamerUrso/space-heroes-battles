@@ -104,6 +104,12 @@ public class PlayerController : BaseMovementController
         if (moveButtonPressed)
         {
             currentMousePosition = Input.mousePosition;
+
+            if (Input.GetMouseButtonDown(0))
+            {
+                previousPos = currentMousePosition;
+            }
+
             var normlised = (currentMousePosition - previousPos).normalized;
 
             deltaX = normlised.x;
@@ -269,7 +275,17 @@ public class PlayerController : BaseMovementController
     //=================================================================================
     public void OnLevelValueChanged(int Level)
     {
-        playerShip.SetStats(playerShipData.level, playerShipData.Health, playerShipData.Speed, playerShipData.Damage, playerShipData.FireRate, playerShipData.GetCalculatedUpgradeStats(), playerShipData.SuperDamage, playerShipData.SuperChargeTime);
+        playerShip.SetStats(
+            playerShipData.level,
+            playerShipData.Health,
+            playerShipData.Speed, 
+            playerShipData.Damage,
+            playerShipData.FireRate,
+            playerShipData.SuperDamage, 
+            playerShipData.SuperChargeTime);
+
+        playerShip.ApplyUpgrades(
+            playerShipData.GetCalculatedUpgradeStats());
     }
     //=================================================================================
     public void OnItemPickedUpHandled(ItemPickedUpEvent payload)

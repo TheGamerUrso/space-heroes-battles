@@ -3,7 +3,9 @@ using UnityEngine;
 public class FollowPathEnemyMovement : BaseEnemyMovement
 {
     [Header("Movement")]
-    public int[] PathIndex;
+    public int[] Paths;
+    private int PathIndex;
+
     public Transform[] Path;
     private int currentPointToFollowIndex;
     [Space()]
@@ -13,39 +15,26 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
 
     [SerializeField] protected bool reverse;
     [SerializeField] protected bool Auto;
-    private int curPath;
-    private GameObject path;
+
     protected float pathMagnitude;
 
-    public void OnEnable()
+    public override void Setup(Vector3 spawnPos,Quaternion targetRot)
     {
-        currentPointToFollowIndex = 0;
+        GeneratePath();
 
-        if (Path.Length > 0)
-            transform.position = Path[0].position;
-    }
+        startingPosition = Path[currentPointToFollowIndex].transform.position;
+        transform.position = Path[currentPointToFollowIndex].transform.position;
+        transform.rotation = Quaternion.identity;
 
-    public override void Setup(Vector3 spawnPos,Quaternion targetRotation)
-    {
-        int pathIndex = GeneratePath();
+        RotateTowardDirection(transform.forward);      
 
         if (enemy.GameObjectType == PoolGameObjectType.Enemy4)
         {
             PingPong = false;
-            if (pathIndex == 0)
+            if (PathIndex == 0)
             {
                 PingPong = true;
             }
-        }
-    }
-
-    public void Start()
-    {
-        startingPosition = transform.position;
-
-        if (Path.Length == 0)
-        {
-            GeneratePath();
         }
     }
 
@@ -53,7 +42,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
     {
         if (Path == null || Path.Length == 0) return;
 
-        if (currentPointToFollowIndex >= Path.Length)
+         if (currentPointToFollowIndex >= Path.Length)
         {
             currentPointToFollowIndex = Path.Length - 1;
         }
@@ -100,59 +89,13 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
         RotateTowardDirection(targetPos);
     }
 
-    private void GeneratePathByIndex(int Index)
+    private void GeneratePath()
     {
-        curPath = Index;
-
-        PingPong = false;
-        if (curPath == 0)
-        {
-            PingPong = true;
-        }
-
-        if (Waypoints.Instance == null)
-        {
-            return;
-        }
-
-        path = Waypoints.Instance.GetPath(PathIndex[curPath]);
-        Transform[] PathList = path.transform.GetChildrenAsList();
-
-        GeneratePath(PathList);
-
-
+        if (Waypoints.Instance == null) return;
+        var waypoints = Waypoints.Instance.GetPath(Paths[PathIndex]);
+        Path = waypoints.transform.GetChildrenAsList(); 
         currentPointToFollowIndex = 0;
         Reset = false;
         Auto = true;
-
-        transform.position = Path[0].position;
-    }
-
-    private int GeneratePath()
-    {
-        curPath = Random.Range(0, PathIndex.Length);
-
-        if (Waypoints.Instance == null)
-        {
-            return -1;
-        }
-
-        path = Waypoints.Instance.GetPath(PathIndex[curPath]);
-        Transform[] PathList = path.transform.GetChildrenAsList();
-
-        GeneratePath(PathList);
-
-
-        currentPointToFollowIndex = 0;
-        Reset = false;
-        Auto = true;
-
-        transform.position = Path[0].position;
-        return curPath;
-    }
-
-    private void GeneratePath(Transform[] newPath)
-    {
-        Path = newPath;
     }
 }

@@ -31,7 +31,7 @@ public class EnemyMovement : BaseEnemyMovement
                 Direction = -1;
             }
             
-            movement += transform.right * (Speed / 2);
+            movement += Direction * transform.right * (Speed / 2);
         }
 
         transform.position += movement * Time.deltaTime;

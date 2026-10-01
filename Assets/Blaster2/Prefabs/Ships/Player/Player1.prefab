@@ -292,6 +292,128 @@ Transform:
   - {fileID: 8492590974454299734}
   m_Father: {fileID: 4448650685746862641}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2765788347906042114
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 884440209404279849}
+  m_Layer: 11
+  m_Name: Ship
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &884440209404279849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2765788347906042114}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 6726810132830982028}
+  m_Father: {fileID: 740005194488201710}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2916339120531276259
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2916339120530791875}
+  - component: {fileID: 2916339120532119011}
+  - component: {fileID: 2916339120533217059}
+  m_Layer: 11
+  m_Name: HitEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 19
+  m_IsActive: 1
+--- !u!4 &2916339120530791875
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2916339120531276259}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: 0.7071068, z: 0.7071068, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 102.009995, y: 102.009995, z: 102.009995}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 8610079805858648620}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 180}
+--- !u!33 &2916339120532119011
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2916339120531276259}
+  m_Mesh: {fileID: 4300000, guid: f0225b857e6e4fe4ea54ff1427036867, type: 3}
+--- !u!23 &2916339120533217059
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2916339120531276259}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: fa1b2e3526996ee47b6a55a46d2fd741, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 2
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &3237608968697406511
 GameObject:
   m_ObjectHideFlags: 0
@@ -570,8 +692,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 884440209404279849}
   - {fileID: 8610079805858648620}
-  - {fileID: 6726810132830982028}
   m_Father: {fileID: 8610240592938546004}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7360492404434270810
@@ -985,6 +1107,7 @@ Transform:
   - {fileID: 575427070751959186}
   - {fileID: 3272753955507952377}
   - {fileID: 511981277768833427}
+  - {fileID: 2916339120530791875}
   m_Father: {fileID: 740005194488201710}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8605041447731962694
@@ -2053,6 +2176,7 @@ MonoBehaviour:
   audioSource: {fileID: 1680336074825548984}
   hitSFX: {fileID: 8300000, guid: c1aba18c60ca2104a962fa852700100e, type: 3}
   boxCollider: {fileID: 8612333302797745696}
+  hitEffect: {fileID: 2916339120531276259}
 --- !u!114 &4467026538369342586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4015,7 +4139,7 @@ PrefabInstance:
   serializedVersion: 2
   m_Modification:
     serializedVersion: 3
-    m_TransformParent: {fileID: 740005194488201710}
+    m_TransformParent: {fileID: 884440209404279849}
     m_Modifications:
     - target: {fileID: 4425269492997787802, guid: d2c03a6779784c1449a777ff79e7d684, type: 3}
       propertyPath: m_ReceiveGI
@@ -4032,6 +4156,18 @@ PrefabInstance:
     - target: {fileID: 4425269493000082042, guid: d2c03a6779784c1449a777ff79e7d684, type: 3}
       propertyPath: m_RootOrder
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425269493000082042, guid: d2c03a6779784c1449a777ff79e7d684, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 100.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425269493000082042, guid: d2c03a6779784c1449a777ff79e7d684, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 100.00007
+      objectReference: {fileID: 0}
+    - target: {fileID: 4425269493000082042, guid: d2c03a6779784c1449a777ff79e7d684, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 100.00007
       objectReference: {fileID: 0}
     - target: {fileID: 4425269493000082042, guid: d2c03a6779784c1449a777ff79e7d684, type: 3}
       propertyPath: m_LocalPosition.x

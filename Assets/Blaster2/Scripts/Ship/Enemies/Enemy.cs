@@ -30,7 +30,7 @@ public class Enemy : Ship, ITargetable
     public PoolGameObjectType GameObjectType { get; set; }
     protected IDataService dataService;
     protected IEventService eventService;
-    private float delaytEntry = 1f;
+    private float delaytEntry = .5f;
     [SerializeField] protected PoolGameObjectType explostionEffect;
 
     public virtual void Awake()
@@ -54,14 +54,19 @@ public class Enemy : Ship, ITargetable
             case EnemyState.None:
                 break;
             case EnemyState.Idle:
+                healthComponent.tempGodMode();
+                animator.SetBool("Death", false);
                 OnEnemyEntered?.Invoke(this);
+
+                delaytEntry = .5f;
+                animator.SetTrigger("Enter");
                 enemyState = EnemyState.Enter;
+
                 break;
             case EnemyState.Enter:
                 delaytEntry -= Time.deltaTime;
                 if (delaytEntry <= 0)
                 {
-                    delaytEntry = 2;
                     healthComponent.SetDamagable(true);
                     weaponController.SetWeapon(0);
                     enemyState = EnemyState.Combat;
@@ -100,7 +105,7 @@ public class Enemy : Ship, ITargetable
 
     public void SetStats(int level)
     {
-        base.SetStats(level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
+        SetStats(level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
         var rand = UnityEngine.Random.value;
         if (rand < .2f)
         {
@@ -110,6 +115,29 @@ public class Enemy : Ship, ITargetable
         {
             DeactivateShield();
         }
+    }
+
+    public override void SetStats(int level,
+        float baseHealth,
+        float baseSpeed,
+        float baseDamage,
+        float baseFireRate,
+        float baseSuperDamage = 0,
+        float baseSpecialCountdown = 0)
+    {
+        float healthGrowthRate = 0.25f;
+        float damageGrowthRate = 0.18f;
+
+        stats.Level = Mathf.Clamp(level, 1, 10);
+
+        stats.Health = baseHealth * (1f + (healthGrowthRate * (stats.Level - 1)));
+        stats.Speed = baseSpeed;
+        stats.Damage = baseDamage * (1f + (damageGrowthRate * (stats.Level - 1)));
+        stats.FireRate = baseFireRate;
+
+        healthComponent.Setup(stats.Health, false);
+        weaponController.Setup(this, stats.Damage, stats.FireRate);
+        movementController.SetSpeed(stats.Speed);
     }
 
     public override void Exit()
@@ -126,6 +154,7 @@ public class Enemy : Ship, ITargetable
     }
     public override void Death()
     {
+        animator.SetBool("Death", true);
         SetState(EnemyState.Death);
 
         eventService.Publish(new EnemyDiedEvent()
@@ -168,7 +197,7 @@ public class Enemy : Ship, ITargetable
     public void Debug_SpawnEnemyElement()
     {
         BaseEnemyMovement enemyMovement = GetComponent<BaseEnemyMovement>();
-        enemyMovement.Setup(new Vector3(0,0,150), Quaternion.Euler(new Vector3(0,180,0)));
+        enemyMovement.Setup(new Vector3(0, 0, 150), Quaternion.Euler(new Vector3(0, 180, 0)));
         SetState(EnemyState.Idle);
         SetStats(stats.Level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
         gameObject.SetActive(true);

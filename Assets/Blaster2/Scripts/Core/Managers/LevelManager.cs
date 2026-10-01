@@ -14,9 +14,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI text;
 
     [SerializeField] private float cooldown;
-
-    [SerializeField] private GameObject[] levels;
-    private List<GameObject> ListOfLevels = new List<GameObject>();
+    [SerializeField] private List<GameObject> ListOfLevels = new List<GameObject>();
     private bool fadeIn;
     private bool fadeOut;
 
@@ -39,19 +37,13 @@ public class LevelManager : MonoBehaviour
     private IAudioService audioService;
     protected GameController gameController;
 
+    [SerializeField] private bool RandLevel = false;
+
     private void Awake()
     {
         cameraMain = Camera.main;
 
         defaultLayer = cameraMain.cullingMask;
-
-
-        foreach (GameObject item in levels)
-        {
-            GameObject levelItem = Instantiate(item, transform, false);
-            levelItem.name = item.name;
-            ListOfLevels.Add(levelItem);
-        }
     }
 
     private void Start()
@@ -141,14 +133,16 @@ public class LevelManager : MonoBehaviour
 
     public void ChooseNewLevel()
     {
+        if (!RandLevel) return;
+
         for (int i = 0; i < ListOfLevels.Count; i++)
         {
             ListOfLevels[i].SetActive(false);
         }
 
         int randLevel = 0;
-        randLevel = Random.Range(0, levels.Length);
-        GameObject levelToLoad = ListOfLevels[randLevel];
+        randLevel = Random.Range(0, ListOfLevels.Count);
+        GameObject levelToLoad = ListOfLevels[Random.Range(0, ListOfLevels.Count)];
 
         if (previousLevel != null && previousLevel == levelToLoad)
         {
@@ -156,7 +150,7 @@ public class LevelManager : MonoBehaviour
             {
                 randLevel += 1;
             }
-            else if (randLevel < levels.Length)
+            else if (randLevel < ListOfLevels.Count)
             {
                 randLevel -= 1;
             }

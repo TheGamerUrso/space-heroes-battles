@@ -24,11 +24,14 @@ public class HealthComponent : MonoBehaviour , IDamagable
     [SerializeField] protected AudioClip hitSFX;
     [SerializeField] protected BoxCollider boxCollider;
 
+    [SerializeField] protected GameObject hitEffect;
+    private float hitEffectTimer;
 
     protected float invisibilityTimer;
     protected int hitIndex;
     protected int numberOfHits;
     protected IEventService eventService;
+
 
 
     private void Start()
@@ -42,6 +45,14 @@ public class HealthComponent : MonoBehaviour , IDamagable
         {
             invisibilityTimer -= Time.deltaTime;
         }
+
+        if (!hitEffect.activeInHierarchy) return;
+
+        hitEffectTimer -= Time.deltaTime;
+        if (hitEffectTimer <= 0)
+        {
+            hitEffect.SetActive(false);
+        }
     }
 
     public void Setup(float baseHealth,bool startWithShield)
@@ -54,6 +65,9 @@ public class HealthComponent : MonoBehaviour , IDamagable
             ship.ActiveShield();
         else
             ship.DeactivateShield();
+
+
+       
     }
     public virtual void TakeDamage(float dmg,bool IgnoreShield = false)
     {
@@ -61,6 +75,9 @@ public class HealthComponent : MonoBehaviour , IDamagable
         {
             return;
         }
+
+        hitEffect.SetActive(true);
+        hitEffectTimer = .5f;
 
         audioSource.PlayOneShot(hitSFX);
 

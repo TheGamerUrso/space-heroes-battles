@@ -23,24 +23,13 @@ public abstract class Ship : MonoBehaviour
     public Stats stats;
     public bool HasShield;
     public GameObject ShieldEffect;
-    public virtual void SetStats(int level, float baseHealth, float baseSpeed, float baseDamage, float baseFireRate)
-    {
-        stats.Level = Mathf.Clamp(level, 1, 10);
-
-        float healthGrowthRate = 0.25f;
-        float damageGrowthRate = 0.18f;
-
-        stats.Health = baseHealth * (1f + (healthGrowthRate * (stats.Level - 1)));
-
-        stats.Speed = baseSpeed;
-
-        stats.Damage = baseDamage * (1f + (damageGrowthRate * (stats.Level - 1)));
-        stats.FireRate = baseFireRate;
-
-        healthComponent.Setup(stats.Health, false);
-        weaponController.Setup(this, stats.Damage, stats.FireRate);
-        movementController.SetSpeed(stats.Speed);
-    }
+    public abstract void SetStats(int level,
+        float baseHealth,
+        float baseSpeed,
+        float baseDamage,
+        float baseFireRate,
+        float baseSuperDamage = 0,
+        float baseSpecialCountdown = 0);
 
     public virtual void Enter() { }
     public virtual void Exit() { }

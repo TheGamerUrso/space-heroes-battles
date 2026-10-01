@@ -19,8 +19,6 @@ public class PlayerShip : Ship
     public bool CanUsePowerUpItem { get; private set; }
 
     float waitEntry = 2;
-    float waitExit = 2;
-
     [SerializeField] private float SuperChargeTime;
     [SerializeField] private float SuperDamage;
     [SerializeField] private float MagnetPower;
@@ -57,6 +55,7 @@ public class PlayerShip : Ship
             case PlayerStateEnum.Death:                
                 break;
             case PlayerStateEnum.Exit:
+                waitEntry = 2;
                 animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
                 break;
         }
@@ -69,9 +68,10 @@ public class PlayerShip : Ship
             playerShipData.Speed,
             playerShipData.Damage,
             playerShipData.FireRate,
-            playerShipData.GetCalculatedUpgradeStats(),
             playerShipData.SuperDamage,
             playerShipData.SuperChargeTime);
+
+        ApplyUpgrades(playerShipData.GetCalculatedUpgradeStats());
         HasArmorUprade = playerShipData.HasArmorUpgrade;
         healthComponent.Setup(playerStats.baseHealth, playerShipData.HasShield);
         ((PlayerWeaponController)weaponController).Setup(this, stats.Damage, stats.FireRate);
@@ -129,41 +129,37 @@ public class PlayerShip : Ship
         return animator.GetCurrentAnimatorStateInfo(0).IsName(id);
     } 
     //=================================================================================
-    public override void SetStats(int level, float baseHealth, float baseSpeed, float baseDamage, float baseFireRate)
-    {
-        stats.Level = Mathf.Clamp(level, 1, 10);     
-
-        var health = level * baseHealth;
-        stats.Health = baseHealth;
-        stats.Speed = baseSpeed;
-        stats.Damage = baseDamage;
-        stats.FireRate = baseFireRate;
-          
-        healthComponent.Setup(stats.Health, false);
-        weaponController.Setup(this, stats.Damage, stats.FireRate);
-        movementController.SetSpeed(stats.Speed);
-    }
-    //=================================================================================
-    public void SetStats(int level, 
+    public override void SetStats(int level, 
         float baseHealth,
         float baseSpeed,
         float baseDamage,
         float baseFireRate,
-        float[] UpgradeStats,
         float baseSuperDamage,
         float baseSpecialCountdown)
     {
-      
+        stats.Level = Mathf.Clamp(level, 1, 10);
 
-        var Health = level * baseHealth;
-        var Speed = baseSpeed + UpgradeStats[(int)UpgradeTypeEnum.Speed];
-        var Damage = (level * baseDamage) + UpgradeStats[(int)UpgradeTypeEnum.Damage];
-        var FireRate = baseFireRate - UpgradeStats[(int)UpgradeTypeEnum.FireRate];
-        SuperDamage = (level * baseSuperDamage) + UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
-        SuperChargeTime = baseSpecialCountdown - UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
+        stats.Health = level * baseHealth;
+        stats.Speed = baseSpeed;
+        stats.Damage = (level * baseDamage);
+        stats.FireRate = baseFireRate;
+
+        healthComponent.Setup(stats.Health, false);
+        weaponController.Setup(this, stats.Damage, stats.FireRate);
+        movementController.SetSpeed(stats.Speed);
+        SuperDamage = (level * baseSuperDamage);
+        SuperChargeTime = baseSpecialCountdown;
+    }
+    //=================================================================================
+    public void ApplyUpgrades(float[] UpgradeStats)
+    {
+        stats.Speed += UpgradeStats[(int)UpgradeTypeEnum.Speed]; 
+        stats.Damage += UpgradeStats[(int)UpgradeTypeEnum.Damage];
+        stats.FireRate -= UpgradeStats[(int)UpgradeTypeEnum.FireRate];
+        SuperDamage += UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
+        SuperChargeTime -= UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
         MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
         MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
         HasArmorUprade = UpgradeStats[(int)UpgradeTypeEnum.ArmorUpgrade] == 1 ? true : false;
-        SetStats(level, Health, Speed, Damage, FireRate);
     }
 }
