@@ -61,6 +61,8 @@ public class WaveManager : MonoBehaviour
     private PlayerData playerData;
     public WaveData waveData;
 
+    public Queue<PoolGameObjectType> waveSpawnQueue = new Queue<PoolGameObjectType>();
+    public List<PoolGameObjectType> waveEnemyQueList = new List<PoolGameObjectType>();
     public void Start()
     {
         dataService = GameContext.Get<IDataService>();
@@ -122,10 +124,12 @@ public class WaveManager : MonoBehaviour
                         return;
                     }
 
-                    enemGO = enemySpawner.SpawnEnemyElement(waveData.availableEnemies);
+                    // Pull the next pre-planned enemy from our tactical queue
+                    PoolGameObjectType nextEnemyType = waveSpawnQueue.Dequeue();
+                    enemGO = enemySpawner.SpawnSpecificEnemy(nextEnemyType);
 
                     waveData.enemiesSpawnedThisWave++;
-                    waveData.TotalAliveEnemies++; // Track active count for clearance
+                    waveData.TotalAliveEnemies++;
                     waveData.timer = waveData.Cooldown;
                 }
                 break;
@@ -231,6 +235,44 @@ public class WaveManager : MonoBehaviour
             waveData.HasBoss = true;
         }
         eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.SURVIVE, value = waveData.Wave });
+
+        GenerateWaveQueue();
+
+        eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.SURVIVE, value = waveData.Wave });
+
+    }
+    //=================================================================================
+    private void GenerateWaveQueue()
+    {
+        waveSpawnQueue.Clear();
+        waveEnemyQueList.Clear();
+        if (waveData.enemyElements == null || waveData.enemyElements.Count == 0) return;
+
+        int maxIndex = Mathf.Clamp(waveData.availableEnemies, 1, waveData.enemyElements.Count);
+
+        for (int i = 0; i < waveData.numberOfEnemiesEachWave; i++)
+        {
+            PoolGameObjectType selectedType;
+
+            // Rule: Early wave spawns favor scouts/weavers; later waves mix in heavy units
+            if (waveData.Wave >= 3 && i == waveData.numberOfEnemiesEachWave - 1 && maxIndex >= 4)
+            {
+                // Put a heavy/area-denial unit at the very end of the queue
+                selectedType = waveData.enemyElements[UnityEngine.Random.Range(3, maxIndex)];
+            }
+            else if (i % 2 == 0)
+            {
+                // Alternate between fast pressure units and pattern shooters
+                selectedType = waveData.enemyElements[0]; // e.g., Fast Scout
+            }
+            else
+            {
+                selectedType = waveData.enemyElements[UnityEngine.Random.Range(0, maxIndex)];
+            }
+
+            waveEnemyQueList.Add(selectedType);
+            waveSpawnQueue.Enqueue(selectedType);
+        }
     }
     //=================================================================================
     public BossEnemy SpawnBoss(GameObject BossPrefab, int difficulty = 1)

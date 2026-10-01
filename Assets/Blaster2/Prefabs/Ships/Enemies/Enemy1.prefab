@@ -81,10 +81,10 @@ GameObject:
   - component: {fileID: 4027941564653448092}
   - component: {fileID: 2225013079835527159}
   - component: {fileID: 1435941801030838864}
+  - component: {fileID: 3298114944494633628}
   - component: {fileID: 1933283670592502111}
   - component: {fileID: 4151433114667561841}
   - component: {fileID: 1675226626586306495}
-  - component: {fileID: 3298114944494633628}
   m_Layer: 15
   m_Name: Enemy1
   m_TagString: Enemy
@@ -350,6 +350,23 @@ MonoBehaviour:
   enemyState: 0
   EnemyData: {fileID: 11400000, guid: dfc53e26d4cfa3e43bfc020c49e3e568, type: 2}
   explostionEffect: 7
+--- !u!114 &3298114944494633628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1332800252941561598}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  speed: 0
+  enemy: {fileID: 1435941801030838864}
+  RotationSpeed: 2
+  RotateTowardDir: 1
+  UseManeuver: 0
 --- !u!114 &1933283670592502111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -396,23 +413,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
---- !u!114 &3298114944494633628
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332800252941561598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  speed: 0
-  enemy: {fileID: 1435941801030838864}
-  RotationSpeed: 2
-  RotateTowardDir: 1
-  UseManeuver: 0
 --- !u!1 &1332990982962192780
 GameObject:
   m_ObjectHideFlags: 0

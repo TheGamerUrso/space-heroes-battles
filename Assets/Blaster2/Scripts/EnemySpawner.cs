@@ -64,6 +64,26 @@ public class EnemySpawner : MonoBehaviour
         return enemGO;
     }
 
+    public GameObject SpawnSpecificEnemy(PoolGameObjectType enemyType)
+    {
+        var availableSpawnLocations = spawnLocations.Where(x => x.IsAvailable).ToList();
+        if (availableSpawnLocations.Count == 0) return null;
+
+        var spawnPos = availableSpawnLocations[UnityEngine.Random.Range(0, availableSpawnLocations.Count)];
+        var enemGO = PoolManager.Instance.GetObjectFromPool(enemyType);
+        var enemy = enemGO.GetComponent<Enemy>();
+        enemy.GameObjectType = enemyType;
+
+        var enemyData = enemy.EnemyData;
+        enemy.SetStats(LevelDifficulty, enemyData.baseHealth, enemyData.baseSpeed, enemyData.baseDamage, enemyData.baseFireRate);
+
+        var enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
+        enemyMovement.Setup(spawnPos.location.position, Quaternion.LookRotation(Vector3.back));
+
+        enemGO.SetActive(true);
+        return enemGO;
+    }
+
     public int availableEnemy = 0;
     [ContextMenu("Debug_Spawn")]
     public void Debug_SpawnEnemyElement()

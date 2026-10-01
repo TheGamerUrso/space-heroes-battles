@@ -1,21 +1,23 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-
 using UnityEngine;
 
 [Serializable]
 public class PoolElement
 {
-    public string name = "Test";
-    public int ID;
+    [Tooltip("The type identifier for this pool.")]
     public PoolGameObjectType poolGameObjectType;
-    public List<GameObject> PoolElementGameObjects;
-    public GameObject PoolElementPrefab;
-    public int poolIndex;
 
-    public int GetPoolElementIndex { get { return poolIndex; } }
-    public List<GameObject> GetThePoolElementGameObjects { get { return PoolElementGameObjects; } }
+    [Tooltip("The prefab to instantiate.")]
+    public GameObject poolElementPrefab;
+
+    [Tooltip("Initial number of objects to pool.")]
+    public int poolIndex = 10;
+
+    // Hidden from the Inspector because it is managed entirely at runtime
+    [HideInInspector]
+    public List<GameObject> poolElementGameObjects = new List<GameObject>();
 }
 
 [Serializable]
@@ -58,134 +60,106 @@ public enum PoolGameObjectType
 
 public class PoolManager : MonoSingleton<PoolManager>
 {
-    public List<PoolElement> PoolElements;
-    public Dictionary<PoolGameObjectType, PoolElement> ListOfPoolElements = new Dictionary<PoolGameObjectType, PoolElement>();
-    private List<GameObject> TempNumberOfGameObject;
-    private GameObject tempGameObjectPrefab;
-    private GameObject holder
-        ;
+    [Header("Pool Databases")]
+    [SerializeField] private List<PoolDatabase> poolDatabases = new List<PoolDatabase>();
+
+    private Dictionary<PoolGameObjectType, PoolElement> listOfPoolElements = new Dictionary<PoolGameObjectType, PoolElement>();
+    private Dictionary<PoolGameObjectType, Transform> poolHolders = new Dictionary<PoolGameObjectType, Transform>();
+
     protected override void Setup()
     {
         base.Setup();
-        if (PoolElements.Count > 0)
+        if (poolDatabases != null && poolDatabases.Count > 0)
         {
-            StartCoroutine(CreatePool());
+            StartCoroutine(CreatePoolRoutine());
+        }
+        else
+        {
+            Debug.LogError("No Pool Databases assigned to PoolManager!");
         }
     }
 
-    public void Recheck()
+    private IEnumerator CreatePoolRoutine()
     {
-        foreach (PoolElement item in PoolElements)
+        // Loop through every assigned database file
+        foreach (PoolDatabase database in poolDatabases)
         {
-            if (ListOfPoolElements.ContainsKey(item.poolGameObjectType))
+            if (database == null || database.poolElements == null) continue;
+
+            foreach (PoolElement item in database.poolElements)
             {
-                return;
+                if (item.poolElementPrefab == null) continue;
+
+                if (!listOfPoolElements.ContainsKey(item.poolGameObjectType))
+                {
+                    listOfPoolElements.Add(item.poolGameObjectType, item);
+                    CreatePoolByType(item.poolGameObjectType);
+                }
+                else
+                {
+                    Debug.LogWarning($"Duplicate pool type detected: {item.poolGameObjectType} in database {database.name}");
+                }
             }
-            ListOfPoolElements.Add(item.poolGameObjectType, item);
-            CreatePoolByType(item.poolGameObjectType);
         }
-    }
-
-    IEnumerator CreatePool()
-    {
-        foreach (PoolElement item in PoolElements)
-        {
-            ListOfPoolElements.Add(item.poolGameObjectType, item);
-        }
-
-        foreach (PoolGameObjectType type in Enum.GetValues(typeof(PoolGameObjectType)))
-        {
-            CreatePoolByType(type);
-        }
-
         yield return null;
     }
 
-
-    public void CreatePool(PoolGameObjectType poolGameObjectType)
+    public GameObject AddGameObjectToPool(PoolGameObjectType poolGameObjectType)
     {
-        List<GameObject> TempNumberOfGameObject = GetPoolElemet(poolGameObjectType).PoolElementGameObjects;
-        GameObject tempGameObjectPrefab = GetPoolElemet(poolGameObjectType).PoolElementPrefab;
+        PoolElement poolElement = GetPoolElement(poolGameObjectType);
+        if (poolElement == null || poolElement.poolElementPrefab == null) return null;
 
-        int poolIndex = GetPoolElemet(poolGameObjectType).poolIndex;
+        GameObject go = Instantiate(poolElement.poolElementPrefab);
+        go.SetActive(false);
 
-        for (int i = 0; i < poolIndex; i++)
+        if (!poolHolders.TryGetValue(poolGameObjectType, out Transform holderTransform))
         {
-            AddGameObjectToPool(poolGameObjectType);
-        }
-    }
-
-    public void AddGameObjectToPool(PoolGameObjectType poolGameObjectType)
-    {
-        List<GameObject> TempNumberOfGameObject = GetPoolElemet(poolGameObjectType).PoolElementGameObjects;
-        GameObject tempGameObjectPrefab = GetPoolElemet(poolGameObjectType).PoolElementPrefab;
-
-        GameObject GO = Instantiate(tempGameObjectPrefab) as GameObject;
-
-        TempNumberOfGameObject.Add(GO);
-
-        if (holder == null)
-        {
-            holder = new GameObject(tempGameObjectPrefab.name);
-            holder.transform.position = Vector3.zero;
-            holder.transform.rotation = Quaternion.identity;
-            holder.transform.parent = this.transform;
+            GameObject holderGO = new GameObject($"Pool_{poolGameObjectType}");
+            holderGO.transform.SetParent(this.transform);
+            holderTransform = holderGO.transform;
+            poolHolders.Add(poolGameObjectType, holderTransform);
         }
 
-        HelperUtils.SetGameObjectParent(GO.transform, "DynamicObjects");
+        go.transform.SetParent(holderTransform);
+        poolElement.poolElementGameObjects.Add(go);
 
-        GO.SetActive(false);
-    }
-
-    public void CreatePoolByType(PoolGameObjectType poolGameObjectType)
-    {
-        List<GameObject> TempNumberOfGameObject = GetPoolElemet(poolGameObjectType).GetThePoolElementGameObjects;
-        GameObject tempGameObjectPrefab = GetPoolElemet(poolGameObjectType).PoolElementPrefab;
-
-        int poolIndex = GetPoolElemet(poolGameObjectType).GetPoolElementIndex;
-
-        for (int i = 0; i < poolIndex; i++)
-        {
-            AddGameObjectToPool(poolGameObjectType);
-        }
-    }
-
-    public List<GameObject> GetPoolByType(PoolGameObjectType poolGameObjectType)
-    {
-        return GetPoolElemet(poolGameObjectType).PoolElementGameObjects;
+        return go;
     }
 
     public GameObject GetObjectFromPool(PoolGameObjectType poolGameObjectType)
     {
-        TempNumberOfGameObject = GetPoolElemet(poolGameObjectType).PoolElementGameObjects;
-        tempGameObjectPrefab = null;
+        PoolElement poolElement = GetPoolElement(poolGameObjectType);
+        if (poolElement == null) return null;
 
-        for (int x = 0; x < TempNumberOfGameObject.Count; x++)
+        for (int x = 0; x < poolElement.poolElementGameObjects.Count; x++)
         {
-            tempGameObjectPrefab = TempNumberOfGameObject[x];
-            if (tempGameObjectPrefab.activeInHierarchy == false)
+            GameObject obj = poolElement.poolElementGameObjects[x];
+            if (obj != null && !obj.activeInHierarchy)
             {
-                return tempGameObjectPrefab;
-            }
-            else
-            {
-                if (x == TempNumberOfGameObject.Count - 1)
-                {
-                    AddGameObjectToPool(poolGameObjectType);
-                }
+                return obj;
             }
         }
-        return null;
+
+        return AddGameObjectToPool(poolGameObjectType);
     }
 
-    public PoolElement GetPoolElemet(PoolGameObjectType poolGameObjectType)
+    public PoolElement GetPoolElement(PoolGameObjectType poolGameObjectType)
     {
-        PoolElement item;
-        if (ListOfPoolElements.TryGetValue(poolGameObjectType, out item))
+        if (listOfPoolElements.TryGetValue(poolGameObjectType, out PoolElement item))
         {
             return item;
         }
         return null;
     }
 
+    private void CreatePoolByType(PoolGameObjectType poolGameObjectType)
+    {
+        PoolElement poolElement = GetPoolElement(poolGameObjectType);
+        if (poolElement == null) return;
+
+        for (int i = 0; i < poolElement.poolIndex; i++)
+        {
+            AddGameObjectToPool(poolGameObjectType);
+        }
+    }
 }
