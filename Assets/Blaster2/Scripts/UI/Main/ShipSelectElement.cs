@@ -1,6 +1,7 @@
 ﻿using System;
 using TheGamerUrso.Core;
 using TMPro;
+using UnityEditor.MPE;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,9 +17,11 @@ public class ShipSelectElement : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CostText;
     private PlayerData playerData;
     private IDataService dataService;
+    private IEventService eventService;
     private void Awake()
     {
         dataService = GameContext.Get<IDataService>();
+        eventService = GameContext.Get<IEventService>();
     }
 
     private void Start()
@@ -79,7 +82,14 @@ public class ShipSelectElement : MonoBehaviour
         PlayerData playerData = dataService.GetPlayerData();
         if (playerData.Coins >= shipSelectData.Cost)
         {
-            Popup.Show(Popup.popupType.message, "Unlocked new Hero", true);
+
+            eventService.Publish(new ErrorDialogEvent()
+            {
+                Type = popupType.message,
+                Message = "Unlocked new Hero",
+                AutoClose = true
+            });
+
             playerData.Coins -= shipSelectData.Cost;
             playerData.UnlockedHeroes[ID] = 1;
             shipSelect.SelectShip(ID);
@@ -96,7 +106,12 @@ public class ShipSelectElement : MonoBehaviour
         }
         else
         {
-            Popup.Show(Popup.popupType.message, Constants.CannotAffordIt, true);
+            eventService.Publish(new ErrorDialogEvent()
+            {
+                Type = popupType.message,
+                Message = "Insufficient funds",
+                AutoClose = true
+            });
         }
     }
 

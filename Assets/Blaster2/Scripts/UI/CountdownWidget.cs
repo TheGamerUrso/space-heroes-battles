@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class CountdownWidget : Dialog<CountdownWidget>
+public class CountdownWidget : UIView
 {
     public TextMeshProUGUI m_Countdown;
     private float previousNum = 0;
@@ -19,7 +19,7 @@ public class CountdownWidget : Dialog<CountdownWidget>
     void Update()
     {
 
-        if (uiView.isActiveAndEnabled)
+        if (IsActive)
         {
             m_Size += m_Speed * Time.deltaTime;
             m_Countdown.transform.localScale = new Vector3(m_Size, m_Size, m_Size);
@@ -27,7 +27,7 @@ public class CountdownWidget : Dialog<CountdownWidget>
 
         if (m_Size > 1f)
         {
-            // Enabled(false);
+            Hide();
         }
     }
 
@@ -36,7 +36,7 @@ public class CountdownWidget : Dialog<CountdownWidget>
         if (number != previousNum)
         {
             m_Countdown.transform.localScale = Vector3.zero;
-            SetWidgetText(string.Format("{0}", number));
+            m_Countdown.SetText(string.Format("{0}", number));
             m_Size = 0;
             previousNum = number;
         }

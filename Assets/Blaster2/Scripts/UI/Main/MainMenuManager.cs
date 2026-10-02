@@ -76,7 +76,7 @@ public class MainMenuManager : MonoBehaviour
         {
             if (item.ScreenType.Equals(ScreenType.ShipSelect))
             {
-                item.m_UIElement.gameObject.SetActive(false);
+                item.m_UIElement.Hide();
                 OnScreenChanged?.Invoke(item.ScreenType, false);
             }
         }
@@ -112,9 +112,9 @@ public class MainMenuManager : MonoBehaviour
 
     public void PlayGame()
     {
-        GetComponent<CanvasGroup>().blocksRaycasts = false;    
+        GetComponent<CanvasGroup>().blocksRaycasts = false;
         LevelEnum[] levels = { LevelEnum.Game };
-       SceneLoader.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
+        SceneLoader.LoadScene(levels[UnityEngine.Random.Range(0, levels.Length)]);
 
     }
 
@@ -149,18 +149,6 @@ public class MainMenuManager : MonoBehaviour
         return false;
     }
 
-    public bool OptionsOrHighscoreOpen()
-    {
-        foreach (UIScreens item in MainMenuScreens)
-        {
-            if (item.m_UIElement.IsActive && item.ScreenType == ScreenType.Options)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void Open(int Id)
     {
         StartCoroutine(SwitchScreen((ScreenType)Id));
@@ -168,39 +156,32 @@ public class MainMenuManager : MonoBehaviour
 
     public void Close()
     {
-        if (!OptionsOrHighscoreOpen())
+        foreach (UIScreens item in MainMenuScreens)
         {
-            CloseMenu();
-        }
-        else
-        {
-            foreach (UIScreens item in MainMenuScreens)
+            if (item.ScreenType == previousScreen)
             {
-                if (item.ScreenType == previousScreen)
-                {
 
-                    item.m_UIElement.Show();
-                    OnScreenChanged?.Invoke(item.ScreenType, true);
-                    if (IsScrene(previousScreen, ScreenType.Upgrades))
-                    {
-                        previousScreen = ScreenType.Challenges;
-                    }
-                    else
-                    {
-                        previousScreen = ScreenType.None;
-                    }
+                item.m_UIElement.Show();
+                OnScreenChanged?.Invoke(item.ScreenType, true);
+                if (IsScrene(previousScreen, ScreenType.Upgrades))
+                {
+                    previousScreen = ScreenType.Challenges;
                 }
                 else
                 {
-                    if (item.ScreenType == ScreenType.ShipSelect && item.m_UIElement.IsActive)
-                    {
-                        shipSelect.SelectShip(playerData.CurrrentSelectedShip);
-                    }
-
-                    item.m_UIElement.Hide();
-                    OnScreenChanged?.Invoke(item.ScreenType, false);
-
+                    previousScreen = ScreenType.None;
                 }
+            }
+            else
+            {
+                if (item.ScreenType == ScreenType.ShipSelect && item.m_UIElement.IsActive)
+                {
+                    shipSelect.SelectShip(playerData.CurrrentSelectedShip);
+                }
+
+                item.m_UIElement.Hide();
+                OnScreenChanged?.Invoke(item.ScreenType, false);
+
             }
         }
     }
@@ -212,11 +193,6 @@ public class MainMenuManager : MonoBehaviour
             if (item.m_UIElement.IsActive)
             {
                 previousScreen = item.ScreenType;
-            }
-
-            if (OptionsOrHighscoreOpen())
-            {
-                previousScreen = ScreenType.Challenges;
             }
         }
         yield return null;
