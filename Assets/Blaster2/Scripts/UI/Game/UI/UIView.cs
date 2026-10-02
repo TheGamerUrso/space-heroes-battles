@@ -6,18 +6,13 @@ public class UIView : MonoBehaviour
     public bool IsActive=> panel.activeSelf;
     [SerializeField] protected GameObject panel;
 
-    public void Toggle(bool value)
-    {
-        panel.SetActive(!panel.activeSelf);
-    }
-
     public virtual void Show()
     {
-        Toggle(true);
+        panel.SetActive(true);
     }
 
     public virtual void Hide()
     {
-        Toggle(false);
+        panel.SetActive(false);
     }
 }

@@ -9,8 +9,6 @@ public class CoinUI : MonoBehaviour
     [SerializeField] private GameController gameController;
     [SerializeField] private TextMeshProUGUI PlayerCoinText;
     public GameObject panel;
-    public float ttl;
-
 
     private void OnDestroy()
     {
@@ -26,19 +24,8 @@ public class CoinUI : MonoBehaviour
         UpdateCoins(0);
     }
 
-    void Update()
-    {
-        ttl-=Time.deltaTime;
-        if(ttl<=0)
-        {
-            ttl = 4;
-            panel.SetActive(false);
-        }
-    }
-
     public void UpdateCoins(int coins)
     {
-        ttl =4;
         panel.SetActive(true);
         PlayerCoinText.text = "" + coins;
     }

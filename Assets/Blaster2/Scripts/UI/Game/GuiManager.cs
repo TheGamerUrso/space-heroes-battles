@@ -168,22 +168,23 @@ public class GuiManager : MonoBehaviour
         Menu.Hide();
     }
     //=================================================================================
-    public void RecieveTransmition(string[] transmitions, 
-        bool playIntro = true)
+    public void RecieveTransmition(string[] transmitions = null, bool playIntro = true)
     {
         IncomingTransmition = true;
         if (incomingMessageUI)
         {
-            ((IncomingMessageUI)incomingMessageUI).RecieveTransmition(transmitions,
-                playIntro, OnIncomingTranmsionEnded);
+            ((IncomingMessageUI)incomingMessageUI).RecieveTransmition(
+                transmitions,
+                playIntro,
+                OnIncomingTranmsionEnded);
         }
         eventService?.Publish(new IncomingTransmitionEvent());
-    }
+    }   
     //=================================================================================
     public void BossWarning()
     {
         IncomingTransmition = true;
-        IncomingBossUI.RecieveTransmition(OnIncomingTranmsionEnded);
+        IncomingBossUI.RecieveTransmition(new string[0],false, OnIncomingTranmsionEnded);
     }
     //=================================================================================
     public void OnIncomingTranmsionEnded()

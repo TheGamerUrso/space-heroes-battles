@@ -10,8 +10,9 @@ public abstract class BaseIncomingMessage : UIView
     [SerializeField] protected AudioSource audioSource;
     [SerializeField] protected AudioClip TransmitionSFX;
     protected Coroutine transmitionCoroutine;
-    public abstract void RecieveTransmition(Action callback = null);
+    public abstract void RecieveTransmition(string[] transmitions,
+        bool playIntro = true, Action callback = null);
 
-    public abstract IEnumerator TranmisionEvent(bool playIntro = true);
+    public abstract IEnumerator TranmisionCoroutine();
 
 }

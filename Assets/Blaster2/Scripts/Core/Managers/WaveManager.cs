@@ -100,17 +100,9 @@ public class WaveManager : MonoBehaviour
             case GameplayLoopState.PreWaveDelay:
                 gameController.IsSlowMo = true;
                 NewWave();
-                string[] transmition = { "Survive", "Goodluck" };
-                if (waveData.Wave <= 1)
-                {
-                    transmition = new string[] { "Survive", "Goodluck" };
-                }
-                else
-                {
-                    transmition = new string[] { "Wave:\n" + waveData.Wave };
-                    eventService?.Publish(new NewWaveStartedEvent() { Wave = waveData.Wave });
-                }
-                guiManager.RecieveTransmition(transmition, waveData.Wave <= 1 ? true : false);
+                string[] transmition = new string[] { "Wave:\n" + waveData.Wave };
+                eventService?.Publish(new NewWaveStartedEvent() { Wave = waveData.Wave });
+                guiManager.RecieveTransmition(transmition, false);
                 currentLoopState = GameplayLoopState.SpawningEnemies;
                 break;
             case GameplayLoopState.SpawningEnemies:

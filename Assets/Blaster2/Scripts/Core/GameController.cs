@@ -56,6 +56,7 @@ public class GameController : MonoBehaviour
     [SerializeField] protected WaveManager waveManager;
     [SerializeField] protected AsteroidSpawner asteroidSpawner;
     [SerializeField] protected GuiManager guiManager;
+    [SerializeField] protected DialogueManager dialogueManager;
     private float timer = 1;
 
     public bool Debug_Flag = false;
@@ -146,21 +147,19 @@ public class GameController : MonoBehaviour
                 if (timer <= 0)
                 {
                     playerShip.weaponController.EnableFire();
-                    SetGameState(GameState.TRANSMISSION);
-                    timer = 5;
+                    guiManager.RecieveTransmition(Array.Empty<string>());
+                    if (dialogueManager.ShowDialogue(0, () => { SetGameState(GameState.GAME); }))
+                    {
+                        SetGameState(GameState.TRANSMISSION);
+                        timer = 5;
+                    }
+                    else
+                    {
+                        SetGameState(GameState.GAME);
+                    }
                 }
                 break;
             case GameState.TRANSMISSION:
-                if (Debug_Flag)
-                {
-                    return;
-                }
-                timer -= Time.deltaTime;
-                if (timer <= 0)
-                {
-                 
-                    SetGameState(GameState.GAME);
-                }
                 break;
             case GameState.GAME:
                 if(playerShip.healthComponent.CurrentHealth <= 0)

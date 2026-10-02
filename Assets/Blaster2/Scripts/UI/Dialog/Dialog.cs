@@ -9,7 +9,15 @@ public class Dialog<T> : MonoBehaviour
 
     public void Enabled(bool value = true)
     {
-        uiView.Toggle(value);
+        if (value)
+        {
+            uiView.Show();
+        }
+        else
+        {
+            uiView.Hide();
+        }
+      
     }
     public virtual void OK()
     {

@@ -7,14 +7,15 @@ public class IncomingBossMessageUI : BaseIncomingMessage
 {
     [SerializeField] private Animator BossStageWarning;
 
-    public override void RecieveTransmition(Action callback = null)
+    public override void RecieveTransmition(string[] transmitions,
+        bool playIntro = true, Action callback = null)
     {
         OnTransmisionEnded = callback;
         if (gameController.CurrentGameState != GameState.GAMEOVER)
-            StartCoroutine(TranmisionEvent());
+            StartCoroutine(TranmisionCoroutine());
     }
 
-    public override IEnumerator TranmisionEvent(bool playIntro = true)
+    public override IEnumerator TranmisionCoroutine()
     {
         AnimationClip[] animatorClipInfo = BossStageWarning.runtimeAnimatorController.animationClips;
         float length = animatorClipInfo[0].length;
