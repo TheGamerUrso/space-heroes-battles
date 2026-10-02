@@ -12,9 +12,6 @@ public abstract class BaseWeapon : MonoBehaviour
 
     public float FireRate { get; set; }
     public float Damage { get; set; }
-    public float SuperChargeTime { get; set; }
-
-
     [SerializeField] protected AudioSource source;
     [SerializeField] protected Transform[] Cannons;
     [SerializeField]

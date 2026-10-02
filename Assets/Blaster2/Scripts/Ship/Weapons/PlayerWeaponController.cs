@@ -19,11 +19,11 @@ public class PlayerWeaponController : WeaponController
         eventService = GameContext.Get<IEventService>();
     }
     //=================================================================================
-    public override void Setup(Ship Ship,float damage,float fireRate)
+    public void Setup(Ship ship, PlayerData playerData, PlayerShipData playerShipData)
     {
-        base.Setup(ship, damage, fireRate);
+        Setup(ship, playerShipData.Damage, playerShipData.FireRate);
         SwitchWeapon(0);
-        specialAttack.Setup(Ship,playerData, playerShipData);
+        specialAttack.Setup(ship, playerData, playerShipData);
     }
     //=================================================================================
     public void ActivateSpecial()

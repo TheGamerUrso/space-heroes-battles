@@ -10,12 +10,14 @@ public class BaseSpecialAttack : BaseWeapon
     protected PlayerShipData playerShipData;
     public bool SpecialActive { get; protected set; } = false;
     protected CountDownTimer m_CountDownTimer;
+    public float SuperChargeTime { get; set; }
 
     public void Setup(Ship ship, PlayerData playerData, PlayerShipData playerShipData)
     {
-        this.ship = ship;
+        Setup(ship, playerShipData.Damage, playerShipData.FireRate);
         this.playerData = playerData;
         this.playerShipData = playerShipData;
+        SetStats(playerShipData);
     }
 
     public override void Update()
@@ -45,13 +47,6 @@ public class BaseSpecialAttack : BaseWeapon
                 m_CountDownTimer = null;
                 playerData.SetSuperMeter(0);
             }
-        }
-
-        float powerLevel = playerData.GetPowerUpLevelPresentage();
-
-        if (Input.GetKeyDown(KeyCode.F) && powerLevel >= 1)
-        {
-            ActivateSpecial();
         }
     }
 

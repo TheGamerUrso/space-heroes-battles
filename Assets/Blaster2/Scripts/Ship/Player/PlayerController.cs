@@ -33,9 +33,9 @@ public class PlayerController : BaseMovementController
 
     //Mouse Click
     private int clicktimes;
-    private float clicktimer;
-    private bool clicked;
-    private float clickDelay = .25f;
+    private float delayClickTimer;
+    private bool HasClicked;
+    private float clickDelayTime = .25f;
 
     private IDataService dataService;
     private IEventService eventService;
@@ -87,7 +87,7 @@ public class PlayerController : BaseMovementController
         if (playerData.PowerPackCollected >= 5)
         {
             playerData.PowerPackCollected = 0;
-            playerShip.UpgradeWeapon();
+            ((PlayerWeaponController)weaponController).UpgradeWeapon();
         }
     }
     //=================================================================================
@@ -95,8 +95,8 @@ public class PlayerController : BaseMovementController
     {
         var attackButtonPressed = (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1")) && !IsMouseOverUI();
         var moveButtonPressed = Input.GetMouseButton(0) && !IsMouseOverUI();
-        var superButtonPressed = Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3"); 
-
+        var superButtonPressed = Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3");
+        var holdFireButtonPressed = Input.touchCount > 1 || (Input.GetMouseButton(1) && Input.GetMouseButton(0)) ? true : false;
         var playerPowerUp = playerData.GetPowerUpLevelPresentage();
         weaponController.ShouldAttack = Input.GetMouseButton(0);
 
@@ -122,46 +122,49 @@ public class PlayerController : BaseMovementController
         }
 
     
-        if (attackButtonPressed)
+        if (attackButtonPressed && !holdFireButtonPressed)
         {
             weaponController.GetCurrentWeapon().Shoot();
         }
 
-        if (superButtonPressed)
+        if (HasClicked)
         {
-            if (!clicked)
+            delayClickTimer -= Time.deltaTime;
+            if (delayClickTimer <= 0)
             {
-                clicked = true;
-                clicktimer = clickDelay;
-            }
-            clicktimes++;
-            if (clicktimes > 1)
-            {
-                if (playerPowerUp >= 1)
-                {
-                    playerShip.ActiveSpecial();
-                }
+                HasClicked = false;     
+ 
             }
         }
 
-        if (clicked)
+        if (!HasClicked && superButtonPressed)
         {
-            clicktimer -= Time.deltaTime;
-            if (clicktimer <= 0)
+            if (!HasClicked)
             {
-                clicked = false;
-                clicktimes = 0;
+                HasClicked = true;
+                delayClickTimer = clickDelayTime;
             }
-        }                
+            ((PlayerWeaponController)weaponController).ActivateSpecial();
+            playerData.SetUsedSuperCount(1);
+            eventService?.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.USE, value = playerData.SuperUsed });
+        }               
     }
     //=================================================================================
     public void TouchControls()
     {
-        if (Input.touchCount > 0 && !IsMouseOverUI())
+        var attackButtonPressed = (Input.GetMouseButton(0) || Input.GetKey(KeyCode.Space) || Input.GetButton("Fire1")) && !IsMouseOverUI();
+        var moveButtonPressed = Input.touchCount > 0 && !IsMouseOverUI();
+        var superButtonPressed = Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3");
+        var holdFireButtonPressed = Input.touchCount > 1 || (Input.GetMouseButton(1) && Input.GetMouseButton(0)) ? true : false;
+        var playerPowerUp = playerData.GetPowerUpLevelPresentage();
+
+        if (moveButtonPressed)
         {
-            if (Input.GetTouch(0).phase == TouchPhase.Moved)
+            var currentTouch = Input.GetTouch(0);
+
+            if (currentTouch.phase == TouchPhase.Moved)
             {
-                var currentPos = Input.GetTouch(0).position;
+                var currentPos = currentTouch.position;
                 var normlised = (currentPos - previousPos).normalized;
 
                 deltaX = normlised.x;
@@ -173,17 +176,15 @@ public class PlayerController : BaseMovementController
             }
         }
 
-        var shouldShoot = Input.GetMouseButton(0) || Input.touchCount > 0;
-        var holdFire = Input.touchCount > 1 || (Input.GetMouseButton(1) && Input.GetMouseButton(0)) ? true : false;
-        if (shouldShoot && !holdFire)
+        if (attackButtonPressed && !holdFireButtonPressed)
         {
             weaponController.GetCurrentWeapon().Shoot();
         }
 
         if (Time.timeScale == 0)
         {
-            clicked = false;
-            clicktimer = 1;
+            HasClicked = false;
+            delayClickTimer = 1;
             clicktimes = 0;
             return;
         }
@@ -192,6 +193,20 @@ public class PlayerController : BaseMovementController
         {
             Touch touch = Input.GetTouch(0);
             clicktimes = touch.tapCount;
+        }
+
+        if (superButtonPressed && playerPowerUp >= 1)
+        {
+            if (!HasClicked)
+            {
+                HasClicked = true;
+                delayClickTimer = clickDelayTime;
+            }
+            clicktimes++;
+            if (clicktimes > 1)
+            {
+                ((PlayerWeaponController)weaponController).ActivateSpecial();
+            }
         }
     }
     //=================================================================================
@@ -261,7 +276,7 @@ public class PlayerController : BaseMovementController
                 damagable.Heal(playerShipData.Health / 2);
                 break;
             case RewardTypeEnum.SHIELD:
-                playerShip.ActiveSpecial();
+                playerShip.ActiveShield();
                 break;
             case RewardTypeEnum.POWERUP:
                 playerData.PowerUp(2);

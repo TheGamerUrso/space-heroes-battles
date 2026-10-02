@@ -74,17 +74,8 @@ public class PlayerShip : Ship
         ApplyUpgrades(playerShipData.GetCalculatedUpgradeStats());
         HasArmorUprade = playerShipData.HasArmorUpgrade;
         healthComponent.Setup(playerStats.baseHealth, playerShipData.HasShield);
-        ((PlayerWeaponController)weaponController).Setup(this, stats.Damage, stats.FireRate);
-    }
-    //=================================================================================
-    public void ActiveSpecial()
-    {
-        ((PlayerWeaponController)weaponController).ActivateSpecial();
-    }
-    //=================================================================================
-    public void UpgradeWeapon()
-    {
-        ((PlayerWeaponController)weaponController).UpgradeWeapon();
+        ((PlayerWeaponController)weaponController).Setup(this,
+            playerData, playerShipData);
     }
     //=================================================================================
     public void Heal(float amount)
@@ -144,11 +135,12 @@ public class PlayerShip : Ship
         stats.Damage = (level * baseDamage);
         stats.FireRate = baseFireRate;
 
-        healthComponent.Setup(stats.Health, false);
-        weaponController.Setup(this, stats.Damage, stats.FireRate);
-        movementController.SetSpeed(stats.Speed);
         SuperDamage = (level * baseSuperDamage);
         SuperChargeTime = baseSpecialCountdown;
+
+        healthComponent.Setup(stats.Health, false);
+        movementController.SetSpeed(stats.Speed);
+        weaponController.Setup(this, stats.Damage, stats.FireRate);
     }
     //=================================================================================
     public void ApplyUpgrades(float[] UpgradeStats)

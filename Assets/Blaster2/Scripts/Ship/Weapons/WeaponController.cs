@@ -17,6 +17,14 @@ public class WeaponController : MonoBehaviour
         CurrentWeaponIndex = 0;
         DisableAllWeapons();
     }
+    public virtual void Setup(Ship ship, float damage, float fireRate)
+    {
+        this.ship = ship;
+        for (int weaponIndex = 0; weaponIndex < Weapons.Length; weaponIndex++)
+        {
+            Weapons[weaponIndex].Setup(ship, damage, fireRate);
+        }
+    }
 
     public BaseWeapon GetCurrentWeapon()
     {
@@ -34,15 +42,7 @@ public class WeaponController : MonoBehaviour
 
         return Weapons[CurrentWeaponIndex];
     }
-    public virtual void Setup(Ship ship, float damage, float fireRate)
-    {
-        this.ship = ship;
-        for (int weaponIndex = 0; weaponIndex < Weapons.Length; weaponIndex++)
-        {
-            Weapons[weaponIndex].Damage = damage;
-            Weapons[weaponIndex].FireRate = fireRate;
-        }
-    }
+ 
     public void DisableAllWeapons()
     {
         for (int i = 0; i < Weapons.Length; i++)
