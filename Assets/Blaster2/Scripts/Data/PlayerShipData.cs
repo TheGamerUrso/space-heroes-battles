@@ -5,7 +5,11 @@ using UnityEngine;
 [System.Serializable]
 public class PlayerShipData : ShipData
 {
+    public event Action<float> OnPowerPackCollected;
+    public event Action<float> OnSuperChargedValueChanged;
+
     public Action<int, float, float> OnXPValueChanged;
+    public Action<int> OnLevelUp;
     public float xp;
     public float xpToLevel;
     public float XPPresentage
@@ -22,7 +26,6 @@ public class PlayerShipData : ShipData
     public float SuperChargeTime;
     public float MagnetPower;
     public float MagnetDistance;
-
     public float ChargePower = 0;
     public int PowerPackCollected = 0;
     public bool HasArmorUpgrade { get; set; }
@@ -53,6 +56,7 @@ public class PlayerShipData : ShipData
             if (xp >= xpToLevel)
             {
                 Level++;
+                OnLevelUp?.Invoke(Level);
                 xp = 0;
 
                 xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
@@ -117,4 +121,27 @@ public class PlayerShipData : ShipData
             armorUpgrade
             };
     }
+
+    public void UpdateUpserCharge(float value)
+    {
+        ChargePower += value;
+        OnSuperChargedValueChanged?.Invoke(value);
+    }
+    public void SetSuperCharge(float value)
+    {
+        ChargePower = value;
+        OnSuperChargedValueChanged?.Invoke(value);
+    }
+
+    public void UpdatePowerPackCollected(int value)
+    {
+        PowerPackCollected += value;
+        if (PowerPackCollected >= 5)
+        {
+            PowerPackCollected = 5;
+        }
+        OnPowerPackCollected?.Invoke(PowerPackCollected);
+    }
+
+
 }

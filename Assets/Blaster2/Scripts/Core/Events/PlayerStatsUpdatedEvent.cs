@@ -13,7 +13,8 @@ public class PlayerStatsUpdatedEvent
         ChargePower,
         PowerPackCollected,
         XP,
-        EnemyEscaped
+        EnemyEscaped,
+        Level
     }
 
     public StatType type;

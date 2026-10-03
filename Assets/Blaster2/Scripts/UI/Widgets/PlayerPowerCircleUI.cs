@@ -46,7 +46,14 @@ public class PlayerPowerCircleUI : MonoBehaviour
     {
         this.ship = ship;
         ChargePowerValueChangedHandled(ship.GetPlayerShipData().ChargePower);
-        PowerPackCollected(ship.GetPlayerShipData().PowerPackCollected);
+        PlayerPowerCircleUI_OnPowerPackCollected(ship.GetPlayerShipData().PowerPackCollected);
+        ship.GetPlayerShipData().OnPowerPackCollected += PlayerPowerCircleUI_OnPowerPackCollected;
+        ship.GetPlayerShipData().OnSuperChargedValueChanged += ChargePowerValueChangedHandled;
+    }
+
+    private void PlayerPowerCircleUI_OnPowerPackCollected(float PowerPackCollected)
+    {
+        RefreshWeaponIndicatorSprite();
     }
 
     public void ActivateSpecial()
@@ -73,11 +80,6 @@ public class PlayerPowerCircleUI : MonoBehaviour
         if (m_PowerUps != null)
             m_PowerUps.fillAmount = playerPowerUp;
 
-        RefreshWeaponIndicatorSprite();
-    }
-
-    public void PowerPackCollected(int collected)
-    {
         RefreshWeaponIndicatorSprite();
     }
 

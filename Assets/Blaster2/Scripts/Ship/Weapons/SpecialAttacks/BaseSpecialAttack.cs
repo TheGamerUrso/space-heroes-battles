@@ -16,15 +16,17 @@ public class BaseSpecialAttack : BaseWeapon
             if (playerShipData == null) return;
 
             if (m_CountDownTimer == null)
+            {
                 m_CountDownTimer = new CountDownTimer(SuperChargeTime);
+            }
+               
 
             if (m_CountDownTimer.m_CountdownTimer >= 0)
             {
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    playerShipData.ChargePower = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
-
+                    playerShipData.SetSuperCharge(m_CountDownTimer.m_CountdownTimer / SuperChargeTime);
                 }
 
                 var damagable = ship.GetComponent<IDamagable>();
@@ -36,7 +38,7 @@ public class BaseSpecialAttack : BaseWeapon
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerShipData.ChargePower = 0;
+                playerShipData.SetSuperCharge(0);
             }
         }
     }
@@ -45,7 +47,7 @@ public class BaseSpecialAttack : BaseWeapon
     {
         if (SpecialActive == false)
         {
-            SpecialActive = true;    
+            SpecialActive = true;
             source.PlayOneShot(weaponData.ShootSFX);
             OnActivateSpecial();
         }

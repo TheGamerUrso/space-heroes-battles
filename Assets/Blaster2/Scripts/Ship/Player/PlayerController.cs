@@ -1,5 +1,6 @@
 ﻿using TheGamerUrso.Core;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.EventSystems;
 
 public enum ControlScemeEnum
@@ -61,12 +62,13 @@ public class PlayerController : BaseMovementController
         controlScemeEnum = (ControlScemeEnum)playerData.playerSettingsData.ControlScene;
         playerShip.Setup(shipData);
 
-
-
         eventService.Subscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
         eventService.Subscribe<ItemPickedUpEvent>(OnItemPickedUpHandled);
         eventService.Subscribe<RewardItemEvent>(OnRewardItemHandled);
     }
+
+   
+
     //=================================================================================
     private void OnDestroy()
     {
@@ -276,10 +278,10 @@ public class PlayerController : BaseMovementController
                 playerShip.ActiveShield();
                 break;
             case RewardTypeEnum.POWERUP:
-                playerShip.GetPlayerShipData().PowerPackCollected += 2;
+                playerShip.GetPlayerShipData().UpdatePowerPackCollected(2); 
                 break;
             case RewardTypeEnum.SUPER:
-                playerShip.GetPlayerShipData().ChargePower += .5f;
+                playerShip.GetPlayerShipData().UpdateUpserCharge(.5f);
                 break;
         }
     }
@@ -311,17 +313,17 @@ public class PlayerController : BaseMovementController
                 {
                     if (weaponController.CurrentWeaponIndex < 4)
                     {
-                        playerShip.GetPlayerShipData().PowerPackCollected += 1;
+                        playerShip.GetPlayerShipData().UpdatePowerPackCollected(1);
                     }
                     else
                     {
-                        playerShip.GetPlayerShipData().ChargePower += 0.025f;
+                        playerShip.GetPlayerShipData().UpdateUpserCharge(0.025f);
                     }
 
                 }
                 else if (!canUseItem)
                 {
-                    playerShip.GetPlayerShipData().ChargePower += 0.025f;
+                    playerShip.GetPlayerShipData().UpdateUpserCharge(0.025f);
                 }
                 break;
             case ItemEnum.HEALTH:
@@ -330,18 +332,18 @@ public class PlayerController : BaseMovementController
                 break;
         }
     }
-
+    //=================================================================================
     public void PlayerStatsUpdateEventHandled(PlayerStatsUpdatedEvent payload)
     {
         switch (payload.type)
         {
             case PlayerStatsUpdatedEvent.StatType.ChargePower:
-                playerShip.GetPlayerShipData().ChargePower += (int)payload.value;
+                 playerShip.GetPlayerShipData().UpdateUpserCharge(payload.value);
                 break;
             case PlayerStatsUpdatedEvent.StatType.PowerPackCollected:
-                playerShip.GetPlayerShipData().PowerPackCollected += (int)payload.value;
+                playerShip.GetPlayerShipData().UpdatePowerPackCollected((int)payload.value);
                 break;
         }
 
-    }
+    }    
 }

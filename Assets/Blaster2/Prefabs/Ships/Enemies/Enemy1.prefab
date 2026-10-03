@@ -90,7 +90,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1330112429161260340
 Transform:
   m_ObjectHideFlags: 0
@@ -339,15 +339,15 @@ MonoBehaviour:
   weaponController: {fileID: 1933283670592502111}
   movementController: {fileID: 3298114944494633628}
   shipData:
-    Level: 0
+    Level: 1
     Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
+    HasShield: 1
   ship_SO: {fileID: 11400000, guid: dfc53e26d4cfa3e43bfc020c49e3e568, type: 2}
-  HasShield: 0
   ShieldEffect: {fileID: 6666128051353428309}
-  enemyState: 0
+  EnemyState: 0
   explostionEffect: 7
   hitEffect: {fileID: 4189618068172357521}
 --- !u!114 &3298114944494633628
@@ -364,7 +364,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
   ship: {fileID: 1435941801030838864}
   speed: 0
-  enemy: {fileID: 1435941801030838864}
   RotationSpeed: 2
   RotateTowardDir: 1
   UseManeuver: 0
@@ -401,7 +400,6 @@ MonoBehaviour:
   audioSource: {fileID: 4027941564653448092}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1338249362927483178}
-  hitEffect: {fileID: 4189618068172357521}
 --- !u!1 &1332990982962192780
 GameObject:
   m_ObjectHideFlags: 0

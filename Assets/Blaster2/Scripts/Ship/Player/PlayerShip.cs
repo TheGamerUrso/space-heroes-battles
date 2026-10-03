@@ -26,11 +26,14 @@ public class PlayerShip : Ship
     {
         eventService = GameContext.Get<IEventService>();
         healthComponent.OnHealthChanged += OnHealthValueChanged;
+
     }
     //=================================================================================
     private void OnDestroy()
     {
         healthComponent.OnHealthChanged -= OnHealthValueChanged;
+        ((PlayerShipData)shipData).OnPowerPackCollected -= ShipData_OnPowerPackCollected;
+        ((PlayerShipData)shipData).OnLevelUp -= ShipData_OnLevelUpHandled;
     }
     //=================================================================================
     public void Update()
@@ -77,12 +80,22 @@ public class PlayerShip : Ship
         healthComponent.Setup(this);
         weaponController.Setup(this);
 
+
+        ((PlayerShipData)shipData).OnPowerPackCollected += ShipData_OnPowerPackCollected;
+        ((PlayerShipData)shipData).OnLevelUp += ShipData_OnLevelUpHandled;
+
         if (GetPlayerShipData().HasShield)
 
             ActiveShield();
         else
             DeactivateShield();
     }
+
+    private void ShipData_OnLevelUpHandled(int obj)
+    {
+        eventService.Publish<PlayerStatsUpdatedEvent>(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.Level, value = shipData.Level });
+    }
+
     //=================================================================================
     public void Heal(float amount)
     {
@@ -186,5 +199,12 @@ public class PlayerShip : Ship
     {
         hitEffect.SetActive(true);
         hitEffectTimer = .5f;
+    }
+    private void ShipData_OnPowerPackCollected(float obj)
+    {
+        if (GetPlayerShipData().PowerPackCollected >= 5)
+        {
+            ((PlayerWeaponController)weaponController).UpgradeWeapon();
+        }
     }
 }

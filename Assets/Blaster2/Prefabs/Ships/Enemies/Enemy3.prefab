@@ -301,15 +301,15 @@ MonoBehaviour:
   weaponController: {fileID: 4198404169524597015}
   movementController: {fileID: 5419107286356001790}
   shipData:
-    Level: 0
+    Level: 1
     Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
+    HasShield: 0
   ship_SO: {fileID: 11400000, guid: 1efe9ab896acc8144bd88510b795658d, type: 2}
-  HasShield: 0
   ShieldEffect: {fileID: 2138503217037189460}
-  enemyState: 0
+  EnemyState: 0
   explostionEffect: 7
   hitEffect: {fileID: 611193977803809183}
 --- !u!114 &5419107286356001790
@@ -326,7 +326,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ship: {fileID: 5741593070882385480}
   speed: 0
-  enemy: {fileID: 5741593070882385480}
   RotationSpeed: 2
   RotateTowardDir: 1
   UseManeuver: 1
@@ -364,7 +363,6 @@ MonoBehaviour:
   audioSource: {fileID: -6424459942528458188}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 993}
-  hitEffect: {fileID: 611193977803809183}
 --- !u!1 &554
 GameObject:
   m_ObjectHideFlags: 0
