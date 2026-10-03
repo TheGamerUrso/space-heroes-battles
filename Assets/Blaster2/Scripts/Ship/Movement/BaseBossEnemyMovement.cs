@@ -11,13 +11,13 @@ public class BaseBossEnemyMovement : BaseEnemyMovement
     
     public void OnDestroy()
     {
-        enemy.GetComponent<BossEnemy>().OnBossPhaseChanged-=OnBossPhaseChangedHandled;
+        ((BossEnemy)ship).OnBossPhaseChanged-=OnBossPhaseChangedHandled;
     }
 
     public void Awake()
     {
         targetPosition = transform.position;
-        enemy.GetComponent<BossEnemy>().OnBossPhaseChanged+=OnBossPhaseChangedHandled;
+        ((BossEnemy)ship).GetComponent<BossEnemy>().OnBossPhaseChanged+=OnBossPhaseChangedHandled;
     }
 
     public override void Move()

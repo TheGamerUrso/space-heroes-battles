@@ -854,10 +854,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy6
       objectReference: {fileID: 0}
-    - target: {fileID: 8246661451200889219, guid: 7e49bedb3a3ce6d48b8131f173f7f6d9, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1300,10 +1296,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy5
       objectReference: {fileID: 0}
-    - target: {fileID: 8746143244605377970, guid: 6cc9cfdfe0b5ecd4480249906c2b8249, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -1414,7 +1406,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1330112429161260340, guid: d56b4ad3aeb59f64eb13779cd4813f73, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 70.8
+      value: 113.6
       objectReference: {fileID: 0}
     - target: {fileID: 1330112429161260340, guid: d56b4ad3aeb59f64eb13779cd4813f73, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1450,6 +1442,22 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1332800252941561598, guid: d56b4ad3aeb59f64eb13779cd4813f73, type: 3}
       propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435941801030838864, guid: d56b4ad3aeb59f64eb13779cd4813f73, type: 3}
+      propertyPath: HasShield
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435941801030838864, guid: d56b4ad3aeb59f64eb13779cd4813f73, type: 3}
+      propertyPath: shipData.Level
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1435941801030838864, guid: d56b4ad3aeb59f64eb13779cd4813f73, type: 3}
+      propertyPath: shipData.HasShield
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3298114944494633628, guid: d56b4ad3aeb59f64eb13779cd4813f73, type: 3}
+      propertyPath: m_Enabled
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -4605,10 +4613,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5723268164745802028, guid: 79afa0eeac83776489055196cc92ba9e, type: 3}
-      propertyPath: enemy
-      value: 
-      objectReference: {fileID: 2035242970}
     - target: {fileID: 5723268164745802033, guid: 79afa0eeac83776489055196cc92ba9e, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
@@ -4652,10 +4656,6 @@ PrefabInstance:
     - target: {fileID: 5723268164745802034, guid: 79afa0eeac83776489055196cc92ba9e, type: 3}
       propertyPath: m_Name
       value: Enemy8
-      objectReference: {fileID: 0}
-    - target: {fileID: 5723268164745802034, guid: 79afa0eeac83776489055196cc92ba9e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5147,10 +5147,6 @@ PrefabInstance:
     - target: {fileID: 1332800252941561598, guid: 86f167d1fa463f442ad30153339af9a7, type: 3}
       propertyPath: m_Name
       value: Enemy2
-      objectReference: {fileID: 0}
-    - target: {fileID: 1332800252941561598, guid: 86f167d1fa463f442ad30153339af9a7, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5794,17 +5790,6 @@ MonoBehaviour:
         dialogue: Copy that. I will intercept immidiatly.
       - potrait: {fileID: 21300000, guid: 501e60d7a2b61134b84f3693564a67ed, type: 3}
         dialogue: Good luck.
---- !u!114 &2035242970 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5723268164745802027, guid: 79afa0eeac83776489055196cc92ba9e, type: 3}
-  m_PrefabInstance: {fileID: 1480743938}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 272ebee2bf358834d865762cdf624eba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2077559307
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10772,12 +10757,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pause: 0
-  TotalCoinsInGame: 0
   Multiplier: 1
-  EnemyKilled: 0
-  EnemyEscaped: 0
   Score: 0
-  CoinPicked: 0
   PlayerShips:
   - name: Player1
     prefab: {fileID: 931127140579759866, guid: 321ea5ea54e6ae04aa3daa1fa65fbce0, type: 3}
@@ -10790,7 +10771,7 @@ MonoBehaviour:
   asteroidSpawner: {fileID: 1943903116084015585}
   guiManager: {fileID: 7282720494834282834}
   dialogueManager: {fileID: 2005484671}
-  Debug_Flag: 0
+  IsDebugMode: 1
 --- !u!4 &2233804167081751955
 Transform:
   m_ObjectHideFlags: 0
@@ -19990,6 +19971,8 @@ MonoBehaviour:
   IncomingBossUI: {fileID: 1431815283}
   gameController: {fileID: 2233804167081751954}
   waveManager: {fileID: 1231900046}
+  PlayerHud: {fileID: 4597321061865750562}
+  CoinsUI: {fileID: 2913458871858965773}
   playerXP: {fileID: 6293384205104531657}
   powerCircleUI: {fileID: 6449473995391528119}
   playerHealthUI: {fileID: 5493668353266146974}

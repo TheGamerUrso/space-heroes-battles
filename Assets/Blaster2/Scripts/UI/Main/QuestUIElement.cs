@@ -46,7 +46,7 @@ public class QuestUIElement : MonoBehaviour
         });
 
         playerData = dataService.GetPlayerData();
-        currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
+        currentPlayerLevel = playerData.GetCurrentPlayerShipData().Level;
 
         switch ((QuestTypeEnum)objectiveData.questType)
         {
@@ -101,28 +101,28 @@ public class QuestUIElement : MonoBehaviour
     {
         if (!questData.claimed && questData.completed)
         {
-            playerData.AddCoin(coinToEarn);
+            playerData.playerEconomyData.Coins += coinToEarn;
             playerData.GetCurrentPlayerShipData().EarnXP(xpToEarn);
 
             switch ((QuestTypeEnum)questData.questType)
             {
                 case QuestTypeEnum.KILL:
-                    playerData.SetPlayerKillsCounter(0);
+                    playerData.UpdateKills(0);
                     break;
                 case QuestTypeEnum.USE:
-                    playerData.SetUsedSuperCount(0);
+                    playerData.UpdateSuperUsed(0);
                     break;
                 case QuestTypeEnum.UNHARMED:
-                    playerData.SetPlayerGotHitCounter(false);
+                    PlayerPrefs.DeleteKey(QuestTypeEnum.UNHARMED.ToString());
                     break;
                 case QuestTypeEnum.SURVIVE:
-                    playerData.SetWaveSurvivedCount(0);
+                    playerData.UpdateWaveSurvived(0);
                     break;
                 case QuestTypeEnum.SPEND:
-                    playerData.CoinSpend = 0;
+                    playerData.UpdateSpendCurrency(0);
                     break;
                 case QuestTypeEnum.BOUNTY:
-                    playerData.BountyKilled = 0;
+                    playerData.UpdateBountyKilled(0);
                     break;
                 case QuestTypeEnum.SCORE: 
                     break;
@@ -140,7 +140,7 @@ public class QuestUIElement : MonoBehaviour
     public void SetRewardInfo()
     {
         playerData = dataService.GetPlayerData();
-        currentPlayerLevel = playerData.GetCurrentPlayerShipData().level;
+        currentPlayerLevel = playerData.GetCurrentPlayerShipData().Level;
 
         rewardText.text = xpToEarn + "xp";
         CoinReward.text = coinToEarn + "$";

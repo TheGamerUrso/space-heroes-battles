@@ -8,9 +8,7 @@ using UnityEngine.UI;
 
 public class PlayerPowerCircleUI : MonoBehaviour
 {
-    private PlayerShip playerShip;
-    private PlayerData playerData;
-    private PlayerShipData playerShipData;
+    private PlayerShip ship;
 
     [Space(2)]
     [SerializeField] private GameObject SuperWidget;
@@ -44,22 +42,11 @@ public class PlayerPowerCircleUI : MonoBehaviour
         });
     }
 
-    private void OnDestroy()
+    public void Setup(PlayerShip ship)
     {
-        playerData.OnPowerUpValueChanged -= PowerPackCollected;
-        playerData.OnChargePowerValueChanged -= ChargePowerValueChangedHandled;
-    }
-
-    public void Setup(PlayerData playerData,PlayerShipData playerShipData)
-    {
-        this.playerData = playerData;
-        this.playerShipData = playerShipData;
-
-        playerData.OnPowerUpValueChanged += PowerPackCollected;
-        playerData.OnChargePowerValueChanged += ChargePowerValueChangedHandled;
-
-        ChargePowerValueChangedHandled(playerData.ChargePower);
-        PowerPackCollected(playerData.PowerPackCollected);
+        this.ship = ship;
+        ChargePowerValueChangedHandled(ship.GetPlayerShipData().ChargePower);
+        PowerPackCollected(ship.GetPlayerShipData().PowerPackCollected);
     }
 
     public void ActivateSpecial()
@@ -96,24 +83,27 @@ public class PlayerPowerCircleUI : MonoBehaviour
 
     public void RefreshWeaponIndicatorSprite()
     {
-        if (playerData == null) return;
+        if (ship == null) return;
+
+        var playerShipData = ship.GetPlayerShipData();
+        if (playerShipData == null) return;
 
         var sprite = WeaponIndicatorSpritesNotActivated[0];
-        var collecterUpgrade = playerData.PowerPackCollected;
+        var collecterUpgrade = playerShipData.PowerPackCollected;
 
         if (m_PowerUps != null)
         {
             if (m_PowerUps.fillAmount == 1)
             {
-                sprite = WeaponIndicatorSpritesActivated[playerData.PowerPackCollected];
+                sprite = WeaponIndicatorSpritesActivated[ship.GetPlayerShipData().PowerPackCollected];
             }
             else if (collecterUpgrade >= WeaponIndicatorSpritesNotActivated.Length)
             {
-                sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
+                sprite = WeaponIndicatorSpritesNotActivated[playerShipData.PowerPackCollected];
             }
             else
             {
-                sprite = WeaponIndicatorSpritesNotActivated[playerData.PowerPackCollected];
+                sprite = WeaponIndicatorSpritesNotActivated[playerShipData.PowerPackCollected];
             }
         }
         if (WeaponIndicatorImage != null)

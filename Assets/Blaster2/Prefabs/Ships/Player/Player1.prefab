@@ -2026,21 +2026,19 @@ MonoBehaviour:
   healthComponent: {fileID: 7004320360844401358}
   weaponController: {fileID: 4467026538369342586}
   movementController: {fileID: 8573234729310641582}
-  stats:
+  shipData:
     Level: 0
+    Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
-    Health: 0
+  ship_SO: {fileID: 11400000, guid: bc2eaccde9a6f754d8978c255160a044, type: 2}
   HasShield: 0
   ShieldEffect: {fileID: 1854617358157983949}
   currentPlayerState: 0
   ItemCollectedEffect: {fileID: 4101952318568694582}
-  playerStats: {fileID: 11400000, guid: bc2eaccde9a6f754d8978c255160a044, type: 2}
-  SuperChargeTime: 0
-  SuperDamage: 0
-  MagnetPower: 0
-  MagnetDistance: 0
+  alarmSFX: {fileID: 8300000, guid: d0888bf451bd66b48951e9488b462d44, type: 3}
+  hitEffect: {fileID: 2916339120531276259}
 --- !u!114 &8573234729310641582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2053,6 +2051,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f68c27ff0e9c0d246914ebb3a314c1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 8571979849814880766}
   speed: 0
   tilt: 25
   playerShip: {fileID: 8571979849814880766}
@@ -2172,11 +2171,9 @@ MonoBehaviour:
   ship: {fileID: 8571979849814880766}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 8604689810804284676}
   audioSource: {fileID: 1680336074825548984}
   hitSFX: {fileID: 8300000, guid: c1aba18c60ca2104a962fa852700100e, type: 3}
   boxCollider: {fileID: 8612333302797745696}
-  hitEffect: {fileID: 2916339120531276259}
 --- !u!114 &4467026538369342586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2189,6 +2186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5196745c092cdce4f8c02004143251d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  ship: {fileID: 8571979849814880766}
   Weapons:
   - {fileID: 8572646886815817646}
   - {fileID: 8573418285517516596}
@@ -2196,46 +2194,6 @@ MonoBehaviour:
   - {fileID: 8573450059780407818}
   - {fileID: 8573466836006806434}
   delayAttak: 3
-  playerData:
-    Score: 0
-    HighScore: 0
-    UnlockedHeroes: 
-    Coins: 0
-    Kills: 0
-    CoinSpend: 0
-    SuperUsed: 0
-    WaveSurvived: 0
-    CoinPicked: 0
-    PlayedGame: 0
-    GotHitInGame: 0
-    BountyKilled: 0
-    EnemyKilled: 0
-    EnemyEscaped: 0
-    ChargePower: 0
-    PowerPackCollected: 0
-    CurrrentSelectedShip: 0
-    SFXVolume: 0
-    MusicVolume: 0
-    AutoAttack: 0
-    mute: 0
-    ControlScene: 1
-    MaxLevel: 0
-    ListOfPlayerActiveQuest: []
-    playerShipData: []
-  playerShipData:
-    level: 0
-    xp: 0
-    xpToLevel: 0
-    Upgrades: 
-    Health: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 0
-    SuperDamage: 0
-    LaserDamage: 0
-    SuperChargeTime: 0
-    MagnetPower: 0
-    MagnetDistance: 0
   specialAttack: {fileID: 7873295070039154695}
   audioSource: {fileID: 1680336074825548984}
   powerSFX: {fileID: 8300000, guid: 59e5f7ab75dfaa7479b20659ecb1510c, type: 3}

@@ -74,14 +74,12 @@ public class WaveManager : MonoBehaviour
 
         waveData.Wave = 0;
 
-        eventService.Subscribe<EnemyDiedEvent>(OnEnemyDiedHandled);
-        eventService.Subscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
+        eventService.Subscribe<EnemyEvent>(EnemyEventHandled);
     }
 
     private void OnDestroy()
     {
-        eventService.Unsubscribe<EnemyDiedEvent>(OnEnemyDiedHandled);
-        eventService.Unsubscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
+        eventService.Unsubscribe<EnemyEvent>(EnemyEventHandled);
     }
 
     private void Update()
@@ -146,7 +144,7 @@ public class WaveManager : MonoBehaviour
                 waveData.timer -= Time.deltaTime;
                 if (waveData.timer <= 0f)
                 {
-                    if (gameController.GetPlayer().stats.Health > 0)
+                    if (gameController.GetPlayer().healthComponent.CurrentHealth > 0)
                     {
                         if (waveData.HasBoss)
                         {
@@ -289,23 +287,25 @@ public class WaveManager : MonoBehaviour
         currentLoopState = GameplayLoopState.HyperspaceTransition;
     }
     //=================================================================================
-    public virtual void OnEnemyDiedHandled(EnemyDiedEvent enemyDied)
+    public virtual void EnemyEventHandled(EnemyEvent payload)
     {
-        waveData.TotalAliveEnemies--;
-        playerData.EnemyKilled++;
-        if (enemyDied.WasBoss)
+        switch (payload.Type)
         {
-            eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.KILL, value = playerData.EnemyKilled });
+            case EnemyEvent.EnemyEventType.NONE:
+                break;
+            case EnemyEvent.EnemyEventType.ENTER:
+                break;
+            case EnemyEvent.EnemyEventType.ESCAPE:
+                waveData.TotalAliveEnemies--;
+                break;
+            case EnemyEvent.EnemyEventType.DEATH:
+                waveData.TotalAliveEnemies--;
+                break;
+            case EnemyEvent.EnemyEventType.HIT:
+                break;
+            default:
+                break;
         }
-        else
-        {
-            eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.BOUNTY, value = 1 });
-        }
-    }
-    //=================================================================================
-    public void OnEnemyEscapedCallback(EnemyEscapedEvent enemyEscaped)
-    {
-        playerData.EnemyEscaped++;
         waveData.TotalAliveEnemies--;
     }
 }

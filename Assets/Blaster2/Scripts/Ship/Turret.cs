@@ -7,24 +7,18 @@ public class Turret : Ship
 
     public void ExitLevel() => Destroy(gameObject);
 
-    public override void SetStats(int level,
-        float baseHealth,
-        float baseSpeed, 
-        float baseDamage, 
-        float baseFireRate, 
-        float baseSuperDamage = 0, 
-        float baseSpecialCountdown = 0)
+    public override void SetStats(int level)
     {
-        stats.Level = Mathf.Clamp(level, 1, 10);
+        shipData.Level = Mathf.Clamp(level, 1, 10);
 
-        stats.Health = level * baseHealth;
-        stats.Speed = baseSpeed;
-        stats.Damage = (level * baseDamage);
-        stats.FireRate = baseFireRate;
+        shipData.Health = level * ship_SO.baseHealth;
+        shipData.Speed = ship_SO.baseSpeed;
+        shipData.Damage = (level * ship_SO.baseDamage);
+        shipData.FireRate = ship_SO.baseFireRate;
 
-        healthComponent.Setup(stats.Health, false);
-        weaponController.Setup(this, stats.Damage, stats.FireRate);
-        movementController.SetSpeed(stats.Speed);
+        healthComponent.Setup(this);
+        weaponController.Setup(this);
+        movementController.Setup(this);
     }
 
     private void OnTriggerEnter(Collider other)

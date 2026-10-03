@@ -4,8 +4,6 @@ using System.Collections;
 using TheGamerUrso.Core;
 using UnityEngine;
 
-
-
 [Serializable]
 public struct PlayerShipElement
 {
@@ -34,32 +32,30 @@ public class GameController : MonoBehaviour
 
     [Header("Gameplay Configuration")]
     public bool pause;
-    public int TotalCoinsInGame;
     public int Multiplier = 1;
-
-    public int EnemyKilled = 0;
-    public int EnemyEscaped = 0;
     public int Score = 0;
-    public int CoinPicked = 0;
 
-    protected IDataService dataService;
-    protected IAudioService audioService;
-    protected IAppService appService;
-    protected IEventService eventService;
-
-    private GameObject currentPlayer;
     [SerializeField] private PlayerShipElement[] PlayerShips;
 
-    protected PlayerShip playerShip;
-    protected PlayerData playerData;
     [SerializeField] protected CameraManager cameraManager;
     [SerializeField] protected WaveManager waveManager;
     [SerializeField] protected AsteroidSpawner asteroidSpawner;
     [SerializeField] protected GuiManager guiManager;
     [SerializeField] protected DialogueManager dialogueManager;
+
+
+    private GameObject currentPlayer;
+    private PlayerShip playerShip;
+    private PlayerData playerData;
     private float timer = 1;
 
-    public bool Debug_Flag = false;
+    private IDataService dataService;
+    private IAudioService audioService;
+    private IAppService appService;
+    private IEventService eventService;
+
+    public bool IsDebugMode = false;
+
 
     //=================================================================================
     protected void Awake()
@@ -76,32 +72,26 @@ public class GameController : MonoBehaviour
         eventService = GameContext.Get<IEventService>();
 
         playerData = dataService.GetPlayerData();
-        playerData.SetSuperMeter(0);
 
-        waveManager.SetLevel(dataService.GetPlayerData().GetCurrentPlayerShipData().level);
+
+        playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
+        waveManager.SetLevel(dataService.GetPlayerData().GetCurrentPlayerShipData().Level);
 
         SetGameState(GameState.SPAWN_PLAYER);
 
-        eventService.Subscribe<EnemyDiedEvent>(OnEnemyDiedHandled);
-        eventService.Subscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
-        eventService.Subscribe<EnemyHitEvent>(OnEnemyHitHandled);
+        eventService.Subscribe<EnemyEvent>(EnemyEventHandled);
 
         audioService.PlayMusicById("Track1");
 
-    }
-    public void OnPlayerHealthValueChanGed(float currentHealth, float MaxHealth)
-    {
-        Multiplier = 0;
-    }
+        eventService.Subscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
+        eventService.Subscribe<PlayerEconomyDataUpdatedEvent>(PlayerEconomyUpdatedEventHandled);
 
+
+    }
+    //=================================================================================
     private void OnDestroy()
     {
-        eventService.Unsubscribe<EnemyDiedEvent>(OnEnemyDiedHandled);
-        eventService.Unsubscribe<EnemyEscapedEvent>(OnEnemyEscapedCallback);
-        eventService.Unsubscribe<EnemyHitEvent>(OnEnemyHitHandled);
-
-        if(playerShip!=null)
-            playerShip.healthComponent.OnHealthChanged -= OnPlayerHealthValueChanGed;
+        eventService.Unsubscribe<EnemyEvent>(EnemyEventHandled);
 
 
         DOTween.Clear(true);
@@ -116,7 +106,10 @@ public class GameController : MonoBehaviour
             case GameState.SPAWN_PLAYER:
 
                 appService.SetGameState(TheGamerUrso.Core.GameStateEnum.GAME);
-                NewGame();
+
+                IsGameOver = false;
+                waveManager.SetLevel(1);
+
                 timer -= Time.deltaTime;
                 if (timer <= 0)
                 {
@@ -126,8 +119,7 @@ public class GameController : MonoBehaviour
                         var player = CreatePlayer(shipSelected);
                         playerShip = player.GetComponentInChildren<PlayerShip>();
                         playerShip.weaponController.DisableFire();
-                        var followPlayer = GameObject.FindAnyObjectByType<PlayerFollow>();
-                        playerShip.healthComponent.OnHealthChanged += OnPlayerHealthValueChanGed;
+                        var followPlayer = GameObject.FindAnyObjectByType<PlayerFollow>();       
                         cameraManager.SetTarget(followPlayer != null ? followPlayer.gameObject : null);
                     }
                     timer = 2;
@@ -139,6 +131,7 @@ public class GameController : MonoBehaviour
                 if (timer <= 0)
                 {
                     guiManager.Setup((PlayerShip)playerShip, playerData);
+                    if (IsDebugMode) return;
                     SetGameState(GameState.START);
                 }
                 break;
@@ -168,8 +161,10 @@ public class GameController : MonoBehaviour
                 }
                 break;
             case GameState.GAMEOVER:
+                GameOver();
                 break;
             case GameState.WIN:
+                Win();
                 break;
         }
     }
@@ -200,23 +195,8 @@ public class GameController : MonoBehaviour
         SetGameState(GameState.GAMEOVER);
 
         Time.timeScale = 1.0f;
-        playerData.GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-        playerData.SetScore(Score);
-        playerData.AddCoin(CoinPicked);
-
+        
         eventService?.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.SCORE, value = Score });
-    }
-
-    //======================================================================================================================================================
-    public void NewGame()
-    {
-        IsGameOver = false;
-        Multiplier = 1;
-        EnemyKilled = 0;
-        EnemyEscaped = 0;
-        Score = 0;
-        CoinPicked = 0;
-        waveManager.SetLevel(1 );
     }
     //=================================================================================
     public void ResetMultiplier()
@@ -253,31 +233,10 @@ public class GameController : MonoBehaviour
         eventService.Publish(new FloatingTextEvent(){Message = ultiplierTextToShow ,targetPos = playerShip.transform.localPosition});
         OnGameScoreValueChanged?.Invoke(Score);
     }
-    //=====================================================================================================================================================
-    public void SetCoinPicked(int coinPicked)
-    {
-        CoinPicked += coinPicked;
-        OnGameCoinsPickedValueChanged?.Invoke(CoinPicked);
-    }
-    //=====================================================================================================================================================
-    public void EnableAsteroids()
-    {
-        asteroidSpawner.EnableAsteroids();
-    }
-    //=====================================================================================================================================================
-    public void DeactivateAsteroid()
-    {
-        asteroidSpawner.DeactivateAsteroid();
-    }
-    //=====================================================================================================================================================
-    public void OnNewEntryUploadedHandled(bool success)
-    {      
-        StartCoroutine(DelayGameOver());
-    }
     //======================================================================================================================================================
     IEnumerator DelayGameOver()
     {
-        SaveSystem.SaveGame();
+        //SaveSystem.SaveGame();
         audioService.PlayMusic("GameOver", false);
         yield return new WaitForSeconds(2.0f);
     }
@@ -286,15 +245,14 @@ public class GameController : MonoBehaviour
     {
         Time.timeScale = 1.0f;
 
-        dataService.GetPlayerData().GetCurrentPlayerShipData().Upgrades[(int)UpgradeTypeEnum.Shield] = 0;
-
-        SaveSystem.SaveGame();
+        //Reset Player Shield
+        //SaveSystem.SaveGame();
 
         yield return new WaitForSeconds(2.0f);
 
         audioService.PlayMusic("Victory", false);
 
-        //GetPlayer()?.ExitLevel();
+        GetPlayer()?.Exit();
 
         yield return new WaitForSeconds(2.0f);
         //TODO GAME OVER
@@ -307,7 +265,9 @@ public class GameController : MonoBehaviour
             id = 0;
         }
 
+        var playerShipData = dataService.GetPlayerData().GetCurrentPlayerShipData();
         currentPlayer = GameObject.Instantiate(PlayerShips[id].prefab.gameObject);
+        currentPlayer.GetComponentInChildren<PlayerShip>().Setup(playerShipData);
 
         currentPlayer.SetActive(true);
 
@@ -323,42 +283,91 @@ public class GameController : MonoBehaviour
         return currentPlayer.GetComponentInChildren<PlayerShip>();
     }
     //=================================================================================
-    public virtual void OnEnemyDiedHandled(EnemyDiedEvent enemyDied)
+    public virtual void EnemyEventHandled(EnemyEvent payload)
     {
         var playerData = dataService.GetPlayerData();
-        int PlayerLevel = playerData.GetCurrentPlayerShipData().level;
-        int EnemyLevel = enemyDied.Level;
-        int levelDiffrence = PlayerLevel / EnemyLevel;
-        if (levelDiffrence == 0) levelDiffrence = 1;
-        float XPEarned = (2.5f * PlayerLevel) / levelDiffrence;
+        switch (payload.Type)
+        {
+            case EnemyEvent.EnemyEventType.NONE:
+                break;
+            case EnemyEvent.EnemyEventType.DEATH:
+                float playerLevel = playerData.GetCurrentPlayerShipData().Level;
+                float enemyLevel = payload.Enemy.shipData.Level;
 
-        eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {XPEarned} XP </color>", targetPos = transform.localPosition });
+                // 1. Calculate precise float ratio (e.g., 1.0 for equal, <1 if player is higher, >1 if enemy is higher)
+                float levelRatio = enemyLevel / Mathf.Max(1f, playerLevel);
 
-        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
+                // 2. Base XP scales with how strong the enemy is, modified by the level ratio
+                float baseXP = 15f * enemyLevel;
 
-        playerData.GetCurrentPlayerShipData().EarnXP(XPEarned);
-        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
+                // 3. Clamp the multiplier so high-level players still get a tiny baseline (e.g., 10%), 
+                //    and over-leveled enemies cap out at a reasonable bonus (e.g., 2x)
+                float xpMultiplier = Mathf.Clamp(levelRatio, 0.1f, 2.0f);
 
-        SetScore(enemyDied.Value);
-        IncreaseMultiplier();
+                int xpEarned = Mathf.Max(1, Mathf.RoundToInt(baseXP * xpMultiplier));
 
-        playerData.SetPlayerKillsCounter(1);
-        IncreaseMultiplier();
-        OnPlayerKillingStreakValueChanged?.Invoke(Multiplier);
+                playerData.GetCurrentPlayerShipData().EarnXP(xpEarned);
+                Score += (int)payload.Value;
 
-        if (!enemyDied.WasBoss) return;
-        playerData.SetBossKilledCount();
+                eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {xpEarned} XP </color>", targetPos = transform.localPosition });
+                IncreaseMultiplier();
+                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.Kills, value = 0});
 
+                if (payload.Enemy.GetComponent<BossEnemy>() != null)
+                {
+                    eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.BOUNTY, value = 1 });
+                }
+                else
+                {
+                    eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.KILL, value = 0 });
+                }
+                break;
+            case EnemyEvent.EnemyEventType.ESCAPE:
+                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.EnemyKilled, value = 0 });
+                DecreaseMultipler();
+                break;
+            case EnemyEvent.EnemyEventType.HIT:
+                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.ChargePower, value = .15f });
+                break;
+        }
     }
-    //=================================================================================
-    public void OnEnemyEscapedCallback(EnemyEscapedEvent enemyEscaped)
+    public void PlayerEconomyUpdatedEventHandled(PlayerEconomyDataUpdatedEvent payload)
     {
-        playerData.EnemyEscaped++;
-        DecreaseMultipler();
+        switch (payload.type)
+        {
+            case PlayerEconomyDataUpdatedEvent.StatType.Coins:
+                playerData.UpdateCurrency((int)payload.value);
+                break;
+        }
     }
-    //=================================================================================
-    public void OnEnemyHitHandled(EnemyHitEvent enemyEscaped)
+
+    public void PlayerStatsUpdateEventHandled(PlayerStatsUpdatedEvent payload)
     {
-        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
+        switch (payload.type)
+        {
+            case PlayerStatsUpdatedEvent.StatType.None:
+                break;
+            case PlayerStatsUpdatedEvent.StatType.Score:
+                playerData.UpdateScore((int)payload.value);
+                break;
+            case PlayerStatsUpdatedEvent.StatType.HighScore:
+                playerData.UpdateHighScore();
+                break;
+            case PlayerStatsUpdatedEvent.StatType.Kills:
+                playerData.UpdateKills((int)payload.value);
+                break;
+            case PlayerStatsUpdatedEvent.StatType.SuperUsed:
+                playerData.UpdateSuperUsed((int)payload.value);
+                break;
+            case PlayerStatsUpdatedEvent.StatType.WaveSurvived:
+                playerData.UpdateWaveSurvived((int)payload.value);
+                break;
+            case PlayerStatsUpdatedEvent.StatType.BountyKilled:
+                playerData.UpdateBountyKilled((int)payload.value);
+                break;
+            case PlayerStatsUpdatedEvent.StatType.EnemyKilled:
+                playerData.UpdateEnemyKilled((int)payload.value);
+                break;
+        }
     }
 }

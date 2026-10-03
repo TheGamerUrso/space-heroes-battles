@@ -34,6 +34,9 @@ public class GuiManager : MonoBehaviour
     public GameController gameController;
     public WaveManager waveManager;
 
+    [SerializeField] private GameObject PlayerHud;
+    [SerializeField] private GameObject CoinsUI;
+
     [SerializeField] private PlayerXPUI playerXP;
     [SerializeField] private PlayerPowerCircleUI powerCircleUI;
     [SerializeField] private PlayerHealthUI playerHealthUI;
@@ -42,6 +45,11 @@ public class GuiManager : MonoBehaviour
 
     private IEventService eventService;
     private IAppService appService;
+    private void Awake()
+    {
+        PlayerHud.SetActive(false);
+        CoinsUI.SetActive(false);
+    }
 
     //=================================================================================
     private void Start()
@@ -60,9 +68,12 @@ public class GuiManager : MonoBehaviour
     {
         playerXP.Setup(playerData.GetCurrentPlayerShipData());
         playerHealthUI.Setup(ship.GetComponent<IDamagable>());
-        powerCircleUI.Setup(playerData, playerData.GetCurrentPlayerShipData());
+        powerCircleUI.Setup(ship);
         lowHealthIndicator.Setup(ship);
         warningSignUI.Setup(ship.gameObject);
+
+        PlayerHud.SetActive(true);
+        CoinsUI.SetActive(true);
     }
 
     public void GameOver()

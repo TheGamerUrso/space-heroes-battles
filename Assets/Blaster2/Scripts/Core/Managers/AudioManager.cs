@@ -110,9 +110,9 @@ public class AudioManager : ServiceComponent<IAudioService>,IAudioService
         }
         else
         {
-            SetMusicVolume(playerData.MusicVolume);
+            SetMusicVolume(playerData.playerSettingsData.MusicVolume);
 
-            SetSoundVolume(playerData.SFXVolume);
+            SetSoundVolume(playerData.playerSettingsData.SFXVolume);
         }
 
     }

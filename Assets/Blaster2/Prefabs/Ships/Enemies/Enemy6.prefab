@@ -814,14 +814,13 @@ GameObject:
   - component: {fileID: 5988183306843965744}
   - component: {fileID: 6349163528851259336}
   - component: {fileID: 1387817161938616007}
-  - component: {fileID: 3414662308423455020}
   m_Layer: 15
   m_Name: Enemy6
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8246661451200889218
 Transform:
   m_ObjectHideFlags: 0
@@ -1057,17 +1056,18 @@ MonoBehaviour:
   healthComponent: {fileID: 6349163528851259336}
   weaponController: {fileID: 5988183306843965744}
   movementController: {fileID: 1387817161938616007}
-  stats:
+  shipData:
     Level: 0
+    Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
-    Health: 0
+  ship_SO: {fileID: 11400000, guid: 4c12e56a29fc3a5449a545324fd8f889, type: 2}
   HasShield: 0
   ShieldEffect: {fileID: 4283895241739180047}
-  enemyState: 0
-  EnemyData: {fileID: 11400000, guid: b5034ea580a850b42aec6c430cf26469, type: 2}
+  EnemyState: 0
   explostionEffect: 7
+  hitEffect: {fileID: 4856079401704798465}
 --- !u!114 &5988183306843965744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1080,6 +1080,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debc7d2df7f7d7740816a0376ad109a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  ship: {fileID: 2453403282377496382}
   Weapons:
   - {fileID: 4232778761907163628}
   delayAttak: 3
@@ -1098,11 +1099,9 @@ MonoBehaviour:
   ship: {fileID: 2453403282377496382}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 4283895241739180047}
   audioSource: {fileID: 1544188833340423206}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 7324131938950037138}
-  hitEffect: {fileID: 4856079401704798465}
 --- !u!114 &1387817161938616007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1115,23 +1114,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  ship: {fileID: 2453403282377496382}
   speed: 0
-  enemy: {fileID: 2453403282377496382}
   RotationSpeed: 2
   RotateTowardDir: 1
   UseManeuver: 1
---- !u!114 &3414662308423455020
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8246661451200889219}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &8246661451201790819
 GameObject:
   m_ObjectHideFlags: 0

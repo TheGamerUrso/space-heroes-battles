@@ -29,7 +29,7 @@ public class BossEnemy : Enemy
 
     public override void Update()
     {
-        switch (enemyState)
+        switch (EnemyState)
         {
             case EnemyState.None:
                 break;
@@ -46,7 +46,6 @@ public class BossEnemy : Enemy
             case EnemyState.Combat:
                 break;
             case EnemyState.Escape:
-                OnEnemyEscaped?.Invoke(this);
                 gameObject.SetActive(false);
                 break;
             case EnemyState.Death:
@@ -70,15 +69,21 @@ public class BossEnemy : Enemy
             weaponController.SetFireRate(0.2f);
         }
     }
-    public override void Hit()
-    {
-        base.Hit();
-        playerData.SetSuperMeter(playerData.ChargePower + 0.15f);
-    }
 
     public override void Death()
     {
+        eventService.Publish(new EnemyEvent()
+        {
+            Type = EnemyEvent.EnemyEventType.DEATH
+        ,
+            Enemy = this,
+            Value = ship_SO.EnemyValue
+        });
+
         animator.SetBool("Death", true);
+
+
+        eventService.Publish(new ShakeCameraEvent());
         StartCoroutine(DeathSequence());
     }
 
@@ -101,6 +106,8 @@ public class BossEnemy : Enemy
         eventService?.Publish(new ShakeCameraEvent() { duration = .5f });
         eventService?.Publish(new DropRandomItemEvent() { SpawnPosition = transform });
         Destroy(transform.parent.gameObject);
+
+        SetState(EnemyState.Death);
     }
 
     //Boss Owned Methods

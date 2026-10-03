@@ -49,7 +49,7 @@ public class ShipSelectElement : MonoBehaviour
 
     public void RefreshElement()
     {
-        int coins = playerData.Coins;
+        int coins = playerData.playerEconomyData.Coins;
 
         if (coins >= shipSelectData.Cost)
         {
@@ -80,7 +80,7 @@ public class ShipSelectElement : MonoBehaviour
     public void Purchase()
     {
         PlayerData playerData = dataService.GetPlayerData();
-        if (playerData.Coins >= shipSelectData.Cost)
+        if (playerData.playerEconomyData.Coins >= shipSelectData.Cost)
         {
 
             eventService.Publish(new ErrorDialogEvent()
@@ -90,7 +90,7 @@ public class ShipSelectElement : MonoBehaviour
                 AutoClose = true
             });
 
-            playerData.Coins -= shipSelectData.Cost;
+            playerData.playerEconomyData.Coins -= shipSelectData.Cost;
             playerData.UnlockedHeroes[ID] = 1;
             shipSelect.SelectShip(ID);
             Unlock();

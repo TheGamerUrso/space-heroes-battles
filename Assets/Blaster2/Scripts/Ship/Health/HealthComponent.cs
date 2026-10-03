@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class HealthComponent : MonoBehaviour , IDamagable
 {
-    public Ship ship;
+    [SerializeField] public Ship ship;
     public Action<float, float> OnHealthChanged;
     public bool IsAlive { get; protected set; }
 
@@ -14,9 +14,6 @@ public class HealthComponent : MonoBehaviour , IDamagable
     [SerializeField] protected float maxHealth;
 
     [Header("Shield")]
-    [SerializeField] protected GameObject ShieldEffect;
-    public bool HasShield { get; protected set; }
-
     public float CurrentHealth => currentHealth;
     public float MaxHealth => maxHealth;
 
@@ -24,97 +21,45 @@ public class HealthComponent : MonoBehaviour , IDamagable
     [SerializeField] protected AudioClip hitSFX;
     [SerializeField] protected BoxCollider boxCollider;
 
-    [SerializeField] protected GameObject hitEffect;
-    private float hitEffectTimer;
-
     protected float invisibilityTimer;
-    protected int hitIndex;
-    protected int numberOfHits;
-    protected IEventService eventService;
-
-
-
-    private void Start()
-    {
-        eventService = GameContext.Get<IEventService>();
-    }
 
     private void Update()
     {
         if (invisibilityTimer >= 0)
         {
             invisibilityTimer -= Time.deltaTime;
-        }
-
-        if (!hitEffect.activeInHierarchy) return;
-
-        hitEffectTimer -= Time.deltaTime;
-        if (hitEffectTimer <= 0)
-        {
-            hitEffect.SetActive(false);
-        }
+        }  
     }
 
-    public void Setup(float baseHealth,bool startWithShield)
+    public void Setup(Ship ship)
     {
-        maxHealth = baseHealth;
+        maxHealth = ship.shipData.Health;
         currentHealth = maxHealth;
         IsAlive = true;
-
-        if (startWithShield)
-            ship.ActiveShield();
-        else
-            ship.DeactivateShield();
-
-
-       
     }
+
     public virtual void TakeDamage(float dmg,bool IgnoreShield = false)
     {
-        if (IsAlive == false)
-        {
-            return;
-        }
-
-        hitEffect.SetActive(true);
-        hitEffectTimer = .5f;
+        if (!IsAlive) return;
 
         audioSource.PlayOneShot(hitSFX);
 
-        bool IsShieldActive = HasShield;
+        bool IsShieldActive = IgnoreShield ? false : ship.shipData.HasShield;
 
-        if (IgnoreShield)
+        if (invisibilityTimer <= 0)
         {
-            IsShieldActive = false;
-        }
-
-        if (IsShieldActive)
-        {
-            HasShield = false;
-            ship.DeactivateShield();
-            ShieldEffect.SetActive(HasShield);
-        }
-        else if (!IsShieldActive)
-        {
-            if (invisibilityTimer <= 0)
+            invisibilityTimer = .25f;
+            if (!IsShieldActive)
             {
-                invisibilityTimer = .25f;
-
                 currentHealth -= dmg;
-
-                OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
-
-                if (CurrentHealth < 1)
-                {
-                    if (IsAlive)
-                    {
-                        IsAlive = false;
-                        ship.Death();
-                    }
-                }
             }
+            if (CurrentHealth < 1)
+            {
+                IsAlive = false;
+            }
+
         }
-        ship.Hit();
+        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
     }
     //=================================================================================
     public virtual void Heal(float amount)

@@ -17,7 +17,7 @@ public class CoinWidget : MonoBehaviour
     private void Start()
     {
         playerData = dataService.GetPlayerData();
-        UpdateCoins(playerData.Coins);
+        UpdateCoins(playerData.playerEconomyData.Coins);
     }
 
     public void UpdateCoins(int coins)

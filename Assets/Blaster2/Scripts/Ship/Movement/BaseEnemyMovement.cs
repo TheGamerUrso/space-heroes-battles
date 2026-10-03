@@ -6,7 +6,6 @@ using UnityEngine.Rendering;
 
 public class BaseEnemyMovement : BaseMovementController
 {
-   [SerializeField] protected Enemy enemy;
     protected bool Loop;
     protected Coroutine EnterCoroutine;
 
@@ -25,7 +24,7 @@ public class BaseEnemyMovement : BaseMovementController
 
     public virtual void Update()
     {
-        if (enemy.enemyState == EnemyState.Combat)
+        if (((Enemy)ship).EnemyState == EnemyState.Combat)
         {
             Move();
         }

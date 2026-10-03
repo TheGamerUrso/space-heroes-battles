@@ -54,8 +54,7 @@ public class EnemySpawner : MonoBehaviour
         var enemy = enemGO.GetComponent<Enemy>();
         enemy.GameObjectType = gameObjectType;
 
-        var enemyData = enemy.EnemyData;
-        enemy.SetStats(LevelDifficulty, enemyData.baseHealth, enemyData.baseSpeed, enemyData.baseDamage, enemyData.baseFireRate);
+        enemy.SetStats(LevelDifficulty);
  
         var enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
         enemyMovement.Setup(spawnPos.location.position, Quaternion.LookRotation(Vector3.back));
@@ -74,8 +73,7 @@ public class EnemySpawner : MonoBehaviour
         var enemy = enemGO.GetComponent<Enemy>();
         enemy.GameObjectType = enemyType;
 
-        var enemyData = enemy.EnemyData;
-        enemy.SetStats(LevelDifficulty, enemyData.baseHealth, enemyData.baseSpeed, enemyData.baseDamage, enemyData.baseFireRate);
+        enemy.SetStats(LevelDifficulty);
 
         var enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
         enemyMovement.Setup(spawnPos.location.position, Quaternion.LookRotation(Vector3.back));

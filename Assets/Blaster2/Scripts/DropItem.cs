@@ -26,17 +26,19 @@ public class DropItem : MonoBehaviour
     [SerializeField] private GameController gameController;
 
     private PoolGameObjectType itemTypeToSpawn;
-    private PlayerShip playerShip;
+    private Ship playerShip;
     private IEventService eventService;
 
     private void Start()
     {
         eventService = GameContext.Get<IEventService>();
-        eventService.Subscribe<EnemyDiedEvent>(EnemyDiedEventHanded);
+        eventService.Subscribe<EnemyEvent>(EnemyEventHanded);
+        playerShip = gameController.GetPlayer();
     }
+
     private void OnDestroy()
     {
-        eventService.Unsubscribe<EnemyDiedEvent>(EnemyDiedEventHanded);
+        eventService.Unsubscribe<EnemyEvent>(EnemyEventHanded);
     }
 
     private void Update()
@@ -56,19 +58,16 @@ public class DropItem : MonoBehaviour
             healthDropCooldown -= Time.deltaTime;
         }
     }
+
     private void PickRandomEnemyToSpawn(Transform transform)
     {
-        if (playerShip == null)
-            playerShip = gameController.GetPlayer();
-
         if (ListOfDropItems.Count > 0)
         {
-            bool hasShield = playerShip.GetComponent<HealthComponent>().HasShield;
-            bool fullHealth = playerShip.GetComponent<HealthComponent>().GetHealthPresentage() == 1;
+            bool hasShield = playerShip == null ? false : playerShip.shipData.HasShield;
+            bool fullHealth = playerShip == null ? true : playerShip.healthComponent.GetHealthPresentage() == 1;
             bool dropExtra = false;
 
-            itemTypeToSpawn = ListOfDropItems[0].DropItemsType;
-
+            itemTypeToSpawn = ListOfDropItems[0].DropItemsType;    
             do
             {
 
@@ -170,8 +169,9 @@ public class DropItem : MonoBehaviour
         }
 
     }
-    private void EnemyDiedEventHanded(EnemyDiedEvent payload)
+    private void EnemyEventHanded(EnemyEvent payload)
     {
-        PickRandomEnemyToSpawn(payload.enemy.transform);
+        if(payload.Type == EnemyEvent.EnemyEventType.DEATH)
+        PickRandomEnemyToSpawn(payload.Enemy.transform);
     }
 }

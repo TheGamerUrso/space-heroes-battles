@@ -41,10 +41,10 @@ public class AudioSettings : MonoBehaviour
             switch (audioType)
             {
                 case AudioType.Music:
-                    volumeSlider.value = playerData.MusicVolume;
+                    volumeSlider.value = playerData.playerSettingsData.MusicVolume;
                     break;
                 case AudioType.SFX:
-                    volumeSlider.value = playerData.SFXVolume;
+                    volumeSlider.value = playerData.playerSettingsData.SFXVolume;
                     break;
                 default:
                     break;
@@ -60,11 +60,11 @@ public class AudioSettings : MonoBehaviour
         switch (audioType)
         {
             case AudioType.Music:
-                playerData.MusicVolume = value;
+                playerData.playerSettingsData.MusicVolume = value;
                 audioService.SetMusicVolume(value);
                 break;
             case AudioType.SFX:
-                playerData.SFXVolume = value;
+                playerData.playerSettingsData.SFXVolume = value;
                 audioService.SetSoundVolume(value);
                 break;
             default:

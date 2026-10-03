@@ -46,7 +46,7 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
 
         PlayerData playerData = dataService.GetPlayerData();
         PlayerShipData playerShipData = playerData.GetCurrentPlayerShipData();
-        SetMaxHealth(playerShipData.level);
+        SetMaxHealth(playerShipData.Level);
 
     }
     private void Start()

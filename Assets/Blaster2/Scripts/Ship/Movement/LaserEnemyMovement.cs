@@ -34,7 +34,7 @@ public class LaserEnemyMovement : BaseEnemyMovement
        
         if (CheckOutOfSight())
         {
-            enemy.Exit();
+            ship.Exit();
         }
     }
 }

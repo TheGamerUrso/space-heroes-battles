@@ -50,8 +50,8 @@ public class UpgradeElement : MonoBehaviour
 
     private void Update()
     {
-        Price.color = playerData.Coins < upgrade.Cost ? Color.red : Color.green;
-        buyButton.interactable = playerData.Coins < upgrade.Cost ? false : true;
+        Price.color = playerData.playerEconomyData.Coins < upgrade.Cost ? Color.red : Color.green;
+        buyButton.interactable = playerData.playerEconomyData.Coins < upgrade.Cost ? false : true;
     }
 
     public void Refresh()
@@ -82,13 +82,13 @@ public class UpgradeElement : MonoBehaviour
         }
 
 
-        if (playerData.Coins < upgrade.Cost)
+        if (playerData.playerEconomyData.Coins < upgrade.Cost)
         {
             Price.color = Color.red;
             buyButton.interactable = false;
         }
 
-        if (playerShipData.level < upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
+        if (playerShipData.Level < upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
         {
             NotAvailable.SetActive(true);
             Warn(Constants.UnlockedAtLvl + upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType));
@@ -113,14 +113,14 @@ public class UpgradeElement : MonoBehaviour
             return;
         }
 
-        if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
+        if (playerData.playerEconomyData.Coins >= upgrade.Cost && playerShipData.Level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
         {
             if (upgrade.ProgressPresentage == 1)
             {
                 return;
             }
 
-            if (playerData.Coins >= upgrade.Cost && playerShipData.level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
+            if (playerData.playerEconomyData.Coins >= upgrade.Cost && playerShipData.Level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
             {
                 upgrade.LevelUp();
             }

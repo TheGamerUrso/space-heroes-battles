@@ -32,6 +32,96 @@ Transform:
   - {fileID: 958282196323163272}
   m_Father: {fileID: 2646186376599001632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2465218781385327618
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8798808640574399026}
+  - component: {fileID: 4579533774633299539}
+  - component: {fileID: 5078312862503297771}
+  m_Layer: 0
+  m_Name: HitEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8798808640574399026
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2465218781385327618}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0.7071069, y: 0.00000019861234, z: 0.00000019861237, w: 0.70710677}
+  m_LocalPosition: {x: 0, y: 0, z: -8}
+  m_LocalScale: {x: 3, y: 3, z: 3}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3788520271434147999}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &4579533774633299539
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2465218781385327618}
+  m_Mesh: {fileID: 4300000, guid: 3e0afe633e79a7740b9aa0e1ddac47e4, type: 3}
+--- !u!23 &5078312862503297771
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2465218781385327618}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: fa1b2e3526996ee47b6a55a46d2fd741, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2644192601680030190
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,8 +345,8 @@ GameObject:
   - component: {fileID: 4762092534207713788}
   - component: {fileID: 270614816652615922}
   - component: {fileID: 117258650432476582}
-  - component: {fileID: 6844363414370466783}
   - component: {fileID: 9038540809281327723}
+  - component: {fileID: 2885067280684546089}
   m_Layer: 0
   m_Name: Boss1
   m_TagString: Untagged
@@ -469,20 +559,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   animator: {fileID: 2730377324933360770}
   audioSource: {fileID: 4762092534207713788}
-  healthComponent: {fileID: 6844363414370466783}
+  healthComponent: {fileID: 0}
   weaponController: {fileID: 9038540809281327723}
   movementController: {fileID: 117258650432476582}
-  stats:
+  shipData:
     Level: 0
+    Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
-    Health: 0
+  ship_SO: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
   HasShield: 0
-  ShieldEffect: {fileID: 0}
+  ShieldEffect: {fileID: 8019238402802615437}
   enemyState: 0
-  EnemyData: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
   explostionEffect: 0
+  hitEffect: {fileID: 2465218781385327618}
   DestroyableParts: []
   Phase: 0
 --- !u!114 &117258650432476582
@@ -497,6 +588,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0c88147df97e79a419122c2e7b25fba4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   speed: 0
   enemy: {fileID: 0}
   RotationSpeed: 2
@@ -509,26 +601,6 @@ MonoBehaviour:
   currentPos: 0
   changePositionTimer: 0
   speedByPhase: 2
---- !u!114 &6844363414370466783
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2645545865169793035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b0d29075bf51a945b8057f28e046215, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
-  ship: {fileID: 270614816652615922}
-  currentHealth: 0
-  maxHealth: 0
-  ShieldEffect: {fileID: 8019238402802615437}
-  audioSource: {fileID: 4762092534207713788}
-  hitSFX: {fileID: 8300000, guid: ec94d567e75cef945b3159eba24780c3, type: 3}
-  boxCollider: {fileID: 6694352324657633754}
-  hitEffect: {fileID: 0}
 --- !u!114 &9038540809281327723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -541,9 +613,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e8de0f56e63524d4586401df7102bb48, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  ship: {fileID: 270614816652615922}
   Weapons:
-  - {fileID: 0}
+  - {fileID: 2410849341381721651}
   delayAttak: 3
+--- !u!114 &2885067280684546089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2645545865169793035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf9ac14c39f0364eb696646e684f43d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  ship: {fileID: 270614816652615922}
+  currentHealth: 0
+  maxHealth: 0
+  audioSource: {fileID: 4762092534207713788}
+  hitSFX: {fileID: 8300000, guid: ec94d567e75cef945b3159eba24780c3, type: 3}
+  boxCollider: {fileID: 6694352324657633754}
+  hitEffect: {fileID: 2465218781385327618}
 --- !u!1 &2651163239107571298
 GameObject:
   m_ObjectHideFlags: 0
@@ -642,6 +734,7 @@ Transform:
   - {fileID: 5138269001164840045}
   - {fileID: 8016841095118197825}
   - {fileID: 6070066933154947990}
+  - {fileID: 8798808640574399026}
   m_Father: {fileID: 2646186376599001632}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5288964606463413282

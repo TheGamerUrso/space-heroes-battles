@@ -20,37 +20,19 @@ public class PersistantData : ServiceComponent<IDataService>, IDataService
 
     public void Load()
     {
-       int firstRunIndex = 0;
+        playerData = new PlayerData(Players);
 
-        if (PlayerPrefs.HasKey("FirstRun"))
-        {
-            firstRunIndex = PlayerPrefs.GetInt("FirstRun");
-
-        }
-
-        if (firstRunIndex == 1)
-        {
-            playerData = SaveSystem.LoadGame();
-
-            new GameSettings(
-                  playerData.SFXVolume,
-                  playerData.MusicVolume,
-                  playerData.AutoAttack,
-                  playerData.mute,
-                  playerData.ControlScene);
-
-        }
-        else if (firstRunIndex == 0)
-        {
-            playerData = new PlayerData(Players);
-            PlayerPrefs.SetInt("FirstRun", 1);
-            SaveSystem.SaveGame();
-        }
+        new GameSettings(
+                 playerData.playerSettingsData.SFXVolume,
+                 playerData.playerSettingsData.MusicVolume,
+                 playerData.playerSettingsData.AutoAttack,
+                 playerData.playerSettingsData.mute,
+                 playerData.playerSettingsData.ControlScene);
     }
 
     public void Save()
     {
-        SaveSystem.SaveGame();
+        //SaveSystem.SaveGame();
     }
 
     public PlayerData GetPlayerData()

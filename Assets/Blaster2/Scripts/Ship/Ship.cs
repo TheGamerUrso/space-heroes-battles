@@ -1,16 +1,6 @@
 using System;
 using UnityEngine;
 
-[Serializable]
-public struct Stats 
-{
-    public int Level;
-    public float Damage;
-    public float FireRate;
-    public float Speed;
-    public float Health;
-}
-
 public abstract class Ship : MonoBehaviour
 {
     [SerializeField] protected Animator animator;
@@ -20,16 +10,10 @@ public abstract class Ship : MonoBehaviour
     public BaseMovementController movementController;
 
     [Header("STATS")]
-    public Stats stats;
-    public bool HasShield;
+    public ShipData shipData;
+    public Ship_SO ship_SO;
     public GameObject ShieldEffect;
-    public abstract void SetStats(int level,
-        float baseHealth,
-        float baseSpeed,
-        float baseDamage,
-        float baseFireRate,
-        float baseSuperDamage = 0,
-        float baseSpecialCountdown = 0);
+    public abstract void SetStats(int level);
 
     public virtual void Enter() { }
     public virtual void Exit() { }
@@ -38,12 +22,12 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void ActiveShield()
     {
-        HasShield = true;
-        if (ShieldEffect != null) ShieldEffect.SetActive(HasShield);
+        shipData.HasShield = true;
+        if (ShieldEffect != null) ShieldEffect.SetActive(shipData.HasShield);
     }
     public virtual void DeactivateShield()
     {
-        HasShield = false;
-        if (ShieldEffect != null) ShieldEffect.SetActive(HasShield);
+        shipData.HasShield = false;
+        if (ShieldEffect != null) ShieldEffect.SetActive(shipData.HasShield);
     }
 }

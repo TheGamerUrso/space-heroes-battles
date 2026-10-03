@@ -1,29 +1,20 @@
 ﻿using System;
-using TheGamerUrso.Core;
-using UnityEditor.MPE;
 using UnityEngine;
 
 [Serializable]
 public class BaseSpecialAttack : BaseWeapon
 {
-    protected PlayerData playerData;
-    protected PlayerShipData playerShipData;
     public bool SpecialActive { get; protected set; } = false;
     protected CountDownTimer m_CountDownTimer;
     public float SuperChargeTime { get; set; }
-
-    public void Setup(Ship ship, PlayerData playerData, PlayerShipData playerShipData)
-    {
-        Setup(ship, playerShipData.Damage, playerShipData.FireRate);
-        this.playerData = playerData;
-        this.playerShipData = playerShipData;
-        SetStats(playerShipData);
-    }
 
     public override void Update()
     {
         if (SpecialActive)
         {
+            var playerShipData = ((PlayerShip)ship).GetPlayerShipData();
+            if (playerShipData == null) return;
+
             if (m_CountDownTimer == null)
                 m_CountDownTimer = new CountDownTimer(SuperChargeTime);
 
@@ -32,7 +23,7 @@ public class BaseSpecialAttack : BaseWeapon
                 m_CountDownTimer.m_CountdownTimer -= Time.deltaTime;
                 if (m_CountDownTimer.countToZero())
                 {
-                    playerData.SetSuperMeter(m_CountDownTimer.m_CountdownTimer / SuperChargeTime);
+                    playerShipData.ChargePower = m_CountDownTimer.m_CountdownTimer / SuperChargeTime;
 
                 }
 
@@ -45,7 +36,7 @@ public class BaseSpecialAttack : BaseWeapon
             {
                 DeactivateSpecial();
                 m_CountDownTimer = null;
-                playerData.SetSuperMeter(0);
+                playerShipData.ChargePower = 0;
             }
         }
     }
@@ -54,9 +45,7 @@ public class BaseSpecialAttack : BaseWeapon
     {
         if (SpecialActive == false)
         {
-            SpecialActive = true;
-            playerData.SetUsedSuperCount(1);
-    
+            SpecialActive = true;    
             source.PlayOneShot(weaponData.ShootSFX);
             OnActivateSpecial();
         }
@@ -81,11 +70,14 @@ public class BaseSpecialAttack : BaseWeapon
             return 0;
     }
 
-    public void SetStats(PlayerShipData playerShipData, int weaponType = 1)
+    public override void UpdateStats()
     {
+        var playerShipData = ((PlayerShip)ship).GetPlayerShipData();
+        if (playerShipData == null) return;
+
         Damage = playerShipData.SuperDamage;
-        SuperChargeTime = playerShipData.SuperChargeTime;
         FireRate = playerShipData.FireRate;
+        SuperChargeTime = playerShipData.SuperChargeTime;
     }
 
     public override void Shoot()

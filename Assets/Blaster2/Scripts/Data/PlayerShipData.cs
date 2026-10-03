@@ -1,13 +1,11 @@
 ﻿using System;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
 
 
 [System.Serializable]
-public class PlayerShipData
+public class PlayerShipData : ShipData
 {
     public Action<int, float, float> OnXPValueChanged;
-    public int level;
     public float xp;
     public float xpToLevel;
     public float XPPresentage
@@ -18,77 +16,46 @@ public class PlayerShipData
         }
     }
 
-    #region Player Upgrades
     public int[] Upgrades;
-
-    public float Health;
-    public float Damage;
-    public float FireRate;
-    public float Speed;
     public float SuperDamage;
     public float LaserDamage;
     public float SuperChargeTime;
     public float MagnetPower;
     public float MagnetDistance;
 
-    public bool HasShield
-    {
-        get
-        {
-            if (Upgrades[(int)UpgradeTypeEnum.Shield] == 0)
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-    }
-
-    public bool HasArmorUpgrade
-    {
-        get
-        {
-            if (Upgrades[(int)UpgradeTypeEnum.ArmorUpgrade] == 1)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-    }
-    #endregion
+    public float ChargePower = 0;
+    public int PowerPackCollected = 0;
+    public bool HasArmorUpgrade { get; set; }
 
     public PlayerShipData(Player_SO player)
     {
-        level = 1;
+        Level = 1;
         xp = 0;
         xpToLevel = 100;
         Health = player.baseHealth;
         Speed = player.baseSpeed;
         FireRate = player.baseFireRate;
         Damage = player.baseDamage;
-        SuperDamage = (level * player.baseSuperDamage);
+        SuperDamage = (Level * player.baseSuperDamage);
         SuperChargeTime = player.baseSpecialCountdown;
         MagnetPower = 0;
         MagnetDistance = 0;
         Upgrades = new int[Enum.GetValues(typeof(UpgradeTypeEnum)).Length];
     }
+
+
     public void EarnXP(float ammount)
     {
-        if (level < 20)
+        if (Level < 20)
         {
             xp += ammount;
 
             if (xp >= xpToLevel)
             {
-                level++;
+                Level++;
                 xp = 0;
 
-                xpToLevel = (level / 10 + level % 10) * 100 * Mathf.Pow(10, level / 10);
+                xpToLevel = (Level / 10 + Level % 10) * 100 * Mathf.Pow(10, Level / 10);
             }
         }
         else
@@ -96,7 +63,7 @@ public class PlayerShipData
             xp = 0;
             xpToLevel = 0;
         }
-        OnXPValueChanged?.Invoke(level, xp, xpToLevel);
+        OnXPValueChanged?.Invoke(Level, xp, xpToLevel);
     }
     public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Speed]; }
     public float GetDamageUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Damage]; }
@@ -137,7 +104,7 @@ public class PlayerShipData
         var superCooldown = 0.1f * SuperCooldownUpgrade;
         var superDamage = 1f * SuperDamageUpgrade;
         var armorUpgrade = SuperDamageUpgrade;
-        //TODO PUT THE STATS IN THE RIGHT ORDER
+
         return new float[] {
             SpeedMultiplier,
             FireRateMultiplier,

@@ -2,201 +2,130 @@
 using System.Collections.Generic;
 using TheGamerUrso.Core;
 using UnityEngine;
-
+using UnityEngine.SocialPlatforms.Impl;
 
 [Serializable]
-public class PlayerData
+public class PlayerEconomyData
 {
-    public Action<float> OnChargePowerValueChanged;
-    public Action<int> OnPowerUpValueChanged;
+    public int Coins;
+    public int CoinSpend;
+    public int CoinPicked;
+    public PlayerEconomyData()
+    {
+        Coins = 0;
+        CoinSpend = 0;
+        CoinPicked = 0;
+    }
+}
+[Serializable]
+public class PlayerStatsData
+{
     public float Score;
     public float HighScore;
-    public int[] UnlockedHeroes;
 
-    [Header("Statistics")]
-    public int Coins;
-    public int Kills;
-    public int CoinSpend;
-    public int SuperUsed = 0;
-    public int WaveSurvived;
-    public int CoinPicked;
-    public bool PlayedGame;
-    public bool GotHitInGame;
-    public int BountyKilled;
-    public int EnemyKilled;
-    public int EnemyEscaped;
+    public PlayerStatsData()
+    {
+        Score = 0;
+        HighScore = 0;
+    }
+}
 
-    [Header("Stats")]
-    [Range(0, 1)]
-    public float ChargePower = 0;
-    [Range(0, 4)]
-    public int PowerPackCollected = 0;
-    [Range(0, 2)]
-    public int CurrrentSelectedShip;
-
-    [Header("Settings")]
+[Serializable]
+public class PlayerSettingsData
+{
     public float SFXVolume;
     public float MusicVolume;
     public bool AutoAttack;
     public bool mute;
     [Range(1, 2)]
     public int ControlScene;
-    [Range(0, 20)]
-    public int MaxLevel;
+}
+
+[Serializable]
+public class PlayerData
+{
+    public PlayerStatsData playerStatsData;
+    public PlayerSettingsData playerSettingsData;
+    public PlayerEconomyData playerEconomyData;
+
+    public int CurrrentSelectedShip;
+    public int[] UnlockedHeroes;
+
     public List<QuestData> ListOfPlayerActiveQuest = new List<QuestData>();
 
     public PlayerShipData[] playerShipData = new PlayerShipData[3];
 
     public PlayerData(Player_SO[] players)
     {
-        Score = 0;
-        HighScore = 0;
-        Coins = 0;
-        Kills = 0;
-        ChargePower = 0;
-        CoinSpend = 0;
-        WaveSurvived = 0;
-        SuperUsed = 0;
-        GotHitInGame = false;
-        PlayedGame = false;
-        UnlockedHeroes = new int[3] { 1, 0, 0 };
-        SFXVolume = .7f;
-        MusicVolume = .7f;
-        AutoAttack = true;
-        mute = false;
-        ControlScene = 1;
+        playerStatsData = new PlayerStatsData();
+        playerSettingsData = new PlayerSettingsData();
+        playerEconomyData = new PlayerEconomyData();
+
         playerShipData = new PlayerShipData[players.Length];
+        UnlockedHeroes = new int[3] { 1, 0, 0 };
+
         for (int i = 0; i < players.Length; i++)
         {
             playerShipData[i] = new PlayerShipData(players[i]);
         }
     }
-//======================================================================================================================================================
-    public void SetPlayerKillsCounter(int KillsCounter)
-    {
-        if (KillsCounter == 0)
-        {
-            Kills = KillsCounter;
-            EnemyKilled = KillsCounter;
-        }
-        else
-        {
-            Kills += KillsCounter;
-            EnemyKilled += KillsCounter;
-        }
-    }
-//======================================================================================================================================================
-    public void SetPlayerGotHitCounter(bool value)
-    {
-        GotHitInGame = value;
-        PlayedGame = value;
-    }
-    //======================================================================================================================================================
-    public void SetCurrentSelectShip(int select)
-    {
-        CurrrentSelectedShip = select;
-    }
-//======================================================================================================================================================
-    public void SetControlSceme(int option)
-    {
-        ControlScene = option;
-    }
-//======================================================================================================================================================
-    public void PowerUp(int ammount)
-    {
-        PowerPackCollected += ammount;
-        if (PowerPackCollected > 5)
-        {
-            PowerPackCollected = 5;
-        }
-        OnPowerUpValueChanged?.Invoke(PowerPackCollected);
-    }
-//======================================================================================================================================================
-    public void SetSuperMeter(float ammount)
-    {
-        ChargePower = ammount;
-        if (ChargePower > 1)
-        {
-            ChargePower = 1;
-        }
-        OnChargePowerValueChanged?.Invoke(ChargePower);
-    }
-//======================================================================================================================================================
-    public void SetScore(int score)
-    {
-        Score = score;
-        Score = Mathf.Clamp(Score, 0, 999999999); 
-    }
-    //======================================================================================================================================================
-    public void SetHighscore(int highscore)
-    {
-        HighScore = highscore;
-        HighScore = Mathf.Clamp(HighScore, 0, 999999999);
-    }
-//======================================================================================================================================================
-    public void AbstractCoins(int ammount)
-    {
-        Coins -= ammount;
-        CoinSpend += ammount;
-        if (Coins < 0)
-        {
-            Coins = 0;
-        }
-    }
-//======================================================================================================================================================
-    public void AddCoin(int ammount)
-    {
-        CoinPicked += ammount;
-        Coins += ammount;
-        if (Coins > 9999999)
-        {
-            Coins = 9999999;
-        }
-    }
-//======================================================================================================================================================
-    public void SetWaveSurvivedCount(int value)
-    {
-        if (value == 0)
-        {
-            WaveSurvived = value;
-        }
-        else
-        {
-            WaveSurvived += value;
-        }
-    }
-//======================================================================================================================================================
-    public void SetUsedSuperCount(int ammount)
-    {
-        if (ammount == 0)
-        {
-            SuperUsed = ammount;
-        }
-        else
-        {
-            SuperUsed += ammount;
-        }
-    }
-//======================================================================================================================================================
-    public void SetBossKilledCount()
-    {
-        if(BountyKilled==1)return;
-        BountyKilled = 1;
-    }
-//======================================================================================================================================================
+
     public PlayerShipData GetCurrentPlayerShipData()
     {
         return playerShipData[CurrrentSelectedShip];
     }
-    //======================================================================================================================================================
-    public float GetPowerUpLevelPresentage()
+
+    public void SetCurrentSelectShip(int select)
     {
-        return ChargePower / 1;
+        CurrrentSelectedShip = select;
     }
-    //======================================================================================================================================================
-    public void ResetWeaponPowerUPCollected()
+
+
+    public void UpdateScore(int Score)
     {
-        PowerPackCollected = 0;
+        playerStatsData.Score += Score;
     }
+
+
+    public void UpdateHighScore()
+    {
+        playerStatsData.HighScore = playerStatsData.Score;
+    }
+
+    public void UpdateKills(int amount)
+    {
+
+    }
+
+    public void UpdateSuperUsed(int amount)
+    {
+
+    }
+
+    public void UpdateWaveSurvived(int amount)
+    {
+
+    }
+    public void UpdateBountyKilled(int BountyIndex)
+    {
+
+    }
+    public void UpdateEnemyKilled(int amount)
+    {
+
+    }
+
+
+
+    public void UpdateCurrency(int amount)
+    {
+        playerEconomyData.Coins += amount;
+        playerEconomyData.CoinPicked += amount;
+    }
+    public void UpdateSpendCurrency(int amount)
+    {
+        playerEconomyData.CoinSpend += amount;
+    }
+
 }
 

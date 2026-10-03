@@ -83,9 +83,7 @@ public class MainMenuManager : MonoBehaviour
 
         var dataService = GameContext.Get<IDataService>();
         playerData = dataService.GetPlayerData();
-        playerData.GotHitInGame = false;
-        playerData.PlayedGame = false;
-
+    
         shipSelect.SetShipTexture(playerData.CurrrentSelectedShip);
 
         shipSelect.OnShipSelected += ShipSelect_OnShipSelected;

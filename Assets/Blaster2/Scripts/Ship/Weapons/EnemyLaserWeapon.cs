@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyLaserWeapon : MonoBehaviour
-{   
-    public Enemy user;
+public class EnemyLaserWeapon : BaseWeapon
+{
+    public LaserEnemyMovement laserEnemyMovement;
     public LineRenderer m_LineRenderer;
     public bool active;
     public float maxLaserDistance;
@@ -18,10 +18,6 @@ public class EnemyLaserWeapon : MonoBehaviour
     public bool hitSomething;
     public int direciton;
     public float laserSize;
-    private void Start()
-    {
-        ActiveLaser();
-    }
 
     public void DeactiveLaser()
     {
@@ -37,37 +33,8 @@ public class EnemyLaserWeapon : MonoBehaviour
         sfx.Play();
     }
 
-    private void Update()
-    {
-        direciton = user.GetComponent<LaserEnemyMovement>().left ? 1 : -1;
+    public override void Update() => Shoot();
 
-         if (active)
-        {
-            laserSize = Mathf.Lerp(laserSize, 4, 1);
-
-            if (laserSize > 4)
-            {
-                laserSize = 4;
-            }
-
-            m_LineRenderer.widthMultiplier = laserSize;
-        }
-        if (laserSize == 4)
-        {
-            fullCharge = true;
-        }
-
-        if (hitSomething)
-        {
-            hitEffect.Play();
-            hitEffect.gameObject.SetActive(true);
-        }
-        else
-        {
-            hitEffect.gameObject.SetActive(false);
-        }
-    }
-    
     public void LateUpdate()
     {
         if (active)
@@ -91,7 +58,7 @@ public class EnemyLaserWeapon : MonoBehaviour
                             hitSomething = true;
                             hitEffect.transform.position = hit.point;
                             xHit = hit.point.x;       
-                            damagable.TakeDamage(user.stats.Damage);
+                            damagable.TakeDamage(ship.shipData.Damage);
                         }
                         hitSomething = false; 
                     }
@@ -103,6 +70,37 @@ public class EnemyLaserWeapon : MonoBehaviour
             }
 
             m_LineRenderer.SetPosition(1, new Vector3(xHit * calculatedDirection,transform.position.y, transform.position.z));
+        }
+    }
+
+    public override void Shoot()
+    {
+        direciton = laserEnemyMovement.left ? 1 : -1;
+
+        if (active)
+        {
+            laserSize = Mathf.Lerp(laserSize, 4, 1);
+
+            if (laserSize > 4)
+            {
+                laserSize = 4;
+            }
+
+            m_LineRenderer.widthMultiplier = laserSize;
+        }
+        if (laserSize == 4)
+        {
+            fullCharge = true;
+        }
+
+        if (hitSomething)
+        {
+            hitEffect.Play();
+            hitEffect.gameObject.SetActive(true);
+        }
+        else
+        {
+            hitEffect.gameObject.SetActive(false);
         }
     }
 }

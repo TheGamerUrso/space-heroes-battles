@@ -10,7 +10,7 @@ public class BoxerEnemyMovement : BaseBossEnemyMovement
 
     public override void Move()
     {
-        if(!enemy.GetComponent<BossEnemy>().StartBattle)return;
+        if(!((BossEnemy)ship).StartBattle)return;
         transform.position = Vector3.Lerp(transform.position, Positions[currentPos], speed * Time.deltaTime);
     }
 }

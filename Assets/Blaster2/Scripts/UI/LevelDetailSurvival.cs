@@ -15,7 +15,7 @@ public class LevelDetailSurvival : MonoBehaviour
     {
         dataService = GameContext.Get<IDataService>();
 
-        score.text = "Highscore \n" + dataService.GetPlayerData().HighScore;
+        score.text = "Highscore \n" + dataService.GetPlayerData().playerStatsData.HighScore;
     }
 
 }

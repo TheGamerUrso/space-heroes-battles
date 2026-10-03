@@ -26,9 +26,9 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
         transform.position = Path[currentPointToFollowIndex].transform.position;
         transform.rotation = Quaternion.identity;
 
-        RotateTowardDirection(transform.forward);      
+        RotateTowardDirection(transform.forward);
 
-        if (enemy.GameObjectType == PoolGameObjectType.Enemy4)
+        if (((Enemy)ship).GameObjectType == PoolGameObjectType.Enemy4)
         {
             PingPong = false;
             if (PathIndex == 0)
@@ -66,7 +66,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
                 }
                 else if (!Reset && !PingPong)
                 {
-                    enemy.Exit();
+                    ship.Exit();
                     return;
                 }
             }

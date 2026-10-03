@@ -26,7 +26,7 @@ public class LevelWidget : MonoBehaviour
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        SetPlayerLevelText(playerShipData.level);
+        SetPlayerLevelText(playerShipData.Level);
     }
 
     private void Update()
@@ -46,7 +46,7 @@ public class LevelWidget : MonoBehaviour
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        SetPlayerLevelText(playerShipData.level);
+        SetPlayerLevelText(playerShipData.Level);
     }
 
     public void SetPlayerLevelText(int lvl)

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class WeaponController : MonoBehaviour
 {
-    protected Ship ship;
+    [SerializeField] protected Ship ship;
     [Space(2)]
     [SerializeField] protected BaseWeapon[] Weapons;
     [SerializeField] protected float delayAttak = 3;
@@ -17,15 +17,16 @@ public class WeaponController : MonoBehaviour
         CurrentWeaponIndex = 0;
         DisableAllWeapons();
     }
-    public virtual void Setup(Ship ship, float damage, float fireRate)
+    //=================================================================================
+    public virtual void Setup(Ship ship)
     {
         this.ship = ship;
         for (int weaponIndex = 0; weaponIndex < Weapons.Length; weaponIndex++)
         {
-            Weapons[weaponIndex].Setup(ship, damage, fireRate);
+            Weapons[weaponIndex].Setup(ship);
         }
     }
-
+    //=================================================================================
     public BaseWeapon GetCurrentWeapon()
     {
         // Check if the list is null or completely empty
@@ -42,7 +43,8 @@ public class WeaponController : MonoBehaviour
 
         return Weapons[CurrentWeaponIndex];
     }
- 
+    //=================================================================================
+
     public void DisableAllWeapons()
     {
         for (int i = 0; i < Weapons.Length; i++)
@@ -50,7 +52,7 @@ public class WeaponController : MonoBehaviour
             Weapons[i].gameObject.SetActive(false);
         }
     }
-
+    //=================================================================================
     public void SetWeapon(int weaponIndex)
     {
         if (Weapons.Length != 0)
@@ -58,7 +60,7 @@ public class WeaponController : MonoBehaviour
             SwitchWeapon(0);
         }
     }
-
+    //=================================================================================
     public void EnableAllWeapon()
     {
         Debug.Log(gameObject.name + "");
@@ -70,13 +72,13 @@ public class WeaponController : MonoBehaviour
             }
         }
     }
-
+    //=================================================================================
     public virtual void SwitchWeapon(int weaponIndex)
     {
         DisableAllWeapons();
         Weapons[weaponIndex].gameObject.SetActive(true);
     }
-
+    //=================================================================================
     public void SetFireRate(float fireRate = .2f, int weaponIndex = 0, bool all = true)
     {
         if (all)
@@ -95,17 +97,17 @@ public class WeaponController : MonoBehaviour
             Weapons[weaponIndex].FireRate = newFireRate;
         }
     }
-
+    //=================================================================================
     public void EnableFire()
     {
         ShouldAttack = true;
     }
-
+    //=================================================================================
     public void DisableFire()
     {
         ShouldAttack = false;
     }
-
+    //=================================================================================
     protected virtual void DestroyOwnedProjectiles()
     {
         EnemyProjectile[] enemyProjectiles = GameObject.FindObjectsOfType<EnemyProjectile>();

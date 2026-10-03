@@ -8,7 +8,7 @@ public class DefaultBossEnemyMovement : BaseBossEnemyMovement
     public override void Update()
     {
         base.Update();
-        if(!enemy.GetComponent<BossEnemy>().StartBattle)return;
+        if(!((BossEnemy)ship).StartBattle)return;
         changePositionTimer-=Time.deltaTime;
         if(changePositionTimer<0)
         {

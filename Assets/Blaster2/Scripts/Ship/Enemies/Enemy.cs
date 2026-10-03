@@ -11,56 +11,58 @@ public enum EnemyState
 
 public class Enemy : Ship, ITargetable
 {
-    public EnemyState enemyState;
-
-    public Action<Enemy> OnEnemyAttack;
-    public Action<Enemy> OnEnemyEscaped;
-    public Action<Enemy> OnEnemyEntered;
-    public Enemy_SO EnemyData;
-    protected PlayerData playerData;
-
     public bool Targetable
     {
         get
         {
-            return healthComponent.HasShield || healthComponent.IsAlive;
+            return shipData.HasShield || healthComponent.IsAlive;
         }
     }
 
     public PoolGameObjectType GameObjectType { get; set; }
+
+
+    public EnemyState EnemyState;
+    [SerializeField] protected PoolGameObjectType explostionEffect;
+    [SerializeField] protected GameObject hitEffect;
+    protected int hitIndex;
+    protected int numberOfHits;
+
+    protected float hitEffectTimer;
+    protected float delaytEntry = .5f;
     protected IDataService dataService;
     protected IEventService eventService;
-    private float delaytEntry = .5f;
-    [SerializeField] protected PoolGameObjectType explostionEffect;
 
-    public virtual void Awake()
+    private void Awake()
     {
-        healthComponent.Setup(100, false);
+        SetStats(shipData.Level);
     }
 
     public virtual void Start()
     {
         eventService = GameContext.Get<IEventService>();
-        dataService = GameContext.Get<IDataService>();
-        playerData = dataService.GetPlayerData();
-
         SetState(EnemyState.Idle);
+
+        healthComponent.OnHealthChanged += OnHealthValueChanged;
+    }
+
+    private void OnDestroy()
+    {
+        healthComponent.OnHealthChanged -= OnHealthValueChanged;
     }
 
     public virtual void Update()
     {
-        switch (enemyState)
+        switch (EnemyState)
         {
             case EnemyState.None:
                 break;
             case EnemyState.Idle:
                 healthComponent.tempGodMode();
                 animator.SetBool("Death", false);
-                OnEnemyEntered?.Invoke(this);
 
                 delaytEntry = .5f;
-                animator.SetTrigger("Enter");
-                enemyState = EnemyState.Enter;
+                Enter();
 
                 break;
             case EnemyState.Enter:
@@ -69,7 +71,7 @@ public class Enemy : Ship, ITargetable
                 {
                     healthComponent.SetDamagable(true);
                     weaponController.SetWeapon(0);
-                    enemyState = EnemyState.Combat;
+                    EnemyState = EnemyState.Combat;
                 }
                 break;
             case EnemyState.Combat:
@@ -87,11 +89,19 @@ public class Enemy : Ship, ITargetable
                 SetState(EnemyState.Idle);
                 break;
         }
+
+        if (!hitEffect.activeInHierarchy) return;
+
+        hitEffectTimer -= Time.deltaTime;
+        if (hitEffectTimer <= 0)
+        {
+            hitEffect.SetActive(false);
+        }
     }
 
     public void SetState(EnemyState enemyState)
     {
-        this.enemyState = enemyState;
+        this.EnemyState = enemyState;
     }
 
     public void OnTriggerEnter(Collider other)
@@ -103,50 +113,54 @@ public class Enemy : Ship, ITargetable
         }
     }
 
-    public void SetStats(int level)
+    public override void SetStats(int level)
     {
-        SetStats(level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
+        float healthGrowthRate = 0.25f;
+        float damageGrowthRate = 0.18f;
+
+        shipData.Level = Mathf.Clamp(level, 1, 10);
+
+        shipData.Health = ship_SO.baseHealth * (1f + (healthGrowthRate * (shipData.Level - 1)));
+        shipData.Speed = ship_SO.baseSpeed;
+        shipData.Damage = ship_SO.baseDamage * (1f + (damageGrowthRate * (shipData.Level - 1)));
+        shipData.FireRate = ship_SO.baseFireRate;
+
         var rand = UnityEngine.Random.value;
         if (rand < .2f)
         {
             ActiveShield();
         }
-        else
-        {
-            DeactivateShield();
-        }
+
+        healthComponent.Setup(this);
+        weaponController.Setup(this);
+        movementController.Setup(this);
     }
 
-    public override void SetStats(int level,
-        float baseHealth,
-        float baseSpeed,
-        float baseDamage,
-        float baseFireRate,
-        float baseSuperDamage = 0,
-        float baseSpecialCountdown = 0)
+
+    public override void Enter()
     {
-        float healthGrowthRate = 0.25f;
-        float damageGrowthRate = 0.18f;
+        base.Enter();
 
-        stats.Level = Mathf.Clamp(level, 1, 10);
+        eventService.Publish(new EnemyEvent()
+        {
+            Type = EnemyEvent.EnemyEventType.ENTER
+,
+            Enemy = this,
+            Value = ship_SO.EnemyValue
+        });
 
-        stats.Health = baseHealth * (1f + (healthGrowthRate * (stats.Level - 1)));
-        stats.Speed = baseSpeed;
-        stats.Damage = baseDamage * (1f + (damageGrowthRate * (stats.Level - 1)));
-        stats.FireRate = baseFireRate;
-
-        healthComponent.Setup(stats.Health, false);
-        weaponController.Setup(this, stats.Damage, stats.FireRate);
-        movementController.SetSpeed(stats.Speed);
+        animator.SetTrigger("Enter");
+        SetState(EnemyState.Enter);
     }
 
     public override void Exit()
     {
-        eventService.Publish(new EnemyEscapedEvent()
+        eventService.Publish(new EnemyEvent()
         {
-            enemy = this,
-            times = 1,
-            value = EnemyData.EnemyValue
+            Type = EnemyEvent.EnemyEventType.ESCAPE
+         ,
+            Enemy = this,
+            Value = ship_SO.EnemyValue
         });
 
         SetState(EnemyState.Escape);
@@ -154,18 +168,17 @@ public class Enemy : Ship, ITargetable
     }
     public override void Death()
     {
+        eventService.Publish(new EnemyEvent() { 
+            Type = EnemyEvent.EnemyEventType.DEATH 
+        ,
+        Enemy = this,
+        Value = ship_SO.EnemyValue
+        });
+
         animator.SetBool("Death", true);
         SetState(EnemyState.Death);
 
-        eventService.Publish(new EnemyDiedEvent()
-        {
-            enemy = this,
-            Level = stats.Level,
-            Value = EnemyData.EnemyValue,
-            WasBoss = false
-        });
-
-        var explostion = PoolManager.Instance.GetObjectFromPool(explostionEffect);
+        var explostion = PoolManager.Instance.GetObjectFromPool(ship_SO.ExplostionEffect);
         explostion.transform.position = transform.position;
         explostion.SetActive(true);
 
@@ -176,20 +189,28 @@ public class Enemy : Ship, ITargetable
 
     public override void Hit()
     {
-        eventService.Publish(new EnemyHitEvent()
-        {
-            enemy = this,
-            Hits = 1
-        });
+        hitEffect.SetActive(true);
+        hitEffectTimer = .5f;
 
-        if (HasShield)
+        eventService.Publish(new EnemyEvent()
         {
-            ActiveShield();
-        }
-        else
-        {
+            Type = EnemyEvent.EnemyEventType.HIT     ,
+            Enemy = this,
+            Value = 1
+        });
+    }
+
+      private void OnHealthValueChanged(float currentHealth, float maxHealth)
+    {
+        var healthPresentage = currentHealth / maxHealth;
+
+        if (currentHealth < 1) 
+            Death();
+
+        if (shipData.HasShield) 
             DeactivateShield();
-        }
+
+        Hit();
     }
 
 
@@ -199,7 +220,7 @@ public class Enemy : Ship, ITargetable
         BaseEnemyMovement enemyMovement = GetComponent<BaseEnemyMovement>();
         enemyMovement.Setup(new Vector3(0, 0, 150), Quaternion.Euler(new Vector3(0, 180, 0)));
         SetState(EnemyState.Idle);
-        SetStats(stats.Level, EnemyData.baseHealth, EnemyData.baseSpeed, EnemyData.baseDamage, EnemyData.baseFireRate);
+        SetStats(shipData.Level);
         gameObject.SetActive(true);
     }
 }

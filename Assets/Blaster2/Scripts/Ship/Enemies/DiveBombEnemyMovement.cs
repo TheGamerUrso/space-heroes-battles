@@ -53,7 +53,7 @@ public class DiveBombEnemyMovement : EnemyMovement
 
         if (CheckOutOfSight())
         {
-            enemy.Exit();
+            ((Enemy)ship).Exit();
             return;
         }
 

@@ -84,14 +84,13 @@ GameObject:
   - component: {fileID: 3298114944494633628}
   - component: {fileID: 1933283670592502111}
   - component: {fileID: 4151433114667561841}
-  - component: {fileID: 1675226626586306495}
   m_Layer: 15
   m_Name: Enemy1
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 19
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1330112429161260340
 Transform:
   m_ObjectHideFlags: 0
@@ -339,17 +338,18 @@ MonoBehaviour:
   healthComponent: {fileID: 4151433114667561841}
   weaponController: {fileID: 1933283670592502111}
   movementController: {fileID: 3298114944494633628}
-  stats:
+  shipData:
     Level: 0
+    Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
-    Health: 0
+  ship_SO: {fileID: 11400000, guid: dfc53e26d4cfa3e43bfc020c49e3e568, type: 2}
   HasShield: 0
   ShieldEffect: {fileID: 6666128051353428309}
   enemyState: 0
-  EnemyData: {fileID: 11400000, guid: dfc53e26d4cfa3e43bfc020c49e3e568, type: 2}
   explostionEffect: 7
+  hitEffect: {fileID: 4189618068172357521}
 --- !u!114 &3298114944494633628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -362,6 +362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  ship: {fileID: 1435941801030838864}
   speed: 0
   enemy: {fileID: 1435941801030838864}
   RotationSpeed: 2
@@ -379,6 +380,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debc7d2df7f7d7740816a0376ad109a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  ship: {fileID: 1435941801030838864}
   Weapons: []
   delayAttak: 3
 --- !u!114 &4151433114667561841
@@ -396,23 +398,10 @@ MonoBehaviour:
   ship: {fileID: 1435941801030838864}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 6666128051353428309}
   audioSource: {fileID: 4027941564653448092}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1338249362927483178}
   hitEffect: {fileID: 4189618068172357521}
---- !u!114 &1675226626586306495
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1332800252941561598}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &1332990982962192780
 GameObject:
   m_ObjectHideFlags: 0

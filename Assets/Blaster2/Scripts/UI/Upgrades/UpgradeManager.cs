@@ -50,8 +50,7 @@ public class UpgradeManager : MonoBehaviour
         var upgradeFound = GetUpgrade(upgradeType);
 
         playerShipData.SetUpgradeByType(upgradeType, upgradeFound.Level);
-
-        playerData.AbstractCoins(upgradeFound.Cost);
+        playerData.playerEconomyData.Coins -= upgradeFound.Cost;
 
         var questService = GameContext.Get<IQuestService>();
         questService.SetQuestProgressByType(QuestTypeEnum.SPEND, upgradeFound.Cost);
@@ -70,7 +69,7 @@ public class UpgradeManager : MonoBehaviour
         }
 
 
-        if (playerData.Coins >= upgrade.Cost && playerShipData.level >= GetLevelRequirment(upgrade.upgradeData.upgradeType))
+        if (playerData.playerEconomyData.Coins >= upgrade.Cost && playerShipData.Level >= GetLevelRequirment(upgrade.upgradeData.upgradeType))
         {
             if (upgrade.ProgressPresentage == 1)
             {

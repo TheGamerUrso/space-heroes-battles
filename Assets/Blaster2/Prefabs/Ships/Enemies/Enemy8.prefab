@@ -1727,14 +1727,13 @@ GameObject:
   - component: {fileID: 5723268164745802028}
   - component: {fileID: 7175738625765692132}
   - component: {fileID: 6705894964894173310}
-  - component: {fileID: 7166766911870247667}
   m_Layer: 15
   m_Name: Enemy8
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5723268164745802033
 Transform:
   m_ObjectHideFlags: 0
@@ -1914,17 +1913,18 @@ MonoBehaviour:
   healthComponent: {fileID: 6705894964894173310}
   weaponController: {fileID: 7175738625765692132}
   movementController: {fileID: 5723268164745802028}
-  stats:
+  shipData:
     Level: 0
+    Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
-    Health: 0
+  ship_SO: {fileID: 11400000, guid: 5e8ad8edf6928e44587ac456ad1eaf41, type: 2}
   HasShield: 0
-  ShieldEffect: {fileID: 0}
-  enemyState: 0
-  EnemyData: {fileID: 11400000, guid: 92e6cdc7192f9ae4881d59d7a1003463, type: 2}
+  ShieldEffect: {fileID: 1709781897410177323}
+  EnemyState: 0
   explostionEffect: 7
+  hitEffect: {fileID: 3491753626926057363}
   rocketeerAnimator: {fileID: 1004535202498848988}
 --- !u!114 &5723268164745802028
 MonoBehaviour:
@@ -1938,8 +1938,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 862b9ed042f0cbd42aa5487e364c9d10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 5723268164745802027}
   speed: 0
-  enemy: {fileID: 0}
   RotationSpeed: 2
   RotateTowardDir: 1
   direction: 0
@@ -1956,7 +1956,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debc7d2df7f7d7740816a0376ad109a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponController
-  Weapons: []
+  ship: {fileID: 5723268164745802027}
+  Weapons:
+  - {fileID: 5723268165666356897}
   delayAttak: 3
 --- !u!114 &6705894964894173310
 MonoBehaviour:
@@ -1973,23 +1975,9 @@ MonoBehaviour:
   ship: {fileID: 5723268164745802027}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 1709781897410177323}
   audioSource: {fileID: 5723268164745802030}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 5723268164745802032}
-  hitEffect: {fileID: 0}
---- !u!114 &7166766911870247667
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5723268164745802034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyDropHandler
 --- !u!1 &5723268165026355794
 GameObject:
   m_ObjectHideFlags: 0
@@ -2234,7 +2222,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa6b38e2444044045b6d9d115a78fb68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  user: {fileID: 5723268164745802027}
+  weaponData: {fileID: 11400000, guid: 9cd4d78b5054d954f8b467893c5dabd5, type: 2}
+  source: {fileID: 5723268165666356898}
+  Cannons:
+  - {fileID: 5723268166011795827}
+  particleSFX:
+  - {fileID: 183541529618659269}
+  laserEnemyMovement: {fileID: 5723268164745802028}
   m_LineRenderer: {fileID: 5723268166011795825}
   active: 0
   maxLaserDistance: 150
@@ -3136,7 +3130,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1565581330130888, guid: ecb4481ba783388469f48476d93b437f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 183541529618659269}
   m_SourcePrefab: {fileID: 100100000, guid: ecb4481ba783388469f48476d93b437f, type: 3}
 --- !u!198 &5607814749371323498 stripped
 ParticleSystem:
@@ -3148,3 +3145,21 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4032680935280300, guid: ecb4481ba783388469f48476d93b437f, type: 3}
   m_PrefabInstance: {fileID: 5723268166354318614}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &5722014580240356062 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1565581330130888, guid: ecb4481ba783388469f48476d93b437f, type: 3}
+  m_PrefabInstance: {fileID: 5723268166354318614}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &183541529618659269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5722014580240356062}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 536415a8dbe428d4285ddb4634202dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponFireEffect
+  particleSFX: {fileID: 5607814749371323498}

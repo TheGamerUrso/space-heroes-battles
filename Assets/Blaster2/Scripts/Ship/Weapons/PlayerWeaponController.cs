@@ -5,8 +5,6 @@ using UnityEngine;
 
 public class PlayerWeaponController : WeaponController
 {
-    [SerializeField] protected PlayerData playerData;
-    [SerializeField] protected PlayerShipData playerShipData;
     [Header("Weapons")]
     [SerializeField] private BaseSpecialAttack specialAttack;
     [SerializeField] private AudioSource audioSource;
@@ -19,18 +17,18 @@ public class PlayerWeaponController : WeaponController
         eventService = GameContext.Get<IEventService>();
     }
     //=================================================================================
-    public void Setup(Ship ship, PlayerData playerData, PlayerShipData playerShipData)
+    public override void Setup(Ship ship)
     {
-        Setup(ship, playerShipData.Damage, playerShipData.FireRate);
-        SwitchWeapon(0);
-        specialAttack.Setup(ship, playerData, playerShipData);
+        base.Setup(ship);
+        specialAttack.Setup(ship);
     }
     //=================================================================================
     public void ActivateSpecial()
     {
-        eventService?.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.USE, value = playerData.SuperUsed });
-        playerData.SuperUsed++;
         specialAttack.ActivateSpecial();
+
+        eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.SuperUsed, value = 1 });
+        eventService?.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.USE, value = 1 });
     }
     //=================================================================================
     public void DeactivateSpecial()

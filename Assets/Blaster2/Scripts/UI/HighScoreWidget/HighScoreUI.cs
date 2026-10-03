@@ -22,7 +22,7 @@ public class HighScoreUI : MonoBehaviour
     void Start () 
     {
         var playerData = dataService.GetPlayerData();
-        string highscore = string.Format("{0:00000000}", playerData.HighScore);
+        string highscore = string.Format("{0:00000000}", playerData.playerStatsData.HighScore);
         string score = string.Format("{0:00000000}", gameController.Score);
 
         m_HighScore.text = highscore;

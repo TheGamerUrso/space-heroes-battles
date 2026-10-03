@@ -28,12 +28,12 @@ public class GameplaySettings : MonoBehaviour
             Icons[i].color = DefaultColor;
         }
 
-        Icons[playerData.ControlScene - 1].color = SelectedColor;
+        Icons[playerData.playerSettingsData.ControlScene - 1].color = SelectedColor;
     }
 
     public void UpdateGameplay(int index)
     {
-        playerData.SetControlSceme(index);
+        playerData.playerSettingsData.ControlScene = index;
 
         for (int i = 0; i < Icons.Length; i++)
         {

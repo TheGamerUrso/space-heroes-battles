@@ -21,7 +21,7 @@ public class PlayerXPUI : MonoBehaviour
     {
         this.playerShipData = playerShipData;
         playerShipData.OnXPValueChanged += UpdateXP;
-        UpdateXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+        UpdateXP(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
     }
 
     public void UpdateXP(int lvl, float xp, float xpToLevel)

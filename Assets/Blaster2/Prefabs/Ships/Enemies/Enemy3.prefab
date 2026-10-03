@@ -49,7 +49,6 @@ GameObject:
   - component: {fileID: 5419107286356001790}
   - component: {fileID: 4198404169524597015}
   - component: {fileID: 6888718693806367405}
-  - component: {fileID: 9199381944510050163}
   m_Layer: 15
   m_Name: Enemy3
   m_TagString: Enemy
@@ -301,17 +300,18 @@ MonoBehaviour:
   healthComponent: {fileID: 6888718693806367405}
   weaponController: {fileID: 4198404169524597015}
   movementController: {fileID: 5419107286356001790}
-  stats:
+  shipData:
     Level: 0
+    Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
-    Health: 0
+  ship_SO: {fileID: 11400000, guid: 1efe9ab896acc8144bd88510b795658d, type: 2}
   HasShield: 0
-  ShieldEffect: {fileID: 0}
+  ShieldEffect: {fileID: 2138503217037189460}
   enemyState: 0
-  EnemyData: {fileID: 11400000, guid: 083802b9891d56740b1d537bff6f75a4, type: 2}
   explostionEffect: 7
+  hitEffect: {fileID: 611193977803809183}
 --- !u!114 &5419107286356001790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,6 +324,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 5741593070882385480}
   speed: 0
   enemy: {fileID: 5741593070882385480}
   RotationSpeed: 2
@@ -341,6 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: debc7d2df7f7d7740816a0376ad109a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponController
+  ship: {fileID: 5741593070882385480}
   Weapons:
   - {fileID: 5387066570048745163}
   delayAttak: 3
@@ -359,23 +361,10 @@ MonoBehaviour:
   ship: {fileID: 5741593070882385480}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 2138503217037189460}
   audioSource: {fileID: -6424459942528458188}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 993}
   hitEffect: {fileID: 611193977803809183}
---- !u!114 &9199381944510050163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 553}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b38325d45986be2409638457c333ef43, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: '::'
 --- !u!1 &554
 GameObject:
   m_ObjectHideFlags: 0

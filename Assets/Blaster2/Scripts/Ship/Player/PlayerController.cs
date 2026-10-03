@@ -14,6 +14,11 @@ public class PlayerController : BaseMovementController
     [SerializeField] private float tilt;
     [SerializeField] private PlayerShip playerShip;
     [SerializeField] private GameObject ShipModel;
+    [SerializeField] private float rotationSpeed;
+    [SerializeField] private WeaponController weaponController;
+    [SerializeField] private ItemPickupEffect itemPickupEffect;
+
+    private Camera _cam;
 
     private Vector2 currentMousePosition;
     private Vector2 previousPos;
@@ -21,17 +26,11 @@ public class PlayerController : BaseMovementController
     private Vector3 targetRotation;
     private Plane plane;
     private Ray ray;
-    [SerializeField] private float rotationSpeed;
     private float hitPoint;
     private float deltaX;
     private float deltaY;
     private float offset = 8;
 
-    private Camera _cam;
-    private PlayerShipData playerShipData;
-    private PlayerData playerData;
-
-    //Mouse Click
     private int clicktimes;
     private float delayClickTimer;
     private bool HasClicked;
@@ -40,8 +39,6 @@ public class PlayerController : BaseMovementController
     private IDataService dataService;
     private IEventService eventService;
 
-    [SerializeField] private WeaponController weaponController;
-    [SerializeField] private ItemPickupEffect itemPickupEffect;
     private void Awake()
     {
         _cam = Camera.main;
@@ -57,15 +54,25 @@ public class PlayerController : BaseMovementController
         eventService.Subscribe<ItemPickedUpEvent>(OnItemPickedUpHandled);
         eventService.Subscribe<RewardItemEvent>(OnRewardItemHandled);
 
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        Speed = playerShipData.Speed;
+        var playerData = dataService.GetPlayerData();
+        var shipData = playerData.GetCurrentPlayerShipData();
+        Speed = shipData.Speed;
 
-        controlScemeEnum = (ControlScemeEnum)playerData.ControlScene;
-        playerData.SetSuperMeter(0);
-        playerData.PowerUp(0);
+        controlScemeEnum = (ControlScemeEnum)playerData.playerSettingsData.ControlScene;
+        playerShip.Setup(shipData);
 
-        playerShip.Setup(playerData, playerShipData);
+
+
+        eventService.Subscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
+        eventService.Subscribe<ItemPickedUpEvent>(OnItemPickedUpHandled);
+        eventService.Subscribe<RewardItemEvent>(OnRewardItemHandled);
+    }
+    //=================================================================================
+    private void OnDestroy()
+    {
+        eventService.Unsubscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
+        eventService.Unsubscribe<ItemPickedUpEvent>(OnItemPickedUpHandled);
+        eventService.Unsubscribe<RewardItemEvent>(OnRewardItemHandled);
     }
     //=================================================================================
     private void Update()
@@ -83,12 +90,6 @@ public class PlayerController : BaseMovementController
        GamepadControls();
 #endif
         ClampTransform();
-
-        if (playerData.PowerPackCollected >= 5)
-        {
-            playerData.PowerPackCollected = 0;
-            ((PlayerWeaponController)weaponController).UpgradeWeapon();
-        }
     }
     //=================================================================================
     public void MouseControls()
@@ -97,7 +98,7 @@ public class PlayerController : BaseMovementController
         var moveButtonPressed = Input.GetMouseButton(0) && !IsMouseOverUI();
         var superButtonPressed = Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3");
         var holdFireButtonPressed = Input.touchCount > 1 || (Input.GetMouseButton(1) && Input.GetMouseButton(0)) ? true : false;
-        var playerPowerUp = playerData.GetPowerUpLevelPresentage();
+        var playerPowerUp = playerShip.GetPlayerShipData().ChargePower/ 100;
         weaponController.ShouldAttack = Input.GetMouseButton(0);
 
 
@@ -145,8 +146,6 @@ public class PlayerController : BaseMovementController
                 delayClickTimer = clickDelayTime;
             }
             ((PlayerWeaponController)weaponController).ActivateSpecial();
-            playerData.SetUsedSuperCount(1);
-            eventService?.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.USE, value = playerData.SuperUsed });
         }               
     }
     //=================================================================================
@@ -156,7 +155,7 @@ public class PlayerController : BaseMovementController
         var moveButtonPressed = Input.touchCount > 0 && !IsMouseOverUI();
         var superButtonPressed = Input.GetKeyDown(KeyCode.F) || Input.GetKeyDown(KeyCode.Space) || Input.GetButtonDown("Fire3");
         var holdFireButtonPressed = Input.touchCount > 1 || (Input.GetMouseButton(1) && Input.GetMouseButton(0)) ? true : false;
-        var playerPowerUp = playerData.GetPowerUpLevelPresentage();
+        var playerPowerUp = playerShip.GetPlayerShipData().ChargePower / 100;
 
         if (moveButtonPressed)
         {
@@ -251,56 +250,44 @@ public class PlayerController : BaseMovementController
     public void ClampTransform() => transform.position = new Vector3(Mathf.Clamp(transform.position.x, Constants.m_XMin, Constants.m_XMax), 0, Mathf.Clamp(transform.position.z, 0, 120));
 
     //=================================================================================
-    public void SetWallet(int coin)
-    {
-        playerData.AddCoin(coin);
-        PlayerPrefs.SetInt("CoinTut", 1);
-        eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {coin} $ </color>", targetPos = transform.localPosition });
-    }
-    //=================================================================================
     public void OnRewardItemHandled(RewardItemEvent payload)
     {
         switch (payload.rewardType)
         {
             case RewardTypeEnum.Gold:
-                playerData.AddCoin((int)payload.reward);
+                eventService.Publish(new PlayerEconomyDataUpdatedEvent() { type = PlayerEconomyDataUpdatedEvent.StatType.Coins, value = (int)payload.reward });
                 eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {payload.reward} Coin </color>", targetPos = transform.localPosition });
                 break;
             case RewardTypeEnum.XP:
+                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.XP, value = (int)payload.reward });
+          
+                var playerShipData = playerShip.GetPlayerShipData();
+                if (playerShipData == null) return;
+
                 var xpReward = Mathf.Clamp((float)payload.reward, 1, playerShipData.xpToLevel);
-                playerData.GetCurrentPlayerShipData().EarnXP(xpReward);
+                playerShipData.EarnXP(xpReward);
                 eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {xpReward} XP </color>", targetPos = transform.localPosition });
                 break;
             case RewardTypeEnum.HEALTH:
                 var damagable = playerShip.GetComponent<IDamagable>();
-                damagable.Heal(playerShipData.Health / 2);
+                damagable.Heal(playerShip.healthComponent.CurrentHealth / 2);
                 break;
             case RewardTypeEnum.SHIELD:
                 playerShip.ActiveShield();
                 break;
             case RewardTypeEnum.POWERUP:
-                playerData.PowerUp(2);
+                playerShip.GetPlayerShipData().PowerPackCollected += 2;
                 break;
             case RewardTypeEnum.SUPER:
-                float power = playerData.ChargePower + .5f;
-                playerData.SetSuperMeter(power);
+                playerShip.GetPlayerShipData().ChargePower += .5f;
                 break;
         }
     }
     //=================================================================================
     public void OnLevelValueChanged(int Level)
     {
-        playerShip.SetStats(
-            playerShipData.level,
-            playerShipData.Health,
-            playerShipData.Speed, 
-            playerShipData.Damage,
-            playerShipData.FireRate,
-            playerShipData.SuperDamage, 
-            playerShipData.SuperChargeTime);
-
-        playerShip.ApplyUpgrades(
-            playerShipData.GetCalculatedUpgradeStats());
+        playerShip.SetStats(Level);
+        playerShip.ApplyUpgrades(playerShip.GetPlayerShipData().GetCalculatedUpgradeStats());
     }
     //=================================================================================
     public void OnItemPickedUpHandled(ItemPickedUpEvent payload)
@@ -308,40 +295,53 @@ public class PlayerController : BaseMovementController
         switch (payload.ItemType)
         {
             case ItemEnum.COIN:
-                SetWallet((int)payload.Ammount);
+                eventService.Publish(new PlayerEconomyDataUpdatedEvent() { type = PlayerEconomyDataUpdatedEvent.StatType.Coins, value = (int)payload.Ammount });
+
+                PlayerPrefs.SetInt("CoinTut", 1);
+                eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {(int)payload.Ammount} $ </color>", targetPos = transform.localPosition });
                 break;
             case ItemEnum.SHIELD:
                 playerShip.ActiveShield();
                 itemPickupEffect.Show(0);
                 break;
             case ItemEnum.POWERUP:
-                bool canUseItem = playerShip.playerStats.CanUsePowerUpItem;
+                bool canUseItem = playerShip.GetPlayerSO().CanUsePowerUpItem;
                 itemPickupEffect.Show(1);
                 if (canUseItem)
                 {
                     if (weaponController.CurrentWeaponIndex < 4)
                     {
-                        playerData.PowerUp(2);
+                        playerShip.GetPlayerShipData().PowerPackCollected += 1;
                     }
                     else
                     {
-                        playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
+                        playerShip.GetPlayerShipData().ChargePower += 0.025f;
                     }
 
                 }
                 else if (!canUseItem)
                 {
-                    playerData.SetSuperMeter(playerData.ChargePower + 0.025f);
+                    playerShip.GetPlayerShipData().ChargePower += 0.025f;
                 }
                 break;
             case ItemEnum.HEALTH:
-                playerShip.healthComponent.Heal(((float)payload.Ammount) * playerShipData.level);
+                playerShip.healthComponent.Heal(((float)payload.Ammount) * playerShip.GetPlayerShipData().Level);
                 itemPickupEffect.Show(2);
                 break;
-            case ItemEnum.EMPTY:
+        }
+    }
+
+    public void PlayerStatsUpdateEventHandled(PlayerStatsUpdatedEvent payload)
+    {
+        switch (payload.type)
+        {
+            case PlayerStatsUpdatedEvent.StatType.ChargePower:
+                playerShip.GetPlayerShipData().ChargePower += (int)payload.value;
                 break;
-            default:
+            case PlayerStatsUpdatedEvent.StatType.PowerPackCollected:
+                playerShip.GetPlayerShipData().PowerPackCollected += (int)payload.value;
                 break;
         }
+
     }
 }

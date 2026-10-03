@@ -30,14 +30,14 @@ public class XPWidget : MonoBehaviour
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        SetPlayerXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+        SetPlayerXP(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
     }
 
     public void NewShipSelected(int shipSelected)
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
 
-        SetPlayerXP(playerShipData.level, playerShipData.xp, playerShipData.xpToLevel);
+        SetPlayerXP(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
     }
 
     private void Update()

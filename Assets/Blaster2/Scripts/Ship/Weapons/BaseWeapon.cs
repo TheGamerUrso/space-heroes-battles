@@ -32,11 +32,11 @@ public abstract class BaseWeapon : MonoBehaviour
     protected Vector3 playerLastLocation;
     public bool AutoAttack { get; set; }
 
-    public virtual void Setup(Ship ship, float damage, float fireRate)
+    public virtual void Setup(Ship ship)
     {
-        this.ship = ship;
         Cannons = transform.Cast<Transform>().ToArray();
-        SetStats(damage, fireRate);
+        this.ship = ship;
+        UpdateStats();
     }
 
     public virtual void Update()
@@ -69,9 +69,9 @@ public abstract class BaseWeapon : MonoBehaviour
 
     public abstract void Shoot();
 
-    public virtual void SetStats(float damage,float fireRate)
+    public virtual void UpdateStats()
     {
-        Damage = damage / Cannons.Length;
-        FireRate = fireRate;
+        Damage = ship.shipData.Damage / Cannons.Length;
+        FireRate = ship.shipData.FireRate;
     }
 }
