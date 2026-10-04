@@ -55,10 +55,13 @@ public class WeaponController : MonoBehaviour
     //=================================================================================
     public void SetWeapon(int weaponIndex)
     {
-        if (Weapons.Length != 0)
-        {
-            SwitchWeapon(0);
-        }
+        if (Weapons.Length == 0) return;
+        SwitchWeapon(weaponIndex);
+    }  
+    //=================================================================================
+    public void EquipRandomWeapon()
+    {
+        SwitchWeapon((UnityEngine.Random.Range(0, Weapons.Length)));
     }
     //=================================================================================
     public void EnableAllWeapon()

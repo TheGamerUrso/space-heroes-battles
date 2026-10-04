@@ -192,10 +192,15 @@ public class GuiManager : MonoBehaviour
         eventService?.Publish(new IncomingTransmitionEvent());
     }   
     //=================================================================================
-    public void BossWarning()
+    public void BossWarning(Action callback)
     {
         IncomingTransmition = true;
-        IncomingBossUI.RecieveTransmition(new string[0],false, OnIncomingTranmsionEnded);
+        IncomingBossUI.RecieveTransmition(new string[0],
+            false, () => 
+            {
+                callback?.Invoke();
+                OnIncomingTranmsionEnded();
+            });
     }
     //=================================================================================
     public void OnIncomingTranmsionEnded()

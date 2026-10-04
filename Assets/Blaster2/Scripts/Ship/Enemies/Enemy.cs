@@ -31,6 +31,7 @@ public class Enemy : Ship, ITargetable
     protected float delaytEntry = .5f;
     protected IDataService dataService;
     protected IEventService eventService;
+    [SerializeField] private float speedVariance = 10f;
 
     private void Awake()
     {
@@ -119,7 +120,8 @@ public class Enemy : Ship, ITargetable
         shipData.Level = Mathf.Clamp(level, 1, 10);
 
         shipData.Health = ship_SO.baseHealth * (1f + (healthGrowthRate * (shipData.Level - 1)));
-        shipData.Speed = ship_SO.baseSpeed;
+
+        shipData.Speed = UnityEngine.Random.Range(ship_SO.baseSpeed - speedVariance, ship_SO.baseSpeed + speedVariance);
         shipData.Damage = ship_SO.baseDamage * (1f + (damageGrowthRate * (shipData.Level - 1)));
         shipData.FireRate = ship_SO.baseFireRate;
 

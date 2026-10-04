@@ -456,7 +456,7 @@ GameObject:
   - component: {fileID: 2864988915761891569}
   - component: {fileID: 578425766118879459}
   - component: {fileID: 2325562087495463868}
-  - component: {fileID: 969367995261294174}
+  - component: {fileID: 1810807022017074708}
   m_Layer: 15
   m_Name: Enemy5
   m_TagString: Enemy
@@ -707,7 +707,7 @@ MonoBehaviour:
   audioSource: {fileID: 4182043450637214606}
   healthComponent: {fileID: 2325562087495463868}
   weaponController: {fileID: 578425766118879459}
-  movementController: {fileID: 969367995261294174}
+  movementController: {fileID: 1810807022017074708}
   shipData:
     Level: 1
     Health: 0
@@ -754,7 +754,9 @@ MonoBehaviour:
   audioSource: {fileID: 4182043450637214606}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1139998693391308860}
---- !u!114 &969367995261294174
+  lastHitTime: 0
+  hitCooldown: 0
+--- !u!114 &1810807022017074708
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -763,14 +765,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 8746143244605377970}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6019cece56864eb438402047508096c4, type: 3}
+  m_Script: {fileID: 11500000, guid: 7591143a80ca4a8458a0a47c64235ca3, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
+  m_EditorClassIdentifier: Assembly-CSharp::StationaryStrafeMovement
   ship: {fileID: 2864988915761891569}
   speed: 0
   RotationSpeed: 2
   RotateTowardDir: 1
-  UseManeuver: 1
+  targetStopY: 100
+  strafeSpeed: 3.5
+  changeDirectionInterval: 2
 --- !u!1 &8897704693328578823
 GameObject:
   m_ObjectHideFlags: 0

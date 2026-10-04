@@ -21,11 +21,11 @@ public class IncomingBossMessageUI : BaseIncomingMessage
         float length = animatorClipInfo[0].length;
         WaitForSeconds delay = new WaitForSeconds(length);
 
-        BossStageWarning.gameObject.SetActive(true);
+        Show();
 
         yield return delay;
 
-        BossStageWarning.gameObject.SetActive(false);
+        Hide();
         OnTransmisionEnded?.Invoke();
 
     }

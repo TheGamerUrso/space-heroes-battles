@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5899636908768079187}
-  - component: {fileID: 450053122754591996}
   m_Layer: 0
   m_Name: Effects
   m_TagString: Untagged
@@ -42,28 +41,6 @@ Transform:
   - {fileID: 6259196986920690885}
   m_Father: {fileID: 6409249336527445079}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &450053122754591996
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 138211767833458599}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 35c33a99cf372d44ea9a748a4c0400a7, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &320565242685163455
 GameObject:
   m_ObjectHideFlags: 0
@@ -94,8 +71,8 @@ Transform:
   m_GameObject: {fileID: 320565242685163455}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -6.2299, y: -0.5738, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -18.6897, y: -1.7214, z: 5.08}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8807093748421307144}
@@ -104,7 +81,7 @@ Transform:
   - {fileID: 6159469115580144950}
   - {fileID: 522788659832698593}
   - {fileID: 4372447037573532900}
-  m_Father: {fileID: 3314340119052440620}
+  m_Father: {fileID: 7875227743399356910}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &8856263007202610322
 BoxCollider:
@@ -279,11 +256,11 @@ MonoBehaviour:
   ship: {fileID: 3944207826785459031}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 4370049907826433064}
   audioSource: {fileID: 72861508929626136}
   hitSFX: {fileID: 8300000, guid: 7879018cb93baa34a81daf08f7d4679a, type: 3}
   boxCollider: {fileID: 8856263007202610322}
-  hitEffect: {fileID: 1521776450358285517}
+  lastHitTime: 0
+  hitCooldown: 0
 --- !u!1 &448857427072043418
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,6 +472,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 7875227743399356910}
   - {fileID: 2896341873845809231}
   m_Father: {fileID: 6409249336527445079}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -889,8 +867,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5778358470967328330}
-  - {fileID: 7098348223266293607}
-  - {fileID: 5195766273193576498}
   m_Father: {fileID: 6409249336527445079}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4343714109725733465
@@ -1163,6 +1139,39 @@ MeshRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &4545117458142254922
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7875227743399356910}
+  m_Layer: 0
+  m_Name: Weapon1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7875227743399356910
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4545117458142254922}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 7098348223266293607}
+  - {fileID: 5195766273193576498}
+  m_Father: {fileID: 6482900006143452500}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4610561539564044398
 GameObject:
   m_ObjectHideFlags: 0
@@ -1224,8 +1233,8 @@ Transform:
   m_GameObject: {fileID: 7388271882823788598}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.2299, y: -0.5738, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 18.6897, y: -1.7214, z: 5.08}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6667353451226986799}
@@ -1234,7 +1243,7 @@ Transform:
   - {fileID: 4286724266209586438}
   - {fileID: 3772362497230828310}
   - {fileID: 8363257038467533443}
-  m_Father: {fileID: 3314340119052440620}
+  m_Father: {fileID: 7875227743399356910}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &507208030636668920
 BoxCollider:
@@ -1409,11 +1418,11 @@ MonoBehaviour:
   ship: {fileID: 3944207826785459031}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 8366498030204623439}
   audioSource: {fileID: 997374680395627140}
   hitSFX: {fileID: 8300000, guid: 7fc7cec712691a44aa1374de30c65523, type: 3}
   boxCollider: {fileID: 507208030636668920}
-  hitEffect: {fileID: 4501683747151973921}
+  lastHitTime: 0
+  hitCooldown: 0
 --- !u!1 &8919108208540936584
 GameObject:
   m_ObjectHideFlags: 0
@@ -1666,17 +1675,19 @@ MonoBehaviour:
   healthComponent: {fileID: 7048067443027768388}
   weaponController: {fileID: 8733662089950650374}
   movementController: {fileID: 2715474510764480597}
-  stats:
-    Level: 1
+  shipData:
+    Level: 0
+    Health: 0
     Damage: 0
     FireRate: 0
     Speed: 0
-    Health: 0
-  HasShield: 0
+    HasShield: 0
+  ship_SO: {fileID: 0}
   ShieldEffect: {fileID: 5414371441509973888}
-  enemyState: 0
-  EnemyData: {fileID: 11400000, guid: 060fc5b36ebf35145ab28eaebde0b7cb, type: 2}
+  EnemyState: 0
   explostionEffect: 0
+  hitEffect: {fileID: 0}
+  speedVariance: 10
   DestroyableParts: []
   Phase: 0
 --- !u!114 &2715474510764480597
@@ -1691,8 +1702,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e22062d1b40b3454d9a645c539f844b3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   speed: 0
-  enemy: {fileID: 3944207826785459031}
   RotationSpeed: 2
   RotateTowardDir: 1
   Positions:
@@ -1718,11 +1729,11 @@ MonoBehaviour:
   ship: {fileID: 3944207826785459031}
   currentHealth: 0
   maxHealth: 0
-  ShieldEffect: {fileID: 5414371441509973888}
   audioSource: {fileID: 8974349977872946961}
   hitSFX: {fileID: 8300000, guid: ec94d567e75cef945b3159eba24780c3, type: 3}
   boxCollider: {fileID: 6792077717865052970}
-  hitEffect: {fileID: 4343714109725733465}
+  lastHitTime: 0
+  hitCooldown: 0
 --- !u!114 &8733662089950650374
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1735,6 +1746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09fa425f81a4ff14da7b3f4afa22adc6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  ship: {fileID: 0}
   Weapons:
   - {fileID: 7202008812173789696}
   delayAttak: 3
@@ -2576,11 +2588,6 @@ MonoBehaviour:
 --- !u!4 &8363257038467533443 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6403269674762385397, guid: f879758ca74f5d14db1362a409f19936, type: 3}
-  m_PrefabInstance: {fileID: 3228159681970748790}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &8366498030204623439 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6401725587664185145, guid: f879758ca74f5d14db1362a409f19936, type: 3}
   m_PrefabInstance: {fileID: 3228159681970748790}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4345751448992625844

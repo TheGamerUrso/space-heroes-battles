@@ -26,6 +26,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4675817566442647257}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -34,7 +35,6 @@ Transform:
   - {fileID: 10559751453615626}
   - {fileID: 3648963568965441140}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &-3189057542827783400
 Rigidbody:
@@ -43,10 +43,21 @@ Rigidbody:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4675817566442647257}
-  serializedVersion: 2
+  serializedVersion: 5
   m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
@@ -60,9 +71,17 @@ BoxCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4675817566442647257}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 1
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Size: {x: 0.4036042, y: 0.41129875, z: 3.4187298}
   m_Center: {x: 0.010373622, y: 0.005771637, z: 0.24081922}
 --- !u!114 &-4009424591164492747
@@ -77,13 +96,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ac3fae5a1c7e3f4784ef097cb2d8695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 75
+  Damage: 0
+  speed: 70
   ExplosionPrefab: 6
 --- !u!1001 &14882187292508622
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 553052603788622889}
     m_Modifications:
     - target: {fileID: 1223216083384138, guid: 57369ee17caa1a2499b2aaa832a1134d, type: 3}
@@ -150,17 +171,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 23298332008258128, guid: 57369ee17caa1a2499b2aaa832a1134d,
-        type: 3}
+    - target: {fileID: 23298332008258128, guid: 57369ee17caa1a2499b2aaa832a1134d, type: 3}
       propertyPath: m_ReceiveGI
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 57369ee17caa1a2499b2aaa832a1134d, type: 3}
 --- !u!4 &10559751453615626 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4885458815428548, guid: 57369ee17caa1a2499b2aaa832a1134d,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 4885458815428548, guid: 57369ee17caa1a2499b2aaa832a1134d, type: 3}
   m_PrefabInstance: {fileID: 14882187292508622}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3651839105461968806
@@ -168,6 +190,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 553052603788622889}
     m_Modifications:
     - target: {fileID: 1598324380993774, guid: 7eedf4519460a0842af962a850d94e97, type: 3}
@@ -227,10 +250,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7eedf4519460a0842af962a850d94e97, type: 3}
 --- !u!4 &3648963568965441140 stripped
 Transform:
-  m_CorrespondingSourceObject: {fileID: 4021296802695634, guid: 7eedf4519460a0842af962a850d94e97,
-    type: 3}
+  m_CorrespondingSourceObject: {fileID: 4021296802695634, guid: 7eedf4519460a0842af962a850d94e97, type: 3}
   m_PrefabInstance: {fileID: 3651839105461968806}
   m_PrefabAsset: {fileID: 0}

@@ -130,9 +130,11 @@ public class WaveManager : MonoBehaviour
                     waveData.timer = waveData.Cooldown;
                     if (waveData.Wave >= 10)
                     {
-                        guiManager.BossWarning();
                         if (guiManager.IncomingTransmition) return;
-                        currentLoopState = GameplayLoopState.BossWaveSetup;
+                        guiManager.BossWarning(() => 
+                        { 
+                            currentLoopState = GameplayLoopState.BossWaveSetup; 
+                        });                               
                     }
                     else
                     {
@@ -273,6 +275,8 @@ public class WaveManager : MonoBehaviour
         BossEnemy enemy = currentBoss.GetComponentInChildren<BossEnemy>();
         int enemyLevel = Mathf.Max(1, waveData.Wave / 2);
         enemy.SetStats(difficulty);
+       
+        enemy.weaponController.EquipRandomWeapon();
         return enemy;
     }
     //=================================================================================
@@ -308,5 +312,16 @@ public class WaveManager : MonoBehaviour
                 break;
         }
         waveData.TotalAliveEnemies--;
+    }
+    public int availableEnemy = 0;
+    [ContextMenu("Debug_Boss")]
+    public void Debug_SpawnEnemyElement()
+    {
+        waveData.HasBoss = true;
+        if (guiManager.IncomingTransmition) return;
+        guiManager.BossWarning(() =>
+        {
+            currentLoopState = GameplayLoopState.BossWaveSetup;
+        });
     }
 }

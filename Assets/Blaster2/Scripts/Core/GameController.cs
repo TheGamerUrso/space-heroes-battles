@@ -305,8 +305,7 @@ public class GameController : MonoBehaviour
                 int xpEarned = Mathf.Max(1, Mathf.RoundToInt(baseXP * xpMultiplier));
 
                 playerData.GetCurrentPlayerShipData().EarnXP(xpEarned);
-                Score += (int)payload.Value;
-
+                SetScore((int)payload.Value);
                 eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {xpEarned} XP </color>", targetPos = transform.localPosition });
                 IncreaseMultiplier();
                 eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.Kills, value = 0});
@@ -335,6 +334,7 @@ public class GameController : MonoBehaviour
         {
             case PlayerEconomyDataUpdatedEvent.StatType.Coins:
                 playerData.UpdateCurrency((int)payload.value);
+                OnGameCoinsPickedValueChanged?.Invoke((int)payload.value);
                 break;
         }
     }
