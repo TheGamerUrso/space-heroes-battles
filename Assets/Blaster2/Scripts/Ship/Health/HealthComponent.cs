@@ -20,16 +20,9 @@ public class HealthComponent : MonoBehaviour , IDamagable
     [SerializeField] protected AudioSource audioSource;
     [SerializeField] protected AudioClip hitSFX;
     [SerializeField] protected BoxCollider boxCollider;
-
-    protected float invisibilityTimer;
-
-    private void Update()
-    {
-        if (invisibilityTimer >= 0)
-        {
-            invisibilityTimer -= Time.deltaTime;
-        }  
-    }
+    private float lastHitFrame = -1f;
+    public float lastHitTime = 0;
+    public float hitCooldown = 0;
 
     public void Setup(Ship ship)
     {
@@ -38,28 +31,49 @@ public class HealthComponent : MonoBehaviour , IDamagable
         IsAlive = true;
     }
 
-    public virtual void TakeDamage(float dmg,bool IgnoreShield = false)
+    public virtual void TakeDamage(float dmg, bool IgnoreShield = false)
     {
         if (!IsAlive) return;
 
         audioSource.PlayOneShot(hitSFX);
 
         bool IsShieldActive = IgnoreShield ? false : ship.shipData.HasShield;
-
-        if (invisibilityTimer <= 0)
+        if (IsShieldActive)
         {
-            invisibilityTimer = .25f;
-            if (!IsShieldActive)
-            {
-                currentHealth -= dmg;
-            }
-            if (CurrentHealth < 1)
-            {
-                IsAlive = false;
-            }
+            ship.DeactivateShield();
 
+            return;
         }
-        OnHealthChanged?.Invoke(CurrentHealth, maxHealth);
+        // 1. Check if this damage is part of a simultaneous multi-bullet spread hit (same frame)
+        bool isSameFrameBurst = (Time.frameCount == lastHitFrame);
+        // 2. If it's NOT the same frame, enforce your rapid-fire hit cooldown
+        if (!isSameFrameBurst && (Time.time - lastHitTime < hitCooldown))
+        {
+            return; // Block rapid-fire spam, but allow simultaneous multi-bullets!
+        }
+        // 3. Apply Damage
+        currentHealth -= dmg;
+        OnHealthChanged?.Invoke(currentHealth, maxHealth);
+
+        // 4. Play audio ONLY once per hit event (prevents audio spam from multi-bullets)
+        if (!isSameFrameBurst && hitSFX != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(hitSFX);
+        }
+
+        // 5. Update tracking variables
+        lastHitTime = Time.time;
+        lastHitFrame = Time.frameCount;
+
+        CheckDeath();
+    }
+    //=================================================================================
+    public void CheckDeath()
+    {
+        if (CurrentHealth < 1)
+        {
+            IsAlive = false;
+        }
     }
     //=================================================================================
     public virtual void Heal(float amount)
@@ -83,9 +97,4 @@ public class HealthComponent : MonoBehaviour , IDamagable
             boxCollider = GetComponent<BoxCollider>();
         boxCollider.enabled = enabled;
     }   
-    //=================================================================================
-    public void tempGodMode()
-    {
-        invisibilityTimer = 1;
-    }
 }

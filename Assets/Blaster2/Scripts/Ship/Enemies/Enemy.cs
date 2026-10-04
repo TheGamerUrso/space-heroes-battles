@@ -27,7 +27,6 @@ public class Enemy : Ship, ITargetable
     [SerializeField] protected GameObject hitEffect;
     protected int hitIndex;
     protected int numberOfHits;
-
     protected float hitEffectTimer;
     protected float delaytEntry = .5f;
     protected IDataService dataService;
@@ -58,7 +57,6 @@ public class Enemy : Ship, ITargetable
             case EnemyState.None:
                 break;
             case EnemyState.Idle:
-                healthComponent.tempGodMode();
                 animator.SetBool("Death", false);
 
                 delaytEntry = .5f;

@@ -267,8 +267,6 @@ public class GameController : MonoBehaviour
 
         var playerShipData = dataService.GetPlayerData().GetCurrentPlayerShipData();
         currentPlayer = GameObject.Instantiate(PlayerShips[id].prefab.gameObject);
-        currentPlayer.GetComponentInChildren<PlayerShip>().Setup(playerShipData);
-
         currentPlayer.SetActive(true);
 
         return currentPlayer;

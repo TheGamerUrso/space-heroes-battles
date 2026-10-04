@@ -173,7 +173,7 @@ public class WaveManager : MonoBehaviour
                 {
                     if (gameController.CurrentGameState != GameState.GAMEOVER)
                     {
-                         //gameController.GameOver();
+                            gameController.GameOver();
                           currentLoopState = GameplayLoopState.Ended;
                           return;
                     }
@@ -271,6 +271,7 @@ public class WaveManager : MonoBehaviour
         currentBoss.name = BossPrefab.name;
 
         BossEnemy enemy = currentBoss.GetComponentInChildren<BossEnemy>();
+        int enemyLevel = Mathf.Max(1, waveData.Wave / 2);
         enemy.SetStats(difficulty);
         return enemy;
     }
@@ -279,7 +280,7 @@ public class WaveManager : MonoBehaviour
     {
         waveData.Difficulty = level;
         enemySpawner.gameObjectTypeList = waveData.enemyElements;
-        enemySpawner.LevelDifficulty = waveData.Difficulty;
+        enemySpawner.currentWave = waveData.Difficulty;
     }
     //=================================================================================
     private void StartHyperspaceSequence()

@@ -15,7 +15,7 @@ public class SpawnLocations
 public class EnemySpawner : MonoBehaviour
 {
     public List<PoolGameObjectType> gameObjectTypeList;
-    public int LevelDifficulty;
+    public int currentWave;
 
     public List<SpawnLocations> spawnLocations;
 
@@ -54,8 +54,9 @@ public class EnemySpawner : MonoBehaviour
         var enemy = enemGO.GetComponent<Enemy>();
         enemy.GameObjectType = gameObjectType;
 
-        enemy.SetStats(LevelDifficulty);
- 
+        // Example: Enemy level increases every 3 waves, or matches the wave directly
+        int enemyLevel = Mathf.Max(1, currentWave / 2);
+        enemy.SetStats(enemyLevel);
         var enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
         enemyMovement.Setup(spawnPos.location.position, Quaternion.LookRotation(Vector3.back));
 
@@ -72,8 +73,8 @@ public class EnemySpawner : MonoBehaviour
         var enemGO = PoolManager.Instance.GetObjectFromPool(enemyType);
         var enemy = enemGO.GetComponent<Enemy>();
         enemy.GameObjectType = enemyType;
-
-        enemy.SetStats(LevelDifficulty);
+        int enemyLevel = Mathf.Max(1, currentWave / 2);
+        enemy.SetStats(enemyLevel);
 
         var enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
         enemyMovement.Setup(spawnPos.location.position, Quaternion.LookRotation(Vector3.back));

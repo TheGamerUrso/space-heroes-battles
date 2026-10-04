@@ -79,7 +79,7 @@ public class PlayerShip : Ship
         ApplyUpgrades(playerShipData.GetCalculatedUpgradeStats());
         healthComponent.Setup(this);
         weaponController.Setup(this);
-
+        weaponController.SetWeapon(0);
 
         ((PlayerShipData)shipData).OnPowerPackCollected += ShipData_OnPowerPackCollected;
         ((PlayerShipData)shipData).OnLevelUp += ShipData_OnLevelUpHandled;
@@ -94,6 +94,7 @@ public class PlayerShip : Ship
     private void ShipData_OnLevelUpHandled(int obj)
     {
         eventService.Publish<PlayerStatsUpdatedEvent>(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.Level, value = shipData.Level });
+        SetStats(shipData.Level);
     }
 
     //=================================================================================

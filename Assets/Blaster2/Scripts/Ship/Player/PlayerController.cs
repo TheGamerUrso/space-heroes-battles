@@ -62,7 +62,6 @@ public class PlayerController : BaseMovementController
         controlScemeEnum = (ControlScemeEnum)playerData.playerSettingsData.ControlScene;
         playerShip.Setup(shipData);
 
-        eventService.Subscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
         eventService.Subscribe<ItemPickedUpEvent>(OnItemPickedUpHandled);
         eventService.Subscribe<RewardItemEvent>(OnRewardItemHandled);
     }
@@ -72,7 +71,6 @@ public class PlayerController : BaseMovementController
     //=================================================================================
     private void OnDestroy()
     {
-        eventService.Unsubscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
         eventService.Unsubscribe<ItemPickedUpEvent>(OnItemPickedUpHandled);
         eventService.Unsubscribe<RewardItemEvent>(OnRewardItemHandled);
     }
@@ -332,18 +330,4 @@ public class PlayerController : BaseMovementController
                 break;
         }
     }
-    //=================================================================================
-    public void PlayerStatsUpdateEventHandled(PlayerStatsUpdatedEvent payload)
-    {
-        switch (payload.type)
-        {
-            case PlayerStatsUpdatedEvent.StatType.ChargePower:
-                 playerShip.GetPlayerShipData().UpdateUpserCharge(payload.value);
-                break;
-            case PlayerStatsUpdatedEvent.StatType.PowerPackCollected:
-                playerShip.GetPlayerShipData().UpdatePowerPackCollected((int)payload.value);
-                break;
-        }
-
-    }    
 }

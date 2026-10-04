@@ -136,11 +136,11 @@ public class PlayerShipData : ShipData
     public void UpdatePowerPackCollected(int value)
     {
         PowerPackCollected += value;
+        OnPowerPackCollected?.Invoke(PowerPackCollected);
         if (PowerPackCollected >= 5)
         {
-            PowerPackCollected = 5;
+            PowerPackCollected = 0;
         }
-        OnPowerPackCollected?.Invoke(PowerPackCollected);
     }
 
 

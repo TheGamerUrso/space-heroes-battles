@@ -23,15 +23,16 @@ public class PlayerWeapon : BaseWeapon
             for (int i = 0; i < Cannons.Length; i++)
             {
                 InstansiatedProjectile = PoolManager.Instance.GetObjectFromPool(weaponData.ProjectileType);
-                InstansiatedProjectile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, 0));
+            
                 Vector3 shootDir = Cannons[i].forward;
-                InstansiatedProjectile.SetActive(true);
 
                 InstansiatedProjectile.transform.position = Cannons[i].position;
-
+                InstansiatedProjectile.transform.rotation = Cannons[i].rotation;
                 BaseProjectile projectile = InstansiatedProjectile.GetComponent<BaseProjectile>();
                 projectile.SetDamage(Damage);
                 projectile.SetShootDir(shootDir);
+
+                InstansiatedProjectile.SetActive(true);
             }         
 
             foreach (var item in particleSFX)

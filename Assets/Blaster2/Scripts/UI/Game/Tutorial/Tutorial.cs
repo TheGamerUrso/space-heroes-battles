@@ -52,7 +52,6 @@ public class Tutorial : MonoSingleton<Tutorial>
         TutorialView.gameObject.SetActive(false);
         appService.Unpause();
         Time.timeScale = 1;
-        gameController.GetPlayer().healthComponent.tempGodMode();
     }
 
 }
