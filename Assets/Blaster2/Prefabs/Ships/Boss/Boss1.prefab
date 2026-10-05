@@ -269,7 +269,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf5971c9f8272ca4fbfe3e5eec420ffb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyBossWeapon
-  weaponData: {fileID: 11400000, guid: 7d9e38a6896440242a1fe408eff79197, type: 2}
+  weaponData: {fileID: 11400000, guid: 58117d96f0b961f4285c9632c81231fb, type: 2}
   source: {fileID: 8132643417449901915}
   Cannons:
   - {fileID: 4430734665262430505}
@@ -359,11 +359,11 @@ GameObject:
   - component: {fileID: 4043490678518042185}
   m_Layer: 0
   m_Name: Boss1
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2645545865169793076
 Transform:
   m_ObjectHideFlags: 0
@@ -573,7 +573,7 @@ MonoBehaviour:
   weaponController: {fileID: 9038540809281327723}
   movementController: {fileID: 4043490678518042185}
   shipData:
-    Level: 0
+    Level: 1
     Health: 0
     Damage: 0
     FireRate: 0
@@ -582,11 +582,10 @@ MonoBehaviour:
   ship_SO: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
   ShieldEffect: {fileID: 8019238402802615437}
   EnemyState: 0
-  explostionEffect: 0
+  explostionEffect: 7
   hitEffect: {fileID: 2465218781385327618}
   speedVariance: 10
   DestroyableParts: []
-  Phase: 0
 --- !u!114 &9038540809281327723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -615,7 +614,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf9ac14c39f0364eb696646e684f43d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  ship: {fileID: 270614816652615922}
   currentHealth: 0
   maxHealth: 0
   audioSource: {fileID: 4762092534207713788}
@@ -623,6 +621,7 @@ MonoBehaviour:
   boxCollider: {fileID: 6694352324657633754}
   lastHitTime: 0
   hitCooldown: 0
+  hasShield: 0
 --- !u!114 &4043490678518042185
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2224,6 +2223,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossEnemyHealthBar
       objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483046, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: healthComponent
+      value: 
+      objectReference: {fileID: 2885067280684546089}
     - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

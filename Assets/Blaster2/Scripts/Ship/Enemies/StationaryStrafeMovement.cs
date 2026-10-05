@@ -18,7 +18,7 @@ public class StationaryStrafeMovement : BaseEnemyMovement
         {
             if (ship is Enemy enemy)
             {
-                enemy.Exit();
+                enemy.SetState(EnemyState.Escape);
             }
             return;
         }

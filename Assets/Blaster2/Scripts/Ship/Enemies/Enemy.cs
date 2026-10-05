@@ -32,6 +32,7 @@ public class Enemy : Ship, ITargetable
     protected IDataService dataService;
     protected IEventService eventService;
     [SerializeField] private float speedVariance = 10f;
+    protected bool IsDead;
 
     private void Awake()
     {
@@ -58,32 +59,19 @@ public class Enemy : Ship, ITargetable
             case EnemyState.None:
                 break;
             case EnemyState.Idle:
-                animator.SetBool("Death", false);
-                delaytEntry = .5f;
-                Enter();
-
+                Idle();
                 break;
             case EnemyState.Enter:
-                delaytEntry -= Time.deltaTime;
-                if (delaytEntry <= 0)
-                {
-                    healthComponent.SetDamagable(true);
-                    EnemyState = EnemyState.Combat;
-                }
+                Enter();
                 break;
             case EnemyState.Combat:
-                weaponController.ShouldAttack = true;
-                var currentWeapon = weaponController.GetCurrentWeapon();
-                if (currentWeapon != null)
-                {
-                    currentWeapon.Shoot();
-                }
+                Combat();
                 break;
             case EnemyState.Escape:
-                SetState(EnemyState.Idle);
+                Exit();
                 break;
             case EnemyState.Death:
-                SetState(EnemyState.Idle);
+                Death();
                 break;
         }
 
@@ -95,7 +83,6 @@ public class Enemy : Ship, ITargetable
             hitEffect.SetActive(false);
         }
     }
-
     public void SetState(EnemyState enemyState)
     {
         this.EnemyState = enemyState;
@@ -136,10 +123,16 @@ public class Enemy : Ship, ITargetable
     }
 
 
+    public override void Idle()
+    {
+        animator.SetBool("Death", false);
+        delaytEntry = .5f;
+        SetState(EnemyState.Enter);
+    }
+
     public override void Enter()
     {
         base.Enter();
-
         eventService.Publish(new EnemyEvent()
         {
             Type = EnemyEvent.EnemyEventType.ENTER
@@ -149,7 +142,24 @@ public class Enemy : Ship, ITargetable
         });
 
         animator.SetTrigger("Enter");
-        SetState(EnemyState.Enter);
+
+
+        delaytEntry -= Time.deltaTime;
+        if (delaytEntry <= 0)
+        {
+            healthComponent.SetDamagable(true);
+            SetState(EnemyState.Combat);
+        }
+    }
+
+    public override void Combat()
+    {
+        weaponController.ShouldAttack = true;
+        var currentWeapon = weaponController.GetCurrentWeapon();
+        if (currentWeapon != null)
+        {
+            currentWeapon.Shoot();
+        }
     }
 
     public override void Exit()
@@ -162,9 +172,10 @@ public class Enemy : Ship, ITargetable
             Value = ship_SO.EnemyValue
         });
 
-        SetState(EnemyState.Escape);
+        SetState(EnemyState.Idle);
         gameObject.SetActive(false);
     }
+
     public override void Death()
     {
         eventService.Publish(new EnemyEvent()
@@ -176,7 +187,7 @@ public class Enemy : Ship, ITargetable
         });
 
         animator.SetBool("Death", true);
-        SetState(EnemyState.Death);
+        SetState(EnemyState.Idle);
 
         var explostion = PoolManager.Instance.GetObjectFromPool(ship_SO.ExplostionEffect);
         explostion.transform.position = transform.position;
@@ -205,7 +216,7 @@ public class Enemy : Ship, ITargetable
         var healthPresentage = currentHealth / maxHealth;
 
         if (currentHealth < 1)
-            Death();
+            SetState(EnemyState.Death);
 
         if (shipData.HasShield)
             DeactivateShield();

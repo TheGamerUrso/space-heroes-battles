@@ -74,8 +74,8 @@ public class PunchWeapon : BaseWeapon
     }
     private void SelectAndPreparePunch()
     {
-        bool leftAlive = LeftPunch != null && LeftPunch != null && LeftPunch.IsAlive;
-        bool rightAlive = RightPunch != null && RightPunch != null && RightPunch.IsAlive;
+        bool leftAlive = LeftPunch != null && LeftPunch != null && LeftPunch.healthComponent.IsAlive;
+        bool rightAlive = RightPunch != null && RightPunch != null && RightPunch.healthComponent.IsAlive;
 
         if (!leftAlive && !rightAlive) return; // Both punches destroyed
 
@@ -122,8 +122,8 @@ public class PunchWeapon : BaseWeapon
         currentPunchState = PunchState.Attacking;
         stateTimer = attackDuration;
 
-        bool leftAlive = LeftPunch != null && LeftPunch != null && LeftPunch.IsAlive;
-        bool rightAlive = RightPunch != null && RightPunch != null && RightPunch.IsAlive;
+        bool leftAlive = LeftPunch != null && LeftPunch != null && LeftPunch.healthComponent.IsAlive;
+        bool rightAlive = RightPunch != null && RightPunch != null && RightPunch.healthComponent.IsAlive;
 
         if (isBothAttack)
         {

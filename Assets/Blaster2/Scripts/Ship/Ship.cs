@@ -14,9 +14,10 @@ public abstract class Ship : MonoBehaviour
     public Ship_SO ship_SO;
     public GameObject ShieldEffect;
     public abstract void SetStats(int level);
-
+    public virtual void Idle() { }
     public virtual void Enter() { }
     public virtual void Exit() { }
+    public virtual void Combat() { }
     public virtual void Death() { }
     public virtual void Hit() { }
 

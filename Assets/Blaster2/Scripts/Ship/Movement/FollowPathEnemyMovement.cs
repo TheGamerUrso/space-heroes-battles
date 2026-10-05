@@ -66,7 +66,7 @@ public class FollowPathEnemyMovement : BaseEnemyMovement
                 }
                 else if (!Reset && !PingPong)
                 {
-                    ship.Exit();
+                    ((Enemy)ship).SetState(EnemyState.Escape);
                     return;
                 }
             }

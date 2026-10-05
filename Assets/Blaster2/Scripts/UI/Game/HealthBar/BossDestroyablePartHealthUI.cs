@@ -24,14 +24,14 @@ public class BossDestroyablePartHealthUI : MonoBehaviour
     private void OnDestroy()
     {
         if (bossDestroyable != null)
-            bossDestroyable.OnHealthChanged -= UpdateHealthBar;
+            bossDestroyable.healthComponent.OnHealthChanged -= UpdateHealthBar;
     }
     protected virtual void Awake() => Hide();
 
     protected virtual void Start()
     {
         if (bossDestroyable != null)
-            bossDestroyable.OnHealthChanged += UpdateHealthBar;
+            bossDestroyable.healthComponent.OnHealthChanged += UpdateHealthBar;
     }
     protected void UpdateHealthBar(float currentHealth, float maxHealth)
     {

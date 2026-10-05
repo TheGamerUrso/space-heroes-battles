@@ -11,6 +11,7 @@ public enum GameplayLoopState
     WaitingForEnemiesToClear,
     BossWaveSetup,
     BossBattleActive,
+    BossDefeated,
     RewardScreenActive,
     RewardClaimed,
     HyperspaceTransition,
@@ -21,7 +22,6 @@ public enum GameplayLoopState
 public class WaveData
 {
     public int Difficulty { get; set; }
-    public bool BossBattleInitiated;
     public bool HasBoss;
     public int Wave;
     public float Cooldown = 1f;
@@ -43,7 +43,7 @@ public class WaveData
 public class WaveManager : MonoBehaviour
 {
     public event Action<GameplayLoopState> OnGameplayLoopStateValueChanged;
-    [SerializeField] private GameplayLoopState currentLoopState;
+    public GameplayLoopState currentLoopState;
     [SerializeField] protected EnemySpawner enemySpawner;
 
     protected GameObject enemGO = null;
@@ -58,8 +58,10 @@ public class WaveManager : MonoBehaviour
     [SerializeField] protected GuiManager guiManager;
     protected IDataService dataService;
     protected IEventService eventService;
+    protected IAudioService audioService;
     private PlayerData playerData;
     public WaveData waveData;
+    protected BossEnemy bossEnemy;
 
     public Queue<PoolGameObjectType> waveSpawnQueue = new Queue<PoolGameObjectType>();
     public List<PoolGameObjectType> waveEnemyQueList = new List<PoolGameObjectType>();
@@ -68,6 +70,7 @@ public class WaveManager : MonoBehaviour
         dataService = GameContext.Get<IDataService>();
         playerData = dataService.GetPlayerData();
         eventService = GameContext.Get<IEventService>();
+        audioService = GameContext.Get<IAudioService>();
 
         shortDelay = new WaitForSeconds(waveData.Delay);
         CooldownTimer = new WaitForSeconds(waveData.Cooldown);
@@ -153,9 +156,9 @@ public class WaveManager : MonoBehaviour
                             waveData.timer = waveData.Cooldown;
 
                             currentBoss = waveData.BossFights[UnityEngine.Random.Range(0, waveData.BossFights.Length)];
-                            SpawnBoss(currentBoss, waveData.Difficulty);
+                            bossEnemy = SpawnBoss(currentBoss, waveData.Difficulty);
                             waveData.enemiesSpawnedThisWave = 1;
-
+                            audioService.PlayMusic("Boss");
                             currentLoopState = GameplayLoopState.BossBattleActive;
                         }
                         else
@@ -171,17 +174,20 @@ public class WaveManager : MonoBehaviour
                 }
                 break;
             case GameplayLoopState.BossBattleActive:
-                if (!waveData.BossBattleInitiated)
+                if (bossEnemy != null && bossEnemy.healthComponent.IsAlive) return;
+              
+             
+
+                break;
+            case GameplayLoopState.BossDefeated:
+                if (gameController.CurrentGameState != GameState.GAMEOVER)
                 {
-                    if (gameController.CurrentGameState != GameState.GAMEOVER)
-                    {
-                            gameController.GameOver();
-                          currentLoopState = GameplayLoopState.Ended;
-                          return;
-                    }
-                    waveData.timer = waveData.Cooldown;
-                    currentLoopState = GameplayLoopState.RewardScreenActive;
+                    gameController.GameOver();
+                    currentLoopState = GameplayLoopState.Ended;
+                    return;
                 }
+                waveData.timer = waveData.Cooldown;
+                currentLoopState = GameplayLoopState.RewardScreenActive;
                 break;
             case GameplayLoopState.RewardScreenActive:
 
@@ -191,6 +197,7 @@ public class WaveManager : MonoBehaviour
                 if (waveData.timer <= 0f)
                 {
                     waveData.timer = waveData.Cooldown;
+                    audioService.PlayMusic("Track1");
                     currentLoopState = GameplayLoopState.HyperspaceTransition;
                 }
                 break;

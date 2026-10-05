@@ -1443,7 +1443,7 @@ MonoBehaviour:
   weaponController: {fileID: 9191643537414187221}
   movementController: {fileID: 2882119671520738138}
   shipData:
-    Level: 0
+    Level: 1
     Health: 0
     Damage: 0
     FireRate: 0
@@ -1456,7 +1456,6 @@ MonoBehaviour:
   hitEffect: {fileID: 8716002159733904328}
   speedVariance: 10
   DestroyableParts: []
-  Phase: 0
 --- !u!114 &9222596880422286310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1469,7 +1468,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b0d29075bf51a945b8057f28e046215, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BossHealthComponent
-  ship: {fileID: 4638824606187594180}
   currentHealth: 0
   maxHealth: 0
   audioSource: {fileID: 5970227681493298721}
@@ -1477,6 +1475,7 @@ MonoBehaviour:
   boxCollider: {fileID: 7085417589331760622}
   lastHitTime: 0
   hitCooldown: 0
+  hasShield: 0
 --- !u!114 &9191643537414187221
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3995,6 +3994,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BossEnemyHealthBar (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 7233618025502483046, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
+      propertyPath: healthComponent
+      value: 
+      objectReference: {fileID: 9222596880422286310}
     - target: {fileID: 7233618025502483047, guid: 26029f53ee0293242a35609dfeebfbdd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -63.75

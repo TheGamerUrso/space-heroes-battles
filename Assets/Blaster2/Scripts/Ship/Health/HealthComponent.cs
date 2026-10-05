@@ -1,11 +1,9 @@
 using System;
-using TheGamerUrso.Core;
-using UnityEditor.MPE;
 using UnityEngine;
 
 public class HealthComponent : MonoBehaviour , IDamagable
 {
-    [SerializeField] public Ship ship;
+    protected Ship ship;
     public Action<float, float> OnHealthChanged;
     public bool IsAlive { get; protected set; }
 
@@ -23,10 +21,18 @@ public class HealthComponent : MonoBehaviour , IDamagable
     private float lastHitFrame = -1f;
     public float lastHitTime = 0;
     public float hitCooldown = 0;
-
+    [SerializeField] protected bool hasShield; // Standalone shield flag for non-ship objects
+    public bool HasShield => (ship != null && ship.shipData != null) ? ship.shipData.HasShield : hasShield;
     public void Setup(Ship ship)
     {
         maxHealth = ship.shipData.Health;
+        currentHealth = maxHealth;
+        IsAlive = true;
+    }
+
+    public void Setup(float customMaxHealth, bool hasShield = false)
+    {
+        maxHealth = customMaxHealth;
         currentHealth = maxHealth;
         IsAlive = true;
     }
@@ -37,7 +43,7 @@ public class HealthComponent : MonoBehaviour , IDamagable
 
         audioSource.PlayOneShot(hitSFX);
 
-        bool IsShieldActive = IgnoreShield ? false : ship.shipData.HasShield;
+        bool IsShieldActive = IgnoreShield ? false : HasShield;
         if (IsShieldActive)
         {
             ship.DeactivateShield();

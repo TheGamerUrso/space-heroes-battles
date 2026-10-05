@@ -7,69 +7,36 @@ using UnityEngine.Splines;
 public class BossEnemy : Enemy
 {
     [SerializeField] protected List<BossDestroyablePart> DestroyableParts = new List<BossDestroyablePart>();
-
     public Action<int> OnBossPhaseChanged;
 
     public bool StartBattle { get; protected set; }
-    [SerializeField] private int Phase;
-    private float enterStartDelay = 4;
+    public int Phase { get; set; } = 1;
 
-
-    public override void Start()
+    public override void Enter()
     {
-        base.Start();
-        Phase = 1;
-    }
-
-    public override void Update()
-    {
-        switch (EnemyState)
+        if (animator == null)
         {
-            case EnemyState.None:
-                break;
-            case EnemyState.Idle:
-                animator.SetBool("Death", false);
-                Enter();
-                break;
-            case EnemyState.Enter:
-
-                if (animator == null)
-                {
-                    return;
-                }
-
-                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-
-                // Check if we are currently playing the Enter animation and it has reached or passed 100% completion
-                if (stateInfo.IsName("Flying") && stateInfo.normalizedTime >= 1.0f)
-                {
-                    healthComponent.SetDamagable(true);
-                    weaponController.SetWeapon(0);
-                    EnemyState = EnemyState.Combat;
-                }
-                        break;
-            case EnemyState.Combat:
-                weaponController.ShouldAttack = true;
-                var currentWeapon = weaponController.GetCurrentWeapon();
-                if (currentWeapon != null)
-                {
-                    currentWeapon.Shoot();
-                }
-                break;
-            case EnemyState.Escape:
-                SetState(EnemyState.Idle);
-                break;
-            case EnemyState.Death:
-                SetState(EnemyState.Idle);
-                break;
+            return;
         }
 
-        if (!hitEffect.activeInHierarchy) return;
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
-        hitEffectTimer -= Time.deltaTime;
-        if (hitEffectTimer <= 0)
+        // Check if we are currently playing the Enter animation and it has reached or passed 100% completion
+        if (stateInfo.IsName("Flying") && stateInfo.normalizedTime >= 1.0f)
         {
-            hitEffect.SetActive(false);
+            healthComponent.SetDamagable(true);
+            weaponController.SetWeapon(0);
+            EnemyState = EnemyState.Combat;
+        }
+    }
+
+    public override void Combat()
+    {
+        weaponController.ShouldAttack = true;
+        var currentWeapon = weaponController.GetCurrentWeapon();
+        if (currentWeapon != null)
+        {
+            currentWeapon.Shoot();
         }
     }
 
@@ -106,6 +73,9 @@ public class BossEnemy : Enemy
 
     public override void Death()
     {
+        if (IsDead) return;
+        IsDead = true;
+
         eventService.Publish(new EnemyEvent()
         {
             Type = EnemyEvent.EnemyEventType.DEATH
@@ -168,7 +138,7 @@ public class BossEnemy : Enemy
     {
         foreach (var part in DestroyableParts)
         {
-            if (part.IsAlive)
+            if (part.healthComponent.IsAlive)
             {
                 return true;
             }
