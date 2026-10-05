@@ -59,7 +59,6 @@ public class Enemy : Ship, ITargetable
                 break;
             case EnemyState.Idle:
                 animator.SetBool("Death", false);
-
                 delaytEntry = .5f;
                 Enter();
 
@@ -69,7 +68,6 @@ public class Enemy : Ship, ITargetable
                 if (delaytEntry <= 0)
                 {
                     healthComponent.SetDamagable(true);
-                    weaponController.SetWeapon(0);
                     EnemyState = EnemyState.Combat;
                 }
                 break;
@@ -108,6 +106,7 @@ public class Enemy : Ship, ITargetable
         if (other.tag.Equals(Constants.PLAYTERTAG))
         {
             other?.GetComponent<IDamagable>()?.TakeDamage(healthComponent.CurrentHealth);
+            if (this is BossEnemy) return;
             healthComponent?.TakeDamage(healthComponent.CurrentHealth, true);
         }
     }
@@ -168,11 +167,12 @@ public class Enemy : Ship, ITargetable
     }
     public override void Death()
     {
-        eventService.Publish(new EnemyEvent() { 
-            Type = EnemyEvent.EnemyEventType.DEATH 
+        eventService.Publish(new EnemyEvent()
+        {
+            Type = EnemyEvent.EnemyEventType.DEATH
         ,
-        Enemy = this,
-        Value = ship_SO.EnemyValue
+            Enemy = this,
+            Value = ship_SO.EnemyValue
         });
 
         animator.SetBool("Death", true);
@@ -194,20 +194,20 @@ public class Enemy : Ship, ITargetable
 
         eventService.Publish(new EnemyEvent()
         {
-            Type = EnemyEvent.EnemyEventType.HIT     ,
+            Type = EnemyEvent.EnemyEventType.HIT,
             Enemy = this,
             Value = 1
         });
     }
 
-      private void OnHealthValueChanged(float currentHealth, float maxHealth)
+    protected virtual void OnHealthValueChanged(float currentHealth, float maxHealth)
     {
         var healthPresentage = currentHealth / maxHealth;
 
-        if (currentHealth < 1) 
+        if (currentHealth < 1)
             Death();
 
-        if (shipData.HasShield) 
+        if (shipData.HasShield)
             DeactivateShield();
 
         Hit();

@@ -5,7 +5,7 @@ public class BaseHealthUI : MonoBehaviour
 {
     public float MaxHealth { get; protected set; }
     public float CurrentHealth { get; protected set; }
-    protected HealthComponent healthComponent;
+    [SerializeField] protected HealthComponent healthComponent;
     protected Color currentColor;
 
     [SerializeField] protected Color fullHealthColor = Color.green;

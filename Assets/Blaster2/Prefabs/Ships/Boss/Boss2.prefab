@@ -229,7 +229,7 @@ Transform:
   m_GameObject: {fileID: 634530768293458831}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -1, z: -0, w: 0.00000028088027}
-  m_LocalPosition: {x: 0, y: 0, z: 60}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -272,7 +272,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (4)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -304,7 +304,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (8)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -336,7 +336,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (2)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -368,7 +368,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (7)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -400,7 +400,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (6)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -432,7 +432,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (9)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -732,7 +732,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2645351936125991094}
   m_Layer: 0
-  m_Name: Crawler
+  m_Name: Ship
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1068,7 +1068,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (1)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1100,7 +1100,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (3)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -1224,16 +1224,16 @@ GameObject:
   - component: {fileID: 3316687275166861217}
   - component: {fileID: 5970227681493298721}
   - component: {fileID: 4638824606187594180}
-  - component: {fileID: 6730904363972671985}
   - component: {fileID: 9222596880422286310}
   - component: {fileID: 9191643537414187221}
+  - component: {fileID: 2882119671520738138}
   m_Layer: 0
   m_Name: Boss2
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &7647967356371916362
 Transform:
   m_ObjectHideFlags: 0
@@ -1243,7 +1243,7 @@ Transform:
   m_GameObject: {fileID: 4979412132350392599}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 100}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1441,7 +1441,7 @@ MonoBehaviour:
   audioSource: {fileID: 5970227681493298721}
   healthComponent: {fileID: 9222596880422286310}
   weaponController: {fileID: 9191643537414187221}
-  movementController: {fileID: 6730904363972671985}
+  movementController: {fileID: 2882119671520738138}
   shipData:
     Level: 0
     Health: 0
@@ -1452,37 +1452,11 @@ MonoBehaviour:
   ship_SO: {fileID: 11400000, guid: 0b7ac667145b81c4fa69a06bfb5c131a, type: 2}
   ShieldEffect: {fileID: 1871532367425724637}
   EnemyState: 0
-  explostionEffect: 0
+  explostionEffect: 7
   hitEffect: {fileID: 8716002159733904328}
   speedVariance: 10
   DestroyableParts: []
   Phase: 0
---- !u!114 &6730904363972671985
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4979412132350392599}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 74c894201a0df5c4e9d1a47eb54ce962, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ship: {fileID: 0}
-  speed: 0
-  RotationSpeed: 2
-  RotateTowardDir: 1
-  Positions:
-  - {x: 0, y: 0, z: 80}
-  - {x: -20, y: 0, z: 80}
-  - {x: 20, y: 0, z: 80}
-  - {x: 0, y: 0, z: 60}
-  currentPos: 0
-  changePositionTimer: 0
-  CurclularMove: 0
-  angle: 0
-  radius: 20
 --- !u!114 &9222596880422286310
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1519,6 +1493,34 @@ MonoBehaviour:
   Weapons:
   - {fileID: 5439231046966938804}
   delayAttak: 3
+--- !u!114 &2882119671520738138
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4979412132350392599}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca43d5021b7cdfd488e3da65f1b14ece, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CircleBossMovement
+  ship: {fileID: 4638824606187594180}
+  speed: 0
+  RotationSpeed: 2
+  RotateTowardDir: 1
+  entryTargetPosition: {x: 0, y: 0, z: 100}
+  entrySpeed: 5
+  speedByPhase: 0
+  Positions:
+  - {x: 0, y: 0, z: 80}
+  - {x: -20, y: 0, z: 80}
+  - {x: 20, y: 0, z: 80}
+  - {x: 0, y: 0, z: 60}
+  currentPos: 0
+  changePositionTimer: 0
+  circleRadius: 20
+  angularSpeed: 2
 --- !u!1 &5301004939285901030
 GameObject:
   m_ObjectHideFlags: 0
@@ -3179,7 +3181,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (5)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -3211,7 +3213,7 @@ GameObject:
   - component: {fileID: 7523336267000717480}
   - component: {fileID: 5439231046966938804}
   m_Layer: 0
-  m_Name: DefaultBossWeapon
+  m_Name: Weapon1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3393,7 +3395,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (12)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -3547,7 +3549,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (10)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -3616,7 +3618,7 @@ GameObject:
   m_Layer: 0
   m_Name: Cannon (11)
   m_TagString: Untagged
-  m_Icon: {fileID: -5442936267250999957, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1

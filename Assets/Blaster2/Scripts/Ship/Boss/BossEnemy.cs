@@ -6,7 +6,7 @@ using UnityEngine.Splines;
 
 public class BossEnemy : Enemy
 {
-    [SerializeField] protected List<HealthComponent> DestroyableParts = new List<HealthComponent>();
+    [SerializeField] protected List<BossDestroyablePart> DestroyableParts = new List<BossDestroyablePart>();
 
     public Action<int> OnBossPhaseChanged;
 
@@ -19,12 +19,6 @@ public class BossEnemy : Enemy
     {
         base.Start();
         Phase = 1;
-
-        healthComponent.OnHealthChanged += OnHealthValueChanged;
-    }
-    private void OnDestroy()
-    {
-        healthComponent.OnHealthChanged -= OnHealthValueChanged;
     }
 
     public override void Update()
@@ -34,40 +28,80 @@ public class BossEnemy : Enemy
             case EnemyState.None:
                 break;
             case EnemyState.Idle:
+                animator.SetBool("Death", false);
+                Enter();
                 break;
             case EnemyState.Enter:
-                enterStartDelay -= Time.deltaTime;
-                if (enterStartDelay <= 0) 
+
+                if (animator == null)
                 {
-                    weaponController.EnableAllWeapon();
-                    StartBattle = true;
+                    return;
+                }
+
+                AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+
+                // Check if we are currently playing the Enter animation and it has reached or passed 100% completion
+                if (stateInfo.IsName("Flying") && stateInfo.normalizedTime >= 1.0f)
+                {
+                    healthComponent.SetDamagable(true);
+                    weaponController.SetWeapon(0);
+                    EnemyState = EnemyState.Combat;
+                }
+                        break;
+            case EnemyState.Combat:
+                weaponController.ShouldAttack = true;
+                var currentWeapon = weaponController.GetCurrentWeapon();
+                if (currentWeapon != null)
+                {
+                    currentWeapon.Shoot();
                 }
                 break;
-            case EnemyState.Combat:
-                break;
             case EnemyState.Escape:
-                gameObject.SetActive(false);
+                SetState(EnemyState.Idle);
                 break;
             case EnemyState.Death:
-                gameObject.SetActive(false);
+                SetState(EnemyState.Idle);
                 break;
+        }
+
+        if (!hitEffect.activeInHierarchy) return;
+
+        hitEffectTimer -= Time.deltaTime;
+        if (hitEffectTimer <= 0)
+        {
+            hitEffect.SetActive(false);
         }
     }
 
-    public void OnHealthValueChanged(float currentHealth,float MaxHealth)
+    private void OnDestroy()
     {
-        if (healthComponent.GetHealthPresentage() < 50f && Phase != 2)
+        healthComponent.OnHealthChanged -= OnHealthValueChanged;
+    }
+
+    protected override void OnHealthValueChanged(float currentHealth, float MaxHealth)
+    {
+        var healthPresentage = currentHealth / MaxHealth;
+
+        if (currentHealth < 1)
+            Death();
+
+        if (shipData.HasShield)
+            DeactivateShield();
+
+        if (healthPresentage < .5f && Phase != 2)
         {
             Phase = 2;
             OnBossPhaseChanged?.Invoke(Phase);
             weaponController.SetFireRate(0.2f);
         }
-        else if (healthComponent.GetHealthPresentage() < 25f && Phase != 3)
+        else if (healthPresentage < .25f && Phase != 3)
         {
             Phase = 3;
             OnBossPhaseChanged?.Invoke(Phase);
             weaponController.SetFireRate(0.2f);
         }
+
+        Hit();
     }
 
     public override void Death()

@@ -354,9 +354,9 @@ GameObject:
   - component: {fileID: 2817152091145541655}
   - component: {fileID: 4762092534207713788}
   - component: {fileID: 270614816652615922}
-  - component: {fileID: 117258650432476582}
   - component: {fileID: 9038540809281327723}
   - component: {fileID: 2885067280684546089}
+  - component: {fileID: 4043490678518042185}
   m_Layer: 0
   m_Name: Boss1
   m_TagString: Untagged
@@ -571,7 +571,7 @@ MonoBehaviour:
   audioSource: {fileID: 4762092534207713788}
   healthComponent: {fileID: 2885067280684546089}
   weaponController: {fileID: 9038540809281327723}
-  movementController: {fileID: 117258650432476582}
+  movementController: {fileID: 4043490678518042185}
   shipData:
     Level: 0
     Health: 0
@@ -587,30 +587,6 @@ MonoBehaviour:
   speedVariance: 10
   DestroyableParts: []
   Phase: 0
---- !u!114 &117258650432476582
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2645545865169793035}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c88147df97e79a419122c2e7b25fba4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ship: {fileID: 270614816652615922}
-  speed: 0
-  RotationSpeed: 2
-  RotateTowardDir: 1
-  Positions:
-  - {x: 0, y: 0, z: 100}
-  - {x: -20, y: 0, z: 100}
-  - {x: 20, y: 0, z: 100}
-  - {x: 0, y: 0, z: 80}
-  currentPos: 0
-  changePositionTimer: 0
-  speedByPhase: 2
 --- !u!114 &9038540809281327723
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -647,6 +623,32 @@ MonoBehaviour:
   boxCollider: {fileID: 6694352324657633754}
   lastHitTime: 0
   hitCooldown: 0
+--- !u!114 &4043490678518042185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2645545865169793035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfa3f610351fd2b48b1c1cfd30e7c33f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StrafeBossMovement
+  ship: {fileID: 270614816652615922}
+  speed: 0
+  RotationSpeed: 2
+  RotateTowardDir: 1
+  entryTargetPosition: {x: 0, y: 0, z: 100}
+  entrySpeed: 5
+  speedByPhase: 0
+  Positions:
+  - {x: -45, y: 0, z: 100}
+  - {x: 45, y: 0, z: 100}
+  currentPos: 0
+  changePositionTimer: 0
+  strafeSpeed: 1
+  strafeWidth: 20
 --- !u!1 &2651163239107571298
 GameObject:
   m_ObjectHideFlags: 0

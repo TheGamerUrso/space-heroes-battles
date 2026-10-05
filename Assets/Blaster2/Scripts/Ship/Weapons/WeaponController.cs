@@ -64,18 +64,6 @@ public class WeaponController : MonoBehaviour
         SwitchWeapon((UnityEngine.Random.Range(0, Weapons.Length)));
     }
     //=================================================================================
-    public void EnableAllWeapon()
-    {
-        Debug.Log(gameObject.name + "");
-        if (Weapons.Length > 0)
-        {
-            for (int i = 0; i < Weapons.Length; i++)
-            {
-                Weapons[i].AutoAttack = true;
-            }
-        }
-    }
-    //=================================================================================
     public virtual void SwitchWeapon(int weaponIndex)
     {
         DisableAllWeapons();
