@@ -34,8 +34,12 @@ public class DiveBombEnemyMovement : EnemyMovement
         }
         else
         {
-            // Fallback default path if player reference is missing
-            targetPosition = transform.position + (Vector3.down * 15f);
+            // Fallback default path if player reference is missing  
+            transform.position = Vector3.MoveTowards(
+                transform.position,
+                targetPosition, speed * Time.deltaTime
+            );
+            targetPosition = transform.position + (Vector3.down * speed);
             hasTarget = true;
         }
 
@@ -62,8 +66,7 @@ public class DiveBombEnemyMovement : EnemyMovement
             // Move rapidly toward the locked player coordinates
             transform.position = Vector3.MoveTowards(
                 transform.position,
-                targetPosition,
-                speed * diveSpeedMultiplier * Time.deltaTime
+                targetPosition, speed * Time.deltaTime
             );
 
             RotateTowardDirection(targetPosition);

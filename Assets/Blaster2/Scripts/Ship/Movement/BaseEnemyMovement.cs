@@ -24,7 +24,9 @@ public class BaseEnemyMovement : BaseMovementController
 
     public virtual void Update()
     {
-        if (((Enemy)ship).EnemyState == EnemyState.Combat)
+        if (((Enemy)ship).EnemyState == EnemyState.Escape || 
+            ((Enemy)ship).EnemyState == EnemyState.Enter || 
+            ((Enemy)ship).EnemyState == EnemyState.Combat)
         {
             Move();
         }

@@ -28,7 +28,6 @@ public class Enemy : Ship, ITargetable
     protected int hitIndex;
     protected int numberOfHits;
     protected float hitEffectTimer;
-    protected float delaytEntry = 2f;
     protected IDataService dataService;
     protected IEventService eventService;
     [SerializeField] private float speedVariance = 10f;
@@ -45,7 +44,6 @@ public class Enemy : Ship, ITargetable
     {
         eventService = GameContext.Get<IEventService>();
         SetState(EnemyState.Idle);
-
         healthComponent.OnHealthChanged += OnHealthValueChanged;
     }
 
@@ -109,8 +107,9 @@ public class Enemy : Ship, ITargetable
 
         shipData.Health = ship_SO.baseHealth * (1f + (healthGrowthRate * (shipData.Level - 1)));
         actiualSpeed = UnityEngine.Random.Range(ship_SO.baseSpeed - speedVariance, ship_SO.baseSpeed + speedVariance);
-        tempSpeed = actiualSpeed * 2;
-        shipData.Speed = tempSpeed;
+        tempSpeed = actiualSpeed * 3;
+
+        shipData.Speed = actiualSpeed;
         shipData.Damage = ship_SO.baseDamage * (1f + (damageGrowthRate * (shipData.Level - 1)));
         shipData.FireRate = ship_SO.baseFireRate;
 
@@ -123,13 +122,12 @@ public class Enemy : Ship, ITargetable
         healthComponent.Setup(this);
         weaponController.Setup(this);
         movementController.Setup(this);
+        movementController.Speed = tempSpeed;
     }
 
 
     public override void Idle()
     {
-        animator.SetBool("Death", false);
-        delaytEntry = 2f;
         SetState(EnemyState.Enter);
     }
 
@@ -144,13 +142,9 @@ public class Enemy : Ship, ITargetable
             Value = ship_SO.EnemyValue
         });
 
-        animator.SetTrigger("Enter");
-
-
-        delaytEntry -= Time.deltaTime;
-        if (delaytEntry <= 0)
+        if (transform.position.z < 120f)
         {
-            movementController.Speed  = actiualSpeed;
+            movementController.UpdateSpeed();
             healthComponent.SetDamagable(true);
             SetState(EnemyState.Combat);
         }
@@ -160,7 +154,7 @@ public class Enemy : Ship, ITargetable
     {
         weaponController.ShouldAttack = true;
         var currentWeapon = weaponController.GetCurrentWeapon();
-        if (currentWeapon != null)
+        if (currentWeapon != null && currentWeapon.gameObject.activeInHierarchy)
         {
             currentWeapon.Shoot();
         }
@@ -190,7 +184,6 @@ public class Enemy : Ship, ITargetable
             Value = ship_SO.EnemyValue
         });
 
-        animator.SetBool("Death", true);
         SetState(EnemyState.Idle);
 
         var explostion = PoolManager.Instance.GetObjectFromPool(ship_SO.ExplostionEffect);
@@ -233,9 +226,11 @@ public class Enemy : Ship, ITargetable
     public void Debug_SpawnEnemyElement()
     {
         BaseEnemyMovement enemyMovement = GetComponent<BaseEnemyMovement>();
-        enemyMovement.Setup(new Vector3(0, 0, 150), Quaternion.Euler(new Vector3(0, 180, 0)));
+        enemyMovement.Setup(new Vector3(0, 0, 250), 
+            Quaternion.Euler(new Vector3(0, 180, 0)));
         SetState(EnemyState.Idle);
         SetStats(shipData.Level);
+        weaponController.EquipRandomWeapon();
         gameObject.SetActive(true);
     }
 }

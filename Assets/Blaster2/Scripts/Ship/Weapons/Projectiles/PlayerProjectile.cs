@@ -33,4 +33,15 @@ public class PlayerProjectile : BaseProjectile
             DestoryNow();
         }
     }
+
+    [ContextMenu("Debug_Projectile")]
+    public void Debug_SpawnEnemyElement()
+    {
+       
+        transform.SetPositionAndRotation(new Vector3(0, 0, 0),
+            Quaternion.Euler(new Vector3(0, 0, 0)));
+
+        SetShootDir(transform.forward);
+        gameObject.SetActive(true);
+    }
 }

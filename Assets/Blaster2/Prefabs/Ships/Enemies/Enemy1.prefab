@@ -333,7 +333,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e4237b3175d47f43a49e3ee38849178, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 5434079089507043312}
   audioSource: {fileID: 4027941564653448092}
   healthComponent: {fileID: 4151433114667561841}
   weaponController: {fileID: 1933283670592502111}
@@ -350,6 +349,8 @@ MonoBehaviour:
   EnemyState: 0
   explostionEffect: 7
   hitEffect: {fileID: 4189618068172357521}
+  delaytEntry: 0.3
+  speedVariance: 10
 --- !u!114 &3298114944494633628
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -394,12 +395,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddf9ac14c39f0364eb696646e684f43d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
-  ship: {fileID: 1435941801030838864}
   currentHealth: 0
   maxHealth: 0
   audioSource: {fileID: 4027941564653448092}
   hitSFX: {fileID: 8300000, guid: 16c6c2be695603046aeb379ad196fcdd, type: 3}
   boxCollider: {fileID: 1338249362927483178}
+  lastHitTime: 0
+  hitCooldown: 0
+  hasShield: 0
 --- !u!1 &1332990982962192780
 GameObject:
   m_ObjectHideFlags: 0
@@ -440,7 +443,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1442525188503047933}
-  - component: {fileID: 5434079089507043312}
   m_Layer: 0
   m_Name: ShipPivot
   m_TagString: Untagged
@@ -466,28 +468,6 @@ Transform:
   - {fileID: 1327409868328380516}
   m_Father: {fileID: 1330112429161260340}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &5434079089507043312
-Animator:
-  serializedVersion: 7
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3223586283285619861}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 1f3640811fbb9d742b60e65e165fbb66, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_AnimatePhysics: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3755639841413673739
 GameObject:
   m_ObjectHideFlags: 0

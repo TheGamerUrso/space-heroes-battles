@@ -79,6 +79,8 @@ public class EnemySpawner : MonoBehaviour
         var enemyMovement = enemGO.GetComponent<BaseEnemyMovement>();
         enemyMovement.Setup(spawnPos.location.position, Quaternion.LookRotation(Vector3.back));
 
+        enemy.weaponController.EquipRandomWeapon();
+
         enemGO.SetActive(true);
         return enemGO;
     }

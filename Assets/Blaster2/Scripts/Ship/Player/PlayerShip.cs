@@ -11,6 +11,7 @@ public enum PlayerStateEnum
 }
 public class PlayerShip : Ship
 {
+    [SerializeField] protected Animator animator;
     public PlayerStateEnum currentPlayerState = PlayerStateEnum.None;
 
     [SerializeField] private ParticleSystem ItemCollectedEffect;

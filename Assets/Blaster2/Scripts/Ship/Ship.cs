@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class Ship : MonoBehaviour
 {
-    [SerializeField] protected Animator animator;
+
     [SerializeField] protected AudioSource audioSource;
     public HealthComponent healthComponent;
     public WeaponController weaponController;

@@ -23,6 +23,7 @@ public class WaveData
 {
     public int Difficulty { get; set; }
     public bool HasBoss;
+    public int BossEveryWave = 10;
     public int Wave;
     public float Cooldown = 1f;
     public float Delay = 0.5f;
@@ -131,7 +132,7 @@ public class WaveManager : MonoBehaviour
                 {
                     waveData.TotalAliveEnemies = 0;
                     waveData.timer = waveData.Cooldown;
-                    if (waveData.Wave >= 10)
+                    if (waveData.Wave >= waveData.BossEveryWave)
                     {
                         if (guiManager.IncomingTransmition) return;
                         guiManager.BossWarning(() => 

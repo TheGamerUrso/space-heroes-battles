@@ -17,6 +17,7 @@ public abstract class BaseProjectile : MonoBehaviour
     protected TrailRenderer trailRenderer;
     protected PlayerData playerData;
     protected IDataService dataService;
+    public TrailRenderer trail;
     protected virtual void OnEnable() { }
    protected virtual void OnDisable()
     {
@@ -50,6 +51,7 @@ public abstract class BaseProjectile : MonoBehaviour
         var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
         explode.SetActive(true);
         explode.transform.position = transform.position;
+        trailRenderer.Clear();
         gameObject.SetActive(false);
     }
 

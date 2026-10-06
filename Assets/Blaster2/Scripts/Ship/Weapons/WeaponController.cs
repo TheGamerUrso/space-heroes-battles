@@ -61,7 +61,9 @@ public class WeaponController : MonoBehaviour
     //=================================================================================
     public void EquipRandomWeapon()
     {
-        SwitchWeapon((UnityEngine.Random.Range(0, Weapons.Length)));
+        if (Weapons.Length == 0) return;
+        CurrentWeaponIndex = (UnityEngine.Random.Range(0, Weapons.Length));
+        SwitchWeapon(CurrentWeaponIndex);
     }
     //=================================================================================
     public virtual void SwitchWeapon(int weaponIndex)

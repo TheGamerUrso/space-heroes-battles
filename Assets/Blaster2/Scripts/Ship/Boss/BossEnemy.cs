@@ -6,6 +6,7 @@ using UnityEngine.Splines;
 
 public class BossEnemy : Enemy
 {
+    [SerializeField] protected Animator animator;
     [SerializeField] protected List<BossDestroyablePart> DestroyableParts = new List<BossDestroyablePart>();
     public Action<int> OnBossPhaseChanged;
 
@@ -14,10 +15,7 @@ public class BossEnemy : Enemy
 
     public override void Enter()
     {
-        if (animator == null)
-        {
-            return;
-        }
+        if (animator == null) return;
 
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
 
@@ -28,6 +26,11 @@ public class BossEnemy : Enemy
             weaponController.SetWeapon(0);
             EnemyState = EnemyState.Combat;
         }
+    }
+
+    public override void Idle()
+    {
+        animator.SetBool("Death", false);
     }
 
     public override void Combat()
