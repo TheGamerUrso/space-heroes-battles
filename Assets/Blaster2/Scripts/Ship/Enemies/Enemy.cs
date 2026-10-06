@@ -28,11 +28,13 @@ public class Enemy : Ship, ITargetable
     protected int hitIndex;
     protected int numberOfHits;
     protected float hitEffectTimer;
-    protected float delaytEntry = .5f;
+    protected float delaytEntry = 2f;
     protected IDataService dataService;
     protected IEventService eventService;
     [SerializeField] private float speedVariance = 10f;
     protected bool IsDead;
+    private float tempSpeed;
+    private float actiualSpeed;
 
     private void Awake()
     {
@@ -106,8 +108,9 @@ public class Enemy : Ship, ITargetable
         shipData.Level = Mathf.Clamp(level, 1, 10);
 
         shipData.Health = ship_SO.baseHealth * (1f + (healthGrowthRate * (shipData.Level - 1)));
-
-        shipData.Speed = UnityEngine.Random.Range(ship_SO.baseSpeed - speedVariance, ship_SO.baseSpeed + speedVariance);
+        actiualSpeed = UnityEngine.Random.Range(ship_SO.baseSpeed - speedVariance, ship_SO.baseSpeed + speedVariance);
+        tempSpeed = actiualSpeed * 2;
+        shipData.Speed = tempSpeed;
         shipData.Damage = ship_SO.baseDamage * (1f + (damageGrowthRate * (shipData.Level - 1)));
         shipData.FireRate = ship_SO.baseFireRate;
 
@@ -126,7 +129,7 @@ public class Enemy : Ship, ITargetable
     public override void Idle()
     {
         animator.SetBool("Death", false);
-        delaytEntry = .5f;
+        delaytEntry = 2f;
         SetState(EnemyState.Enter);
     }
 
@@ -147,6 +150,7 @@ public class Enemy : Ship, ITargetable
         delaytEntry -= Time.deltaTime;
         if (delaytEntry <= 0)
         {
+            movementController.Speed  = actiualSpeed;
             healthComponent.SetDamagable(true);
             SetState(EnemyState.Combat);
         }
