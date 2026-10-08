@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Splines;
 
 public class BossEnemy : Enemy
 {
@@ -15,6 +13,7 @@ public class BossEnemy : Enemy
 
     public override void Enter()
     {
+       healthComponent.Isinvulnerable = true;
         if (animator == null) return;
 
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
@@ -25,60 +24,55 @@ public class BossEnemy : Enemy
             healthComponent.SetDamagable(true);
             weaponController.SetWeapon(0);
             EnemyState = EnemyState.Combat;
+            healthComponent.Isinvulnerable = false;
         }
     }
 
     public override void Idle()
     {
+        base.Idle();
         animator.SetBool("Death", false);
     }
 
     public override void Combat()
     {
-        weaponController.ShouldAttack = true;
-        var currentWeapon = weaponController.GetCurrentWeapon();
-        if (currentWeapon != null)
-        {
-            currentWeapon.Shoot();
-        }
+        base.Combat();
     }
 
-    private void OnDestroy()
-    {
-        healthComponent.OnHealthChanged -= OnHealthValueChanged;
-    }
 
     protected override void OnHealthValueChanged(float currentHealth, float MaxHealth)
     {
-        var healthPresentage = currentHealth / MaxHealth;
+        base.OnHealthValueChanged(currentHealth, MaxHealth);
+        var healthPercentage = currentHealth / MaxHealth;
+        int newPhase = Phase;
 
-        if (currentHealth < 1)
-            Death();
+        if (healthPercentage <= 0.20f) newPhase = 4;
+        else if (healthPercentage <= 0.50f) newPhase = 3;
+        else if (healthPercentage <= 0.75f) newPhase = 2;
+        else newPhase = 1;
 
-        if (shipData.HasShield)
-            DeactivateShield();
-
-        if (healthPresentage < .5f && Phase != 2)
+        // Only update and invoke if the phase actually changes
+        if (newPhase != Phase)
         {
-            Phase = 2;
+            Phase = newPhase;
             OnBossPhaseChanged?.Invoke(Phase);
-            weaponController.SetFireRate(0.2f);
-        }
-        else if (healthPresentage < .25f && Phase != 3)
-        {
-            Phase = 3;
-            OnBossPhaseChanged?.Invoke(Phase);
-            weaponController.SetFireRate(0.2f);
-        }
 
-        Hit();
+            // Lower delay = faster fire rate
+            float newFireRate = Phase switch
+            {
+                1 => 1.5f,  // Phase 1: 1.5s delay (slower start)
+                2 => 1.2f,  // Phase 2: 1.2s delay
+                3 => 0.9f,  // Phase 3: 0.9s delay
+                4 => 0.6f,  // Phase 4: 0.6s delay (rapid fire)
+                _ => 1.5f
+            };
+
+            weaponController.SetFireRate(newFireRate);
+        }
     }
 
     public override void Death()
     {
-        if (IsDead) return;
-        IsDead = true;
-
         eventService.Publish(new EnemyEvent()
         {
             Type = EnemyEvent.EnemyEventType.DEATH
@@ -87,55 +81,15 @@ public class BossEnemy : Enemy
             Value = ship_SO.EnemyValue
         });
 
-        animator.SetBool("Death", true);
+        SetState(EnemyState.Idle);
 
-
-        eventService.Publish(new ShakeCameraEvent());
-        StartCoroutine(DeathSequence());
-    }
-
-    private IEnumerator DeathSequence()
-    {
-        DeathExplosions();
-
-        healthComponent.SetDamagable(false);
-
-        yield return new WaitForSeconds(4.0f);
-
-        for (int i = 0; i < 4; i++)
-        {
-            eventService?.Publish(new DropRandomItemEvent() { SpawnPosition = transform });
-        }
-
-        var explostion = PoolManager.Instance.GetObjectFromPool(explostionEffect);
+        var explostion = PoolManager.Instance.GetObjectFromPool(ship_SO.ExplostionEffect);
         explostion.transform.position = transform.position;
         explostion.SetActive(true);
-        eventService?.Publish(new ShakeCameraEvent() { duration = .5f });
-        eventService?.Publish(new DropRandomItemEvent() { SpawnPosition = transform });
-        Destroy(transform.parent.gameObject);
 
-        SetState(EnemyState.Death);
+        eventService.Publish(new ShakeCameraEvent());
+        gameObject.SetActive(false);
     }
-
-    //Boss Owned Methods
-    private void DeathExplosions()
-    {
-        Vector3[] positions ={
-                 transform.position,
-                transform.position + (transform.right * 50),
-                  transform.position - (transform.right * 50),
-                    transform.position + (transform.forward * 50),
-                      transform.position - (transform.forward * 50)
-            };
-
-        for (int i = 0; i < 5; i++)
-        {
-            var explostion = PoolManager.Instance.GetObjectFromPool(explostionEffect);
-            explostion.transform.position = positions[i];
-            explostion.SetActive(true);
-        }
-    }
-
 
     public bool IsProtected()
     {

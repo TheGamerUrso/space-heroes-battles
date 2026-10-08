@@ -33,7 +33,6 @@ public class DropItem : MonoBehaviour
     {
         eventService = GameContext.Get<IEventService>();
         eventService.Subscribe<EnemyEvent>(EnemyEventHanded);
-        playerShip = gameController.GetPlayer();
     }
 
     private void OnDestroy()
@@ -61,6 +60,9 @@ public class DropItem : MonoBehaviour
 
     private void PickRandomEnemyToSpawn(Transform transform)
     {
+        if(playerShip==null)
+            playerShip = gameController.GetPlayer();
+
         if (ListOfDropItems.Count > 0)
         {
             bool hasShield = playerShip == null ? false : playerShip.shipData.HasShield;
@@ -98,8 +100,9 @@ public class DropItem : MonoBehaviour
                 {
                     if (!hasShield && shieldDropCooldown < 0)
                     {
-                        itemTypeToSpawn = ListOfDropItems[2].DropItemsType;
+                            itemTypeToSpawn = ListOfDropItems[2].DropItemsType;
                         shieldDropCooldown = UnityEngine.Random.Range(2, 8);
+                  
                         break;
                     }
                     else

@@ -10,7 +10,6 @@ public class EnemyWeapon : BaseWeapon
             delayAttackTimer = weaponData.DelayBetweenShots;
             AboutToShoot?.Invoke(false);
             nextShot = Time.time + FireRate;
-            Shoot();
 
             for (int i = 0; i < Cannons.Length; i++)
             {

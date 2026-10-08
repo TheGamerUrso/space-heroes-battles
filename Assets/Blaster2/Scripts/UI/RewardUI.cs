@@ -32,16 +32,24 @@ public class RewardUI : UIView
         panel.SetActive(false);
         rewardPanel.SetActive(true);
         rewardClaimedPanel.SetActive(false);
-        intermediateRewardManager.OnNewRewardGenerated += IntermediateRewardManager_OnNewRewardGenerated;
+
+        intermediateRewardManager.OnIntermediateRewardStarted += IntermediateRewardManager_OnIntermediateRewardStarted; ;
+        intermediateRewardManager.OnIntermediateRewardEnded += IntermediateRewardManager_OnIntermediateRewardEnded; ;
     }
 
-    private void IntermediateRewardManager_OnNewRewardGenerated(RewardTypeEnum[] rewards)
+    private void IntermediateRewardManager_OnIntermediateRewardEnded()
+    {
+        Hide();
+    }
+
+    private void IntermediateRewardManager_OnIntermediateRewardStarted(RewardTypeEnum[] rewards)
     {
         for (int i = 0; i < rewards.Length; i++)
         {
             rewardBoxes[i].SetReward(rewards[i]);
             rewardBoxes[i].CloseChest();
         }
+        Show();
     }
 
     public void ClaimRewardButton(int Id)
@@ -60,7 +68,6 @@ public class RewardUI : UIView
     public override void Show()
     {
         base.Show();
-        intermediateRewardManager.SetState(IntermediateRewardState.INITIALIZE);
         rewardPanel.SetActive(true);
     }
 

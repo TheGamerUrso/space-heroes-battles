@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -22,14 +23,33 @@ public class BaseEnemyMovement : BaseMovementController
     [SerializeField] protected float RotationSpeed = 2;
     [SerializeField] protected bool RotateTowardDir = true;
 
+    private bool IsMoving = false;
+
+    protected virtual void Start()
+    {
+        ((Enemy)ship).OnEnemyStateChanged += OnEnemyStateChangedHandled;
+    }
+
+    protected virtual void OnDestroy()
+    {
+        ((Enemy)ship).OnEnemyStateChanged -= OnEnemyStateChangedHandled;
+    }
+
+    private void OnEnemyStateChangedHandled(EnemyState state)
+    {
+        IsMoving = state == EnemyState.Escape ||
+                state == EnemyState.Enter ||
+                 state == EnemyState.Combat;
+
+        if (state == EnemyState.Combat)
+        {
+            OnCombatStarted();
+        }
+    }
+
     public virtual void Update()
     {
-        if (((Enemy)ship).EnemyState == EnemyState.Escape || 
-            ((Enemy)ship).EnemyState == EnemyState.Enter || 
-            ((Enemy)ship).EnemyState == EnemyState.Combat)
-        {
-            Move();
-        }
+        if (IsMoving) Move();
     }
     public virtual void Setup(Vector3 spawnPos,Quaternion targetRot)
     {
@@ -64,4 +84,7 @@ public class BaseEnemyMovement : BaseMovementController
         // Apply rotation (Ensure your 2D/3D sprite orientation aligns with Z-forward LookRotation)
         transform.rotation = Quaternion.LookRotation(targetRotation, Vector3.up);
     }
+    protected virtual void HandleEntry() { }
+
+    protected virtual void OnCombatStarted() { }
 }

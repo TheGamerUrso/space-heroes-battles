@@ -8,6 +8,7 @@ public class BossHealthWidget : EnemyHealthWidget
     {
         base.Awake();
         HealthBarTransform.transform.localScale = new Vector3(0, 1, 1);
+        Show();
     }
 
     public override void Show()

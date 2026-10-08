@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using TheGamerUrso.Core;
 using TMPro;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 
 public class LevelManager : MonoBehaviour
 {
+    public Action LevelChanged;
     [SerializeField] private Camera cameraMain;
     [SerializeField] private GameObject WrapTunnelFX;
     [SerializeField] private Image Fade;
@@ -53,8 +55,9 @@ public class LevelManager : MonoBehaviour
         ChooseNewLevel();
     }
 
-    public bool ActivateHyperdrive()
+    public bool ActivateHyperdrive(Action callback)
     {
+        LevelChanged = callback;
         if (firstTime && !active)
         {
             firstTime = false;
@@ -129,6 +132,7 @@ public class LevelManager : MonoBehaviour
 
         active = false;
         audioService.PlayRandomMusic(true);
+        LevelChanged?.Invoke();
     }
 
     public void ChooseNewLevel()
@@ -141,8 +145,8 @@ public class LevelManager : MonoBehaviour
         }
 
         int randLevel = 0;
-        randLevel = Random.Range(0, ListOfLevels.Count);
-        GameObject levelToLoad = ListOfLevels[Random.Range(0, ListOfLevels.Count)];
+        randLevel = UnityEngine.Random.Range(0, ListOfLevels.Count);
+        GameObject levelToLoad = ListOfLevels[UnityEngine.Random.Range(0, ListOfLevels.Count)];
 
         if (previousLevel != null && previousLevel == levelToLoad)
         {
@@ -156,7 +160,7 @@ public class LevelManager : MonoBehaviour
             }
             else
             {
-                var randomNum = Random.Range(1, 100);
+                var randomNum = UnityEngine.Random.Range(1, 100);
                 if (randomNum >= 50)
                 {
                     randLevel += 1;

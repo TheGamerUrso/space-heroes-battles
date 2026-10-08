@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using UnityEngine;
 
 
@@ -7,9 +10,9 @@ public class PlayerShipData : ShipData
 {
     public event Action<float> OnPowerPackCollected;
     public event Action<float> OnSuperChargedValueChanged;
-
     public Action<int, float, float> OnXPValueChanged;
     public Action<int> OnLevelUp;
+
     public float xp;
     public float xpToLevel;
     public float XPPresentage
@@ -30,6 +33,9 @@ public class PlayerShipData : ShipData
     public int PowerPackCollected = 0;
     public bool HasArmorUpgrade { get; set; }
 
+    [SerializeField]
+    private Dictionary<UpgradeTypeEnum, int> UpgradeDict = new Dictionary<UpgradeTypeEnum, int>();
+
     public PlayerShipData(Player_SO player)
     {
         Level = 1;
@@ -44,6 +50,13 @@ public class PlayerShipData : ShipData
         MagnetPower = 0;
         MagnetDistance = 0;
         Upgrades = new int[Enum.GetValues(typeof(UpgradeTypeEnum)).Length];
+
+        var names = Enum.GetValues(typeof(UpgradeTypeEnum)).Cast<UpgradeTypeEnum>().ToList();
+
+        foreach (var item in names)
+        {
+            UpgradeDict.Add(item, 0);
+        }
     }
 
 
@@ -69,28 +82,35 @@ public class PlayerShipData : ShipData
         }
         OnXPValueChanged?.Invoke(Level, xp, xpToLevel);
     }
-    public float GetSpeedUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Speed]; }
-    public float GetDamageUpgrade() { return Upgrades[(int)UpgradeTypeEnum.Damage]; }
-    public float GetFireRateUpgrade() { return Upgrades[(int)UpgradeTypeEnum.FireRate]; }
 
-    public void SetUpgrades(int upgrade, int value)
+    public float GetUpgrade(UpgradeTypeEnum upgradeType)
     {
-        Upgrades[upgrade] = value;
-        SaveSystem.SaveGame();
+        if(UpgradeDict.TryGetValue(upgradeType,out var upgrade))
+        {
+            var HealthUpgrade = Upgrades[(int)UpgradeTypeEnum.Health];
+            return upgrade;
+        }
+        return 0;
     }
 
-    public int[] GetUpgrades()
+    public void SetUpgrades(UpgradeTypeEnum type, int value)
     {
-        return Upgrades;
+        if (UpgradeDict.TryGetValue(type, out var upgrade))
+        {
+            UpgradeDict[type] = value;
+        }
     }
 
-    public void SetUpgradeByType(UpgradeTypeEnum upgradeType, int Level)
+    public ReadOnlyCollection<KeyValuePair<UpgradeTypeEnum, int>> GetUpgrades()
     {
-        Upgrades[(int)upgradeType] = Level;
+        ReadOnlyCollection<KeyValuePair<UpgradeTypeEnum,int>> readOnlyDinosaurs =
+            new ReadOnlyCollection<KeyValuePair<UpgradeTypeEnum, int>>(UpgradeDict.ToList());
+        return readOnlyDinosaurs;
     }
 
     public float[] GetCalculatedUpgradeStats()
     {
+        var HealthUpgrade = Upgrades[(int)UpgradeTypeEnum.Health];
         var SpeedUpgrade = Upgrades[(int)UpgradeTypeEnum.Speed];
         var DamageUpgrade = Upgrades[(int)UpgradeTypeEnum.Damage];
         var FireRateUpgrade = Upgrades[(int)UpgradeTypeEnum.FireRate];
@@ -100,6 +120,7 @@ public class PlayerShipData : ShipData
         var SuperDamageUpgrade = Upgrades[(int)UpgradeTypeEnum.SuperDamage];
         var HasArmorUpgrade = Upgrades[(int)UpgradeTypeEnum.ArmorUpgrade];
 
+        var healthMultiplier = 5 * HealthUpgrade;
         var SpeedMultiplier = 0.25f * SpeedUpgrade;
         var DamageMultiplier = .1f * DamageUpgrade;
         var FireRateMultiplier = 0.01f * FireRateUpgrade;
@@ -122,15 +143,15 @@ public class PlayerShipData : ShipData
             };
     }
 
-    public void UpdateUpserCharge(float value)
+    public void UpdateSuperCharge(float value)
     {
         ChargePower += value;
-        OnSuperChargedValueChanged?.Invoke(value);
+        OnSuperChargedValueChanged?.Invoke(ChargePower);
     }
     public void SetSuperCharge(float value)
     {
         ChargePower = value;
-        OnSuperChargedValueChanged?.Invoke(value);
+        OnSuperChargedValueChanged?.Invoke(ChargePower);
     }
 
     public void UpdatePowerPackCollected(int value)

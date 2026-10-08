@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using TheGamerUrso.Core;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
+
 
 [Serializable]
 public class PlayerEconomyData
@@ -44,6 +43,10 @@ public class PlayerSettingsData
 [Serializable]
 public class PlayerData
 {
+    public event Action<int> ShipSelected;
+    public event Action<float> OnScoreUpdated;
+    public event Action<int> OnCurrencyUpdated;
+    public event Action<int> OnCurrencySpendUpdated;
     public PlayerStatsData playerStatsData;
     public PlayerSettingsData playerSettingsData;
     public PlayerEconomyData playerEconomyData;
@@ -78,12 +81,14 @@ public class PlayerData
     public void SetCurrentSelectShip(int select)
     {
         CurrrentSelectedShip = select;
+        ShipSelected?.Invoke(CurrrentSelectedShip);
     }
 
 
     public void UpdateScore(int Score)
     {
         playerStatsData.Score += Score;
+        OnScoreUpdated?.Invoke(playerStatsData.Score);
     }
 
 
@@ -121,10 +126,12 @@ public class PlayerData
     {
         playerEconomyData.Coins += amount;
         playerEconomyData.CoinPicked += amount;
+        OnCurrencyUpdated?.Invoke(amount);
     }
     public void UpdateSpendCurrency(int amount)
     {
         playerEconomyData.CoinSpend += amount;
+        OnCurrencySpendUpdated?.Invoke(amount);
     }
 
 }

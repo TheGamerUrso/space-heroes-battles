@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using TheGamerUrso.Core;
+using UnityEditor.Overlays;
 using UnityEngine;
 
 [Serializable]
@@ -13,7 +14,17 @@ public struct PlayerShipElement
 
 public enum GameState
 {
-    IDLE,SPAWN_PLAYER,INITIALIZING,START,TRANSMISSION, GAME, GAMEOVER, WIN
+    IDLE,
+    SPAWN_PLAYER,
+    INITIALIZING,
+    START,
+    TRANSMISSION,
+    GAME,
+    INTERMEDIATE_REWARD,
+    INTERMEDIATE_REWARD_CLAIMED,
+    HyperspaceTransition,
+    GAMEOVER, 
+    WIN
 }
 
 public class GameController : MonoBehaviour
@@ -34,6 +45,7 @@ public class GameController : MonoBehaviour
     public bool pause;
     public int Multiplier = 1;
     public int Score = 0;
+    public int Currency = 0;
 
     [SerializeField] private PlayerShipElement[] PlayerShips;
 
@@ -42,6 +54,8 @@ public class GameController : MonoBehaviour
     [SerializeField] protected AsteroidSpawner asteroidSpawner;
     [SerializeField] protected GuiManager guiManager;
     [SerializeField] protected DialogueManager dialogueManager;
+    [SerializeField] protected IntermediateRewardManager intermediateRewardManager;
+    [SerializeField] protected LevelManager levelManager;
 
 
     private GameObject currentPlayer;
@@ -86,8 +100,21 @@ public class GameController : MonoBehaviour
         eventService.Subscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
         eventService.Subscribe<PlayerEconomyDataUpdatedEvent>(PlayerEconomyUpdatedEventHandled);
 
-
+        waveManager.OnGameplayLoopStateValueChanged += WaveManager_OnGameplayLoopStateValueChanged;
     }
+
+    private void WaveManager_OnGameplayLoopStateValueChanged(GameplayLoopState obj)
+    {
+        if(obj == GameplayLoopState.BossDefeated)
+        {
+            SetGameState(GameState.INTERMEDIATE_REWARD);
+            intermediateRewardManager.Show(() =>
+            {
+                SetGameState(GameState.INTERMEDIATE_REWARD_CLAIMED);
+            });
+        }
+    }
+
     //=================================================================================
     private void OnDestroy()
     {
@@ -157,16 +184,34 @@ public class GameController : MonoBehaviour
             case GameState.GAME:
                 if(playerShip.healthComponent.CurrentHealth <= 0)
                 {
-                    GameOver();
+                    GameOver();              
                 }
                 break;
+            case GameState.INTERMEDIATE_REWARD:
+               
+                break;
+            case GameState.INTERMEDIATE_REWARD_CLAIMED:
+                    audioService.PlayMusic("Track1");
+                    StartHyperspaceSequence();
+                break;
+            case GameState.HyperspaceTransition:
+                break;
             case GameState.GAMEOVER:
-                GameOver();
                 break;
             case GameState.WIN:
-                Win();
                 break;
         }
+    }
+    //=================================================================================
+    private void StartHyperspaceSequence()
+    {
+        levelManager.ActivateHyperdrive(OnLevelCHangedHandled);
+        SetGameState(GameState.HyperspaceTransition);
+    }
+    //=================================================================================
+    public void OnLevelCHangedHandled()
+    {
+        SetGameState(GameState.GAME);
     }
     //=================================================================================
     public void SetGameState(GameState nextGameState)
@@ -177,16 +222,10 @@ public class GameController : MonoBehaviour
                 guiManager.GameOver();
                 break;
             case GameState.WIN:
-                guiManager.Win();
+                guiManager.GameOver();
                 break;
         }
         CurrentGameState = nextGameState;
-    }
-    //======================================================================================================================================================
-    public void Win()
-    {
-        SetGameState(GameState.WIN);
-        StartCoroutine(DelayWinScreen());
     }
     //======================================================================================================================================================
     public void GameOver()
@@ -236,26 +275,8 @@ public class GameController : MonoBehaviour
     //======================================================================================================================================================
     IEnumerator DelayGameOver()
     {
-        //SaveSystem.SaveGame();
         audioService.PlayMusic("GameOver", false);
         yield return new WaitForSeconds(2.0f);
-    }
-    //======================================================================================================================================================
-    IEnumerator DelayWinScreen()
-    {
-        Time.timeScale = 1.0f;
-
-        //Reset Player Shield
-        //SaveSystem.SaveGame();
-
-        yield return new WaitForSeconds(2.0f);
-
-        audioService.PlayMusic("Victory", false);
-
-        GetPlayer()?.Exit();
-
-        yield return new WaitForSeconds(2.0f);
-        //TODO GAME OVER
     }
     //=================================================================================
     public GameObject CreatePlayer(int id)
@@ -296,7 +317,7 @@ public class GameController : MonoBehaviour
                 float levelRatio = enemyLevel / Mathf.Max(1f, playerLevel);
 
                 // 2. Base XP scales with how strong the enemy is, modified by the level ratio
-                float baseXP = 15f * enemyLevel;
+                float baseXP = 2f * enemyLevel;
 
                 // 3. Clamp the multiplier so high-level players still get a tiny baseline (e.g., 10%), 
                 //    and over-leveled enemies cap out at a reasonable bonus (e.g., 2x)
@@ -305,6 +326,9 @@ public class GameController : MonoBehaviour
                 int xpEarned = Mathf.Max(1, Mathf.RoundToInt(baseXP * xpMultiplier));
 
                 playerData.GetCurrentPlayerShipData().EarnXP(xpEarned);
+                if (!playerShip.GetWeaponController().IsSuperActive())
+                    playerData.GetCurrentPlayerShipData().UpdateSuperCharge(0.025f);
+
                 SetScore((int)payload.Value);
                 eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {xpEarned} XP </color>", targetPos = transform.localPosition });
                 IncreaseMultiplier();
@@ -333,8 +357,9 @@ public class GameController : MonoBehaviour
         switch (payload.type)
         {
             case PlayerEconomyDataUpdatedEvent.StatType.Coins:
-                playerData.UpdateCurrency((int)payload.value);
-                OnGameCoinsPickedValueChanged?.Invoke((int)payload.value);
+                Currency += (int)payload.value;
+                playerData.UpdateCurrency(Currency);
+                OnGameCoinsPickedValueChanged?.Invoke(Currency);
                 break;
         }
     }

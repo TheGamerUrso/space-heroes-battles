@@ -3,13 +3,15 @@ using System.Collections;
 using System.Runtime.CompilerServices;
 using TheGamerUrso.Core;
 using TMPro;
+using UnityEditor;
 using UnityEditor.MPE;
 using UnityEngine;
 using static UnityEngine.Rendering.DebugUI;
 
 
-public class GuiManager : MonoBehaviour
+public class GuiManager : ServiceComponent<IGUIService>, IGUIService
 {
+    public bool IsMenuOpen { get; }
     public bool IncomingTransmition { get; set; }
 
     [Header("Menu")]
@@ -45,8 +47,9 @@ public class GuiManager : MonoBehaviour
 
     private IEventService eventService;
     private IAppService appService;
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
         PlayerHud.SetActive(false);
         CoinsUI.SetActive(false);
     }
@@ -59,8 +62,9 @@ public class GuiManager : MonoBehaviour
         timer = 1;
         eventService.Subscribe<FloatingTextEvent>(CreateFloatingText);
     }
-    private void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         eventService.Unsubscribe<FloatingTextEvent>(CreateFloatingText);
     }
 
@@ -106,13 +110,6 @@ public class GuiManager : MonoBehaviour
                 pauseButton.SetActive(true);
             }
 #endif
-#if UNITY_EDITOR || UNITY_STANDALONE || UNITY_WEBGL
-            pauseButton.SetActive(true);
-            if (Input.GetKeyDown(KeyCode.Escape))
-            {
-                PauseButton();
-            }
-#endif
         }
     }
     //=================================================================================
@@ -127,13 +124,14 @@ public class GuiManager : MonoBehaviour
         {
             appService.Unpause();
             gameController.IsSlowMo = false;
-            PauseScreenUI.Show();
+            PauseScreenUI.Hide();
+           
         }
         else if (appService.CurrentGameState == TheGamerUrso.Core.GameStateEnum.GAME)
         {
             appService.Pause();
             gameController.IsSlowMo = true;
-            PauseScreenUI.Hide();
+            PauseScreenUI.Show();
         }
     }
     //=================================================================================
@@ -145,7 +143,7 @@ public class GuiManager : MonoBehaviour
         m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(payload.Message, payload.targetPos);
     }
     //=================================================================================
-    public void QuitGameButton()
+    public void QuitButton()
     {
         LoadMainMenu();
     }
@@ -167,16 +165,18 @@ public class GuiManager : MonoBehaviour
             activeMenuGO = PauseScreenUI;
         }
 
-        if (activeMenuGO != null)
-            StartCoroutine(DelayCloseMenu(activeMenuGO, 1));
+        appService.Unpause();
+        activeMenuGO.Hide();
+        appService.LoadMainMenu();   
     }
-
     //=================================================================================
     IEnumerator DelayCloseMenu(UIView Menu, float time)
     {
+        appService.Unpause();
         WaitForSeconds delay = new WaitForSeconds(time);
         yield return delay;
         Menu.Hide();
+        appService.LoadMainMenu();
     }
     //=================================================================================
     public void RecieveTransmition(string[] transmitions = null, bool playIntro = true)

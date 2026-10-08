@@ -20,16 +20,17 @@ public abstract class BossEnemyMovement : BaseEnemyMovement
     {
         enemyShip = ship as Enemy;
     }
-  
 
-    public void Awake()
+    protected override void Start()
     {
+        base.Start();
         targetPosition = transform.position;
         ((BossEnemy)ship).GetComponent<BossEnemy>().OnBossPhaseChanged += OnBossPhaseChangedHandled;
     }
 
-    public void OnDestroy()
+    protected override void OnDestroy()
     {
+        base.OnDestroy();
         ((BossEnemy)ship).OnBossPhaseChanged -= OnBossPhaseChangedHandled;
     }
 
@@ -51,18 +52,12 @@ public abstract class BossEnemyMovement : BaseEnemyMovement
                 break;
         }
     }
-    protected virtual void HandleEntry()
+    protected override void HandleEntry()
     {
         // Move from off-screen spawn to the combat entry position
         transform.position = Vector3.MoveTowards(transform.position, entryTargetPosition, entrySpeed * Time.deltaTime);
-
-        // Once destination is reached, switch the centralized state to Combat
-        if (enemyShip.EnemyState == EnemyState.Combat)
-        {
-            OnCombatStarted();
-        }
     }
-    protected virtual void OnCombatStarted() { }
+ 
 
     public virtual void OnBossPhaseChangedHandled(int Phase)
     {

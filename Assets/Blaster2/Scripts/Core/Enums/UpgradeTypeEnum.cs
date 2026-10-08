@@ -1,4 +1,5 @@
-﻿public enum UpgradeTypeEnum  {
+﻿public enum UpgradeTypeEnum  
+{
     Shield = 0,
     FireRate = 1,
     Damage = 2,
@@ -7,5 +8,6 @@
     MagnetDistance = 5,
     SuperrechargeTime = 6,
     SuperDamage = 7,
-    ArmorUpgrade = 8
+    ArmorUpgrade = 8,
+    Health = 9
 }

@@ -9,9 +9,10 @@ public class IntermediateRewardManager : MonoBehaviour
     {
         NONE,INITIALIZE,WAITING,CLAIMED
     }
+   [SerializeField] private Action callback;
 
-    public event Action<IntermediateRewardState> OnIntermediateRewardStateChanged;
-    public event Action<RewardTypeEnum[]> OnNewRewardGenerated;
+    public event Action<RewardTypeEnum[]> OnIntermediateRewardStarted;
+    public event Action OnIntermediateRewardEnded;
     private IntermediateRewardState intermediateRewardState;
 
     public int RewardBoxSelected;
@@ -35,8 +36,13 @@ public class IntermediateRewardManager : MonoBehaviour
 
     public void SetState(IntermediateRewardState intermediateRewardState)
     {
-        this.intermediateRewardState = intermediateRewardState;
-        OnIntermediateRewardStateChanged?.Invoke(intermediateRewardState);
+        this.intermediateRewardState = intermediateRewardState;     
+    }
+
+    public void Show(Action callback)
+    {
+        this.callback = callback;
+        SetState(IntermediateRewardState.INITIALIZE);
     }
 
     public void Update()
@@ -49,6 +55,7 @@ public class IntermediateRewardManager : MonoBehaviour
                 GenerateNewRewards();
                 gameController.IsSlowMo = false;
                 SetState(IntermediateRewardState.WAITING);
+
                 break;
             case IntermediateRewardState.WAITING:
                 break;
@@ -56,8 +63,9 @@ public class IntermediateRewardManager : MonoBehaviour
                 timer -= Time.deltaTime;
                 if (timer <= 1)
                 {
+                    callback?.Invoke();
                     SetState(IntermediateRewardState.NONE);
-                    OnIntermediateRewardStateChanged?.Invoke(intermediateRewardState);
+                    OnIntermediateRewardEnded?.Invoke();
                 }
                 break;
         }
@@ -68,7 +76,7 @@ public class IntermediateRewardManager : MonoBehaviour
         {
             rewards[i] = (RewardTypeEnum)UnityEngine.Random.Range(0, Enum.GetValues(typeof(RewardTypeEnum)).Length);
         }
-
+        OnIntermediateRewardStarted?.Invoke(rewards);
     }
 
     public void ClaimReward(int rewardIndex)

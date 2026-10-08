@@ -21,6 +21,8 @@ public class HealthComponent : MonoBehaviour , IDamagable
     private float lastHitFrame = -1f;
     public float lastHitTime = 0;
     public float hitCooldown = 0;
+    private bool invulnerable = false;
+    public bool Isinvulnerable { get { return invulnerable; } set { invulnerable = value; } }
     [SerializeField] protected bool hasShield; // Standalone shield flag for non-ship objects
     public bool HasShield => (ship != null && ship.shipData != null) ? ship.shipData.HasShield : hasShield;
     public void Setup(Ship ship)
@@ -39,7 +41,7 @@ public class HealthComponent : MonoBehaviour , IDamagable
 
     public virtual void TakeDamage(float dmg, bool IgnoreShield = false)
     {
-        if (!IsAlive) return;
+        if (!IsAlive || invulnerable) return;
 
         audioSource.PlayOneShot(hitSFX);
 

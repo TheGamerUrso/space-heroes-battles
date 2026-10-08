@@ -31,7 +31,8 @@ public class AsteroidCollider : MonoBehaviour, IDamagable, ITargetable
     }
 
     public bool IsAlive { get; set; } = false;
-
+    private bool invulnerable = false;
+    public bool Isinvulnerable { get { return invulnerable; } set { invulnerable = value; } }
     private Rigidbody rigid;
     private float force = 2500;
 

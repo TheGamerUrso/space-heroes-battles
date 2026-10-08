@@ -11,16 +11,14 @@ public enum GameplayLoopState
     WaitingForEnemiesToClear,
     BossWaveSetup,
     BossBattleActive,
-    BossDefeated,
-    RewardScreenActive,
-    RewardClaimed,
-    HyperspaceTransition,
-    Ended
+    BossDefeated
 }
 
 [Serializable]
 public class WaveData
 {
+    public Action<GameplayLoopState> OnGameplayLoopStateChanged;
+
     public int Difficulty { get; set; }
     public bool HasBoss;
     public int BossEveryWave = 10;
@@ -44,6 +42,7 @@ public class WaveData
 public class WaveManager : MonoBehaviour
 {
     public event Action<GameplayLoopState> OnGameplayLoopStateValueChanged;
+
     public GameplayLoopState currentLoopState;
     [SerializeField] protected EnemySpawner enemySpawner;
 
@@ -86,6 +85,11 @@ public class WaveManager : MonoBehaviour
         eventService.Unsubscribe<EnemyEvent>(EnemyEventHandled);
     }
 
+    private void SetState(GameplayLoopState newState)
+    {
+        currentLoopState = newState;
+        OnGameplayLoopStateValueChanged?.Invoke(currentLoopState);
+    }
     private void Update()
     {
         if (gameController.pause) return;
@@ -96,7 +100,7 @@ public class WaveManager : MonoBehaviour
                 if (gameController.CurrentGameState == GameState.GAME)
                 {
                     waveData.timer = waveData.Cooldown;
-                    currentLoopState = GameplayLoopState.PreWaveDelay;
+                    SetState(GameplayLoopState.PreWaveDelay);
                 }
                 break;
             case GameplayLoopState.PreWaveDelay:
@@ -105,7 +109,7 @@ public class WaveManager : MonoBehaviour
                 string[] transmition = new string[] { "Wave:\n" + waveData.Wave };
                 eventService?.Publish(new NewWaveStartedEvent() { Wave = waveData.Wave });
                 guiManager.RecieveTransmition(transmition, false);
-                currentLoopState = GameplayLoopState.SpawningEnemies;
+                SetState(GameplayLoopState.SpawningEnemies);
                 break;
             case GameplayLoopState.SpawningEnemies:
                 if (guiManager.IncomingTransmition) return;
@@ -114,7 +118,7 @@ public class WaveManager : MonoBehaviour
                 {
                     if (waveData.enemiesSpawnedThisWave >= waveData.numberOfEnemiesEachWave)
                     {
-                        currentLoopState = GameplayLoopState.WaitingForEnemiesToClear;
+                        SetState(GameplayLoopState.WaitingForEnemiesToClear);
                         return;
                     }
 
@@ -135,14 +139,14 @@ public class WaveManager : MonoBehaviour
                     if (waveData.Wave >= waveData.BossEveryWave)
                     {
                         if (guiManager.IncomingTransmition) return;
-                        guiManager.BossWarning(() => 
-                        { 
-                            currentLoopState = GameplayLoopState.BossWaveSetup; 
+                        guiManager.BossWarning(() =>
+                        {
+                            SetState(GameplayLoopState.BossWaveSetup);
                         });                               
                     }
                     else
                     {
-                        currentLoopState = GameplayLoopState.PreWaveDelay;
+                        SetState(GameplayLoopState.PreWaveDelay);
                     }
                 }
                 break;
@@ -150,68 +154,30 @@ public class WaveManager : MonoBehaviour
                 waveData.timer -= Time.deltaTime;
                 if (waveData.timer <= 0f)
                 {
-                    if (gameController.GetPlayer().healthComponent.CurrentHealth > 0)
-                    {
-                        if (waveData.HasBoss)
-                        {
-                            waveData.timer = waveData.Cooldown;
+                    waveData.timer = waveData.Cooldown;
 
-                            currentBoss = waveData.BossFights[UnityEngine.Random.Range(0, waveData.BossFights.Length)];
-                            bossEnemy = SpawnBoss(currentBoss, waveData.Difficulty);
-                            waveData.enemiesSpawnedThisWave = 1;
-                            audioService.PlayMusic("Boss");
-                            currentLoopState = GameplayLoopState.BossBattleActive;
-                        }
-                        else
-                        {
-                            StartHyperspaceSequence();
-                        }
-                    }
-                    else
-                    {
-                        gameController.IsGameOver = true;
-                        currentLoopState = GameplayLoopState.Ended;
-                    }
+                    currentBoss = waveData.BossFights[UnityEngine.Random.Range(0, waveData.BossFights.Length)];
+                    bossEnemy = SpawnBoss(currentBoss, waveData.Difficulty);
+                    waveData.enemiesSpawnedThisWave = 1;
+                    audioService.PlayMusic("Boss");
+                    SetState(GameplayLoopState.BossBattleActive);
                 }
                 break;
             case GameplayLoopState.BossBattleActive:
                 if (bossEnemy != null && bossEnemy.healthComponent.IsAlive) return;
-              
-             
-
+                SetState(GameplayLoopState.BossDefeated);
                 break;
             case GameplayLoopState.BossDefeated:
-                if (gameController.CurrentGameState != GameState.GAMEOVER)
-                {
-                    gameController.GameOver();
-                    currentLoopState = GameplayLoopState.Ended;
-                    return;
-                }
                 waveData.timer = waveData.Cooldown;
-                currentLoopState = GameplayLoopState.RewardScreenActive;
-                break;
-            case GameplayLoopState.RewardScreenActive:
-
-                break;
-            case GameplayLoopState.RewardClaimed:
-                waveData.timer -= Time.deltaTime;
-                if (waveData.timer <= 0f)
-                {
-                    waveData.timer = waveData.Cooldown;
-                    audioService.PlayMusic("Track1");
-                    currentLoopState = GameplayLoopState.HyperspaceTransition;
-                }
-                break;
-            case GameplayLoopState.HyperspaceTransition:
-                waveData.timer -= Time.deltaTime;
-                if (waveData.timer <= 0f)
-                {
-                    currentLoopState = GameplayLoopState.PreWaveDelay; // Loop back for next wave
-                }
+                SetState(GameplayLoopState.WaitingForStart);
                 break;
         }
-    }
 
+        if (gameController.CurrentGameState == GameState.GAMEOVER)
+        {
+            SetState(GameplayLoopState.WaitingForStart);
+        }
+    }
     //======================================================================================================================================================
     public void NewWave()
     {
@@ -295,11 +261,6 @@ public class WaveManager : MonoBehaviour
         enemySpawner.currentWave = waveData.Difficulty;
     }
     //=================================================================================
-    private void StartHyperspaceSequence()
-    {
-        currentLoopState = GameplayLoopState.HyperspaceTransition;
-    }
-    //=================================================================================
     public virtual void EnemyEventHandled(EnemyEvent payload)
     {
         switch (payload.Type)
@@ -329,7 +290,7 @@ public class WaveManager : MonoBehaviour
         if (guiManager.IncomingTransmition) return;
         guiManager.BossWarning(() =>
         {
-            currentLoopState = GameplayLoopState.BossWaveSetup;
+            SetState(GameplayLoopState.BossWaveSetup);
         });
     }
 }

@@ -76,4 +76,9 @@ public class PlayerWeaponController : WeaponController
         CurrentWeaponIndex = 0;
         SwitchWeapon(CurrentWeaponIndex);
     }
+    //=================================================================================
+    public bool IsSuperActive()
+    {
+        return specialAttack.SpecialActive;
+    }
 }

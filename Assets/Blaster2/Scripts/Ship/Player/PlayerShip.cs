@@ -14,13 +14,14 @@ public class PlayerShip : Ship
     [SerializeField] protected Animator animator;
     public PlayerStateEnum currentPlayerState = PlayerStateEnum.None;
 
-    [SerializeField] private ParticleSystem ItemCollectedEffect;
-    [Space()]
-    protected float waitEntry = 2;
-    protected float hitEffectTimer;
-    protected float delaytEntry = .5f;
+    [SerializeField] private ParticleSystem ItemCollectedEffect; 
     [SerializeField] protected AudioClip alarmSFX;
     [SerializeField] protected GameObject hitEffect;
+
+    protected float delayEntryTimer = 2;
+    protected float delayEntry = .5f;
+    protected float hitEffectTimer;
+
     protected IEventService eventService;
     //=================================================================================
     public void Start()
@@ -46,8 +47,8 @@ public class PlayerShip : Ship
                 break;
             case PlayerStateEnum.Enter:
                 animator.SetTrigger(Constants.PLAYERENTERSTRINGKEY);
-                waitEntry -= Time.deltaTime;
-                if (waitEntry <= 0)
+                delayEntryTimer -= Time.deltaTime;
+                if (delayEntryTimer <= 0)
                 {
                     currentPlayerState = PlayerStateEnum.Combat;
                 }
@@ -57,7 +58,7 @@ public class PlayerShip : Ship
             case PlayerStateEnum.Death:                
                 break;
             case PlayerStateEnum.Exit:
-                waitEntry = 2;
+                delayEntryTimer = delayEntry;
                 animator.SetTrigger(Constants.PLAYEREXITSTRINGKEY);
                 break;
         }
@@ -74,16 +75,14 @@ public class PlayerShip : Ship
     public void Setup(PlayerShipData playerShipData)
     {
         shipData = playerShipData;
+  
+        ((PlayerShipData)shipData).OnPowerPackCollected += ShipData_OnPowerPackCollected;
+        ((PlayerShipData)shipData).OnLevelUp += ShipData_OnLevelUpHandled;
 
         SetStats(shipData.Level);
 
-        ApplyUpgrades(playerShipData.GetCalculatedUpgradeStats());
-        healthComponent.Setup(this);
-        weaponController.Setup(this);
         weaponController.SetWeapon(0);
 
-        ((PlayerShipData)shipData).OnPowerPackCollected += ShipData_OnPowerPackCollected;
-        ((PlayerShipData)shipData).OnLevelUp += ShipData_OnLevelUpHandled;
 
         if (GetPlayerShipData().HasShield)
 
@@ -144,7 +143,6 @@ public class PlayerShip : Ship
         }
     }
     //=================================================================================
-
     public bool GetAnimationState(string id)
     {
         if (animator == null)
@@ -162,45 +160,51 @@ public class PlayerShip : Ship
 
         playerData.Level = Mathf.Clamp(level, 1, 10);
 
-        playerData.Health = level * player_SO.baseHealth;
+        playerData.Health = player_SO.baseHealth;
         playerData.Speed = ship_SO.baseSpeed;
-        playerData.Damage = (level * player_SO.baseDamage);
         playerData.FireRate = player_SO.baseFireRate;
+        playerData.Damage = player_SO.baseDamage;
+        playerData.SuperDamage = player_SO.baseSuperDamage;
+        playerData.SuperChargeTime = player_SO.baseSpecialCountdown;
+        playerData.MagnetPower = player_SO.baseSpecialCountdown;
+        playerData.MagnetDistance = player_SO.baseSpecialCountdown;    
 
-        GetPlayerShipData().SuperDamage = (level * player_SO.baseSuperDamage);
-        GetPlayerShipData().SuperChargeTime = player_SO.baseSpecialCountdown;
+        shipData.Health += playerData.GetUpgrade(UpgradeTypeEnum.Health); 
+        shipData.Speed += playerData.GetUpgrade(UpgradeTypeEnum.Speed);
+        shipData.Damage += playerData.GetUpgrade(UpgradeTypeEnum.Damage);
+        shipData.FireRate -= playerData.GetUpgrade(UpgradeTypeEnum.FireRate);
+
+        GetPlayerShipData().SuperDamage += playerData.GetUpgrade(UpgradeTypeEnum.SuperDamage);
+        GetPlayerShipData().SuperChargeTime -= playerData.GetUpgrade(UpgradeTypeEnum.SuperrechargeTime);
+        GetPlayerShipData().MagnetPower = playerData.GetUpgrade(UpgradeTypeEnum.MagnetStrength);
+        GetPlayerShipData().MagnetDistance = playerData.GetUpgrade(UpgradeTypeEnum.MagnetDistance);
+
+        GetPlayerShipData().HasArmorUpgrade = (int)playerData.GetUpgrade(UpgradeTypeEnum.ArmorUpgrade) == 1 ? true : false;
+        GetPlayerShipData().HasShield = (int)playerData.GetUpgrade(UpgradeTypeEnum.Shield)== 1 ? true : false;
 
         healthComponent.Setup(this);
         movementController.Setup(this);
         weaponController.Setup(this);
     }
-    //=================================================================================
-    public void ApplyUpgrades(float[] UpgradeStats)
-    {
-        shipData.Speed += UpgradeStats[(int)UpgradeTypeEnum.Speed];
-        shipData.Damage += UpgradeStats[(int)UpgradeTypeEnum.Damage];
-        shipData.FireRate -= UpgradeStats[(int)UpgradeTypeEnum.FireRate];
-        GetPlayerShipData().SuperDamage += UpgradeStats[(int)UpgradeTypeEnum.SuperDamage];
-        GetPlayerShipData().SuperChargeTime -= UpgradeStats[(int)UpgradeTypeEnum.SuperrechargeTime];
-        GetPlayerShipData().MagnetPower = UpgradeStats[(int)UpgradeTypeEnum.MagnetStrength];
-        GetPlayerShipData().MagnetDistance = UpgradeStats[(int)UpgradeTypeEnum.MagnetDistance];
-        GetPlayerShipData().HasArmorUpgrade = UpgradeStats[(int)UpgradeTypeEnum.ArmorUpgrade] == 1 ? true : false;
-        GetPlayerShipData().HasShield = UpgradeStats[(int)UpgradeTypeEnum.Shield] == 1 ? true : false;
-    }
-    
 
     public PlayerShipData GetPlayerShipData()
     {
         return ((PlayerShipData)shipData);
     }
+
     public Player_SO GetPlayerSO()
     {
         return ((Player_SO)ship_SO);
     }
+
     public override void Hit()
     {
         hitEffect.SetActive(true);
         hitEffectTimer = .5f;
+    }
+    public PlayerWeaponController GetWeaponController()
+    {
+        return ((PlayerWeaponController)weaponController);
     }
     private void ShipData_OnPowerPackCollected(float obj)
     {

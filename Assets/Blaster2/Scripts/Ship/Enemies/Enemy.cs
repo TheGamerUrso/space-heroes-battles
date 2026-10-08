@@ -21,7 +21,7 @@ public class Enemy : Ship, ITargetable
 
     public PoolGameObjectType GameObjectType { get; set; }
 
-
+    public Action<EnemyState> OnEnemyStateChanged;
     public EnemyState EnemyState;
     [SerializeField] protected PoolGameObjectType explostionEffect;
     [SerializeField] protected GameObject hitEffect;
@@ -35,16 +35,13 @@ public class Enemy : Ship, ITargetable
     private float tempSpeed;
     private float actiualSpeed;
 
-    private void Awake()
-    {
-        SetStats(shipData.Level);
-    }
-
     public virtual void Start()
     {
         eventService = GameContext.Get<IEventService>();
-        SetState(EnemyState.Idle);
         healthComponent.OnHealthChanged += OnHealthValueChanged;
+
+        SetStats(shipData.Level);
+        SetState(EnemyState.Idle);
     }
 
     private void OnDestroy()
@@ -86,6 +83,7 @@ public class Enemy : Ship, ITargetable
     public void SetState(EnemyState enemyState)
     {
         this.EnemyState = enemyState;
+        OnEnemyStateChanged?.Invoke(enemyState);
     }
 
     public void OnTriggerEnter(Collider other)
@@ -134,6 +132,7 @@ public class Enemy : Ship, ITargetable
     public override void Enter()
     {
         base.Enter();
+        healthComponent.Isinvulnerable = true;
         eventService.Publish(new EnemyEvent()
         {
             Type = EnemyEvent.EnemyEventType.ENTER
@@ -144,6 +143,7 @@ public class Enemy : Ship, ITargetable
 
         if (transform.position.z < 120f)
         {
+            healthComponent.Isinvulnerable = false;
             movementController.UpdateSpeed();
             healthComponent.SetDamagable(true);
             SetState(EnemyState.Combat);

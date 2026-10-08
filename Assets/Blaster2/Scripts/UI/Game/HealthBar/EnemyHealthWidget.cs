@@ -2,7 +2,6 @@
 
 public class EnemyHealthWidget : BaseHealthUI
 {
-    public Enemy enemy;
     private float timer;
     public float duration;
     public bool Static;
@@ -12,14 +11,14 @@ public class EnemyHealthWidget : BaseHealthUI
 
     protected virtual void Start()
     {
-        if (enemy != null)
-            enemy.healthComponent.OnHealthChanged += HealthComponent_OnHealthChangedHandled;
+        if (healthComponent != null)
+            healthComponent.OnHealthChanged += HealthComponent_OnHealthChangedHandled;
     }
 
     private void OnDestroy()
     {
-        if(enemy!=null)
-        enemy.healthComponent.OnHealthChanged -= HealthComponent_OnHealthChangedHandled;
+        if(healthComponent != null)
+        healthComponent.OnHealthChanged -= HealthComponent_OnHealthChangedHandled;
     }
 
     private void HealthComponent_OnHealthChangedHandled(float currentHealth, float MaxHealth)

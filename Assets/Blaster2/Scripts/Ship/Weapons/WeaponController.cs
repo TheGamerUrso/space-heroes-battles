@@ -25,6 +25,7 @@ public class WeaponController : MonoBehaviour
         {
             Weapons[weaponIndex].Setup(ship);
         }
+        SetWeapon(CurrentWeaponIndex);
     }
     //=================================================================================
     public BaseWeapon GetCurrentWeapon()
@@ -78,16 +79,12 @@ public class WeaponController : MonoBehaviour
         {
             for (int i = 0; i < Weapons.Length; i++)
             {
-                float newFireRate = Weapons[i].FireRate - fireRate;
-
-                Weapons[i].FireRate = newFireRate;
+                Weapons[i].FireRate = fireRate;
             }
         }
         else
         {
-            float newFireRate = Weapons[weaponIndex].FireRate - fireRate;
-
-            Weapons[weaponIndex].FireRate = newFireRate;
+            Weapons[weaponIndex].FireRate = fireRate;
         }
     }
     //=================================================================================

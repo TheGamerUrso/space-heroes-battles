@@ -145,6 +145,8 @@ public class PlayerController : BaseMovementController
                 HasClicked = true;
                 delayClickTimer = clickDelayTime;
             }
+            var chargePower = playerShip.GetPlayerShipData().ChargePower;
+            if (chargePower < 1) return;
             ((PlayerWeaponController)weaponController).ActivateSpecial();
         }               
     }
@@ -259,7 +261,7 @@ public class PlayerController : BaseMovementController
                 eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {payload.reward} Coin </color>", targetPos = transform.localPosition });
                 break;
             case RewardTypeEnum.XP:
-                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.XP, value = (int)payload.reward });
+                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.XP, value = (float)payload.reward });
           
                 var playerShipData = playerShip.GetPlayerShipData();
                 if (playerShipData == null) return;
@@ -279,7 +281,8 @@ public class PlayerController : BaseMovementController
                 playerShip.GetPlayerShipData().UpdatePowerPackCollected(2); 
                 break;
             case RewardTypeEnum.SUPER:
-                playerShip.GetPlayerShipData().UpdateUpserCharge(.5f);
+                if (!playerShip.GetWeaponController().IsSuperActive())
+                    playerShip.GetPlayerShipData().UpdateSuperCharge(.5f);
                 break;
         }
     }
@@ -287,7 +290,6 @@ public class PlayerController : BaseMovementController
     public void OnLevelValueChanged(int Level)
     {
         playerShip.SetStats(Level);
-        playerShip.ApplyUpgrades(playerShip.GetPlayerShipData().GetCalculatedUpgradeStats());
     }
     //=================================================================================
     public void OnItemPickedUpHandled(ItemPickedUpEvent payload)
@@ -315,13 +317,15 @@ public class PlayerController : BaseMovementController
                     }
                     else
                     {
-                        playerShip.GetPlayerShipData().UpdateUpserCharge(0.025f);
+                        if (!playerShip.GetWeaponController().IsSuperActive())
+                            playerShip.GetPlayerShipData().UpdateSuperCharge(0.025f);
                     }
 
                 }
                 else if (!canUseItem)
                 {
-                    playerShip.GetPlayerShipData().UpdateUpserCharge(0.025f);
+                    if (!playerShip.GetWeaponController().IsSuperActive())
+                        playerShip.GetPlayerShipData().UpdateSuperCharge(0.025f);
                 }
                 break;
             case ItemEnum.HEALTH:
