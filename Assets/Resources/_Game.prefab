@@ -368,6 +368,53 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &1486067313245022170
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2573491204525437592}
+  - component: {fileID: 9093321053107103866}
+  m_Layer: 0
+  m_Name: QuestSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2573491204525437592
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486067313245022170}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -541.3615, y: -1271.7, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5761738244540654098}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &9093321053107103866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486067313245022170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 344f1874da73c854c89b2a0e68396843, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::QuestSystem
+  DictOfActiveQuests: []
+  ListOfAvailableQuestType: 
+  ActiveQuests: []
 --- !u!1 &1695353005717976901
 GameObject:
   m_ObjectHideFlags: 0
@@ -3758,6 +3805,101 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!1 &6276316486434185414
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1601724143170351931}
+  - component: {fileID: 3310150512084291954}
+  m_Layer: 0
+  m_Name: UpgradeSystem
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1601724143170351931
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6276316486434185414}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -539.46204, y: -1271.7, z: 76.51463}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5761738244540654098}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3310150512084291954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6276316486434185414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 59fbce1e464a8ff4e9813a9a2c672d44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  UpgradesDict:
+  - key: 0
+    value:
+      upgradeData: {fileID: 11400000, guid: 5e8d13511b2b9bc46b406a460c92e5cf, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 1
+    value:
+      upgradeData: {fileID: 11400000, guid: b170d615b8c64314b8ba6186f829a6c2, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 2
+    value:
+      upgradeData: {fileID: 11400000, guid: da83ce9710bd7834f8307cf5207cf13b, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 3
+    value:
+      upgradeData: {fileID: 11400000, guid: 3285374d2dfd7be4bb3f0fe6aef9c6ca, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 4
+    value:
+      upgradeData: {fileID: 11400000, guid: 09a27b3067c5d9d428d73830c1b8daf4, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 5
+    value:
+      upgradeData: {fileID: 11400000, guid: 073512fad01f6d240a4c274232423f95, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 6
+    value:
+      upgradeData: {fileID: 11400000, guid: e6a77f92555ea6449b384858cb0b8a2f, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 7
+    value:
+      upgradeData: {fileID: 11400000, guid: 50368d848f855fb40aa918c4c4e3f62f, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 8
+    value:
+      upgradeData: {fileID: 11400000, guid: 1e8c7ae978b052a48bc1699aba8d62ac, type: 2}
+      Level: 0
+      Cost: 0
+  - key: 9
+    value:
+      upgradeData: {fileID: 11400000, guid: b37f64b150e01f54b93ba53832a18a61, type: 2}
+      Level: 0
+      Cost: 0
 --- !u!1 &7465229004721495933
 GameObject:
   m_ObjectHideFlags: 0
@@ -4345,6 +4487,8 @@ Transform:
   - {fileID: 6826906192568986437}
   - {fileID: 4169436843945724539}
   - {fileID: 4681532948433419520}
+  - {fileID: 1601724143170351931}
+  - {fileID: 2573491204525437592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1476311073679848034

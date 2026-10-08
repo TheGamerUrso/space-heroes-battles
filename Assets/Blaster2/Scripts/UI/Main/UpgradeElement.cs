@@ -1,8 +1,6 @@
-﻿using System;
-using TheGamerUrso.Core;
+﻿using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class UpgradeElement : MonoBehaviour
@@ -15,7 +13,8 @@ public class UpgradeElement : MonoBehaviour
     [SerializeField] private Image Icon;
 
     [SerializeField] private GameObject NotAvailable;
-    private UpgradeManager upgradeManager;
+    private IUpgradesService upgradesService;
+    private IDataService dataService;
 
     private Color TextdefaultColor;
     private PlayerData playerData;
@@ -23,18 +22,52 @@ public class UpgradeElement : MonoBehaviour
     [SerializeField] private UpgradeData upgradeData;
     private Upgrade upgrade;
 
-    public void SetUpgradeElement(UpgradeManager upgradeManager,PlayerData playerData)
+
+    private void Start()
     {
-        this.upgradeManager = upgradeManager;
-        this.playerData = playerData;
-        this.playerShipData = playerData.GetCurrentPlayerShipData();
-        upgrade = upgradeManager.GetUpgrade(upgradeData.upgradeType);
-        upgradeManager.OnUpgradeValueChanged += Upgrade_OnUpdateValueChanged;
-        upgradeManager.OnUpgradeErrorOccured += UpgradeManager_OnUpgradeErrorOccured;
-        Name.text = upgradeManager.GetUpgradeName(upgrade.upgradeData.upgradeType);
+        upgradesService = GameContext.Get<IUpgradesService>();
+        dataService = GameContext.Get<IDataService>();
+
+        playerData = dataService.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        playerData.OnCurrencyValueChanged += PlayerData_OnCurrencyValueChanged;
+        playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.GetCurrentPlayerShipData().OnLevelUp += PlayerShipData_OnLevelUp;
+
+        upgradesService.OnUpgradeValueChanged += Upgrade_OnUpdateValueChanged;
+        upgradesService.OnUpgradeErrorOccured += UpgradeManager_OnUpgradeErrorOccured;
+
+        upgrade = upgradesService.GetUpgrade(upgradeData.upgradeType);
+        Name.text = upgrade.GetUpgradeName();
         Icon.sprite = upgrade.upgradeData.sprite;
         TextdefaultColor = Price.color;
 
+        Refresh();
+
+    }
+
+    private void PlayerData_OnCurrencyValueChanged(int obj)
+    {
+        Refresh();
+    }
+
+    private void OnDestroy()
+    {
+        upgradesService.OnUpgradeValueChanged -= Upgrade_OnUpdateValueChanged;
+        upgradesService.OnUpgradeErrorOccured -= UpgradeManager_OnUpgradeErrorOccured;
+
+        if (playerData == null) return;
+        playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
+
+        playerData.GetCurrentPlayerShipData().OnLevelUp -= PlayerShipData_OnLevelUp;
+    }
+
+    private void PlayerData_OnCurrentShipSelectedValueChanged(int currentShip)
+    {
+        upgrade.SetUpgrade(playerShipData.Upgrades[(int)upgrade.upgradeData.upgradeType]);
+    }
+    private void PlayerShipData_OnLevelUp(int Level)
+    {
         Refresh();
     }
 
@@ -48,86 +81,43 @@ public class UpgradeElement : MonoBehaviour
         Refresh();
     }
 
-    private void Update()
-    {
-        Price.color = playerData.playerEconomyData.Coins < upgrade.Cost ? Color.red : Color.green;
-        buyButton.interactable = playerData.playerEconomyData.Coins < upgrade.Cost ? false : true;
-    }
-
     public void Refresh()
     {
-     
-        Price.text = upgradeManager.GetCost(upgrade.upgradeData.upgradeType);
-
-
+        Price.text = upgrade.GetCost().ToString();
         progressbar.fillAmount = upgrade.ProgressPresentage;
 
         MessageText.gameObject.SetActive(false);
         NotAvailable.SetActive(false);
         Price.color = TextdefaultColor;
-        buyButton.interactable = true;
 
-        if (upgrade.ProgressPresentage == 1)
+        if (upgrade.IsMaxLevel())
         {
             buyButton.interactable = false;
-            if (upgrade.upgradeData.MaxLevel > 1)
-            {
-                Warn(Constants.UpgradeMaxedOut);
-            }
-            else if (upgrade.upgradeData.MaxLevel == 1)
-            {
-                Warn(Constants.OutOfStock);
-            }
-            return;
+            Warn(Constants.UpgradeMaxedOut);
         }
-
-
-        if (playerData.playerEconomyData.Coins < upgrade.Cost)
+        else if (!upgrade.HasRequirementMet(playerShipData.Level))
         {
+            NotAvailable.SetActive(true);
+            Warn(Constants.UnlockedAtLvl + upgrade.GetLevelRequirment(upgrade.upgradeData.upgradeType));
+            buyButton.interactable = false;
+        }
+        else if (!upgrade.CanAffordNextLevel(playerData.playerEconomyData.Coins))
+        {
+            Warn(Constants.OutOfStock);
             Price.color = Color.red;
             buyButton.interactable = false;
         }
-
-        if (playerShipData.Level < upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
+        else
         {
-            NotAvailable.SetActive(true);
-            Warn(Constants.UnlockedAtLvl + upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType));
-            buyButton.interactable = false;
+            buyButton.interactable = true;
         }
     }
 
 
     public void BuyButton()
     {
-        if (upgrade.ProgressPresentage == 1)
-        {
-            buyButton.interactable = false;
-            if (upgrade.upgradeData.MaxLevel > 1)
-            {
-                Warn(Constants.UpgradeMaxedOut);
-            }
-            else if (upgrade.upgradeData.MaxLevel == 1)
-            {
-                Warn(Constants.OutOfStock);
-            }
-            return;
-        }
-
-        if (playerData.playerEconomyData.Coins >= upgrade.Cost && playerShipData.Level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
-        {
-            if (upgrade.ProgressPresentage == 1)
-            {
-                return;
-            }
-
-            if (playerData.playerEconomyData.Coins >= upgrade.Cost && playerShipData.Level >= upgradeManager.GetLevelRequirment(upgrade.upgradeData.upgradeType))
-            {
-                upgrade.LevelUp();
-            }
-        }
-
-
-        upgradeManager.BuyUpgrade(upgradeData.upgradeType);
+        upgradesService.BuyUpgrade(upgradeData.upgradeType);
+        Refresh();
     }
 
     public void Warn(string message)

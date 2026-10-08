@@ -4,7 +4,7 @@ using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 
-public class LevelWidget : MonoBehaviour
+public class LevelUI : MonoBehaviour
 {
     private PlayerData playerData;
     private PlayerShipData playerShipData;
@@ -25,8 +25,17 @@ public class LevelWidget : MonoBehaviour
     {
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
+        playerData.OnCurrencyValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.GetCurrentPlayerShipData().OnLevelUp += PlayerShipData_OnLevelUp;
 
-        SetPlayerLevelText(playerShipData.Level);
+        SetText(playerShipData.Level);
+    }
+    private void OnDestroy()
+    {
+        playerData.OnCurrencyValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.GetCurrentPlayerShipData().OnLevelUp -= PlayerShipData_OnLevelUp;
     }
 
     private void Update()
@@ -42,14 +51,18 @@ public class LevelWidget : MonoBehaviour
         }
     }
 
-    public void NewShipSelected(int shipSelected)
+    public void PlayerData_OnCurrentShipSelectedValueChanged(int shipSelected)
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
-
-        SetPlayerLevelText(playerShipData.Level);
+        SetText(playerShipData.Level);
     }
 
-    public void SetPlayerLevelText(int lvl)
+    public void PlayerShipData_OnLevelUp(int lvl)
+    {
+        SetText(lvl);
+    }
+
+    public void SetText(int lvl)
     {
         level = lvl;
         updateText = true;

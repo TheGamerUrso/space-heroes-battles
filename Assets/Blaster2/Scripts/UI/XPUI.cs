@@ -5,7 +5,7 @@ using TheGamerUrso.Core;
 using TMPro;
 using UnityEngine;
 
-public class XPWidget : MonoBehaviour
+public class XPUI : MonoBehaviour
 {
     private PlayerData playerData;
     private PlayerShipData playerShipData;
@@ -29,15 +29,21 @@ public class XPWidget : MonoBehaviour
 
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
+        playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.GetCurrentPlayerShipData().OnXPValueChanged += PlayerShipData_OnXPValueChanged;
+        SetText(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
+    }
 
-        SetPlayerXP(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
+    private void OnDestroy()
+    {
+        playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.GetCurrentPlayerShipData().OnXPValueChanged -= PlayerShipData_OnXPValueChanged;
     }
 
     public void NewShipSelected(int shipSelected)
     {
         playerShipData = playerData.GetCurrentPlayerShipData();
-
-        SetPlayerXP(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
+        SetText(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
     }
 
     private void Update()
@@ -52,7 +58,18 @@ public class XPWidget : MonoBehaviour
             }
         }
     }
-    public void SetPlayerXP(int lvl, float xp, float xpToLevel)
+    public void PlayerData_OnCurrentShipSelectedValueChanged(int shipSelected)
+    {
+        playerShipData = playerData.GetCurrentPlayerShipData();
+        SetText(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
+    }
+
+    public void PlayerShipData_OnXPValueChanged(int lvl, float xp, float xpToLevel)
+    {
+        SetText(playerShipData.Level, playerShipData.xp, playerShipData.xpToLevel);
+    }
+
+    public void SetText(int lvl, float xp, float xpToLevel)
     {
         this.xp = xp;
         this.xpToLevel = xpToLevel;

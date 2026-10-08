@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TheGamerUrso.Core;
 using UnityEngine;
 
-public class UpgradeManager : MonoBehaviour
+public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesService
 {
     public event Action<Upgrade> OnUpgradeValueChanged;
     public event Action<string> OnUpgradeErrorOccured;
@@ -13,68 +13,45 @@ public class UpgradeManager : MonoBehaviour
     protected IDataService dataService;
     private PlayerData playerData;
     private PlayerShipData playerShipData;
-    protected void Awake()
+
+    protected override void Awake()
     {
+        base.Awake();
         dataService = GameContext.Get<IDataService>();
     }
 
     private void Start()
     {
         playerData = dataService.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+
+        playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+
     }
 
-    private void OnShipSelected(int shipSelected)
+    protected override void OnDestroy()
     {
-        foreach(Upgrade upgrade in UpgradesDict.Values)
-        {
-            upgrade.SetUpgrade(playerShipData.Upgrades[(int)upgrade.upgradeData.upgradeType]);
-        }
+        base.OnDestroy();
+        playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
     }
 
-    public Upgrade GetUpgrade(UpgradeTypeEnum upgradeType)
+    private void PlayerData_OnCurrentShipSelectedValueChanged(int currentShip)
     {
-        if(UpgradesDict.TryGetValue(upgradeType, out Upgrade value))
-        {
-            return value;
-        }
-        return null;
+        playerShipData = playerData.GetCurrentPlayerShipData();
     }
 
     public void BuyUpgrade(UpgradeTypeEnum upgradeType)
     {
         var upgrade = GetUpgrade(upgradeType);
-        if (upgrade.ProgressPresentage == 1)
+
+        if (!upgrade.CanAffordNextLevel(playerData.playerEconomyData.Coins) ||
+            !upgrade.HasRequirementMet(playerShipData.Level) || upgrade.IsMaxLevel()) return;
         {
-            return;
-        }
-        var upgradeFound = GetUpgrade(upgradeType);
+            playerShipData.SetUpgrades(upgradeType, upgrade.Level);
+            playerData.playerEconomyData.Coins -= upgrade.Cost;
 
-        playerShipData.SetUpgradeByType(upgradeType, upgradeFound.Level);
-        playerData.playerEconomyData.Coins -= upgradeFound.Cost;
-
-        var questService = GameContext.Get<IQuestService>();
-        questService.SetQuestProgressByType(QuestTypeEnum.SPEND, upgradeFound.Cost);
-
-        if (upgrade.ProgressPresentage == 1)
-        {
-            if (upgrade.upgradeData.MaxLevel > 1)
-            {
-                OnUpgradeErrorOccured?.Invoke(Constants.UpgradeMaxedOut);
-            }
-            else if (upgrade.upgradeData.MaxLevel == 1)
-            {
-                OnUpgradeErrorOccured?.Invoke(Constants.OutOfStock);
-            }
-            return;
-        }
-
-
-        if (playerData.playerEconomyData.Coins >= upgrade.Cost && playerShipData.Level >= GetLevelRequirment(upgrade.upgradeData.upgradeType))
-        {
-            if (upgrade.ProgressPresentage == 1)
-            {
-                return;
-            }
+            var questService = GameContext.Get<IQuestService>();
+            questService.SetQuestProgressByType(QuestTypeEnum.SPEND, upgrade.Cost);
 
             upgrade.LevelUp();
 
@@ -82,35 +59,12 @@ public class UpgradeManager : MonoBehaviour
         }
     }
 
-    public string GetCost(UpgradeTypeEnum upgradeType)
+    public Upgrade GetUpgrade(UpgradeTypeEnum upgradeType)
     {
-        var upgradeFound = GetUpgrade(upgradeType);
-        return $"{(upgradeFound!=null ? upgradeFound.Cost.ToString() : 0)}";
-    }
-
-    public string GetLevelRequirmentToString(UpgradeTypeEnum upgradeTypeEnum,int Level = 1)
-    {
-        var upgradeFound = GetUpgrade(upgradeTypeEnum);
-        return $"{(upgradeFound != null ? $"{Constants.UnlockedAtLvl} {upgradeFound.upgradeData.LevelRequirementPerLevel[Level].ToString()} Required" : 0)}";
-    }
-
-    public string GetUpgradeName(UpgradeTypeEnum upgradeTypeEnum)
-    {
-        return $"{upgradeTypeEnum.ToString()}";
-    }
-
-
-    public int GetLevelRequirment(UpgradeTypeEnum upgradeType)
-    {
-        var upgradeFound = GetUpgrade(upgradeType);
-        if (upgradeFound.upgradeData.LevelRequirementPerLevel.Length > 0)
+        if (UpgradesDict.TryGetValue(upgradeType, out Upgrade value))
         {
-            return upgradeFound.upgradeData.LevelRequirementPerLevel[upgradeFound.Level];
+            return value;
         }
-        else
-        {
-            return 1;
-        }
+        return null;
     }
-
 }

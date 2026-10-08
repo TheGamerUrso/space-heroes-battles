@@ -5,20 +5,21 @@ using UnityEngine;
 public class QuestUI : UIView
 {
     [SerializeField] private GameObject[] questLocation;
-    [SerializeField] protected QuestSystem questManager;
+    [SerializeField] protected IQuestService questService;
 
     private void OnDestroy()
     {
-        questManager.LoadingNewQuests -= LoadingNewQuests;
-        questManager.OnNewQuestGenerated -= InitializeObjectives;
-        questManager.OnQuestValueChanged -= RefreshObjectives;
+        questService.LoadingNewQuests -= LoadingNewQuests;
+        questService.OnNewQuestGenerated -= InitializeObjectives;
+        questService.OnQuestValueChanged -= RefreshObjectives;
     }
 
     private void Start()
     {
-        questManager.LoadingNewQuests += LoadingNewQuests;
-        questManager.OnNewQuestGenerated += InitializeObjectives;
-        questManager.OnQuestValueChanged += RefreshObjectives;
+        questService = GameContext.Get<IQuestService>();
+        questService.LoadingNewQuests += LoadingNewQuests;
+        questService.OnNewQuestGenerated += InitializeObjectives;
+        questService.OnQuestValueChanged += RefreshObjectives;
 
         InitializeObjectives();
     }
@@ -36,7 +37,7 @@ public class QuestUI : UIView
     public void RefreshObjectives()
     {
         GameObject questGO;
-        for (int i = 0; i < questManager.ListOfActiveQuest.Count; i++)
+        for (int i = 0; i < questService.ListOfActiveQuest.Count; i++)
         {
             questGO = questLocation[i];
             questGO.GetComponent<QuestUIElement>().RefreshQuests();
@@ -46,7 +47,7 @@ public class QuestUI : UIView
     public void InitializeObjectives()
     {
         var questIndex = 0;
-        foreach (QuestData item in questManager.ActiveQuests.ToList())
+        foreach (QuestData item in questService.ListOfActiveQuest.ToList())
         {
             var questLocation = this.questLocation[questIndex];
             var questUIElement = questLocation.GetComponent<QuestUIElement>();

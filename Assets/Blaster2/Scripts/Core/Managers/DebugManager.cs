@@ -16,4 +16,14 @@ public class DebugManager : MonoBehaviour
         }
         dataService.GetPlayerData().UpdateCurrency(99999);
     }
+
+    [ContextMenu("Give XP")]
+    public void GiveXP()
+    {
+        if (dataService == null)
+        {
+            dataService = GameContext.Get<IDataService>();
+        }
+        dataService.GetPlayerData().GetCurrentPlayerShipData().EarnXP(100);
+    }
 }
