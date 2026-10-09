@@ -5,11 +5,10 @@ using UnityEngine;
 public interface IQuestService 
 {
     public event Action LoadingNewQuests;
-    public event Action OnNewQuestGenerated;
+    public event Action<Dictionary<int, QuestData>> OnNewQuestGenerated;
     public event Action OnQuestValueChanged;
-
-    public List<QuestData> ListOfActiveQuest { get; }
+    public IReadOnlyDictionary<int,QuestData> GetActiveQuest();
 
     public void SetQuestProgressByType(QuestTypeEnum type, int progress);
-    void CompleteQuest(QuestData questData);
+    void CompleteQuest(int QuestIndex);
 }

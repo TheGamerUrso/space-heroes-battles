@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NUnit.Framework.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using TheGamerUrso.Core;
@@ -10,122 +11,180 @@ using UnityEngine.Playables;
 public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
 {
     public event Action LoadingNewQuests;
-    public event Action OnNewQuestGenerated;
+    public event Action<Dictionary<int, QuestData>> OnNewQuestGenerated;
     public event Action OnQuestValueChanged;
-    [SerializeField] private Dictionary<string, QuestData> DictOfActiveQuests = new Dictionary<string, QuestData>();
-
-    [SerializeField] private List<QuestTypeEnum> ListOfAvailableQuestType;
+    [SerializeField] private Dictionary<int, QuestData> ActiveQuestDict = new Dictionary<int, QuestData>();
     private float ResetTimer = 2f;
     private bool AllQuestsCompleted = false;
-    public List<QuestData> ActiveQuests = new List<QuestData>();
-    public List<QuestData> ListOfActiveQuest { get { return ActiveQuests; } }
 
     private INotificationService notificationService;
     private IQuestService questService;
     private IEventService eventService;
+    private IDataService dataService;
 
-    private void OnEnable()
-    {
-  
-    }
+    private PlayerData playerData;
+    private PlayerShipData playerShipData;
 
     private void Start()
     {
-        InitializeQuests();
         eventService = GameContext.Get<IEventService>();
         notificationService = GameContext.Get<INotificationService>();
 
         eventService.Subscribe<QuestProgressEvent>(OnQuestProgressHandled);
         OnQuestValueChanged?.Invoke();
+
+        dataService = GameContext.Get<IDataService>();
+
+        playerData = dataService.GetPlayerData();
+        playerShipData = playerData.GetCurrentPlayerShipData();
+
+        playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+
+        GeneratedQuest();
+    }
+
+    private void PlayerData_OnCurrentShipSelectedValueChanged(int obj)
+    {
+        playerShipData = playerData.GetCurrentPlayerShipData();
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
         eventService.Unsubscribe<QuestProgressEvent>(OnQuestProgressHandled);
-    }
-    public void InitializeQuests()
-    {
 
-        CreateNewQuests();
+        playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
     }
 
-    public void CreateNewQuests()
+    public void CreateNewQuests(int questIndex)
     {
-        ListOfAvailableQuestType = Enum.GetValues(typeof(QuestTypeEnum)).Cast<QuestTypeEnum>().ToList();
+        var ListOfAvailableQuestType = Enum.GetValues(typeof(QuestTypeEnum)).Cast<QuestTypeEnum>().ToList();
+ 
+        int randoNumber = UnityEngine.Random.Range(0, ListOfAvailableQuestType.Count);
+        var questType = ListOfAvailableQuestType[randoNumber];
+        ListOfAvailableQuestType.Remove(questType);
 
-        QuestTypeEnum questType;
-        QuestData questData = null;
-
-        for (int i = 0; i < 3; i++)
+        if(ActiveQuestDict.TryGetValue(questIndex,out QuestData questDataFound))
         {
-            int randoNumber = UnityEngine.Random.Range(0, ListOfAvailableQuestType.Count);
+            ActiveQuestDict[questIndex] = CreateQuest(questIndex, questType);
+        }
+        else
+        {
+            ActiveQuestDict.Add(questIndex, CreateQuest(questIndex, questType));
+        }
+        OnNewQuestGenerated?.Invoke(ActiveQuestDict);
+    }
+    //======================================================================================================================================================
+    public QuestData CreateQuest(int pos, 
+        QuestTypeEnum questType)
+    {
+        var description = "QUEST_DESCRIPTION_ID";
+        var requirment = 0;
+        var xpReward = 0.0f;
+        var CurrencyReward = 0;
+        switch (questType)
+        {
+            case QuestTypeEnum.KILL:
+                description = "Kill <color=orange> X / % </color>enemies";
+                requirment = UnityEngine.Random.Range(200, 500);
+                xpReward = 50f;
+                CurrencyReward = 100;
+                break;
+            case QuestTypeEnum.USE:
+                description = "Use super <color=orange> X / % </color>  times";
+                requirment = UnityEngine.Random.Range(3, 10);
+                xpReward = 20f;
+                CurrencyReward = 40;
+                break;
+            case QuestTypeEnum.UNHARMED:
+                description = "Achieve <color=orange> % </color> Score Without Getting Hit";
+                requirment = UnityEngine.Random.Range(200, 500);
+                xpReward = 75f;
+                CurrencyReward = 150;
+                break;
+            case QuestTypeEnum.SURVIVE:
+                description = "Survive <color=orange> % </color> Waves";
+                requirment = UnityEngine.Random.Range(10, 50);
+                xpReward = 25f;
+                CurrencyReward = 50;
+                break;
+            case QuestTypeEnum.SPEND:
+                description = "Spend <color=orange> X / % </color> coins";
+                requirment = UnityEngine.Random.Range(500, 1000);
+                xpReward = 15f;
+                CurrencyReward = 0;
+                break;
+            case QuestTypeEnum.BOUNTY:  
+                description = "Defeat a strong Enemy";
+                requirment = 1;
+                xpReward = 100f;
+                CurrencyReward = 200;
+                break;
+            case QuestTypeEnum.SCORE:
+                description = "Achieve <color=orange> % </color> Total Score";
+                requirment = UnityEngine.Random.Range(10000, 50000);
+                xpReward = 80f;
+                CurrencyReward = 100;
+                break;
+        }
 
-            questType = ListOfAvailableQuestType[randoNumber];
+        return new QuestData(pos,
+                    requirment,
+                    questType,
+                    description, 
+                    new QuestReward(xpReward, CurrencyReward));
+    }
+    //======================================================================================================================================================
+    public void CompleteQuest(int questIndex)
+    {
+        var questData = ActiveQuestDict[questIndex];
+        if (!questData.claimed && questData.completed)
+        {
+            playerData.playerEconomyData.Coins += questData.questReward.Currency;
+            playerData.GetCurrentPlayerShipData().EarnXP(questData.questReward.XP);
 
-            switch (questType)
+            switch ((QuestTypeEnum)questData.questType)
             {
                 case QuestTypeEnum.KILL:
-                    questData = new QuestData(i, "DEFEAT ENEMIES", UnityEngine.Random.Range(200, 500), 0, (int)questType, "Kill <color=orange> X / % </color>   enemies");
+                    playerData.playerStatsData.UpdateKills(0);
                     break;
                 case QuestTypeEnum.USE:
-                    questData = new QuestData(i, "SPECIAL ATTACK USED", UnityEngine.Random.Range(3, 10), 0, (int)questType, "Use super <color=orange> X / % </color>  times");
+                    playerData.playerStatsData.UpdateSuperUsed(0);
                     break;
                 case QuestTypeEnum.UNHARMED:
-                    questData = new QuestData(i, "UNHARMED", UnityEngine.Random.Range(10000, 50000), 0, (int)questType, "Achieve <color=orange> % </color> Score Without Getting Hit");
+                    playerData.playerStatsData.UpdateIsUnharmed(false);
                     break;
                 case QuestTypeEnum.SURVIVE:
-                    questData = new QuestData(i, "SURVIVE", UnityEngine.Random.Range(10, 50), 0, (int)questType, "Survive <color=orange> % </color> Waves");
+                    playerData.playerStatsData.UpdateWaveSurvived(0);
                     break;
                 case QuestTypeEnum.SPEND:
-                    questData = new QuestData(i, "SPEND", UnityEngine.Random.Range(500, 1000), 0, (int)questType, "Spend <color=orange> X / % </color> coins");
+                    playerData.playerEconomyData.UpdateSpendCurrency(0);
                     break;
                 case QuestTypeEnum.BOUNTY:
-                    questData = new QuestData(i, "BOUNTY", 1, 0, (int)questType, "Defeat a strong Enemy");
+                    playerData.playerStatsData.UpdateBounty(0);
                     break;
                 case QuestTypeEnum.SCORE:
-                    questData = new QuestData(i, "SCORE", UnityEngine.Random.Range(10000, 50000), 0, (int)questType, "Achieve <color=orange> % </color> Total Score");
+                    playerData.playerStatsData.UpdateScore(0);
                     break;
             }
 
-            ListOfAvailableQuestType.Remove(questType);
+            OnQuestValueChanged?.Invoke();
 
-            DictOfActiveQuests.Add(questData.Id, questData);
-        }
+            int numberOfCompletdQuest = 0;
 
-
-        var objectiveIndex = 0;
-
-        foreach (QuestData item in DictOfActiveQuests.Values)
-        {
-            if (item != null)
+            foreach (var item in ActiveQuestDict.ToList())
             {
-                ActiveQuests.Add(item);
-                objectiveIndex++;
+                if (item.Value.claimed)
+                {
+                    numberOfCompletdQuest++;
+                }
             }
-        }
 
-        OnNewQuestGenerated?.Invoke();
-    }
-
-    public void CompleteQuest(QuestData questData)
-    {
-        DictOfActiveQuests.Remove(questData.Id);
-
-        int numberOfCompletdQuest = 0;
-
-        foreach (var item in ActiveQuests.ToList())
-        {
-            if (item.claimed)
+            if (numberOfCompletdQuest == 3)
             {
-                numberOfCompletdQuest++;
+                LoadingNewQuests?.Invoke();
+                AllQuestsCompleted = true;
             }
-        }
-
-        if (numberOfCompletdQuest == 3)
-        {
-            LoadingNewQuests?.Invoke();
-            AllQuestsCompleted = true;
         }
     }
     //======================================================================================================================================================
@@ -139,66 +198,46 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         {
             AllQuestsCompleted = false;
             ResetTimer = 2f;
-            GenerateNewObjectives();
+            GeneratedQuest();
         }
-    }
-    //======================================================================================================================================================
-    public void GenerateNewObjectives()
-    {
-        foreach (var item in ActiveQuests.ToList())
-        {
-            ActiveQuests.Remove(item);
-            InitializeQuests();
-        }
-    }
-    //======================================================================================================================================================
-    [ContextMenu("Generate New Challenges")]
-    public void GeneratedQuest()
-    {
-        GenerateNewObjectives();
     }
     //======================================================================================================================================================
     public void SetQuestProgressByType(QuestTypeEnum type, int progress)
     {
-        QuestData objectiveData = GetOnGoingObjectiveById(type);
-        if (objectiveData != null)
+        QuestData questData = GetOnGoingObjectiveById((int)type);
+        if (questData != null)
         {
-            objectiveData.UpdateProgress(progress);
+            questData.UpdateProgress(progress);
 
             Notification notification = new Notification();
-            notification.Name = objectiveData.Id;
-            objectiveData.Description = objectiveData.Description.Replace("%", "" + objectiveData.requirment);
-            notification.Description = objectiveData.Description.Replace(" X ", "" + progress);
+            notification.Name = questData.Id;
+            questData.Description = questData.Description.Replace("%", "" + questData.requirment);
+            notification.Description = questData.Description.Replace(" X ", "" + progress);
             notificationService?.Add(notification);
         }
         OnQuestValueChanged?.Invoke();
     }
     //======================================================================================================================================================
+    [ContextMenu("Generate New Challenges")]
+    public void GeneratedQuest()
+    {
+        for (int i = 0; i < 3; i++)
+        {
+            CreateNewQuests(i);
+        }
+    }
+    //======================================================================================================================================================
     [ContextMenu("Finish Quests")]
     public void FinishQuest()
     {
-        for (int i = 0; i < ActiveQuests.Count; i++)
+        foreach (var item in ActiveQuestDict.Values)
         {
-            QuestData objective = ActiveQuests[i];
-            objective.UpdateProgress(objective.requirment);
+            item.UpdateProgress(item.requirment);
         }
-        OnQuestValueChanged?.Invoke();
+
     }
     //======================================================================================================================================================
-    public QuestData GetOnGoingObjectiveById(QuestTypeEnum objectiveType)
-    {
-        for (int i = 0; i < ActiveQuests.Count; i++)
-        {
-            if ((QuestTypeEnum)ActiveQuests[i].questType == objectiveType)
-            {
-                return ActiveQuests[i];
-            }
-        }
-        return null;
-    }
-
-    private void OnQuestProgressHandled(QuestProgressEvent payload)
-    {
-        SetQuestProgressByType(payload.questTypeEnum, payload.value);
-    }
+    public QuestData GetOnGoingObjectiveById(int questIndex) =>  ActiveQuestDict[questIndex];
+    private void OnQuestProgressHandled(QuestProgressEvent payload) => SetQuestProgressByType(payload.questTypeEnum, payload.value);
+    public IReadOnlyDictionary<int, QuestData> GetActiveQuest() => ActiveQuestDict;
 }

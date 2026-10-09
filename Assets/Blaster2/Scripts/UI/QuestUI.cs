@@ -1,59 +1,63 @@
+using System.Collections.Generic;
 using System.Linq;
 using TheGamerUrso.Core;
 using UnityEngine;
 
 public class QuestUI : UIView
 {
-    [SerializeField] private GameObject[] questLocation;
+    [SerializeField] private QuestUIElement[] questElements;
     [SerializeField] protected IQuestService questService;
 
     private void OnDestroy()
     {
         questService.LoadingNewQuests -= LoadingNewQuests;
-        questService.OnNewQuestGenerated -= InitializeObjectives;
-        questService.OnQuestValueChanged -= RefreshObjectives;
+        questService.OnNewQuestGenerated -= UpdateQuestsElements;
+        questService.OnQuestValueChanged -= RefreshQuests;
     }
 
     private void Start()
     {
         questService = GameContext.Get<IQuestService>();
         questService.LoadingNewQuests += LoadingNewQuests;
-        questService.OnNewQuestGenerated += InitializeObjectives;
-        questService.OnQuestValueChanged += RefreshObjectives;
+        questService.OnNewQuestGenerated += UpdateQuestsElements;
+        questService.OnQuestValueChanged += RefreshQuests;
 
-        InitializeObjectives();
+        for (int i = 0; i < questElements.Length; i++)
+        {
+            questElements[i].OnButtonPressed += QuestUI_OnButtonPressed;
+        }
+
+        UpdateQuestsElements(questService.GetActiveQuest());
+    }
+
+    private void QuestUI_OnButtonPressed(int Index)
+    {
+        questService.CompleteQuest(Index);
     }
 
     public void LoadingNewQuests()
     {
-        GameObject questGO;
-        for (int i = 0; i < questLocation.Length; i++)
+        for (int i = 0; i < questElements.Length; i++)
         {
-            questGO = questLocation[i];
-            questGO.GetComponent<QuestUIElement>().LoadingIndicator();
+            questElements[i].LoadingIndicator();
         }
     }
 
-    public void RefreshObjectives()
+    public void RefreshQuests()
     {
-        GameObject questGO;
-        for (int i = 0; i < questService.ListOfActiveQuest.Count; i++)
+        foreach (KeyValuePair<int, QuestData> item in questService.GetActiveQuest().ToList())
         {
-            questGO = questLocation[i];
-            questGO.GetComponent<QuestUIElement>().RefreshQuests();
+            var questElement = questElements[item.Key];
+            questElement.SetElement(item.Key, item.Value);
         }
     }
 
-    public void InitializeObjectives()
+    public void UpdateQuestsElements(IReadOnlyDictionary<int,QuestData> ListOfActiveQuest)
     {
-        var questIndex = 0;
-        foreach (QuestData item in questService.ListOfActiveQuest.ToList())
+        foreach (KeyValuePair<int,QuestData> item in ListOfActiveQuest.ToList())
         {
-            var questLocation = this.questLocation[questIndex];
-            var questUIElement = questLocation.GetComponent<QuestUIElement>();
-            questUIElement.InitializeObjective(item);
-            questIndex++;
+            var questElement = questElements[item.Key];
+            questElement.SetElement(item.Key, item.Value);
         }
-        RefreshObjectives();
     }
 }

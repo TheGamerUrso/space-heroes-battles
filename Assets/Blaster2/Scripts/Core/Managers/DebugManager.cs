@@ -14,7 +14,7 @@ public class DebugManager : MonoBehaviour
         {
             dataService = GameContext.Get<IDataService>();
         }
-        dataService.GetPlayerData().UpdateCurrency(99999);
+        dataService.GetPlayerData().playerEconomyData.UpdateCurrency(99999);
     }
 
     [ContextMenu("Give XP")]

@@ -14,7 +14,8 @@ public class PlayerStatsUpdatedEvent
         PowerPackCollected,
         XP,
         EnemyEscaped,
-        Level
+        Level,
+        Currency
     }
 
     public StatType type;

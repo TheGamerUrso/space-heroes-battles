@@ -25,60 +25,40 @@ public class UpgradeElement : MonoBehaviour
 
     private void Start()
     {
+        //Upgrade Service
         upgradesService = GameContext.Get<IUpgradesService>();
-        dataService = GameContext.Get<IDataService>();
+        upgradesService.OnUpgradeValueChanged += Upgrade_OnUpdateValueChanged;
+        upgradesService.OnUpgradeErrorOccured += UpgradeManager_OnUpgradeErrorOccured;
 
+
+        //PlayerData
+        dataService = GameContext.Get<IDataService>();
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-        playerData.OnCurrencyValueChanged += PlayerData_OnCurrencyValueChanged;
+        playerData.playerEconomyData.OnCurrencyValueChanged += PlayerData_OnCurrencyValueChanged;
         playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
         playerData.GetCurrentPlayerShipData().OnLevelUp += PlayerShipData_OnLevelUp;
 
-        upgradesService.OnUpgradeValueChanged += Upgrade_OnUpdateValueChanged;
-        upgradesService.OnUpgradeErrorOccured += UpgradeManager_OnUpgradeErrorOccured;
 
         upgrade = upgradesService.GetUpgrade(upgradeData.upgradeType);
         Name.text = upgrade.GetUpgradeName();
         Icon.sprite = upgrade.upgradeData.sprite;
         TextdefaultColor = Price.color;
-
-        Refresh();
-
-    }
-
-    private void PlayerData_OnCurrencyValueChanged(int obj)
-    {
+        
         Refresh();
     }
 
     private void OnDestroy()
-    {
+    {       
+        //Upgrade Service
         upgradesService.OnUpgradeValueChanged -= Upgrade_OnUpdateValueChanged;
         upgradesService.OnUpgradeErrorOccured -= UpgradeManager_OnUpgradeErrorOccured;
 
+        //PlayerData
         if (playerData == null) return;
         playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
-
+        playerData.playerEconomyData.OnCurrencyValueChanged -= PlayerData_OnCurrencyValueChanged;
         playerData.GetCurrentPlayerShipData().OnLevelUp -= PlayerShipData_OnLevelUp;
-    }
-
-    private void PlayerData_OnCurrentShipSelectedValueChanged(int currentShip)
-    {
-        upgrade.SetUpgrade(playerShipData.Upgrades[(int)upgrade.upgradeData.upgradeType]);
-    }
-    private void PlayerShipData_OnLevelUp(int Level)
-    {
-        Refresh();
-    }
-
-    private void UpgradeManager_OnUpgradeErrorOccured(string message)
-    {
-        Warn(message); 
-    }
-
-    private void Upgrade_OnUpdateValueChanged(Upgrade obj)
-    {
-        Refresh();
     }
 
     public void Refresh()
@@ -125,4 +105,32 @@ public class UpgradeElement : MonoBehaviour
         MessageText.text = message;
         MessageText.gameObject.SetActive(true);
     }
+
+
+
+
+    private void PlayerData_OnCurrencyValueChanged(int obj)
+    {
+        Refresh();
+    }
+
+    private void PlayerData_OnCurrentShipSelectedValueChanged(int currentShip)
+    {
+        upgrade.SetUpgrade(playerShipData.Upgrades[(int)upgrade.upgradeData.upgradeType]);
+    }
+    private void PlayerShipData_OnLevelUp(int Level)
+    {
+        Refresh();
+    }
+
+    private void UpgradeManager_OnUpgradeErrorOccured(string message)
+    {
+        Warn(message);
+    }
+
+    private void Upgrade_OnUpdateValueChanged(Upgrade obj)
+    {
+        Refresh();
+    }
+
 }

@@ -5,7 +5,6 @@ public class Weapon_SO : ScriptableObject
 {
     public PoolGameObjectType ProjectileType;
     public AudioClip ShootSFX;
-    public int Repeat;
     public bool FollowTarget;
     public float DelayBetweenShots;
 }

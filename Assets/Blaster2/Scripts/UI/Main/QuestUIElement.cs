@@ -8,8 +8,8 @@ using UnityEngine.UI;
 
 public class QuestUIElement : MonoBehaviour
 {
-
-     public QuestData questData;
+    public event Action<int> OnButtonPressed;
+    private int questIndex = 0;
 
     [SerializeField] private TextMeshProUGUI rewardText;
     [SerializeField] private TextMeshProUGUI CoinReward;
@@ -19,155 +19,32 @@ public class QuestUIElement : MonoBehaviour
     [SerializeField] private AudioClip ClickSoundEffect;
     [SerializeField] private GameObject completedQuestGameObject = null;
 
-
-    private bool completed;
-    private float sleepTimer;
-    private PlayerData playerData;
-    private int currentPlayerLevel;
-
-
-    private float xpToEarn;
-    private int coinToEarn;
-    private IDataService dataService;
-    private void Awake()
-    {
-        dataService = GameContext.Get<IDataService>();
-    }
     //=================================================================================
-    public void InitializeObjective(QuestData objectiveData)
+    public void SetElement(int questIndex,QuestData questData)
     {
+        this.questIndex = questIndex;
         Button.interactable = false;
-        completed = objectiveData.completed;
-        this.questData = objectiveData;
 
-        Button.onClick.AddListener(() =>
-        {
-            Complete();
-        });
-
-        playerData = dataService.GetPlayerData();
-        currentPlayerLevel = playerData.GetCurrentPlayerShipData().Level;
-
-        switch ((QuestTypeEnum)objectiveData.questType)
-        {
-            case QuestTypeEnum.KILL:
-                xpToEarn = 50 * currentPlayerLevel;
-                coinToEarn = 100 * currentPlayerLevel;
-                break;
-            case QuestTypeEnum.USE:
-                xpToEarn = 20 * currentPlayerLevel;
-                coinToEarn = 40 * currentPlayerLevel;
-                break;
-            case QuestTypeEnum.UNHARMED:
-                xpToEarn = 75 * currentPlayerLevel;
-                coinToEarn = 150 * currentPlayerLevel;
-                break;
-            case QuestTypeEnum.SURVIVE:
-                xpToEarn = 25 * currentPlayerLevel;
-                coinToEarn = 50 * currentPlayerLevel;
-                break;
-            case QuestTypeEnum.SPEND:
-                xpToEarn = 15 * currentPlayerLevel;
-                coinToEarn = objectiveData.progress / 3 * currentPlayerLevel;
-                break;
-            case QuestTypeEnum.BOUNTY:
-                xpToEarn = 100 * currentPlayerLevel;
-                coinToEarn = 200 * currentPlayerLevel;
-                break;
-            case QuestTypeEnum.SCORE:
-                xpToEarn = 80 * currentPlayerLevel;
-                coinToEarn = 100 * currentPlayerLevel;
-                break;
-            default:
-                break;
-        }
-
-        RefreshQuests();
-    }
-//=================================================================================
-    public void LoadingIndicator()
-    {
-        completed = false;
-        questDescription.text = " Getting new Objective ";
-        Button.interactable = false;
-    }
-//=================================================================================
-    public void ResetStatus()
-    {
-        completed = false;
-    }
-//=================================================================================
-    public void Complete()
-    {
-        if (!questData.claimed && questData.completed)
-        {
-            playerData.playerEconomyData.Coins += coinToEarn;
-            playerData.GetCurrentPlayerShipData().EarnXP(xpToEarn);
-
-            switch ((QuestTypeEnum)questData.questType)
-            {
-                case QuestTypeEnum.KILL:
-                    playerData.UpdateKills(0);
-                    break;
-                case QuestTypeEnum.USE:
-                    playerData.UpdateSuperUsed(0);
-                    break;
-                case QuestTypeEnum.UNHARMED:
-                    PlayerPrefs.DeleteKey(QuestTypeEnum.UNHARMED.ToString());
-                    break;
-                case QuestTypeEnum.SURVIVE:
-                    playerData.UpdateWaveSurvived(0);
-                    break;
-                case QuestTypeEnum.SPEND:
-                    playerData.UpdateSpendCurrency(0);
-                    break;
-                case QuestTypeEnum.BOUNTY:
-                    playerData.UpdateBountyKilled(0);
-                    break;
-                case QuestTypeEnum.SCORE: 
-                    break;
-            }
-
-            questData.claimed = true;
-            Button.interactable = false;
-
-            var questService = GameContext.Get<IQuestService>();
-            questService.CompleteQuest(questData);
-            RefreshQuests();
-        }
-    }
-    //=================================================================================
-    public void SetRewardInfo()
-    {
-        playerData = dataService.GetPlayerData();
-        currentPlayerLevel = playerData.GetCurrentPlayerShipData().Level;
-
-        rewardText.text = xpToEarn + "xp";
-        CoinReward.text = coinToEarn + "$";
-    }
-//=================================================================================
-    public void RefreshQuests()
-    {
         completedQuestGameObject.SetActive(questData.claimed);
-
-        if ((QuestTypeEnum)questData.questType == QuestTypeEnum.UNHARMED)
-        {
-            questDescription.text = questData.Description;
-        }
-        else if ((QuestTypeEnum)questData.questType == QuestTypeEnum.BOUNTY || (QuestTypeEnum)questData.questType == QuestTypeEnum.SURVIVE)
-        {
-            questDescription.text = questData.Description.Replace(" X ", "" + questData.requirment);
-        }
-        else
-        {
-            questDescription.text = questData.Description.Replace(" X ", "" + questData.progress);
-        }
+        questDescription.text = questData.Description;
 
         if (questData.completed && !questData.claimed)
         {
             Button.interactable = true;
         }
 
-        SetRewardInfo();
+        rewardText.text = questData.questReward.XP + "xp";
+        CoinReward.text = questData.questReward.Currency + "$";
+    }
+//=================================================================================
+    public void LoadingIndicator()
+    {
+        questDescription.text = " Getting new Objective ";
+        Button.interactable = false;
+    }
+//=================================================================================
+    public void Complete()
+    {
+        OnButtonPressed?.Invoke(questIndex);
     }
 }

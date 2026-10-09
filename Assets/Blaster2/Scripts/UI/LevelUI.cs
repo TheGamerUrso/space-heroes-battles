@@ -25,17 +25,24 @@ public class LevelUI : MonoBehaviour
     {
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-        playerData.OnCurrencyValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.playerEconomyData.OnCurrencyValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
         playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
-        playerData.GetCurrentPlayerShipData().OnLevelUp += PlayerShipData_OnLevelUp;
+
+        foreach (var item in playerData.playerShipData)
+        {
+            item.OnLevelUp += PlayerShipData_OnLevelUp;
+        }
 
         SetText(playerShipData.Level);
     }
     private void OnDestroy()
     {
-        playerData.OnCurrencyValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
+        playerData.playerEconomyData.OnCurrencyValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
         playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
-        playerData.GetCurrentPlayerShipData().OnLevelUp -= PlayerShipData_OnLevelUp;
+        foreach (var item in playerData.playerShipData)
+        {
+            item.OnLevelUp -= PlayerShipData_OnLevelUp;
+        }
     }
 
     private void Update()

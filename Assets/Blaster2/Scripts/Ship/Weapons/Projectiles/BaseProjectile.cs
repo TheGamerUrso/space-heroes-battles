@@ -18,11 +18,14 @@ public abstract class BaseProjectile : MonoBehaviour
     protected PlayerData playerData;
     protected IDataService dataService;
     public TrailRenderer trail;
-    protected virtual void OnEnable() { }
-   protected virtual void OnDisable()
+    protected virtual void OnEnable()
     {
         if (trailRenderer)
             trailRenderer.Clear();
+    }
+    protected virtual void OnDisable()
+    {
+
     }
 
     protected virtual void Awake()

@@ -9,6 +9,8 @@ public class PlayerProjectile : BaseProjectile
         base.Awake();
         PlayerData playerData = dataService.GetPlayerData();
         meshRenderer.material = playerMaterials[playerData.CurrrentSelectedShip];
+
+      
     }
 
     public override void Movement()

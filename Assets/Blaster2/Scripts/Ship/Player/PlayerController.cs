@@ -257,7 +257,7 @@ public class PlayerController : BaseMovementController
         switch (payload.rewardType)
         {
             case RewardTypeEnum.Gold:
-                eventService.Publish(new PlayerEconomyDataUpdatedEvent() { type = PlayerEconomyDataUpdatedEvent.StatType.Coins, value = (int)payload.reward });
+                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.Currency, value = (int)payload.reward });
                 eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {payload.reward} Coin </color>", targetPos = transform.localPosition });
                 break;
             case RewardTypeEnum.XP:
@@ -297,7 +297,7 @@ public class PlayerController : BaseMovementController
         switch (payload.ItemType)
         {
             case ItemEnum.COIN:
-                eventService.Publish(new PlayerEconomyDataUpdatedEvent() { type = PlayerEconomyDataUpdatedEvent.StatType.Coins, value = (int)payload.Ammount });
+                eventService.Publish(new PlayerStatsUpdatedEvent() { type = PlayerStatsUpdatedEvent.StatType.Currency, value = (int)payload.Ammount });
 
                 PlayerPrefs.SetInt("CoinTut", 1);
                 eventService.Publish(new FloatingTextEvent() { Message = $"<color=yellow> {(int)payload.Ammount} $ </color>", targetPos = transform.localPosition });

@@ -24,9 +24,7 @@ public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesServi
     {
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
-
         playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
-
     }
 
     protected override void OnDestroy()

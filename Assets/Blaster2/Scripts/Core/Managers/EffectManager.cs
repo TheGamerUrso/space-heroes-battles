@@ -5,32 +5,32 @@ using UnityEngine;
 public class EffectManager : MonoBehaviour
 {
     [SerializeField] private GameObject LevelUpPrefab;
-    private IEventService eventService;
+    private IDataService dataService;
+    private PlayerData playerData;
 
     private void Start()
     {
-        eventService = GameContext.Get<IEventService>();
-        eventService.Subscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
+        dataService = GameContext.Get<IDataService>();
+        playerData = dataService.GetPlayerData();
+        if (playerData == null) return;
+
+        foreach (var playerShipData in playerData.playerShipData)
+        {
+            playerShipData.OnLevelUp += OnLevelValueChanged;
+        }
     }
 
-    protected void OnDestroy()
+    private void OnDestroy()
     {
-        eventService.Unsubscribe<PlayerStatsUpdatedEvent>(PlayerStatsUpdateEventHandled);
+        if (playerData == null) return;
+        foreach (var playerShipData in playerData.playerShipData)
+        {
+            playerShipData.OnLevelUp += OnLevelValueChanged;
+        }
     }
 
     public void OnLevelValueChanged(int Level)
     {
-  
+        LevelUpPrefab.SetActive(true);
     }  
-    //=================================================================================
-    public void PlayerStatsUpdateEventHandled(PlayerStatsUpdatedEvent payload)
-    {
-        switch (payload.type)
-        {
-            case PlayerStatsUpdatedEvent.StatType.Level:
-                LevelUpPrefab.SetActive(true);
-                break;
-        }
-
-    }
 }
