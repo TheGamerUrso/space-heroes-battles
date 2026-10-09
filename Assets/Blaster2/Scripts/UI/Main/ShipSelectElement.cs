@@ -17,11 +17,12 @@ public class ShipSelectElement : MonoBehaviour
     [SerializeField] private TextMeshProUGUI CostText;
     private PlayerData playerData;
     private IDataService dataService;
-    private IEventService eventService;
+    private INotificationService notificationService;
+
     private void Awake()
     {
         dataService = GameContext.Get<IDataService>();
-        eventService = GameContext.Get<IEventService>();
+        notificationService = GameContext.Get<INotificationService>();
     }
 
     private void Start()
@@ -83,7 +84,7 @@ public class ShipSelectElement : MonoBehaviour
         if (playerData.playerEconomyData.Coins >= shipSelectData.Cost)
         {
 
-            eventService.Publish(new ErrorDialogEvent()
+            notificationService?.Show(new ErrorDialogEvent()
             {
                 Type = popupType.message,
                 Message = "Unlocked new Hero",
@@ -106,7 +107,7 @@ public class ShipSelectElement : MonoBehaviour
         }
         else
         {
-            eventService.Publish(new ErrorDialogEvent()
+            notificationService?.Show(new ErrorDialogEvent()
             {
                 Type = popupType.message,
                 Message = "Insufficient funds",

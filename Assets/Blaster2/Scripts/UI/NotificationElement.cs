@@ -16,13 +16,13 @@ public class NotificationElement : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Image Icon;
 
     public Notification notification;
-    public NotificationSystem notificationSystem;
+    public NotificationManager notificationSystem;
 
     private float TTL = 2;
 
     public void SetNotificationElement(
         Notification notification,
-        NotificationSystem notificationSystem, Action<NotificationElement> callback, int TTL = 2)
+        NotificationManager notificationSystem, Action<NotificationElement> callback, int TTL = 2)
     {
         TimesUp = callback;
         this.notification = notification;

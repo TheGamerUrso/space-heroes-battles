@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using TheGamerUrso.Core;
+using Unity.ProjectAuditor.Editor;
 using UnityEngine;
+using UnityEngine.Playables;
 
 [DefaultExecutionOrder(-100)]
 public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
@@ -18,16 +20,30 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
     public List<QuestData> ActiveQuests = new List<QuestData>();
     public List<QuestData> ListOfActiveQuest { get { return ActiveQuests; } }
 
+    private INotificationService notificationService;
+    private IQuestService questService;
+    private IEventService eventService;
+
     private void OnEnable()
     {
-        OnQuestValueChanged?.Invoke();
+  
     }
 
     private void Start()
     {
         InitializeQuests();
+        eventService = GameContext.Get<IEventService>();
+        notificationService = GameContext.Get<INotificationService>();
+
+        eventService.Subscribe<QuestProgressEvent>(OnQuestProgressHandled);
+        OnQuestValueChanged?.Invoke();
     }
 
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        eventService.Unsubscribe<QuestProgressEvent>(OnQuestProgressHandled);
+    }
     public void InitializeQuests()
     {
 
@@ -148,6 +164,12 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         if (objectiveData != null)
         {
             objectiveData.UpdateProgress(progress);
+
+            Notification notification = new Notification();
+            notification.Name = objectiveData.Id;
+            objectiveData.Description = objectiveData.Description.Replace("%", "" + objectiveData.requirment);
+            notification.Description = objectiveData.Description.Replace(" X ", "" + progress);
+            notificationService?.Add(notification);
         }
         OnQuestValueChanged?.Invoke();
     }
@@ -173,5 +195,10 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
             }
         }
         return null;
+    }
+
+    private void OnQuestProgressHandled(QuestProgressEvent payload)
+    {
+        SetQuestProgressByType(payload.questTypeEnum, payload.value);
     }
 }

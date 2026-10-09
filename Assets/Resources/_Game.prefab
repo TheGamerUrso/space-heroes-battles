@@ -368,53 +368,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &1486067313245022170
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2573491204525437592}
-  - component: {fileID: 9093321053107103866}
-  m_Layer: 0
-  m_Name: QuestSystem
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2573491204525437592
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1486067313245022170}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -541.3615, y: -1271.7, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5761738244540654098}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9093321053107103866
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1486067313245022170}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 344f1874da73c854c89b2a0e68396843, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::QuestSystem
-  DictOfActiveQuests: []
-  ListOfAvailableQuestType: 
-  ActiveQuests: []
 --- !u!1 &1695353005717976901
 GameObject:
   m_ObjectHideFlags: 0
@@ -1822,7 +1775,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7947147498984386624}
-  m_Father: {fileID: 5697813248465465699}
+  m_Father: {fileID: 5801102341485216768}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -2432,57 +2385,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &5697813248465465696
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5697813248465465699}
-  - component: {fileID: 5697813248465465698}
-  m_Layer: 0
-  m_Name: Dialogs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5697813248465465699
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5697813248465465696}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5697813249698648954}
-  - {fileID: 510837330239274852}
-  m_Father: {fileID: 5761738244540654098}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5697813248465465698
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5697813248465465696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 685d06662ea582d4999debc9d93e5ca2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  popupDialogMessageDict:
-  - key: 0
-    value: {fileID: 777375654774429750}
-  - key: 1
-    value: {fileID: 2387254205270506887}
 --- !u!1 &5697813249152970635
 GameObject:
   m_ObjectHideFlags: 0
@@ -2821,7 +2723,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5697813250065213533}
-  m_Father: {fileID: 5697813248465465699}
+  m_Father: {fileID: 5801102341485216768}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3320,7 +3222,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5801102341485216768}
-  - component: {fileID: 5801102341485216771}
+  - component: {fileID: 6499157574185927118}
   m_Layer: 0
   m_Name: NotificationSystem
   m_TagString: Untagged
@@ -3342,9 +3244,11 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5801102342864246802}
+  - {fileID: 5697813249698648954}
+  - {fileID: 510837330239274852}
   m_Father: {fileID: 5761738244540654098}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5801102341485216771
+--- !u!114 &6499157574185927118
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -3353,11 +3257,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 5801102341485216769}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ea1342ba8a92b946af0f9a5580175ed, type: 3}
+  m_Script: {fileID: 11500000, guid: e7078d3b7f902df4aabe59209d1d5399, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  content: {fileID: 5801102341846116663}
-  NotificationElementPrefab: {fileID: 6109185301251412748, guid: fcb5844d88e0b524190ff45d8e050a70, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::NotificationManager
+  content: {fileID: 5801102342864246802}
+  NotificationElementPrefab: {fileID: 4662569975071465838}
+  popupDialogMessageDict:
+  - key: 0
+    value: {fileID: 777375654774429750}
+  - key: 1
+    value: {fileID: 2387254205270506887}
 --- !u!1 &5801102341846116660
 GameObject:
   m_ObjectHideFlags: 0
@@ -4481,14 +4390,12 @@ Transform:
   - {fileID: 1978984324118837623}
   - {fileID: 7445005688720646233}
   - {fileID: 7994325095950084178}
-  - {fileID: 5697813248465465699}
   - {fileID: 5801102341485216768}
   - {fileID: 4879675619846807883}
   - {fileID: 6826906192568986437}
   - {fileID: 4169436843945724539}
   - {fileID: 4681532948433419520}
   - {fileID: 1601724143170351931}
-  - {fileID: 2573491204525437592}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1476311073679848034
@@ -4708,5 +4615,10 @@ PrefabInstance:
 --- !u!224 &4662569975071465837 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 6109185301251412751, guid: fcb5844d88e0b524190ff45d8e050a70, type: 3}
+  m_PrefabInstance: {fileID: 1476311073679848034}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4662569975071465838 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6109185301251412748, guid: fcb5844d88e0b524190ff45d8e050a70, type: 3}
   m_PrefabInstance: {fileID: 1476311073679848034}
   m_PrefabAsset: {fileID: 0}

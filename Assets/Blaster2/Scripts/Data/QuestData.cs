@@ -55,12 +55,8 @@ public class QuestData
             this.progress = Mathf.Clamp(this.progress, 0, requirment);
             if (this.progress >= requirment)
             {
-                completed = true;
-                Notification notification = new Notification();
-                notification.Name = Id;
+                completed = true;       
                 this.Description = Description.Replace("%",""+ requirment);    
-                notification.Description = Description.Replace(" X ", "" + progress);
-                NotificationSystem.Instance.Add(notification);
                 progress = 0;         
             }
         }
