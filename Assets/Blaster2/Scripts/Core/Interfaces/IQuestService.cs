@@ -5,8 +5,7 @@ using UnityEngine;
 public interface IQuestService 
 {
     public event Action LoadingNewQuests;
-    public event Action<Dictionary<int, QuestData>> OnNewQuestGenerated;
-    public event Action OnQuestValueChanged;
+    public event Action<Dictionary<int, QuestData>> OnQuestsValueChanged;
     public IReadOnlyDictionary<int,QuestData> GetActiveQuest();
 
     public void SetQuestProgressByType(QuestTypeEnum type, int progress);

@@ -11,23 +11,26 @@ public class QuestUI : UIView
     private void OnDestroy()
     {
         questService.LoadingNewQuests -= LoadingNewQuests;
-        questService.OnNewQuestGenerated -= UpdateQuestsElements;
-        questService.OnQuestValueChanged -= RefreshQuests;
+        questService.OnQuestsValueChanged -= RefreshQuests;
+
+        for (int i = 0; i < questElements.Length; i++)
+        {
+            questElements[i].OnButtonPressed -= QuestUI_OnButtonPressed;
+        }
     }
 
     private void Start()
     {
         questService = GameContext.Get<IQuestService>();
         questService.LoadingNewQuests += LoadingNewQuests;
-        questService.OnNewQuestGenerated += UpdateQuestsElements;
-        questService.OnQuestValueChanged += RefreshQuests;
+        questService.OnQuestsValueChanged += RefreshQuests;
 
         for (int i = 0; i < questElements.Length; i++)
         {
             questElements[i].OnButtonPressed += QuestUI_OnButtonPressed;
         }
 
-        UpdateQuestsElements(questService.GetActiveQuest());
+        RefreshQuests(questService.GetActiveQuest());
     }
 
     private void QuestUI_OnButtonPressed(int Index)
@@ -43,18 +46,9 @@ public class QuestUI : UIView
         }
     }
 
-    public void RefreshQuests()
+    public void RefreshQuests(IReadOnlyDictionary<int, QuestData> ListOfActiveQuest)
     {
-        foreach (KeyValuePair<int, QuestData> item in questService.GetActiveQuest().ToList())
-        {
-            var questElement = questElements[item.Key];
-            questElement.SetElement(item.Key, item.Value);
-        }
-    }
-
-    public void UpdateQuestsElements(IReadOnlyDictionary<int,QuestData> ListOfActiveQuest)
-    {
-        foreach (KeyValuePair<int,QuestData> item in ListOfActiveQuest.ToList())
+        foreach (KeyValuePair<int, QuestData> item in ListOfActiveQuest.ToList())
         {
             var questElement = questElements[item.Key];
             questElement.SetElement(item.Key, item.Value);

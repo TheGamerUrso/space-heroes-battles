@@ -28,10 +28,8 @@ public class QuestUIElement : MonoBehaviour
         completedQuestGameObject.SetActive(questData.claimed);
         questDescription.text = questData.Description;
 
-        if (questData.completed && !questData.claimed)
-        {
-            Button.interactable = true;
-        }
+
+        Button.interactable = questData.claimed ? false : questData.IsCompleted();
 
         rewardText.text = questData.questReward.XP + "xp";
         CoinReward.text = questData.questReward.Currency + "$";

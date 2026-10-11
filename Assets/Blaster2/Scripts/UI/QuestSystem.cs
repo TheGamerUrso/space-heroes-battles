@@ -11,9 +11,11 @@ using UnityEngine.Playables;
 public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
 {
     public event Action LoadingNewQuests;
-    public event Action<Dictionary<int, QuestData>> OnNewQuestGenerated;
-    public event Action OnQuestValueChanged;
-    [SerializeField] private Dictionary<int, QuestData> ActiveQuestDict = new Dictionary<int, QuestData>();
+    public event Action<Dictionary<int, QuestData>> OnQuestsValueChanged;
+
+    [SerializeField] private Dictionary<int, QuestData> ActiveQuestDict = 
+        new Dictionary<int, QuestData>();
+
     private float ResetTimer = 2f;
     private bool AllQuestsCompleted = false;
 
@@ -31,7 +33,6 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         notificationService = GameContext.Get<INotificationService>();
 
         eventService.Subscribe<QuestProgressEvent>(OnQuestProgressHandled);
-        OnQuestValueChanged?.Invoke();
 
         dataService = GameContext.Get<IDataService>();
 
@@ -72,7 +73,7 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         {
             ActiveQuestDict.Add(questIndex, CreateQuest(questIndex, questType));
         }
-        OnNewQuestGenerated?.Invoke(ActiveQuestDict);
+        OnQuestsValueChanged?.Invoke(ActiveQuestDict);
     }
     //======================================================================================================================================================
     public QuestData CreateQuest(int pos, 
@@ -138,8 +139,11 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
     public void CompleteQuest(int questIndex)
     {
         var questData = ActiveQuestDict[questIndex];
-        if (!questData.claimed && questData.completed)
+        if (questData.IsCompleted())
         {
+            if (questData.claimed) return;
+            questData.Claim();
+
             playerData.playerEconomyData.Coins += questData.questReward.Currency;
             playerData.GetCurrentPlayerShipData().EarnXP(questData.questReward.XP);
 
@@ -168,7 +172,8 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
                     break;
             }
 
-            OnQuestValueChanged?.Invoke();
+
+            OnQuestsValueChanged?.Invoke(ActiveQuestDict);
 
             int numberOfCompletdQuest = 0;
 
@@ -215,7 +220,7 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
             notification.Description = questData.Description.Replace(" X ", "" + progress);
             notificationService?.Add(notification);
         }
-        OnQuestValueChanged?.Invoke();
+        OnQuestsValueChanged?.Invoke(ActiveQuestDict);
     }
     //======================================================================================================================================================
     [ContextMenu("Generate New Challenges")]
@@ -234,7 +239,7 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         {
             item.UpdateProgress(item.requirment);
         }
-
+        OnQuestsValueChanged?.Invoke(ActiveQuestDict);
     }
     //======================================================================================================================================================
     public QuestData GetOnGoingObjectiveById(int questIndex) =>  ActiveQuestDict[questIndex];

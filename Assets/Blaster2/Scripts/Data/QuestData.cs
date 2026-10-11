@@ -25,7 +25,6 @@ public class QuestReward
 public class QuestData
 {
     public bool claimed;
-    public bool completed;
     public int pos;
     public string Id;
     public int progress;
@@ -55,26 +54,26 @@ public class QuestData
     }
     public bool IsCompleted()
     {
-        if (progress >= requirment && !completed)
+        if (progress >= requirment)
         {
             return true;
         }
         return false;
     }
 
+    public void Claim()
+    {
+        claimed = true;
+        this.Description = Description.Replace("%", "" + requirment);
+        progress = 0;
+    }
+
     public void UpdateProgress(int progress)
     {
-        if (!completed)
-        {
-            this.progress += progress;
-            this.progress = Mathf.Clamp(this.progress, 0, requirment);
-            if (this.progress >= requirment)
-            {
-                completed = true;       
-                this.Description = Description.Replace("%",""+ requirment);    
-                progress = 0;         
-            }
-        }
+        if (IsCompleted()) return;
+        this.progress += progress;
+        this.progress = Mathf.Clamp(this.progress, 0, requirment);
+        this.Description = GetQuestDescriptionByType((QuestTypeEnum)questType);
     }
 
     public string GetQuestNameByType(QuestTypeEnum questType)
