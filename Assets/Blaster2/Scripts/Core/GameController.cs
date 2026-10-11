@@ -116,6 +116,7 @@ public class GameController : MonoBehaviour
     private void OnDestroy()
     {
         eventService.Unsubscribe<EnemyEvent>(EnemyEventHandled);
+        playerData.playerStatsData.IsUnharmed = false;
         DOTween.Clear(true);
         DOTween.ClearCachedTweens();
     }
@@ -143,6 +144,8 @@ public class GameController : MonoBehaviour
                         playerShip.weaponController.DisableFire();
                         var followPlayer = GameObject.FindAnyObjectByType<PlayerFollow>();       
                         cameraManager.SetTarget(followPlayer != null ? followPlayer.gameObject : null);
+
+                        playerShip.OnShipHit += PlayerShip_OnShipHit;
                     }
                     timer = 2;
                     SetGameState(GameState.INITIALIZING);
@@ -197,6 +200,13 @@ public class GameController : MonoBehaviour
                 break;
         }
     }
+
+    private void PlayerShip_OnShipHit()
+    {
+        playerData.playerStatsData.IsUnharmed = true;
+        eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.UNHARMED, value = playerData.playerStatsData.IsUnharmed ? 1 : 0 });
+    }
+
     //=================================================================================
     private void StartHyperspaceSequence()
     {
@@ -314,14 +324,22 @@ public class GameController : MonoBehaviour
                 if (!playerShip.GetWeaponController().IsSuperActive())
                     playerData.GetCurrentPlayerShipData().UpdateSuperCharge(0.025f);
 
+                playerData.playerStatsData.Kills++;
+                eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.KILL,value = playerData.playerStatsData.Kills });
+
                 SetScore((int)payload.Value);
-            
+
+                playerData.playerStatsData.Kills++;
+                eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.SCORE, value = (int)playerData.playerStatsData.Score });
+
                 IncreaseMultiplier();
 
                 playerData.playerStatsData.UpdateEnemyKilled(1);
                 if (payload.Enemy.GetComponent<BossEnemy>() != null)
                 {
                     playerData.playerStatsData.UpdateBounty(1);
+                    eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.BOUNTY, value = 1});
+
                 }
                 break;
             case EnemyEvent.EnemyEventType.ESCAPE:

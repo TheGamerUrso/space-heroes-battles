@@ -11,6 +11,8 @@ public enum PlayerStateEnum
 }
 public class PlayerShip : Ship
 {
+    public event Action OnShipHit;
+
     [SerializeField] protected Animator animator;
     public PlayerStateEnum currentPlayerState = PlayerStateEnum.None;
 

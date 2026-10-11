@@ -41,7 +41,7 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
 
         playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
 
-        GeneratedQuest();
+        GenerateAllQuests();
     }
 
     private void PlayerData_OnCurrentShipSelectedValueChanged(int obj)
@@ -56,22 +56,37 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
 
         playerData.OnCurrentShipSelectedValueChanged -= PlayerData_OnCurrentShipSelectedValueChanged;
     }
-
-    public void CreateNewQuests(int questIndex)
+    [ContextMenu("Generate New Challenges")]
+    public void GenerateAllQuests()
     {
-        var ListOfAvailableQuestType = Enum.GetValues(typeof(QuestTypeEnum)).Cast<QuestTypeEnum>().ToList();
- 
-        int randoNumber = UnityEngine.Random.Range(0, ListOfAvailableQuestType.Count);
-        var questType = ListOfAvailableQuestType[randoNumber];
-        ListOfAvailableQuestType.Remove(questType);
+        var availableTypes = Enum.GetValues(typeof(QuestTypeEnum)).Cast<QuestTypeEnum>().ToList();
 
-        if(ActiveQuestDict.TryGetValue(questIndex,out QuestData questDataFound))
+        foreach (var item in ActiveQuestDict)
         {
-            ActiveQuestDict[questIndex] = CreateQuest(questIndex, questType);
+            availableTypes.Remove((QuestTypeEnum)item.Value.questType);
         }
-        else
+        // 2. Loop through your 3 quest slots (indices 0, 1, 2)
+        for (int i = 0; i < 3; i++)
         {
-            ActiveQuestDict.Add(questIndex, CreateQuest(questIndex, questType));
+            if (availableTypes.Count == 0) break; // Safety check if fewer enums than slots
+
+            // Pick a random index from the remaining available types
+            int randomIndex = UnityEngine.Random.Range(0, availableTypes.Count);
+            QuestTypeEnum selectedType = availableTypes[randomIndex];
+
+            // Remove it so it cannot be picked again for the other slots
+            availableTypes.RemoveAt(randomIndex);
+
+            // Create or overwrite the quest data in the dictionary
+            QuestData newQuest = CreateQuest(i, selectedType);
+            if (ActiveQuestDict.ContainsKey(i))
+            {
+                ActiveQuestDict[i] = newQuest;
+            }
+            else
+            {
+                ActiveQuestDict.Add(i, newQuest);
+            }
         }
         OnQuestsValueChanged?.Invoke(ActiveQuestDict);
     }
@@ -203,7 +218,7 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         {
             AllQuestsCompleted = false;
             ResetTimer = 2f;
-            GeneratedQuest();
+            GenerateAllQuests();
         }
     }
     //======================================================================================================================================================
@@ -223,15 +238,6 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         OnQuestsValueChanged?.Invoke(ActiveQuestDict);
     }
     //======================================================================================================================================================
-    [ContextMenu("Generate New Challenges")]
-    public void GeneratedQuest()
-    {
-        for (int i = 0; i < 3; i++)
-        {
-            CreateNewQuests(i);
-        }
-    }
-    //======================================================================================================================================================
     [ContextMenu("Finish Quests")]
     public void FinishQuest()
     {
@@ -242,7 +248,14 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
         OnQuestsValueChanged?.Invoke(ActiveQuestDict);
     }
     //======================================================================================================================================================
-    public QuestData GetOnGoingObjectiveById(int questIndex) =>  ActiveQuestDict[questIndex];
+    public QuestData GetOnGoingObjectiveById(int questIndex)
+    {
+        if (ActiveQuestDict.TryGetValue(questIndex, out QuestData value))
+        {
+            return value;
+        }
+        return null;
+    }
     private void OnQuestProgressHandled(QuestProgressEvent payload) => SetQuestProgressByType(payload.questTypeEnum, payload.value);
     public IReadOnlyDictionary<int, QuestData> GetActiveQuest() => ActiveQuestDict;
 }

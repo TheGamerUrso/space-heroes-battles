@@ -21,7 +21,7 @@ public abstract class BaseProjectile : MonoBehaviour
     protected virtual void OnEnable()
     {
         if (trailRenderer)
-            trailRenderer.Clear();
+            trailRenderer.enabled = true;
     }
     protected virtual void OnDisable()
     {
@@ -54,7 +54,7 @@ public abstract class BaseProjectile : MonoBehaviour
         var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
         explode.SetActive(true);
         explode.transform.position = transform.position;
-        trailRenderer.Clear();
+        trailRenderer.enabled = false;
         gameObject.SetActive(false);
     }
 

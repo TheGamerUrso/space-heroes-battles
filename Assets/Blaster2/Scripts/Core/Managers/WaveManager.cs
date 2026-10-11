@@ -181,7 +181,13 @@ public class WaveManager : MonoBehaviour
     //======================================================================================================================================================
     public void NewWave()
     {
-        waveData.HasBoss = false;
+        if (waveData.HasBoss)
+        {
+            waveData.HasBoss = false;
+            playerData.playerStatsData.IsUnharmed = false;
+            eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.UNHARMED, value = playerData.playerStatsData.IsUnharmed ? 1 : 0 });
+        }
+
         waveData.enemiesSpawnedThisWave = 0; // Reset spawn counter per wave
         waveData.TotalAliveEnemies = 0;
         waveData.Wave++;
@@ -199,7 +205,8 @@ public class WaveManager : MonoBehaviour
         if (waveData.Wave > 0 && waveData.Wave % 2 == 0)
         {
             waveData.HasBoss = true;
-        }
+        }     
+
         eventService.Publish(new QuestProgressEvent() { questTypeEnum = QuestTypeEnum.SURVIVE, value = waveData.Wave });
 
         GenerateWaveQueue();
