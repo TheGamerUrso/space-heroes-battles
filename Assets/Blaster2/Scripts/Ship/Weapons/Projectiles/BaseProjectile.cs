@@ -18,6 +18,21 @@ public abstract class BaseProjectile : MonoBehaviour
     protected PlayerData playerData;
     protected IDataService dataService;
     public TrailRenderer trail;
+    protected virtual void OnEnable()
+    {
+        if (trailRenderer)
+        {
+            trailRenderer.enabled = false;
+
+            trailRenderer.Clear();
+
+            trailRenderer.enabled = true;
+        }
+    }
+    protected virtual void OnDisable()
+    {
+
+    }
 
     protected virtual void Awake()
     {
@@ -27,26 +42,6 @@ public abstract class BaseProjectile : MonoBehaviour
 
         dataService = GameContext.Get<IDataService>();
         playerData = dataService.GetPlayerData();
-    }
-
-    public virtual void Init(float Damage, Vector3 spawnPosition, Quaternion rotation, Vector3 direction)
-    {
-        // 1. Instantly disable and clear the trail first while hidden/at spawn
-        if (trailRenderer != null)
-        {
-            trailRenderer.emitting = false;
-            trailRenderer.Clear();
-        }
-
-        SetDamage(Damage);
-
-        // 2. Set transform values immediately
-        transform.SetPositionAndRotation(spawnPosition, rotation);
-
-        SetShootDir(direction);
-
-        // 3. Activate the game object
-
     }
 
     private void Start() => OnStart();
@@ -65,6 +60,7 @@ public abstract class BaseProjectile : MonoBehaviour
         var explode = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.BulletExplosion);
         explode.SetActive(true);
         explode.transform.position = transform.position;
+        trailRenderer.enabled = false;
         gameObject.SetActive(false);
     }
 
@@ -74,5 +70,4 @@ public abstract class BaseProjectile : MonoBehaviour
     }
 
      public abstract void OnTriggerEnter(Collider other);
-
 }
