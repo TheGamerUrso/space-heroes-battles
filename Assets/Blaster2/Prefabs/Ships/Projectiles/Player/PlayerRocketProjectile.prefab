@@ -30,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 1456814716516072}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -50, z: 0}
+  m_LocalPosition: {x: 0, y: -50, z: 63.28}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -103,8 +103,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.40553442, y: 0.73337364, z: 3.4971635}
-  m_Center: {x: 0.0036263317, y: 0.030158043, z: 0.09436953}
+  m_Size: {x: 0.6361799, y: 0.69154346, z: 6.8878126}
+  m_Center: {x: -0.00000017881393, y: -0.003954828, z: 0.30225706}
 --- !u!205 &4955318096505812940
 LODGroup:
   m_ObjectHideFlags: 0
@@ -134,7 +134,7 @@ TrailRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1456814716516072}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -152,7 +152,7 @@ TrailRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 159b5679de5141c428728adf5e83e299, type: 2}
+  - {fileID: 2100000, guid: 66c1287ccb8ddd14785a3475e54bdf05, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -175,17 +175,17 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Time: 0.025
+  m_Time: 0.25
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
-    widthMultiplier: 1
+    widthMultiplier: 0.5
     widthCurve:
       serializedVersion: 2
       m_Curve:
       - serializedVersion: 3
         time: 0
-        value: 1
+        value: 0.008310318
         inSlope: 0
         outSlope: 0
         tangentMode: 0
@@ -206,7 +206,7 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 0, g: 1, b: 1, a: 1}
+      key0: {r: 1, g: 0, b: 0, a: 1}
       key1: {r: 1, g: 0.9677047, b: 0.5946944, a: 1}
       key2: {r: 1, g: 1, b: 1, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -241,7 +241,7 @@ TrailRenderer:
     textureScale: {x: 1, y: 1}
     shadowBias: 0.5
     generateLightingData: 0
-  m_MinVertexDistance: 0.01
+  m_MinVertexDistance: 0.05
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
@@ -304,15 +304,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4101142786705998, guid: a1aa3ab93da62de47956fadce5f0ad63, type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.25
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4101142786705998, guid: a1aa3ab93da62de47956fadce5f0ad63, type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.25000012
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4101142786705998, guid: a1aa3ab93da62de47956fadce5f0ad63, type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.25000012
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 4101142786705998, guid: a1aa3ab93da62de47956fadce5f0ad63, type: 3}
       propertyPath: m_LocalPosition.x

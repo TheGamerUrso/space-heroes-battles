@@ -1169,9 +1169,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 344f1874da73c854c89b2a0e68396843, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::QuestSystem
-  DictOfActiveQuests: []
-  ListOfAvailableQuestType: 
-  ActiveQuests: []
+  ActiveQuestDict: []
 --- !u!1 &3274511997794494846
 GameObject:
   m_ObjectHideFlags: 0
@@ -1324,6 +1322,25 @@ MonoBehaviour:
   BackgroundMusic: {fileID: 8387873741432827533}
   MusicMixerGroup: {fileID: 243603027282041178, guid: 9425bb409cfc98f4a8e71adb82785c85, type: 2}
   SFXMixerGroup: {fileID: 243726926689573304, guid: 9425bb409cfc98f4a8e71adb82785c85, type: 2}
+  ListOfAudioClips:
+  - key: Track1
+    value: {fileID: 8300000, guid: 03c3443a550f947d5b4c9db246e7cb10, type: 3}
+  - key: Main
+    value: {fileID: 8300000, guid: 2231d2dcf30efbd4fb15de8fb907cedd, type: 3}
+  - key: Intro
+    value: {fileID: 8300000, guid: 77345a710e19b4d4794ef7b204af026f, type: 3}
+  - key: GameOver
+    value: {fileID: 8300000, guid: 843d21fc688514a469d96f57336084f8, type: 3}
+  - key: Win
+    value: {fileID: 8300000, guid: 012177e9db117704c98e33174b7ade29, type: 3}
+  - key: Boss
+    value: {fileID: 8300000, guid: 0ffc88673235b984ea29bf25f54f91a4, type: 3}
+  - key: Track2
+    value: {fileID: 8300000, guid: d493bd61e05022445a934c672ab0f1a8, type: 3}
+  - key: UI_Click
+    value: {fileID: 8300000, guid: 8c46e94535e397b499b6601631714553, type: 3}
+  - key: UI_Back
+    value: {fileID: 8300000, guid: f9f37952095368c4c96bc2a04be022d1, type: 3}
   fadeIn: 0
   fadeOut: 0
   crossfade: 0
@@ -3906,6 +3923,12 @@ MonoBehaviour:
     playerStatsData:
       Score: 0
       HighScore: 0
+      IsUnharmed: 0
+      WaveSurvived: 0
+      SpendCurrency: 0
+      Bounty: 0
+      SuperUsed: 0
+      Kills: 0
     playerSettingsData:
       SFXVolume: 0
       MusicVolume: 0

@@ -32,6 +32,96 @@ Transform:
   - {fileID: 7238083084433938565}
   m_Father: {fileID: 5864911870531906024}
   m_LocalEulerAnglesHint: {x: 0, y: -7, z: 0}
+--- !u!1 &617890825060091401
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6115799995457922419}
+  - component: {fileID: 8618686333704234810}
+  - component: {fileID: 3422720813776710547}
+  m_Layer: 11
+  m_Name: HitEffect
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 19
+  m_IsActive: 1
+--- !u!4 &6115799995457922419
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617890825060091401}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.01, y: 1.01, z: 1.01}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7844644366897855978}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &8618686333704234810
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617890825060091401}
+  m_Mesh: {fileID: 4300000, guid: 5537287f66e52ba4b994adb68ab904ae, type: 3}
+--- !u!23 &3422720813776710547
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 617890825060091401}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 0
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_ForceMeshLod: -1
+  m_MeshLodSelectionBias: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 193ca4235715b554aa66452c5fd2fb70, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 2
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 0
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_GlobalIlluminationMeshLod: 0
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_MaskInteraction: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!1 &2098125363353108604
 GameObject:
   m_ObjectHideFlags: 0
@@ -333,17 +423,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 206108104106472706}
+  Cannons: []
   particleSFX:
   - {fileID: 2390643924273401887}
   - {fileID: 3936731263666784992}
   - {fileID: 6596147567093152089}
   - {fileID: 5476260599813801718}
   - {fileID: 1186722440544863907}
-  Cannons: []
 --- !u!82 &206108104106472706
 AudioSource:
   m_ObjectHideFlags: 0
@@ -534,13 +621,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 206108104106472706}
+  Cannons: []
   particleSFX:
   - {fileID: 3672018351231355347}
-  Cannons: []
 --- !u!82 &4488075723211137646
 AudioSource:
   m_ObjectHideFlags: 0
@@ -652,6 +736,8 @@ GameObject:
   - component: {fileID: 3671627365297100251}
   - component: {fileID: 3673750318685682059}
   - component: {fileID: 2009061848612604927}
+  - component: {fileID: 8552830762254017382}
+  - component: {fileID: 3876505337847109630}
   m_Layer: 11
   m_Name: PlayerShip2
   m_TagString: Player
@@ -701,7 +787,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 20
   m_CollisionDetection: 0
 --- !u!65 &3714103758766995029
 BoxCollider:
@@ -736,10 +822,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f68c27ff0e9c0d246914ebb3a314c1d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ship: {fileID: 0}
   speed: 0
   tilt: 5
   playerShip: {fileID: 0}
   ShipModel: {fileID: 4591792195628567887}
+  rotationSpeed: 0
+  weaponController: {fileID: 0}
+  itemPickupEffect: {fileID: 0}
 --- !u!114 &3673750318685682059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -752,19 +842,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faedbe193391217438e99925da59ab78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 0}
   audioSource: {fileID: 2009061848612604927}
-  healthComponent: {fileID: 0}
-  weaponController: {fileID: 0}
-  movementController: {fileID: 0}
-  Level: 0
-  Damage: 0
-  FireRate: 0
-  Speed: 0
-  Health: 0
+  healthComponent: {fileID: 8552830762254017382}
+  weaponController: {fileID: 3876505337847109630}
+  movementController: {fileID: 3671627365297100251}
+  shipData:
+    Level: 1
+    Health: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    HasShield: 0
+  ship_SO: {fileID: 11400000, guid: a61232b41a212b549a5e00e07be2900b, type: 2}
+  ShieldEffect: {fileID: 7646615145772614478}
+  animator: {fileID: 7969239444483948099}
   currentPlayerState: 0
   ItemCollectedEffect: {fileID: 280781531771403593}
-  playerStats: {fileID: 11400000, guid: a61232b41a212b549a5e00e07be2900b, type: 2}
+  alarmSFX: {fileID: 8300000, guid: d0888bf451bd66b48951e9488b462d44, type: 3}
+  hitEffect: {fileID: 617890825060091401}
 --- !u!82 &2009061848612604927
 AudioSource:
   m_ObjectHideFlags: 0
@@ -862,6 +957,49 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8552830762254017382
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3702046769842057913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ddf9ac14c39f0364eb696646e684f43d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HealthComponent
+  currentHealth: 0
+  maxHealth: 0
+  audioSource: {fileID: 2009061848612604927}
+  hitSFX: {fileID: 8300000, guid: ec94d567e75cef945b3159eba24780c3, type: 3}
+  boxCollider: {fileID: 0}
+  lastHitTime: 0
+  hitCooldown: 0
+  hasShield: 0
+--- !u!114 &3876505337847109630
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3702046769842057913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5196745c092cdce4f8c02004143251d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  ship: {fileID: 3673750318685682059}
+  Weapons:
+  - {fileID: 3672169683319691227}
+  - {fileID: 3671811054664771393}
+  - {fileID: 3671911641081997589}
+  - {fileID: 3671842536856095359}
+  - {fileID: 8032367144032042201}
+  delayAttak: 3
+  specialAttack: {fileID: 5656591244530284495}
+  audioSource: {fileID: 2009061848612604927}
+  powerSFX: {fileID: 8300000, guid: 59e5f7ab75dfaa7479b20659ecb1510c, type: 3}
 --- !u!1 &3702064748094228087
 GameObject:
   m_ObjectHideFlags: 0
@@ -1003,15 +1141,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 206108104106472706}
+  Cannons: []
   particleSFX:
   - {fileID: 3672346806923692937}
   - {fileID: 3672052026066729953}
   - {fileID: 3673733279120718525}
-  Cannons: []
 --- !u!82 &1757974075063601264
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1288,16 +1423,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 206108104106472706}
+  Cannons: []
   particleSFX:
   - {fileID: 3671896614282912967}
   - {fileID: 3671609721243417891}
   - {fileID: 3672065342416771239}
   - {fileID: 3672148789829746717}
-  Cannons: []
 --- !u!82 &3301612653695215840
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1443,14 +1575,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 6103c54a7e565874b8d9e66ef0941733, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 206108104106472706}
+  Cannons: []
   particleSFX:
   - {fileID: 3672066613344978839}
   - {fileID: 3671636765802816959}
-  Cannons: []
 --- !u!82 &5088510058204028966
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1922,12 +2051,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponData: {fileID: 11400000, guid: 540f6e43400aba24e9f9b9172b1dd55a, type: 2}
-  FireRate: 0
-  Damage: 0
-  SuperChargeTime: 0
   source: {fileID: 4712354770063655544}
-  particleSFX: []
   Cannons: []
+  particleSFX: []
   laiser: {fileID: 4119458728088854212}
   laserSize: 0
   lineRenderer: {fileID: 6491659003616258864}
@@ -2199,6 +2325,7 @@ Transform:
   - {fileID: 4110994171973838848}
   - {fileID: 1509497133712966966}
   - {fileID: 1708379154447266660}
+  - {fileID: 6115799995457922419}
   m_Father: {fileID: 2303128119046675478}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8932629622521655827
@@ -4565,5 +4692,10 @@ PrefabInstance:
 --- !u!4 &7644226640315716482 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1715484475757355732, guid: 43fd104da1617ae48805b2c0ce1dfc0f, type: 3}
+  m_PrefabInstance: {fileID: 9068877090948804950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &7646615145772614478 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1712815212522402328, guid: 43fd104da1617ae48805b2c0ce1dfc0f, type: 3}
   m_PrefabInstance: {fileID: 9068877090948804950}
   m_PrefabAsset: {fileID: 0}

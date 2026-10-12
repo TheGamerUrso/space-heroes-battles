@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using TheGamerUrso.Core;
+using Unity.Burst.CompilerServices;
 using UnityEngine;
 
 public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesService
@@ -11,6 +12,8 @@ public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesServi
     [DictionaryDisplay]
     [SerializeField] private Dictionary<UpgradeTypeEnum, Upgrade> UpgradesDict = new Dictionary<UpgradeTypeEnum, Upgrade>();
     protected IDataService dataService;
+    private INotificationService notificationService;
+
     private PlayerData playerData;
     private PlayerShipData playerShipData;
 
@@ -25,6 +28,8 @@ public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesServi
         playerData = dataService.GetPlayerData();
         playerShipData = playerData.GetCurrentPlayerShipData();
         playerData.OnCurrentShipSelectedValueChanged += PlayerData_OnCurrentShipSelectedValueChanged;
+
+        notificationService = GameContext.Get<INotificationService>();
     }
 
     protected override void OnDestroy()
@@ -42,19 +47,39 @@ public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesServi
     {
         var upgrade = GetUpgrade(upgradeType);
 
-        if (!upgrade.CanAffordNextLevel(playerData.playerEconomyData.Coins) ||
-            !upgrade.HasRequirementMet(playerShipData.Level) || upgrade.IsMaxLevel()) return;
+        bool ErrorOccured = false;
+
+        if (upgrade.IsMaxLevel())
         {
-            playerShipData.SetUpgrades(upgradeType, upgrade.Level);
-            playerData.playerEconomyData.Coins -= upgrade.Cost;
-
-            var questService = GameContext.Get<IQuestService>();
-            questService.SetQuestProgressByType(QuestTypeEnum.SPEND, upgrade.Cost);
-
-            upgrade.LevelUp();
-
-            OnUpgradeValueChanged?.Invoke(upgrade);
+            notificationService.Show(new ErrorDialogEvent() { Type = popupType.error, Message = "Upgrade Maxed Out" });
+            ErrorOccured = true;
         }
+
+        if (!upgrade.CanAffordNextLevel(playerData.playerEconomyData.Coins))
+        {
+            notificationService.Show(new ErrorDialogEvent() { Type = popupType.error, Message = "Insufficient funds" });
+            ErrorOccured = true;
+        }
+
+        if (!upgrade.HasRequirementMet(playerShipData.Level))
+        {
+            notificationService.Show(new ErrorDialogEvent() { Type = popupType.error, Message = $"Requires Lvl {upgrade.GetLevelRequirment(upgrade.upgradeData.upgradeType)}" });
+            ErrorOccured = true;
+        }
+
+
+        if (ErrorOccured) return;
+
+        playerShipData.SetUpgrades(upgradeType, upgrade.Level);
+        playerData.playerEconomyData.Coins -= upgrade.Cost;
+
+        var questService = GameContext.Get<IQuestService>();
+        questService.SetQuestProgressByType(QuestTypeEnum.SPEND, upgrade.Cost);
+
+        upgrade.LevelUp();
+
+        OnUpgradeValueChanged?.Invoke(upgrade);
+
     }
 
     public Upgrade GetUpgrade(UpgradeTypeEnum upgradeType)
@@ -65,4 +90,6 @@ public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesServi
         }
         return null;
     }
+
+
 }

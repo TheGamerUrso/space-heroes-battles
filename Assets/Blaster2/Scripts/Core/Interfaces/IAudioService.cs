@@ -11,7 +11,5 @@ public interface IAudioService
     void SetMusicVolume(float volume);
     void SetSoundVolume(float volume);
 
-    void PlaySound(AudioClip clip, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f);
-    void PlaySoundByClip(AudioClip clip, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f);
-    void PlaySoundByClip(AudioSource source, string IdTrack, int mixGroupIndex = 0, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f);
+    void PlaySound(string Id, bool usePitch = false, float minRange = .8f, float maxRange = 1.2f);
 }

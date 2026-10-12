@@ -83,7 +83,7 @@ public class Items : MonoBehaviour, IPickable
             eventService.Publish(new ItemPickedUpEvent(itemData.itemType, itemData.ammount));
         }
 
-        audioService.PlaySound(itemData.CollectedSoundSFX);
+        audioService.PlaySound(itemData.itemType.ToString());
 
         picked = true;
     }

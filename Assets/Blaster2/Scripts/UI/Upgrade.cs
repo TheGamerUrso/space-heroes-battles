@@ -95,7 +95,7 @@ public class Upgrade
         {
             return false;
         }
-   
+
         int nextLevelCost = GetCost();
 
         return playerCurrency >= nextLevelCost;

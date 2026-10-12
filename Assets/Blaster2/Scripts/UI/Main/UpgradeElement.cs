@@ -72,24 +72,16 @@ public class UpgradeElement : MonoBehaviour
 
         if (upgrade.IsMaxLevel())
         {
-            buyButton.interactable = false;
             Warn(Constants.UpgradeMaxedOut);
         }
         else if (!upgrade.HasRequirementMet(playerShipData.Level))
         {
             NotAvailable.SetActive(true);
             Warn(Constants.UnlockedAtLvl + upgrade.GetLevelRequirment(upgrade.upgradeData.upgradeType));
-            buyButton.interactable = false;
         }
         else if (!upgrade.CanAffordNextLevel(playerData.playerEconomyData.Coins))
         {
-            Warn(Constants.OutOfStock);
             Price.color = Color.red;
-            buyButton.interactable = false;
-        }
-        else
-        {
-            buyButton.interactable = true;
         }
     }
 
@@ -105,9 +97,6 @@ public class UpgradeElement : MonoBehaviour
         MessageText.text = message;
         MessageText.gameObject.SetActive(true);
     }
-
-
-
 
     private void PlayerData_OnCurrencyValueChanged(int obj)
     {
