@@ -1,8 +1,6 @@
-﻿using DG.Tweening;
-using System;
+﻿using System;
 using System.Collections;
 using TheGamerUrso.Core;
-using UnityEditor.Overlays;
 using UnityEngine;
 
 [Serializable]
@@ -98,6 +96,7 @@ public class GameController : MonoBehaviour
         audioService.PlayMusicById("Track1");
 
         waveManager.OnGameplayLoopStateValueChanged += WaveManager_OnGameplayLoopStateValueChanged;
+
     }
 
     private void WaveManager_OnGameplayLoopStateValueChanged(GameplayLoopState obj)
@@ -117,8 +116,6 @@ public class GameController : MonoBehaviour
     {
         eventService.Unsubscribe<EnemyEvent>(EnemyEventHandled);
         playerData.playerStatsData.IsUnharmed = false;
-        DOTween.Clear(true);
-        DOTween.ClearCachedTweens();
     }
 
     //=================================================================================
@@ -245,7 +242,8 @@ public class GameController : MonoBehaviour
     //=================================================================================
     public void ResetMultiplier()
     {
-        Multiplier = 1;
+        Multiplier = 1; 
+        OnPlayerKillingStreakValueChanged?.Invoke(Multiplier);
     }
     //=================================================================================
     public void IncreaseMultiplier()
@@ -255,15 +253,17 @@ public class GameController : MonoBehaviour
         {
             Multiplier = 5;
         }
+        OnPlayerKillingStreakValueChanged?.Invoke(Multiplier);
     }
     //=================================================================================
     public void DecreaseMultipler()
     {
         Multiplier--;
-        if (Multiplier < 0)
+        if (Multiplier < 1)
         {
-            Multiplier = 0;
+            Multiplier = 1;
         }
+        OnPlayerKillingStreakValueChanged?.Invoke(Multiplier);
     }
     //======================================================================================================================================================
     public void SetScore(int enemyValue)
@@ -277,6 +277,8 @@ public class GameController : MonoBehaviour
         var ultiplierTextToShow = Multiplier > 1 ? $"{enemyValue} + (x {Multiplier} )" : $"{enemyValue * Multiplier}";
         eventService.Publish(new FloatingTextEvent(){Message = ultiplierTextToShow ,targetPos = playerShip.transform.localPosition});
         playerData.playerStatsData.UpdateScore(valueReward);
+
+        OnGameScoreValueChanged?.Invoke(Score);
     }
     //======================================================================================================================================================
     IEnumerator DelayGameOver()
@@ -317,7 +319,7 @@ public class GameController : MonoBehaviour
                 break;
             case EnemyEvent.EnemyEventType.DEATH:
                 float playerLevel = playerData.GetCurrentPlayerShipData().Level;
-                int enemyLevel = payload.Enemy.shipData.Level;
+                int enemyLevel = payload.Enemy.ShipData.Level;
 
                 RewardXP(enemyLevel);
 

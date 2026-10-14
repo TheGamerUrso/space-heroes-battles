@@ -1,10 +1,7 @@
-﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
-using CodeMonkey;
 using CodeMonkey.Utils;
+using PrimeTween;
 
 public class WarningSignUI : MonoBehaviour
 {
@@ -21,11 +18,10 @@ public class WarningSignUI : MonoBehaviour
 
     private void Start()
     {
-        Sequence fadeAnim = DOTween.Sequence();
-        fadeAnim.Append(WarningSign.GetComponent<Image>().DOFade(0, .25f))
-  .Append(WarningSign.GetComponent<Image>().DOFade(1, .25f))
-  .Append(WarningSign.GetComponent<Image>().DOFade(0, .25f))
-  .Append(WarningSign.GetComponent<Image>().DOFade(1, .25f)).SetLoops(-1);
+        Sequence fadeAnim = Sequence.Create(cycles: 1, Sequence.SequenceCycleMode.Rewind);
+        fadeAnim.Chain(Tween.Alpha(WarningSign.GetComponent<Image>(), 1, .25f))
+        .Chain(Tween.Alpha(WarningSign.GetComponent<Image>(), 0, .25f))
+        .Chain(Tween.Alpha(WarningSign.GetComponent<Image>(), 1, .25f));
     }
 
     public float angle;

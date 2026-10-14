@@ -10,8 +10,8 @@ public abstract class Ship : MonoBehaviour
     public BaseMovementController movementController;
 
     [Header("STATS")]
-    public ShipData shipData;
-    public Ship_SO ship_SO;
+    public abstract ShipData ShipData { get;}
+    public abstract Ship_SO Ship_SO { get; }
     public GameObject ShieldEffect;
     public abstract void SetStats(int level);
     public virtual void Idle() { }
@@ -23,12 +23,17 @@ public abstract class Ship : MonoBehaviour
 
     public virtual void ActiveShield()
     {
-        shipData.HasShield = true;
-        if (ShieldEffect != null) ShieldEffect.SetActive(shipData.HasShield);
+        ShipData.HasShield = true;
+        if (ShieldEffect != null) ShieldEffect.SetActive(GetShipData<ShipData>().HasShield);
     }
     public virtual void DeactivateShield()
     {
-        shipData.HasShield = false;
-        if (ShieldEffect != null) ShieldEffect.SetActive(shipData.HasShield);
+        ShipData.HasShield = false;
+        if (ShieldEffect != null) ShieldEffect.SetActive(GetShipData<ShipData>().HasShield);
+    }
+
+    public T GetShipData<T>() where T : ShipData
+    {
+        return (T)ShipData;
     }
 }

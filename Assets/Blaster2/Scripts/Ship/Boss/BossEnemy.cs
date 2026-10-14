@@ -78,12 +78,12 @@ public class BossEnemy : Enemy
             Type = EnemyEvent.EnemyEventType.DEATH
         ,
             Enemy = this,
-            Value = ship_SO.EnemyValue
+            Value = GetShipData<EnemyData>().EnemyValue
         });
 
         SetState(EnemyState.Idle);
 
-        var explostion = PoolManager.Instance.GetObjectFromPool(ship_SO.ExplostionEffect);
+        var explostion = PoolManager.Instance.GetObjectFromPool(Ship_SO.ExplostionEffect);
         explostion.transform.position = transform.position;
         explostion.SetActive(true);
 

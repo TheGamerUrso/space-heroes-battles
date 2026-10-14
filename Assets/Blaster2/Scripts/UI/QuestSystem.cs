@@ -159,7 +159,7 @@ public class QuestSystem : ServiceComponent<IQuestService>, IQuestService
             if (questData.claimed) return;
             questData.Claim();
 
-            playerData.playerEconomyData.Coins += questData.questReward.Currency;
+            playerData.playerEconomyData.AddCurrency(questData.questReward.Currency);
             playerData.GetCurrentPlayerShipData().EarnXP(questData.questReward.XP);
 
             switch ((QuestTypeEnum)questData.questType)

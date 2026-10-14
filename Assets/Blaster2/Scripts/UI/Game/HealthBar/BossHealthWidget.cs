@@ -1,6 +1,5 @@
-using DG.Tweening;
+using PrimeTween;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class BossHealthWidget : EnemyHealthWidget
 {
@@ -14,7 +13,6 @@ public class BossHealthWidget : EnemyHealthWidget
     public override void Show()
     {
         base.Show();
-        TweenParams tParams = new TweenParams().SetEase(Ease.Linear);
-        HealthBarTransform.transform.DOScaleX(1, 2).SetAs(tParams);
+        Tween.ScaleX(HealthBarTransform.transform, endValue: 1, 2, ease: Ease.Linear);
     }
 }

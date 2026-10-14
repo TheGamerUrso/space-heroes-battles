@@ -19,6 +19,6 @@ public class BaseMovementController : MonoBehaviour
 
     public void UpdateSpeed()
     {
-        Speed = ship.shipData.Speed;
+        Speed = ship.ShipData.Speed;
     }
 }

@@ -7,17 +7,17 @@ public class DebugManager : MonoBehaviour
     private GameController gameController;
     private IDataService dataService;
 
-    [ContextMenu("Infinite Money")]
+    [Button("Infinite Money")]
     public void GiveInfinityCoins()
     {
         if(dataService == null)
         {
             dataService = GameContext.Get<IDataService>();
         }
-        dataService.GetPlayerData().playerEconomyData.UpdateCurrency(99999);
+        dataService.GetPlayerData().playerEconomyData.AddCurrency(99999);
     }
 
-    [ContextMenu("Give XP")]
+    [Button("Give XP")]
     public void GiveXP()
     {
         if (dataService == null)
@@ -25,5 +25,15 @@ public class DebugManager : MonoBehaviour
             dataService = GameContext.Get<IDataService>();
         }
         dataService.GetPlayerData().GetCurrentPlayerShipData().EarnXP(100);
+    }
+
+    [Button("Give Level")]
+    public void GiveLevel()
+    {
+        if (dataService == null)
+        {
+            dataService = GameContext.Get<IDataService>();
+        }
+        dataService.GetPlayerData().GetCurrentPlayerShipData().EarnXP(dataService.GetPlayerData().GetCurrentPlayerShipData().xpToLevel);
     }
 }

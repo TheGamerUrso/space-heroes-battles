@@ -71,7 +71,7 @@ public class UpgradeManager : ServiceComponent<IUpgradesService>, IUpgradesServi
         if (ErrorOccured) return;
 
         playerShipData.SetUpgrades(upgradeType, upgrade.Level);
-        playerData.playerEconomyData.Coins -= upgrade.Cost;
+        playerData.playerEconomyData.RemoveCurrency(upgrade.Cost);
 
         var questService = GameContext.Get<IQuestService>();
         questService.SetQuestProgressByType(QuestTypeEnum.SPEND, upgrade.Cost);

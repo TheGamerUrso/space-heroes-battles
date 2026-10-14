@@ -134,13 +134,18 @@ public class GuiManager : ServiceComponent<IGUIService>, IGUIService
             PauseScreenUI.Show();
         }
     }
+
+    private GameObject floatingTextSpawned;
     //=================================================================================
     public void CreateFloatingText(FloatingTextEvent payload)
     {
-        GameObject m_floatingTextScript = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
-        m_floatingTextScript.SetActive(true);
+        if (floatingTextSpawned == null || !floatingTextSpawned.activeInHierarchy)
+            floatingTextSpawned = PoolManager.Instance.GetObjectFromPool(PoolGameObjectType.FloatingText);
 
-        m_floatingTextScript.GetComponent<FloatingText>().ShowFloatingText(payload.Message, payload.targetPos);
+
+        floatingTextSpawned.SetActive(true);
+
+        floatingTextSpawned.GetComponent<FloatingText>().ShowFloatingText(payload.Message, payload.targetPos);      
     }
     //=================================================================================
     public void QuitButton()

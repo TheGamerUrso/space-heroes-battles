@@ -1,6 +1,4 @@
-﻿using DG.Tweening;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 
 namespace TheGamerUrso.Core
@@ -16,7 +14,6 @@ namespace TheGamerUrso.Core
         private static float DefaultTimeDeltaScale;   
         private bool autoKillMode;
         private bool useSafeMode;
-        private LogBehaviour logBehaviour;
 
         public GameStateEnum CurrentGameState { get; private set; } = GameStateEnum.PRELOAD;
         public bool IsPaused { get; set; }
@@ -24,8 +21,7 @@ namespace TheGamerUrso.Core
         protected override void Awake()
         {
             base.Awake();
-            DefaultTimeDeltaScale = Time.fixedDeltaTime;
-            DOTween.Init(autoKillMode, useSafeMode, logBehaviour);                 
+            DefaultTimeDeltaScale = Time.fixedDeltaTime;              
         }      
 
         public void SetGameState(GameStateEnum nextGameState)

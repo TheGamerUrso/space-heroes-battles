@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using DG.Tweening;
+﻿using PrimeTween;
 using UnityEngine;
 
 public class AboutToShootIndicator : MonoBehaviour
@@ -22,8 +20,8 @@ public class AboutToShootIndicator : MonoBehaviour
             if (!playEffect)
             {
                 playEffect = true;
-                transform.DOScale(new Vector3(size, size, size), speed).OnComplete(() =>
-                {    
+                Tween.Scale(transform,endValue:size,duration:1).OnComplete(() =>
+                {     
                     transform.localScale = new Vector3(0, 0, 0);
                 });
             }

@@ -5,5 +5,7 @@ using UnityEngine;
 public interface IPickable
 {
     ItemEnum ID { get;}
+    bool IsPulled { get; set; }
+    GameObject gameObject { get; }
     void PickUp();
 }

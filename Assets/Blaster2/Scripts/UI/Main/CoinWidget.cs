@@ -18,6 +18,12 @@ public class CoinWidget : MonoBehaviour
     {
         playerData = dataService.GetPlayerData();
         UpdateCoins(playerData.playerEconomyData.Coins);
+        playerData.playerEconomyData.OnCurrencyValueChanged += UpdateCoins;
+    }
+
+    private void OnDestroy()
+    {
+        playerData.playerEconomyData.OnCurrencyValueChanged -= UpdateCoins;
     }
 
     public void UpdateCoins(int coins)

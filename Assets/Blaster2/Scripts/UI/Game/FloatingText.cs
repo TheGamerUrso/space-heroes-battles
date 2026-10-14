@@ -1,6 +1,6 @@
-﻿using UnityEngine;
+﻿using PrimeTween;
 using TMPro;
-using DG.Tweening;
+using UnityEngine;
 
 public class FloatingText : MonoBehaviour
 {
@@ -20,11 +20,14 @@ public class FloatingText : MonoBehaviour
     public int vibriate = 10;
     public int elasticity = 1;
     public Ease ease;
-    public Vector3 size;
+    public Vector3 size = new Vector3(1,1,1);
 
     public void Animate()
     {
-        FloatingTextPivot.transform.DOPunchScale(size, duration, vibriate, elasticity).SetEase(ease);
+        Tween.PunchScale(FloatingTextPivot, size, duration, elasticity, true, ease).OnComplete(() =>
+        {
+            transform.localScale = new Vector3(0, 0, 0);
+        });
     }
 
     private void Start()

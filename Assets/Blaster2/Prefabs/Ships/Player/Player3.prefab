@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 453835733016189640}
   - component: {fileID: 8938171091518586220}
   - component: {fileID: 8132052961233858703}
+  - component: {fileID: 7952275070982286726}
   m_Layer: 11
   m_Name: PlayerShip3
   m_TagString: Player
@@ -292,20 +293,31 @@ MonoBehaviour:
   healthComponent: {fileID: 8938171091518586220}
   weaponController: {fileID: 8132052961233858703}
   movementController: {fileID: 2399667030331633769}
-  shipData:
-    Level: 1
-    Health: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 0
-    HasShield: 0
-  ship_SO: {fileID: 11400000, guid: 484e3f95cb234a545abc09e5da8f6663, type: 2}
   ShieldEffect: {fileID: 5656504243185030966}
   animator: {fileID: 164284352585205606}
   currentPlayerState: 0
   ItemCollectedEffect: {fileID: 8052240262709501556}
   alarmSFX: {fileID: 8300000, guid: d0888bf451bd66b48951e9488b462d44, type: 3}
   hitEffect: {fileID: 1962202934685561146}
+  playerShipData:
+    Level: 0
+    Health: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    HasShield: 0
+    xp: 0
+    xpToLevel: 0
+    Upgrades: 
+    SuperDamage: 0
+    LaserDamage: 0
+    SuperChargeTime: 0
+    MagnetPower: 0
+    MagnetDistance: 0
+    ChargePower: 0
+    PowerPackCollected: 0
+    UpgradeDict: []
+  player_SO: {fileID: 11400000, guid: 484e3f95cb234a545abc09e5da8f6663, type: 2}
 --- !u!82 &453835733016189640
 AudioSource:
   m_ObjectHideFlags: 0
@@ -446,6 +458,40 @@ MonoBehaviour:
   specialAttack: {fileID: 7920686491038451814}
   audioSource: {fileID: 453835733016189640}
   powerSFX: {fileID: 8300000, guid: 59e5f7ab75dfaa7479b20659ecb1510c, type: 3}
+--- !u!114 &7952275070982286726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2366965125821257483}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60eb61c258af3c84491e5ef692911ba0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  playerShip: {fileID: 2396655672373402681}
+  playerShipData:
+    Level: 0
+    Health: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    HasShield: 0
+    xp: 0
+    xpToLevel: 0
+    Upgrades: 
+    SuperDamage: 0
+    LaserDamage: 0
+    SuperChargeTime: 0
+    MagnetPower: 0
+    MagnetDistance: 0
+    ChargePower: 0
+    PowerPackCollected: 0
+    UpgradeDict: []
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 524288
 --- !u!1 &2366994805390381081
 GameObject:
   m_ObjectHideFlags: 0

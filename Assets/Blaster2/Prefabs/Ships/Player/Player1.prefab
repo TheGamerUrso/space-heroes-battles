@@ -1938,6 +1938,7 @@ GameObject:
   - component: {fileID: 1680336074825548984}
   - component: {fileID: 7004320360844401358}
   - component: {fileID: 4467026538369342586}
+  - component: {fileID: 4144662533052352534}
   m_Layer: 11
   m_Name: PlayerShip1
   m_TagString: Player
@@ -2026,20 +2027,31 @@ MonoBehaviour:
   healthComponent: {fileID: 7004320360844401358}
   weaponController: {fileID: 4467026538369342586}
   movementController: {fileID: 8573234729310641582}
-  shipData:
-    Level: 1
-    Health: 0
-    Damage: 0
-    FireRate: 0
-    Speed: 0
-    HasShield: 0
-  ship_SO: {fileID: 11400000, guid: bc2eaccde9a6f754d8978c255160a044, type: 2}
   ShieldEffect: {fileID: 1854617358157983949}
   animator: {fileID: 7360492404434270810}
   currentPlayerState: 0
   ItemCollectedEffect: {fileID: 4101952318568694582}
   alarmSFX: {fileID: 8300000, guid: d0888bf451bd66b48951e9488b462d44, type: 3}
   hitEffect: {fileID: 2916339120531276259}
+  playerShipData:
+    Level: 0
+    Health: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    HasShield: 0
+    xp: 0
+    xpToLevel: 0
+    Upgrades: 
+    SuperDamage: 0
+    LaserDamage: 0
+    SuperChargeTime: 0
+    MagnetPower: 0
+    MagnetDistance: 0
+    ChargePower: 0
+    PowerPackCollected: 0
+    UpgradeDict: []
+  player_SO: {fileID: 11400000, guid: bc2eaccde9a6f754d8978c255160a044, type: 2}
 --- !u!114 &8573234729310641582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2200,6 +2212,40 @@ MonoBehaviour:
   specialAttack: {fileID: 7873295070039154695}
   audioSource: {fileID: 1680336074825548984}
   powerSFX: {fileID: 8300000, guid: 59e5f7ab75dfaa7479b20659ecb1510c, type: 3}
+--- !u!114 &4144662533052352534
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8605901557099674316}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 60eb61c258af3c84491e5ef692911ba0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: '::'
+  playerShip: {fileID: 8571979849814880766}
+  playerShipData:
+    Level: 0
+    Health: 0
+    Damage: 0
+    FireRate: 0
+    Speed: 0
+    HasShield: 0
+    xp: 0
+    xpToLevel: 0
+    Upgrades: 
+    SuperDamage: 0
+    LaserDamage: 0
+    SuperChargeTime: 0
+    MagnetPower: 0
+    MagnetDistance: 0
+    ChargePower: 0
+    PowerPackCollected: 0
+    UpgradeDict: []
+  itemLayer:
+    serializedVersion: 2
+    m_Bits: 524288
 --- !u!1 &8605924191077551618
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,18 +17,32 @@ public class PlayerEconomyData
         CoinPicked = 0;
     }
 
-    public void UpdateCurrency(int amount)
+    public void UpdateCoinPicked(int amount)
+    {
+        CoinPicked += amount;
+    }
+
+    public void RemoveCurrency(int amount)
+    {
+        Coins -= amount;
+        OnCurrencyValueChanged?.Invoke(Coins);
+        UpdateSpendCurrency(amount);
+    }
+
+    public void AddCurrency(int amount)
     {
         Coins += amount;
-        OnCurrencyValueChanged?.Invoke(amount);
+        OnCurrencyValueChanged?.Invoke(Coins);
         UpdateSpendCurrency(amount);
     }
 
     public void UpdateSpendCurrency(int amount)
     {
-        OnCurrencySpendValueChanged?.Invoke(amount);
+        CoinSpend += amount;
+        OnCurrencySpendValueChanged?.Invoke(CoinSpend);
     }
 }
+
 [Serializable]
 public class PlayerStatsData
 {

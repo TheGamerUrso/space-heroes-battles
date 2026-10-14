@@ -24,10 +24,10 @@ public class HealthComponent : MonoBehaviour , IDamagable
     private bool invulnerable = false;
     public bool Isinvulnerable { get { return invulnerable; } set { invulnerable = value; } }
     [SerializeField] protected bool hasShield; // Standalone shield flag for non-ship objects
-    public bool HasShield => (ship != null && ship.shipData != null) ? ship.shipData.HasShield : hasShield;
+    public bool HasShield => (ship != null && ship.ShipData != null) ? ship.ShipData.HasShield : hasShield;
     public void Setup(Ship ship)
     {
-        maxHealth = ship.shipData.Health;
+        maxHealth = ship.ShipData.Health;
         currentHealth = maxHealth;
         IsAlive = true;
     }

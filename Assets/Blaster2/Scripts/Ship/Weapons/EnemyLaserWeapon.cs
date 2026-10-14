@@ -58,7 +58,7 @@ public class EnemyLaserWeapon : BaseWeapon
                             hitSomething = true;
                             hitEffect.transform.position = hit.point;
                             xHit = hit.point.x;       
-                            damagable.TakeDamage(ship.shipData.Damage);
+                            damagable.TakeDamage(ship.ShipData.Damage);
                         }
                         hitSomething = false; 
                     }

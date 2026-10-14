@@ -65,7 +65,7 @@ public class DropItem : MonoBehaviour
 
         if (ListOfDropItems.Count > 0)
         {
-            bool hasShield = playerShip == null ? false : playerShip.shipData.HasShield;
+            bool hasShield = playerShip == null ? false : playerShip.ShipData.HasShield;
             bool fullHealth = playerShip == null ? true : playerShip.healthComponent.GetHealthPresentage() == 1;
             bool dropExtra = false;
 

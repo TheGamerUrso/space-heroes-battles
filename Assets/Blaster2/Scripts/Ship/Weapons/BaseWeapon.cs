@@ -71,7 +71,7 @@ public abstract class BaseWeapon : MonoBehaviour
 
     public virtual void UpdateStats()
     {
-        Damage = ship.shipData.Damage / Cannons.Length;
-        FireRate = ship.shipData.FireRate;
+        Damage = ship.ShipData.Damage / Cannons.Length;
+        FireRate = ship.ShipData.FireRate;
     }
 }

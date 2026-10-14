@@ -8,11 +8,9 @@ public enum ItemEnum
 
 public class Items : MonoBehaviour, IPickable
 {
-    private PlayerController player;
 
     public ItemEnum ID => itemData.itemType;
     [SerializeField] private Item_SO itemData;
-    [SerializeField] private LayerMask playerLayer;
     public BoxCollider boxCollider;
 
     protected float m_XVel;
@@ -22,20 +20,15 @@ public class Items : MonoBehaviour, IPickable
     [SerializeField] protected Vector2 m_RandomXVelValues = new Vector2();
     [SerializeField] protected Vector2 m_RandomZVelValues = new Vector2();
 
-    protected float magnetPower;
-    protected float magnetDistance = 25;
-
     protected bool picked;
     protected float TTL = .2f;
-    protected PlayerData playerData;
-    protected PlayerShipData playerShipData;
     [SerializeField] protected GameController gameController;
     [SerializeField] protected AudioSource audioSource;
-    private Collider[] colliders;
 
     private IAudioService audioService;
-    private IDataService dataService;
     private IEventService eventService;
+
+   public bool IsPulled { get; set; }
 
     private void OnEnable()
     {
@@ -45,20 +38,8 @@ public class Items : MonoBehaviour, IPickable
 
     private void Start()
     {
-        dataService = GameContext.Get<IDataService>();
         audioService = GameContext.Get<IAudioService>();
         eventService = GameContext.Get<IEventService>();
-
-        playerData = dataService.GetPlayerData();
-        playerShipData = playerData.GetCurrentPlayerShipData();
-        if (itemData.itemType == ItemEnum.COIN)
-        {
-            if (playerShipData.MagnetPower > 0)
-            {
-                magnetPower = playerShipData.MagnetPower;
-                magnetDistance = playerShipData.MagnetDistance;
-            }
-        }
 
         int dir = Random.Range(-1, 1);
 
@@ -110,37 +91,25 @@ public class Items : MonoBehaviour, IPickable
 
     public void Movement()
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, magnetDistance, playerLayer);
-        if (colliders.Length > 0 && magnetPower > 0)
-        {
-            for (int i = 0; i < colliders.Length; i++)
-            {
-                Collider item = colliders[i];
-                if (item.CompareTag("Player"))
-                {
-                    GameObject target = item.gameObject;
-                    if (magnetPower > 0)
-                    {
-                        transform.localPosition = Vector3.MoveTowards(transform.localPosition, target.transform.localPosition, magnetPower * Time.deltaTime);
-                    }
-                }
-            }
-        }
-        else
-        {
-            Vector3 movement = (-transform.forward * m_ZVel) + (-transform.right * m_XVel);
+        if (picked) return;
+        if (IsPulled) return;
 
-            Vector3 newPos = transform.localPosition;
-            newPos += movement * Time.deltaTime;
-            transform.localPosition = newPos;
+        Vector3 movement = (-transform.forward * m_ZVel) + (-transform.right * m_XVel);
 
-            if (transform.position.x < Constants.m_XMin || transform.position.x > Constants.m_XMax)
-            {
-                m_XVel *= -1;
-            }
+        Vector3 newPos = transform.localPosition;
+        newPos += movement * Time.deltaTime;
+        transform.localPosition = newPos;
+
+        if (transform.position.x < Constants.m_XMin || transform.position.x > Constants.m_XMax)
+        {
+            m_XVel *= -1;
         }
 
-        transform.localPosition = new Vector3(Mathf.Clamp(transform.localPosition.x, Constants.m_XMin, Constants.m_XMax), transform.localPosition.y, transform.localPosition.z);
+        transform.localPosition = new Vector3(
+            Mathf.Clamp(transform.localPosition.x, Constants.m_XMin, Constants.m_XMax),
+            transform.localPosition.y,
+            transform.localPosition.z
+        );
     }
 
 }

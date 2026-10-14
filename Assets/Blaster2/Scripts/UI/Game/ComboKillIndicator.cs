@@ -1,6 +1,6 @@
-﻿using TMPro;
+﻿using PrimeTween;
+using TMPro;
 using UnityEngine;
-using DG.Tweening;
 
 public class ComboKillIndicator : MonoBehaviour
 {
@@ -19,7 +19,7 @@ public class ComboKillIndicator : MonoBehaviour
     private float duration = 1;
     private int vibriate = 5;
     private int elasticity = 1;
-    private Ease ease = Ease.InOutQuart;
+   private Ease ease = Ease.InOutQuart;
     private Vector3 size = new Vector3(.25f, .25f, .25f);
 
     private void Start()
@@ -62,7 +62,7 @@ public class ComboKillIndicator : MonoBehaviour
 
     public void Animate()
     {
-        confratulationText.transform.DOPunchScale(size, duration, vibriate, elasticity).SetEase(ease);
+        Tween.PunchScale(confratulationText.transform, size, duration, vibriate, true, ease);
     }
 
     public void Update()

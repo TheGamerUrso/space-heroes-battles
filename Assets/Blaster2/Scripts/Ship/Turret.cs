@@ -6,6 +6,14 @@ public class Turret : Ship
     [SerializeField] private BaseWeapon baseWeapon;
     protected float hitEffectTimer;
     [SerializeField] protected GameObject hitEffect;
+
+    public ShipData shipData;
+    public Ship_SO turrentData;
+
+    public override ShipData ShipData => shipData;
+
+    public override Ship_SO Ship_SO => turrentData;
+
     private void Start()
     {
         healthComponent.OnHealthChanged -= OnHealthValueChanged;
@@ -17,10 +25,10 @@ public class Turret : Ship
     {
         shipData.Level = Mathf.Clamp(level, 1, 10);
 
-        shipData.Health = level * ship_SO.baseHealth;
-        shipData.Speed = ship_SO.baseSpeed;
-        shipData.Damage = (level * ship_SO.baseDamage);
-        shipData.FireRate = ship_SO.baseFireRate;
+        shipData.Health = level * Ship_SO.baseHealth;
+        shipData.Speed = Ship_SO.baseSpeed;
+        shipData.Damage = (level * Ship_SO.baseDamage);
+        shipData.FireRate = Ship_SO.baseFireRate;
 
         healthComponent.Setup(this);
         weaponController.Setup(this);

@@ -1,6 +1,4 @@
-﻿using DG.Tweening;
-using System.Collections;
-using System.Collections.Generic;
+﻿using PrimeTween;
 using TMPro;
 using UnityEngine;
 
@@ -14,12 +12,13 @@ public class ScoreMultplierWidget : MonoBehaviour
     public int vibriate = 10;
     public int elasticity = 1;
 
-    public Ease ease;
+   public Ease ease;
     public Vector3 size;
 
     public void Animate()
     {
-        widgetPanel.transform.DOPunchScale(size, duration, vibriate, elasticity).SetEase(ease).OnComplete(() => { widgetPanel.transform.localScale = Vector3.one; });
+ 
+        Tween.PunchScale(widgetPanel.transform,size,duration,vibriate,true,ease).OnComplete(() => { widgetPanel.transform.localScale = Vector3.one; });
 
         widgetPanel.transform.localScale = new Vector3(Mathf.Clamp(widgetPanel.transform.localScale.x, 0, 1), Mathf.Clamp(widgetPanel.transform.localScale.y, 0, 1), Mathf.Clamp(widgetPanel.transform.localScale.z, 0, 1));
     }

@@ -91,7 +91,7 @@ public class ShipSelectElement : MonoBehaviour
                 AutoClose = true
             });
 
-            playerData.playerEconomyData.Coins -= shipSelectData.Cost;
+            playerData.playerEconomyData.RemoveCurrency(shipSelectData.Cost);
             playerData.UnlockedHeroes[ID] = 1;
             shipSelect.SelectShip(ID);
             Unlock();

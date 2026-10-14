@@ -15,11 +15,16 @@ public class Enemy : Ship, ITargetable
     {
         get
         {
-            return shipData.HasShield || healthComponent.IsAlive;
+            return enemyData.HasShield || healthComponent.IsAlive;
         }
     }
 
     public PoolGameObjectType GameObjectType { get; set; }
+
+    [SerializeField] private EnemyData enemyData;
+    public override ShipData ShipData => enemyData;
+    [SerializeField] private Enemy_SO enemy_SO;
+    public override Ship_SO Ship_SO => enemy_SO;
 
     public Action<EnemyState> OnEnemyStateChanged;
     public EnemyState EnemyState;
@@ -40,7 +45,7 @@ public class Enemy : Ship, ITargetable
         eventService = GameContext.Get<IEventService>();
         healthComponent.OnHealthChanged += OnHealthValueChanged;
 
-        SetStats(shipData.Level);
+        SetStats(ShipData.Level);
         SetState(EnemyState.Idle);
     }
 
@@ -101,15 +106,17 @@ public class Enemy : Ship, ITargetable
         float healthGrowthRate = 0.25f;
         float damageGrowthRate = 0.18f;
 
-        shipData.Level = Mathf.Clamp(level, 1, 10);
+        enemyData.Level = Mathf.Clamp(level, 1, 10);
 
-        shipData.Health = ship_SO.baseHealth * (1f + (healthGrowthRate * (shipData.Level - 1)));
-        actiualSpeed = UnityEngine.Random.Range(ship_SO.baseSpeed - speedVariance, ship_SO.baseSpeed + speedVariance);
+        enemyData.Health = enemy_SO.baseHealth * (1f + (healthGrowthRate * (enemyData.Level - 1)));
+        actiualSpeed = UnityEngine.Random.Range(enemy_SO.baseSpeed - speedVariance, enemy_SO.baseSpeed + speedVariance);
         tempSpeed = actiualSpeed * 3;
 
-        shipData.Speed = actiualSpeed;
-        shipData.Damage = ship_SO.baseDamage * (1f + (damageGrowthRate * (shipData.Level - 1)));
-        shipData.FireRate = ship_SO.baseFireRate;
+        enemyData.Speed = actiualSpeed;
+        enemyData.Damage = enemy_SO.baseDamage * (1f + (damageGrowthRate * (enemyData.Level - 1)));
+        enemyData.FireRate = enemy_SO.baseFireRate;
+
+        enemyData.EnemyValue = enemy_SO.EnemyValue * enemyData.Level;
 
         var rand = UnityEngine.Random.value;
         if (rand < .2f)
@@ -138,7 +145,7 @@ public class Enemy : Ship, ITargetable
             Type = EnemyEvent.EnemyEventType.ENTER
 ,
             Enemy = this,
-            Value = ship_SO.EnemyValue
+            Value = enemy_SO.EnemyValue
         });
 
         if (transform.position.z < 120f)
@@ -167,7 +174,7 @@ public class Enemy : Ship, ITargetable
             Type = EnemyEvent.EnemyEventType.ESCAPE
          ,
             Enemy = this,
-            Value = ship_SO.EnemyValue
+            Value = enemy_SO.EnemyValue
         });
 
         SetState(EnemyState.Idle);
@@ -181,12 +188,12 @@ public class Enemy : Ship, ITargetable
             Type = EnemyEvent.EnemyEventType.DEATH
         ,
             Enemy = this,
-            Value = ship_SO.EnemyValue
+            Value = enemy_SO.EnemyValue
         });
 
         SetState(EnemyState.Idle);
 
-        var explostion = PoolManager.Instance.GetObjectFromPool(ship_SO.ExplostionEffect);
+        var explostion = PoolManager.Instance.GetObjectFromPool(Ship_SO.ExplostionEffect);
         explostion.transform.position = transform.position;
         explostion.SetActive(true);
 
@@ -215,7 +222,7 @@ public class Enemy : Ship, ITargetable
         if (currentHealth < 1)
             SetState(EnemyState.Death);
 
-        if (shipData.HasShield)
+        if (enemyData.HasShield)
             DeactivateShield();
 
         Hit();
@@ -229,7 +236,7 @@ public class Enemy : Ship, ITargetable
         enemyMovement.Setup(new Vector3(0, 0, 250), 
             Quaternion.Euler(new Vector3(0, 180, 0)));
         SetState(EnemyState.Idle);
-        SetStats(shipData.Level);
+        SetStats(enemyData.Level);
         weaponController.EquipRandomWeapon();
         gameObject.SetActive(true);
     }

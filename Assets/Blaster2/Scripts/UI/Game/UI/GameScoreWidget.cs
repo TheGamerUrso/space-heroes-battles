@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
+using PrimeTween;
 
 public class GameScoreWidget : MonoBehaviour
 {
@@ -23,6 +22,7 @@ public class GameScoreWidget : MonoBehaviour
     private void OnDestroy()
     {
         gameController.OnGameScoreValueChanged -= OnScoreValueChanged;
+        
     }
 
     private void Update()
@@ -35,5 +35,8 @@ public class GameScoreWidget : MonoBehaviour
     {
         string scoreText = string.Format("{00:00000000}", score);
         ScoreText.text = scoreText;
+        Tween.Scale(transform, endValue: 1.2f, duration: 1, ease: Ease.InOutSine);
+
+
     }
 }
